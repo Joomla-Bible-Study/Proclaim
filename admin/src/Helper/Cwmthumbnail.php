@@ -52,7 +52,7 @@ class Cwmthumbnail
      *
      * @return  array{valid: bool, error: ?string}  Validation result
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function validate(
         string $filePath,
@@ -114,7 +114,7 @@ class Cwmthumbnail
      *
      * @return  bool  True on success, false if path not allowed or deletion failed
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function deleteFolder(string $folderPath): bool
     {

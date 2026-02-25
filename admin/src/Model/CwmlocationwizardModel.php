@@ -103,14 +103,22 @@ class CwmlocationwizardModel extends BaseDatabaseModel
         $raw = ComponentHelper::getParams('com_proclaim')->get('location_group_mapping', '{}');
 
         if (\is_string($raw)) {
-            $decoded = json_decode($raw, true);
+            try {
+                $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return [];
+            }
 
             return \is_array($decoded) ? $decoded : [];
         }
 
         // Registry::get() returns stdClass for nested objects — convert to array
         if ($raw instanceof \stdClass) {
-            return json_decode(json_encode($raw), true) ?: [];
+            try {
+                return json_decode(json_encode($raw, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                return [];
+            }
         }
 
         return \is_array($raw) ? $raw : [];
@@ -142,7 +150,11 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             return [];
         }
 
-        $rules = json_decode($rulesJson, true) ?: [];
+        try {
+            $rules = json_decode($rulesJson, true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return [];
+        }
 
         // Preset definitions — must match applyPermissions()
         $presets = [
@@ -307,7 +319,11 @@ class CwmlocationwizardModel extends BaseDatabaseModel
             return;
         }
 
-        $rules = json_decode($asset->rules ?? '{}', true) ?: [];
+        try {
+            $rules = json_decode($asset->rules ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            $rules = [];
+        }
 
         // Preset definitions — actions and their allowed values
         $presets = [

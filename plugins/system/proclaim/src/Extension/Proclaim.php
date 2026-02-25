@@ -386,7 +386,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $db->setQuery($query);
             $json = $db->loadResult();
 
-            return $json ? (json_decode($json, true) ?: []) : [];
+            return $json ? (json_decode($json, true, 512, JSON_THROW_ON_ERROR) ?: []) : [];
         } catch (\Exception $e) {
             return [];
         }

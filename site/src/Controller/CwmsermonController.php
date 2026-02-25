@@ -246,7 +246,7 @@ class CwmsermonController extends FormController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private function redirectBack($input, int $t): void
     {

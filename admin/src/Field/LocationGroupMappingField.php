@@ -93,9 +93,15 @@ class LocationGroupMappingField extends FormField
         $currentMapping = [];
 
         if (!empty($this->value)) {
-            $decoded = \is_string($this->value)
-                ? json_decode($this->value, true)
-                : $this->value;
+            if (\is_string($this->value)) {
+                try {
+                    $decoded = json_decode($this->value, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    $decoded = null;
+                }
+            } else {
+                $decoded = $this->value;
+            }
 
             if (\is_array($decoded)) {
                 $currentMapping = $decoded;

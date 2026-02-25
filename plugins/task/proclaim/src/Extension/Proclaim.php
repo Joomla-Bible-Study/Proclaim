@@ -202,7 +202,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return int
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private function archive(ExecuteTaskEvent $event): int
     {

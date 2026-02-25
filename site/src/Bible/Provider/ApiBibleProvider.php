@@ -154,7 +154,11 @@ class ApiBibleProvider extends AbstractBibleProvider
             );
         }
 
-        $data = json_decode($body, true);
+        try {
+            $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
 
         if (!\is_array($data) || !isset($data['data'])) {
             Log::add('ApiBible: Invalid JSON response for "' . $reference . '" (' . $translation . ')', Log::ERROR, 'com_proclaim.bible');

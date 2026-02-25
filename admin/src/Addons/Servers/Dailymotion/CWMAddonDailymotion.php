@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Dailymotion;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\Registry\Registry;
 
@@ -56,6 +57,117 @@ class CWMAddonDailymotion extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(dailymotion\.com|dai\.ly)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'dailymotion',
+            'label'    => 'Dailymotion',
+            'patterns' => [
+                '/dailymotion\.com/i',
+                '/dai\.ly/i',
+            ],
+            'allVideosTags' => ['dailymotion'],
+        ];
+    }
+
+    /**
+     * Extract Dailymotion video ID from a URL.
+     *
+     * @param   string  $text  URL or text containing a Dailymotion URL
+     *
+     * @return  string|null  The video ID or null
+     *
+     * @since   10.1.0
+     */
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public static function extractMediaId(string $text): ?string
+    {
+        $patterns = [
+            '/dailymotion\.com\/video\/([a-z0-9]+)/i',
+            '/dailymotion\.com\/embed\/video\/([a-z0-9]+)/i',
+            '/dai\.ly\/([a-z0-9]+)/i',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $text, $matches)) {
+                return $matches[1];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @deprecated Use extractMediaId() instead
+     */
+    public static function extractDailymotionVideoId(string $text): ?string
+    {
+        return static::extractMediaId($text);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result  = [];
+        $videoId = self::extractDailymotionVideoId($combined);
+
+        // Fall back to AllVideos bare ID: {dailymotion}x7tgad0{/dailymotion}
+        if ($videoId === null && !empty($avContent) && preg_match('/^[a-z0-9]+$/i', $avContent)) {
+            $videoId = $avContent;
+        }
+
+        if ($videoId) {
+            $result['filename'] = '//www.dailymotion.com/embed/video/' . $videoId;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        // Map extracted URL params to embed option form fields
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'dailymotion');
+
+        $dmParamMap = [
+            'mute'      => 'dm_mute',
+            'startTime' => 'dm_start',
+            'loop'      => 'dm_loop',
+            'scaleMode' => 'dm_scale',
+        ];
+
+        foreach ($dmParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**

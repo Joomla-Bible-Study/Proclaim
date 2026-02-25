@@ -34,7 +34,12 @@ use Joomla\Registry\Registry;
  */
 class CwmupgradeHelper
 {
-    /** @var array|null Request-level cache for detect9xSchema() result */
+    /**
+     * Request-level cache for detect9xSchema() result.
+     *
+     * @var    array|null
+     * @since  10.1.0
+     */
     private static ?array $cached9xDetection = null;
 
     /**
@@ -170,7 +175,7 @@ class CwmupgradeHelper
                 $db->setQuery($query);
                 $count = (int) $db->loadResult();
 
-                // Use short name for display (strip prefix)
+                // Use a short name for display (strip prefix)
                 $shortName          = str_replace('#__bsms_', '', $table['name']);
                 $counts[$shortName] = $count;
             } catch (\Exception $e) {

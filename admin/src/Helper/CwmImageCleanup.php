@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
  * Image Cleanup Helper - Find and remove orphaned image folders
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class CwmImageCleanup
 {
@@ -45,7 +45,7 @@ class CwmImageCleanup
      *
      * @return  array  Orphaned folders grouped by type
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function findOrphanedFolders(): array
     {
@@ -67,7 +67,7 @@ class CwmImageCleanup
      *
      * @return  array  Array of orphan info objects
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private static function scanTypeFolder(string $basePath, string $type): array
     {
@@ -120,7 +120,7 @@ class CwmImageCleanup
      *
      * @return  int|null  Extracted ID or null if not found
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private static function extractIdFromFolderName(string $folderName): ?int
     {
@@ -144,7 +144,7 @@ class CwmImageCleanup
      *
      * @return  array  Array of valid integer IDs
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private static function getValidIds(string $type): array
     {
@@ -177,7 +177,7 @@ class CwmImageCleanup
      *
      * @return  int  Size in bytes
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private static function getFolderSize(string $path): int
     {
@@ -205,7 +205,7 @@ class CwmImageCleanup
      *
      * @return  int  Number of files
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private static function getFileCount(string $path): int
     {
@@ -225,7 +225,7 @@ class CwmImageCleanup
      *
      * @return  array{deleted: int, errors: array}
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function deleteOrphans(array $folderPaths): array
     {
@@ -272,7 +272,7 @@ class CwmImageCleanup
      *
      * @return  array{folders: int, size: int, size_formatted: string}
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function getTotals(array $orphans): array
     {
@@ -300,7 +300,7 @@ class CwmImageCleanup
      *
      * @return  string  Formatted string (e.g., "1.5 MB")
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public static function formatBytes(int $bytes): string
     {

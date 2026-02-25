@@ -94,7 +94,11 @@ class GetBibleProvider extends AbstractBibleProvider
             );
         }
 
-        $data = json_decode($body, true);
+        try {
+            $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
 
         if (!\is_array($data) || empty($data)) {
             Log::add('GetBible: Invalid JSON response for "' . $apiRef . '" (' . $translation . ')', Log::ERROR, 'com_proclaim.bible');

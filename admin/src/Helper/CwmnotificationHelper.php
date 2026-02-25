@@ -28,12 +28,12 @@ use Joomla\Registry\Registry;
  * Handles sending email notifications when comments need moderation.
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class CwmnotificationHelper
 {
     /**
-     * Send notification email when a comment is submitted and held for approval
+     * Send a notification email when a comment is submitted and held for approval
      *
      * @param   int       $studyId      The study ID the comment is for
      * @param   string    $authorName   The comment author's name
@@ -43,7 +43,7 @@ class CwmnotificationHelper
      * @return  bool  True on success, false on failure
      *
      * @throws \Exception
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public static function notifyCommentPending(
         int $studyId,
@@ -114,7 +114,7 @@ class CwmnotificationHelper
      *
      * @return  object|null  Study details object or null on failure
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected static function getStudyDetails(int $studyId): ?object
     {

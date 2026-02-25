@@ -59,6 +59,53 @@ class CWMAddonVirtuemart extends CWMAddon
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'virtuemart',
+            'label'    => 'VirtueMart',
+            'patterns' => [
+                '/com_virtuemart/i',
+                '/virtuemart.*download/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result = [];
+
+        // Build URL from legacy virtueMart_id param if available
+        $vmId = $params['virtueMart_id'] ?? '';
+
+        if (!empty($vmId) && $vmId !== '0') {
+            $result['filename'] = 'index.php?option=com_virtuemart&view=productdetails&virtuemart_product_id=' . (int) $vmId;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
+    }
+
+    /**
      * Render general fieldset fields
      *
      * @param   object  $media_form  Media files form

@@ -368,14 +368,22 @@ class CwmlocationHelper
         $raw = $params->get('location_group_mapping', '{}');
 
         if (\is_string($raw)) {
-            $decoded = json_decode($raw, true);
+            try {
+                $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return [];
+            }
 
             return \is_array($decoded) ? $decoded : [];
         }
 
         // Registry::get() returns stdClass for nested objects — convert to array
         if ($raw instanceof \stdClass) {
-            return json_decode(json_encode($raw), true) ?: [];
+            try {
+                return json_decode(json_encode($raw, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                return [];
+            }
         }
 
         return \is_array($raw) ? $raw : [];

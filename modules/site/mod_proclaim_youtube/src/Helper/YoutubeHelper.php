@@ -68,7 +68,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             $cachedVideo = $cache->get($cacheKey, 'mod_proclaim_youtube');
 
             if ($cachedVideo !== false) {
-                $decoded = json_decode($cachedVideo, true);
+                $decoded = json_decode($cachedVideo, true, 512, JSON_THROW_ON_ERROR);
 
                 if ($decoded !== null) {
                     return $decoded;

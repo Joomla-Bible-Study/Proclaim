@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -64,6 +65,43 @@ class CWMAddonLocal extends CWMAddon
     public function upload(?array $data): array
     {
         return (new Cwmuploadscript())->upload($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Local files are detected by heuristics (file extensions, relative paths),
+     * not by URL patterns. Only type/label are declared for registry discovery.
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'local',
+            'label'    => 'Local',
+            'patterns' => [],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        return [
+            'filename'  => CwmserverMigrationHelper::stripLegacyPrefix($filename, $legacyServerParams),
+            'player'    => $params['player'] ?? '',
+            'mediacode' => $mediacode,
+        ];
     }
 
     /**

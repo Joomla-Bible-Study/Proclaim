@@ -33,6 +33,10 @@ if (!\defined('JPATH_ADMINISTRATOR')) {
     \define('JPATH_ADMINISTRATOR', JPATH_ROOT . '/administrator');
 }
 
+if (!\defined('BIBLESTUDY_PATH_ADMIN')) {
+    \define('BIBLESTUDY_PATH_ADMIN', JPATH_ROOT . '/admin');
+}
+
 if (!\defined('JPATH_TESTS')) {
     \define('JPATH_TESTS', \dirname(__DIR__));
 }

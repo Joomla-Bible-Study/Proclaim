@@ -28,7 +28,7 @@ use Joomla\Database\DatabaseInterface;
  * and post-install messages for new features.
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class CwmguidedtourHelper
 {
@@ -36,7 +36,7 @@ class CwmguidedtourHelper
      * Database driver
      *
      * @var DatabaseInterface
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected DatabaseInterface $db;
 
@@ -44,7 +44,7 @@ class CwmguidedtourHelper
      * Proclaim extension ID
      *
      * @var int
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected int $extensionId;
 
@@ -53,7 +53,7 @@ class CwmguidedtourHelper
      * Each tour has steps that guide users through the feature.
      *
      * @var array
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected array $tours = [
         'whats_new_10_1' => [
@@ -306,7 +306,7 @@ class CwmguidedtourHelper
      * Array of post-install messages to register.
      *
      * @var array
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected array $postInstallMessages = [
         'archived_messages' => [
@@ -356,7 +356,7 @@ class CwmguidedtourHelper
     /**
      * Constructor
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function __construct()
     {
@@ -369,7 +369,7 @@ class CwmguidedtourHelper
      *
      * @return int Extension ID
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getExtensionId(): int
     {
@@ -388,7 +388,7 @@ class CwmguidedtourHelper
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function registerAll(): void
     {
@@ -403,7 +403,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function registerTour(string $key): bool
     {
@@ -428,7 +428,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function registerPostInstallMessage(string $key): bool
     {
@@ -451,7 +451,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Number of messages registered
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function registerPostInstallMessages(): int
     {
@@ -474,7 +474,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Number of tours registered
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function registerGuidedTours(): int
     {
@@ -507,7 +507,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True if supported
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function supportsGuidedTours(): bool
     {
@@ -525,7 +525,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Tour ID or 0 if not found
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function getTourId(string $uid): int
     {
@@ -549,7 +549,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True if exists
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function tourExists(string $uid): bool
     {
@@ -575,7 +575,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True if exists
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function postInstallMessageExists(string $titleKey): bool
     {
@@ -596,7 +596,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function insertTour(string $key, array $tour): bool
     {
@@ -671,7 +671,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function updateTour(string $key, array $tour): bool
     {
@@ -754,7 +754,7 @@ class CwmguidedtourHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function insertPostInstallMessage(array $message): bool
     {
@@ -789,7 +789,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Number of tours removed
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function removeAllTours(): int
     {
@@ -837,7 +837,7 @@ class CwmguidedtourHelper
      *
      * @return  self
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function addTour(string $key, array $tour): self
     {
@@ -853,7 +853,7 @@ class CwmguidedtourHelper
      *
      * @return  self
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function addPostInstallMessage(string $key, array $message): self
     {

@@ -62,7 +62,7 @@ class CwmteacherTable extends Table
     /** @var string|null Full teacher image path @since 7.0.0 */
     public ?string $teacher_image = null;
 
-    /** @var string|null Teacher thumbnail path @since 10.2.0 */
+    /** @var string|null Teacher thumbnail path @since 10.1.0 */
     public ?string $teacher_thumbnail = null;
 
     /** @var string|null Short bio @since 7.0.0 */
@@ -212,7 +212,12 @@ class CwmteacherTable extends Table
 
         // Auto-prepend https:// to URLs in social_links JSON
         if (!empty($this->social_links) && \is_string($this->social_links)) {
-            $links   = json_decode($this->social_links, true);
+            try {
+                $links = json_decode($this->social_links, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $links = null;
+            }
+
             $changed = false;
 
             if (\is_array($links)) {
@@ -309,7 +314,7 @@ class CwmteacherTable extends Table
      *
      * @return  bool  True on success
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     #[\Override]
     public function delete($pk = null): bool

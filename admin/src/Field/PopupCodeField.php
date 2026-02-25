@@ -23,7 +23,7 @@ use Joomla\CMS\Language\Text;
  * Popup Code Field - Text field with clickable code insertion buttons
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class PopupCodeField extends TextField
 {
@@ -32,7 +32,7 @@ class PopupCodeField extends TextField
      *
      * @var  string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected $type = 'PopupCode';
 
@@ -41,7 +41,7 @@ class PopupCodeField extends TextField
      *
      * @var  array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected array $codes = [
         '{{scripture}}'        => 'JBS_CMN_SCRIPTURE',
@@ -61,7 +61,7 @@ class PopupCodeField extends TextField
      *
      * @return  string  The field input markup.
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function getInput(): string
     {

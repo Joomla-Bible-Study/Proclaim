@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Rumble;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\Registry\Registry;
 
@@ -56,6 +57,110 @@ class CWMAddonRumble extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(rumble\.com)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'          => 'rumble',
+            'label'         => 'Rumble',
+            'patterns'      => ['/rumble\.com/i'],
+            'allVideosTags' => ['rumble'],
+        ];
+    }
+
+    /**
+     * Extract Rumble embed ID from a URL.
+     *
+     * @param   string  $text  URL or text containing a Rumble URL
+     *
+     * @return  string|null  The embed ID or null
+     *
+     * @since   10.1.0
+     */
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public static function extractMediaId(string $text): ?string
+    {
+        // Rumble embed URLs: rumble.com/embed/v1abc23/
+        if (preg_match('/rumble\.com\/embed\/(v[a-z0-9]+)/i', $text, $matches)) {
+            return $matches[1];
+        }
+
+        // Standard URLs: rumble.com/v1abc23-title.html
+        if (preg_match('/rumble\.com\/(v[a-z0-9]+)/i', $text, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    /**
+     * @deprecated Use extractMediaId() instead
+     */
+    public static function extractRumbleEmbedId(string $text): ?string
+    {
+        return static::extractMediaId($text);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result  = [];
+        $embedId = self::extractRumbleEmbedId($combined);
+
+        // Fall back to AllVideos bare ID: {rumble}v1abc23{/rumble}
+        if ($embedId === null && !empty($avContent) && preg_match('/^v[a-z0-9]+$/i', $avContent)) {
+            $embedId = $avContent;
+        }
+
+        if ($embedId) {
+            $result['filename'] = '//rumble.com/embed/' . $embedId . '/';
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        // Map extracted URL params to embed option form fields
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'rumble');
+
+        $rbParamMap = [
+            'rel' => 'rb_rel',
+            'pub' => 'rb_pub',
+        ];
+
+        foreach ($rbParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '2') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**

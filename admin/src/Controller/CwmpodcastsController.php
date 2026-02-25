@@ -62,7 +62,7 @@ class CwmpodcastsController extends AdminController
      * @return void
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function validate(): void
     {
@@ -104,7 +104,7 @@ class CwmpodcastsController extends AdminController
      * @return void
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixDurations(): void
     {
@@ -141,7 +141,7 @@ class CwmpodcastsController extends AdminController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMediaFilesForDuration(): void
     {
@@ -175,7 +175,7 @@ class CwmpodcastsController extends AdminController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixSingleDuration(): void
     {
@@ -214,7 +214,7 @@ class CwmpodcastsController extends AdminController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMediaFilesForMetadata(): void
     {
@@ -250,7 +250,7 @@ class CwmpodcastsController extends AdminController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixSingleMetadata(): void
     {
@@ -288,7 +288,7 @@ class CwmpodcastsController extends AdminController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function storeFixResults(): void
     {
@@ -303,7 +303,7 @@ class CwmpodcastsController extends AdminController
         try {
             // Get JSON body
             $json = file_get_contents('php://input');
-            $data = json_decode($json, true);
+            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
             if ($data) {
                 $results = [

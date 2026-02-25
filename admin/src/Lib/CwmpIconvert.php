@@ -463,7 +463,11 @@ class CwmpIconvert
                 $studydate  = $pi->date;
                 $studytitle = $pi->name;
                 $teacher_id = null;
-                $t          = json_decode($pi->teacher, true);
+                try {
+                    $t = json_decode($pi->teacher, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    continue;
+                }
                 foreach ($this->teachersids as $teacher) {
                     if ($teacher['oldid'] == $t['0']) {
                         $teacher_id = $teacher['newid'];
@@ -501,7 +505,11 @@ class CwmpIconvert
                 $user_id        = $pi->user;
                 $show_level     = $pi->access;
                 $location_id    = '';
-                $l              = json_decode($pi->ministry, true);
+                try {
+                    $l = json_decode($pi->ministry, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    $l = [];
+                }
 
                 foreach ($this->locations as $location) {
                     if ($location['oldid'] == $l['0']) {

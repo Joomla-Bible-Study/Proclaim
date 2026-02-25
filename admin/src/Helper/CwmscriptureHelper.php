@@ -42,7 +42,7 @@ class CwmscriptureHelper
      * @var array<string, int>
      * @since 10.1.0
      */
-    private const ABBREVIATIONS = [
+    private const array ABBREVIATIONS = [
         // Old Testament
         'gen'          => 101, 'genesis' => 101,
         'ex'           => 102, 'exod' => 102, 'exodus' => 102,
@@ -131,7 +131,7 @@ class CwmscriptureHelper
      * @var array<string, int>
      * @since 10.1.0
      */
-    private const BOOK_KEYS = [
+    private const array BOOK_KEYS = [
         'JBS_BBK_GENESIS'         => 101, 'JBS_BBK_EXODUS' => 102, 'JBS_BBK_LEVITICUS' => 103,
         'JBS_BBK_NUMBERS'         => 104, 'JBS_BBK_DEUTERONOMY' => 105, 'JBS_BBK_JOSHUA' => 106,
         'JBS_BBK_JUDGES'          => 107, 'JBS_BBK_RUTH' => 108, 'JBS_BBK_1SAMUEL' => 109,

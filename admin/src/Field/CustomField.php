@@ -29,7 +29,7 @@ use Joomla\CMS\Language\Text;
  * - input="text" or input="textarea" - Determines input type
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class CustomField extends FormField
 {
@@ -38,7 +38,7 @@ class CustomField extends FormField
      *
      * @var  string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected $type = 'Custom';
 
@@ -47,7 +47,7 @@ class CustomField extends FormField
      *
      * @var  bool
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected static bool $modalAdded = false;
 
@@ -56,7 +56,7 @@ class CustomField extends FormField
      *
      * @var  array<string, string>
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected const PODCAST_CODES = [
         '{scripture1}'    => 'JBS_CMN_SCRIPTURE',
@@ -76,7 +76,7 @@ class CustomField extends FormField
      *
      * @var  array<string, string>
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected const TEMPLATE_CODES = [
         '{{scripture}}'        => 'JBS_CMN_SCRIPTURE',
@@ -96,7 +96,7 @@ class CustomField extends FormField
      *
      * @return  string  The field input markup.
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function getInput(): string
     {
@@ -135,7 +135,7 @@ class CustomField extends FormField
      *
      * @return  string  The input HTML
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildInputHtml(string $inputType): string
     {
@@ -185,7 +185,7 @@ class CustomField extends FormField
      *
      * @return  string  The button HTML
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildButtonHtml(string $modalId): string
     {
@@ -213,7 +213,7 @@ class CustomField extends FormField
      *
      * @return  string  The modal HTML
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildModalHtml(string $modalId, string $codeset, array $codes): string
     {
@@ -275,7 +275,7 @@ class CustomField extends FormField
      *
      * @return  string  The script tag with JavaScript
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildJavaScript(): string
     {

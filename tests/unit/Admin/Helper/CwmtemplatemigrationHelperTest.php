@@ -130,7 +130,7 @@ class TestableCwmtemplatemigrationHelper extends CwmtemplatemigrationHelper
     public function __construct(array $templateRows)
     {
         $this->store = new TemplateMigStore($templateRows);
-        $this->db    = new TemplateMigFakeDb($this->store);
+        parent::__construct(new TemplateMigFakeDb($this->store));
     }
 
     // ---- Override to keep store and assertions in sync ----------------------

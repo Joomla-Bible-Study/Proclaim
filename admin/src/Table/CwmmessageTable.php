@@ -636,7 +636,7 @@ class CwmmessageTable extends Table
      *
      * @return  bool  True on success
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     #[\Override]
     public function delete($pk = null): bool

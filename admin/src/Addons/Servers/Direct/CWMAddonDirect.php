@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
  * Class CWMAddonDirect
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class CWMAddonDirect extends CWMAddon
 {
@@ -35,7 +35,7 @@ class CWMAddonDirect extends CWMAddon
      * Name of Add-on
      *
      * @var     string
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected $name = 'Direct Link';
 
@@ -43,7 +43,7 @@ class CWMAddonDirect extends CWMAddon
      * Description of add-on
      *
      * @var     string
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected $description = 'Direct link server for URL-based media files.';
 
@@ -55,11 +55,49 @@ class CWMAddonDirect extends CWMAddon
      * @return array
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function upload(?array $data): array
     {
         return (new Cwmuploadscript())->upload($data);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'direct',
+            'label'    => 'Direct Link',
+            'patterns' => [
+                '/drive\.google\.com/i',
+                '/docs\.google\.com/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        return [
+            'filename'  => $filename,
+            'player'    => '0',
+            'mediacode' => '',
+            'special'   => $params['special'] ?? '_blank',
+        ];
     }
 
     /**
@@ -70,7 +108,7 @@ class CWMAddonDirect extends CWMAddon
      *
      * @return string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function renderGeneral(object $media_form, bool $new): string
     {
@@ -99,7 +137,7 @@ class CWMAddonDirect extends CWMAddon
      *
      * @return string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function render(object $media_form, bool $new): string
     {
@@ -120,7 +158,7 @@ class CWMAddonDirect extends CWMAddon
      *
      * @return  string  Complete player HTML, or empty to fall back to CWMHtml5Inline
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function renderInlinePlayer(string $url, Registry $mediaParams, int $mediaId): string
     {

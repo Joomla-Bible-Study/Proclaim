@@ -271,7 +271,11 @@ class CwmteacherModel extends AdminModel
         if (!empty($data['social_links']) && \is_array($data['social_links'])) {
             $data['social_links'] = json_encode(array_values($data['social_links']));
 
-            $decoded = json_decode($data['social_links'], true) ?: [];
+            try {
+                $decoded = json_decode($data['social_links'], true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                $decoded = [];
+            }
 
             // Map platform → legacy column (first match wins)
             $legacyMap = [

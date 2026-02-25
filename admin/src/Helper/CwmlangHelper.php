@@ -31,7 +31,9 @@ use Joomla\CMS\Factory;
  */
 class CwmlangHelper
 {
-    /** @var string[]|null Cached array of all component language keys */
+    /** @var string[]|null Cached array of all component language keys
+     * @since 10.1.0
+     * */
     private static ?array $cachedKeys = null;
 
     /**
@@ -44,6 +46,7 @@ class CwmlangHelper
      * ~14 000 deprecation notices and ~150 MB of debug-plugin memory overhead.
      *
      * @return void
+     * @throws \Exception
      * @since  10.1.0
      */
     public static function registerAllForJs(): void
@@ -72,6 +75,7 @@ class CwmlangHelper
      * Result is cached for the lifetime of the request.
      *
      * @return string[]
+     * @throws \Exception
      * @since  10.1.0
      */
     public static function getAllKeys(): array

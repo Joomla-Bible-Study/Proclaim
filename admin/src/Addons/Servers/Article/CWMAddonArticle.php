@@ -59,6 +59,53 @@ class CWMAddonArticle extends CWMAddon
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'article',
+            'label'    => 'Article',
+            'patterns' => [
+                '/com_content/i',
+                '/option=com_content/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result = [];
+
+        // Build URL from legacy article_id param if available
+        $articleId = $params['article_id'] ?? '';
+
+        if (!empty($articleId) && $articleId !== '0' && $articleId !== '') {
+            $result['filename'] = 'index.php?option=com_content&view=article&id=' . (int) $articleId;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        $result['player']    = '100';
+        $result['mediacode'] = '';
+
+        return $result;
+    }
+
+    /**
      * Render general fieldset fields
      *
      * @param   object  $media_form  Media files form

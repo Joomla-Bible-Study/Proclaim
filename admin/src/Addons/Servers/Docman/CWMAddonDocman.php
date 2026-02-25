@@ -59,6 +59,53 @@ class CWMAddonDocman extends CWMAddon
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'docman',
+            'label'    => 'DOCman',
+            'patterns' => [
+                '/com_docman/i',
+                '/docman.*document/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result = [];
+
+        // Build URL from legacy docMan_id param if available
+        $docmanId = $params['docMan_id'] ?? '';
+
+        if (!empty($docmanId) && $docmanId !== '0') {
+            $result['filename'] = 'index.php?option=com_docman&view=document&slug=' . $docmanId;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        $result['player']    = '100';
+        $result['mediacode'] = '';
+
+        return $result;
+    }
+
+    /**
      * Render general fieldset fields
      *
      * @param   object  $media_form  Media files form

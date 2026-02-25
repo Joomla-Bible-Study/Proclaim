@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 /**
  * Test class for Cwmpodcast duration detection
  *
- * @since 10.2.0
+ * @since 10.1.0
  */
 class CwmpodcastDurationTest extends ProclaimTestCase
 {

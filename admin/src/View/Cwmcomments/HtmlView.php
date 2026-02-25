@@ -208,7 +208,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return  int  Number of pending comments
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function getPendingCount(): int
     {

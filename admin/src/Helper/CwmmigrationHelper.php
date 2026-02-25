@@ -987,7 +987,11 @@ class CwmmigrationHelper
         $existing = $params->get('location_group_mapping', '{}');
 
         if (\is_string($existing)) {
-            $existing = json_decode($existing, true) ?: [];
+            try {
+                $existing = json_decode($existing, true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                $existing = [];
+            }
         }
 
         // Merge without overwriting manually configured entries
@@ -1099,7 +1103,12 @@ class CwmmigrationHelper
                 continue;
             }
 
-            $rules    = json_decode($levels[$accessId]->rules, true);
+            try {
+                $rules = json_decode($levels[$accessId]->rules, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                continue;
+            }
+
             $groupIds = \is_array($rules) ? array_values(array_map('intval', $rules)) : [];
 
             if (!empty($groupIds)) {
@@ -1348,7 +1357,7 @@ class CwmmigrationHelper
                         $targetServerIds[$targetType] = $existing[$targetType][0]['id'];
                     } else {
                         // Create a new server
-                        $label = CwmserverMigrationHelper::TYPE_LABELS[$targetType] ?? $targetType;
+                        $label = CwmserverMigrationHelper::getTypeLabels()[$targetType] ?? $targetType;
 
                         try {
                             $newId = CwmserverMigrationHelper::createServerForType(

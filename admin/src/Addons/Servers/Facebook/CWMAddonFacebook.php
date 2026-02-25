@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Facebook;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\Registry\Registry;
 
@@ -56,6 +57,83 @@ class CWMAddonFacebook extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(facebook\.com|fb\.watch)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'facebook',
+            'label'    => 'Facebook',
+            'patterns' => [
+                '/facebook\.com/i',
+                '/fb\.watch/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result      = [];
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'facebook');
+
+        // If already an embed URL, extract the href param as the source URL
+        if (str_contains(strtolower($filename), 'facebook.com/plugins/video.php')) {
+            $embedParts = parse_url($filename);
+            $embedQuery = [];
+
+            if (!empty($embedParts['query'])) {
+                parse_str($embedParts['query'], $embedQuery);
+            }
+
+            $sourceUrl          = !empty($embedQuery['href']) ? urldecode($embedQuery['href']) : $filename;
+            $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
+                . urlencode($sourceUrl) . '&show_text=false';
+
+            $sourceQuery = $embedQuery;
+        } else {
+            // Convert any Facebook URL to embed format
+            $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
+                . urlencode($filename) . '&show_text=false';
+        }
+
+        // Map extracted URL params to embed option form fields
+        $fbParamMap = [
+            'show_text' => 'fb_show_text',
+            'muted'     => 'fb_muted',
+            'lazy'      => 'fb_lazy',
+            't'         => 'fb_t',
+        ];
+
+        foreach ($fbParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === 'true') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**

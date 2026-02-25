@@ -154,11 +154,15 @@ class CwmtemplatemigrationHelper
     /**
      * Constructor
      *
+     * @param   ?DatabaseInterface  $db  Optional database driver (resolved from container if null)
+     *
      * @since 10.1.0
      */
-    public function __construct()
+    public function __construct(?DatabaseInterface $db = null)
     {
-        $this->db = Factory::getContainer()->get(DatabaseInterface::class);
+        /** @var DatabaseInterface $resolved */
+        $resolved = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
+        $this->db = $resolved;
     }
 
     /**
@@ -168,7 +172,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  int  Number of templates updated
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function migrateFromVersion(string $fromVersion = '0.0.0'): int
     {
@@ -264,7 +268,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  int  Number of templates updated
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function migrateAll(): int
     {
@@ -279,7 +283,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  self
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function addMigration(string $version, array $params): self
     {
@@ -294,7 +298,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  array  Array of migrations to run
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function getMigrationsAfterVersion(string $fromVersion): array
     {
@@ -402,8 +406,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadObjectList();
+        $templates = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($templates as $template) {
             if (empty($template->params)) {
@@ -431,7 +434,7 @@ class CwmtemplatemigrationHelper
     }
 
     /**
-     * Convert legacy 0x color format to # hex format in all templates.
+     * Convert the legacy 0x color format to # hex format in all templates.
      *
      * @param   array  $colorFields  Array of color field names to convert
      *
@@ -447,8 +450,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadObjectList();
+        $templates = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($templates as $template) {
             $updated  = false;
@@ -506,8 +508,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params']))
             ->from($this->db->quoteName('#__bsms_admin'));
-        $this->db->setQuery($query);
-        $adminRecords = $this->db->loadObjectList();
+        $adminRecords = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($adminRecords as $admin) {
             $updated  = false;
@@ -539,8 +540,7 @@ class CwmtemplatemigrationHelper
                     ->update($this->db->quoteName('#__bsms_admin'))
                     ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($registry->toString()))
                     ->where($this->db->quoteName('id') . ' = ' . (int) $admin->id);
-                $this->db->setQuery($updateQuery);
-                $this->db->execute();
+                $this->db->setQuery($updateQuery)->execute();
                 $updatedCount++;
             }
         }
@@ -565,8 +565,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadObjectList();
+        $templates = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($templates as $template) {
             $updated  = false;
@@ -611,7 +610,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  int  Number of templates updated
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function applyParamsToTemplates(array $paramsToAdd): int
     {
@@ -621,8 +620,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadObjectList();
+        $templates = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($templates as $template) {
             $updated  = false;
@@ -686,8 +684,7 @@ class CwmtemplatemigrationHelper
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName(['id', 'params', 'title']))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadObjectList();
+        $templates = $this->db->setQuery($query)->loadObjectList();
 
         foreach ($templates as $template) {
             $updated  = false;
@@ -793,7 +790,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  bool  True on success
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function updateTemplateParams(int $templateId, string $params): bool
     {
@@ -801,9 +798,8 @@ class CwmtemplatemigrationHelper
             ->update($this->db->quoteName('#__bsms_templates'))
             ->set($this->db->quoteName('params') . ' = ' . $this->db->quote($params))
             ->where($this->db->quoteName('id') . ' = ' . $templateId);
-        $this->db->setQuery($query);
 
-        return $this->db->execute();
+        return $this->db->setQuery($query)->execute();
     }
 
     /**
@@ -811,7 +807,7 @@ class CwmtemplatemigrationHelper
      *
      * @return  array  Array of migrations
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function getMigrations(): array
     {
@@ -825,15 +821,14 @@ class CwmtemplatemigrationHelper
      *
      * @return  bool  True if parameter exists in at least one template
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function parameterExistsInTemplates(string $paramName): bool
     {
         $query = $this->db->getQuery(true)
             ->select($this->db->quoteName('params'))
             ->from($this->db->quoteName('#__bsms_templates'));
-        $this->db->setQuery($query);
-        $templates = $this->db->loadColumn();
+        $templates = $this->db->setQuery($query)->loadColumn();
 
         foreach ($templates as $params) {
             if (!empty($params)) {

@@ -28,7 +28,7 @@ use Joomla\CMS\Language\Text;
  * - extension: The component folder name to check (e.g., "com_virtuemart")
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class IntegrationToggleField extends RadioField
 {
@@ -36,7 +36,7 @@ class IntegrationToggleField extends RadioField
      * The field type.
      *
      * @var string
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected $type = 'IntegrationToggle';
 
@@ -44,7 +44,7 @@ class IntegrationToggleField extends RadioField
      * The extension component to check for.
      *
      * @var string
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected $extension = '';
 
@@ -57,7 +57,7 @@ class IntegrationToggleField extends RadioField
      *
      * @return  boolean  True on success.
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     #[\Override]
     public function setup(\SimpleXMLElement $element, $value, $group = null): bool
@@ -76,7 +76,7 @@ class IntegrationToggleField extends RadioField
      *
      * @return boolean True if installed, false otherwise.
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function isExtensionInstalled(): bool
     {
@@ -92,7 +92,7 @@ class IntegrationToggleField extends RadioField
      *
      * @return string The field input markup.
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     #[\Override]
     protected function getInput(): string
@@ -124,7 +124,7 @@ class IntegrationToggleField extends RadioField
      *
      * @return string The field label markup.
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     #[\Override]
     protected function getLabel(): string

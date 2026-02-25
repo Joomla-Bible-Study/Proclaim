@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -31,49 +32,110 @@ use Joomla\Registry\Registry;
 class CwmserverMigrationHelper
 {
     /**
-     * Supported target server types for migration.
+     * Get supported target server types for migration.
      *
-     * @var    string[]
-     * @since  10.1.0
+     * Built dynamically from the addon registry. Each addon declares its type
+     * via getMigrationPatterns().
+     *
+     * @return  string[]
+     *
+     * @since   10.1.0
      */
-    public const TARGET_TYPES = [
-        'youtube',
-        'vimeo',
-        'wistia',
-        'resi',
-        'soundcloud',
-        'dailymotion',
-        'rumble',
-        'facebook',
-        'embed',
-        'article',
-        'virtuemart',
-        'docman',
-        'local',
-    ];
+    public static function getTargetTypes(): array
+    {
+        $types = [];
+
+        foreach (self::getMigrationRegistry() as $entry) {
+            $type = $entry['meta']['type'] ?? null;
+
+            if ($type !== null && $type !== 'legacy') {
+                $types[] = $type;
+            }
+        }
+
+        return array_values(array_unique($types));
+    }
 
     /**
-     * Display-friendly labels per detected type.
+     * Get display-friendly labels per detected type.
      *
-     * @var    array<string, string>
+     * Built dynamically from the addon registry. Each addon declares its label
+     * via getMigrationPatterns().
+     *
+     * @return  array<string, string>
+     *
+     * @since   10.1.0
+     */
+    public static function getTypeLabels(): array
+    {
+        $labels = [];
+
+        foreach (self::getMigrationRegistry() as $entry) {
+            $type  = $entry['meta']['type'] ?? null;
+            $label = $entry['meta']['label'] ?? null;
+
+            if ($type !== null && $label !== null && $type !== 'legacy') {
+                $labels[$type] = $label;
+            }
+        }
+
+        // Always include 'unknown'
+        $labels['unknown'] = 'Unknown';
+
+        return $labels;
+    }
+
+    /**
+     * Cached addon migration metadata, built on first call to getMigrationRegistry().
+     *
+     * @var    array|null
      * @since  10.1.0
      */
-    public const TYPE_LABELS = [
-        'youtube'     => 'YouTube',
-        'vimeo'       => 'Vimeo',
-        'wistia'      => 'Wistia',
-        'resi'        => 'Resi',
-        'soundcloud'  => 'SoundCloud',
-        'dailymotion' => 'Dailymotion',
-        'rumble'      => 'Rumble',
-        'facebook'    => 'Facebook',
-        'embed'       => 'Embed / iFrame',
-        'article'     => 'Article',
-        'virtuemart'  => 'VirtueMart',
-        'docman'      => 'DOCman',
-        'local'       => 'Local',
-        'unknown'     => 'Unknown',
-    ];
+    private static ?array $migrationRegistry = null;
+
+    /**
+     * Build the migration pattern registry from all addon classes.
+     *
+     * Iterates all Servers/ subdirectories, instantiates each addon, and collects
+     * their getMigrationPatterns() metadata. Cached per-request.
+     *
+     * @return  array  Array of ['addon' => CWMAddon, 'meta' => array] entries
+     *
+     * @since   10.1.0
+     */
+    private static function getMigrationRegistry(): array
+    {
+        if (self::$migrationRegistry !== null) {
+            return self::$migrationRegistry;
+        }
+
+        self::$migrationRegistry = [];
+
+        $serverDir = BIBLESTUDY_PATH_ADMIN . '/src/Addons/Servers';
+
+        if (!is_dir($serverDir)) {
+            return self::$migrationRegistry;
+        }
+
+        foreach (scandir($serverDir) as $dir) {
+            if ($dir === '.' || $dir === '..' || !is_dir($serverDir . '/' . $dir)) {
+                continue;
+            }
+
+            try {
+                $addon = CWMAddon::getInstance(strtolower($dir));
+                $meta  = $addon->getMigrationPatterns();
+
+                if (!empty($meta) && !empty($meta['type'])) {
+                    self::$migrationRegistry[] = ['addon' => $addon, 'meta' => $meta];
+                }
+            } catch (\RuntimeException) {
+                continue;
+            }
+        }
+
+        return self::$migrationRegistry;
+    }
 
     /**
      * Scan all legacy servers and classify their media files by detected type.
@@ -138,7 +200,11 @@ class CwmserverMigrationHelper
                     continue;
                 }
 
-                $mediaParams = json_decode($media->params ?? '{}', true) ?: [];
+                try {
+                    $mediaParams = json_decode($media->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+                } catch (\JsonException) {
+                    continue;
+                }
                 $filename    = $mediaParams['filename'] ?? '';
                 $mediacode   = $mediaParams['mediacode'] ?? '';
                 $mimeType    = $mediaParams['mime_type'] ?? '';
@@ -161,30 +227,12 @@ class CwmserverMigrationHelper
     }
 
     /**
-     * AllVideos shortcode tag-to-type map.
-     *
-     * Maps AllVideos Reloaded shortcode names to migration target types.
-     *
-     * @var    array<string, string>
-     * @since  10.1.0
-     */
-    private const ALLVIDEOS_TAG_MAP = [
-        'youtube'     => 'youtube',
-        'youtubewide' => 'youtube',
-        'youtubehd'   => 'youtube',
-        'vimeo'       => 'vimeo',
-        'dailymotion' => 'dailymotion',
-        'soundcloud'  => 'soundcloud',
-        'rumble'      => 'rumble',
-    ];
-
-    /**
      * AllVideos shortcode tags that represent local media files.
      *
      * @var    string[]
      * @since  10.1.0
      */
-    private const ALLVIDEOS_LOCAL_TAGS = [
+    private const array ALLVIDEOS_LOCAL_TAGS = [
         'mp3', 'mp4', 'flv', 'wmv', 'wma', 'ogg', 'ogv', 'webm', 'wav',
         'divx', 'mov', 'swf', 'avi', 'aac',
     ];
@@ -192,10 +240,11 @@ class CwmserverMigrationHelper
     /**
      * Detect the actual content platform from media file data.
      *
-     * Priority: Legacy player overrides (4/5/6) > AllVideos shortcodes (player 2/3)
-     *           > YouTube > Vimeo > Wistia > Resi > SoundCloud > Dailymotion > Rumble
-     *           > VirtueMart > DOCman > Article > Embed (iframe) > Player 7 (audio)
-     *           > Local > Unknown
+     * Detection phases:
+     *  1. Legacy player/ID overrides (player 4/5/6 or docMan_id/article_id/virtueMart_id)
+     *  2. AllVideos shortcodes ({youtube}…{/youtube}, {mp3}…{/mp3}, etc.)
+     *  3. URL pattern matching via addon registry (YouTube, Vimeo, Wistia, etc.)
+     *  4. Heuristic fallbacks (iframe→embed, file extension→local, S3/CloudFront→local)
      *
      * @param   string  $filename    The filename/URL from media params
      * @param   string  $mediacode   The embed code from media params
@@ -203,8 +252,8 @@ class CwmserverMigrationHelper
      * @param   string  $player      The player setting
      * @param   array   $allParams   Full media params array for legacy ID field detection
      *
-     * @return  string  One of: youtube, vimeo, wistia, resi, soundcloud,
-     *                  dailymotion, rumble, virtuemart, docman, article, embed, local, unknown
+     * @return  string  A target type from the addon registry (e.g. youtube, vimeo, embed,
+     *                  local, direct) or 'unknown'
      *
      * @since   10.1.0
      */
@@ -215,26 +264,36 @@ class CwmserverMigrationHelper
         string $player,
         array $allParams = []
     ): string {
-        // Legacy player type overrides (set via docMan_id/article_id/virtueMart_id params)
-        if ($player === '4' || (!empty($allParams['docMan_id']) && $allParams['docMan_id'] !== '0' && $allParams['docMan_id'] !== '-1')) {
-            return 'docman';
+        // Phase 1: Legacy player type / ID overrides
+        $legacyIdFields = [
+            ['4', 'docMan_id',     'docman'],
+            ['5', 'article_id',    'article'],
+            ['6', 'virtueMart_id', 'virtuemart'],
+        ];
+
+        foreach ($legacyIdFields as [$legacyPlayer, $paramKey, $type]) {
+            if ($player === $legacyPlayer) {
+                return $type;
+            }
+
+            $val = $allParams[$paramKey] ?? '';
+
+            if ($val !== '' && $val !== '0' && $val !== '-1') {
+                return $type;
+            }
         }
 
-        if ($player === '5' || (!empty($allParams['article_id']) && $allParams['article_id'] !== '0' && $allParams['article_id'] !== '-1' && $allParams['article_id'] !== '')) {
-            return 'article';
-        }
+        // Load the addon registry at once for phases 2 and 3
+        $registry = self::getMigrationRegistry();
 
-        if ($player === '6' || (!empty($allParams['virtueMart_id']) && $allParams['virtueMart_id'] !== '0' && $allParams['virtueMart_id'] !== '-1')) {
-            return 'virtuemart';
-        }
-
-        // AllVideos shortcodes: {youtube}ID{/youtube}, {vimeo}ID{/vimeo}, etc.
-        // Used with player types 2/3 (AllVideos Reloaded popup/inline)
+        // Phase 2: AllVideos shortcodes ({tag}content{/tag})
         if (!empty($mediacode) && preg_match('/\{(\w+)\}/', $mediacode, $avMatch)) {
             $tag = strtolower($avMatch[1]);
 
-            if (isset(self::ALLVIDEOS_TAG_MAP[$tag])) {
-                return self::ALLVIDEOS_TAG_MAP[$tag];
+            foreach ($registry as $entry) {
+                if (\in_array($tag, $entry['meta']['allVideosTags'] ?? [], true)) {
+                    return $entry['meta']['type'];
+                }
             }
 
             if (\in_array($tag, self::ALLVIDEOS_LOCAL_TAGS, true)) {
@@ -242,124 +301,52 @@ class CwmserverMigrationHelper
             }
         }
 
-        // Player types 2/3 without recognized shortcode — check URL patterns first,
-        // then fall back to embed
-        $isAllVideosPlayer = ($player === '2' || $player === '3');
-
+        // Phase 3: URL pattern detection via addon registry
         $combined = $filename . ' ' . $mediacode;
 
-        // YouTube
-        if (preg_match('/youtu(be\.com|\.be)\//i', $combined)
-            || preg_match('/youtube\.com\/embed\//i', $combined)
-        ) {
-            return 'youtube';
+        foreach ($registry as $entry) {
+            foreach ($entry['meta']['patterns'] ?? [] as $pattern) {
+                if (preg_match($pattern, $combined)) {
+                    return $entry['meta']['type'];
+                }
+            }
         }
 
-        // Vimeo
-        if (preg_match('/vimeo\.com/i', $combined)
-            || preg_match('/player\.vimeo\.com/i', $combined)
-        ) {
-            return 'vimeo';
+        // Phase 4: Heuristic fallbacks
+
+        // Embed code detected by HTML tags or player type
+        if (!empty($mediacode)) {
+            if (preg_match('/<(iframe|embed|object)\b/i', $mediacode)
+                || $player === '8'
+                || $player === '2'
+                || $player === '3'
+            ) {
+                return 'embed';
+            }
         }
 
-        // Wistia
-        if (preg_match('/wistia\.(com|net)/i', $combined)
-            || preg_match('/fast\.wistia/i', $combined)
-        ) {
-            return 'wistia';
-        }
-
-        // Resi
-        if (preg_match('/rfrn\.(tv|stream)|resi\.(io|media)/i', $combined)
-            || preg_match('/control\.resi\.io/i', $combined)
-        ) {
-            return 'resi';
-        }
-
-        // SoundCloud
-        if (preg_match('/soundcloud\.com/i', $combined)
-            || preg_match('/w\.soundcloud\.com/i', $combined)
-        ) {
-            return 'soundcloud';
-        }
-
-        // Dailymotion
-        if (preg_match('/dailymotion\.com/i', $combined)
-            || preg_match('/dai\.ly/i', $combined)
-        ) {
-            return 'dailymotion';
-        }
-
-        // Rumble
-        if (preg_match('/rumble\.com/i', $combined)) {
-            return 'rumble';
-        }
-
-        // Facebook
-        if (preg_match('/facebook\.com/i', $combined)
-            || preg_match('/fb\.watch/i', $combined)
-        ) {
-            return 'facebook';
-        }
-
-        // VirtueMart (Joomla e-commerce digital downloads)
-        if (preg_match('/com_virtuemart/i', $combined)
-            || preg_match('/virtuemart.*download/i', $combined)
-        ) {
-            return 'virtuemart';
-        }
-
-        // DOCman (Joomlatools document management)
-        if (preg_match('/com_docman/i', $combined)
-            || preg_match('/docman.*document/i', $combined)
-        ) {
-            return 'docman';
-        }
-
-        // Joomla core articles (com_content)
-        if (preg_match('/com_content/i', $combined)
-            || preg_match('/option=com_content/i', $combined)
-        ) {
-            return 'article';
-        }
-
-        // Generic embed code (has iframe/embed/object tag in mediacode)
-        if (!empty($mediacode) && preg_match('/<(iframe|embed|object)\b/i', $mediacode)) {
-            return 'embed';
-        }
-
-        // Player type 8 = embed code (even without iframe tag in mediacode)
-        if ($player === '8' && !empty($mediacode)) {
-            return 'embed';
-        }
-
-        // AllVideos player types 2/3 with unrecognized content → embed
-        if ($isAllVideosPlayer && !empty($mediacode)) {
-            return 'embed';
-        }
-
-        // Player type 7 = legacy simple audio player → local
+        // Player 7 = legacy simple audio player
         if ($player === '7') {
             return 'local';
         }
 
-        // Local file detection: relative paths, no known platform domain
+        // Local file detection
         if (!empty($filename)) {
-            // Has a file extension typical of audio/video/document
             if (preg_match('/\.(mp3|mp4|m4a|m4v|ogg|ogv|webm|wav|flac|aac|pdf|doc|docx|ppt|pptx|zip)$/i', $filename)) {
                 return 'local';
             }
 
-            // Relative path (no protocol, starts with / or doesn't have ://)
             if (!preg_match('/^(https?:)?\/\//i', $filename) && !str_contains($filename, '://')) {
                 return 'local';
             }
 
-            // S3/CloudFront URLs treated as local (direct file hosting)
-            if (preg_match('/\.s3[\.-].*?amazonaws\.com/i', $filename)
-                || preg_match('/cloudfront\.net/i', $filename)
-            ) {
+            if (preg_match('/\.s3[\.-].*?amazonaws\.com|cloudfront\.net/i', $filename)) {
                 return 'local';
+            }
+
+            // Player 0 with an external URL and no recognized platform
+            if ($player === '0' && preg_match('/^(https?:)?\/\//i', $filename)) {
+                return 'direct';
             }
         }
 
@@ -477,7 +464,12 @@ class CwmserverMigrationHelper
         $ids = [];
 
         foreach ($rows as $row) {
-            $params    = json_decode($row->params ?? '{}', true) ?: [];
+            try {
+                $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                continue;
+            }
+
             $filename  = $params['filename'] ?? '';
             $mediacode = $params['mediacode'] ?? '';
             $mimeType  = $params['mime_type'] ?? '';
@@ -535,7 +527,7 @@ class CwmserverMigrationHelper
                     continue;
                 }
 
-                $params        = json_decode($row->params ?? '{}', true) ?: [];
+                $params        = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
                 $newParams     = self::transformParams($params, $targetType, $legacyServerParams);
                 $newParamsJson = json_encode($newParams, JSON_THROW_ON_ERROR);
 
@@ -615,388 +607,19 @@ class CwmserverMigrationHelper
         $avContent = self::extractAllVideosContent($mediacode);
         $combined  = $filename . ' ' . $mediacode;
 
-        switch ($targetType) {
-            case 'youtube':
-                $videoId     = self::extractYoutubeId($combined);
-                $sourceQuery = self::extractSourceUrlParams($combined, 'youtube');
-
-                // Fall back to AllVideos bare ID: {youtube}dQw4w9WgXcQ{/youtube}
-                if ($videoId === null && !empty($avContent) && preg_match('/^[a-zA-Z0-9_-]+$/', $avContent)) {
-                    $videoId = $avContent;
-                }
-
-                if ($videoId) {
-                    // Clean embed URL — form fields handle params now
-                    $result['filename'] = '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1';
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                // Map extracted URL params → embed option form fields
-                $ytParamMap = [
-                    'mute'           => 'yt_mute',
-                    'start'          => 'yt_start',
-                    'end'            => 'yt_end',
-                    'loop'           => 'yt_loop',
-                    'controls'       => 'yt_controls',
-                    'rel'            => 'yt_rel',
-                    'cc_load_policy' => 'yt_cc',
-                    'playsinline'    => 'yt_playsinline',
-                ];
-
-                foreach ($ytParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                // Map autoplay → autostart (existing field)
-                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'vimeo':
-                $videoId     = self::extractVimeoId($combined);
-                $sourceQuery = self::extractSourceUrlParams($combined, 'vimeo');
-
-                // Fall back to AllVideos bare ID: {vimeo}123456789{/vimeo}
-                if ($videoId === null && !empty($avContent) && preg_match('/^\d+$/', $avContent)) {
-                    $videoId = $avContent;
-                }
-
-                if ($videoId) {
-                    // Clean embed URL — form fields handle params now
-                    $result['filename'] = '//player.vimeo.com/video/' . $videoId;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                // Map extracted URL params → embed option form fields
-                $vmParamMap = [
-                    'muted'      => 'vm_muted',
-                    'loop'       => 'vm_loop',
-                    'controls'   => 'vm_controls',
-                    'color'      => 'vm_color',
-                    'title'      => 'vm_title',
-                    'byline'     => 'vm_byline',
-                    'portrait'   => 'vm_portrait',
-                    'dnt'        => 'vm_dnt',
-                    'background' => 'vm_background',
-                    'speed'      => 'vm_speed',
-                ];
-
-                foreach ($vmParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'wistia':
-                $hash        = self::extractWistiaHash($combined);
-                $sourceQuery = self::extractSourceUrlParams($combined, 'wistia');
-
-                if ($hash) {
-                    // Clean embed URL — form fields handle params now
-                    $result['filename'] = 'https://fast.wistia.net/embed/iframe/' . $hash;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                // Map extracted URL params → embed option form fields
-                $wsParamMap = [
-                    'muted'                 => 'ws_muted',
-                    'playerColor'           => 'ws_player_color',
-                    'controlsVisibleOnLoad' => 'ws_controls_visible',
-                    'playbar'               => 'ws_playbar',
-                    'endVideoBehavior'      => 'ws_end_behavior',
-                    'doNotTrack'            => 'ws_dnt',
-                    'time'                  => 'ws_time',
-                    'resumable'             => 'ws_resumable',
-                    'playbackRateControl'   => 'ws_speed',
-                ];
-
-                foreach ($wsParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['autoPlay']) && $sourceQuery['autoPlay'] === 'true') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'resi':
-                $result['filename']  = $filename;
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-
-                // Extract query params from Resi embed URL if present
-                $resiParts = parse_url($filename);
-
-                if (!empty($resiParts['query'])) {
-                    $resiQuery  = [];
-                    parse_str($resiParts['query'], $resiQuery);
-
-                    $riParamMap = [
-                        'controls'   => 'ri_controls',
-                        'loop'       => 'ri_loop',
-                        'startPos'   => 'ri_start_pos',
-                        'background' => 'ri_background',
-                    ];
-
-                    foreach ($riParamMap as $urlParam => $formField) {
-                        if (isset($resiQuery[$urlParam]) && $resiQuery[$urlParam] !== '') {
-                            $result[$formField] = $resiQuery[$urlParam];
-                        }
-                    }
-
-                    if (isset($resiQuery['autoplay']) && $resiQuery['autoplay'] === '1') {
-                        $result['autostart'] = 'true';
-                    }
-                }
-
-                break;
-
-            case 'soundcloud':
-                $sourceQuery         = self::extractSourceUrlParams($combined, 'soundcloud');
-                $result['filename']  = $filename;
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-
-                // Map extracted URL params → embed option form fields
-                $scParamMap = [
-                    'color'         => 'sc_color',
-                    'hide_related'  => 'sc_hide_related',
-                    'show_comments' => 'sc_show_comments',
-                    'show_user'     => 'sc_show_user',
-                    'visual'        => 'sc_visual',
-                ];
-
-                foreach ($scParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['auto_play']) && $sourceQuery['auto_play'] === 'true') {
-                    $result['autostart'] = 'true';
-                }
-
-                // If already an embed player URL with params, preserve it
-                if (str_contains(strtolower($filename), 'w.soundcloud.com/player')) {
-                    break;
-                }
-
-                // If iframe in mediacode had an embed URL, extract and use it
-                if (!empty($mediacode) && preg_match('/src=["\']([^"\']*w\.soundcloud\.com\/player[^"\']*)["\']/', $mediacode, $scMatch)) {
-                    $result['filename'] = $scMatch[1];
-
-                    break;
-                }
-
-                // Convert track URL to embed, using defaults
-                if (str_contains(strtolower($filename), 'soundcloud.com')) {
-                    $result['filename'] = '//w.soundcloud.com/player/?url=' . urlencode($filename)
-                        . '&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
-                }
-
-                break;
-
-            case 'dailymotion':
-                $videoId     = self::extractDailymotionId($combined);
-                $sourceQuery = self::extractSourceUrlParams($combined, 'dailymotion');
-
-                // Fall back to AllVideos bare ID: {dailymotion}x7tgad0{/dailymotion}
-                if ($videoId === null && !empty($avContent) && preg_match('/^[a-z0-9]+$/i', $avContent)) {
-                    $videoId = $avContent;
-                }
-
-                if ($videoId) {
-                    // Clean embed URL — form fields handle params now
-                    $result['filename'] = '//www.dailymotion.com/embed/video/' . $videoId;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                // Map extracted URL params → embed option form fields
-                $dmParamMap = [
-                    'mute'      => 'dm_mute',
-                    'startTime' => 'dm_start',
-                    'loop'      => 'dm_loop',
-                    'scaleMode' => 'dm_scale',
-                ];
-
-                foreach ($dmParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'rumble':
-                $embedId     = self::extractRumbleId($combined);
-                $sourceQuery = self::extractSourceUrlParams($combined, 'rumble');
-
-                // Fall back to AllVideos bare ID: {rumble}v1abc23{/rumble}
-                if ($embedId === null && !empty($avContent) && preg_match('/^v[a-z0-9]+$/i', $avContent)) {
-                    $embedId = $avContent;
-                }
-
-                if ($embedId) {
-                    // Clean embed URL — form fields handle params now
-                    $result['filename'] = '//rumble.com/embed/' . $embedId . '/';
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                // Map extracted URL params → embed option form fields
-                $rbParamMap = [
-                    'rel' => 'rb_rel',
-                    'pub' => 'rb_pub',
-                ];
-
-                foreach ($rbParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '2') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'facebook':
-                $sourceQuery = self::extractSourceUrlParams($combined, 'facebook');
-
-                // If already an embed URL, extract the href param as the source URL
-                if (str_contains(strtolower($filename), 'facebook.com/plugins/video.php')) {
-                    $embedParts = parse_url($filename);
-                    $embedQuery = [];
-
-                    if (!empty($embedParts['query'])) {
-                        parse_str($embedParts['query'], $embedQuery);
-                    }
-
-                    // Use href param as the clean source, or keep the embed URL
-                    $sourceUrl          = !empty($embedQuery['href']) ? urldecode($embedQuery['href']) : $filename;
-                    $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
-                        . urlencode($sourceUrl) . '&show_text=false';
-
-                    // Map embed params to form fields
-                    $sourceQuery = $embedQuery;
-                } else {
-                    // Convert any Facebook URL to embed format
-                    $result['filename'] = 'https://www.facebook.com/plugins/video.php?href='
-                        . urlencode($filename) . '&show_text=false';
-                }
-
-                // Map extracted URL params → embed option form fields
-                $fbParamMap = [
-                    'show_text' => 'fb_show_text',
-                    'muted'     => 'fb_muted',
-                    'lazy'      => 'fb_lazy',
-                    't'         => 'fb_t',
-                ];
-
-                foreach ($fbParamMap as $urlParam => $formField) {
-                    if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
-                        $result[$formField] = $sourceQuery[$urlParam];
-                    }
-                }
-
-                if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === 'true') {
-                    $result['autostart'] = 'true';
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'embed':
-                $result['filename']  = $filename;
-                $result['player']    = '8';
-                $result['mediacode'] = $mediacode;
-                break;
-
-            case 'article':
-                // Build URL from legacy article_id param if available
-                $articleId = $params['article_id'] ?? '';
-
-                if (!empty($articleId) && $articleId !== '0' && $articleId !== '') {
-                    $result['filename'] = 'index.php?option=com_content&view=article&id=' . (int) $articleId;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                $result['player']    = '100';
-                $result['mediacode'] = '';
-                break;
-
-            case 'virtuemart':
-                // Build URL from legacy virtueMart_id param if available
-                $vmId = $params['virtueMart_id'] ?? '';
-
-                if (!empty($vmId) && $vmId !== '0') {
-                    $result['filename'] = 'index.php?option=com_virtuemart&view=productdetails&virtuemart_product_id=' . (int) $vmId;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                $result['player']    = '1';
-                $result['mediacode'] = '';
-                break;
-
-            case 'docman':
-                // Build URL from legacy docMan_id param if available
-                $docmanId = $params['docMan_id'] ?? '';
-
-                if (!empty($docmanId) && $docmanId !== '0') {
-                    $result['filename'] = 'index.php?option=com_docman&view=document&slug=' . $docmanId;
-                } else {
-                    $result['filename'] = $filename;
-                }
-
-                $result['player']    = '100';
-                $result['mediacode'] = '';
-                break;
-
-            case 'local':
-            default:
-                // Strip protocol+domain using legacy server path/protocol
-                $result['filename']  = self::stripLegacyPrefix($filename, $legacyServerParams);
-                $result['player']    = $params['player'] ?? '';
-                $result['mediacode'] = $mediacode;
-                break;
-        }
-
-        return $result;
+        // Delegate to addon's transformMigrationParams()
+        $addon       = CWMAddon::getInstance($targetType);
+        $addonResult = $addon->transformMigrationParams(
+            $params,
+            $mediacode,
+            $filename,
+            $avContent,
+            $combined,
+            $legacyServerParams
+        );
+
+        // Merge addon result into preserved display params (addon values override)
+        return array_merge($result, $addonResult);
     }
 
     /**
@@ -1050,134 +673,6 @@ class CwmserverMigrationHelper
         }
 
         return ['unpublished' => $unpublished, 'skipped' => $skipped];
-    }
-
-    /**
-     * Extract YouTube video ID from a string (URL or embed).
-     *
-     * @param   string  $text  Text containing a YouTube URL
-     *
-     * @return  string|null  Video ID or null
-     *
-     * @since   10.1.0
-     */
-    public static function extractYoutubeId(string $text): ?string
-    {
-        $patterns = [
-            '/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/',
-            '/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
-            '/youtu\.be\/([a-zA-Z0-9_-]+)/',
-            '/youtube\.com\/live\/([a-zA-Z0-9_-]+)/',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $text, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Extract Vimeo video ID from a string (URL or embed).
-     *
-     * @param   string  $text  Text containing a Vimeo URL
-     *
-     * @return  string|null  Numeric video ID or null
-     *
-     * @since   10.1.0
-     */
-    public static function extractVimeoId(string $text): ?string
-    {
-        $patterns = [
-            '/vimeo\.com\/(\d+)/',
-            '/player\.vimeo\.com\/video\/(\d+)/',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $text, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Extract Wistia media hash from a string.
-     *
-     * @param   string  $text  Text containing a Wistia URL
-     *
-     * @return  string|null  Media hash or null
-     *
-     * @since   10.1.0
-     */
-    public static function extractWistiaHash(string $text): ?string
-    {
-        $patterns = [
-            '/wistia\.com\/medias\/([a-z0-9]+)/i',
-            '/fast\.wistia\.net\/embed\/iframe\/([a-z0-9]+)/i',
-            '/wistia\.net\/medias\/([a-z0-9]+)/i',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $text, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Extract Dailymotion video ID from a string.
-     *
-     * @param   string  $text  Text containing a Dailymotion URL
-     *
-     * @return  string|null  Video ID or null
-     *
-     * @since   10.1.0
-     */
-    public static function extractDailymotionId(string $text): ?string
-    {
-        $patterns = [
-            '/dailymotion\.com\/video\/([a-z0-9]+)/i',
-            '/dailymotion\.com\/embed\/video\/([a-z0-9]+)/i',
-            '/dai\.ly\/([a-z0-9]+)/i',
-        ];
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $text, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Extract Rumble embed ID from a string.
-     *
-     * @param   string  $text  Text containing a Rumble URL
-     *
-     * @return  string|null  Embed ID or null
-     *
-     * @since   10.1.0
-     */
-    public static function extractRumbleId(string $text): ?string
-    {
-        // Rumble embed URLs: rumble.com/embed/v1abc23/
-        if (preg_match('/rumble\.com\/embed\/(v[a-z0-9]+)/i', $text, $matches)) {
-            return $matches[1];
-        }
-
-        // Standard URLs: rumble.com/v1abc23-title.html
-        if (preg_match('/rumble\.com\/(v[a-z0-9]+)/i', $text, $matches)) {
-            return $matches[1];
-        }
-
-        return null;
     }
 
     /**
@@ -1271,7 +766,7 @@ class CwmserverMigrationHelper
      *
      * @since   10.1.0
      */
-    private static function stripLegacyPrefix(string $filename, array $legacyServerParams): string
+    public static function stripLegacyPrefix(string $filename, array $legacyServerParams): string
     {
         $path     = $legacyServerParams['path'] ?? '';
         $protocol = $legacyServerParams['protocol'] ?? '';

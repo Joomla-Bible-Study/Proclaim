@@ -210,7 +210,7 @@ class CwmtemplateController extends FormController
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     public function loadLayoutEditor(): void
     {

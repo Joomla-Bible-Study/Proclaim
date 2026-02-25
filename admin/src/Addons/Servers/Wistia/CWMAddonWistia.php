@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -63,6 +64,76 @@ class CWMAddonWistia extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(wistia\.com|wistia\.net)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'wistia',
+            'label'    => 'Wistia',
+            'patterns' => [
+                '/wistia\.(com|net)/i',
+                '/fast\.wistia/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result = [];
+        $hash   = $this->extractWistiaMediaHash($combined);
+
+        if ($hash) {
+            $result['filename'] = 'https://fast.wistia.net/embed/iframe/' . $hash;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        // Map extracted URL params to embed option form fields
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'wistia');
+
+        $wsParamMap = [
+            'muted'                 => 'ws_muted',
+            'playerColor'           => 'ws_player_color',
+            'controlsVisibleOnLoad' => 'ws_controls_visible',
+            'playbar'               => 'ws_playbar',
+            'endVideoBehavior'      => 'ws_end_behavior',
+            'doNotTrack'            => 'ws_dnt',
+            'time'                  => 'ws_time',
+            'resumable'             => 'ws_resumable',
+            'playbackRateControl'   => 'ws_speed',
+        ];
+
+        foreach ($wsParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoPlay']) && $sourceQuery['autoPlay'] === 'true') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**
@@ -187,7 +258,13 @@ class CWMAddonWistia extends CWMAddon
      *
      * @since   10.1.0
      */
-    public function extractWistiaMediaHash(string $url): ?string
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public static function extractMediaId(string $text): ?string
     {
         $patterns = [
             '/wistia\.com\/medias\/([a-z0-9]+)/i',
@@ -196,12 +273,20 @@ class CWMAddonWistia extends CWMAddon
         ];
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url, $matches)) {
+            if (preg_match($pattern, $text, $matches)) {
                 return $matches[1];
             }
         }
 
         return null;
+    }
+
+    /**
+     * @deprecated Use extractMediaId() instead
+     */
+    public function extractWistiaMediaHash(string $url): ?string
+    {
+        return static::extractMediaId($url);
     }
 
     /**
@@ -309,7 +394,11 @@ class CWMAddonWistia extends CWMAddon
             return ['success' => false, 'error' => 'Media file not found'];
         }
 
-        $params   = json_decode($row->params ?? '{}', true) ?: [];
+        try {
+            $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return ['success' => false, 'error' => 'Invalid media params JSON'];
+        }
         $hashedId = trim($params['filename'] ?? '');
 
         if (empty($hashedId)) {

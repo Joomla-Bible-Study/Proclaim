@@ -50,7 +50,7 @@ class Cwmpodcast
 
     /**
      * @var Cwmlisting|null
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private ?Cwmlisting $listing = null;
 
@@ -59,7 +59,7 @@ class Cwmpodcast
      *
      * @return Cwmlisting
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     private function getListing(): Cwmlisting
     {
@@ -504,7 +504,7 @@ class Cwmpodcast
      *
      * @return string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function sanitizeHtmlForPodcast(?string $string, int $maxLength = 4000): string
     {
@@ -569,7 +569,7 @@ class Cwmpodcast
      *
      * @return string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function closeUnclosedTags(string $html): string
     {
@@ -653,7 +653,7 @@ class Cwmpodcast
      * @return array  Array of validation results per podcast
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function validateAllPodcasts(): array
     {
@@ -683,7 +683,7 @@ class Cwmpodcast
      * @return array  Validation result with 'valid', 'errors', 'warnings' keys
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function validatePodcast(object $podcast): array
     {
@@ -791,7 +791,7 @@ class Cwmpodcast
      *
      * @return array  Validation result
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function validatePodcastImage(string $imagePath): array
     {
@@ -848,7 +848,7 @@ class Cwmpodcast
      *
      * @return array  Validation result with warnings
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function validatePodcastMedia(int $podcastId): array
     {
@@ -907,7 +907,7 @@ class Cwmpodcast
      *
      * @return array  Validation result
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function validatePodcastXml(string $filePath): array
     {
@@ -1003,7 +1003,7 @@ class Cwmpodcast
      *
      * @return string  HTML formatted report
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getValidationReport(array $validationResults): string
     {
@@ -1064,7 +1064,7 @@ class Cwmpodcast
      * @return array  Results with 'fixed', 'failed', 'skipped' counts and details
      *
      * @throws \Exception
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixMediaDurations(?int $podcastId = null): array
     {
@@ -1341,7 +1341,7 @@ class Cwmpodcast
      *
      * @return array  Array of media file IDs and titles
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMediaFilesNeedingDuration(?int $podcastId = null): array
     {
@@ -1391,7 +1391,7 @@ class Cwmpodcast
      *
      * @return array  Result with 'status', 'message', 'duration'
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixSingleMediaDuration(int $mediaId): array
     {
@@ -1534,7 +1534,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function processRemoteFile(int $mediaId, Registry $params, string $title, string $path, object $db): array
     {
@@ -1580,7 +1580,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function saveDuration(int $mediaId, Registry $params, string $title, int $durationSeconds, object $db, bool $isRemote): array
     {
@@ -1624,7 +1624,7 @@ class Cwmpodcast
      *
      * @return array  Array of files needing metadata fix with id, title, and missing fields
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMediaFilesNeedingMetadata(?int $podcastId = null): array
     {
@@ -1695,7 +1695,7 @@ class Cwmpodcast
      *
      * @return array  Result with 'status', 'message', 'fixed' array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function fixSingleMediaMetadata(int $mediaId): array
     {
@@ -1818,7 +1818,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function fixYouTubeMetadata(int $mediaId, Registry $params, string $title, bool $needsDuration, object $db): array
     {
@@ -1887,7 +1887,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function fixRemoteMetadata(int $mediaId, Registry $params, string $title, string $path, bool $needsSize, bool $needsMimeType, bool $needsDuration, object $db): array
     {
@@ -1964,7 +1964,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function fixLocalMetadata(int $mediaId, Registry $params, string $title, string $localPath, bool $needsSize, bool $needsMimeType, bool $needsDuration, object $db): array
     {
@@ -2023,7 +2023,7 @@ class Cwmpodcast
      *
      * @return array  Result array
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function saveMetadata(int $mediaId, Registry $params, string $title, array $fixed, object $db, bool $isRemote): array
     {
@@ -2079,7 +2079,7 @@ class Cwmpodcast
      *
      * @return array|null  Array of headers or null on failure
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getRemoteFileHeaders(string $url): ?array
     {
@@ -2121,7 +2121,7 @@ class Cwmpodcast
      *
      * @return string|null  MIME type or null if unable to detect
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function detectMimeType(string $filepath): ?string
     {
@@ -2174,7 +2174,7 @@ class Cwmpodcast
      *
      * @return string  Formatted size
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function formatFileSize(int $bytes): string
     {
@@ -2229,7 +2229,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds, or 0 if unable to determine
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMediaDuration(string $filename): int
     {
@@ -2291,7 +2291,7 @@ class Cwmpodcast
      *
      * @return array  Array with method names as keys and availability as boolean values
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getAvailableDurationMethods(): array
     {
@@ -2320,7 +2320,7 @@ class Cwmpodcast
      *
      * @return bool
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function checkGetID3Available(): bool
     {
@@ -2344,7 +2344,7 @@ class Cwmpodcast
      *
      * @return array  Array of supported extensions
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getSupportedDurationFormats(): array
     {
@@ -2368,7 +2368,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds or 0 if FFprobe not available
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getDurationWithFFprobe(string $filename): int
     {
@@ -2399,7 +2399,7 @@ class Cwmpodcast
      *
      * @return string|null  Path to ffprobe or null if not found
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function findFFprobe(): ?string
     {
@@ -2443,7 +2443,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds or 0 if unable to read
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getM4aDuration(string $filename): int
     {
@@ -2525,7 +2525,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds or 0 if unable to read
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getWavDuration(string $filename): int
     {
@@ -2591,7 +2591,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds or 0 if unable to read
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getOggDuration(string $filename): int
     {
@@ -2665,7 +2665,7 @@ class Cwmpodcast
      *
      * @return int  Duration in seconds or 0 if getID3 not available
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected function getDurationWithGetID3(string $filename): int
     {
@@ -2903,7 +2903,7 @@ class Cwmpodcast
      *
      * @return  bool  True if this is a YouTube URL
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function isYouTubeUrl(string $url): bool
     {
@@ -2931,7 +2931,7 @@ class Cwmpodcast
      *
      * @return  string|null  Video ID or null if not found
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function extractYouTubeVideoId(string $url): ?string
     {
@@ -2968,7 +2968,7 @@ class Cwmpodcast
      *
      * @return  string|null  API key or null if not found
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getYouTubeApiKey(): ?string
     {
@@ -3004,7 +3004,7 @@ class Cwmpodcast
      *
      * @return  int  Duration in seconds, or 0 if failed
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getYouTubeDuration(string $videoId, string $apiKey): int
     {
@@ -3028,7 +3028,11 @@ class Cwmpodcast
             return 0;
         }
 
-        $data = json_decode($response, true);
+        try {
+            $data = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return 0;
+        }
 
         if (!isset($data['items'][0]['contentDetails']['duration'])) {
             return 0;
@@ -3047,7 +3051,7 @@ class Cwmpodcast
      *
      * @return  int  Duration in seconds
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function parseIso8601Duration(string $duration): int
     {

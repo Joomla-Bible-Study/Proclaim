@@ -19,6 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Google;
@@ -134,6 +135,81 @@ class CWMAddonYoutube extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(youtube\.com|youtu\.be)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'youtube',
+            'label'    => 'YouTube',
+            'patterns' => [
+                '/youtu(be\.com|\.be)\//i',
+                '/youtube\.com\/embed\//i',
+            ],
+            'allVideosTags' => ['youtube', 'youtubewide', 'youtubehd'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result  = [];
+        $videoId = self::extractYoutubeVideoId($combined);
+
+        // Fall back to AllVideos bare ID: {youtube}dQw4w9WgXcQ{/youtube}
+        if ($videoId === null && !empty($avContent) && preg_match('/^[a-zA-Z0-9_-]+$/', $avContent)) {
+            $videoId = $avContent;
+        }
+
+        if ($videoId) {
+            $result['filename'] = '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1';
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        // Map extracted URL params to embed option form fields
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'youtube');
+
+        $ytParamMap = [
+            'mute'           => 'yt_mute',
+            'start'          => 'yt_start',
+            'end'            => 'yt_end',
+            'loop'           => 'yt_loop',
+            'controls'       => 'yt_controls',
+            'rel'            => 'yt_rel',
+            'cc_load_policy' => 'yt_cc',
+            'playsinline'    => 'yt_playsinline',
+        ];
+
+        foreach ($ytParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**
@@ -430,7 +506,13 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @since   10.1.0
      */
-    private function extractYoutubeVideoId(string $url): ?string
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public static function extractMediaId(string $text): ?string
     {
         $patterns = [
             '/(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/',
@@ -440,17 +522,25 @@ class CWMAddonYoutube extends CWMAddon
         ];
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url, $matches)) {
+            if (preg_match($pattern, $text, $matches)) {
                 return $matches[1];
             }
         }
 
         // If it looks like a bare video ID (11 chars, alphanumeric + - _)
-        if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
-            return $url;
+        if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $text)) {
+            return $text;
         }
 
         return null;
+    }
+
+    /**
+     * @deprecated Use extractMediaId() instead
+     */
+    public static function extractYoutubeVideoId(string $url): ?string
+    {
+        return static::extractMediaId($url);
     }
 
     /**

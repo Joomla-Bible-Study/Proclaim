@@ -26,7 +26,7 @@ if (!\defined('CWM_LOADED')) {
  *
  * @return  bool  Always true to show the message until dismissed
  *
- * @since   10.2.0
+ * @since 10.1.0
  */
 function admin_postinstall_gettingstarted_condition(): bool
 {

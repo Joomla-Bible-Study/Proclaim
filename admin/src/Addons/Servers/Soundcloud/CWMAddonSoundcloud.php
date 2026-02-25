@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Soundcloud;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\Registry\Registry;
 
@@ -56,6 +57,84 @@ class CWMAddonSoundcloud extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(soundcloud\.com)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'soundcloud',
+            'label'    => 'SoundCloud',
+            'patterns' => [
+                '/soundcloud\.com/i',
+                '/w\.soundcloud\.com/i',
+            ],
+            'allVideosTags' => ['soundcloud'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result      = [];
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'soundcloud');
+
+        $result['filename']  = $filename;
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        // Map extracted URL params to embed option form fields
+        $scParamMap = [
+            'color'         => 'sc_color',
+            'hide_related'  => 'sc_hide_related',
+            'show_comments' => 'sc_show_comments',
+            'show_user'     => 'sc_show_user',
+            'visual'        => 'sc_visual',
+        ];
+
+        foreach ($scParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['auto_play']) && $sourceQuery['auto_play'] === 'true') {
+            $result['autostart'] = 'true';
+        }
+
+        // If already an embed player URL with params, preserve it
+        if (str_contains(strtolower($filename), 'w.soundcloud.com/player')) {
+            return $result;
+        }
+
+        // If iframe in mediacode had an embed URL, extract and use it
+        if (!empty($mediacode) && preg_match('/src=["\']([^"\']*w\.soundcloud\.com\/player[^"\']*)["\']/', $mediacode, $scMatch)) {
+            $result['filename'] = $scMatch[1];
+
+            return $result;
+        }
+
+        // Convert track URL to embed, using defaults
+        if (str_contains(strtolower($filename), 'soundcloud.com')) {
+            $result['filename'] = '//w.soundcloud.com/player/?url=' . urlencode($filename)
+                . '&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false';
+        }
+
+        return $result;
     }
 
     /**

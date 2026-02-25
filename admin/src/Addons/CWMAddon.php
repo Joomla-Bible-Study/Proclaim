@@ -896,6 +896,85 @@ abstract class CWMAddon
     }
 
     /**
+     * Migration detection metadata for this addon.
+     *
+     * Override in child classes to declare the URL patterns, AllVideos tags,
+     * and display label used by the server migration helper to classify
+     * legacy media files.
+     *
+     * Return format:
+     * [
+     *     'type'           => 'youtube',
+     *     'label'          => 'YouTube',
+     *     'patterns'       => ['/youtu(be\.com|\.be)\//i'],
+     *     'allVideosTags'  => ['youtube', 'youtubewide'],
+     * ]
+     *
+     * @return  array  Migration metadata, or empty array if this addon
+     *                 does not participate in migration detection.
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [];
+    }
+
+    /**
+     * Transform legacy media params into this addon's format during migration.
+     *
+     * Receives the full legacy params array and the legacy server params.
+     * Returns an array with addon-specific keys (filename, player, mediacode,
+     * plus any embed option fields).
+     *
+     * The caller (CwmserverMigrationHelper::transformParams) handles
+     * preserving shared display params and merging them with this result.
+     *
+     * @param   array  $params              Legacy media file params
+     * @param   string $mediacode           The raw mediacode value
+     * @param   string $filename            The raw filename value
+     * @param   string $avContent           Extracted AllVideos content (bare ID between tags)
+     * @param   string $combined            Combined "$filename $mediacode" for pattern matching
+     * @param   array  $legacyServerParams  Legacy server params (path, protocol)
+     *
+     * @return  array  Transformed params for this addon
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        // Default: preserve filename and player settings (local/passthrough behavior)
+        return [
+            'filename'  => $filename,
+            'player'    => $params['player'] ?? '',
+            'mediacode' => $mediacode,
+        ];
+    }
+
+    /**
+     * Extract the platform-specific media ID from a URL or embed string.
+     *
+     * Each addon overrides this to extract its platform's ID
+     * (e.g., YouTube video ID, Vimeo numeric ID, Wistia hash).
+     *
+     * @param   string  $text  URL, embed code, or combined text to search
+     *
+     * @return  string|null  The extracted ID, or null if not found
+     *
+     * @since   10.1.0
+     */
+    public static function extractMediaId(string $text): ?string
+    {
+        return null;
+    }
+
+    /**
      * Build the complete embed URL with all form field params applied.
      * Override in each platform addon.
      *

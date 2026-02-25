@@ -104,7 +104,11 @@ class BibleImporter
                 return -1;
             }
 
-            $books = json_decode($response->body, true);
+            try {
+                $books = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $books = null;
+            }
 
             if (!\is_array($books) || empty($books)) {
                 Log::add('BibleImporter: Invalid or empty book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
@@ -142,7 +146,11 @@ class BibleImporter
                     continue;
                 }
 
-                $bookData = json_decode($bookResponse->body, true);
+                try {
+                    $bookData = json_decode($bookResponse->body, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    continue;
+                }
 
                 if (!\is_array($bookData) || !isset($bookData['chapters'])) {
                     continue;
@@ -214,7 +222,11 @@ class BibleImporter
      */
     public static function importFromJson(string $json, string $abbreviation): int
     {
-        $data = json_decode($json, true);
+        try {
+            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return -1;
+        }
 
         if (!\is_array($data)) {
             return -1;

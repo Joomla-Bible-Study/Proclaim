@@ -1217,7 +1217,7 @@ class CwmadminController extends FormController
      *
      * @throws \Exception
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMigrationCountsXHR(): void
     {
@@ -1255,7 +1255,7 @@ class CwmadminController extends FormController
      *
      * @throws \Exception
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getMigrationBatchXHR(): void
     {
@@ -1298,7 +1298,7 @@ class CwmadminController extends FormController
      *
      * @throws \Exception
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function migrateRecordXHR(): void
     {
@@ -1346,7 +1346,7 @@ class CwmadminController extends FormController
      *
      * @throws \Exception
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getOrphanedFoldersXHR(): void
     {
@@ -1382,7 +1382,7 @@ class CwmadminController extends FormController
      *
      * @throws \Exception
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function deleteOrphanedFoldersXHR(): void
     {
@@ -1422,7 +1422,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getLegacyFolderReportXHR(): void
     {
@@ -1458,7 +1458,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function downloadClearedLogXHR(): void
     {
@@ -1503,7 +1503,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function getUnresolvableCountXHR(): void
     {
@@ -1536,7 +1536,7 @@ class CwmadminController extends FormController
      *
      * @return void
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     public function clearUnresolvableXHR(): void
     {
@@ -2712,7 +2712,11 @@ class CwmadminController extends FormController
             if ($response->code !== 200) {
                 // Parse API error message if available
                 $apiError = '';
-                $decoded  = json_decode($response->body ?? '', true);
+                try {
+                    $decoded = json_decode($response->body ?? '', true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    $decoded = null;
+                }
 
                 if (\is_array($decoded) && isset($decoded['message'])) {
                     $apiError = $decoded['message'];
@@ -2733,7 +2737,11 @@ class CwmadminController extends FormController
                 return;
             }
 
-            $data = json_decode($response->body, true);
+            try {
+                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $data = null;
+            }
 
             if (!\is_array($data) || !isset($data['data'])) {
                 // Log the actual response for debugging
@@ -2908,7 +2916,12 @@ class CwmadminController extends FormController
 
         // Read raw POST body (JSON)
         $rawInput = file_get_contents('php://input');
-        $data     = json_decode($rawInput, true);
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
 
         if (!\is_array($data) || empty($data['rows'])) {
             echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => 'No rows provided']]], JSON_THROW_ON_ERROR);
@@ -3001,7 +3014,7 @@ class CwmadminController extends FormController
                 'success'  => true,
                 'servers'  => $servers,
                 'existing' => $existing,
-                'labels'   => CwmserverMigrationHelper::TYPE_LABELS,
+                'labels'   => CwmserverMigrationHelper::getTypeLabels(),
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
@@ -3039,7 +3052,12 @@ class CwmadminController extends FormController
         }
 
         $rawInput = file_get_contents('php://input');
-        $data     = json_decode($rawInput, true);
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
 
         if (!\is_array($data)) {
             echo json_encode(['success' => false, 'message' => 'Invalid request body'], JSON_THROW_ON_ERROR);
@@ -3101,7 +3119,12 @@ class CwmadminController extends FormController
         }
 
         $rawInput = file_get_contents('php://input');
-        $data     = json_decode($rawInput, true);
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
 
         if (!\is_array($data) || empty($data['type']) || empty($data['name'])) {
             echo json_encode(['success' => false, 'message' => 'Missing type or name'], JSON_THROW_ON_ERROR);

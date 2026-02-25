@@ -1330,6 +1330,29 @@ namespace Joomla\Filesystem {
             {
                 return str_replace(['/', '\\'], $ds, $path);
             }
+
+            /**
+             * @param string|array $paths  Directory or array of directories to search
+             * @param string       $file   Filename to find
+             *
+             * @return string|false  Full path if found, false otherwise
+             */
+            public static function find($paths, string $file)
+            {
+                if (\is_string($paths)) {
+                    $paths = [$paths];
+                }
+
+                foreach ($paths as $path) {
+                    $fullPath = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . $file;
+
+                    if (is_file($fullPath)) {
+                        return $fullPath;
+                    }
+                }
+
+                return false;
+            }
         }
     }
 

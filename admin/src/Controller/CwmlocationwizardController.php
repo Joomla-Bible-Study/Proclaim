@@ -117,18 +117,26 @@ class CwmlocationwizardController extends BaseController
         $permissions    = [];
 
         if (\is_string($rawMapping)) {
-            $decoded = json_decode($rawMapping, true);
+            try {
+                $decoded = json_decode($rawMapping, true, 512, JSON_THROW_ON_ERROR);
 
-            if (\is_array($decoded)) {
-                $mapping = $decoded;
+                if (\is_array($decoded)) {
+                    $mapping = $decoded;
+                }
+            } catch (\JsonException) {
+                // Invalid JSON — keep empty mapping
             }
         }
 
         if (\is_string($rawPermissions)) {
-            $decoded = json_decode($rawPermissions, true);
+            try {
+                $decoded = json_decode($rawPermissions, true, 512, JSON_THROW_ON_ERROR);
 
-            if (\is_array($decoded)) {
-                $permissions = $decoded;
+                if (\is_array($decoded)) {
+                    $permissions = $decoded;
+                }
+            } catch (\JsonException) {
+                // Invalid JSON — keep empty permissions
             }
         }
 
@@ -236,7 +244,11 @@ class CwmlocationwizardController extends BaseController
 
             case 5:
                 $rawMapping = Factory::getApplication()->getInput()->get('mapping', '{}', 'raw');
-                $mapping    = \is_string($rawMapping) ? (json_decode($rawMapping, true) ?? []) : [];
+                try {
+                    $mapping = \is_string($rawMapping) ? (json_decode($rawMapping, true, 512, JSON_THROW_ON_ERROR) ?? []) : [];
+                } catch (\JsonException) {
+                    $mapping = [];
+                }
                 $data       = $model->getPreviewData($mapping);
                 break;
         }

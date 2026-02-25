@@ -201,7 +201,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function autoDetectMetadata(Registry $params, object $server, string $set_path, Registry $path): void
     {

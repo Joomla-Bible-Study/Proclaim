@@ -27,7 +27,7 @@ use Joomla\CMS\Language\Text;
  * Output is valid CSS color value (named color or hex).
  *
  * @package  Proclaim.Admin
- * @since    10.2.0
+ * @since 10.1.0
  */
 class ColorPickerField extends FormField
 {
@@ -36,7 +36,7 @@ class ColorPickerField extends FormField
      *
      * @var  string
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected $type = 'ColorPicker';
 
@@ -45,7 +45,7 @@ class ColorPickerField extends FormField
      *
      * @var  array<string, string>
      *
-     * @since 10.2.0
+     * @since 10.1.0
      */
     protected const CSS_COLORS = [
         'aliceblue'            => '#F0F8FF',
@@ -197,7 +197,7 @@ class ColorPickerField extends FormField
      *
      * @return  string  The field input markup.
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function getInput(): string
     {
@@ -370,7 +370,7 @@ class ColorPickerField extends FormField
      *
      * @return  string  The swatch HTML
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildPreviewSwatch(string $value, bool $isNamedColor): string
     {
@@ -407,7 +407,7 @@ class ColorPickerField extends FormField
      *
      * @return  string  The swatch HTML
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildColorSwatch(string $name, string $hex, bool $isSelected): string
     {
@@ -447,7 +447,7 @@ class ColorPickerField extends FormField
      *
      * @return  string  The style tag
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildStyles(): string
     {
@@ -471,7 +471,7 @@ class ColorPickerField extends FormField
      *
      * @return  string  The script tag with JavaScript
      *
-     * @since   10.2.0
+     * @since 10.1.0
      */
     protected function buildJavaScript(): string
     {

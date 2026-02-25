@@ -200,6 +200,8 @@ class com_proclaimInstallerScript extends InstallerScript
         '/plugins/finder/proclaim/language/de-DE/de-DE.plg_finder_biblestudy.sys.ini',
         // Module files removed in 10.1.0
         '/modules/mod_proclaim_youtube/helper.php',
+        // Dead helper classes removed in 10.1.0
+        '/administrator/components/com_proclaim/src/Helper/Cwmsearchfilters.php',
     ];
 
     /**
@@ -1361,7 +1363,11 @@ class com_proclaimInstallerScript extends InstallerScript
                 continue;
             }
 
-            $params = json_decode($row->params, true);
+            try {
+                $params = json_decode($row->params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                continue;
+            }
 
             if (!$params || empty($params['studyimage']) || $params['studyimage'] === '-1') {
                 continue;

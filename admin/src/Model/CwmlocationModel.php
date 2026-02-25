@@ -243,7 +243,11 @@ class CwmlocationModel extends AdminModel
         $raw = ComponentHelper::getParams('com_proclaim')->get('location_group_mapping', '{}');
 
         if (\is_string($raw)) {
-            $mapping = json_decode($raw, true);
+            try {
+                $mapping = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return false;
+            }
         } else {
             $mapping = $raw;
         }

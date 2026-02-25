@@ -441,9 +441,13 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $images = null;
         if (!empty($item->thumbnailm)) {
             // Try to decode as JSON
-            $decoded = json_decode($item->thumbnailm);
+            try {
+                $decoded = json_decode($item->thumbnailm, false, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $decoded = null;
+            }
 
-            if (json_last_error() === JSON_ERROR_NONE && \is_object($decoded)) {
+            if (\is_object($decoded)) {
                 $images = $decoded;
             } else {
                 // Treat as direct path

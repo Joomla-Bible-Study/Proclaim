@@ -345,11 +345,10 @@ class CwmschemaorgHelper
 
         try {
             $document = Factory::getApplication()->getDocument();
+            $json     = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         } catch (\Exception $e) {
             return;
         }
-
-        $json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $document->addCustomTag(
             '<script type="application/ld+json">' . $json . '</script>'
@@ -390,9 +389,7 @@ class CwmschemaorgHelper
     private static function toIso8601(string $date): string
     {
         try {
-            $dt = new \DateTime($date);
-
-            return $dt->format('c');
+            return (new \DateTime($date))->format('c');
         } catch (\Exception $e) {
             return $date;
         }

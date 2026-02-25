@@ -64,6 +64,69 @@ class CWMAddonResi extends CWMAddon
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'resi',
+            'label'    => 'Resi',
+            'patterns' => [
+                '/rfrn\.(tv|stream)|resi\.(io|media)/i',
+                '/control\.resi\.io/i',
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result              = [];
+        $result['filename']  = $filename;
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        // Extract query params from Resi embed URL if present
+        $resiParts = parse_url($filename);
+
+        if (!empty($resiParts['query'])) {
+            $resiQuery = [];
+            parse_str($resiParts['query'], $resiQuery);
+
+            $riParamMap = [
+                'controls'   => 'ri_controls',
+                'loop'       => 'ri_loop',
+                'startPos'   => 'ri_start_pos',
+                'background' => 'ri_background',
+            ];
+
+            foreach ($riParamMap as $urlParam => $formField) {
+                if (isset($resiQuery[$urlParam]) && $resiQuery[$urlParam] !== '') {
+                    $result[$formField] = $resiQuery[$urlParam];
+                }
+            }
+
+            if (isset($resiQuery['autoplay']) && $resiQuery['autoplay'] === '1') {
+                $result['autostart'] = 'true';
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Build a Resi.io embed URL with all form field params applied.
      *
      * @param   string    $filename     The raw Resi URL
@@ -311,7 +374,14 @@ class CWMAddonResi extends CWMAddon
                 ];
             }
 
-            $params    = json_decode($paramsJson, true);
+            try {
+                $params = json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                return [
+                    'success' => false,
+                    'error'   => 'Invalid server params JSON',
+                ];
+            }
             $accountId = $params['account_id'] ?? '';
 
             if (empty($accountId)) {

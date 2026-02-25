@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -63,6 +64,83 @@ class CWMAddonVimeo extends CWMAddon
     public function getUrlPatterns(): array
     {
         return ['/(vimeo\.com)/i'];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'vimeo',
+            'label'    => 'Vimeo',
+            'patterns' => [
+                '/vimeo\.com/i',
+                '/player\.vimeo\.com/i',
+            ],
+            'allVideosTags' => ['vimeo'],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        $result  = [];
+        $videoId = $this->extractVimeoVideoId($combined);
+
+        // Fall back to AllVideos bare ID: {vimeo}123456789{/vimeo}
+        if ($videoId === null && !empty($avContent) && preg_match('/^\d+$/', $avContent)) {
+            $videoId = $avContent;
+        }
+
+        if ($videoId) {
+            $result['filename'] = '//player.vimeo.com/video/' . $videoId;
+        } else {
+            $result['filename'] = $filename;
+        }
+
+        // Map extracted URL params to embed option form fields
+        $sourceQuery = CwmserverMigrationHelper::extractSourceUrlParams($combined, 'vimeo');
+
+        $vmParamMap = [
+            'muted'      => 'vm_muted',
+            'loop'       => 'vm_loop',
+            'controls'   => 'vm_controls',
+            'color'      => 'vm_color',
+            'title'      => 'vm_title',
+            'byline'     => 'vm_byline',
+            'portrait'   => 'vm_portrait',
+            'dnt'        => 'vm_dnt',
+            'background' => 'vm_background',
+            'speed'      => 'vm_speed',
+        ];
+
+        foreach ($vmParamMap as $urlParam => $formField) {
+            if (isset($sourceQuery[$urlParam]) && $sourceQuery[$urlParam] !== '') {
+                $result[$formField] = $sourceQuery[$urlParam];
+            }
+        }
+
+        if (isset($sourceQuery['autoplay']) && $sourceQuery['autoplay'] === '1') {
+            $result['autostart'] = 'true';
+        }
+
+        $result['player']    = '1';
+        $result['mediacode'] = '';
+
+        return $result;
     }
 
     /**
@@ -182,15 +260,12 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
-     * Extract Vimeo video ID from URL
-     *
-     * @param   string  $url  The Vimeo URL
-     *
-     * @return  string|null  The video ID or null if not found
+     * {@inheritdoc}
      *
      * @since   10.1.0
      */
-    public function extractVimeoVideoId(string $url): ?string
+    #[\Override]
+    public static function extractMediaId(string $text): ?string
     {
         $patterns = [
             '/vimeo\.com\/(\d+)/',
@@ -200,12 +275,20 @@ class CWMAddonVimeo extends CWMAddon
         ];
 
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $url, $matches)) {
+            if (preg_match($pattern, $text, $matches)) {
                 return $matches[1];
             }
         }
 
         return null;
+    }
+
+    /**
+     * @deprecated Use extractMediaId() instead
+     */
+    public function extractVimeoVideoId(string $url): ?string
+    {
+        return static::extractMediaId($url);
     }
 
     /**
@@ -309,7 +392,11 @@ class CWMAddonVimeo extends CWMAddon
             return ['success' => false, 'error' => 'Media file not found'];
         }
 
-        $params  = json_decode($row->params ?? '{}', true) ?: [];
+        try {
+            $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return ['success' => false, 'error' => 'Invalid media params JSON'];
+        }
         $videoId = $this->extractVimeoVideoId($params['filename'] ?? '');
 
         if (!$videoId) {

@@ -11,6 +11,11 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Dailymotion\CWMAddonDailymotion;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Rumble\CWMAddonRumble;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Vimeo\CWMAddonVimeo;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
@@ -373,15 +378,15 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // extractYoutubeId() tests
+    // extractMediaId() tests — YouTube
     // -------------------------------------------------------------------------
 
     /**
      * @dataProvider youtubeIdProvider
      */
-    public function testExtractYoutubeId(string $text, ?string $expected): void
+    public function testExtractYoutubeMediaId(string $text, ?string $expected): void
     {
-        $result = CwmserverMigrationHelper::extractYoutubeId($text);
+        $result = CWMAddonYoutube::extractMediaId($text);
         self::assertSame($expected, $result);
     }
 
@@ -401,15 +406,15 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // extractVimeoId() tests
+    // extractMediaId() tests — Vimeo
     // -------------------------------------------------------------------------
 
     /**
      * @dataProvider vimeoIdProvider
      */
-    public function testExtractVimeoId(string $text, ?string $expected): void
+    public function testExtractVimeoMediaId(string $text, ?string $expected): void
     {
-        $result = CwmserverMigrationHelper::extractVimeoId($text);
+        $result = CWMAddonVimeo::extractMediaId($text);
         self::assertSame($expected, $result);
     }
 
@@ -427,15 +432,15 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // extractWistiaHash() tests
+    // extractMediaId() tests — Wistia
     // -------------------------------------------------------------------------
 
     /**
      * @dataProvider wistiaHashProvider
      */
-    public function testExtractWistiaHash(string $text, ?string $expected): void
+    public function testExtractWistiaMediaId(string $text, ?string $expected): void
     {
-        $result = CwmserverMigrationHelper::extractWistiaHash($text);
+        $result = CWMAddonWistia::extractMediaId($text);
         self::assertSame($expected, $result);
     }
 
@@ -452,15 +457,15 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // extractDailymotionId() tests
+    // extractMediaId() tests — Dailymotion
     // -------------------------------------------------------------------------
 
     /**
      * @dataProvider dailymotionIdProvider
      */
-    public function testExtractDailymotionId(string $text, ?string $expected): void
+    public function testExtractDailymotionMediaId(string $text, ?string $expected): void
     {
-        $result = CwmserverMigrationHelper::extractDailymotionId($text);
+        $result = CWMAddonDailymotion::extractMediaId($text);
         self::assertSame($expected, $result);
     }
 
@@ -478,15 +483,15 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // extractRumbleId() tests
+    // extractMediaId() tests — Rumble
     // -------------------------------------------------------------------------
 
     /**
      * @dataProvider rumbleIdProvider
      */
-    public function testExtractRumbleId(string $text, ?string $expected): void
+    public function testExtractRumbleMediaId(string $text, ?string $expected): void
     {
-        $result = CwmserverMigrationHelper::extractRumbleId($text);
+        $result = CWMAddonRumble::extractMediaId($text);
         self::assertSame($expected, $result);
     }
 
@@ -778,28 +783,32 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // Constants tests
+    // Dynamic type/label methods tests
     // -------------------------------------------------------------------------
 
-    public function testTargetTypesIncludesAllExpected(): void
+    public function testGetTargetTypesIncludesAllExpected(): void
     {
         $expected = [
             'youtube', 'vimeo', 'wistia', 'resi',
             'soundcloud', 'dailymotion', 'rumble', 'facebook',
             'embed', 'article', 'virtuemart', 'docman', 'local',
+            'direct',
         ];
 
-        self::assertSame($expected, CwmserverMigrationHelper::TARGET_TYPES);
+        $actual = CwmserverMigrationHelper::getTargetTypes();
+        sort($expected);
+        sort($actual);
+        self::assertSame($expected, $actual);
     }
 
-    public function testTypeLabelsCoversAllTargetTypes(): void
+    public function testGetTypeLabelsCoversAllTargetTypes(): void
     {
-        foreach (CwmserverMigrationHelper::TARGET_TYPES as $type) {
-            self::assertArrayHasKey($type, CwmserverMigrationHelper::TYPE_LABELS);
+        foreach (CwmserverMigrationHelper::getTargetTypes() as $type) {
+            self::assertArrayHasKey($type, CwmserverMigrationHelper::getTypeLabels());
         }
 
         // Also includes 'unknown'
-        self::assertArrayHasKey('unknown', CwmserverMigrationHelper::TYPE_LABELS);
+        self::assertArrayHasKey('unknown', CwmserverMigrationHelper::getTypeLabels());
     }
 
     // -------------------------------------------------------------------------

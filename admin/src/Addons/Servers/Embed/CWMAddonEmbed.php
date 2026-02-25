@@ -45,6 +45,44 @@ class CWMAddonEmbed extends CWMAddon
     protected $description = 'Generic embed/iframe server adapter';
 
     /**
+     * {@inheritdoc}
+     *
+     * Embed is a fallback type — no URL patterns. Matched by iframe/embed/object
+     * tag detection in the helper, not by addon patterns.
+     * Only type/label are declared for registry discovery.
+     *
+     * @since   10.1.0
+     */
+    public function getMigrationPatterns(): array
+    {
+        return [
+            'type'     => 'embed',
+            'label'    => 'Embed / iFrame',
+            'patterns' => [],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    public function transformMigrationParams(
+        array $params,
+        string $mediacode,
+        string $filename,
+        string $avContent,
+        string $combined,
+        array $legacyServerParams = []
+    ): array {
+        return [
+            'filename'  => $filename,
+            'player'    => '8',
+            'mediacode' => $mediacode,
+        ];
+    }
+
+    /**
      * Render general fieldset fields
      *
      * @param   object  $media_form  Media files form
