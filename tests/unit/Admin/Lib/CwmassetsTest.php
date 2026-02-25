@@ -32,23 +32,46 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
-     * Test query default value is empty array
+     * Test fixSingleRecord method exists with correct signature
      *
      * @return void
      */
-    public function testQueryDefaultIsEmptyArray(): void
+    public function testFixSingleRecordMethodExists(): void
     {
-        $this->assertIsArray(Cwmassets::$query);
+        $this->assertTrue(method_exists(Cwmassets::class, 'fixSingleRecord'));
+
+        $method = new \ReflectionMethod(Cwmassets::class, 'fixSingleRecord');
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+        $this->assertReturnTypeName('bool', $method);
     }
 
     /**
-     * Test count default value is zero
+     * Test fixAllAssets method exists
      *
      * @return void
      */
-    public function testCountDefaultIsZero(): void
+    public function testFixAllAssetsMethodExists(): void
     {
-        $this->assertEquals(0, Cwmassets::$count);
+        $this->assertTrue(method_exists(Cwmassets::class, 'fixAllAssets'));
+
+        $method = new \ReflectionMethod(Cwmassets::class, 'fixAllAssets');
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
+    }
+
+    /**
+     * Test cleanOrphanedAssets method exists
+     *
+     * @return void
+     */
+    public function testCleanOrphanedAssetsMethodExists(): void
+    {
+        $this->assertTrue(method_exists(Cwmassets::class, 'cleanOrphanedAssets'));
+
+        $method = new \ReflectionMethod(Cwmassets::class, 'cleanOrphanedAssets');
+        $this->assertTrue($method->isPublic());
+        $this->assertTrue($method->isStatic());
     }
 
     /**

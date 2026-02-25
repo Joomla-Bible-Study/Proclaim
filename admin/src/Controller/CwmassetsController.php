@@ -257,7 +257,7 @@ class CwmassetsController extends BaseController
 
         foreach ($results as $item) {
             $processed++;
-            $wasFixed = $this->fixSingleAssetDirect($db, $tableName, $assetName, $item, $parentId);
+            $wasFixed = Cwmassets::fixSingleRecord($db, $tableName, $assetName, $item, $parentId);
 
             if ($wasFixed) {
                 $fixed++;
@@ -270,93 +270,6 @@ class CwmassetsController extends BaseController
             'processed' => $processed,
             'fixed'     => $fixed,
         ]);
-    }
-
-    /**
-     * Fix a single asset record using direct SQL
-     *
-     * @param   object  $db         Database driver
-     * @param   string  $tableName  Table name
-     * @param   string  $assetName  Asset name (e.g., 'message', 'teacher')
-     * @param   object  $item       Record with id, asset_id, aid, parent_id, rules
-     * @param   int     $parentId   Parent asset ID for com_proclaim
-     *
-     * @return bool True if asset was fixed, false if already OK
-     *
-     * @since 10.1.0
-     */
-    private function fixSingleAssetDirect(object $db, string $tableName, string $assetName, object $item, int $parentId): bool
-    {
-        $assetFullName = 'com_proclaim.' . $assetName . '.' . $item->id;
-        $defaultRules  = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
-
-        // Check if asset actually exists (aid comes from LEFT JOIN)
-        $assetExists = !empty($item->aid);
-
-        // Case 1: No asset_id OR asset_id points to a non-existent asset
-        if (empty($item->asset_id) || $item->asset_id == 0 || !$assetExists) {
-            // Check if asset already exists by name
-            $query = $db->getQuery(true);
-            $query->select($db->quoteName('id'))
-                ->from($db->quoteName('#__assets'))
-                ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
-            $db->setQuery($query);
-            $existingAssetId = $db->loadResult();
-
-            if ($existingAssetId) {
-                // Asset exists, just update the record's asset_id
-                $query = $db->getQuery(true);
-                $query->update($db->quoteName($tableName))
-                    ->set($db->quoteName('asset_id') . ' = ' . (int) $existingAssetId)
-                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
-                $db->setQuery($query);
-                $db->execute();
-            } else {
-                // Create a new asset
-                $query = $db->getQuery(true);
-                $query->insert($db->quoteName('#__assets'))
-                    ->columns($db->quoteName(['parent_id', 'level', 'name', 'title', 'rules']))
-                    ->values(
-                        (int) $parentId . ', 4, ' . $db->quote($assetFullName) . ', ' .
-                        $db->quote($assetName . ' ' . $item->id) . ', ' .
-                        $db->quote($defaultRules)
-                    );
-                $db->setQuery($query);
-                $db->execute();
-                $newAssetId = $db->insertid();
-
-                // Update the record with new asset_id
-                $query = $db->getQuery(true);
-                $query->update($db->quoteName($tableName))
-                    ->set($db->quoteName('asset_id') . ' = ' . (int) $newAssetId)
-                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            return true;
-        }
-
-        // Case 2: Has valid asset_id with existing asset but parent_id mismatch or empty rules
-        if ($item->parent_id != $parentId || empty($item->rules)) {
-            $query = $db->getQuery(true);
-            $query->update($db->quoteName('#__assets'))
-                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
-                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
-
-            if (empty($item->rules)) {
-                $query->set($db->quoteName('rules') . ' = ' . $db->quote($defaultRules));
-            }
-
-            $query->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
-            $db->setQuery($query);
-            $db->execute();
-
-            return true;
-        }
-
-        // Asset is already OK
-        return false;
     }
 
     /**

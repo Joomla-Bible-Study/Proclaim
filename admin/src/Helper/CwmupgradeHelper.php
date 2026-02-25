@@ -450,14 +450,7 @@ class CwmupgradeHelper
     public static function rebuildAssets(): array
     {
         try {
-            $results = Cwmassets::build();
-
-            foreach ($results->query as $key => $items) {
-                foreach ($items as $item) {
-                    Cwmassets::fixAssets($key, $item);
-                }
-            }
-
+            Cwmassets::fixAllAssets();
             Log::add('Asset rebuild completed via upgrade wizard', Log::INFO, 'com_proclaim');
 
             return ['success' => true, 'message' => 'Assets rebuilt'];

@@ -21,75 +21,28 @@ use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 
 /**
- * Asset Fix class
+ * Centralised Proclaim asset management.
+ *
+ * Every operation that creates, fixes, or cleans assets in `#__assets`
+ * for Proclaim content MUST go through this class.  There is exactly
+ * ONE code-path for each operation — no duplicates in controllers,
+ * models, or restore helpers.
  *
  * @since  7.0.4
  */
 class Cwmassets
 {
-    public static int $parent_id = 0;
-
     /**
-     * @var array
-     * @since 7.0.4
-     */
-    public static array $query = [];
-
-    /**
+     * Cached com_proclaim parent asset ID.
+     *
      * @var int
      * @since 7.0.4
      */
-    public static int $count = 0;
+    public static int $parent_id = 0;
 
-    /**
-     * Fix Assets function.
-     *
-     * @param   string   $key     Asset name to affect
-     * @param   ?object  $result  Assets to look at.
-     *
-     * @return bool
-     *
-     * @since 9.0.0
-     */
-    public static function fixAssets(string $key, ?object $result): bool
-    {
-        $result_object   = (object) $result;
-        self::$parent_id = self::ensureParentAsset();
-
-        if (!self::$parent_id) {
-            Log::add('Could not find or create parent asset', Log::WARNING, 'com_proclaim');
-
-            return false;
-        }
-
-        // Check if the asset actually exists (aid comes from LEFT JOIN with #__assets)
-        $assetExists = !empty($result_object->aid);
-
-        // Case 1: No asset_id OR asset_id points to non-existent asset
-        if (!$result_object->asset_id || !$assetExists) {
-            // Delete stale asset_id reference if it exists but asset is missing
-            if ($result_object->asset_id && !$assetExists) {
-                Log::add('Stale asset_id ' . $result_object->asset_id . ' for ' . $key . ' ID ' . $result_object->id, Log::NOTICE, 'com_proclaim');
-            }
-
-            self::setAsset($result_object, $key);
-            Log::add('Set Asset Under Key: ' . $key, Log::NOTICE, 'com_proclaim');
-
-            return true;
-        }
-
-        // Case 2: Asset exists but parent_id mismatch or empty rules
-        if ((self::$parent_id !== (int) $result_object->parent_id || $result_object->rules === "") && $result_object->asset_id) {
-            Log::add('Reset Asset ID: ' . $result_object->asset_id, Log::NOTICE, 'com_proclaim');
-            $deletasset = self::deleteAsset($result_object);
-
-            if ($deletasset) {
-                self::setAsset($result_object, $key);
-            }
-        }
-
-        return true;
-    }
+    // =========================================================================
+    // Parent Asset Management
+    // =========================================================================
 
     /**
      * Ensure the com_proclaim parent asset exists, create if missing.
@@ -227,135 +180,299 @@ class Cwmassets
         return 1;
     }
 
+    // =========================================================================
+    // Consolidated Asset Fixing (single source of truth)
+    // =========================================================================
+
     /**
-     * Set Asset
+     * Fix ALL Proclaim assets: clean orphans, fix/create per record, rebuild tree.
      *
-     * @param   object  $data       Data
-     * @param   string  $assetName  Asset Name
+     * This is the ONE method that all callers (restore, install, upgrade,
+     * manual fix) must use for a full asset repair cycle.
      *
      * @return void
      *
-     * @since 9.0.0
+     * @since 10.1.0
      */
-    private static function setAsset(object $data, string $assetName): void
+    public static function fixAllAssets(): void
     {
-        $db         = Factory::getContainer()->get(DatabaseInterface::class);
-        $AssetTable = '\CWM\Component\Proclaim\Administrator\Table\Cwm' . $assetName . 'Table';
-        $table      = new $AssetTable($db);
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        if ($data->id) {
+        // Step 1: Ensure the com_proclaim parent asset exists
+        $parentId = self::ensureParentAsset();
+
+        if (!$parentId) {
+            Log::add('Could not find or create com_proclaim parent asset', Log::WARNING, 'com_proclaim');
+
+            return;
+        }
+
+        // Step 2: Remove orphaned Proclaim assets (stale from previous state)
+        self::cleanOrphanedAssets($db);
+
+        // Step 3: Fix/create assets for every content record
+        $assetTables = self::getAssetObjects();
+
+        foreach ($assetTables as $tableInfo) {
             try {
-                if ($assetName === 'MediaFile') {
-                    $columns = [
-                        'media_image',
-                        'special',
-                        'filename',
-                        'size',
-                        'mime_type',
-                        'mediacode',
-                        'link_type',
-                        'docMan_id',
-                        'article_id',
-                        'virtueMart_id',
-                        'player',
-                        'popup',
-                        'server',
-                        'internal_viewer',
-                        'path',
-                    ];
+                $offset = 0;
 
-                    foreach ($columns as $col) {
-                        unset($table->$col);
+                while (true) {
+                    $query = $db->getQuery(true);
+                    $query->select(
+                        $db->quoteName('j.id') . ', ' . $db->quoteName('j.asset_id') . ', '
+                        . $db->quoteName('a.id', 'aid') . ', ' . $db->quoteName('a.parent_id') . ', ' . $db->quoteName('a.rules')
+                    )
+                        ->from($db->quoteName($tableInfo['name'], 'j'))
+                        ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')')
+                        ->setLimit(100, $offset);
+                    $db->setQuery($query);
+                    $results = $db->loadObjectList();
+
+                    if (empty($results)) {
+                        break;
                     }
+
+                    foreach ($results as $item) {
+                        self::fixSingleRecord($db, $tableInfo['name'], $tableInfo['assetname'], $item, $parentId);
+                    }
+
+                    unset($results);
+                    $offset += 100;
                 }
 
-                $table->load($data->id, false);
+                Log::add('Fixed assets for ' . $tableInfo['name'], Log::INFO, 'com_proclaim');
             } catch (\Exception $e) {
-                echo 'Caught exception: ', $e->getMessage(), "\n";
-
-                return;
+                Log::add('Asset fix error for ' . $tableInfo['name'] . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
             }
+        }
 
-            $table->store();
+        // Step 4: Rebuild the entire nested-set tree
+        try {
+            $assetTable = new \Joomla\CMS\Table\Asset($db);
+            $assetTable->rebuild();
+            Log::add('Asset tree rebuilt successfully', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Asset tree rebuild failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
     }
 
     /**
-     * Delete a Proclaim-owned asset.
+     * Fix the asset for a single content record.
      *
-     * Only deletes the asset if it belongs to Proclaim (name starts with
-     * "com_proclaim.").  This prevents accidental deletion of core Joomla
-     * assets (com_content, com_users, etc.) if a record's asset_id column
-     * ever points to a non-Proclaim row.
+     * Uses Joomla's Asset Table ORM for inserts (proper lft/rgt positioning)
+     * and direct SQL for lightweight updates.
      *
-     * @param   object  $data  Data with asset_id property
+     * @param   DatabaseInterface  $db         Database driver
+     * @param   string             $tableName  Content table name (e.g. '#__bsms_studies')
+     * @param   string             $assetName  Short asset name (e.g. 'message', 'teacher')
+     * @param   object             $item       Record with id, asset_id, aid, parent_id, rules
+     * @param   int                $parentId   com_proclaim parent asset ID
+     *
+     * @return bool True if asset was fixed/created, false if already OK
+     *
+     * @since 10.1.0
+     */
+    public static function fixSingleRecord(DatabaseInterface $db, string $tableName, string $assetName, object $item, int $parentId): bool
+    {
+        $assetFullName = 'com_proclaim.' . $assetName . '.' . $item->id;
+        $defaultRules  = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+
+        // Check if asset actually exists (aid comes from LEFT JOIN)
+        $assetExists = !empty($item->aid);
+
+        // Case 1: No asset_id OR asset_id points to a non-existent asset
+        if (empty($item->asset_id) || $item->asset_id == 0 || !$assetExists) {
+            // Check if asset already exists by name
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
+            $db->setQuery($query);
+            $existingAssetId = $db->loadResult();
+
+            if ($existingAssetId) {
+                // Asset exists by name — just link the record to it
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($tableName))
+                    ->set($db->quoteName('asset_id') . ' = ' . (int) $existingAssetId)
+                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
+                $db->setQuery($query);
+                $db->execute();
+            } else {
+                // Create a new asset via Joomla's nested-set API (NOT raw SQL)
+                // to ensure correct lft/rgt positioning in the asset tree.
+                // Raw INSERT with lft=0, rgt=0 creates a corruption bomb:
+                // deleting such an asset runs DELETE WHERE lft BETWEEN 0 AND 0
+                // which also deletes the root asset and destroys all permissions.
+                $asset = new \Joomla\CMS\Table\Asset($db);
+                $asset->setLocation($parentId, 'last-child');
+                $asset->parent_id = $parentId;
+                $asset->name      = $assetFullName;
+                $asset->title     = $assetName . ' ' . $item->id;
+                $asset->rules     = $defaultRules;
+
+                if (!$asset->store()) {
+                    Log::add('Failed to create asset: ' . $assetFullName, Log::WARNING, 'com_proclaim');
+
+                    return false;
+                }
+
+                $newAssetId = (int) $asset->id;
+
+                // Update the record with new asset_id
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($tableName))
+                    ->set($db->quoteName('asset_id') . ' = ' . $newAssetId)
+                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            return true;
+        }
+
+        // Case 2: Has valid asset_id with existing asset but parent_id mismatch or empty rules
+        if ($item->parent_id != $parentId || empty($item->rules)) {
+            $query = $db->getQuery(true);
+            $query->update($db->quoteName('#__assets'))
+                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
+                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
+
+            if (empty($item->rules)) {
+                $query->set($db->quoteName('rules') . ' = ' . $db->quote($defaultRules));
+            }
+
+            $query->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+            $db->setQuery($query);
+            $db->execute();
+
+            return true;
+        }
+
+        // Asset is already OK
+        return false;
+    }
+
+    /**
+     * Remove Proclaim-owned assets whose content records no longer exist.
+     *
+     * After a restore, the #__assets table still contains assets from the
+     * previous state.  Their content records were overwritten by the restore,
+     * so the assets are now orphans.  Removing them keeps the tree clean and
+     * prevents stale references.
+     *
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return int Number of orphaned assets removed
+     *
+     * @since 10.1.0
+     */
+    public static function cleanOrphanedAssets(DatabaseInterface $db): int
+    {
+        $assetMap = [
+            'com_proclaim.message.'      => '#__bsms_studies',
+            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
+            'com_proclaim.serie.'        => '#__bsms_series',
+            'com_proclaim.teacher.'      => '#__bsms_teachers',
+            'com_proclaim.server.'       => '#__bsms_servers',
+            'com_proclaim.comment.'      => '#__bsms_comments',
+            'com_proclaim.location.'     => '#__bsms_locations',
+            'com_proclaim.messagetype.'  => '#__bsms_message_type',
+            'com_proclaim.podcast.'      => '#__bsms_podcast',
+            'com_proclaim.template.'     => '#__bsms_templates',
+            'com_proclaim.templatecode.' => '#__bsms_templatecode',
+            'com_proclaim.topic.'        => '#__bsms_topics',
+            'com_proclaim.admin.'        => '#__bsms_admin',
+        ];
+
+        $totalRemoved = 0;
+
+        foreach ($assetMap as $prefix => $sourceTable) {
+            try {
+                $query = $db->getQuery(true)
+                    ->delete($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where(
+                        'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
+                        . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
+                    );
+                $db->setQuery($query);
+                $db->execute();
+                $totalRemoved += $db->getAffectedRows();
+            } catch (\Exception $e) {
+                Log::add('Orphan cleanup error for ' . $prefix . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
+        }
+
+        if ($totalRemoved > 0) {
+            Log::add('Cleaned ' . $totalRemoved . ' orphaned Proclaim assets', Log::INFO, 'com_proclaim');
+        }
+
+        return $totalRemoved;
+    }
+
+    // =========================================================================
+    // Backward-Compatible Wrappers (for progressive/timer-bounded callers)
+    // =========================================================================
+
+    /**
+     * Fix a single asset record (backward-compatible wrapper).
+     *
+     * Used by CwminstallModel and CwmassetsModel in their progressive
+     * timer-bounded loops.  Delegates to fixSingleRecord().
+     *
+     * @param   string   $key     Asset short name (e.g. 'message', 'teacher')
+     * @param   ?object  $result  Record with id, asset_id, aid, parent_id, rules
      *
      * @return bool
      *
      * @since 9.0.0
      */
-    private static function deleteAsset(object $data): bool
+    public static function fixAssets(string $key, ?object $result): bool
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
+        $parentId = self::ensureParentAsset();
 
-        if (!isset($data->asset_id) || (int) $data->asset_id < 2) {
+        if (!$parentId) {
+            Log::add('Could not find or create parent asset', Log::WARNING, 'com_proclaim');
+
             return false;
         }
 
-        $assetId = (int) $data->asset_id;
+        // Resolve table name from the asset short name
+        $tableMap  = array_column(self::getAssetObjects(), 'name', 'assetname');
+        $tableName = $tableMap[$key] ?? '';
 
-        // Never delete the Proclaim parent asset itself
-        if ($assetId === self::$parent_id) {
-            return true;
+        if (!$tableName) {
+            Log::add('Unknown asset key: ' . $key, Log::WARNING, 'com_proclaim');
+
+            return false;
         }
 
-        // Verify this asset actually belongs to Proclaim before deleting
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('name'))
-            ->from($db->quoteName('#__assets'))
-            ->where($db->quoteName('id') . ' = :assetId')
-            ->bind(':assetId', $assetId, \Joomla\Database\ParameterType::INTEGER);
-        $db->setQuery($query);
-        $name = (string) $db->loadResult();
-
-        if ($name === '' || !str_starts_with($name, 'com_proclaim.')) {
-            Log::add(
-                'Skipped deletion of non-Proclaim asset ID ' . $assetId . ' (name: ' . $name . ')',
-                Log::WARNING,
-                'com_proclaim'
-            );
-
-            return true;
-        }
-
-        $query = $db->getQuery(true)
-            ->delete($db->quoteName('#__assets'))
-            ->where($db->quoteName('id') . ' = :assetId')
-            ->bind(':assetId', $assetId, \Joomla\Database\ParameterType::INTEGER);
-        $db->setQuery($query);
-        $db->execute();
-
-        return true;
+        return self::fixSingleRecord($db, $tableName, $key, (object) $result, $parentId);
     }
 
     /**
-     * Build functions
+     * Build the asset-fix queue (backward-compatible wrapper).
      *
-     * @return object
+     * Queries all Proclaim content tables with a LEFT JOIN on #__assets to
+     * identify records needing asset fixes.  Used by progressive models
+     * (CwminstallModel, CwmassetsModel) that process records across
+     * multiple HTTP requests.
+     *
+     * @return object Object with ->count (total records) and ->query (keyed array)
      *
      * @since 9.0.0
      */
     public static function build(): object
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $objects    = self::getAssetObjects();
+        $allResults = [];
+        $totalCount = 0;
 
-        // Get the names of the JBS tables
-        $objects = self::getassetObjects();
-
-        // Run through each table
         foreach ($objects as $object) {
-            // Put the table into the return array
-            // Get the total number of rows and collect the table into a query
             $query = $db->getQuery(true);
             $query->select(
                 $db->quoteName('j.id') . ', ' .
@@ -368,18 +485,22 @@ class Cwmassets
                 ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')');
             $db->setQuery($query);
             $results     = $db->loadObjectList();
-            self::$count += \count($results);
-            self::$query = array_merge((array)self::$query, [$object['assetname'] => $results]);
+            $totalCount += \count($results);
+            $allResults[$object['assetname']] = $results;
         }
 
-        Log::add('Build fixAsset', Log::INFO, 'com_proclaim');
+        Log::add('Build fixAsset queue: ' . $totalCount . ' records', Log::INFO, 'com_proclaim');
 
         $result        = new \stdClass();
-        $result->count = self::$count;
-        $result->query = self::$query;
+        $result->count = $totalCount;
+        $result->query = $allResults;
 
         return $result;
     }
+
+    // =========================================================================
+    // Asset Table Definitions
+    // =========================================================================
 
     /**
      * Table list Array.

@@ -687,19 +687,9 @@ class Cwmrestore
         $app = Factory::getApplication();
 
         try {
-            // Build the asset fix queue
-            $results = Cwmassets::build();
-
-            // Process all assets synchronously
-            foreach ($results->query as $key => $items) {
-                foreach ($items as $item) {
-                    Cwmassets::fixAssets($key, $item);
-                }
-            }
-
+            Cwmassets::fixAllAssets();
             $app->enqueueMessage(Text::_('JBS_IBM_ASSETS_FIXED'), 'info');
         } catch (\Exception $e) {
-            // Asset fix failed - user can run it manually from control panel
             $app->enqueueMessage(
                 Text::_('JBS_IBM_ASSETS_FIX_MANUAL') . ' ' . $e->getMessage(),
                 'warning'
