@@ -31,8 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         studies: 0, teachers: 0, series: 0, total: 0,
     };
 
+    let relinkTotals = {
+        studies: 0, teachers: 0, series: 0, total: 0,
+    };
+
     // ---- Navigation guard ----
-    let activeOperation = null; // null | 'migration' | 'webp' | 'orphan'
+    let activeOperation = null; // null | 'migration' | 'webp' | 'orphan' | 'relink'
 
     // ---- Pipeline state ----
     let pipelineMode = false;
@@ -789,6 +793,114 @@ document.addEventListener('DOMContentLoaded', () => {
         recoverType();
     });
 
+    // ---- Relink Images ----
+    function loadRelinkCounts() {
+        return cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getRelinkCountsXHR&${token}=1`)
+            .then((data) => {
+                relinkTotals = data;
+
+                if (data.total === 0) {
+                    document.getElementById('relink-counts').innerHTML = `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_RELINK_NONE')}</div>`;
+                    document.getElementById('btn-start-relink').disabled = true;
+                } else {
+                    const msg = Joomla.Text._('JBS_ADM_RELINK_COUNTS')
+                        .replace('%s', data.studies)
+                        .replace('%s', data.teachers)
+                        .replace('%s', data.series);
+                    document.getElementById('relink-counts').innerHTML = `<div class="mb-0">${msg}</div>
+             <div class="mt-2 fw-bold">${Joomla.Text._('JBS_CMN_TOTAL')}: ${data.total}</div>`;
+                    document.getElementById('btn-start-relink').disabled = false;
+                }
+            })
+            .catch(() => {
+                document.getElementById('relink-counts').innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
+            });
+    }
+
+    document.getElementById('btn-start-relink').addEventListener('click', function () {
+        this.disabled = true;
+        activeOperation = 'relink';
+        setOperationRunning(true);
+        const progressEl = document.getElementById('relink-progress');
+        const barEl = progressEl.querySelector('.progress-bar');
+        const statusEl = document.getElementById('relink-status');
+        progressEl.style.display = 'block';
+        barEl.classList.add('progress-bar-striped', 'progress-bar-animated');
+
+        const types = ['studies', 'teachers', 'series'];
+        let typeIndex = 0;
+        let totalRelinked = 0;
+        let totalErrors = 0;
+        let totalSkipped = 0;
+        const allErrorDetails = [];
+        const grandTotal = relinkTotals.total;
+
+        function updateBar() {
+            const pct = grandTotal > 0 ? Math.min(100, Math.round(((totalRelinked + totalErrors + totalSkipped) / grandTotal) * 100)) : 0;
+            barEl.style.width = `${pct}%`;
+            barEl.textContent = `${pct}%`;
+        }
+
+        function relinkType() {
+            if (typeIndex >= types.length) {
+                activeOperation = null;
+                setOperationRunning(false);
+                barEl.classList.remove('progress-bar-striped', 'progress-bar-animated');
+                barEl.style.width = '100%';
+                barEl.textContent = '100%';
+                const msg = Joomla.Text._('JBS_ADM_RELINK_COMPLETE')
+                    .replace('%s', totalRelinked)
+                    .replace('%s', totalSkipped)
+                    .replace('%s', totalErrors);
+                statusEl.innerHTML = `<span class="text-success">${msg}</span>`;
+                if (allErrorDetails.length > 0) {
+                    const detailHtml = allErrorDetails.map((d) => `<li class="small text-danger">${d}</li>`).join('');
+                    statusEl.innerHTML += `<ul class="mt-2 mb-0">${detailHtml}</ul>`;
+                }
+                loadRelinkCounts();
+                return;
+            }
+
+            if (relinkTotals[types[typeIndex]] === 0) {
+                typeIndex += 1;
+                relinkType();
+                return;
+            }
+
+            statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_RELINKING')} ${types[typeIndex]}...`;
+            relinkBatch(types[typeIndex]);
+        }
+
+        function relinkBatch(type) {
+            cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.relinkBatchXHR&${token}=1&type=${type}&limit=10`)
+                .then((data) => {
+                    totalRelinked += data.relinked;
+                    totalErrors += data.errors;
+                    totalSkipped += data.skipped;
+                    if (data.errorDetails && data.errorDetails.length > 0) {
+                        allErrorDetails.push(...data.errorDetails);
+                    }
+                    updateBar();
+                    statusEl.innerHTML = `${Joomla.Text._('JBS_ADM_RELINKING')} ${types[typeIndex]}... <strong>${totalRelinked}</strong> / ${grandTotal}`;
+
+                    // Stop if remaining > 0 but nothing was relinked (avoid infinite loop)
+                    if (data.remaining > 0 && data.relinked > 0) {
+                        relinkBatch(type);
+                    } else {
+                        typeIndex += 1;
+                        relinkType();
+                    }
+                })
+                .catch(() => {
+                    activeOperation = null;
+                    setOperationRunning(false);
+                    statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_MIGRATION_ERROR')}</span>`;
+                });
+        }
+
+        relinkType();
+    });
+
     // ---- Legacy Files Report ----
     document.getElementById('btn-scan-legacy').addEventListener('click', function () {
         const btn = this;
@@ -1379,6 +1491,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadWebPCounts();
         loadThumbRegenCounts();
         loadRecoveryCounts();
+        loadRelinkCounts();
 
         // Check if a cleared-images log exists and show the download button if so
         // downloadLogBtn already declared in outer scope (line ~937)

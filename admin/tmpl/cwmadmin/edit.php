@@ -576,6 +576,26 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </button>
                                 </div>
                             </div>
+                            <!-- Relink Images -->
+                            <div class="col-12 col-lg-6">
+                                <div class="cwmadmin-panel mb-4">
+                                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_RELINK_IMAGES'); ?></h3>
+                                    <p><?php echo Text::_('JBS_ADM_RELINK_IMAGES_DESC'); ?></p>
+                                    <div id="relink-counts" class="mb-3">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        <?php echo Text::_('JBS_ADM_LOADING'); ?>
+                                    </div>
+                                    <div id="relink-progress" class="mb-3" style="display:none;">
+                                        <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-primary" style="width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2" id="relink-status"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" id="btn-start-relink" disabled>
+                                        <i class="icon-link" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_RELINK_IMAGES_BTN'); ?>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

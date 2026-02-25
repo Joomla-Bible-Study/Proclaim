@@ -1813,6 +1813,95 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Get count of records with broken or empty image references that can be relinked XHR
+     *
+     * Returns per-type count of records where the DB image columns are empty or
+     * point to missing files, but whose alias-ID folder has files on disk.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getRelinkCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getRelinkCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Relink a batch of records to their existing image files XHR
+     *
+     * Updates DB columns for records with broken or empty image references
+     * where the expected alias-ID folder already contains image files.
+     * No files are moved or copied — only DB references are updated.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function relinkBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $document = $app->getDocument();
+        $input    = $app->getInput();
+
+        $document->setMimeEncoding('application/json');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->getCmd('type', 'studies');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::relinkBatch($type, $limit);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'relinked'     => 0,
+                'skipped'      => 0,
+                'errors'       => 0,
+                'remaining'    => 0,
+                'errorDetails' => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * Delete legacy image folders/files XHR
      *
      * Accepts an array of relative folder paths and deletes the image

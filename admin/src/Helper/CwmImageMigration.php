@@ -944,6 +944,185 @@ class CwmImageMigration
     }
 
     /**
+     * Get records with empty or broken image references that have files on disk to relink
+     *
+     * Finds records where:
+     * - Image columns are NULL/empty, OR
+     * - Image columns contain a path where the file doesn't exist on disk
+     *
+     * Then checks if `findExistingMigratedFiles()` can locate files in the expected
+     * alias-ID or bare-ID folder for that record.
+     *
+     * @param   string  $type   Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $limit  Maximum records to return (0 = unlimited)
+     *
+     * @return  list<\stdClass>  Records with id, alias, title properties
+     *
+     * @since 10.1.0
+     */
+    public static function getRelinkCandidates(string $type, int $limit = 0): array
+    {
+        $cfg = self::REGEN_TYPE_CONFIG[$type] ?? null;
+
+        if ($cfg === null) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        // Select the columns needed for relinking
+        switch ($type) {
+            case 'studies':
+                $query->select($db->quoteName(['id', 'studytitle', 'alias', 'thumbnailm', 'image']))
+                    ->from($db->quoteName('#__bsms_studies'));
+                $thumbCol  = 'thumbnailm';
+                $titleCol  = 'studytitle';
+                break;
+
+            case 'teachers':
+                $query->select($db->quoteName(['id', 'teachername', 'alias', 'teacher_thumbnail', 'teacher_image', 'image']))
+                    ->from($db->quoteName('#__bsms_teachers'));
+                $thumbCol  = 'teacher_thumbnail';
+                $titleCol  = 'teachername';
+                break;
+
+            case 'series':
+                $query->select($db->quoteName(['id', 'series_text', 'alias', 'series_thumbnail', 'image']))
+                    ->from($db->quoteName('#__bsms_series'));
+                $thumbCol  = 'series_thumbnail';
+                $titleCol  = 'series_text';
+                break;
+
+            default:
+                return [];
+        }
+
+        $db->setQuery($query);
+        $rows = $db->loadObjectList() ?: [];
+
+        $candidates = [];
+
+        foreach ($rows as $row) {
+            $thumbValue = trim($row->$thumbCol ?? '');
+            $title      = $row->$titleCol ?? '';
+            $alias      = $row->alias ?? '';
+
+            // Determine if this record qualifies: empty/null OR broken (file missing)
+            $isEmpty  = ($thumbValue === '' || \strlen($thumbValue) <= 1);
+            $isBroken = false;
+
+            if (!$isEmpty) {
+                // Check if the referenced file actually exists on disk
+                $absPath  = Path::clean(JPATH_ROOT . '/' . $thumbValue);
+                $isBroken = !is_file($absPath);
+            }
+
+            if (!$isEmpty && !$isBroken) {
+                continue;
+            }
+
+            // Check if there are files on disk to relink to
+            $existing = self::findExistingMigratedFiles($type, (int) $row->id, $title, $alias);
+
+            if ($existing === null) {
+                continue;
+            }
+
+            // Build a normalized candidate object
+            $candidate        = new \stdClass();
+            $candidate->id    = (int) $row->id;
+            $candidate->alias = $alias;
+            $candidate->title = $title;
+
+            $candidates[] = $candidate;
+
+            if ($limit > 0 && \count($candidates) >= $limit) {
+                break;
+            }
+        }
+
+        return $candidates;
+    }
+
+    /**
+     * Get count of records per type that can be relinked to existing image files
+     *
+     * @return  array{studies: int, teachers: int, series: int, total: int}
+     *
+     * @since 10.1.0
+     */
+    public static function getRelinkCounts(): array
+    {
+        $counts = [
+            'studies'  => \count(self::getRelinkCandidates('studies')),
+            'teachers' => \count(self::getRelinkCandidates('teachers')),
+            'series'   => \count(self::getRelinkCandidates('series')),
+        ];
+
+        $counts['total'] = $counts['studies'] + $counts['teachers'] + $counts['series'];
+
+        return $counts;
+    }
+
+    /**
+     * Relink a batch of records to their existing image files on disk
+     *
+     * For each qualifying record, calls findExistingMigratedFiles() to locate
+     * the files and updateDbFromExistingFiles() to update the DB columns.
+     * No files are moved or copied — this only updates DB references.
+     *
+     * @param   string  $type   Record type: 'studies', 'teachers', or 'series'
+     * @param   int     $limit  Maximum records to process per batch
+     *
+     * @return  array{relinked: int, skipped: int, remaining: int, errors: int, errorDetails: list<string>}
+     *
+     * @since 10.1.0
+     */
+    public static function relinkBatch(string $type, int $limit = 10): array
+    {
+        $result = [
+            'relinked'     => 0,
+            'skipped'      => 0,
+            'remaining'    => 0,
+            'errors'       => 0,
+            'errorDetails' => [],
+        ];
+
+        // Fetch a bit more than needed so we can report remaining
+        $candidates = self::getRelinkCandidates($type);
+        $batch      = \array_slice($candidates, 0, $limit);
+
+        $result['remaining'] = max(0, \count($candidates) - \count($batch));
+
+        foreach ($batch as $candidate) {
+            $existing = self::findExistingMigratedFiles($type, $candidate->id, $candidate->title, $candidate->alias);
+
+            if ($existing === null) {
+                $result['skipped']++;
+
+                continue;
+            }
+
+            try {
+                $updateResult = self::updateDbFromExistingFiles($type, $candidate->id, $existing);
+
+                if ($updateResult['success']) {
+                    $result['relinked']++;
+                } else {
+                    $result['errors']++;
+                    $result['errorDetails'][] = $type . ' #' . $candidate->id . ': ' . ($updateResult['error'] ?? 'Unknown error');
+                }
+            } catch (\Throwable $e) {
+                $result['errors']++;
+                $result['errorDetails'][] = $type . ' #' . $candidate->id . ': ' . $e->getMessage();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Recover bare-ID folders by migrating their images to proper alias-ID folders
      *
      * For each numeric-only folder, looks up the DB record, generates proper
