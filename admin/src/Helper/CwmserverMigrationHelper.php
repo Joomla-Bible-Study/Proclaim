@@ -79,8 +79,9 @@ class CwmserverMigrationHelper
             }
         }
 
-        // Always include 'unknown'
+        // Always include non-addon types
         $labels['unknown'] = 'Unknown';
+        $labels['empty']   = 'Empty';
 
         return $labels;
     }
@@ -227,6 +228,77 @@ class CwmserverMigrationHelper
     }
 
     /**
+     * Get detailed media file information for a legacy server filtered by detected type.
+     *
+     * Used by the drill-down feature so administrators can investigate
+     * unknown, empty, or any other classified media files.
+     *
+     * @param   int     $legacyServerId  The legacy server ID
+     * @param   string  $detectedType    The detected content type to filter by
+     * @param   int     $limit           Maximum rows to return
+     *
+     * @return  array  Array of associative arrays with media file details
+     *
+     * @since   10.1.0
+     */
+    public static function getMediaFileDetails(int $legacyServerId, string $detectedType, int $limit = 100): array
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('m.id'),
+                $db->quoteName('m.study_id'),
+                $db->quoteName('m.published'),
+                $db->quoteName('m.params'),
+                $db->quoteName('s.studytitle'),
+            ])
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->join('LEFT', $db->quoteName('#__bsms_studies', 's'), $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id'))
+            ->where($db->quoteName('m.server_id') . ' = :serverId')
+            ->bind(':serverId', $legacyServerId, \Joomla\Database\ParameterType::INTEGER);
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        $results = [];
+
+        foreach ($rows as $row) {
+            try {
+                $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                continue;
+            }
+
+            $filename  = $params['filename'] ?? '';
+            $mediacode = $params['mediacode'] ?? '';
+            $mimeType  = $params['mime_type'] ?? '';
+            $player    = $params['player'] ?? '';
+
+            if (self::detectContentType($filename, $mediacode, $mimeType, $player, $params) !== $detectedType) {
+                continue;
+            }
+
+            $results[] = [
+                'id'         => (int) $row->id,
+                'study_id'   => (int) $row->study_id,
+                'published'  => (int) $row->published,
+                'studytitle' => $row->studytitle ?? '',
+                'filename'   => $filename,
+                'mediacode'  => mb_substr($mediacode, 0, 120),
+                'mime_type'  => $mimeType,
+                'player'     => $player,
+                'icon'       => $params['media_icon_type'] ?? '',
+            ];
+
+            if (\count($results) >= $limit) {
+                break;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * AllVideos shortcode tags that represent local media files.
      *
      * @var    string[]
@@ -281,6 +353,11 @@ class CwmserverMigrationHelper
             if ($val !== '' && $val !== '0' && $val !== '-1') {
                 return $type;
             }
+        }
+
+        // Early exit: genuinely empty records (no filename, no mediacode, no legacy IDs)
+        if (empty($filename) && empty($mediacode)) {
+            return 'empty';
         }
 
         // Load the addon registry at once for phases 2 and 3
@@ -452,16 +529,24 @@ class CwmserverMigrationHelper
         int $limit = 25
     ): array {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Load ALL media files for this server (no SQL LIMIT) because the type
+        // filter is applied in PHP after parsing params.  Applying SQL LIMIT
+        // before filtering caused early exit when a batch contained mixed types
+        // and returned fewer matching IDs than the batch size.
+        // ORDER BY id ensures deterministic ordering so the offset-based
+        // failure-skipping logic in the JS batch loop works correctly.
         $query = $db->getQuery(true)
             ->select([$db->quoteName('id'), $db->quoteName('params')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('server_id') . ' = :serverId')
             ->bind(':serverId', $legacyServerId, \Joomla\Database\ParameterType::INTEGER)
-            ->setLimit($limit, $offset);
+            ->order($db->quoteName('id') . ' ASC');
         $db->setQuery($query);
         $rows = $db->loadObjectList();
 
-        $ids = [];
+        // Filter by detected type in PHP, then apply offset/limit
+        $allIds = [];
 
         foreach ($rows as $row) {
             try {
@@ -476,11 +561,11 @@ class CwmserverMigrationHelper
             $player    = $params['player'] ?? '';
 
             if (self::detectContentType($filename, $mediacode, $mimeType, $player, $params) === $detectedType) {
-                $ids[] = (int) $row->id;
+                $allIds[] = (int) $row->id;
             }
         }
 
-        return $ids;
+        return \array_slice($allIds, $offset, $limit);
     }
 
     /**

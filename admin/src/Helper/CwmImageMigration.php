@@ -547,9 +547,21 @@ class CwmImageMigration
             }
 
             if ($thumbFile !== null || $imageFile !== null) {
+                $thumbPath = $thumbFile ? $candidate['relDir'] . '/' . $thumbFile : '';
+                $imagePath = $imageFile ? $candidate['relDir'] . '/' . $imageFile : '';
+
+                // Fall back: if only one exists, use it for both columns so the
+                // thumbnail column is never left empty (which would cause the
+                // record to remain a relink candidate indefinitely).
+                if ($thumbPath === '' && $imagePath !== '') {
+                    $thumbPath = $imagePath;
+                } elseif ($imagePath === '' && $thumbPath !== '') {
+                    $imagePath = $thumbPath;
+                }
+
                 return [
-                    'image'     => $imageFile ? $candidate['relDir'] . '/' . $imageFile : '',
-                    'thumbnail' => $thumbFile ? $candidate['relDir'] . '/' . $thumbFile : '',
+                    'image'     => $imagePath,
+                    'thumbnail' => $thumbPath,
                 ];
             }
         }

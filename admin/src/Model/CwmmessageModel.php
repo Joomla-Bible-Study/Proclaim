@@ -202,7 +202,7 @@ class CwmmessageModel extends AdminModel
         );
         $query->from($db->quoteName('#__bsms_mediafiles', 'm'));
         $query->where($db->quoteName('m.study_id') . ' = ' . (int) $this->getItem()->id);
-        $query->where('(' . $db->quoteName('m.published') . ' = 0 OR ' . $db->quoteName('m.published') . ' = 1)');
+        $query->whereIn($db->quoteName('m.published'), [0, 1, 2]);
         $query->order($db->quoteName('m.ordering') . ' ASC, ' . $db->quoteName('m.createdate') . ' DESC');
 
         // Join over the asset groups.

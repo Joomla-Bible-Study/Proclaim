@@ -42,6 +42,8 @@
         virtuemart: 'primary',
         docman: 'info',
         local: 'dark',
+        direct: 'secondary',
+        empty: 'warning',
         unknown: 'light',
     };
 
@@ -178,18 +180,147 @@
             for (const [type, count] of Object.entries(server.types)) {
                 const badge = TYPE_BADGES[type] || 'secondary';
                 const label = typeLabels[type] || type;
-                html += `<span class="badge bg-${badge} me-1">${escapeHtml(label)}: ${count}</span>`;
+                html += `<button type="button" class="badge bg-${badge} me-1 border-0 smg-detail-btn"`;
+                html += ` data-server-id="${server.id}" data-type="${type}"`;
+                html += ` title="${Joomla.Text._('JBS_SMG_DETAIL_TOOLTIP')}"`;
+                html += ` style="cursor:pointer">${escapeHtml(label)}: ${count}</button>`;
             }
 
             html += '</td></tr>';
         }
 
         html += '</tbody></table>';
+        html += '<div id="smg-detail-panel" style="display:none;"></div>';
         tableContainer.innerHTML = html;
+
+        // Bind click handlers on type badges for drill-down
+        tableContainer.querySelectorAll('.smg-detail-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                showDetail(parseInt(btn.dataset.serverId, 10), btn.dataset.type);
+            });
+        });
 
         // Build config form
         buildConfigForm();
         configPanel.style.display = '';
+    }
+
+    // =========================================================================
+    // Drill-down Detail
+    // =========================================================================
+
+    /**
+     * Fetch and display media file details for a server + type.
+     *
+     * @param {number} serverId  Legacy server ID
+     * @param {string} type      Detected type key
+     */
+    async function showDetail(serverId, type) {
+        const panel = document.getElementById('smg-detail-panel');
+
+        if (!panel) {
+            return;
+        }
+
+        const label = typeLabels[type] || type;
+        const server = scanData.find(s => s.id === serverId);
+        const serverName = server ? server.server_name : `ID ${serverId}`;
+
+        panel.innerHTML = '<div class="text-center p-3">'
+            + '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '
+            + Joomla.Text._('JBS_ADM_LOADING')
+            + '</div>';
+        panel.style.display = '';
+
+        try {
+            const url = ajaxUrl('serverMigrationDetailXHR')
+                + `&serverId=${serverId}&type=${encodeURIComponent(type)}`;
+            const result = await window.ProclaimFetch.fetchJson(url, {}, { timeout: 30000, retries: 1 });
+
+            if (!result.success) {
+                panel.innerHTML = `<div class="alert alert-danger">${escapeHtml(result.message || 'Failed')}</div>`;
+                return;
+            }
+
+            renderDetail(panel, serverName, label, type, result.details);
+        } catch (err) {
+            panel.innerHTML = `<div class="alert alert-danger">${escapeHtml(err.message)}</div>`;
+        }
+    }
+
+    /**
+     * Render the detail table inside the given panel.
+     *
+     * @param {HTMLElement} panel       Target container
+     * @param {string}      serverName  Legacy server name
+     * @param {string}      label       Type display label
+     * @param {string}      type        Type key
+     * @param {Array}       details     Media file detail rows
+     */
+    function renderDetail(panel, serverName, label, type, details) {
+        const badge = TYPE_BADGES[type] || 'secondary';
+
+        let html = '<div class="card mt-3 mb-3">';
+        html += `<div class="card-header d-flex justify-content-between align-items-center">`;
+        html += `<span><strong>${escapeHtml(serverName)}</strong> &mdash; `;
+        html += `<span class="badge bg-${badge}">${escapeHtml(label)}</span>`;
+        html += ` (${details.length} ${details.length === 1 ? 'file' : 'files'})</span>`;
+        html += `<button type="button" class="btn-close" id="smg-detail-close" aria-label="Close"></button>`;
+        html += '</div>';
+
+        if (details.length === 0) {
+            html += `<div class="card-body"><p class="text-muted mb-0">${Joomla.Text._('JBS_SMG_DETAIL_NONE')}</p></div>`;
+        } else {
+            html += '<div class="card-body p-0"><div class="table-responsive">';
+            html += '<table class="table table-sm table-striped mb-0">';
+            html += '<thead><tr>';
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_ID')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_STATUS')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_STUDY')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_FILENAME')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_MEDIACODE')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_MIME')}</th>`;
+            html += `<th>${Joomla.Text._('JBS_SMG_DETAIL_PLAYER')}</th>`;
+            html += '</tr></thead><tbody>';
+
+            for (const row of details) {
+                const editUrl = `index.php?option=com_proclaim&task=cwmmediafile.edit&id=${row.id}`;
+                const statusBadge = publishedBadge(row.published);
+                html += '<tr>';
+                html += `<td><a href="${editUrl}" target="_blank">${row.id}</a></td>`;
+                html += `<td class="text-center">${statusBadge}</td>`;
+                html += '<td>';
+
+                if (row.study_id) {
+                    const studyUrl = `index.php?option=com_proclaim&task=cwmmessage.edit&id=${row.study_id}`;
+                    html += `<a href="${studyUrl}" target="_blank">${escapeHtml(row.studytitle || 'ID ' + row.study_id)}</a>`;
+                } else {
+                    html += '<span class="text-muted">—</span>';
+                }
+
+                html += '</td>';
+                html += `<td><small>${escapeHtml(row.filename || '—')}</small></td>`;
+                html += `<td><small>${escapeHtml(row.mediacode || '—')}</small></td>`;
+                html += `<td><small>${escapeHtml(row.mime_type || '—')}</small></td>`;
+                html += `<td>${escapeHtml(row.player || '—')}</td>`;
+                html += '</tr>';
+            }
+
+            html += '</tbody></table></div></div>';
+        }
+
+        html += '</div>';
+        panel.innerHTML = html;
+
+        // Close button
+        const closeBtn = document.getElementById('smg-detail-close');
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                panel.style.display = 'none';
+                panel.innerHTML = '';
+            });
+        }
     }
 
     /**
@@ -225,7 +356,15 @@
                 // Option: Skip
                 html += `<option value="skip">${Joomla.Text._('JBS_SMG_SKIP')}</option>`;
 
-                // Option: Create new
+                // Empty files have no content — skip-only (use drill-down to investigate)
+                if (type === 'empty') {
+                    html += '</select>';
+                    html += ` <small class="text-muted fst-italic">${Joomla.Text._('JBS_SMG_EMPTY_HINT')}</small>`;
+                    html += '</div></div>';
+                    continue;
+                }
+
+                // Option: Create new (not for unknown — those need manual review)
                 if (type !== 'unknown') {
                     html += `<option value="create_new">${Joomla.Text._('JBS_SMG_CREATE_NEW')} ${escapeHtml(label)}</option>`;
                 }
@@ -347,11 +486,15 @@
                 targetServerId = parseInt(group.targetValue.replace('existing_', ''), 10);
             }
 
-            // Migrate in batches
-            let offset = 0;
+            // Migrate in batches.  Successfully migrated rows change server_id
+            // and drop out of the result set.  Failed rows stay, so we track
+            // cumulative failures and use that as the query offset to skip
+            // past stuck files instead of re-fetching them every batch.
             let batchErrors = [];
+            let failedInGroup = 0;
+            let safety = Math.ceil(group.count / BATCH_SIZE) * 2 + 5;
 
-            while (offset < group.count + BATCH_SIZE) {
+            while (safety-- > 0) {
                 progressText.textContent = Joomla.Text._('JBS_SMG_MIGRATING')
                     .replace('%d', Math.min(migratedTotal + BATCH_SIZE, totalFiles))
                     .replace('%t', totalFiles);
@@ -361,7 +504,7 @@
                     detectedType: group.detectedType,
                     targetServerId,
                     targetType: group.targetType,
-                    offset,
+                    offset: failedInGroup,
                     limit: BATCH_SIZE,
                     legacyServerParams: group.legacyServerParams,
                 });
@@ -372,6 +515,7 @@
                 }
 
                 migratedTotal += batchResult.migrated;
+                failedInGroup += batchResult.fetched - batchResult.migrated;
 
                 if (batchResult.errors && batchResult.errors.length) {
                     batchErrors = batchErrors.concat(batchResult.errors);
@@ -382,12 +526,10 @@
                 progressBar.style.width = pct + '%';
                 progressBar.textContent = pct + '%';
 
-                // If fewer fetched than limit, we've exhausted this group
-                if (batchResult.fetched < BATCH_SIZE) {
+                // No more matching files for this group (all remaining are failures)
+                if (batchResult.fetched === 0) {
                     break;
                 }
-
-                offset += BATCH_SIZE;
             }
 
             allErrors = allErrors.concat(batchErrors);
@@ -478,6 +620,27 @@
     // =========================================================================
     // Utility
     // =========================================================================
+
+    /**
+     * Return an HTML badge for a Joomla published state value.
+     *
+     * @param {number} state  Published state (-2=trashed, 0=unpublished, 1=published, 2=archived)
+     * @returns {string}  HTML badge markup
+     */
+    function publishedBadge(state) {
+        switch (state) {
+        case 1:
+            return '<span class="badge bg-success">Published</span>';
+        case 0:
+            return '<span class="badge bg-secondary">Unpublished</span>';
+        case 2:
+            return '<span class="badge bg-info">Archived</span>';
+        case -2:
+            return '<span class="badge bg-danger">Trashed</span>';
+        default:
+            return `<span class="badge bg-light text-dark">${state}</span>`;
+        }
+    }
 
     /**
      * Escape HTML entities.

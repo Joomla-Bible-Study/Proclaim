@@ -68,7 +68,7 @@ class CwmmediafilesModel extends ListModel
      * @throws \Exception
      * @since 9.0.0
      */
-    public function getItems(): mixed
+    public function getItems(): array
     {
         // Get a storage key.
         $store = $this->getStoreId();
@@ -86,8 +86,8 @@ class CwmmediafilesModel extends ListModel
 
             $items = $this->_getList($this->_getListQuery(), $this->getStart(), $this->getState('list.limit'));
 
-            if (!$items) {
-                return false;
+            if (empty($items)) {
+                return [];
             }
 
             foreach ($items as $item) {
@@ -111,7 +111,7 @@ class CwmmediafilesModel extends ListModel
         } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 
-            return false;
+            return [];
         }
 
         return $this->cache[$store];

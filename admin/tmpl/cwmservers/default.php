@@ -20,6 +20,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmservers\HtmlView $this */
 
@@ -34,7 +35,8 @@ $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
-$columns   = 5;
+$locationEnabled = CwmlocationHelper::isEnabled();
+$columns         = $locationEnabled ? 5 : 4;
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
 $workflow_state    = false;
@@ -126,9 +128,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     $listOrder
                                 ); ?>
                             </th>
+                            <?php if ($locationEnabled) : ?>
                             <th scope="col" class="w-10 d-none d-md-table-cell">
                                 <?php echo Text::_('JBS_CMN_LOCATION'); ?>
                             </th>
+                            <?php endif; ?>
                             <th scope="col" class="w-3 d-none d-lg-table-cell">
                                 <?php
                                 echo HTMLHelper::_(
@@ -204,6 +208,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         endif; ?>
                                     </div>
                                 </td>
+                                <?php if ($locationEnabled) : ?>
                                 <td class="small d-none d-md-table-cell">
                                     <?php if (isset($item->location_id) && $item->location_id > 0) : ?>
                                         <?php echo $this->escape($item->location_text ?? ''); ?>
@@ -211,6 +216,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                         <span class="badge bg-secondary"><?php echo Text::_('JBS_SVR_SHARED'); ?></span>
                                     <?php endif; ?>
                                 </td>
+                                <?php endif; ?>
                                 <td class="center d-none d-md-table-cell">
                                     <?php
                                     echo (int)$item->id; ?>

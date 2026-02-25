@@ -233,9 +233,14 @@ class Cwmassets
     }
 
     /**
-     * Delete assets
+     * Delete a Proclaim-owned asset.
      *
-     * @param   object  $data  Data
+     * Only deletes the asset if it belongs to Proclaim (name starts with
+     * "com_proclaim.").  This prevents accidental deletion of core Joomla
+     * assets (com_content, com_users, etc.) if a record's asset_id column
+     * ever points to a non-Proclaim row.
+     *
+     * @param   object  $data  Data with asset_id property
      *
      * @return bool
      *
@@ -245,19 +250,44 @@ class Cwmassets
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        if (isset($data->asset_id)) {
-            if ((int)$data->asset_id >= 2 && (int)$data->asset_id !== self::$parent_id) {
-                $query = $db->getQuery(true);
-                $query->delete($db->quoteName('#__assets'))
-                    ->where($db->quoteName('id') . ' = ' . $db->quote($data->asset_id));
-                $db->setQuery($query);
-                $db->execute();
-            }
+        if (!isset($data->asset_id) || (int) $data->asset_id < 2) {
+            return false;
+        }
+
+        $assetId = (int) $data->asset_id;
+
+        // Never delete the Proclaim parent asset itself
+        if ($assetId === self::$parent_id) {
+            return true;
+        }
+
+        // Verify this asset actually belongs to Proclaim before deleting
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('name'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('id') . ' = :assetId')
+            ->bind(':assetId', $assetId, \Joomla\Database\ParameterType::INTEGER);
+        $db->setQuery($query);
+        $name = (string) $db->loadResult();
+
+        if ($name === '' || !str_starts_with($name, 'com_proclaim.')) {
+            Log::add(
+                'Skipped deletion of non-Proclaim asset ID ' . $assetId . ' (name: ' . $name . ')',
+                Log::WARNING,
+                'com_proclaim'
+            );
 
             return true;
         }
 
-        return false;
+        $query = $db->getQuery(true)
+            ->delete($db->quoteName('#__assets'))
+            ->where($db->quoteName('id') . ' = :assetId')
+            ->bind(':assetId', $assetId, \Joomla\Database\ParameterType::INTEGER);
+        $db->setQuery($query);
+        $db->execute();
+
+        return true;
     }
 
     /**

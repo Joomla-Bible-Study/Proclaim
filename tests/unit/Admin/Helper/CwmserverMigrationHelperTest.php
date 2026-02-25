@@ -223,9 +223,9 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
                 'sermon.mp3', '', 'audio/mpeg', '7', 'local',
             ],
 
-            // Unknown
+            // Empty (no filename, no mediacode)
             'empty everything' => [
-                '', '', '', '', 'unknown',
+                '', '', '', '', 'empty',
             ],
             'unknown domain URL' => [
                 'https://unknownplatform.com/video/123', '', '', '', 'unknown',

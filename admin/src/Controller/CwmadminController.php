@@ -3155,6 +3155,57 @@ class CwmadminController extends FormController
     }
 
     /**
+     * AJAX: Get media file details for a legacy server + detected type (drill-down).
+     *
+     * Expects GET params: serverId, type.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationDetailXHR(): void
+    {
+        session_write_close();
+        $app = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $serverId = $app->getInput()->getInt('serverId', 0);
+        $type     = $app->getInput()->getCmd('type', '');
+
+        if ($serverId < 1 || $type === '') {
+            echo json_encode(['success' => false, 'message' => 'Missing serverId or type'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $details = CwmserverMigrationHelper::getMediaFileDetails($serverId, $type);
+
+            echo json_encode([
+                'success' => true,
+                'details' => $details,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
      * AJAX: Unpublish empty legacy servers after migration.
      *
      * @return  void
