@@ -18,6 +18,8 @@
         filterType: 'all', // all, live, upcoming, completed
         playlists: [],
         processedVideoIds: new Set(), // Track processed video IDs to prevent duplicates
+        scopeChannel: true,
+        phraseMatch: false,
 
         init() {
             this.createModal();
@@ -59,8 +61,16 @@
                 + '</div>'
                 + '</div>'
                 + '</div>'
-                + '<div class="mt-2">'
+                + '<div class="mt-2 d-flex align-items-center gap-3">'
                 + '<button class="btn btn-sm btn-outline-secondary" type="button" id="youtubeResetBtn"><span class="icon-refresh"></span> Reset Filters</button>'
+                + '<div class="form-check form-check-inline mb-0">'
+                + '<input class="form-check-input" type="checkbox" id="youtubeScopeChannel" checked>'
+                + '<label class="form-check-label" for="youtubeScopeChannel">Channel Only</label>'
+                + '</div>'
+                + '<div class="form-check form-check-inline mb-0">'
+                + '<input class="form-check-input" type="checkbox" id="youtubePhraseMatch">'
+                + '<label class="form-check-label" for="youtubePhraseMatch">Exact Phrase</label>'
+                + '</div>'
                 + '</div>'
                 + '</div>'
                 + '<div id="youtubeVideoGrid" class="row row-cols-1 row-cols-md-3 g-4"></div>'
@@ -155,6 +165,32 @@
                 });
             }
 
+            // Scope channel checkbox
+            const scopeChannel = document.getElementById('youtubeScopeChannel');
+            if (scopeChannel) {
+                const newScopeChannel = scopeChannel.cloneNode(true);
+                scopeChannel.parentNode.replaceChild(newScopeChannel, scopeChannel);
+
+                newScopeChannel.addEventListener('change', function handleScopeChange() {
+                    self.scopeChannel = this.checked;
+                    self.currentPageToken = '';
+                    self.loadVideos();
+                });
+            }
+
+            // Phrase match checkbox
+            const phraseMatch = document.getElementById('youtubePhraseMatch');
+            if (phraseMatch) {
+                const newPhraseMatch = phraseMatch.cloneNode(true);
+                phraseMatch.parentNode.replaceChild(newPhraseMatch, phraseMatch);
+
+                newPhraseMatch.addEventListener('change', function handlePhraseChange() {
+                    self.phraseMatch = this.checked;
+                    self.currentPageToken = '';
+                    self.loadVideos();
+                });
+            }
+
             const resetBtn = document.getElementById('youtubeResetBtn');
             if (resetBtn) {
                 const newResetBtn = resetBtn.cloneNode(true);
@@ -164,9 +200,13 @@
                     document.getElementById('youtubeSearchInput').value = '';
                     document.getElementById('youtubeFilterType').value = 'all';
                     document.getElementById('youtubePlaylistSelect').value = '';
+                    document.getElementById('youtubeScopeChannel').checked = true;
+                    document.getElementById('youtubePhraseMatch').checked = false;
                     self.searchQuery = '';
                     self.filterType = 'all';
                     self.selectedPlaylist = '';
+                    self.scopeChannel = true;
+                    self.phraseMatch = false;
                     self.currentPageToken = '';
                     self.loadVideos();
                 });
@@ -318,6 +358,8 @@
 
             if (this.searchQuery) {
                 url += `&query=${encodeURIComponent(this.searchQuery)}`;
+                url += `&scope_channel=${this.scopeChannel ? 1 : 0}`;
+                url += `&phrase_match=${this.phraseMatch ? 1 : 0}`;
             }
 
             // Add filter type for live videos

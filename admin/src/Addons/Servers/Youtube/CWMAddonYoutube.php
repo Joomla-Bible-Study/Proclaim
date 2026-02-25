@@ -729,10 +729,12 @@ class CWMAddonYoutube extends CWMAddon
     {
         $this->loadLanguage();
 
-        $serverId   = $input->getInt('server_id', 0);
-        $query      = $input->getString('query', '');
-        $pageToken  = $input->getString('page_token', '');
-        $maxResults = $input->getInt('max_results', 12);
+        $serverId     = $input->getInt('server_id', 0);
+        $query        = $input->getString('query', '');
+        $pageToken    = $input->getString('page_token', '');
+        $maxResults   = $input->getInt('max_results', 12);
+        $scopeChannel = $input->getBool('scope_channel', true);
+        $phraseMatch  = $input->getBool('phrase_match', false);
 
         if (!$serverId) {
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_SERVER_ID')];
@@ -757,13 +759,15 @@ class CWMAddonYoutube extends CWMAddon
 
             $youtube = new YouTube($client);
 
+            $searchQuery = $phraseMatch ? '"' . $query . '"' : $query;
+
             $params = [
-                'q'          => $query,
+                'q'          => $searchQuery,
                 'type'       => 'video',
                 'maxResults' => $maxResults,
             ];
 
-            if (!empty($channelId)) {
+            if ($scopeChannel && !empty($channelId)) {
                 $params['channelId'] = $channelId;
             }
 
