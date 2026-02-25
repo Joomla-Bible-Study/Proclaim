@@ -65,7 +65,7 @@ class CwmseriesdisplaysController extends BaseController
     public function paginateAjax(): void
     {
         $app = Factory::getApplication();
-        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);

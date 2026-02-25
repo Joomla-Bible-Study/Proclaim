@@ -367,7 +367,7 @@ class HtmlView extends BaseHtmlView
             $t      = $this->template->id ?? $mainframe->input->getInt('t', 1);
             $itemId = $this->itemid;
 
-            $ajaxUrl = 'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
+            $ajaxUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
                 . '&t=' . (int) $t
                 . '&Itemid=' . (int) $itemId;
 

@@ -94,7 +94,7 @@ class CwmsermonsController extends BaseController
             CwmanalyticsHelper::logEvent('play', 0, $id);
         }
 
-        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['success' => $id > 0]);
         $app->close();
     }
@@ -116,7 +116,7 @@ class CwmsermonsController extends BaseController
     public function filterAjax(): void
     {
         $app = Factory::getApplication();
-        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
@@ -126,11 +126,23 @@ class CwmsermonsController extends BaseController
         }
 
         try {
-            /** @var \CWM\Component\Proclaim\Site\Model\CwmsermonsModel $model */
-            $model = $this->getModel('Cwmsermons', 'Site');
+            // Flatten bracket-format params (filter[teacher] → filter_teacher) so
+            // the model's getUserStateFromRequest() finds them by their flat keys.
+            $input  = $app->getInput();
+            $filter = $input->get('filter', [], 'array');
 
-            // populateState() runs automatically on first getState() call,
-            // reading filter_* / list_* params from the request just like a form POST.
+            foreach ($filter as $key => $value) {
+                $input->set('filter_' . $key, $value);
+            }
+
+            $list = $input->get('list', [], 'array');
+
+            foreach ($list as $key => $value) {
+                $input->set('list_' . $key, $value);
+            }
+
+            /** @var \CWM\Component\Proclaim\Site\Model\CwmsermonsModel $model */
+            $model    = $this->getModel('Cwmsermons', 'Site');
             $state    = $model->getState();
             $template = $state->get('template');
             $params   = $state->get('params');

@@ -559,8 +559,12 @@ describe('sermon-filters.es6.js', () => {
     });
 
     describe('Error fallback', () => {
-        test('should fallback to form.submit() on fetch error', async () => {
+        test('should fallback to native form submit on fetch error', async () => {
             jest.spyOn(console, 'warn').mockImplementation(function () {});
+
+            // Spy on the native submit that the error fallback uses
+            const nativeSpy = jest.spyOn(HTMLFormElement.prototype, 'submit')
+                .mockImplementation(function () {});
 
             // All fetch calls fail (no fetch happens during init)
             const mockFetch = jest.fn()
@@ -569,7 +573,6 @@ describe('sermon-filters.es6.js', () => {
             setupModule(mockFetch);
 
             const form = document.getElementById('adminForm');
-            form.submit = jest.fn();
 
             form.dispatchEvent(new Event('submit', { cancelable: true }));
 
@@ -577,7 +580,8 @@ describe('sermon-filters.es6.js', () => {
                 await new Promise(function (r) { setTimeout(r, 10); });
             }
 
-            expect(form.submit).toHaveBeenCalled();
+            expect(nativeSpy).toHaveBeenCalled();
+            nativeSpy.mockRestore();
         }, 10000);
     });
 });

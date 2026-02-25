@@ -43,11 +43,10 @@ class CwmscriptureController extends BaseController
      */
     public function getPassageXHR(): void
     {
-        $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $input    = $app->getInput();
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);

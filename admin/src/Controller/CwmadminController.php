@@ -1066,11 +1066,10 @@ class CwmadminController extends FormController
     public function getThumbnailListXHR(): void
     {
         $app          = Factory::getApplication();
-        $document     = $app->getDocument();
         $input        = $app->getInput();
         $images_paths = [];
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1109,10 +1108,9 @@ class CwmadminController extends FormController
     public function createThumbnailXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1224,9 +1222,8 @@ class CwmadminController extends FormController
     public function getMigrationCountsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1263,10 +1260,9 @@ class CwmadminController extends FormController
     public function getMigrationBatchXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1307,10 +1303,9 @@ class CwmadminController extends FormController
     public function migrateRecordXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1356,9 +1351,8 @@ class CwmadminController extends FormController
     public function getOrphanedFoldersXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1393,10 +1387,9 @@ class CwmadminController extends FormController
     public function deleteOrphanedFoldersXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1434,9 +1427,8 @@ class CwmadminController extends FormController
     public function getLegacyFolderReportXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1516,9 +1508,8 @@ class CwmadminController extends FormController
     public function getUnresolvableCountXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1550,9 +1541,8 @@ class CwmadminController extends FormController
     public function clearUnresolvableXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1583,9 +1573,8 @@ class CwmadminController extends FormController
     public function getWebPCountsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1622,10 +1611,9 @@ class CwmadminController extends FormController
     public function migrateToWebPXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1660,9 +1648,8 @@ class CwmadminController extends FormController
     public function getThumbRegenCountXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1696,10 +1683,9 @@ class CwmadminController extends FormController
     public function regenerateThumbsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1739,9 +1725,8 @@ class CwmadminController extends FormController
     public function getRecoveryCountsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1781,10 +1766,9 @@ class CwmadminController extends FormController
     public function recoverBareIdFoldersXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1827,9 +1811,8 @@ class CwmadminController extends FormController
     public function getRelinkCountsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1870,10 +1853,9 @@ class CwmadminController extends FormController
     public function relinkBatchXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1914,10 +1896,9 @@ class CwmadminController extends FormController
     public function deleteLegacyFoldersXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken() && !Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -1963,9 +1944,8 @@ class CwmadminController extends FormController
     public function getPlayerStatsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2006,9 +1986,8 @@ class CwmadminController extends FormController
     public function getPopupStatsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2048,9 +2027,8 @@ class CwmadminController extends FormController
     public function doArchiveXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
@@ -2093,9 +2071,8 @@ class CwmadminController extends FormController
     public function aliasUpdateXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
@@ -2137,10 +2114,9 @@ class CwmadminController extends FormController
     public function changePlayersXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
@@ -2208,10 +2184,9 @@ class CwmadminController extends FormController
     public function changePopupXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
@@ -2303,10 +2278,9 @@ class CwmadminController extends FormController
     public function changePlayerByMediaTypeXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Check for request forgeries
         if (!Session::checkToken('get')) {
@@ -2388,9 +2362,8 @@ class CwmadminController extends FormController
     public function getScriptureStatusXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2436,8 +2409,7 @@ class CwmadminController extends FormController
     public function getTranslationsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2555,8 +2527,7 @@ class CwmadminController extends FormController
     public function downloadTranslationXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2614,8 +2585,7 @@ class CwmadminController extends FormController
     public function removeTranslationXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2662,8 +2632,7 @@ class CwmadminController extends FormController
     public function removeAllTranslationsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2706,8 +2675,7 @@ class CwmadminController extends FormController
     public function syncApiBibleTranslationsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2878,8 +2846,7 @@ class CwmadminController extends FormController
     public function cleanupProviderXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -2930,8 +2897,7 @@ class CwmadminController extends FormController
     public function csvImportBatchXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
             echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => Text::_('JINVALID_TOKEN')]]], JSON_THROW_ON_ERROR);
@@ -3018,8 +2984,7 @@ class CwmadminController extends FormController
     {
         session_write_close();
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3064,8 +3029,7 @@ class CwmadminController extends FormController
     {
         session_write_close();
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3127,8 +3091,7 @@ class CwmadminController extends FormController
     {
         session_write_close();
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get') && !Session::checkToken()) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3181,8 +3144,7 @@ class CwmadminController extends FormController
     {
         session_write_close();
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3221,8 +3183,7 @@ class CwmadminController extends FormController
     public function detectUpgradeXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3262,8 +3223,7 @@ class CwmadminController extends FormController
     public function upgradeBackupXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3303,8 +3263,7 @@ class CwmadminController extends FormController
     public function upgradeParamsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3340,8 +3299,7 @@ class CwmadminController extends FormController
     public function upgradeSchemaXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3387,8 +3345,7 @@ class CwmadminController extends FormController
     public function upgradeDataXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3424,8 +3381,7 @@ class CwmadminController extends FormController
     public function upgradeAssetsXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
@@ -3459,8 +3415,7 @@ class CwmadminController extends FormController
     public function upgradeVerifyXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);

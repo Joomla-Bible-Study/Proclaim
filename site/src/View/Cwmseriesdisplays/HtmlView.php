@@ -237,7 +237,7 @@ class HtmlView extends BaseHtmlView
             $t      = $this->template->id ?? $app->getInput()->getInt('t', 1);
             $itemId = (int) $app->getInput()->get('Itemid', 0);
 
-            $ajaxUrl = 'index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw'
+            $ajaxUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmseriesdisplays.paginateAjax&format=raw'
                 . '&t=' . (int) $t
                 . '&Itemid=' . (int) $itemId;
 

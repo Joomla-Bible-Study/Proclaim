@@ -199,11 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear existing search params
         url.search = '';
 
-        // Re-apply relevant filter/list params
-        for (const pair of params.entries()) {
-            if (pair[0] !== 'task' && pair[0] !== 'format' && pair[1] !== '') {
-                url.searchParams.set(pair[0], pair[1]);
-            }
+        // Only push limitstart for pagination — filter/sort state stays
+        // in the form, not the URL, so the address bar stays clean.
+        const limitstart = params.get('limitstart');
+
+        if (limitstart && limitstart !== '0') {
+            url.searchParams.set('limitstart', limitstart);
         }
 
         history.pushState({ proclaimAjax: true }, '', url.toString());
@@ -476,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // Cancelled — a newer request replaced this one
             }
 
-            // Fallback: submit the form normally
+            // Fallback: submit the form normally (use native submit to avoid infinite loop)
             console.warn('Proclaim AJAX filter error:', err.message);
 
             if (appendMode) {
@@ -486,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 hideLoading();
             }
 
-            form.submit();
+            nativeSubmit();
             return;
         }
 
@@ -541,6 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
         resetScrollState();
         fetchResults({ limitstart: 0 });
     });
+
+    // Save the native submit so the error fallback can do a real POST
+    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
 
     // Override the native submit() so searchtools' form.submit() goes through AJAX
     form.submit = function () {

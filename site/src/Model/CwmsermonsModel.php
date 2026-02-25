@@ -23,6 +23,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
@@ -719,6 +721,7 @@ class CwmsermonsModel extends ListModel
     {
         $user     = $this->getCurrentUser();
         $groups   = $user->getAuthorisedViewLevels();
+        /** @var DatabaseDriver $db */
         $db       = $this->getDatabase();
         $query    = parent::getListQuery();
         $nullDate = $db->quote($db->getNullDate());
@@ -925,36 +928,44 @@ class CwmsermonsModel extends ListModel
 
         $filters_group = [];
 
-        // Teacher filter via junction table (matches any teacher role, not just primary)
-        $teacherIds = [];
-
-        $mteacher = $params->get('mteacher_id');
-
-        if ($mteacher !== null && $mteacher[0] !== '-1') {
-            $teacherIds = array_merge($teacherIds, array_map('intval', (array) $mteacher));
-        }
-
-        $lteacher = $params->get('lteacher_id');
-
-        if ($lteacher !== null && $lteacher[0] !== '-1') {
-            $teacherIds = array_merge($teacherIds, array_map('intval', (array) $lteacher));
-        }
-
+        // Normalize filter.teacher (may arrive as array from Joomla's parent populateState)
         $filterTeacher = $this->getState('filter.teacher');
+        $filterTeacher = (int) (\is_array($filterTeacher) ? reset($filterTeacher) : $filterTeacher);
 
-        if (!empty($filterTeacher)) {
-            $teacherIds[] = (int) $filterTeacher;
+        // Teacher ID
+        if (
+            empty($filterTeacher)
+            && $params->get('mteacher_id') !== null && $params->get('mteacher_id')[0] !== '-1'
+        ) {
+            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
+        } elseif (
+            !empty($filterTeacher)
+            && $params->get('mteacher_id') !== null && $params->get(
+                'mteacher_id'
+            )[0] !== '-1'
+        ) {
+            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
+            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
+        } elseif (!empty($filterTeacher)) {
+            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
         }
 
-        $teacherIds = array_unique(array_filter($teacherIds));
-
-        if (!empty($teacherIds)) {
-            $tSubquery = $db->getQuery(true)
-                ->select('1')
-                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
-                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
-                ->whereIn($db->quoteName('stf.teacher_id'), $teacherIds);
-            $query->where('EXISTS (' . $tSubquery . ')');
+        // Teacher ID from template
+        if (
+            empty($filterTeacher)
+            && $params->get('lteacher_id') !== null && $params->get('lteacher_id')[0] !== '-1'
+        ) {
+            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
+        } elseif (
+            !empty($filterTeacher)
+            && $params->get('lteacher_id') !== null && $params->get(
+                'lteacher_id'
+            )[0] !== '-1'
+        ) {
+            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
+            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
+        } elseif (!empty($filterTeacher)) {
+            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
         }
 
         // Location ID
@@ -1079,7 +1090,7 @@ class CwmsermonsModel extends ListModel
 
         // Topic ID
         if (
-            !\is_null($params->get('mtopic_id')) && $params->get('mtopic_id')[0] !== '-1' && empty(
+            $params->get('mtopic_id') !== null && $params->get('mtopic_id')[0] !== '-1' && empty(
                 $this->getState(
                     'filter.topic'
                 )
@@ -1097,7 +1108,7 @@ class CwmsermonsModel extends ListModel
             $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
         }
 
-        // Topic ID from template
+        // Topic ID from a template
         if (
             $params->get('ltopic_id') !== null && $params->get('ltopic_id')[0] !== '-1' && empty(
                 $this->getState(

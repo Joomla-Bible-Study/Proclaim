@@ -254,27 +254,6 @@ class CwminstallModel extends ListModel
     {
         $app = Factory::getApplication();
 
-        // Set Finishing Steps
-        $this->finish     = [
-            'fixassets',
-            'fixmenus',
-            'fixemptyaccess',
-            'fixemptylanguage',
-            'migratedeprecatedplayers',
-            'updatetemplatedefaults',
-            'seedbibletranslations',
-            'populatestudyteachers',
-            'fixteacheraliases',
-            'migrateaccesstolocations',
-            'migratelegacyservers',
-            'registerguidedtours',
-            'rmoldurl',
-            'setupdateurl',
-            'podcastlinkmissing',
-            'finish',
-        ];
-        $this->totalSteps += \count($this->finish);
-
         /**
          * First, we check to see if there is a current version of the database installed. This will have a #__bsms_version
          * table, so we check for its existence.
@@ -287,6 +266,8 @@ class CwminstallModel extends ListModel
         $this->versionSwitch = $version;
 
         $this->callstack['subversiontype_version'] = $version;
+
+        $hasDbChanges = false;
 
         if ($this->callstack['subversiontype_version'] > 000) {
             $files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
@@ -345,12 +326,44 @@ class CwminstallModel extends ListModel
                     }
                 }
             }
-        } elseif (!\in_array('registerguidedtours', $this->finish, true)) {
-            // New Installation
-            // Add guided tours to the finish steps
-            $this->finish[] = 'registerguidedtours';
-            $this->totalSteps++;
+
+            $hasDbChanges = !empty($this->versionStack) || !empty($this->subFiles);
         }
+
+        // Set finishing steps based on whether DB changes are needed.
+        // When no SQL/PHP migrations need to run, skip one-time data migrations
+        // that have already been applied — only run essential housekeeping.
+        if ($hasDbChanges || $this->callstack['subversiontype_version'] <= 000) {
+            $this->finish = [
+                'fixassets',
+                'fixmenus',
+                'fixemptyaccess',
+                'fixemptylanguage',
+                'migratedeprecatedplayers',
+                'updatetemplatedefaults',
+                'seedbibletranslations',
+                'populatestudyteachers',
+                'fixteacheraliases',
+                'migrateaccesstolocations',
+                'migratelegacyservers',
+                'registerguidedtours',
+                'rmoldurl',
+                'setupdateurl',
+                'podcastlinkmissing',
+                'finish',
+            ];
+        } else {
+            $this->finish = [
+                'fixassets',
+                'registerguidedtours',
+                'rmoldurl',
+                'setupdateurl',
+                'finish',
+            ];
+            Log::add('No DB changes detected — using minimal finish steps', Log::INFO, 'com_proclaim');
+        }
+
+        $this->totalSteps += \count($this->finish);
 
         $this->isimport = Factory::getApplication()->getInput()->getInt('cwmalt', 0);
         ++$this->totalSteps;
