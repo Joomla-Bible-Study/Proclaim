@@ -2439,19 +2439,25 @@ class CwmadminController extends FormController
 
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
 
-            // data_size is a cached column added in 10.1.0 — may not exist yet
-            // if the migration hasn't run.  Detect once and fall back gracefully.
-            $hasDataSize = !empty(
-                $db->setQuery(
-                    'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
-                    . ' LIKE ' . $db->quote('data_size')
-                )->loadObjectList()
-            );
+            // data_size and downloaded_at are columns added in 10.1.0 — may not
+            // exist yet if the migrations haven't run.  Detect and fall back.
+            $colCheck = $db->setQuery(
+                'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
+                . ' WHERE ' . $db->quoteName('Field') . ' IN ('
+                . $db->quote('data_size') . ', ' . $db->quote('downloaded_at') . ')'
+            )->loadObjectList('Field');
+
+            $hasDataSize    = isset($colCheck['data_size']);
+            $hasDownloaded  = isset($colCheck['downloaded_at']);
 
             $cols = ['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size'];
 
             if ($hasDataSize) {
                 $cols[] = 't.data_size';
+            }
+
+            if ($hasDownloaded) {
+                $cols[] = 't.downloaded_at';
             }
 
             $query = $db->getQuery(true)
@@ -2492,6 +2498,33 @@ class CwmadminController extends FormController
                 }
             } catch (\Exception) {
                 // bible_version columns may not exist yet — usage counts stay empty
+            }
+
+            // Quick reconciliation: if a bundled translation shows installed=0
+            // but already has verses in the DB, update the flag to prevent
+            // unnecessary auto-downloads from the client.
+            foreach ($translations as $t) {
+                if ((int) ($t->bundled ?? 0) === 1 && (int) ($t->installed ?? 0) === 0) {
+                    $countQ = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName('#__bsms_bible_verses'))
+                        ->where($db->quoteName('translation') . ' = ' . $db->quote($t->abbreviation));
+                    $db->setQuery($countQ);
+                    $vcnt = (int) $db->loadResult();
+
+                    if ($vcnt > 0) {
+                        $upQ = $db->getQuery(true)
+                            ->update($db->quoteName('#__bsms_bible_translations'))
+                            ->set($db->quoteName('installed') . ' = 1')
+                            ->set($db->quoteName('verse_count') . ' = ' . $vcnt)
+                            ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($t->abbreviation));
+                        $db->setQuery($upQ);
+                        $db->execute();
+
+                        $t->installed   = 1;
+                        $t->verse_count = $vcnt;
+                    }
+                }
             }
 
             // Sum total installed size from the cached column; attach usage counts
@@ -2539,6 +2572,7 @@ class CwmadminController extends FormController
         session_write_close();
 
         $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+        $force        = (bool) $app->getInput()->getInt('force', 0);
 
         if (empty($abbreviation)) {
             echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
@@ -2551,7 +2585,7 @@ class CwmadminController extends FormController
             // Downloading 66 books can take a while
             @set_time_limit(600);
 
-            $count = BibleImporter::downloadAndImport($abbreviation);
+            $count = BibleImporter::downloadAndImport($abbreviation, $force);
 
             if ($count < 0) {
                 echo json_encode([
@@ -2649,6 +2683,70 @@ class CwmadminController extends FormController
             echo json_encode([
                 'success' => true,
                 'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED_ALL', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Re-download all installed getbible translations from the API.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function updateAllTranslationsXHR(): void
+    {
+        $app = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        try {
+            @set_time_limit(0);
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('abbreviation'))
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('installed') . ' = 1')
+                ->where($db->quoteName('source') . ' = ' . $db->quote('getbible'));
+            $db->setQuery($query);
+            $rows = $db->loadColumn();
+
+            $updated = 0;
+            $failed  = 0;
+            $total   = \count($rows);
+
+            foreach ($rows as $abbr) {
+                $count = BibleImporter::downloadAndImport($abbr, true);
+
+                if ($count > 0) {
+                    $updated++;
+                } else {
+                    $failed++;
+                }
+            }
+
+            echo json_encode([
+                'success' => true,
+                'updated' => $updated,
+                'failed'  => $failed,
+                'total'   => $total,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_UPDATE_ALL_COMPLETE', $updated, $failed),
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

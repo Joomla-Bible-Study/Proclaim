@@ -1034,6 +1034,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_bible_translations` (
     `verse_count`  INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Number of verses stored locally',
     `estimated_size` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Estimated text size in bytes before download',
     `data_size`    BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Actual stored size in bytes (cached after download)',
+    `downloaded_at` DATETIME NULL DEFAULT NULL COMMENT 'When the translation was last downloaded/refreshed',
     `copyright`    TEXT COMMENT 'Copyright notice for this translation',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_abbreviation` (`abbreviation`),

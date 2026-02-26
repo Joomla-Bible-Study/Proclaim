@@ -68,23 +68,57 @@ class BibleImporter
     private static ?bool $hasDataSize = null;
 
     /**
+     * Cached result of whether the downloaded_at column exists.
+     *
+     * @var  bool|null
+     * @since  10.1.0
+     */
+    private static ?bool $hasDownloadedAt = null;
+
+    /**
      * Download and import a translation from GetBible.net API.
      *
      * Fetches the book list, then downloads each book and inserts verses.
      *
      * @param   string  $abbreviation  Translation abbreviation (e.g. "kjv", "web")
+     * @param   bool    $force         When true, skip the early-exit guard and re-download
+     *                                 from the API even if verses already exist locally.
      *
      * @return  int  Number of verses imported, or -1 on failure
      *
      * @since  10.1.0
      */
-    public static function downloadAndImport(string $abbreviation): int
+    public static function downloadAndImport(string $abbreviation, bool $force = false): int
     {
         Log::addLogger(
             ['text_file' => 'com_proclaim.bible.php'],
             Log::ALL,
             ['com_proclaim.bible']
         );
+
+        // If verses already exist for this translation and force is not set,
+        // just reconcile the record and return — no need to re-download.
+        if (!$force) {
+            $db        = Factory::getContainer()->get(DatabaseInterface::class);
+            $checkQ    = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_verses'))
+                ->where($db->quoteName('translation') . ' = :abbr')
+                ->bind(':abbr', $abbreviation);
+            $db->setQuery($checkQ);
+            $existing = (int) $db->loadResult();
+
+            if ($existing > 0) {
+                self::updateTranslationRecord($abbreviation, $existing, [], 0);
+                Log::add(
+                    'BibleImporter: skipped download for "' . $abbreviation . '" — ' . $existing . ' verses already present',
+                    Log::INFO,
+                    'com_proclaim.bible'
+                );
+
+                return $existing;
+            }
+        }
 
         $factory  = new HttpFactory();
         $http     = $factory->getHttp();
@@ -628,6 +662,33 @@ class BibleImporter
     }
 
     /**
+     * Check whether the downloaded_at column exists on the translations table.
+     *
+     * The column was added in 10.1.0 and may not exist on databases that
+     * haven't run the migration yet.  Result is cached for the request.
+     *
+     * @return  bool
+     *
+     * @since  10.1.0
+     */
+    private static function hasDownloadedAtColumn(): bool
+    {
+        if (self::$hasDownloadedAt !== null) {
+            return self::$hasDownloadedAt;
+        }
+
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $rows = $db->setQuery(
+            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
+            . ' LIKE ' . $db->quote('downloaded_at')
+        )->loadObjectList();
+
+        self::$hasDownloadedAt = \count($rows) > 0;
+
+        return self::$hasDownloadedAt;
+    }
+
+    /**
      * Update or create the translation record in #__bsms_bible_translations.
      *
      * @param   string  $abbreviation  Translation abbreviation
@@ -656,7 +717,8 @@ class BibleImporter
         $db->setQuery($query);
         $exists = (int) $db->loadResult() > 0;
 
-        $withSize = self::hasDataSizeColumn();
+        $withSize       = self::hasDataSizeColumn();
+        $withDownloaded = self::hasDownloadedAtColumn();
 
         if ($exists) {
             $query = $db->getQuery(true)
@@ -677,6 +739,12 @@ class BibleImporter
                 $query->set($db->quoteName('data_size') . ' = :size')
                     ->bind(':size', $dataSize, ParameterType::INTEGER);
             }
+
+            if ($withDownloaded) {
+                $now = Factory::getDate()->toSql();
+                $query->set($db->quoteName('downloaded_at') . ' = :dlat')
+                    ->bind(':dlat', $now);
+            }
         } else {
             $columns = ['abbreviation', 'name', 'language', 'source', 'installed', 'verse_count', 'copyright'];
             $values  = $db->quote($abbreviation) . ', '
@@ -690,6 +758,11 @@ class BibleImporter
             if ($withSize) {
                 $columns[] = 'data_size';
                 $values .= ', ' . (int) $dataSize;
+            }
+
+            if ($withDownloaded) {
+                $columns[] = 'downloaded_at';
+                $values .= ', ' . $db->quote(Factory::getDate()->toSql());
             }
 
             $query = $db->getQuery(true)

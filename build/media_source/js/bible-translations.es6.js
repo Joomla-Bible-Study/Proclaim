@@ -78,6 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
         coreTranslation: config.dataset.strCoreTranslation,
         coreCannotRemove: config.dataset.strCoreCannotRemove,
         providerCleanupDone: config.dataset.strProviderCleanupDone,
+        bibleRefresh: config.dataset.strBibleRefresh,
+        bibleRefreshing: config.dataset.strBibleRefreshing,
+        bibleUpdateAll: config.dataset.strBibleUpdateAll,
+        bibleUpdateAllDesc: config.dataset.strBibleUpdateAllDesc,
+        bibleUpdatingAll: config.dataset.strBibleUpdatingAll,
+        bibleUpdateAllComplete: config.dataset.strBibleUpdateAllComplete,
+        bibleDownloadedAt: config.dataset.strBibleDownloadedAt,
     };
 
     const gdprMode = parseInt(config.dataset.gdprMode, 10) === 1;
@@ -622,6 +629,46 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Format a datetime string as a relative date (e.g. "2 days ago", "3 months ago").
+     */
+    const formatRelativeDate = (dateStr) => {
+        if (!dateStr) {
+            return '';
+        }
+
+        const date = new Date(dateStr.replace(' ', 'T') + 'Z');
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHr = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHr / 24);
+        const diffMonth = Math.floor(diffDay / 30);
+
+        if (diffMin < 1) {
+            return 'just now';
+        }
+
+        if (diffMin < 60) {
+            return `${diffMin}m ago`;
+        }
+
+        if (diffHr < 24) {
+            return `${diffHr}h ago`;
+        }
+
+        if (diffDay < 30) {
+            return `${diffDay}d ago`;
+        }
+
+        if (diffMonth < 12) {
+            return `${diffMonth}mo ago`;
+        }
+
+        return date.toLocaleDateString();
+    };
+
+    /**
      * Render the translations table from a filtered list.
      */
     function renderTranslationsTable(translations, totalSize) {
@@ -754,13 +801,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? formatSize(t.data_size || 0)
                 : (t.estimated_size > 0 ? `~${formatSize(t.estimated_size)}` : '-');
 
+            // Downloaded-at info for installed getbible translations
+            const downloadedAt = t.downloaded_at || '';
+            const downloadedInfo = (isInstalled && downloadedAt)
+                ? `<span class="text-muted d-block mt-1" style="font-size:.75rem" title="${esc(downloadedAt)}">${strings.bibleDownloadedAt.replace('%s', formatRelativeDate(downloadedAt))}</span>`
+                : '';
+
             let actionBtn;
 
             if (isInstalled && isBundled) {
-                // Core translations cannot be removed
-                actionBtn = `<span class="text-muted small" title="${strings.coreCannotRemove}"><i class="icon-lock" aria-hidden="true"></i></span>`;
+                // Core translations: refresh button only (cannot be removed)
+                actionBtn = `<div class="d-flex align-items-center gap-1">`
+                    + `<button type="button" class="btn btn-sm btn-outline-primary btn-refresh-translation" data-abbr="${esc(t.abbreviation)}" title="${strings.bibleRefresh}">`
+                    + `<i class="icon-refresh" aria-hidden="true"></i> ${strings.bibleRefresh}</button></div>`
+                    + downloadedInfo;
             } else if (isInstalled) {
-                actionBtn = `<button type="button" class="btn btn-sm btn-danger btn-remove-translation" data-abbr="${esc(t.abbreviation)}">${strings.remove}</button>`;
+                actionBtn = `<div class="d-flex align-items-center gap-1">`
+                    + `<button type="button" class="btn btn-sm btn-outline-primary btn-refresh-translation" data-abbr="${esc(t.abbreviation)}" title="${strings.bibleRefresh}">`
+                    + `<i class="icon-refresh" aria-hidden="true"></i></button>`
+                    + `<button type="button" class="btn btn-sm btn-danger btn-remove-translation" data-abbr="${esc(t.abbreviation)}">${strings.remove}</button></div>`
+                    + downloadedInfo;
             } else if (isOnlineOnly) {
                 // API.Bible translations are online-only, cannot be downloaded locally
                 actionBtn = `<span class="badge bg-light text-dark border" title="${esc(strings.onlineOnlyDesc)}"><i class="icon-globe" aria-hidden="true"></i> ${strings.onlineOnly}</span>`;
@@ -798,6 +858,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
                     {},
                     { timeout: 60000, retries: 1 },
+                )
+                    .then((result) => {
+                        if (result.success) {
+                            Joomla.renderMessages({ message: [result.message] });
+                        } else {
+                            Joomla.renderMessages({ error: [result.message] });
+                        }
+
+                        loadTranslations(true);
+                        refreshLocalBadge();
+                    })
+                    .catch(() => {
+                        Joomla.renderMessages({ error: [strings.downloadFailed] });
+                        loadTranslations(true);
+                    });
+            });
+        });
+
+        // Bind refresh buttons (force re-download)
+        container.querySelectorAll('.btn-refresh-translation').forEach((btn) => {
+            btn.addEventListener('click', function () {
+                const abbr = this.getAttribute('data-abbr');
+                this.disabled = true;
+                this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.bibleRefreshing}`;
+
+                window.ProclaimFetch.fetchJson(
+                    `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}&force=1`,
+                    {},
+                    { timeout: 600000, retries: 0 },
                 )
                     .then((result) => {
                         if (result.success) {
@@ -854,9 +943,14 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function updateRemoveAllVisibility(hasInstalled) {
         const removeAllBtn = document.getElementById('btn-remove-all-translations');
+        const updateAllBtn = document.getElementById('btn-update-all-translations');
 
         if (removeAllBtn) {
             removeAllBtn.classList.toggle('d-none', !hasInstalled);
+        }
+
+        if (updateAllBtn) {
+            updateAllBtn.classList.toggle('d-none', !hasInstalled);
         }
     }
 
@@ -966,6 +1060,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(() => {
                     removeAllBtn.disabled = false;
+                    loadTranslations(true);
+                });
+        });
+    }
+
+    // Update All button
+    const updateAllBtn = document.getElementById('btn-update-all-translations');
+
+    if (updateAllBtn) {
+        updateAllBtn.addEventListener('click', () => {
+            if (!confirm(strings.bibleUpdateAllDesc)) {
+                return;
+            }
+
+            updateAllBtn.disabled = true;
+            updateAllBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.bibleUpdatingAll}`;
+
+            window.ProclaimFetch.fetchJson(
+                `${baseUrl}updateAllTranslationsXHR&${token}=1`,
+                {},
+                { timeout: 0, retries: 0 },
+            )
+                .then((result) => {
+                    if (result.success) {
+                        Joomla.renderMessages({ message: [result.message] });
+                    } else {
+                        Joomla.renderMessages({ error: [result.message] });
+                    }
+
+                    updateAllBtn.disabled = false;
+                    updateAllBtn.innerHTML = `<i class="icon-download" aria-hidden="true"></i> ${strings.bibleUpdateAll}`;
+                    loadTranslations(true);
+                    refreshLocalBadge();
+                })
+                .catch(() => {
+                    updateAllBtn.disabled = false;
+                    updateAllBtn.innerHTML = `<i class="icon-download" aria-hidden="true"></i> ${strings.bibleUpdateAll}`;
                     loadTranslations(true);
                 });
         });

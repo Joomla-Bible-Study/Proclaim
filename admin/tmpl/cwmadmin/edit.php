@@ -789,6 +789,10 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPT
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="tab-description mb-0" id="translations-card-header"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h3>
                         <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-primary d-none" id="btn-update-all-translations"
+                                    title="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>">
+                                <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>
+                            </button>
                             <button type="button" class="btn btn-danger d-none" id="btn-remove-all-translations"
                                     title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
                                 <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>
@@ -861,6 +865,13 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPT
              data-str-online-only-desc="<?php echo Text::_('JBS_ADM_ONLINE_ONLY_DESC'); ?>"
              data-str-provider-disable-confirm="<?php echo Text::_('JBS_ADM_PROVIDER_DISABLE_CONFIRM'); ?>"
              data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
+             data-str-bible-refresh="<?php echo Text::_('JBS_ADM_BIBLE_REFRESH'); ?>"
+             data-str-bible-refreshing="<?php echo Text::_('JBS_ADM_BIBLE_REFRESHING'); ?>"
+             data-str-bible-update-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>"
+             data-str-bible-update-all-desc="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>"
+             data-str-bible-updating-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATING_ALL'); ?>"
+             data-str-bible-update-all-complete="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_COMPLETE'); ?>"
+             data-str-bible-downloaded-at="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOADED_AT'); ?>"
         ></div>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
