@@ -185,9 +185,6 @@ class CwmsermonsModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $level = $this->getUserStateFromRequest($this->context . '.filter.level', 'filter_level');
-        $this->setState('filter.level', $level);
-
         $book = $this->getUserStateFromRequest($this->context . '.filter.book', 'filter_book');
 
         if ($landing === 1 && $book !== 0) {

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmfilterHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -23,6 +24,10 @@ use Joomla\Database\DatabaseInterface;
 
 /**
  * Teachers List Form Field class for the Proclaim component
+ *
+ * On the frontend, only teachers associated with published, access-filtered
+ * messages are shown, cross-filtered by other active filters.
+ * On the backend, all teachers are listed.
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -48,12 +53,35 @@ class TeacherListField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
+        $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('id') . ', ' . $db->quoteName('teachername'));
-        $query->from($db->quoteName('#__bsms_teachers'));
-        $query->order($db->quoteName('teachername'));
-        $db->setQuery((string)$query);
+
+        $query->select('DISTINCT ' . $db->quoteName('t.id') . ', ' . $db->quoteName('t.teachername'))
+            ->from($db->quoteName('#__bsms_teachers', 't'));
+
+        if ($app->isClient('site')) {
+            $user   = $app->getIdentity();
+            $groups = $user->getAuthorisedViewLevels();
+
+            $query->join(
+                'INNER',
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+                ->join(
+                    'INNER',
+                    $db->quoteName('#__bsms_studies', 's') . ' ON '
+                    . $db->quoteName('s.id') . ' = ' . $db->quoteName('stj.study_id')
+                )
+                ->whereIn($db->quoteName('s.published'), [1, 2])
+                ->whereIn($db->quoteName('s.access'), $groups);
+
+            CwmfilterHelper::applyCrossFilters($query, 'teacher');
+        }
+
+        $query->order($db->quoteName('t.teachername'));
+        $db->setQuery($query);
         $teachers = $db->loadObjectList();
         $options  = [];
 
