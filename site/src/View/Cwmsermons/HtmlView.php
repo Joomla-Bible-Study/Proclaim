@@ -87,65 +87,11 @@ class HtmlView extends BaseHtmlView
      */
     protected ?Registry $params = null;
 
-    /** @var object|null
-     *
-     * @since 7.0
-     */
-    protected ?object $study = null;
-
     /** @var string|null
      *
      * @since 7.0
      */
     protected ?string $subscribe = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $series = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $teachers = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $messageTypes = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $years = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $locations = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $topics = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $orders = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $books = null;
 
     /** @var object|null
      *
