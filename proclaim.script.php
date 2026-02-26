@@ -769,6 +769,13 @@ class com_proclaimInstallerScript extends InstallerScript
                     'warning'
                 );
             }
+
+            // Ensure all Proclaim tables have primary keys.
+            // Sites upgraded from v7/v8/v9 may lack PKs because the original
+            // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
+            // information_schema first so this is safe on fresh installs where
+            // the install SQL already created the PKs.
+            $this->ensurePrimaryKeys();
         }
         // Detect 9.x legacy schema and warn the user to run the upgrade wizard
         if ($type === 'install') {
@@ -1346,6 +1353,93 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 10.1.0
      */
+    /**
+     * Add missing primary keys to Proclaim tables.
+     *
+     * Legacy sites upgraded from v7/v8/v9 may lack PKs because the original
+     * install used CREATE TABLE IF NOT EXISTS which skipped existing tables.
+     * We query information_schema to avoid "Multiple primary key" errors on
+     * tables that already have the correct PK.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function ensurePrimaryKeys(): void
+    {
+        try {
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
+            $prefix = $db->getPrefix();
+
+            // table_suffix => PK column
+            $tables = [
+                'bsms_admin'              => 'id',
+                'bsms_books'              => 'id',
+                'bsms_comments'           => 'id',
+                'bsms_locations'          => 'id',
+                'bsms_mediafiles'         => 'id',
+                'bsms_message_type'       => 'id',
+                'bsms_podcast'            => 'id',
+                'bsms_series'             => 'id',
+                'bsms_servers'            => 'id',
+                'bsms_studies'            => 'id',
+                'bsms_studytopics'        => 'id',
+                'bsms_teachers'           => 'id',
+                'bsms_templatecode'       => 'id',
+                'bsms_templates'          => 'id',
+                'bsms_topics'             => 'id',
+                'bsms_study_scriptures'   => 'id',
+                'bsms_study_teachers'     => 'id',
+                'bsms_analytics_events'   => 'id',
+                'bsms_analytics_monthly'  => 'id',
+                'bsms_platform_stats'     => 'id',
+                'bsms_bible_translations' => 'id',
+                'bsms_bible_verses'       => 'id',
+                'bsms_scripture_cache'    => 'id',
+                'bsms_timeset'            => 'timeset',
+            ];
+
+            $added = 0;
+
+            foreach ($tables as $suffix => $pkColumn) {
+                $fullName = $prefix . $suffix;
+
+                // Check if a PK already exists
+                $query = $db->getQuery(true)
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('information_schema.TABLE_CONSTRAINTS'))
+                    ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
+                    ->where($db->quoteName('TABLE_NAME') . ' = ' . $db->quote($fullName))
+                    ->where($db->quoteName('CONSTRAINT_TYPE') . ' = ' . $db->quote('PRIMARY KEY'));
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    continue;
+                }
+
+                // Table exists but has no PK — add it
+                $db->setQuery(
+                    'ALTER TABLE ' . $db->quoteName($fullName)
+                    . ' ADD PRIMARY KEY (' . $db->quoteName($pkColumn) . ')'
+                );
+                $db->execute();
+                $added++;
+            }
+
+            if ($added > 0) {
+                Factory::getApplication()->enqueueMessage(
+                    'Added primary keys to ' . $added . ' table(s) missing them.',
+                    'message'
+                );
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Primary key check notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
     private function migrateStudyImageParams(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
