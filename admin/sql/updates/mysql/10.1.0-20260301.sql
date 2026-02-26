@@ -37,4 +37,6 @@ ALTER TABLE `#__bsms_scripture_cache` ADD PRIMARY KEY (`id`);
 
 -- Non-integer PK tables
 ALTER TABLE `#__bsms_timeset` ADD PRIMARY KEY (`timeset`);
-ALTER TABLE `#__bsms_storage` ADD PRIMARY KEY (`key`);
+
+-- Drop legacy storage table (no code references it; only exists on upgraded sites)
+DROP TABLE IF EXISTS `#__bsms_storage`;
