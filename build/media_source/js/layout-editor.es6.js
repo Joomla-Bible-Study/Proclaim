@@ -61,6 +61,7 @@
                     { id: 'teachers-list', label: 'All Teachers', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             details: {
@@ -95,6 +96,7 @@
                     { id: 'teachers-list', label: 'All Teachers', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             teachers: {
@@ -113,6 +115,7 @@
                     { id: 'teacher', label: 'Teacher Name', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             teacherDetails: {
@@ -133,6 +136,7 @@
                     { id: 'teacher', label: 'Teacher Name', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             series: {
@@ -146,6 +150,7 @@
                     { id: 'teacher', label: 'Teacher', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             seriesDetails: {
@@ -159,6 +164,7 @@
                     { id: 'teacher', label: 'Teacher', section: 'Teacher' },
                     { id: 'teacherimage', label: 'Teacher Image', section: 'Teacher' },
                     { id: 'teacher-title', label: 'Teacher Title + Name', section: 'Teacher' },
+                    { id: 'teachercard', label: 'Teacher Card', section: 'Teacher' },
                 ],
             },
             landingPage: {
@@ -245,7 +251,7 @@
          * @returns {boolean} True if the element is an image element
          */
     const isImageElement = (elementId) => {
-        const imageElements = ['teacherimage', 'thumbnail', 'seriesthumbnail'];
+        const imageElements = ['teacherimage', 'thumbnail', 'seriesthumbnail', 'teachercard'];
         return imageElements.includes(elementId.toLowerCase());
     };
 

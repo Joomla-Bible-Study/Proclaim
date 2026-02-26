@@ -57,6 +57,10 @@ class Cwmlisting
      */
     public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
+        // Ensure listing CSS is loaded for all frontend views that use this helper
+        Factory::getApplication()->getDocument()->getWebAssetManager()
+            ->useStyle('com_proclaim.cwmcore');
+
         $list         = null;
         $row          = [];
         $this->params = $params;
@@ -119,6 +123,7 @@ class Cwmlisting
         // Standard params that check {name}row > 0
         $standardParams = [
             'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'teachercard',
             'duration', 'studyintro', 'studytext', 'series', 'description', 'seriesthumbnail', 'submitted',
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
@@ -217,27 +222,40 @@ class Cwmlisting
 
 
 
+        // Determine listing item style (classic or cards) from per-context param
+        $listingStyle      = $params->get($extra . 'listing_item_style', 'classic');
+        $listingStyleClass = $listingStyle === 'cards' ? ' proclaim-listing--cards' : '';
+
         // Start the listing wrapper
-        $list .= '<div class="proclaim-listing" data-context="' . $type . '">';
+        $list .= '<div class="proclaim-listing' . $listingStyleClass . '" data-context="' . $type . '">' . "\n";
 
         // Check if we have a valid first item for header rows
         $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
-        $headerClass       = $params->get('listheadertype', '');
+
+        // In cards mode, map table-dark/table-light to cards-specific header variants
+        // so the header follows the template's accent color (dark) or stays neutral (light).
+        $rawHeaderType = $params->get('listheadertype', '');
+
+        if ($listingStyle === 'cards') {
+            $headerClass = $rawHeaderType === 'table-dark' ? 'proclaim-header--accent' : 'proclaim-header--subtle';
+        } else {
+            $headerClass = $rawHeaderType;
+        }
 
         if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
             $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</div>';
+            $list .= '</div>' . "\n";
         }
 
         if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
             $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</div>';
+            $list .= '</div>' . "\n";
         }
 
         if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -247,12 +265,12 @@ class Cwmlisting
                 $header = 1,
                 $type
             );
-            $list .= '</div>';
+            $list .= '</div>' . "\n";
         }
 
         if ($type === 'seriesdisplay' && $hasValidFirstItem) {
             if ($params->get('use_header_seriesdisplay') > 0) {
-                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -262,7 +280,7 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</div>';
+                $list .= '</div>' . "\n";
             }
 
             $list .= $this->getFluidRow(
@@ -278,7 +296,7 @@ class Cwmlisting
 
         if ($type === 'teacher' && $hasValidFirstItem) {
             if ($params->get('use_headers_teacher_details') > 0) {
-                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -288,7 +306,7 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</div>';
+                $list .= '</div>' . "\n";
             }
 
             $list .= $this->getFluidRow(
@@ -303,7 +321,7 @@ class Cwmlisting
         }
 
         if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
             $list .= $this->getFluidRow(
                 $listrows,
                 $listsorts,
@@ -313,7 +331,7 @@ class Cwmlisting
                 $header = 1,
                 $type
             );
-            $list .= '</div>';
+            $list .= '</div>' . "\n";
         }
 
         // Go through and attach the media files as an array to their study
@@ -400,7 +418,7 @@ class Cwmlisting
             }
         }
 
-        $list .= '</div>';
+        $list .= '</div>' . "\n";
 
         return $list;
     }
@@ -747,7 +765,7 @@ class Cwmlisting
                 $archivedClass = ' proclaim-archived';
             }
 
-            $frow .= '<div class="proclaim-item' . $archivedClass . '">';
+            $frow .= '<div class="proclaim-item' . $archivedClass . '">' . "\n";
         }
 
         foreach ($listrows as $row) {
@@ -761,7 +779,7 @@ class Cwmlisting
 
             // Open the row div at the first element of this row
             if ($remaining === $total) {
-                $frow .= '<div class="row proclaim-item-row">';
+                $frow .= '<div class="row proclaim-item-row">' . "\n";
             }
 
             // Compute proportional Bootstrap column class for this element
@@ -780,7 +798,7 @@ class Cwmlisting
             if ($header === 1) {
                 $frow .= '<div class="' . $colClass . ' fw-bold">'
                     . $this->getFluidData($item, $row, $params, $template, 1, $type)
-                    . '</div>';
+                    . '</div>' . "\n";
             } else {
                 $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type, $colClass);
             }
@@ -789,13 +807,13 @@ class Cwmlisting
 
             // Close the row div after the last element of this row
             if ($rowCounts[$rowNum][0] === 0) {
-                $frow .= '</div>';
+                $frow .= '</div>' . "\n";
             }
         }
 
         // Close proclaim-item wrapper for body mode
         if ($header === 0) {
-            $frow .= '</div>';
+            $frow .= '</div>' . "\n";
         }
 
         return $frow;
@@ -1141,6 +1159,56 @@ class Cwmlisting
                     }
                 } else {
                     $data = trim($item->teachername ?? '');
+                }
+                break;
+            case $extra . 'teachercard':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_TEACHER');
+                } else {
+                    $cardHtml = '<div class="proclaim-teacher-stack">';
+
+                    // Teacher image (series/teacher contexts use teacher_thumbnail, messages use thumb)
+                    if ($type === 'seriesdisplays' || $type === 'seriesdisplay'
+                        || $type === 'teachers' || $type === 'teacher') {
+                        if (!empty($item->teacher_thumbnail)) {
+                            $cardHtml .= $this->useJImage(
+                                $item->teacher_thumbnail,
+                                $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                                null,
+                                null,
+                                null,
+                                $imgClass
+                            );
+                        }
+                    } elseif (!empty($item->thumb)) {
+                        $cardHtml .= $this->useJImage(
+                            $item->thumb,
+                            $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                            null,
+                            null,
+                            null,
+                            $imgClass
+                        );
+                    }
+
+                    // Teacher name (with title prefix if not already included)
+                    if (!empty($item->teachername)) {
+                        $name        = trim($item->teachername);
+                        $titlePrefix = isset($item->title) ? trim($item->title) : '';
+
+                        if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $titlePrefix . ' ' . $name . '</div>';
+                        } else {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $name . '</div>';
+                        }
+                    }
+
+                    $cardHtml .= '</div>';
+                    $data      = $cardHtml;
+
+                    $classAppliedToImg = true;
                 }
                 break;
             case $extra . 'teachers-list':

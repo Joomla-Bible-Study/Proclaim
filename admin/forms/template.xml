@@ -374,6 +374,11 @@
                 <option value="10">10</option>
                 <option value="0">JBS_TPL_INFINITE_SCROLL_UNLIMITED</option>
             </field>
+            <field name="listing_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+            </field>
         </fieldset>
         <!-- Messages: Teacher Display -->
         <fieldset name="LISTTEACHER" label="JBS_TPL_LIST_TEACHER" layoutContext="messages"
@@ -616,6 +621,18 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="teacher-titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="teachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="teachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="teachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="teachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="teachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="teachercardlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
         </fieldset>
         <fieldset name="DISPLAYELEMENTS3" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="durationrow" type="RowOptions" size="1" default="0" label="JBS_CMN_DURATION"
@@ -831,6 +848,11 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
+            <field name="dlisting_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+            </field>
         </fieldset>
         <!-- Details: Scripture Display -->
         <fieldset name="DETAILS_SCRIPTURE" label="JBS_TPL_DETAILS_SCRIPTURE_SETTINGS" layoutContext="details"
@@ -910,6 +932,11 @@
                 <option value="0">JBS_TPL_NO_HEADER_ROW</option>
                 <option value="1">JBS_TPL_USE_HEADER_ROW</option>
             </field>
+            <field name="tslisting_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+            </field>
         </fieldset>
         <fieldset name="TEACHERDISPLAY" label="JBS_TPL_TEACHERS_LIST"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -948,6 +975,18 @@
             <field name="tsteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="tsteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tsteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tsteachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tsteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tsteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tsteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="tsteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1071,6 +1110,11 @@
             </field>
             <field name="teacherdisplay_color" type="ColorPicker" default="black"
                    label="JBS_TPL_SERIESDISPLAY_COLOR" description="JBS_TPL_SERIESDISPLAY_COLOR"/>
+            <field name="tdlisting_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+            </field>
         </fieldset>
         <fieldset name="TEACHERDETAILSDISPLAY" label="JBS_TPL_TEACHER_DETAILS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -1107,6 +1151,20 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tdteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="tdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tdteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tdteachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tdteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tdteachercardlinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
 
             <field name="tdteacheremailrow" type="RowOptions" size="1" default="0" label="JBS_TCH_EMAIL"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1327,6 +1385,11 @@
                 <option value="0">JBS_CMN_HIDE</option>
                 <option value="1">JBS_CMN_SHOW</option>
             </field>
+            <field name="slisting_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+            </field>
         </fieldset>
         <fieldset name="SERIESDISPLAY" label="JBS_TPL_SERIES_LIST"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -1390,6 +1453,18 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="steacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="steachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="steachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="steachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="steachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="steachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="steachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sdescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="sdescriptioncol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1450,6 +1525,11 @@
                    layout="joomla.form.field.radio.switcher">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
+            </field>
+            <field name="sdlisting_item_style" type="list" default="classic"
+                   label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
+                <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
+                <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
             </field>
         </fieldset>
         <fieldset name="SERIESDETAILDISPLAY" label="JBS_TPL_SERIES_DETAILS"
@@ -1513,6 +1593,18 @@
             <field name="sdteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="sdteacher-titlelinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="sdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="sdteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="sdteachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="sdteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="sdteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="sdteachercardlinktype" type="SeriesLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="sddescriptionrow" type="RowOptions" size="1" default="0" label="JBS_CMN_SERIES_DESCRIPTION"
                    description="JBS_TPL_ROW_DESC"/>
@@ -1690,6 +1782,18 @@
             <field name="dteacher-titlecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dteacher-titlelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
+                   description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="dteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dteachercardcolspan" type="SpanOptions" default="2" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dteachercardelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dteachercardcustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="dteachercardlinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS3" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
