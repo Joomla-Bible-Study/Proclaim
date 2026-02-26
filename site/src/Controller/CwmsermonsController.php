@@ -158,13 +158,43 @@ class CwmsermonsController extends BaseController
                 $html = $listing->getFluidListing($items, $params, $template, 'sermons');
             }
 
+            // Build cross-filtered dropdown options so the client can
+            // narrow the remaining filter dropdowns to match the active
+            // selection.  Each field's getOptions() already applies
+            // CwmfilterHelper::applyCrossFilters() internally.
+            $filterForm    = $model->getFilterForm();
+            $filterOptions = [];
+            $filterFields  = ['book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location'];
+
+            foreach ($filterFields as $fieldName) {
+                $field = $filterForm->getField($fieldName, 'filter');
+
+                if (!$field) {
+                    continue;
+                }
+
+                $options = [];
+
+                foreach ($field->options as $opt) {
+                    // Skip placeholder options (empty value)
+                    if ((string) $opt->value === '') {
+                        continue;
+                    }
+
+                    $options[] = ['value' => $opt->value, 'text' => $opt->text];
+                }
+
+                $filterOptions[$fieldName] = $options;
+            }
+
             echo json_encode([
-                'success'      => true,
-                'html'         => $html,
-                'pagination'   => $pagination->getPagesLinks(),
-                'pagesCounter' => $pagination->getPagesCounter(),
-                'total'        => $pagination->total,
-                'pagesTotal'   => $pagination->pagesTotal,
+                'success'       => true,
+                'html'          => $html,
+                'pagination'    => $pagination->getPagesLinks(),
+                'pagesCounter'  => $pagination->getPagesCounter(),
+                'total'         => $pagination->total,
+                'pagesTotal'    => $pagination->pagesTotal,
+                'filterOptions' => $filterOptions,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

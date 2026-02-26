@@ -159,7 +159,7 @@
                     + Joomla.Text._('JBS_ANA_SYNCING') + ' ' + name + ' (' + (i + 1) + '/' + servers.length + ')...';
 
                 try {
-                    const url = 'index.php?option=com_proclaim&task=cwmadmin.addonAjax'
+                    const url = 'index.php?option=com_proclaim&task=cwmserver.addonAjax'
                         + '&addon=' + encodeURIComponent(srv.type)
                         + '&action=fetchStats'
                         + '&server_id=' + srv.id

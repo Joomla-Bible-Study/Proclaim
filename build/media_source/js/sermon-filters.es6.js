@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let abortController = null;
     let searchDebounceTimer = null;
+    let clearInProgress = false;
 
     const DEBOUNCE_MS = 350;
 
@@ -82,6 +83,87 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Joomla.Text._() returns the raw key when unregistered
         return (result === key) ? fallback : result;
+    }
+
+    // ─── Cross-Filter Dropdown Updates ──────────────────────
+
+    /**
+     * Update filter dropdown options from the AJAX response.
+     *
+     * After the server returns cross-filtered options, each <select> is
+     * rebuilt to show only the choices that match the active filters.
+     * Choices.js wrappers (joomla-field-fancy-select) are synced too.
+     *
+     * @param {Object} filterOptions  Map of fieldName → [{value, text}, …]
+     */
+    function updateFilterDropdowns(filterOptions) {
+        const filterNames = ['book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location'];
+
+        filterNames.forEach((name) => {
+            const options = filterOptions[name];
+
+            if (!options) {
+                return;
+            }
+
+            // Find the <select> — searchtools uses filter[name] or filter_name
+            const select = form.querySelector(
+                `select[name="filter[${name}]"], select[name="filter_${name}"]`,
+            );
+
+            if (!select) {
+                return;
+            }
+
+            const currentValue = select.value;
+
+            // Rebuild <select> options: keep placeholder, replace the rest
+            const placeholder = select.querySelector('option[value=""]');
+            select.innerHTML = '';
+
+            if (placeholder) {
+                select.appendChild(placeholder);
+            }
+
+            options.forEach(({ value, text }) => {
+                const opt = document.createElement('option');
+                opt.value = value;
+                opt.textContent = text;
+
+                if (String(value) === currentValue) {
+                    opt.selected = true;
+                }
+
+                select.appendChild(opt);
+            });
+
+            // If selected value no longer exists in narrowed list, reset
+            if (currentValue && !select.querySelector(`option[value="${CSS.escape(currentValue)}"]`)) {
+                select.value = '';
+            }
+
+            // Sync the Choices.js fancy-select wrapper if present
+            const fancySelect = select.closest('joomla-field-fancy-select');
+
+            if (fancySelect && fancySelect.choicesInstance) {
+                const ci = fancySelect.choicesInstance;
+                const newValue = select.value;
+
+                // Rebuild Choices.js from the updated <select>
+                ci.clearStore();
+                const choices = Array.from(select.options).map((o) => ({
+                    value: o.value,
+                    label: o.textContent,
+                    selected: o.selected,
+                    placeholder: o.value === '',
+                }));
+                ci.setChoices(choices, 'value', 'label', true);
+
+                if (newValue) {
+                    ci.setChoiceByValue(newValue);
+                }
+            }
+        });
     }
 
     // ─── Helpers ─────────────────────────────────────────────
@@ -471,6 +553,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Scroll to top of results
                 scrollToList();
+
+                // Narrow the remaining filter dropdowns to match active selection
+                if (result.filterOptions) {
+                    updateFilterDropdowns(result.filterOptions);
+                }
             }
         } catch (err) {
             if (err.name === 'AbortError') {
@@ -538,6 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+        clearInProgress = false;
         // Reset to page 1 on filter/search change
         resetScrollState();
         fetchResults({ limitstart: 0 });
@@ -548,6 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Override the native submit() so searchtools' form.submit() goes through AJAX
     form.submit = function () {
+        clearInProgress = false;
         resetScrollState();
         fetchResults({ limitstart: 0 });
     };
@@ -569,9 +658,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Intercept filter dropdown changes.
+     * Suppressed while searchtools Clear is resetting fields — the
+     * form submit at the end of clear() handles the single AJAX call.
      */
     form.querySelectorAll('select[name^="filter_"], select[name^="filter["]').forEach((select) => {
         select.addEventListener('change', () => {
+            if (clearInProgress) {
+                return;
+            }
+
             resetScrollState();
             fetchResults({ limitstart: 0 });
         });
@@ -582,10 +677,30 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     form.querySelectorAll('select[name^="list_"], select[name^="list["]').forEach((select) => {
         select.addEventListener('change', () => {
+            if (clearInProgress) {
+                return;
+            }
+
             resetScrollState();
             fetchResults({ limitstart: 0 });
         });
     });
+
+    /**
+     * Suppress per-field change events while the Clear button resets
+     * all filters.  Searchtools' clear() sets each select to '' (which
+     * may fire Choices.js change events) then calls requestSubmit().
+     * Without this guard, each intermediate change would trigger a
+     * partial AJAX request.  We let only the final submit fire.
+     */
+    const clearButton = document.querySelector('.js-stools-btn-clear');
+
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            clearInProgress = true;
+        });
+    }
+
 
     // ─── Pagination Style Setup ────────────────────────────────
 

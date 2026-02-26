@@ -83,7 +83,7 @@ $studyLabels = [];
 $studyTotals = [];
 
 foreach ($this->topStudies as $row) {
-    $title         = htmlspecialchars(substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40), ENT_QUOTES);
+    $title         = mb_substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40);
     $studyLabels[] = $title;
     $studyTotals[] = (int) ($row['total'] ?? 0);
 }
@@ -95,7 +95,7 @@ $combLabels = [];
 $combTotals = [];
 
 foreach ($this->topStudiesCombined as $row) {
-    $title       = htmlspecialchars(substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40), ENT_QUOTES);
+    $title        = mb_substr((string) ($row['title'] ?? 'ID #' . $row['study_id']), 0, 40);
     $combLabels[] = $title;
     $combTotals[] = (int) ($row['total'] ?? 0);
 }
