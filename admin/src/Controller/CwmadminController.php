@@ -1465,7 +1465,7 @@ class CwmadminController extends FormController
         $app = Factory::getApplication();
 
         if (!Session::checkToken('get')) {
-            $app->setHeader('Content-Type', 'application/json');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
             $app->close();
 
@@ -1478,7 +1478,7 @@ class CwmadminController extends FormController
         $logFile = CwmImageMigration::getClearedLogPath();
 
         if (!is_file($logFile)) {
-            $app->setHeader('Content-Type', 'application/json');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => 'No cleared images log found.'], JSON_THROW_ON_ERROR);
             $app->close();
 
@@ -2963,7 +2963,7 @@ class CwmadminController extends FormController
         $app = Factory::getApplication();
 
         if (!Session::checkToken('get')) {
-            $app->setHeader('Content-Type', 'application/json');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
             $app->close();
 

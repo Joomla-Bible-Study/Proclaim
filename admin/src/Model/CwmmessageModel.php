@@ -129,7 +129,7 @@ class CwmmessageModel extends AdminModel
             $query->join('LEFT', $db->quoteName('#__bsms_topics', 'topic') . ' ON ' . $db->quoteName('topic.id') . ' = ' . $db->quoteName('studytopics.topic_id'));
             $query->where($db->quoteName('studytopics.study_id') . ' = ' . (int)$id);
 
-            $db->setQuery($query->__toString());
+            $db->setQuery($query);
             $topics = $db->loadObjectList();
 
             if ($topics) {
@@ -162,7 +162,7 @@ class CwmmessageModel extends AdminModel
         $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
         $query->from($db->quoteName('#__bsms_topics', 'topic'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $topics         = $db->loadObjectList();
         $translatedList = [];
 
@@ -213,7 +213,7 @@ class CwmmessageModel extends AdminModel
         $query->select($db->quoteName(['s.server_name', 's.type'], ['server_name', 'server_type']));
         $query->join('LEFT', $db->quoteName('#__bsms_servers', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {

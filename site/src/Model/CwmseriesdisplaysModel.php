@@ -35,14 +35,6 @@ use Joomla\Database\QueryInterface;
 class CwmseriesdisplaysModel extends ListModel
 {
     /**
-     * Instance cache for filter dropdown queries within the same request.
-     *
-     * @var array<string, array>
-     * @since 10.1.0
-     */
-    private array $filterCache = [];
-
-    /**
      * Constructor.
      *
      * @param   array  $config  An optional associative array of configuration settings.
@@ -81,109 +73,6 @@ class CwmseriesdisplaysModel extends ListModel
         }
 
         parent::__construct($config);
-    }
-
-
-
-    /**
-     * Get a list of teachers associated with the series
-     *
-     * @return array
-     * @since 9.0.0
-     */
-    public function getTeachers(): array
-    {
-        if (isset($this->filterCache['teachers'])) {
-            return $this->filterCache['teachers'];
-        }
-
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['t.id', 't.teachername'], ['value', 'text']));
-        $query->from($db->quoteName('#__bsms_teachers', 't'));
-        $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('series.teacher'));
-        $query->group($db->quoteName('t.id'));
-        $query->order($db->quoteName('t.teachername') . ' ASC');
-
-        $db->setQuery($query);
-
-        $this->filterCache['teachers'] = $db->loadObjectList();
-
-        return $this->filterCache['teachers'];
-    }
-
-    /**
-     * Get a list of years from studies associated with series
-     *
-     * @return array
-     * @since 9.0.0
-     */
-    public function getYears(): array
-    {
-        if (isset($this->filterCache['years'])) {
-            return $this->filterCache['years'];
-        }
-
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-        $query->select('DISTINCT YEAR(' . $db->quoteName('s.studydate') . ') as value');
-        $query->select('YEAR(' . $db->quoteName('s.studydate') . ') as text');
-        $query->from($db->quoteName('#__bsms_studies', 's'));
-        $query->select($db->quoteName('series.access'));
-        $query->join('INNER', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('series.id'));
-        $query->order($db->quoteName('value'));
-
-        $db->setQuery($query);
-
-        $this->filterCache['years'] = $db->loadObjectList();
-
-        return $this->filterCache['years'];
-    }
-
-    /**
-     * Get a list of all used series
-     *
-     * @return array
-     * @throws \Exception
-     * @since 7.0
-     */
-    public function getSeries(): array
-    {
-        if (isset($this->filterCache['series'])) {
-            return $this->filterCache['series'];
-        }
-
-        $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
-
-        $query->select($db->quoteName(['series.id', 'series.series_text', 'series.access'], ['value', 'text', 'access']));
-        $query->from($db->quoteName('#__bsms_series', 'series'));
-        $query->join('INNER', $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.series_id') . ' = ' . $db->quoteName('series.id'));
-        $query->group($db->quoteName('series.id'));
-        $query->order($db->quoteName('series.series_text'));
-
-        $db->setQuery($query);
-        $items = $db->loadObjectList();
-
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = $this->getCurrentUser();
-        $groups = $user->getAuthorisedViewLevels();
-        $count  = \count($items);
-
-        if ($count > 0) {
-            foreach ($items as $i => $iValue) {
-                if ($iValue->access > 1) {
-                    if (!\in_array($iValue->access, $groups, true)) {
-                        unset($items[$i]);
-                    }
-                }
-            }
-        }
-
-        $this->filterCache['series'] = $items;
-
-        return $this->filterCache['series'];
     }
 
     /**
@@ -460,17 +349,5 @@ class CwmseriesdisplaysModel extends ListModel
 
 
         return $query;
-    }
-
-    /**
-     * Method to get the starting number of items for the data set.
-     *
-     * @return  int  The starting number of items available in the data set.
-     *
-     * @since   3.0.1
-     */
-    public function getStart(): int
-    {
-        return (int) $this->getState('list.start');
     }
 }

@@ -86,12 +86,6 @@ class HtmlView extends BaseHtmlView
      */
     protected ?Registry $state = null;
 
-    /** @var string State
-     *
-     * @since 7.0
-     */
-    protected string $go = '';
-
     /**
      * Filter form
      *

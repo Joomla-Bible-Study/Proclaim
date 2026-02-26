@@ -314,7 +314,7 @@ class CwmassetsController extends BaseController
     private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {
         $app = Factory::getApplication();
-        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        header('Content-Type: application/json; charset=utf-8');
         $app->setHeader('Cache-Control', 'no-cache, must-revalidate');
 
         $response = [

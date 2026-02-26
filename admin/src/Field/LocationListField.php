@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmfilterHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
@@ -56,12 +57,44 @@ class LocationListField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $user      = Factory::getApplication()->getIdentity();
+        $app       = Factory::getApplication();
+        $user      = $app->getIdentity();
         $isAdmin   = $user->authorise('core.admin');
         $enabled   = CwmlocationHelper::isEnabled();
         $currentId = (int) $this->value;
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Frontend filter: only locations used by published, accessible messages
+        if ($app->isClient('site')) {
+            $groups = $user->getAuthorisedViewLevels();
+            $query  = $db->getQuery(true)
+                ->select('DISTINCT ' . $db->quoteName('loc.id') . ', ' . $db->quoteName('loc.location_text'))
+                ->from($db->quoteName('#__bsms_locations', 'loc'))
+                ->join(
+                    'INNER',
+                    $db->quoteName('#__bsms_studies', 's') . ' ON '
+                    . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('loc.id')
+                )
+                ->where($db->quoteName('loc.published') . ' = 1')
+                ->whereIn($db->quoteName('s.published'), [1, 2])
+                ->whereIn($db->quoteName('s.access'), $groups)
+                ->order($db->quoteName('loc.location_text'));
+
+            CwmfilterHelper::applyCrossFilters($query, 'location');
+
+            $db->setQuery($query);
+            $rows    = $db->loadObjectList() ?: [];
+            $options = parent::getOptions();
+
+            foreach ($rows as $row) {
+                $options[] = HTMLHelper::_('select.option', (int) $row->id, $row->location_text);
+            }
+
+            return $options;
+        }
+
+        // Admin: show all published locations with campus-aware filtering
         $query = $db->getQuery(true)
             ->select([$db->quoteName('id'), $db->quoteName('location_text')])
             ->from($db->quoteName('#__bsms_locations'))

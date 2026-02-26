@@ -133,15 +133,16 @@ class CwmtemplateController extends FormController
      */
     public function loadFieldset(): void
     {
+        $app = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
         // Check for request forgeries
         if (!Session::checkToken('get')) {
             echo json_encode(['success' => false, 'error' => 'Invalid token'], JSON_THROW_ON_ERROR);
-            Factory::getApplication()->close();
+            $app->close();
 
             return;
         }
-
-        $app       = Factory::getApplication();
         $input     = $app->getInput();
         $fieldset  = $input->getString('fieldset', '');
         $id        = $input->getInt('id', 0);

@@ -172,7 +172,7 @@ class CwmadminModel extends AdminModel
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from($db->quoteName('#__bsms_mediafiles'));
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {
