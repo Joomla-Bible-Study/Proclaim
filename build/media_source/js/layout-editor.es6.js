@@ -986,8 +986,11 @@
                             window.Joomla.initCustomSelect(container);
                         }
 
-                        // Fix TinyMCE editors after they initialize (needs delay)
-                        this.fixHiddenEditors(container);
+                        // Notify Joomla that new dynamic content was loaded.
+                        // Joomla 6's TinyMCE plugin listens for this event and
+                        // initializes editors with correct config, license key,
+                        // and dark mode support.
+                        container.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
                     } else {
                         container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
                     }
@@ -996,104 +999,6 @@
                     container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
                     console.error('Fieldset load error:', error);
                 });
-        }
-
-        /**
-             * Initialize TinyMCE editors in dynamically loaded content
-             * Joomla's TinyMCE only initializes on page load, so AJAX content needs manual init
-             * @param {HTMLElement} container - Container with editor textareas
-             */
-        fixHiddenEditors(container) {
-            // Check if there are any editor textareas
-            const textareas = container.querySelectorAll('textarea.mce_editable');
-            if (textareas.length === 0) {
-                return;
-            }
-
-            // Initialize TinyMCE for each textarea
-            this.initTinyMCEEditors(container);
-        }
-
-        /**
-             * Initialize TinyMCE for textareas in a container
-             * @param {HTMLElement} container - Container with editor textareas
-             */
-        initTinyMCEEditors(container) {
-            if (typeof window.tinymce === 'undefined') {
-                return;
-            }
-
-            const textareas = container.querySelectorAll('textarea.mce_editable');
-
-            textareas.forEach((textarea) => {
-                const editorId = textarea.id;
-                if (!editorId) { return; }
-
-                // Check if already initialized
-                const existingEditor = window.tinymce.get(editorId);
-                if (existingEditor) {
-                    // If the editor's container is detached or different, remove it
-                    const editorContainer = existingEditor.getContainer();
-                    if (!editorContainer || !document.body.contains(editorContainer)) {
-                        existingEditor.remove();
-                    } else {
-                        // Editor is valid, skip
-                        return;
-                    }
-                }
-
-                // Simple config that works
-                const config = {
-                    target: textarea,
-                    menubar: true,
-                    toolbar: 'undo redo | bold italic underline | bullist numlist | link',
-                    plugins: 'link lists',
-                    branding: false,
-                    promotion: false,
-                    height: 300,
-                    setup: (editor) => {
-                        editor.on('change', () => {
-                            editor.save();
-                        });
-                    },
-                };
-
-                // Initialize TinyMCE
-                window.tinymce.init(config).then((editors) => {
-                    if (editors && editors[0]) {
-                        const [editor] = editors;
-
-                        // Enable the toggle button
-                        const wrapper = textarea.closest('.js-editor-tinymce');
-                        const toggleBtn = wrapper?.querySelector('.js-tiny-toggler-button');
-                        if (toggleBtn) {
-                            toggleBtn.disabled = false;
-                            // Add click handler for toggle
-                            toggleBtn.addEventListener('click', () => {
-                                if (editor.isHidden()) {
-                                    editor.show();
-                                } else {
-                                    editor.hide();
-                                }
-                            });
-                        }
-
-                        // Register with Joomla's editor system
-                        if (window.Joomla?.editors?.instances) {
-                            window.Joomla.editors.instances[editorId] = {
-                                id: editorId,
-                                getValue: () => editor.getContent(),
-                                setValue: (val) => editor.setContent(val),
-                                getSelection: () => editor.selection.getContent(),
-                                replaceSelection: (val) => editor.execCommand('mceInsertContent', false, val),
-                                disable: (state) => editor.mode.set(state ? 'readonly' : 'design'),
-                            };
-                        }
-                    }
-                }).catch((err) => {
-                    console.error('[Layout Editor] TinyMCE initialization failed for', editorId, err);
-                });
-            });
         }
 
         // =====================================================================

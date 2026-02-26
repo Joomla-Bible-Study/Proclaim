@@ -921,6 +921,30 @@
     margin-top: .25rem;
 }
 
+/* Stack editor fields vertically — Atum's default side-by-side layout
+   (240px label + flex controls) doesn't leave enough width for editors
+   inside the modal context */
+.view-settings-modal .control-group:has(textarea),
+.view-settings-modal .control-group:has(.js-editor-tinymce) {
+    flex-direction: column;
+}
+
+.view-settings-modal .control-group:has(textarea) .control-label,
+.view-settings-modal .control-group:has(.js-editor-tinymce) .control-label {
+    inline-size: 100%;
+    padding-bottom: 0;
+}
+
+/* Prevent TinyMCE editor from overflowing the modal */
+.view-settings-modal .tox-tinymce {
+    max-width: 100%;
+}
+
+.view-settings-modal .control-group:has(.js-editor-tinymce) .controls {
+    max-inline-size: 100%;
+    overflow: hidden;
+}
+
 /* Two-column layout for form fields on larger screens */
 @media (min-width: 768px) {
     .view-settings-modal .accordion-body {
@@ -936,6 +960,7 @@
     /* Full-width elements (editors, textareas) */
     .view-settings-modal .control-group:has(textarea),
     .view-settings-modal .control-group:has(.editor),
+    .view-settings-modal .control-group:has(.js-editor-tinymce),
     .view-settings-modal .control-group:has([type="editor"]) {
         grid-column: 1 / -1;
     }
