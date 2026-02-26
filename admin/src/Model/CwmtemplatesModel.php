@@ -102,7 +102,7 @@ class CwmtemplatesModel extends ListModel
         $query->group($db->quoteName('template.type'));
         $query->order($db->quoteName('template.type'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
 
         return $db->loadObjectList();
     }

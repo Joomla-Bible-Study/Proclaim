@@ -105,7 +105,7 @@ class CwmmessagesController extends AdminController
         $app = Factory::getApplication();
 
         if (!Session::checkToken('get')) {
-            $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => false, 'error' => 'Invalid token']);
             $app->close();
 
@@ -117,7 +117,7 @@ class CwmmessagesController extends AdminController
         $ids = array_filter($ids);
 
         if (empty($ids)) {
-            $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['success' => true, 'hasFiles' => false, 'files' => []]);
             $app->close();
 
@@ -165,7 +165,7 @@ class CwmmessagesController extends AdminController
             ];
         }
 
-        $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
             'success'  => true,
             'hasFiles' => !empty($files),
