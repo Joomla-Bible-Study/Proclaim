@@ -2697,27 +2697,36 @@ class Cwmlisting
         $social = $params->get('socialnetworking');
 
         if ($social !== null && $social !== '') {
-            return (int) $social;
+            $mode = (int) $social;
+        } else {
+            // Fall back to embedshare (module context or legacy data)
+            $embed = $params->get('embedshare');
+
+            if ($embed !== null && $embed !== '') {
+                // Legacy string values from old radio field
+                if ($embed === 'TRUE') {
+                    $mode = 1;
+                } elseif ($embed === 'FALSE') {
+                    $mode = 0;
+                } else {
+                    $mode = (int) $embed;
+                }
+            } else {
+                // Default to AddToAny (1) to preserve existing behavior
+                $mode = 1;
+            }
         }
 
-        // Fall back to embedshare (module context or legacy data)
-        $embed = $params->get('embedshare');
+        // GDPR enforcement: override AddToAny → Local when GDPR mode is active
+        if ($mode === 1) {
+            $gdprMode = (int) ComponentHelper::getParams('com_proclaim')->get('gdpr_mode', 0);
 
-        if ($embed !== null && $embed !== '') {
-            // Legacy string values from old radio field
-            if ($embed === 'TRUE') {
-                return 1;
+            if ($gdprMode === 1) {
+                return 2;
             }
-
-            if ($embed === 'FALSE') {
-                return 0;
-            }
-
-            return (int) $embed;
         }
 
-        // Default to AddToAny (1) to preserve existing behavior for upgrades
-        return 1;
+        return $mode;
     }
 
     /**

@@ -219,6 +219,10 @@
                 <option value="1">JBS_TPL_SHARE_ADDTOANY</option>
                 <option value="2">JBS_TPL_SHARE_LOCAL</option>
             </field>
+            <field type="note" name="embedshare_gdpr_note"
+                   class="alert alert-warning"
+                   description="JBS_TPL_SHARE_GDPR_WARNING"
+                   showon="embedshare:1"/>
             <field name="backcolor" type="ColorPicker" default="#287585"
                    label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
             <field name="frontcolor" type="ColorPicker" default="white"
@@ -845,6 +849,10 @@
                 <option value="1">JBS_TPL_SHARE_ADDTOANY</option>
                 <option value="2">JBS_TPL_SHARE_LOCAL</option>
             </field>
+            <field type="note" name="socialnetworking_gdpr_note"
+                   class="alert alert-warning"
+                   description="JBS_TPL_SHARE_GDPR_WARNING"
+                   showon="socialnetworking:1"/>
             <field name="dlisting_item_style" type="list" default="classic"
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
