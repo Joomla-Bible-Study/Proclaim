@@ -901,10 +901,18 @@ class Cwmlisting
 
         foreach ($listparams as $listparam) {
             // Build a row-like object with the element metadata
-            $dummyRow->name    = $listparam->name;
-            $dummyRow->col     = $listparam->col ?? '1';
-            $dummyRow->colspan = $listparam->colspan ?? '1';
-            $dummyRow->custom  = $listparam->custom ?? '';
+            $dummyRow->name         = $listparam->name;
+            $dummyRow->col          = $listparam->col ?? '1';
+            $dummyRow->colspan      = $listparam->colspan ?? '1';
+            $dummyRow->custom       = $listparam->custom ?? '';
+            $dummyRow->element      = $listparam->element ?? 1;
+            $dummyRow->linktype     = $listparam->linktype ?? 0;
+            $dummyRow->customtext   = $listparam->customtext ?? '';
+            $dummyRow->date_format  = $listparam->date_format ?? '';
+            $dummyRow->show_verses  = $listparam->show_verses ?? '';
+            $dummyRow->show_version = $listparam->show_version ?? '';
+            $dummyRow->show_tooltip = $listparam->show_tooltip ?? '';
+            $dummyRow->separator    = $listparam->separator ?? '';
 
             $data = $this->getFluidData(
                 $item,
@@ -915,7 +923,11 @@ class Cwmlisting
                 $type
             );
 
-            if ($data !== '' && $data !== null) {
+            // Skip fields with no visible content (getFluidData may return
+            // empty wrapper divs like <div class="col-2"></div>).
+            // Use a regex that checks for any text or self-closing tags (img, span, etc.)
+            // inside the wrapper, preserving media icon fields that have no plain text.
+            if ($data !== '' && $data !== null && preg_match('/<(?:a|span|img|button)\b|[^<>\s]/i', $data)) {
                 $customClass = $listparam->custom ?? '';
                 $card .= '<div class="proclaim-grid-card-field'
                     . ($customClass ? ' ' . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8') : '') . '">';
