@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -2590,7 +2589,7 @@ class Cwmlisting
      *
      * @param   object            $row       Item Info
      * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  Template
+     * @param   object  $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return string
      *

@@ -48,7 +48,7 @@ class CwmteacherModel extends ItemModel
      * @throws \Exception
      * @since 7.1.0
      */
-    public function &getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         $app = Factory::getApplication();
 
@@ -144,5 +144,4 @@ class CwmteacherModel extends ItemModel
             $this->setState('filter.archived', 2);
         }
     }
-    // End class
 }

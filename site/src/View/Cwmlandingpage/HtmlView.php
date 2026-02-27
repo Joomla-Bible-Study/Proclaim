@@ -104,13 +104,13 @@ class HtmlView extends BaseHtmlView
         // Prepare meta-information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetaData('keywords', $itemparams->get('metakey'));
-        } elseif (!$itemparams->get('metakey')) {
+        } else {
             $document->setMetaData('keywords', $this->params->get('metakey'));
         }
 
         if ($itemparams->get('metadesc')) {
             $document->setDescription($itemparams->get('metadesc'));
-        } elseif (!$itemparams->get('metadesc')) {
+        } else {
             $document->setDescription($this->params->get('metadesc'));
         }
 

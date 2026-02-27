@@ -193,13 +193,8 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $app = Factory::getApplication();
-        if ($app) {
-            $input = $app->getInput();
-        } else {
-            // Fallback or error handling if application is not available
-            return;
-        }
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
         $input->get('tmpl', 'component', 'string');
         $mediaid      = $input->get('mediaid', '', 'int');

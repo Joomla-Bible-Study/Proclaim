@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
@@ -85,8 +86,7 @@ class CwmlandingpageModel extends ListModel
         $t = $params->get('sermonsid');
 
         if (!$t) {
-            $input = Factory::getApplication();
-            $t     = $input->get('t', 1, 'int');
+            $t = Factory::getApplication()->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -119,12 +119,10 @@ class CwmlandingpageModel extends ListModel
         $db              = $this->getDatabase();
         $query           = $db->getQuery(true);
         $template_params = Cwmparams::getTemplateparams();
-        $registry        = new Registry();
-        $registry->loadString($template_params->params);
-        $t_params = $registry;
+        $t_params        = $template_params->params;
 
         // Load the parameters. Merge Global and Menu Item params into new object
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
         /** @var Registry $params */
         $params = $app->getParams();
         $this->setState('params', $params);
@@ -165,7 +163,7 @@ class CwmlandingpageModel extends ListModel
         $query->select($db->quoteName(['l.id', 'l.location_text'], ['lid', null]));
         $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON ' . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id'));
 
-        $rightnow = date('Y-m-d H:i:s');
+        $rightnow = (new Date())->toSql();
 
         // Filter by published state based on show_archived parameter
         $showArchived = $this->getState('filter.show_archived', '0');

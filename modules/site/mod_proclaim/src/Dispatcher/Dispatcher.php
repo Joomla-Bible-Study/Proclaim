@@ -73,23 +73,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ->getLatest($data['params'], $this->getApplication());
 
         if ($data['params']->get('useexpert_module') > 0 || \is_string($data['params']->get('moduletemplate'))) {
-            foreach ($data['list'] as $item) {
-                try {
-                    $renderedPage = $pageBuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
-                } catch (\Exception $e) {
-                    $this->app->enqueueMessage($e->getMessage(), 'error');
-                    continue;
-                }
-
-                $item->scripture1       = $renderedPage->scripture1;
-                $item->scripture2       = $renderedPage->scripture2;
-                $item->media            = $renderedPage->media;
-                $item->duration         = $renderedPage->duration ?? null;
-                $item->studydate        = $renderedPage->studydate ?? null;
-                $item->topics           = $renderedPage->topics;
-                $item->study_thumbnail  = $renderedPage->study_thumbnail ?? null;
-                $item->series_thumbnail = $renderedPage->series_thumbnail ?? null;
-                $item->detailslink      = $renderedPage->detailslink;
+            try {
+                $pageBuilder->enrichStudies($data['list'], $data['params'], $data['cwmtemplate']);
+            } catch (\Exception $e) {
+                $this->app->enqueueMessage($e->getMessage(), 'error');
             }
         }
 

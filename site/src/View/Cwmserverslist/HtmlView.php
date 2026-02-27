@@ -156,9 +156,6 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getApplication()->getIdentity();
 
-        // Get the toolbar object instance
-        $bar = Factory::getApplication()->getDocument()->getToolbar('toolbar');
-
         ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'servers.png');
 
         if ($this->canDo->get('core.create')) {
@@ -177,7 +174,7 @@ class HtmlView extends BaseHtmlView
             ToolbarHelper::archiveList('cwmservers.archive');
         }
 
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
+        if ((int) $this->state->get('filter.published') === -2 && $this->canDo->get('core.delete')) {
             ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
         } elseif ($this->canDo->get('core.delete')) {
             ToolbarHelper::trash('cwmservers.trash');

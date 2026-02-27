@@ -94,7 +94,6 @@ class CwmseriesdisplaysModel extends ListModel
      */
     protected function populateState($ordering = 'series_text', $direction = 'DESC'): void
     {
-        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');

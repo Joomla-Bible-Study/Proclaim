@@ -98,9 +98,9 @@ class HtmlView extends BaseHtmlView
 
         // Params are the individual params for the media file record
         if ($this->media) {
-            $registory = new Registry();
-            $registory->loadString($this->media->params);
-            $this->media->params = $registory;
+            $registry = new Registry();
+            $registry->loadString($this->media->params);
+            $this->media->params = $registry;
         }
 
         $this->prepareDocument();

@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -47,9 +46,9 @@ class Cwmpagebuilder
     /**
      * Build Page
      *
-     * @param   object            $item      Item info
-     * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  Template data
+     * @param   object    $item      Item info
+     * @param   Registry  $params    Item Params
+     * @param   object    $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return object
      *
@@ -133,7 +132,7 @@ class Cwmpagebuilder
             $image                  = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
             $page->series_thumbnail = Cwmimages::renderPicture($image, $item->series_text);
         } else {
-            $page->series_thumnail = '';
+            $page->series_thumbnail = '';
         }
 
         $page->detailslink = Route::_(
@@ -212,14 +211,67 @@ class Cwmpagebuilder
     }
 
     /**
+     * Enrich an array of study items with buildPage display properties.
+     *
+     * Calls buildPage() on each item and merges the computed display
+     * properties (scripture, media, thumbnails, etc.) back onto the item.
+     *
+     * @param   array     $studies   Array of study objects from studyBuilder() or model
+     * @param   Registry  $params    Template parameters
+     * @param   object    $template  Template object
+     *
+     * @return  array  The same array with display properties merged onto each item
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function enrichStudies(array $studies, Registry $params, object $template): array
+    {
+        foreach ($studies as $study) {
+            $this->enrichStudy($study, $params, $template);
+        }
+
+        return $studies;
+    }
+
+    /**
+     * Enrich a single study item with buildPage display properties.
+     *
+     * @param   object    $study     Study object
+     * @param   Registry  $params    Template parameters
+     * @param   object    $template  Template object
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function enrichStudy(object $study, Registry $params, object $template): void
+    {
+        $page = $this->buildPage($study, $params, $template);
+
+        $study->scripture1          = $page->scripture1;
+        $study->scripture2          = $page->scripture2;
+        $study->media               = $page->media;
+        $study->studydate           = $page->studydate;
+        $study->topics              = $page->topics;
+        $study->study_thumbnail     = $page->study_thumbnail ?? null;
+        $study->series_thumbnail    = $page->series_thumbnail ?? null;
+        $study->detailslink         = $page->detailslink;
+        $study->teacherimage        = $page->teacherimage ?? null;
+        $study->studyintro          = $page->studyintro ?? '';
+        $study->secondary_reference = $page->secondary_reference ?? '';
+        $study->sdescription        = $page->sdescription ?? '';
+    }
+
+    /**
      * Study Builder
      *
-     * @param   string            $whereitem   ?
-     * @param   string            $wherefield  ?
-     * @param   Registry          $params      Item params
-     * @param   int               $limit       Limit of Records
-     * @param   string            $order       DESC or ASC
-     * @param   CwmtemplateTable  $template    Template Data
+     * @param   string    $whereitem   ?
+     * @param   string    $wherefield  ?
+     * @param   Registry  $params      Item params
+     * @param   int       $limit       Limit of Records
+     * @param   string    $order       DESC or ASC
      *
      * @return array
      *
@@ -232,7 +284,6 @@ class Cwmpagebuilder
         $params = null,
         $limit = 10,
         $order = 'DESC',
-        $template = null
     ): array {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 

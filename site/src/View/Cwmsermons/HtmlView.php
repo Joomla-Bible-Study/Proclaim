@@ -205,52 +205,15 @@ class HtmlView extends BaseHtmlView
         ) {
             $page_builder = new Cwmpagebuilder();
 
-            foreach ($items as $iValue) {
-                $item = &$iValue;
-
+            foreach ($items as $item) {
                 if ($item->access > 1 && !\in_array($item->access, $groups, true)) {
-                    unset($item);
-                } else {
-                    $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
-
-                    $pelements        = $page_builder->buildPage($item, $params, $this->template);
-                    $item->scripture1 = $pelements->scripture1;
-                    $item->scripture2 = $pelements->scripture2;
-                    $item->media      = $pelements->media;
-                    $item->studydate  = $pelements->studydate;
-                    $item->topics     = $pelements->topics;
-
-                    if (isset($pelements->study_thumbnail)) {
-                        $item->study_thumbnail = $pelements->study_thumbnail;
-                    } else {
-                        $item->study_thumbnail = null;
-                    }
-
-                    if (isset($pelements->series_thumbnail)) {
-                        $item->series_thumbnail = $pelements->series_thumbnail;
-                    } else {
-                        $item->series_thumbnail = null;
-                    }
-
-                    $item->detailslink = $pelements->detailslink;
-
-                    if (!isset($item->studyintro)) {
-                        $item->studyintro = '';
-                    }
-
-                    if (isset($pelements->secondary_reference)) {
-                        $item->secondary_reference = $pelements->secondary_reference;
-                    } else {
-                        $item->secondary_reference = '';
-                    }
-
-                    if (isset($pelements->sdescription)) {
-                        $item->sdescription = $pelements->sdescription;
-                    } else {
-                        $item->sdescription = '';
-                    }
+                    continue;
                 }
+
+                $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
             }
+
+            $page_builder->enrichStudies($items, $params, $this->template);
         }
 
         // Get the podcast subscription

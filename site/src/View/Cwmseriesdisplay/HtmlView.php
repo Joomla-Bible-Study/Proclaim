@@ -182,6 +182,8 @@ class HtmlView extends BaseHtmlView
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
             . ':' . $items->id;
 
+        $studies = $this->seriesstudies;
+
         if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate'))) {
             // Get studies associated with the series
             $pagebuilder = new Cwmpagebuilder();
@@ -196,47 +198,9 @@ class HtmlView extends BaseHtmlView
                 $params,
                 $limit,
                 $seriesorder,
-                $this->template
             );
 
-            foreach ($studies as $i => $study) {
-                $pelements               = $pagebuilder->buildPage($study, $params, $this->template);
-                $studies[$i]->scripture1 = $pelements->scripture1;
-                $studies[$i]->scripture2 = $pelements->scripture2;
-                $studies[$i]->media      = $pelements->media;
-                $studies[$i]->studydate  = $pelements->studydate;
-                $studies[$i]->topics     = $pelements->topics;
-
-                if (isset($pelements->study_thumbnail)) {
-                    $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-                } else {
-                    $studies[$i]->study_thumbnail = null;
-                }
-
-                if (isset($pelements->series_thumbnail)) {
-                    $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-                } else {
-                    $studies[$i]->series_thumbnail = null;
-                }
-
-                $studies[$i]->detailslink = $pelements->detailslink;
-
-                if (isset($pelements->studyintro)) {
-                    $studies[$i]->studyintro = $pelements->studyintro;
-                }
-
-                if (isset($pelements->secondary_reference)) {
-                    $studies[$i]->secondary_reference = $pelements->secondary_reference;
-                } else {
-                    $studies[$i]->secondary_reference = '';
-                }
-
-                if (isset($pelements->sdescription)) {
-                    $studies[$i]->sdescription = $pelements->sdescription;
-                } else {
-                    $studies[$i]->sdescription = '';
-                }
-            }
+            $pagebuilder->enrichStudies($studies, $params, $this->template);
 
             $this->page = $items;
         }
@@ -251,10 +215,10 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $mainframe->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        if (!\in_array($items->access, $groups) && $items->access) {
+        if (!\in_array($items->access, $groups, true) && $items->access) {
             $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
