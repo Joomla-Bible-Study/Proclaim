@@ -276,6 +276,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
                 <?php echo $this->form->renderField('text'); ?>
+                <hr />
+                <h4><?php echo Text::_('JBS_TPL_CONTENT_SCOPE'); ?></h4>
+                <?php foreach ($this->form->getFieldset('CONTENT_SCOPE') as $field) :
+                    echo $this->form->renderField($field->fieldname, 'params');
+                endforeach; ?>
             </div>
             <div class="col-lg-3">
                 <div class="card">
@@ -289,7 +294,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         </div>
 
         <hr />
-
         <div class="row">
             <div class="col-12">
                 <h4><?php echo Text::_('JBS_CMN_TERMS_SETTINGS'); ?></h4>
@@ -308,6 +312,27 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 </div>
                 <?php echo $this->form->getInput('terms', 'params'); ?>
                 <div class="form-text small text-muted"><?php echo Text::_('JBS_CMN_TERMS_DESC'); ?></div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_TPL_FILTERS'); ?></h4>
+            </div>
+            <?php
+            $filterArray = array_values($this->form->getFieldset('FILTERS'));
+            $split       = 3;
+            ?>
+            <div class="col-lg-6">
+                <?php for ($i = 0; $i < $split; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
+            </div>
+            <div class="col-lg-6">
+                <?php for ($i = $split, $count = count($filterArray); $i < $count; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
             </div>
         </div>
         <?php

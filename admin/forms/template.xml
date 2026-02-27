@@ -104,7 +104,7 @@
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
         </fieldset>
-        <fieldset name="FILTERS" label="JBS_TPL_FILTERS" layoutContext="messages"
+        <fieldset name="FILTERS" label="JBS_TPL_FILTERS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="lteacher_id" type="TeacherList" default="-1" multiple="true"
                    size="10" label="JBS_CMN_FILTERS_TEACHER" description="JBS_CMN_FILTERS_DESC">
@@ -359,6 +359,9 @@
                 <option value="false">JNO</option>
                 <option value="true">JYES</option>
             </field>
+        </fieldset>
+        <fieldset name="CONTENT_SCOPE" label="JBS_TPL_CONTENT_SCOPE"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="default_show_archived" type="list" default="2"
                    label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
                    description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
