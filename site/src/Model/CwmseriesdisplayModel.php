@@ -231,7 +231,7 @@ class CwmseriesdisplayModel extends ItemModel
         // Filter by published state based on show_archived parameter
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
-            $showArchived = $t_params->get('default_show_archived', '0');
+            $showArchived = $t_params->get('sddefault_show_archived', '0');
         }
         switch ($showArchived) {
             case '1': // Archived only

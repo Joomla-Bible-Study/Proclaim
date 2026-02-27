@@ -182,7 +182,7 @@ class CwmseriesdisplaysModel extends ListModel
         // Get show_archived parameter from menu, fall back to template default
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
-            $showArchived = $params->get('default_show_archived', '0');
+            $showArchived = $params->get('sdefault_show_archived', '0');
         }
         $this->setState('filter.show_archived', $showArchived);
 

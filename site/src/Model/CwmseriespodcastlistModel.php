@@ -155,7 +155,7 @@ class CwmseriespodcastlistModel extends ListModel
             $showArchived = $params->get('show_archived', '');
             if ($showArchived === '' || $showArchived === null) {
                 $template_params = Cwmparams::getTemplateparams();
-                $showArchived    = $template_params->params->get('default_show_archived', '0');
+                $showArchived    = $template_params->params->get('sdefault_show_archived', '0');
             }
             $this->setState('filter.show_archived', $showArchived);
         }

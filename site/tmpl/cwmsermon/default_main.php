@@ -53,7 +53,7 @@ if (!$isPrint && $this->item->params->get('showpodcastsubscribedetails') === '1'
                 // Add archive badge if item is archived and badge is enabled
                 $showBadge = $this->item->params->get('show_archive_badge', '');
                 if ($showBadge === '' || $showBadge === null) {
-                    $showBadge = $this->item->params->get('default_show_archive_badge', '1');
+                    $showBadge = $this->item->params->get('ddefault_show_archive_badge', '1');
                 }
                 if (isset($this->item->published) && (int)$this->item->published === 2
                     && (int)$showBadge === 1) {

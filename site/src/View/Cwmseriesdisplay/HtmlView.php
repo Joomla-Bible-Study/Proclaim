@@ -182,7 +182,7 @@ class HtmlView extends BaseHtmlView
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
             . ':' . $items->id;
 
-        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate')) == true) {
+        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate'))) {
             // Get studies associated with the series
             $pagebuilder = new Cwmpagebuilder();
             $whereitem   = $items->id;

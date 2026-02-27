@@ -199,6 +199,21 @@
     };
 
     /**
+         * Maps each Layout Editor context to the form field name of its template
+         * override (TemplateCode or SermonsTemplateFile). When a non-default
+         * override is selected, the Layout Editor canvas is bypassed at render
+         * time, so we dim it and show an informational banner.
+         */
+    const CONTEXT_OVERRIDE_FIELDS = {
+        messages: 'sermonstemplate',
+        details: 'sermontemplate',
+        teachers: 'teacherstemplate',
+        teacherDetails: 'teachertemplate',
+        series: 'seriesdisplaystemplate',
+        seriesDetails: 'seriesdisplaytemplate',
+    };
+
+    /**
          * Get link type options from PHP based on context
          * @param {string} context - Current context (messages, details, teachers, teacherDetails, series, seriesDetails)
          * @returns {Array} Link type options appropriate for the context
@@ -516,12 +531,30 @@
              */
         init() {
             this.createStructure();
-            this.initSidebar();
-            this.initCanvas();
-            this.loadFromParams();
-            this.initSortable();
-            this.cleanupRows(); // Ensure empty drop zone exists
+            this.initOverrideDropdown();
+
+            // Check if the restored context is an order-only context (e.g. Landing Page)
+            const contextDef = this.getElementDefs()[this.currentContext];
+            const isOrderOnly = contextDef?.isOrderOnly || false;
+
+            this.updateToolbarForContext(isOrderOnly);
+
+            if (isOrderOnly) {
+                this.initLandingPageSidebar();
+                this.initLandingPageCanvas();
+                this.loadLandingPageFromParams();
+                this.initLandingPageSortable();
+            } else {
+                this.initSidebar();
+                this.initCanvas();
+                this.loadFromParams();
+                this.initSortable();
+                this.cleanupRows(); // Ensure empty drop zone exists
+            }
+
             this.bindEvents();
+            this.updateOverrideDropdown();
+            this.checkTemplateOverride();
         }
 
         /**
@@ -550,6 +583,12 @@
                         </button>
                     </div>
                     <div class="layout-toolbar-group layout-toolbar-spacer"></div>
+                    <div class="layout-toolbar-group layout-override-dropdown-group" style="display:none">
+                        <label class="layout-override-label" for="layout-override-select">
+                            ${this.trans('JBS_TPL_TEMPLATE_FILE') || 'Template File'}:
+                        </label>
+                        <select id="layout-override-select" class="form-select layout-override-select"></select>
+                    </div>
                     <div class="layout-toolbar-group"${this.options.showViewSettings ? '' : ' style="display:none"'}>
                         <button type="button" class="btn btn-secondary btn-view-settings" title="${this.trans('JBS_TPL_VIEW_SETTINGS') || 'View Settings'}">
                             <span class="icon-cog" aria-hidden="true"></span>
@@ -673,6 +712,9 @@
                 this.initSortable();
                 this.cleanupRows(); // Ensure empty drop zone exists
             }
+
+            this.updateOverrideDropdown();
+            this.checkTemplateOverride();
         }
 
         /**
@@ -798,6 +840,160 @@
             if (modalInstance) {
                 modalInstance.hide();
             }
+
+            // Sync toolbar dropdown from the (now loaded) hidden form field
+            this.syncOverrideDropdownFromForm();
+            this.checkTemplateOverride();
+        }
+
+        /**
+             * Check whether the current context has a template override active.
+             * When a non-default override is selected the Layout Editor canvas
+             * is not used at render time, so we overlay a notice and dim the
+             * canvas + sidebar to prevent confusion.
+             */
+        checkTemplateOverride() {
+            const fieldName = CONTEXT_OVERRIDE_FIELDS[this.currentContext];
+            if (!fieldName) {
+                this.clearOverrideOverlay();
+                return;
+            }
+
+            // Prefer the toolbar dropdown (always present), fall back to hidden form field
+            const value = this.overrideDropdown?.value
+                    ?? document.getElementById(this.options.formId)
+                        ?.querySelector(`[name="jform[params][${fieldName}]"]`)?.value
+                    ?? '0';
+
+            if (value && value !== '0') {
+                this.showOverrideOverlay();
+            } else {
+                this.clearOverrideOverlay();
+            }
+        }
+
+        /**
+             * Show the "override active" overlay on the canvas area.
+             */
+        showOverrideOverlay() {
+            if (this.container.querySelector('.layout-override-overlay')) {
+                return; // already showing
+            }
+
+            const overlay = document.createElement('div');
+            overlay.className = 'layout-override-overlay';
+            overlay.innerHTML = `
+                <div class="layout-override-notice">
+                    <span class="icon-info-circle" aria-hidden="true"></span>
+                    <span>${this.trans('JBS_TPL_LAYOUT_OVERRIDE_ACTIVE') || 'A template override file is active for this context. To use the Layout Editor instead, set the Template File dropdown (in the toolbar) back to "Use Default".'}</span>
+                </div>
+            `;
+
+            // Insert overlay before the canvas inside the editor wrapper
+            this.editor.appendChild(overlay);
+            this.editor.classList.add('layout-override-active');
+        }
+
+        /**
+             * Remove the "override active" overlay.
+             */
+        clearOverrideOverlay() {
+            const overlay = this.container.querySelector('.layout-override-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+            this.editor?.classList.remove('layout-override-active');
+        }
+
+        /**
+             * Sync the toolbar dropdown value from the hidden Joomla form
+             * field.  Called after View Settings Apply so that changes made
+             * inside the modal are reflected in the toolbar.
+             */
+        syncOverrideDropdownFromForm() {
+            if (!this.overrideDropdown) { return; }
+
+            const fieldName = CONTEXT_OVERRIDE_FIELDS[this.currentContext];
+            if (!fieldName) { return; }
+
+            const form = document.getElementById(this.options.formId);
+            const hidden = form?.querySelector(`[name="jform[params][${fieldName}]"]`);
+            if (hidden) {
+                this.overrideDropdown.value = hidden.value;
+            }
+        }
+
+        /**
+             * One-time setup: cache the toolbar dropdown element and bind its
+             * change handler.  Called once from init().
+             */
+        initOverrideDropdown() {
+            this.overrideDropdown = this.toolbar?.querySelector('.layout-override-select');
+            this.overrideDropdownGroup = this.toolbar?.querySelector('.layout-override-dropdown-group');
+
+            if (this.overrideDropdown) {
+                this.overrideDropdown.addEventListener('change', () => {
+                    const val = this.overrideDropdown.value;
+
+                    // Sync value to the hidden Joomla form field (if loaded)
+                    const fieldName = CONTEXT_OVERRIDE_FIELDS[this.currentContext];
+                    if (fieldName) {
+                        const form = document.getElementById(this.options.formId);
+                        const hidden = form?.querySelector(`[name="jform[params][${fieldName}]"]`);
+                        if (hidden) {
+                            hidden.value = val;
+                        }
+
+                        // Also update the in-memory params so save picks it up
+                        const params = window.Joomla?.getOptions?.('com_proclaim.templateParams');
+                        if (params) {
+                            params[fieldName] = val;
+                        }
+                    }
+
+                    this.markDirty();
+                    this.checkTemplateOverride();
+                });
+            }
+        }
+
+        /**
+             * Populate the toolbar override dropdown with the correct options
+             * for the current context.  Hides the dropdown when the context
+             * has no override field (e.g. Landing Page).
+             */
+        updateOverrideDropdown() {
+            if (!this.overrideDropdown || !this.overrideDropdownGroup) {
+                return;
+            }
+
+            const overrideData = window.Joomla?.getOptions?.('com_proclaim.overrideOptions') || {};
+            const contextData = overrideData[this.currentContext];
+
+            if (!contextData) {
+                // No override field for this context — hide the dropdown
+                this.overrideDropdownGroup.style.display = 'none';
+                return;
+            }
+
+            // Build <option> elements
+            this.overrideDropdown.innerHTML = '';
+            (contextData.options || []).forEach((opt) => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.label;
+                this.overrideDropdown.appendChild(option);
+            });
+
+            // Set the current value — check the hidden form field first,
+            // fall back to the PHP-provided initial value
+            const fieldName = contextData.field;
+            const form = document.getElementById(this.options.formId);
+            const hidden = form?.querySelector(`[name="jform[params][${fieldName}]"]`);
+            const currentValue = hidden?.value ?? contextData.value ?? '0';
+            this.overrideDropdown.value = currentValue;
+
+            this.overrideDropdownGroup.style.display = '';
         }
 
         /**

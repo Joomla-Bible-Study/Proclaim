@@ -292,29 +292,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
 
         <div class="row">
             <div class="col-12">
-                <h4><?php echo Text::_('JBS_TPL_TEMPLATES'); ?></h4>
-            </div>
-            <div class="col-lg-6">
-                <?php
-                $fields = $this->form->getFieldset('TEMPLATES');
-$fieldArray             = iterator_to_array($fields);
-$half                   = (int) ceil(\count($fieldArray) / 2);
-$i                      = 0;
-foreach ($fieldArray as $field) :
-    if ($i === $half) {
-        echo '</div><div class="col-lg-6">';
-    }
-    echo $this->form->renderField($field->fieldname, 'params');
-    $i++;
-endforeach;
-?>
-            </div>
-        </div>
-
-        <hr />
-
-        <div class="row">
-            <div class="col-12">
                 <h4><?php echo Text::_('JBS_CMN_TERMS_SETTINGS'); ?></h4>
             </div>
             <div class="col-12">
@@ -405,7 +382,13 @@ echo $this->form->getInput('rules'); ?>
         endif; ?>
 
         <input type="hidden" name="task" value=""/>
-        <?php
-        echo HTMLHelper::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
+
+        <?php // Render template override fields as hidden inputs so the toolbar dropdown can sync values ?>
+        <?php foreach ($form->getFieldset('TEMPLATE_OVERRIDES') as $field): ?>
+            <input type="hidden"
+                   name="jform[params][<?php echo $field->fieldname; ?>]"
+                   value="<?php echo htmlspecialchars($paramsArray[$field->fieldname] ?? '0', ENT_COMPAT, 'UTF-8'); ?>" />
+        <?php endforeach; ?>
     </div>
 </form>

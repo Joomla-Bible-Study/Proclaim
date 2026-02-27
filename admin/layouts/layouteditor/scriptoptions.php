@@ -114,6 +114,32 @@ $linkTypeOptions        = $extractFieldOptions('scripture1linktype');
 $teacherLinkTypeOptions = $extractFieldOptions('tsteacherlinktype');
 $seriesLinkTypeOptions  = $extractFieldOptions('sserieslinktype');
 
+// ─── 2b. Extract template override dropdown options per context ──────────
+// Maps each Layout Editor context → its override field name.  Must stay
+// in sync with CONTEXT_OVERRIDE_FIELDS in layout-editor.es6.js.
+$overrideFieldMap = [
+    'messages'       => 'sermonstemplate',
+    'details'        => 'sermontemplate',
+    'teachers'       => 'teacherstemplate',
+    'teacherDetails' => 'teachertemplate',
+    'series'         => 'seriesdisplaystemplate',
+    'seriesDetails'  => 'seriesdisplaytemplate',
+];
+
+$overrideOptions = [];
+
+foreach ($overrideFieldMap as $context => $fieldName) {
+    $opts = $extractFieldOptions($fieldName);
+
+    if (!empty($opts)) {
+        $overrideOptions[$context] = [
+            'field'   => $fieldName,
+            'options' => $opts,
+            'value'   => (string) ($templateParams[$fieldName] ?? '0'),
+        ];
+    }
+}
+
 // ─── 3. Register all script options ─────────────────────────────────────
 if ($templateId !== null) {
     $document->addScriptOptions('com_proclaim.templateId', (int) $templateId);
@@ -161,4 +187,8 @@ if (!empty($teacherLinkTypeOptions)) {
 
 if (!empty($seriesLinkTypeOptions)) {
     $document->addScriptOptions('com_proclaim.seriesLinkTypeOptions', $seriesLinkTypeOptions);
+}
+
+if (!empty($overrideOptions)) {
+    $document->addScriptOptions('com_proclaim.overrideOptions', $overrideOptions);
 }
