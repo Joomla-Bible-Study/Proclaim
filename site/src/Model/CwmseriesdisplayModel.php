@@ -97,12 +97,12 @@ class CwmseriesdisplayModel extends ItemModel
     /**
      * Get Studies
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies(): mixed
+    public function getStudies(): array
     {
         $app = Factory::getApplication();
         $sid = (int) $app->getUserState('sid');
@@ -285,11 +285,7 @@ class CwmseriesdisplayModel extends ItemModel
         $db->setQuery($query, 0, (int) $t_params->get('series_detail_limit', 20));
         $studies = $db->loadObjectList();
 
-        if (\count($studies) < 1) {
-            return false;
-        }
-
-        return $studies;
+        return $studies ?: [];
     }
 
     /**

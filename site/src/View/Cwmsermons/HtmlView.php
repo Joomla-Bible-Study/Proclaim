@@ -99,12 +99,6 @@ class HtmlView extends BaseHtmlView
      */
     protected ?object $template = null;
 
-    /** @var array|null
-     *
-     * @since 7.0
-     */
-    protected ?array $topic = null;
-
     /** @var object|null
      *
      * @since 7.0
@@ -116,20 +110,6 @@ class HtmlView extends BaseHtmlView
      * @since 7.0
      */
     protected ?object $page = null;
-
-    /** @var string|null
-     *
-     * @since 7.0
-     */
-    protected ?string $request_url = null;
-
-    /**
-     * Pagination limit box HTML
-     *
-     * @var string|null
-     * @since 7.0
-     */
-    protected ?string $limitbox = null;
 
     /**
      * Main image HTML string
@@ -164,7 +144,6 @@ class HtmlView extends BaseHtmlView
     public array $teachersFluid = [];
 
     /**
-    /**
      * Current menu item ID
      *
      * @var int
@@ -186,27 +165,25 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        /** @var CwmsermonsModel $module */
-        $module      = $this->getModel();
-        $this->state = $module->getState();
+        /** @var CwmsermonsModel $model */
+        $model       = $this->getModel();
+        $this->state = $model->getState();
 
         $this->template = $this->state->get('template');
 
-        $items                       = $module->getItems();
-        $pagination                  = $module->getPagination();
-        $this->page                  = new \stdClass();
-        $this->page->pagelinks       = $pagination->getPagesLinks();
-        $this->page->counter         = $pagination->getPagesCounter();
-        $this->activeFilters         = $module->getActiveFilters();
+        $items                 = $model->getItems();
+        $pagination            = $model->getPagination();
+        $this->page            = new \stdClass();
+        $this->page->pagelinks = $pagination->getPagesLinks();
+        $this->page->counter   = $pagination->getPagesCounter();
+        $this->activeFilters   = $model->getActiveFilters();
 
-        // Get a filter form.
-        $this->filterForm = $module->getFilterForm();
+        $this->filterForm = $model->getFilterForm();
         $mainframe        = Factory::getApplication();
         $this->admin      = $this->state->get('administrator');
 
         $params = $this->state->params;
 
-        // Check permissions for this view by running through the records and removing those that the user doesn't have permission to see
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
@@ -216,11 +193,6 @@ class HtmlView extends BaseHtmlView
             'proclaim-page-header-img',
             false
         );
-
-        // Build go button
-        $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
-            'JBS_STY_GO_BUTTON'
-        ) . '">';
 
         // Only load PageBuilder if the default template is NOT being used
         if (
@@ -284,14 +256,9 @@ class HtmlView extends BaseHtmlView
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-        $uri = new Uri();
-
-        $this->pagination  = $pagination;
-        $this->limitbox    = $this->pagination->getLimitBox();
-        $this->items       = $items;
-        $stringuri         = $uri->toString();
-        $this->request_url = $stringuri;
-        $this->params      = $params;
+        $this->pagination = $pagination;
+        $this->items      = $items;
+        $this->params     = $params;
 
         // Pre-calculate values for templates to avoid helper instantiation in templates
         $this->listing      = new Cwmlisting();
