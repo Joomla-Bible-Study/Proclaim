@@ -213,11 +213,11 @@
                    label="JBS_TPL_MEDIA_PLAYER_WIDTH" description="JBS_TPL_MEDIA_PLAYER_WIDTH_DESC"/>
             <field name="player_height" type="int" default="385"
                    label="JBS_TPL_MEDIA_PLAYER_HEIGHT" description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
-            <field name="embedshare" default="TRUE" type="radio"
-                   label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="FALSE">JBS_TPL_NO_SHARE</option>
-                <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
+            <field name="embedshare" type="list" default="1"
+                   label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
+                <option value="0">JBS_CMN_HIDE</option>
+                <option value="1">JBS_TPL_SHARE_ADDTOANY</option>
+                <option value="2">JBS_TPL_SHARE_LOCAL</option>
             </field>
             <field name="backcolor" type="ColorPicker" default="#287585"
                    label="JBS_TPL_MEDIA_BACKCOLOR" description="JBS_TPL_MEDIA_BACKCOLOR_DESC"/>
@@ -838,14 +838,12 @@
                 <option value="1">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_TOP</option>
                 <option value="2">JBS_TPL_SHOW_PODCAST_SUBSCRIBE_BOTTOM</option>
             </field>
-            <field name="socialnetworking"
-                   type="radio"
-                   default="1"
+            <field name="socialnetworking" type="list" default="1"
                    label="JBS_ADM_SOCIALNETWORKING"
-                   description="JBS_ADM_SOCIALNETWORKING_DESC"
-                   layout="joomla.form.field.radio.switcher">
+                   description="JBS_ADM_SOCIALNETWORKING_DESC">
                 <option value="0">JBS_CMN_HIDE</option>
-                <option value="1">JBS_CMN_SHOW</option>
+                <option value="1">JBS_TPL_SHARE_ADDTOANY</option>
+                <option value="2">JBS_TPL_SHARE_LOCAL</option>
             </field>
             <field name="dlisting_item_style" type="list" default="classic"
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">

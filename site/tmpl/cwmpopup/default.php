@@ -77,7 +77,7 @@ if ($player === 8) {
     <div class="popupfooter">
         <?php
     // Social Networking
-    if ($this->params->get('embedshare') !== 'FALSE') {
+    if ((int) $this->params->get('embedshare', 1) > 0) {
         try {
             echo $this->listing->getShare($this->path1, $this->media, $this->params);
         } catch (Exception $e) {

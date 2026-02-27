@@ -2645,7 +2645,9 @@ class Cwmlisting
     }
 
     /**
-     * Share Helper file
+     * Share Helper — dispatches to local privacy-safe or AddToAny renderer.
+     *
+     * Modes: 0 = hide, 1 = local/privacy (no external requests), 2 = AddToAny.
      *
      * @param   string    $link    Link
      * @param   object    $row     Item Info
@@ -2656,13 +2658,82 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getShare($link, $row, Registry $params): ?string
+    public function getShare(string $link, object $row, Registry $params): ?string
     {
-        // Get a study title and prepare for sharing
-        $title = $row->studytitle ?? '';
-        $title = htmlspecialchars(strip_tags($title), ENT_QUOTES, 'UTF-8');
+        $mode = $this->resolveShareMode($params);
 
-        // Get description from intro or first part of the study text
+        if ($mode === 0) {
+            return null;
+        }
+
+        $data = $this->prepareShareData($link, $row);
+
+        return match ($mode) {
+            1       => $this->renderAddToAnyShare($data),
+            2       => $this->renderLocalShare($data),
+            default => null,
+        };
+    }
+
+    /**
+     * Determine which sharing mode to use from template/module params.
+     *
+     * Priority: socialnetworking (template-level setting visible to admins)
+     * then embedshare (module-only override / legacy backward compat).
+     *
+     * Handles backward compatibility:
+     * - socialnetworking: int 0/1/2 (old 1 = "Show" maps to 1 = AddToAny)
+     * - embedshare: string "TRUE"/"FALSE" or int 0/1/2
+     *
+     * @param   Registry  $params  Template or module params
+     *
+     * @return int  0 = hide, 1 = AddToAny, 2 = local/privacy
+     *
+     * @since 10.1.0
+     */
+    private function resolveShareMode(Registry $params): int
+    {
+        // socialnetworking is the primary setting (template detail/popup views)
+        $social = $params->get('socialnetworking');
+
+        if ($social !== null && $social !== '') {
+            return (int) $social;
+        }
+
+        // Fall back to embedshare (module context or legacy data)
+        $embed = $params->get('embedshare');
+
+        if ($embed !== null && $embed !== '') {
+            // Legacy string values from old radio field
+            if ($embed === 'TRUE') {
+                return 1;
+            }
+
+            if ($embed === 'FALSE') {
+                return 0;
+            }
+
+            return (int) $embed;
+        }
+
+        // Default to AddToAny (1) to preserve existing behavior for upgrades
+        return 1;
+    }
+
+    /**
+     * Extract common share data from the sermon row.
+     *
+     * @param   string  $link  Page link
+     * @param   object  $row   Item data
+     *
+     * @return array{title: string, description: string, imageUrl: string, link: string}
+     *
+     * @since 10.1.0
+     */
+    private function prepareShareData(string $link, object $row): array
+    {
+        $title = htmlspecialchars(strip_tags($row->studytitle ?? ''), ENT_QUOTES, 'UTF-8');
+
         $description = '';
 
         if (!empty($row->studyintro)) {
@@ -2673,7 +2744,6 @@ class Cwmlisting
 
         $description = mb_substr($description, 0, 200);
 
-        // Get image URL for sharing
         $imageUrl = '';
 
         if (!empty($row->thumbnailm)) {
@@ -2682,39 +2752,115 @@ class Cwmlisting
             $imageUrl = Uri::root() . $row->image;
         }
 
-        // Ensure link is absolute
         if (!str_starts_with($link, 'http')) {
             $link = Uri::root() . ltrim($link, '/');
         }
 
-        $shareit = '<div class="proclaim-share float-end">';
+        return [
+            'title'       => $title,
+            'description' => $description,
+            'imageUrl'    => $imageUrl,
+            'link'        => $link,
+        ];
+    }
 
-        // AddToAny with data attributes for specific content
-        $shareit .= '<!-- AddToAny Share Buttons -->
-            <div class="a2a_kit a2a_kit_size_32 a2a_default_style"
-                 data-a2a-url="' . htmlspecialchars($link, ENT_QUOTES, 'UTF-8') . '"
-                 data-a2a-title="' . $title . '">
-                <a class="a2a_button_facebook"></a>
-                <a class="a2a_button_x"></a>
-                <a class="a2a_button_email"></a>
-                <a class="a2a_button_copy_link"></a>
-                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-            </div>';
+    /**
+     * Render local/privacy share buttons — no external HTTP requests.
+     *
+     * Uses direct platform share URLs and a JS clipboard handler.
+     *
+     * @param   array  $data  Share data from prepareShareData()
+     *
+     * @return string  HTML for local share buttons
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    private function renderLocalShare(array $data): string
+    {
+        $url   = rawurlencode($data['link']);
+        $title = rawurlencode(html_entity_decode($data['title'], ENT_QUOTES, 'UTF-8'));
+        $desc  = rawurlencode($data['description'] ?: 'Check out this message');
 
-        $shareit .= '</div>';
+        $html = '<div class="proclaim-share proclaim-share-local float-end">';
 
-        // Add script and configuration once per page
+        // Facebook
+        $html .= '<a class="proclaim-share-btn proclaim-share-facebook"'
+            . ' href="https://www.facebook.com/sharer/sharer.php?u=' . $url . '"'
+            . ' target="_blank" rel="noopener noreferrer"'
+            . ' aria-label="Share on Facebook">'
+            . '<i class="fa-brands fa-facebook-f"></i></a>';
+
+        // X / Twitter
+        $html .= '<a class="proclaim-share-btn proclaim-share-x"'
+            . ' href="https://x.com/intent/post?url=' . $url . '&text=' . $title . '"'
+            . ' target="_blank" rel="noopener noreferrer"'
+            . ' aria-label="Share on X">'
+            . '<i class="fa-brands fa-x-twitter"></i></a>';
+
+        // Email
+        $html .= '<a class="proclaim-share-btn proclaim-share-email"'
+            . ' href="mailto:?subject=' . $title . '&body=' . $desc . '%0A%0A' . $url . '"'
+            . ' aria-label="Share via email">'
+            . '<i class="fa-solid fa-envelope"></i></a>';
+
+        // Copy Link
+        $html .= '<button type="button" class="proclaim-share-btn proclaim-share-copy"'
+            . ' data-share-url="' . htmlspecialchars($data['link'], ENT_QUOTES, 'UTF-8') . '"'
+            . ' aria-label="Copy link">'
+            . '<i class="fa-solid fa-link"></i></button>';
+
+        $html .= '</div>';
+
+        // Register clipboard handler JS via WAM
+        $app = Factory::getApplication();
+
+        if ($app instanceof CMSApplicationInterface) {
+            $wa = $app->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.share');
+            $wa->useStyle('com_proclaim.share-css');
+        }
+
+        return $html;
+    }
+
+    /**
+     * Render AddToAny share buttons — loads remote third-party script.
+     *
+     * @param   array  $data  Share data from prepareShareData()
+     *
+     * @return string  HTML for AddToAny share buttons
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    private function renderAddToAnyShare(array $data): string
+    {
+        $safeLink  = htmlspecialchars($data['link'], ENT_QUOTES, 'UTF-8');
+        $safeTitle = $data['title'];
+
+        $html = '<div class="proclaim-share float-end">'
+            . '<!-- AddToAny Share Buttons -->'
+            . '<div class="a2a_kit a2a_kit_size_32 a2a_default_style"'
+            . ' data-a2a-url="' . $safeLink . '"'
+            . ' data-a2a-title="' . $safeTitle . '">'
+            . '<a class="a2a_button_facebook"></a>'
+            . '<a class="a2a_button_x"></a>'
+            . '<a class="a2a_button_email"></a>'
+            . '<a class="a2a_button_copy_link"></a>'
+            . '<a class="a2a_dd" href="https://www.addtoany.com/share"></a>'
+            . '</div></div>';
+
         $app = Factory::getApplication();
 
         if (!$app instanceof CMSApplicationInterface) {
-            return $shareit;
+            return $html;
         }
 
         $doc = $app->getDocument();
 
-        // Build configuration script with email template
         // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
-        $escapedDesc = addslashes($description ?: 'Check out this message');
+        $escapedDesc = addslashes($data['description'] ?: 'Check out this message');
         $config      = "var a2a_config = a2a_config || {};
 a2a_config.onclick = 1;
 a2a_config.num_services = 8;
@@ -2725,15 +2871,13 @@ a2a_config.templates.email = {
     body: '" . $escapedDesc . "\\n\\n\${link}'
 };";
 
-        // Add image for Open Graph sharing if available
-        if ($imageUrl) {
-            $config .= "\na2a_config.linkurl_default = '" . addslashes($link) . "';";
+        if ($data['imageUrl']) {
+            $config .= "\na2a_config.linkurl_default = '" . addslashes($data['link']) . "';";
         }
 
         $wa = $doc->getWebAssetManager();
         $wa->addInlineScript($config);
 
-        // Add the AddToAny script (async for performance)
         $wa->registerAndUseScript(
             'com_proclaim.addtoany',
             'https://static.addtoany.com/menu/page.js',
@@ -2741,7 +2885,7 @@ a2a_config.templates.email = {
             ['defer'   => true, 'async' => true]
         );
 
-        return $shareit;
+        return $html;
     }
 
     /**
