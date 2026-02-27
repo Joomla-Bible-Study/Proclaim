@@ -914,6 +914,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_LEGACY')}`;
                 resultsEl.style.display = 'block';
 
+                if (data.error) {
+                    resultsEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${data.error}</span>`;
+                    return;
+                }
+
                 if (data.total_files === 0) {
                     resultsEl.innerHTML = `<div class="alert alert-success"><i class="icon-checkmark me-1" aria-hidden="true"></i>${Joomla.Text._('JBS_ADM_LEGACY_NO_FILES')}</div>`;
                     return;
@@ -1009,11 +1014,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="icon-search" aria-hidden="true"></i> ${Joomla.Text._('JBS_ADM_SCAN_LEGACY')}`;
                 resultsEl.style.display = 'block';
-                resultsEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
+                resultsEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${err.message || err}</span>`;
             });
     });
 

@@ -1426,11 +1426,15 @@ class CwmadminController extends FormController
      */
     public function getLegacyFolderReportXHR(): void
     {
-        $app      = Factory::getApplication();
+        $app = Factory::getApplication();
+
+        // Buffer output to prevent stray PHP notices from corrupting JSON
+        ob_start();
 
         header('Content-Type: application/json; charset=utf-8');
 
         if (!Session::checkToken('get')) {
+            ob_end_clean();
             echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
             $app->close();
 
@@ -1439,8 +1443,10 @@ class CwmadminController extends FormController
 
         try {
             $report = CwmImageMigration::getLegacyFolderReport();
+            ob_end_clean();
             echo json_encode($report, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e) {
+            ob_end_clean();
             echo json_encode([
                 'folders' => [], 'total_files' => 0, 'total_size' => 0,
                 'error'   => $e->getMessage(),

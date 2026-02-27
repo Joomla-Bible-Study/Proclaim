@@ -1666,7 +1666,7 @@ class CwmImageMigration
                     'path'      => $relDir,
                     'files'     => \count($directFiles),
                     'size'      => $size,
-                    'filenames' => array_map('basename', $directFiles),
+                    'filenames' => array_values(array_map('basename', $directFiles)),
                 ];
                 $report['total_files'] += \count($directFiles);
                 $report['total_size'] += $size;
@@ -1693,7 +1693,7 @@ class CwmImageMigration
                             'path'      => $relSub,
                             'files'     => \count($looseFiles),
                             'size'      => $size,
-                            'filenames' => array_map('basename', $looseFiles),
+                            'filenames' => array_values(array_map('basename', $looseFiles)),
                         ];
                         $report['total_files'] += \count($looseFiles);
                         $report['total_size'] += $size;
@@ -1709,7 +1709,7 @@ class CwmImageMigration
                         'path'      => $relSub,
                         'files'     => \count($files),
                         'size'      => $size,
-                        'filenames' => array_map('basename', $files),
+                        'filenames' => array_values(array_map('basename', $files)),
                     ];
                     $report['total_files'] += \count($files);
                     $report['total_size'] += $size;
