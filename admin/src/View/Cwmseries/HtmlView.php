@@ -20,8 +20,10 @@ use Joomla\CMS\MVC\Model\State;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -54,10 +56,10 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var State|\Joomla\Registry\Registry
+     * @var State|Registry
      * @since    7.0.0
      */
-    protected State|\Joomla\Registry\Registry $state;
+    protected State|Registry $state;
 
     /**
      * Filter Form
@@ -163,6 +165,7 @@ class HtmlView extends BaseHtmlView
         $user  = $this->getCurrentUser();
 
         // Get the toolbar object instance
+        /** @var Toolbar $toolbar */
         $toolbar = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_SERIES'), 'tree-2 tree-2');

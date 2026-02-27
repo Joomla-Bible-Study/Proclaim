@@ -145,6 +145,7 @@
     display: flex;
     gap: 1rem;
     min-height: 400px;
+    position: relative;
 }
 
 /* ==========================================================================
@@ -621,6 +622,24 @@
     padding: 0 !important;
 }
 
+/* Template override dropdown in toolbar — match .btn sizing */
+.layout-override-dropdown-group {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.layout-override-label {
+    white-space: nowrap;
+    color: var(--bs-secondary-color, #6c757d);
+}
+
+.layout-override-select {
+    width: auto;
+    min-width: 10rem;
+    max-width: 16rem;
+}
+
 /* ==========================================================================
    Sortable Ghost & Drag States
    ========================================================================== */
@@ -1095,6 +1114,48 @@
     background: var(--layout-bg-primary);
     box-shadow: var(--layout-shadow-lg);
     z-index: 1000;
+}
+
+/* ==========================================================================
+   Template Override Active - dims editor when a custom template file or
+   template code override is selected for the current context
+   ========================================================================== */
+
+.layout-editor.layout-override-active .layout-sidebar,
+.layout-editor.layout-override-active .layout-canvas {
+    opacity: 0.35;
+    pointer-events: none;
+    user-select: none;
+}
+
+.layout-override-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.layout-override-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--layout-bg-primary, #fff);
+    border: 1px solid var(--layout-border, #dee2e6);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    font-size: 0.875rem;
+    color: var(--layout-text-primary, #333);
+    pointer-events: auto;
+}
+
+.layout-override-notice .icon-info-circle {
+    font-size: 1.25rem;
+    color: var(--bs-info, #0dcaf0);
+    flex-shrink: 0;
 }
 
 /* ==========================================================================

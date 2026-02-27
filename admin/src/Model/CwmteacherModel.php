@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -139,7 +140,7 @@ class CwmteacherModel extends AdminModel
     {
         $jinput = Factory::getApplication()->getInput();
 
-        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+        // The front end calls this model and uses a_id to avoid id clashes, so we need to check for that first.
         if ($jinput->get('a_id')) {
             $pk = $jinput->get('a_id', 0);
         } else {
@@ -267,6 +268,16 @@ class CwmteacherModel extends AdminModel
      */
     public function save($data): bool
     {
+        $filter = InputFilter::getInstance();
+
+        if (isset($data['metadata']['author'])) {
+            $data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
+        }
+
+        if (isset($data['created_by_alias'])) {
+            $data['created_by_alias'] = $filter->clean($data['created_by_alias'], 'TRIM');
+        }
+
         // Sync social_links subform → legacy columns for frontend backward compatibility
         if (!empty($data['social_links']) && \is_array($data['social_links'])) {
             $data['social_links'] = json_encode(array_values($data['social_links']));

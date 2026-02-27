@@ -276,6 +276,11 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
                 <?php echo $this->form->renderField('text'); ?>
+                <hr />
+                <h4><?php echo Text::_('JBS_TPL_CONTENT_SCOPE'); ?></h4>
+                <?php foreach ($this->form->getFieldset('CONTENT_SCOPE') as $field) :
+                    echo $this->form->renderField($field->fieldname, 'params');
+                endforeach; ?>
             </div>
             <div class="col-lg-3">
                 <div class="card">
@@ -289,30 +294,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         </div>
 
         <hr />
-
-        <div class="row">
-            <div class="col-12">
-                <h4><?php echo Text::_('JBS_TPL_TEMPLATES'); ?></h4>
-            </div>
-            <div class="col-lg-6">
-                <?php
-                $fields = $this->form->getFieldset('TEMPLATES');
-$fieldArray             = iterator_to_array($fields);
-$half                   = (int) ceil(\count($fieldArray) / 2);
-$i                      = 0;
-foreach ($fieldArray as $field) :
-    if ($i === $half) {
-        echo '</div><div class="col-lg-6">';
-    }
-    echo $this->form->renderField($field->fieldname, 'params');
-    $i++;
-endforeach;
-?>
-            </div>
-        </div>
-
-        <hr />
-
         <div class="row">
             <div class="col-12">
                 <h4><?php echo Text::_('JBS_CMN_TERMS_SETTINGS'); ?></h4>
@@ -331,6 +312,27 @@ endforeach;
                 </div>
                 <?php echo $this->form->getInput('terms', 'params'); ?>
                 <div class="form-text small text-muted"><?php echo Text::_('JBS_CMN_TERMS_DESC'); ?></div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_TPL_FILTERS'); ?></h4>
+            </div>
+            <?php
+            $filterArray = array_values($this->form->getFieldset('FILTERS'));
+            $split       = 3;
+            ?>
+            <div class="col-lg-6">
+                <?php for ($i = 0; $i < $split; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
+            </div>
+            <div class="col-lg-6">
+                <?php for ($i = $split, $count = count($filterArray); $i < $count; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
             </div>
         </div>
         <?php
@@ -405,7 +407,13 @@ echo $this->form->getInput('rules'); ?>
         endif; ?>
 
         <input type="hidden" name="task" value=""/>
-        <?php
-        echo HTMLHelper::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
+
+        <?php // Render template override fields as hidden inputs so the toolbar dropdown can sync values ?>
+        <?php foreach ($form->getFieldset('TEMPLATE_OVERRIDES') as $field): ?>
+            <input type="hidden"
+                   name="jform[params][<?php echo $field->fieldname; ?>]"
+                   value="<?php echo htmlspecialchars($paramsArray[$field->fieldname] ?? '0', ENT_COMPAT, 'UTF-8'); ?>" />
+        <?php endforeach; ?>
     </div>
 </form>

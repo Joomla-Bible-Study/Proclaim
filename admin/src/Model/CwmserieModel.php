@@ -105,14 +105,14 @@ class CwmserieModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->getInput();
+        $input = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-        if ($jinput->get('a_id')) {
-            $id = $jinput->get('a_id', 0);
+        if ($input->get('a_id')) {
+            $id = $input->get('a_id', 0);
         } else {
             // The back end uses id so we use that the rest of the time and set it to 0 by default.
-            $id = $jinput->get('id', 0);
+            $id = $input->get('id', 0);
         }
 
         $user = Factory::getApplication()->getIdentity();
@@ -120,8 +120,8 @@ class CwmserieModel extends AdminModel
         // Check for existing article.
         // Modify the form based on Edit State access controls.
         if (
-            ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
-            || ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
         ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -196,7 +196,7 @@ class CwmserieModel extends AdminModel
         $data['image'] = $image->url;
 
         // Alter the title for save as copy
-        if ($app->getInput()->get('task') == 'save2copy') {
+        if ($app->getInput()->get('task') === 'save2copy') {
             list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['series_text']);
             $data['series_text'] = $title;
             $data['alias']       = $alias;
@@ -434,7 +434,7 @@ class CwmserieModel extends AdminModel
     {
         $user = Factory::getApplication()->getIdentity();
 
-        // Check for existing article.
+        // Check for existing series.
         if (!empty($record->id)) {
             return $user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$record->id);
         }
@@ -465,8 +465,8 @@ class CwmserieModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->series_text);
         }
 
-        // Always ensure created date is set (handles empty string from form)
-        if (empty($table->created) || $table->created === '') {
+        // Always ensure the created date is set (handles empty string from form)
+        if (empty($table->created)) {
             $table->created = $date->toSql();
         }
 
@@ -492,7 +492,7 @@ class CwmserieModel extends AdminModel
             $table->modified_by = $user->id;
         }
 
-        if ($table->ordering == 0) {
+        if ($table->ordering === 0) {
             $table->ordering = 1;
             $db              = Factory::getContainer()->get(DatabaseInterface::class);
             $table->reorder($db->quoteName('id') . ' = ' . (int)$table->id);

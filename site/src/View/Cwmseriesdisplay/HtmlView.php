@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplay;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -91,17 +90,17 @@ class HtmlView extends BaseHtmlView
      */
     protected ?object $page = null;
 
-    /** @var  object|null Series Studies
+    /** @var  ?array Series Studies
      *
      * @since 7.0
      */
-    protected ?object $seriesstudies = null;
+    protected ?array $seriesstudies = [];
 
-    /** @var  CwmtemplateTable|null Template
+    /** @var  \stdClass|null Template
      *
      * @since 7.0
      */
-    protected ?CwmtemplateTable $template = null;
+    protected ?\stdClass $template = null;
 
     /** @var  Registry|null Params
      *
@@ -121,11 +120,11 @@ class HtmlView extends BaseHtmlView
      */
     protected ?string $passageLink = null;
 
-    /** @var  object|null Studies
+    /** @var  ?array Studies
      *
      * @since 7.0
      */
-    protected ?object $studies = null;
+    protected ?array $studies = [];
 
     /** @var  string|null Request URL
      *
@@ -183,7 +182,7 @@ class HtmlView extends BaseHtmlView
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
             . ':' . $items->id;
 
-        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate')) == true) {
+        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate'))) {
             // Get studies associated with the series
             $pagebuilder = new Cwmpagebuilder();
             $whereitem   = $items->id;

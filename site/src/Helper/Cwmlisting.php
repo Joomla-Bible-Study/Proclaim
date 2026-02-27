@@ -43,6 +43,14 @@ class Cwmlisting
     public Registry $params;
 
     /**
+     * Context prefix for per-context template settings (e.g., 'd', 'ts', 'sd').
+     *
+     * @var    string
+     * @since  10.1.0
+     */
+    protected string $extra = '';
+
+    /**
      * Get Fluid Listing
      *
      * @param   mixed      $items     Items
@@ -57,6 +65,10 @@ class Cwmlisting
      */
     public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
+        // Ensure listing CSS is loaded for all frontend views that use this helper
+        Factory::getApplication()->getDocument()->getWebAssetManager()
+            ->useStyle('com_proclaim.cwmcore');
+
         $list         = null;
         $row          = [];
         $this->params = $params;
@@ -114,11 +126,14 @@ class Cwmlisting
                 break;
         }
 
+        $this->extra = $extra;
+
         $listparams = [];
 
         // Standard params that check {name}row > 0
         $standardParams = [
             'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'teachercard',
             'duration', 'studyintro', 'studytext', 'series', 'description', 'seriesthumbnail', 'submitted',
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
@@ -217,42 +232,50 @@ class Cwmlisting
 
 
 
+        // Determine listing item style (classic, cards, or grid) from per-context param
+        $listingStyle = $params->get($extra . 'listing_item_style', 'classic');
+
+        if ($listingStyle === 'grid') {
+            $gridSize          = $params->get($extra . 'grid_card_size', 'medium');
+            $listingStyleClass = ' proclaim-listing--grid proclaim-grid--' . $gridSize;
+        } elseif ($listingStyle === 'cards') {
+            $listingStyleClass = ' proclaim-listing--cards';
+        } else {
+            $listingStyleClass = '';
+        }
+
         // Start the listing wrapper
-        $list .= '<div class="proclaim-listing" data-context="' . $type . '">';
+        $list .= '<div class="proclaim-listing' . $listingStyleClass . '" data-context="' . $type . '">' . "\n";
 
         // Check if we have a valid first item for header rows
         $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
-        $headerClass       = $params->get('listheadertype', '');
 
-        if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</div>';
+        // In cards mode, map table-dark/table-light to cards-specific header variants
+        // so the header follows the template's accent color (dark) or stays neutral (light).
+        $rawHeaderType = $params->get($extra . 'listheadertype', '');
+
+        if ($listingStyle === 'cards') {
+            $headerClass = $rawHeaderType === 'table-dark' ? 'proclaim-header--accent' : 'proclaim-header--subtle';
+        } else {
+            $headerClass = $rawHeaderType;
         }
 
-        if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
-            $list .= '</div>';
-        }
+        // Grid mode skips column headers — elements are stacked vertically in each card
+        if ($listingStyle !== 'grid') {
+            if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
+                $list .= '</div>' . "\n";
+            }
 
-        if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 1,
-                $type
-            );
-            $list .= '</div>';
-        }
+            if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
+                $list .= '</div>' . "\n";
+            }
 
-        if ($type === 'seriesdisplay' && $hasValidFirstItem) {
-            if ($params->get('use_header_seriesdisplay') > 0) {
-                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -262,23 +285,43 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</div>';
+                $list .= '</div>' . "\n";
             }
 
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 0,
-                $type
-            );
-        }
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                if ($params->get('use_header_seriesdisplay') > 0) {
+                    $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                    $list .= $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $items[0],
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
+                    $list .= '</div>' . "\n";
+                }
+            }
 
-        if ($type === 'teacher' && $hasValidFirstItem) {
-            if ($params->get('use_headers_teacher_details') > 0) {
-                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                if ($params->get('use_headers_teacher_details') > 0) {
+                    $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                    $list .= $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $items[0],
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
+                    $list .= '</div>' . "\n";
+                }
+            }
+
+            if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -288,32 +331,43 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</div>';
+                $list .= '</div>' . "\n";
             }
-
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 0,
-                $type
-            );
         }
 
-        if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
-            $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">';
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 1,
-                $type
-            );
-            $list .= '</div>';
+        // Render single-item views (seriesdisplay, teacher) — these don't loop
+        if ($listingStyle !== 'grid') {
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                $list .= $this->getFluidRow(
+                    $listrows,
+                    $listsorts,
+                    $items[0],
+                    $params,
+                    $template,
+                    $header = 0,
+                    $type
+                );
+            }
+
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                $list .= $this->getFluidRow(
+                    $listrows,
+                    $listsorts,
+                    $items[0],
+                    $params,
+                    $template,
+                    $header = 0,
+                    $type
+                );
+            }
+        } else {
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                $row[] = $this->getGridCard($listparams, $items[0], $params, $template, $type);
+            }
+
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                $row[] = $this->getGridCard($listparams, $items[0], $params, $template, $type);
+            }
         }
 
         // Go through and attach the media files as an array to their study
@@ -336,15 +390,19 @@ class Cwmlisting
 
                 $item->mediafiles = $studymedia;
 
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
@@ -363,34 +421,46 @@ class Cwmlisting
                 $item->mediafiles = $studymedia;
             }
 
-            $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 0, $type);
+            if ($listingStyle === 'grid') {
+                $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+            } else {
+                $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 0, $type);
+            }
         }
 
         if ($type === 'seriesdisplays') {
             foreach ($items as $item) {
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
         if ($type === 'teachers') {
             foreach ($items as $item) {
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
@@ -400,7 +470,7 @@ class Cwmlisting
             }
         }
 
-        $list .= '</div>';
+        $list .= '</div>' . "\n";
 
         return $list;
     }
@@ -494,7 +564,7 @@ class Cwmlisting
         if (isset($this->params)) {
             $showArchived = $this->params->get('show_archived', '');
             if ($showArchived === '' || $showArchived === null) {
-                $showArchived = $this->params->get('default_show_archived', '0');
+                $showArchived = $this->params->get($this->extra . 'default_show_archived', '0');
             }
         }
         if ($showArchived === '1' || $showArchived === '2') {
@@ -747,7 +817,7 @@ class Cwmlisting
                 $archivedClass = ' proclaim-archived';
             }
 
-            $frow .= '<div class="proclaim-item' . $archivedClass . '">';
+            $frow .= '<div class="proclaim-item' . $archivedClass . '">' . "\n";
         }
 
         foreach ($listrows as $row) {
@@ -761,7 +831,7 @@ class Cwmlisting
 
             // Open the row div at the first element of this row
             if ($remaining === $total) {
-                $frow .= '<div class="row proclaim-item-row">';
+                $frow .= '<div class="row proclaim-item-row">' . "\n";
             }
 
             // Compute proportional Bootstrap column class for this element
@@ -780,7 +850,7 @@ class Cwmlisting
             if ($header === 1) {
                 $frow .= '<div class="' . $colClass . ' fw-bold">'
                     . $this->getFluidData($item, $row, $params, $template, 1, $type)
-                    . '</div>';
+                    . '</div>' . "\n";
             } else {
                 $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type, $colClass);
             }
@@ -789,16 +859,86 @@ class Cwmlisting
 
             // Close the row div after the last element of this row
             if ($rowCounts[$rowNum][0] === 0) {
-                $frow .= '</div>';
+                $frow .= '</div>' . "\n";
             }
         }
 
         // Close proclaim-item wrapper for body mode
         if ($header === 0) {
-            $frow .= '</div>';
+            $frow .= '</div>' . "\n";
         }
 
         return $frow;
+    }
+
+    /**
+     * Render a single item as a grid card with all configured elements stacked vertically.
+     *
+     * In grid mode, row/column/colspan settings are ignored — every element with row > 0
+     * is rendered sequentially inside a card div.
+     *
+     * @param   array      $listparams  Sorted list parameters (element configs)
+     * @param   object     $item        The data item
+     * @param   Registry   $params      Template params
+     * @param   \stdClass  $template    Template object
+     * @param   string     $type        View type (sermons, seriesdisplays, teachers, etc.)
+     *
+     * @return  string  HTML for one grid card
+     *
+     * @since  10.1.0
+     */
+    private function getGridCard(
+        array $listparams,
+        object $item,
+        Registry $params,
+        \stdClass $template,
+        string $type
+    ): string {
+        // Build a dummy row object for getFluidData calls
+        $dummyRow = new \stdClass();
+
+        $card = '<div class="proclaim-grid-card">' . "\n";
+
+        foreach ($listparams as $listparam) {
+            // Build a row-like object with the element metadata
+            $dummyRow->name         = $listparam->name;
+            $dummyRow->col          = $listparam->col ?? '1';
+            $dummyRow->colspan      = $listparam->colspan ?? '1';
+            $dummyRow->custom       = $listparam->custom ?? '';
+            $dummyRow->element      = $listparam->element ?? 1;
+            $dummyRow->linktype     = $listparam->linktype ?? 0;
+            $dummyRow->customtext   = $listparam->customtext ?? '';
+            $dummyRow->date_format  = $listparam->date_format ?? '';
+            $dummyRow->show_verses  = $listparam->show_verses ?? '';
+            $dummyRow->show_version = $listparam->show_version ?? '';
+            $dummyRow->show_tooltip = $listparam->show_tooltip ?? '';
+            $dummyRow->separator    = $listparam->separator ?? '';
+
+            $data = $this->getFluidData(
+                $item,
+                $dummyRow,
+                $params,
+                $template,
+                0,
+                $type
+            );
+
+            // Skip fields with no visible content (getFluidData may return
+            // empty wrapper divs like <div class="col-2"></div>).
+            // Use a regex that checks for any text or self-closing tags (img, span, etc.)
+            // inside the wrapper, preserving media icon fields that have no plain text.
+            if ($data !== '' && $data !== null && preg_match('/<(?:a|span|img|button)\b|[^<>\s]/i', $data)) {
+                $customClass = $listparam->custom ?? '';
+                $card .= '<div class="proclaim-grid-card-field'
+                    . ($customClass ? ' ' . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8') : '') . '">';
+                $card .= $data;
+                $card .= '</div>' . "\n";
+            }
+        }
+
+        $card .= '</div>' . "\n";
+
+        return $card;
     }
 
     /**
@@ -1100,7 +1240,7 @@ class Cwmlisting
                     // Add archive badge if item is archived and badge is enabled
                     $showBadge = $params->get('show_archive_badge', '');
                     if ($showBadge === '' || $showBadge === null) {
-                        $showBadge = $params->get('default_show_archive_badge', '1');
+                        $showBadge = $params->get($extra . 'default_show_archive_badge', '1');
                     }
                     if (
                         isset($item->published) && (int)$item->published === 2
@@ -1141,6 +1281,56 @@ class Cwmlisting
                     }
                 } else {
                     $data = trim($item->teachername ?? '');
+                }
+                break;
+            case $extra . 'teachercard':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_TEACHER');
+                } else {
+                    $cardHtml = '<div class="proclaim-teacher-stack">';
+
+                    // Teacher image (series/teacher contexts use teacher_thumbnail, messages use thumb)
+                    if ($type === 'seriesdisplays' || $type === 'seriesdisplay'
+                        || $type === 'teachers' || $type === 'teacher') {
+                        if (!empty($item->teacher_thumbnail)) {
+                            $cardHtml .= $this->useJImage(
+                                $item->teacher_thumbnail,
+                                $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                                null,
+                                null,
+                                null,
+                                $imgClass
+                            );
+                        }
+                    } elseif (!empty($item->thumb)) {
+                        $cardHtml .= $this->useJImage(
+                            $item->thumb,
+                            $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                            null,
+                            null,
+                            null,
+                            $imgClass
+                        );
+                    }
+
+                    // Teacher name (with title prefix if not already included)
+                    if (!empty($item->teachername)) {
+                        $name        = trim($item->teachername);
+                        $titlePrefix = isset($item->title) ? trim($item->title) : '';
+
+                        if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $titlePrefix . ' ' . $name . '</div>';
+                        } else {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $name . '</div>';
+                        }
+                    }
+
+                    $cardHtml .= '</div>';
+                    $data      = $cardHtml;
+
+                    $classAppliedToImg = true;
                 }
                 break;
             case $extra . 'teachers-list':
@@ -1502,7 +1692,7 @@ class Cwmlisting
                 // Add archive badge if item is archived and badge is enabled
                 $showBadge = $params->get('show_archive_badge', '');
                 if ($showBadge === '' || $showBadge === null) {
-                    $showBadge = $params->get('default_show_archive_badge', '1');
+                    $showBadge = $params->get($this->extra . 'default_show_archive_badge', '1');
                 }
                 if (
                     isset($row->published) && (int)$row->published === 2
@@ -2349,7 +2539,7 @@ class Cwmlisting
         // Include archived media when showing archived messages
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
-            $showArchived = $params->get('default_show_archived', '0');
+            $showArchived = $params->get($this->extra . 'default_show_archived', '0');
         }
         if ($showArchived === '1' || $showArchived === '2') {
             $query->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)');

@@ -86,24 +86,6 @@ class CwmtemplateTable extends Table
     public ?string $title = null;
 
     /**
-     * Text
-     *
-     * @var ?string
-     *
-     * @since 9.0.0
-     */
-    public ?string $text = null;
-
-    /**
-     * PDF file
-     *
-     * @var ?string
-     *
-     * @since 9.0.0
-     */
-    public ?string $pdf = null;
-
-    /**
      * Asset ID
      *
      * @var int|null
