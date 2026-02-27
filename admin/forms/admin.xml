@@ -260,14 +260,6 @@
                label="JBS_ADM_CSP_EXTRA_SOURCES"
                description="JBS_ADM_CSP_EXTRA_SOURCES_DESC"
                rows="3" cols="60" filter="string"/>
-        <field name="enable_structured_data" type="radio" default="0"
-               label="JBS_ADM_ENABLE_STRUCTURED_DATA"
-               description="JBS_ADM_ENABLE_STRUCTURED_DATA_DESC"
-               layout="joomla.form.field.radio.switcher">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-
         <!-- Scripture Provider Settings (Local is always enabled as the primary built-in provider) -->
         <field name="provider_getbible" type="radio" default="1"
                label="JBS_ADM_PROVIDER_GETBIBLE" description="JBS_ADM_PROVIDER_GETBIBLE_DESC"

@@ -249,16 +249,14 @@ class HtmlView extends BaseHtmlView
         $this->listing = new Cwmlisting();
 
         // Schema.org structured data
-        if (CwmschemaorgHelper::isEnabled()) {
-            CwmschemaorgHelper::inject(
-                CwmschemaorgHelper::buildSeriesDetail(
-                    $this->items,
-                    $this->studies ?? [],
-                    Uri::getInstance()->toString(),
-                    $mainframe->get('sitename')
-                )
-            );
-        }
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildSeriesDetail(
+                $this->items,
+                $this->studies ?? [],
+                Uri::getInstance()->toString(),
+                $mainframe->get('sitename')
+            )
+        );
 
         parent::display($tpl);
     }

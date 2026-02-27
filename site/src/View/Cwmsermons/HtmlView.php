@@ -355,14 +355,12 @@ class HtmlView extends BaseHtmlView
         }
 
         // Schema.org structured data
-        if (CwmschemaorgHelper::isEnabled()) {
-            CwmschemaorgHelper::inject(
-                CwmschemaorgHelper::buildSermonList(
-                    $this->items ?? [],
-                    Uri::getInstance()->toString(),
-                    $app->get('sitename')
-                )
-            );
-        }
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildSermonList(
+                $this->items ?? [],
+                Uri::getInstance()->toString(),
+                $app->get('sitename')
+            )
+        );
     }
 }

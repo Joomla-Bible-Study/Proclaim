@@ -31,24 +31,6 @@ use Joomla\CMS\Uri\Uri;
 class CwmschemaorgHelper
 {
     /**
-     * Check whether structured data output is enabled in admin settings.
-     *
-     * @return bool
-     *
-     * @since 10.1.0
-     */
-    public static function isEnabled(): bool
-    {
-        try {
-            $admin = Cwmparams::getAdmin();
-
-            return (int) $admin->params->get('enable_structured_data', 0) === 1;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
      * Build CreativeWork JSON-LD for a single sermon detail page.
      *
      * @param   object  $item      Sermon item from model

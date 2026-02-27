@@ -581,7 +581,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Schema.org structured data (skip in print mode)
-        if (CwmschemaorgHelper::isEnabled() && empty($this->print)) {
+        if (empty($this->print)) {
             CwmschemaorgHelper::inject(
                 CwmschemaorgHelper::buildSermonDetail(
                     $this->item,
