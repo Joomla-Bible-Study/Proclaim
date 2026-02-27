@@ -92,8 +92,6 @@ class Cwmcustom
             'location_text'      => 15,
             'message_type'       => 16,
             'details-text'       => 17,
-            'details-text-pdf'   => 18,
-            'details-pdf'        => 19,
             'media'              => 20,
             'store'              => 22,
             'filesize'           => 23,
