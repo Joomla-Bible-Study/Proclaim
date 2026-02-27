@@ -35,6 +35,17 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 $orderName = 'series.ordering';
 $saveOrder = $listOrder == $orderName;
 
+
+if (str_contains($listOrder, 'publish_up')) {
+    $orderingColumn = 'publish_up';
+} elseif (str_contains($listOrder, 'publish_down')) {
+    $orderingColumn = 'publish_down';
+} elseif (str_contains($listOrder, 'modified')) {
+    $orderingColumn = 'modified';
+} else {
+    $orderingColumn = 'created';
+}
+
 ?>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseries'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row">
@@ -112,12 +123,22 @@ $saveOrder = $listOrder == $orderName;
                                     $listOrder
                                 ); ?>
                             </th>
+                            <th scope="col" class="w-3 d-none d-lg-table-cell">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_HEADING_DATE_' . strtoupper($orderingColumn),
+                                    'series.created',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
+                            </th>
                         </tr>
                         </thead>
                         <tbody
                         <?php
                         foreach ($this->items as $i => $item) :
-                            $item->max_ordering = 0;
+                            $item->max_ordering  = 0;
                             $canCheckin          = $user->authorise('core.manage', 'com_checkin')
                                 || $item->checked_out == $userId || \is_null($item->checked_out);
                             $canCreate          = $user->authorise('core.create');
@@ -154,26 +175,32 @@ $saveOrder = $listOrder == $orderName;
                                         <?php
                                         endif; ?>
                                         <?php if ($item->checked_out) : ?>
-                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'cwmseries.', $canCheckin); ?>
+                                            <?php echo HTMLHelper::_(
+                                                'jgrid.checkedout',
+                                                $i,
+                                                $item->editor,
+                                                $item->checked_out_time,
+                                                'cwmseries.',
+                                                $canCheckin
+                                            ); ?>
                                         <?php endif; ?>
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo Route::_(
-                                                'index.php?option=com_proclaim&task=cwmserie.edit&id=' . (int)$item->id
-                                            ); ?>"
+                                                                    echo Route::_(
+                                                                        'index.php?option=com_proclaim&task=cwmserie.edit&id=' . (int)$item->id
+                                                                    ); ?>"
                                                title="<?php
-                                                       echo Text::_('JACTION_EDIT'); ?>">
+                                                                                                                               echo Text::_('JACTION_EDIT'); ?>">
                                                 <?php
-                                                        echo $this->escape($item->series_text); ?></a>
+                                                                                                                                echo $this->escape($item->series_text); ?></a>
                                         <?php else : ?>
                                             <span
                                                     title="<?php
-                                                            echo Text::sprintf(
-                                                                'JFIELD_ALIAS_LABEL',
-                                                                $this->escape($item->alias)
-                                                            ); ?>"><?php
+                                                                                                                                    echo Text::sprintf(
+                                                                                                                                        'JFIELD_ALIAS_LABEL',
+                                                                                                                                        $this->escape($item->alias)
+                                                                                                                                    ); ?>"><?php
                                                 echo $this->escape($item->series_text); ?></span>
                                         <?php
                                         endif; ?>
@@ -195,6 +222,12 @@ $saveOrder = $listOrder == $orderName;
                                     <?php
                                     echo (int)$item->id; ?>
                                 </td>
+                                <td class="small d-none d-md-table-cell text-center">
+                                    <?php if ($item->created && $item->created !== '0000-00-00 00:00:00') : ?>
+                                        <?php echo HTMLHelper::_('date', $item->created, Text::_('DATE_FORMAT_LC1')); ?>
+                                    <?php else : ?>
+                                        <?php echo Text::_('JNONE'); // Or just leave blank?>
+                                    <?php endif; ?>
                             </tr>
                         <?php
                         endforeach; ?>
@@ -214,9 +247,9 @@ $saveOrder = $listOrder == $orderName;
                             'bootstrap.renderModal',
                             'collapseModal',
                             [
-                                        'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                        'footer' => $this->loadTemplate('batch_footer'),
-                                    ],
+                                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                                    'footer' => $this->loadTemplate('batch_footer'),
+                                                ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php

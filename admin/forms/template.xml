@@ -114,32 +114,6 @@
                    label="JBS_TPL_SERIES_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
-            <field name="offset" type="radio" default="false"
-                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="false">JNO</option>
-                <option value="true">JYES</option>
-            </field>
-            <field name="listheadertype" type="radio" default="table-light"
-                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
-                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
-            </field>
-            <field name="default_show_archived" type="list" default="2"
-                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
-                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
-                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
-                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
-                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
-            </field>
-            <field name="default_show_archive_badge" type="radio" default="1"
-                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
-                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
-                   layout="joomla.form.field.radio.switcher">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
         </fieldset>
         <fieldset name="FILTERS" label="JBS_TPL_FILTERS" layoutContext="messages"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -375,6 +349,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="grid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="listing_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="listheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="offset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="default_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="default_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <!-- Messages: Teacher Display -->
@@ -849,6 +857,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="dgrid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="dlisting_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="dlistheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="doffset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="ddefault_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="ddefault_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <!-- Details: Scripture Display -->
@@ -933,6 +975,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="tsgrid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="tslisting_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="tslistheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="tsoffset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="tsdefault_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="tsdefault_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <fieldset name="TEACHERDISPLAY" label="JBS_TPL_TEACHERS_LIST"
@@ -1111,6 +1187,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="tdgrid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="tdlisting_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="tdlistheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="tdoffset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="tddefault_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="tddefault_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <fieldset name="TEACHERDETAILSDISPLAY" label="JBS_TPL_TEACHER_DETAILS"
@@ -1386,6 +1496,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="sgrid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="slisting_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="slistheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="soffset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="sdefault_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="sdefault_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <fieldset name="SERIESDISPLAY" label="JBS_TPL_SERIES_LIST"
@@ -1527,6 +1671,40 @@
                    label="JBS_TPL_LISTING_ITEM_STYLE" description="JBS_TPL_LISTING_ITEM_STYLE_DESC">
                 <option value="classic">JBS_TPL_LISTING_STYLE_CLASSIC</option>
                 <option value="cards">JBS_TPL_LISTING_STYLE_CARDS</option>
+                <option value="grid">JBS_TPL_LISTING_STYLE_GRID</option>
+            </field>
+            <field name="sdgrid_card_size" type="list" default="medium"
+                   label="JBS_TPL_GRID_CARD_SIZE" description="JBS_TPL_GRID_CARD_SIZE_DESC"
+                   showon="sdlisting_item_style:grid">
+                <option value="small">JBS_TPL_GRID_SIZE_SMALL</option>
+                <option value="medium">JBS_TPL_GRID_SIZE_MEDIUM</option>
+                <option value="large">JBS_TPL_GRID_SIZE_LARGE</option>
+            </field>
+            <field name="sdlistheadertype" type="radio" default="table-light"
+                   label="JBS_TPL_HEADER" description="JBS_TPL_HEADER_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="table-light">JBS_TPL_HEADER_LIGHT</option>
+                <option value="table-dark">JBS_TPL_HEADER_DARK</option>
+            </field>
+            <field name="sdoffset" type="radio" default="false"
+                   label="JBS_TPL_TIME_OFFSET" description="JBS_TPL_TIME_OFFSET_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="false">JNO</option>
+                <option value="true">JYES</option>
+            </field>
+            <field name="sddefault_show_archived" type="list" default="2"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVED"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVED_DESC">
+                <option value="0">JBS_CMN_PUBLISHED_ONLY</option>
+                <option value="1">JBS_CMN_ARCHIVED_ONLY</option>
+                <option value="2">JBS_CMN_BOTH_PUBLISHED_ARCHIVED</option>
+            </field>
+            <field name="sddefault_show_archive_badge" type="radio" default="1"
+                   label="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE"
+                   description="JBS_TPL_DEFAULT_SHOW_ARCHIVE_BADGE_DESC"
+                   layout="joomla.form.field.radio.switcher">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
         <fieldset name="SERIESDETAILDISPLAY" label="JBS_TPL_SERIES_DETAILS"

@@ -171,6 +171,7 @@ class CwmseriesModel extends ListModel
                     $db->quoteName('series.language'),
                     $db->quoteName('series.access'),
                     $db->quoteName('series.ordering'),
+                    $db->quoteName('series.created'),
                     $db->quoteName('series.checked_out'),
                     $db->quoteName('series.checked_out_time'),
                 ])
