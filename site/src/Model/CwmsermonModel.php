@@ -50,7 +50,6 @@ class CwmsermonModel extends FormModel
      *
      * @param   ?int  $pk  ID
      *
-     * @access    public
      * @return    bool    True on success
      *
      * @todo      this looks like it could be moved to a helper.
@@ -184,18 +183,9 @@ class CwmsermonModel extends FormModel
                     . $db->quoteName('stp.id') . ' = ' . $db->quoteName('tp.topic_id')
                 );
 
-                // Join over media files
-                $query->select(
-                    'SUM(' . $db->quoteName('m.plays') . ') AS ' . $db->quoteName('totalplays') . ', '
-                    . 'SUM(' . $db->quoteName('m.downloads') . ') AS ' . $db->quoteName('totaldownloads') . ', '
-                    . $db->quoteName('m.id')
-                );
-                $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('m.id') . ') AS ' . $db->quoteName('mids'));
-                $query->join(
-                    'LEFT',
-                    $db->quoteName('#__bsms_mediafiles', 'm') . ' ON '
-                    . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id')
-                );
+                // NOTE: Mediafile aggregation (mids, totalplays, totaldownloads) is
+                // loaded in a separate query below to avoid a Cartesian product with
+                // topics that inflates SUM(plays) and SUM(downloads).
 
                 $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
                 $canEdit      = $user->authorise('core.edit', 'com_proclaim');
@@ -238,10 +228,27 @@ class CwmsermonModel extends FormModel
                 $data = $db->loadObject();
 
                 if (empty($data)) {
-                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND'), 'error');
 
                     return $data;
                 }
+
+                // Load media stats in a separate query to avoid Cartesian product with topics
+                $mediaQuery = $db->getQuery(true)
+                    ->select([
+                        'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+                        'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+                        'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+                    ])
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+                    ->where($db->quoteName('study_id') . ' = ' . (int) $pk)
+                    ->where($db->quoteName('published') . ' = 1');
+                $db->setQuery($mediaQuery);
+                $mediaStats = $db->loadObject();
+
+                $data->mids           = $mediaStats->mids ?? null;
+                $data->totalplays     = (int) ($mediaStats->totalplays ?? 0);
+                $data->totaldownloads = (int) ($mediaStats->totaldownloads ?? 0);
 
                 // Check for published state if filter set.
                 if (
@@ -264,10 +271,7 @@ class CwmsermonModel extends FormModel
                 $template     = Cwmparams::getTemplateparams();
 
                 $data->params->merge($template->params);
-                $mparams = clone $this->getState('params');
-                $mj      = new Registry();
-                $mj->loadString($mparams);
-                $data->params->merge($mj);
+                $data->params->merge($this->getState('params'));
 
                 $data->admin_params = Cwmparams::getAdmin()->params;
 
@@ -279,9 +283,9 @@ class CwmsermonModel extends FormModel
                     // Check general edit permission first.
                     if ($user->authorise('core.edit', $asset)) {
                         $data->params->set('access-edit', true);
-                    } elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
+                    } elseif ($user->authorise('core.edit.own', $asset)) {
                         // Check for a valid user and that they are the owner.
-                        if ($userId == $data->created_by) {
+                        if ($userId === (int) $data->created_by) {
                             $data->params->set('access-edit', true);
                         }
                     }
@@ -295,9 +299,7 @@ class CwmsermonModel extends FormModel
                     $data->params->set('access-view', true);
                 } else {
                     // If no access filter is set, the layout takes some responsibility for display of limited information.
-                    $user   = Factory::getApplication()->getIdentity();
                     $groups = $user->getAuthorisedViewLevels();
-
                     $data->params->set('access-view', \in_array($data->access, $groups, true));
                 }
 
@@ -306,13 +308,8 @@ class CwmsermonModel extends FormModel
 
                 $this->_item[$pk] = $data;
             } catch (\Exception $e) {
-                if ((int) $e->getCode() === 404) {
-                    // Need to go through the error handler to allow Redirect to work.
-                    Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-                } else {
-                    Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-                    $this->_item[$pk] = false;
-                }
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                $this->_item[$pk] = false;
             }
         }
 
@@ -322,7 +319,6 @@ class CwmsermonModel extends FormModel
     /**
      * Method to retrieve comments for a study
      *
-     * @access  public
      * @return  mixed  data object on success, false on failure.
      *
      * @throws \Exception
@@ -355,7 +351,6 @@ class CwmsermonModel extends FormModel
     /**
      * Method to store a record
      *
-     * @access    public
      * @return    bool    True on success
      *
      * @throws \Exception
@@ -401,22 +396,14 @@ class CwmsermonModel extends FormModel
      * @param   array  $data      Data for the form.
      * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return  bool|Form  Will load form if found or return false
+     * @return  Form
      *
      * @throws \Exception
      * @since   4.0.0
-     *
      */
-    public function getForm($data = [], $loadData = true): bool|Form
+    public function getForm($data = [], $loadData = true): Form
     {
-        // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
-
-        if (empty($form)) {
-            return false;
-        }
-
-        return $form;
+        return $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     /**
@@ -431,7 +418,7 @@ class CwmsermonModel extends FormModel
      */
     protected function populateState(): void
     {
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
 
         // Load state from the request.
         $pk = $app->getInput()->get('id', '', 'int');

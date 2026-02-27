@@ -213,12 +213,6 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        if ($this->getLayout() === 'pagebreak') {
-            $this->_displayPagebrake($tpl);
-
-            return;
-        }
-
         $BiblePassage  = new Cwmshowscripture();
         $this->passage = $BiblePassage->buildAllPassages($this->item, $this->item->params);
 
@@ -324,48 +318,8 @@ class HtmlView extends BaseHtmlView
                 'sermontemplate'
             ) !== '0')
         ) {
-            $pagebuilder            = new Cwmpagebuilder();
-            $pelements              = $pagebuilder->buildPage(
-                $this->item,
-                $this->item->params,
-                $this->state->get('template')
-            );
-            $this->item->scripture1 = $pelements->scripture1;
-            $this->item->scripture2 = $pelements->scripture2;
-            $this->item->media      = $pelements->media;
-            $this->item->studydate  = $pelements->studydate;
-
-            if (isset($pelements->secondary_reference)) {
-                $this->item->secondary_reference = $pelements->secondary_reference;
-            } else {
-                $this->item->secondary_reference = '';
-            }
-
-            if (isset($pelements->topics)) {
-                $this->item->topics = $pelements->topics;
-            } else {
-                $this->item->topics = '';
-            }
-
-            if (isset($pelements->study_thumbnail)) {
-                $this->item->study_thumbnail = $pelements->study_thumbnail;
-            } else {
-                $this->item->study_thumbnail = null;
-            }
-
-            if (isset($pelements->series_thumbnail)) {
-                $this->item->series_thumbnail = $pelements->series_thumbnail;
-            } else {
-                $this->item->series_thumbnail = null;
-            }
-
-            $this->item->detailslink = $pelements->detailslink;
-
-            if (isset($pelements->teacherimage)) {
-                $this->item->teacherimage = $pelements->teacherimage;
-            } else {
-                $this->item->teacherimage = null;
-            }
+            $pagebuilder = new Cwmpagebuilder();
+            $pagebuilder->enrichStudy($this->item, $this->item->params, $this->state->get('template'));
         }
 
         PluginHelper::importPlugin('content');
@@ -399,20 +353,6 @@ class HtmlView extends BaseHtmlView
         $this->getDocument()->getWebAssetManager()->useStyle('com_proclaim.podcast');
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($this->item->params->get('subscribeintro', 'Our Podcasts'));
-
-        // Scripture links plugin
-        $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
-
-        if ($plugin) {
-            $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
-
-            // Convert parameter fields to objects.
-            $registry = new Registry();
-            $registry->loadString($plugin->params);
-            $st_params  = $registry;
-            $version    = $st_params->get('bible_version');
-            $windowopen = "window.open(this.href,this.target,'width=800,height=500,scrollbars=1');return false;";
-        }
 
         // Find the messages list menu item via Joomla's cached menu API
         $menuid = null;
@@ -577,7 +517,7 @@ class HtmlView extends BaseHtmlView
         $id    = 0;
 
         if (isset($menu->query['id'])) {
-            $id = (int)@$menu->query['id'];
+            $id = (int) ($menu->query['id'] ?? 0);
         }
 
         // If the menu item does not concern this Study
@@ -587,13 +527,7 @@ class HtmlView extends BaseHtmlView
                 $title = $this->item->studytitle;
             }
 
-            $path = [['studytitle' => $this->item->studytitle, 'link' => '']];
-
-            $path = array_reverse($path);
-
-            foreach ($path as $item) {
-                $pathway->addItem($item['studytitle'], $item['link']);
-            }
+            $pathway->addItem($this->item->studytitle, '');
         }
 
         // Check for empty title and add site name if param is set
@@ -613,25 +547,20 @@ class HtmlView extends BaseHtmlView
 
         if ($this->item->params->get('metadesc')) {
             $this->document->setDescription($this->item->params->get('metadesc'));
-        } elseif (!$this->item->params->get('metadesc')) {
+        } else {
             $this->document->setDescription($this->item->studyintro);
         }
 
-        if ($this->item->metakey) {
-            $this->document->setMetadata('keywords', $this->item->metakey);
-        } elseif (!$this->item->metakey && $this->params->get('menu-meta_keywords')) {
+        if ($this->item->params->get('metakey')) {
+            $this->document->setMetadata('keywords', $this->item->params->get('metakey'));
+        } elseif ($this->params->get('menu-meta_keywords')) {
             $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+        } else {
+            $this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
         }
 
         if ($this->params->get('robots')) {
             $this->document->setMetadata('robots', $this->params->get('robots'));
-        }
-
-        // Prepare meta information (under development)
-        if ($this->item->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->item->params->get('metakey'));
-        } elseif (!$this->item->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
         }
 
         if ($app->get('MetaAuthor') === '1') {

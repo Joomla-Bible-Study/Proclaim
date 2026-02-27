@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\Registry\Registry;
 
 /**
@@ -36,7 +35,7 @@ class Cwmcustom
      * @param   string                   $custom    Custom String
      * @param   object                   $row       Row info
      * @param   Registry                 $params    Params for intro
-     * @param   CwmtemplateTable|Object  $template  Template ID
+     * @param   object                   $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return string
      *

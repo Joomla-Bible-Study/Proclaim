@@ -19,7 +19,6 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
@@ -410,7 +409,6 @@ class CwmsermonsModel extends ListModel
     {
         $user     = $this->getCurrentUser();
         $groups   = $user->getAuthorisedViewLevels();
-        /** @var DatabaseDriver $db */
         $db       = $this->getDatabase();
         $query    = parent::getListQuery();
         $nullDate = $db->quote($db->getNullDate());
@@ -615,352 +613,49 @@ class CwmsermonsModel extends ListModel
         /** @var Registry $params */
         $params = $this->getState('params');
 
-        $filters_group = [];
-
-        // Normalize filter.teacher (may arrive as array from Joomla's parent populateState)
+        // Teacher — junction table EXISTS subquery for multi-teacher support
         $filterTeacher = $this->getState('filter.teacher');
         $filterTeacher = (int) (\is_array($filterTeacher) ? reset($filterTeacher) : $filterTeacher);
 
-        // Teacher ID
-        if (
-            empty($filterTeacher)
-            && $params->get('mteacher_id') !== null && $params->get('mteacher_id')[0] !== '-1'
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
-        } elseif (
-            !empty($filterTeacher)
-            && $params->get('mteacher_id') !== null && $params->get(
-                'mteacher_id'
-            )[0] !== '-1'
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('mteacher_id')];
-            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
-        } elseif (!empty($filterTeacher)) {
-            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
+        foreach (['mteacher_id', 'lteacher_id'] as $paramKey) {
+            $this->addTeacherFilter($query, $db, $params->get($paramKey), $filterTeacher);
         }
 
-        // Teacher ID from template
-        if (
-            empty($filterTeacher)
-            && $params->get('lteacher_id') !== null && $params->get('lteacher_id')[0] !== '-1'
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
-        } elseif (
-            !empty($filterTeacher)
-            && $params->get('lteacher_id') !== null && $params->get(
-                'lteacher_id'
-            )[0] !== '-1'
-        ) {
-            $filters_group[] = ['study.teacher_id' => $params->get('lteacher_id')];
-            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
-        } elseif (!empty($filterTeacher)) {
-            $filters_group[] = ['study.teacher_id' => [$filterTeacher]];
+        // Book — chapter-range special handling
+        $filterBook = (int) $this->getState('filter.book');
+
+        foreach (['mbooknumber', 'lbooknumber'] as $paramKey) {
+            $this->addBookFilter($query, $db, $params->get($paramKey), $filterBook);
         }
 
-        // Location ID
-        if (
-            $params->get('mlocations') !== null && $params->get('mlocations')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.location'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.location_id' => $params->get('mlocations')];
-        } elseif (
-            $params->get('mlocations') !== null && $params->get(
-                'mlocations'
-            )[0] !== '-1' && !empty($this->getState('filter.location'))
-        ) {
-            $filters_group[] = ['study.location_id' => $params->get('mlocations')];
-            $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
-        } elseif (!empty($this->getState('filter.location'))) {
-            $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
-        }
+        // Standard column filters (location, series, topic, messagetype)
+        $standardFilters = [
+            ['study.location_id', ['mlocations', 'llocations'],     'filter.location'],
+            ['study.series_id',   ['mseries_id', 'lseries_id'],    'filter.series'],
+            ['st.topic_id',       ['mtopic_id', 'ltopic_id'],      'filter.topic'],
+            ['study.messagetype', ['mmessagetype', 'lmessagetype'], 'filter.messagetype'],
+        ];
 
-        // Location ID from template
-        if (
-            $params->get('llocations') !== null && $params->get('llocations')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.location'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.location_id' => $params->get('llocations')];
-        } elseif (
-            $params->get('llocations') !== null && $params->get(
-                'llocations'
-            )[0] !== '-1' && !empty($this->getState('filter.location'))
-        ) {
-            $filters_group[] = ['study.location_id' => $params->get('llocations')];
-            $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
-        } elseif (!empty($this->getState('filter.location'))) {
-            $filters_group[] = ['study.location_id' => [$this->getState('filter.location')]];
-        }
+        foreach ($standardFilters as [$column, $paramKeys, $stateKey]) {
+            $filterVal = (int) $this->getState($stateKey);
 
-        // Book Number ID
-        if (
-            $params->get('mbooknumber') !== null && $params->get('mbooknumber')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.book'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
-        } elseif (
-            $params->get('mbooknumber') !== null && $params->get(
-                'mbooknumber'
-            )[0] !== '-1' && !empty($this->getState('filter.book'))
-        ) {
-            $filters_group[] = ['study.booknumber' => $params->get('mbooknumber')];
-            $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
-        } elseif (!empty($this->getState('filter.book'))) {
-            $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
-        }
-
-        // Book Number ID from template
-        if (
-            $params->get('lbooknumber') !== null && $params->get('lbooknumber')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.book'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.booknumber' => $params->get('lbooknumber')];
-        } elseif (
-            $params->get('lbooknumber') !== null && $params->get(
-                'lbooknumber'
-            )[0] !== '-1' && !empty($this->getState('filter.book'))
-        ) {
-            $filters_group[] = ['study.booknumber' => $params->get('lbooknumber')];
-            $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
-        } elseif (!empty($this->getState('filter.book'))) {
-            $filters_group[] = ['study.booknumber' => [$this->getState('filter.book')]];
-        }
-
-        // Series ID
-        if (
-            $params->get('mseries_id') !== null && $params->get('mseries_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.series'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.series_id' => $params->get('mseries_id')];
-        } elseif (
-            $params->get('mseries_id') !== null && $params->get(
-                'mseries_id'
-            )[0] !== '-1' && !empty($this->getState('filter.series'))
-        ) {
-            $filters_group[] = ['study.series_id' => $params->get('mseries_id')];
-            $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
-        } elseif (!empty($this->getState('filter.series'))) {
-            $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
-        }
-
-        // Series ID from template
-        if (
-            $params->get('lseries_id') !== null && $params->get('lseries_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.series'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.series_id' => $params->get('lseries_id')];
-        } elseif (
-            $params->get('lseries_id') !== null && $params->get(
-                'lseries_id'
-            )[0] !== '-1' && !empty($this->getState('filter.series'))
-        ) {
-            $filters_group[] = ['study.series_id' => $params->get('lseries_id')];
-            $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
-        } elseif (!empty($this->getState('filter.series'))) {
-            $filters_group[] = ['study.series_id' => [$this->getState('filter.series')]];
-        }
-
-        // Topic ID
-        if (
-            $params->get('mtopic_id') !== null && $params->get('mtopic_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.topic'
-                )
-            )
-        ) {
-            $filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
-        } elseif (
-            $params->get('mtopic_id') !== null && $params->get(
-                'mtopic_id'
-            )[0] !== '-1' && !empty($this->getState('filter.topic'))
-        ) {
-            $filters_group[] = ['st.topic_id' => $params->get('mtopic_id')];
-            $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
-        } elseif (!empty($this->getState('filter.topic'))) {
-            $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
-        }
-
-        // Topic ID from a template
-        if (
-            $params->get('ltopic_id') !== null && $params->get('ltopic_id')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.topic'
-                )
-            )
-        ) {
-            $filters_group[] = ['st.topic_id' => $params->get('ltopic_id')];
-        } elseif (
-            $params->get('ltopic_id') !== null && $params->get(
-                'ltopic_id'
-            )[0] !== '-1' && !empty($this->getState('filter.topic'))
-        ) {
-            $filters_group[] = ['st.topic_id' => $params->get('ltopic_id')];
-            $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
-        } elseif (!empty($this->getState('filter.topic'))) {
-            $filters_group[] = ['st.topic_id' => [$this->getState('filter.topic')]];
-        }
-
-        // Message Type ID
-        if (
-            $params->get('mmessagetype') !== null && $params->get('mmessagetype')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.messagetype'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
-        } elseif (
-            $params->get('mmessagetype') !== null
-            && $params->get('mmessagetype')[0] !== '-1'
-            && !empty($this->getState('filter.messagetype'))
-        ) {
-            $filters_group[] = ['study.messagetype' => $params->get('mmessagetype')];
-            $filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
-        } elseif (!empty($this->getState('filter.messagetype'))) {
-            $filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
-        }
-
-        // Message Type ID from template
-        if (
-            $params->get('lmessagetype') !== null && $params->get('lmessagetype')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.messagetype'
-                )
-            )
-        ) {
-            $filters_group[] = ['study.messagetype' => $params->get('lmessagetype')];
-        } elseif (
-            $params->get('lmessagetype') !== null
-            && $params->get('lmessagetype')[0] !== '-1'
-            && !empty($this->getState('filter.messagetype'))
-        ) {
-            $filters_group[] = ['study.messagetype' => $params->get('lmessagetype')];
-            $filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
-        } elseif (!empty($this->getState('filter.messagetype'))) {
-            $filters_group[] = ['study.messagetype' => [$this->getState('filter.messagetype')]];
-        }
-
-        // Year ID
-        if (
-            $params->get('years') !== null && $params->get('years')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.year'
-                )
-            )
-        ) {
-            $filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
-        } elseif (
-            $params->get('years') !== null && $params->get('years')[0] !== '-1' && !empty(
-                $this->getState(
-                    'filter.year'
-                )
-            )
-        ) {
-            $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
-            $filters_group[] = ['YEAR(study.studydate)' => $params->get('years')];
-        } elseif (!empty($this->getState('filter.year'))) {
-            $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
-        }
-
-        // Year ID from template
-        if (
-            $params->get('lyears') !== null && $params->get('lyears')[0] !== '-1' && empty(
-                $this->getState(
-                    'filter.year'
-                )
-            )
-        ) {
-            $filters_group[] = ['YEAR(study.studydate)' => $params->get('lyears')];
-        } elseif (
-            $params->get('lyears') !== null && $params->get('lyears')[0] !== '-1' && !empty(
-                $this->getState(
-                    'filter.year'
-                )
-            )
-        ) {
-            $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
-            $filters_group[] = ['YEAR(study.studydate)' => $params->get('lyears')];
-        } elseif (!empty($this->getState('filter.year'))) {
-            $filters_group[] = ['YEAR(study.studydate)' => [$this->getState('filter.year')]];
-        }
-
-        // Work through each filter deceleration
-        foreach ($filters_group as $filters) {
-            if (\is_array($filters)) {
-                // Work through the menu filters or search filters
-                foreach ($filters as $filter => $filtervalue) {
-                    if (\count($filtervalue) > 1) {
-                        $where2   = [];
-                        $subquery = '(';
-
-                        foreach ($filtervalue as $filterid) {
-                            $where2[] = $db->quoteName($filter) . ' = ' . (int)$filterid;
-                        }
-
-                        $subquery .= implode(' OR ', $where2);
-                        $subquery .= ')';
-
-                        $query->where($subquery);
-                    } else {
-                        foreach ($filtervalue as $filterid) {
-                            if ((int)$filterid >= 1 && $filter !== 'study.booknumber') {
-                                if ($this->landing === 1) {
-                                    $$filterid = $this->getState($filter);
-                                }
-
-                                $query->where($db->quoteName($filter) . ' = ' . (int)$filterid);
-                            }
-
-                            if ((int)$filterid >= 1 && $filter === 'study.booknumber') {
-                                $book     = $filterid;
-                                $appInput = Factory::getApplication()->getInput();
-                                $chb      = $appInput->get('minChapt', '', 'int');
-                                $che      = $appInput->get('maxChapt', '', 'int');
-
-                                if ($chb && $che) {
-                                    $query->where(
-                                        '(' . $db->quoteName('study.booknumber') . ' = ' . (int)$book .
-                                        ' AND ' . $db->quoteName('study.chapter_begin') . ' >= ' . (int)$chb .
-                                        ' AND ' . $db->quoteName('study.chapter_end') . ' <= ' . (int)$che . ')' .
-                                        ' OR ' . $db->quoteName('study.booknumber2') . ' = ' . (int)$book
-                                    );
-                                } elseif ($chb) {
-                                    $query->where(
-                                        '(' . $db->quoteName('study.booknumber') . ' = ' . (int)$book . ' AND ' . $db->quoteName('study.chapter_begin') . ' >= ' .
-                                        (int)$chb . ') OR ' . $db->quoteName('study.booknumber2') . ' = ' . (int)$book
-                                    );
-                                } elseif ($che) {
-                                    $query->where(
-                                        '(' . $db->quoteName('study.booknumber') . ' = ' . (int)$book . ' AND ' . $db->quoteName('study.chapter_end') . ' <= ' .
-                                        (int)$che . ') OR ' . $db->quoteName('study.booknumber2') . ' = ' . (int)$book
-                                    );
-                                } else {
-                                    $query->where(
-                                        '(' . $db->quoteName('study.booknumber') . ' = ' . (int)$book . ' OR ' . $db->quoteName('study.booknumber2') . ' = ' . (int)$book . ')'
-                                    );
-                                }
-                            }
-                        }
-                    }
-                }
+            foreach ($paramKeys as $pk) {
+                $this->addParamFilter($query, $db, $column, $params->get($pk), $filterVal);
             }
+        }
+
+        // Year — expression-based (not a column reference, so skip quoteName)
+        $yearFilter = (int) $this->getState('filter.year');
+
+        foreach (['years', 'lyears'] as $paramKey) {
+            $this->addParamFilter(
+                $query,
+                $db,
+                'YEAR(study.studydate)',
+                $params->get($paramKey),
+                $yearFilter,
+                true,
+            );
         }
 
         if ($this->getState('filter.language')) {
@@ -976,12 +671,13 @@ class CwmsermonsModel extends ListModel
         if (!empty($search)) {
             $like = $db->quote('%' . trim($search) . '%');
             $query->where(
-                $db->quoteName('study.studytitle') . ' LIKE ' . $like
+                '(' . $db->quoteName('study.studytitle') . ' LIKE ' . $like
                 . ' OR ' . $db->quoteName('study.studytext') . ' LIKE ' . $like
                 . ' OR ' . $db->quoteName('study.studyintro') . ' LIKE ' . $like
                 . ' OR ' . $db->quoteName('series.series_text') . ' LIKE ' . $like
                 . ' OR ' . $db->quoteName('series.description') . ' LIKE ' . $like
                 . ' OR ' . $db->quoteName('t.topic_text') . ' LIKE ' . $like
+                . ')'
             );
         }
 
@@ -1050,27 +746,27 @@ class CwmsermonsModel extends ListModel
         // Batch-load mediafile aggregation (mids, totalplays, totaldownloads)
         $mediaStats = $this->batchLoadMediaStats($studyIds);
 
-        foreach ($items as $item) {
-            $sid                  = (int) $item->id;
-            $stats                = $mediaStats[$sid] ?? null;
-            $item->mids           = $stats->mids ?? null;
-            $item->totalplays     = (int) ($stats->totalplays ?? 0);
-            $item->totaldownloads = (int) ($stats->totaldownloads ?? 0);
-            $item->study_id       = $sid;
-        }
-
         // Batch-load all scripture references
         $scriptureMap = CwmscriptureHelper::getScripturesForStudies($studyIds);
-
-        foreach ($items as $item) {
-            $item->scriptures = $scriptureMap[(int) $item->id] ?? [];
-        }
 
         // Batch-load all teachers (for teachers-list element)
         $teacherMap = CwmstudyteacherHelper::getTeachersForStudies($studyIds);
 
         foreach ($items as $item) {
-            $item->teachers = $teacherMap[(int) $item->id] ?? [];
+            $sid = (int) $item->id;
+
+            // Media stats
+            $stats                = $mediaStats[$sid] ?? null;
+            $item->mids           = $stats->mids ?? null;
+            $item->totalplays     = (int) ($stats->totalplays ?? 0);
+            $item->totaldownloads = (int) ($stats->totaldownloads ?? 0);
+            $item->study_id       = $sid;
+
+            // Scriptures
+            $item->scriptures = $scriptureMap[$sid] ?? [];
+
+            // Teachers
+            $item->teachers = $teacherMap[$sid] ?? [];
         }
 
         return $items;
@@ -1108,5 +804,205 @@ class CwmsermonsModel extends ListModel
         $db->setQuery($query);
 
         return $db->loadObjectList('study_id') ?: [];
+    }
+
+    /**
+     * Apply a standard column filter using the 3-branch param/user/both pattern.
+     *
+     * Handles: param only → restrict to param values; both param + user filter →
+     * restrict to param values AND require user pick; user filter only → exact match.
+     *
+     * @param   QueryInterface  $query         Active query builder
+     * @param   object          $db            Database driver
+     * @param   string          $column        Column name (e.g. 'study.location_id') or SQL expression
+     * @param   ?array          $paramValues   Values from menu/template params (null if unset)
+     * @param   int             $filterValue   User-selected filter value (0 = none)
+     * @param   bool            $isExpression  True if $column is a SQL expression (skip quoteName)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function addParamFilter(
+        QueryInterface $query,
+        object $db,
+        string $column,
+        ?array $paramValues,
+        int $filterValue,
+        bool $isExpression = false,
+    ): void {
+        $colRef   = $isExpression ? $column : $db->quoteName($column);
+        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+
+        if ($hasParam && $filterValue < 1) {
+            $intValues = array_map('intval', $paramValues);
+
+            if (\count($intValues) > 1) {
+                $query->where($colRef . ' IN (' . implode(',', $intValues) . ')');
+            } else {
+                $query->where($colRef . ' = ' . $intValues[0]);
+            }
+        } elseif ($hasParam && $filterValue >= 1) {
+            $intValues = array_map('intval', $paramValues);
+            $query->where($colRef . ' IN (' . implode(',', $intValues) . ')');
+            $query->where($colRef . ' = ' . $filterValue);
+        } elseif ($filterValue >= 1) {
+            $query->where($colRef . ' = ' . $filterValue);
+        }
+    }
+
+    /**
+     * Apply teacher filter using EXISTS subquery against the junction table.
+     *
+     * Uses `#__bsms_study_teachers` instead of the legacy `study.teacher_id`
+     * column, supporting the multi-teacher-per-sermon data model.
+     *
+     * @param   QueryInterface  $query        Active query builder
+     * @param   object          $db           Database driver
+     * @param   ?array          $paramValues  Teacher IDs from menu/template params
+     * @param   int             $filterValue  User-selected teacher ID (0 = none)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function addTeacherFilter(
+        QueryInterface $query,
+        object $db,
+        ?array $paramValues,
+        int $filterValue,
+    ): void {
+        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+
+        if ($hasParam && $filterValue < 1) {
+            $intValues = array_map('intval', $paramValues);
+            $sub       = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->whereIn($db->quoteName('stf.teacher_id'), $intValues);
+            $query->where('EXISTS (' . $sub . ')');
+        } elseif ($hasParam && $filterValue >= 1) {
+            $intValues = array_map('intval', $paramValues);
+            $sub       = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->whereIn($db->quoteName('stf.teacher_id'), $intValues);
+            $query->where('EXISTS (' . $sub . ')');
+
+            $sub2 = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf2'))
+                ->where($db->quoteName('stf2.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->where($db->quoteName('stf2.teacher_id') . ' = ' . $filterValue);
+            $query->where('EXISTS (' . $sub2 . ')');
+        } elseif ($filterValue >= 1) {
+            $sub = $db->getQuery(true)
+                ->select('1')
+                ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                ->where($db->quoteName('stf.teacher_id') . ' = ' . $filterValue);
+            $query->where('EXISTS (' . $sub . ')');
+        }
+    }
+
+    /**
+     * Apply book number filter with chapter-range support.
+     *
+     * Multi-value params use a simple IN clause. Single-value params and
+     * user-selected filters use chapter-range logic with booknumber2 fallback.
+     *
+     * @param   QueryInterface  $query        Active query builder
+     * @param   object          $db           Database driver
+     * @param   ?array          $paramValues  Book numbers from menu/template params
+     * @param   int             $filterValue  User-selected book number (0 = none)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function addBookFilter(
+        QueryInterface $query,
+        object $db,
+        ?array $paramValues,
+        int $filterValue,
+    ): void {
+        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $col      = $db->quoteName('study.booknumber');
+
+        if ($hasParam && $filterValue < 1) {
+            $intValues = array_map('intval', $paramValues);
+
+            if (\count($intValues) > 1) {
+                $query->where($col . ' IN (' . implode(',', $intValues) . ')');
+            } else {
+                $this->addBookChapterWhere($query, $db, $intValues[0]);
+            }
+        } elseif ($hasParam && $filterValue >= 1) {
+            $intValues = array_map('intval', $paramValues);
+
+            if (\count($intValues) > 1) {
+                $query->where($col . ' IN (' . implode(',', $intValues) . ')');
+            } else {
+                $this->addBookChapterWhere($query, $db, $intValues[0]);
+            }
+
+            $this->addBookChapterWhere($query, $db, $filterValue);
+        } elseif ($filterValue >= 1) {
+            $this->addBookChapterWhere($query, $db, $filterValue);
+        }
+    }
+
+    /**
+     * Add WHERE clause for a single book number with optional chapter range.
+     *
+     * Also checks booknumber2 (secondary scripture reference) as a fallback.
+     * Chapter range bounds come from the request input (minChapt, maxChapt).
+     *
+     * @param   QueryInterface  $query  Active query builder
+     * @param   object          $db     Database driver
+     * @param   int             $book   Book number to filter on
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function addBookChapterWhere(QueryInterface $query, object $db, int $book): void
+    {
+        $appInput = Factory::getApplication()->getInput();
+        $chb      = $appInput->get('minChapt', 0, 'int');
+        $che      = $appInput->get('maxChapt', 0, 'int');
+
+        $bn  = $db->quoteName('study.booknumber');
+        $bn2 = $db->quoteName('study.booknumber2');
+        $cb  = $db->quoteName('study.chapter_begin');
+        $ce  = $db->quoteName('study.chapter_end');
+
+        if ($chb && $che) {
+            $query->where(
+                '(' . $bn . ' = ' . $book
+                . ' AND ' . $cb . ' >= ' . $chb
+                . ' AND ' . $ce . ' <= ' . $che
+                . ') OR ' . $bn2 . ' = ' . $book
+            );
+        } elseif ($chb) {
+            $query->where(
+                '(' . $bn . ' = ' . $book
+                . ' AND ' . $cb . ' >= ' . $chb
+                . ') OR ' . $bn2 . ' = ' . $book
+            );
+        } elseif ($che) {
+            $query->where(
+                '(' . $bn . ' = ' . $book
+                . ' AND ' . $ce . ' <= ' . $che
+                . ') OR ' . $bn2 . ' = ' . $book
+            );
+        } else {
+            $query->where(
+                '(' . $bn . ' = ' . $book
+                . ' OR ' . $bn2 . ' = ' . $book . ')'
+            );
+        }
     }
 }

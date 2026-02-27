@@ -43,7 +43,6 @@ class CwmpopupModel extends ListModel
      */
     protected function populateState($ordering = null, $direction = null): void
     {
-        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         // Load the parameters

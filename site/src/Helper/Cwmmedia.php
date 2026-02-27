@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -92,7 +91,7 @@ class Cwmmedia
      *
      * @param   Object                   $media     Media info
      * @param   Registry                 $params    Params
-     * @param   CwmtemplateTable|Object  $template  Template Table
+     * @param   object                   $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return string|null
      *
@@ -914,7 +913,7 @@ class Cwmmedia
      *
      * @param   Object                   $media     Media
      * @param   Registry                 $params    Params
-     * @param   CwmtemplateTable|Object  $template  Template ID
+     * @param   object                   $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return string
      *

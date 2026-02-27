@@ -30,20 +30,6 @@ use Joomla\Database\ParameterType;
 class CwmteachersModel extends ListModel
 {
     /**
-     * Method to get a list of sermons.
-     * Overridden to add a check for access levels.
-     *
-     * @return  mixed  An array of data items on success, false on failure.
-     *
-     * @throws \Exception
-     * @since   9.0.0
-     */
-    public function getItems(): array
-    {
-        return parent::getItems();
-    }
-
-    /**
      * Build an SQL query to load the list data
      *
      * @return  DatabaseQuery A DatabaseQuery object to retrieve the data set.
@@ -89,7 +75,7 @@ class CwmteachersModel extends ListModel
             ->bind(':listShow', $listShow, ParameterType::INTEGER);
 
         // Filter by view access level
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $app->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
         $query->whereIn($db->quoteName('teachers.access'), $groups);
 
@@ -112,7 +98,6 @@ class CwmteachersModel extends ListModel
      */
     protected function populateState($ordering = 'teachers.ordering', $direction = 'asc'): void
     {
-        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         // Load state from the request.

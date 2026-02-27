@@ -103,7 +103,8 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $input = Factory::getApplication()->getInput();
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
         // Get the menu item object
         // Load the Admin settings and params from the template
@@ -119,7 +120,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Get studies associated with this series
-        Factory::getApplication()->setUserState('sid', $item->id);
+        $app->setUserState('sid', $item->id);
         $studies = $this->get('Studies');
 
         CwmanalyticsHelper::logEvent('page_view', 0, 0, '', (int) $item->id);
@@ -133,7 +134,7 @@ class HtmlView extends BaseHtmlView
         // Get the series image
         $image              = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
         $item->image        = Cwmimages::renderPicture($image, $item->series_text ?? '');
-        $teacherImage       = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail ?? '', $image2 = null);
+        $teacherImage       = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail ?? '');
         $item->teacherimage = Cwmimages::renderPicture($teacherImage, $item->teachername ?? '');
 
         $media = [];
@@ -190,11 +191,11 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $app->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
         if ($item->access && !\in_array($item->access, $groups, true)) {
-            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+            $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
         }

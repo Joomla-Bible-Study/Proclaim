@@ -117,7 +117,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
      */
     protected function getStudiesQuery(): QueryInterface
     {
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
         $sid = (int) $app->getUserState('sid');
 
         $params          = $app->getParams();
@@ -198,14 +198,6 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $query->select($db->quoteName('book2.bookname', 'bookname2'));
         $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON ' . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2'));
 
-        // Join over Plays/Downloads
-        $query->select(
-            'SUM(' . $db->quoteName('mediafile.plays') . ') AS totalplays, ' .
-            'SUM(' . $db->quoteName('mediafile.downloads') . ') AS totaldownloads, ' .
-            $db->quoteName('mediafile.study_id')
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id'));
-
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
         $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id'));
@@ -215,9 +207,6 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $query->join('LEFT', $db->quoteName('#__users', 'users') . ' ON ' . $db->quoteName('study.user_id') . ' = ' . $db->quoteName('users.id'));
 
         $query->group($db->quoteName('study.id'));
-
-        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('m.id') . ') AS mids');
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'm') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('m.study_id'));
 
         // Filter only for authorized view
         $query->whereIn($db->quoteName('study.access'), $groups);
@@ -320,6 +309,29 @@ class CwmseriespodcastdisplayModel extends ItemModel
             return [];
         }
 
+        // Batch-load media stats separately to avoid Cartesian product
+        $studyIds   = array_column($studies, 'id');
+        $mediaQuery = $db->getQuery(true)
+            ->select([
+                $db->quoteName('study_id'),
+                'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+                'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+                'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+            ])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->whereIn($db->quoteName('study_id'), $studyIds)
+            ->group($db->quoteName('study_id'));
+        $db->setQuery($mediaQuery);
+        $mediaStats = $db->loadObjectList('study_id');
+
+        foreach ($studies as $study) {
+            $stats                 = $mediaStats[$study->id] ?? null;
+            $study->mids           = $stats->mids ?? null;
+            $study->totalplays     = (int) ($stats->totalplays ?? 0);
+            $study->totaldownloads = (int) ($stats->totaldownloads ?? 0);
+            $study->study_id       = (int) $study->id;
+        }
+
         return $studies;
     }
 
@@ -360,8 +372,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
      */
     protected function populateState(): void
     {
-        /** @type \JApplicationSite $app */
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
 
         // Load the parameters.
         $params = $app->getParams();

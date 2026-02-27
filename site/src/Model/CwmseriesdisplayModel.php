@@ -97,12 +97,12 @@ class CwmseriesdisplayModel extends ItemModel
     /**
      * Get Studies
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies(): mixed
+    public function getStudies(): array
     {
         $app = Factory::getApplication();
         $sid = (int) $app->getUserState('sid');
@@ -186,14 +186,6 @@ class CwmseriesdisplayModel extends ItemModel
         $query->select($db->quoteName('book2.bookname', 'bookname2'));
         $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON ' . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2'));
 
-        // Join over Plays/Downloads
-        $query->select(
-            'SUM(' . $db->quoteName('mediafile.plays') . ') AS totalplays, ' .
-            'SUM(' . $db->quoteName('mediafile.downloads') . ') AS totaldownloads, ' .
-            $db->quoteName('mediafile.study_id')
-        );
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id'));
-
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
         $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id'));
@@ -214,10 +206,7 @@ class CwmseriesdisplayModel extends ItemModel
 
         $query->group($db->quoteName('study.id'));
 
-        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('m.id') . ') AS mids');
-        $query->join('LEFT', $db->quoteName('#__bsms_mediafiles', 'm') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('m.study_id'));
-
-        // Filter only for authorized view
+        // Filter only for the authorized view
         $query->whereIn($db->quoteName('study.access'), $groups);
         $query->extendWhere(
             'AND',
@@ -228,7 +217,7 @@ class CwmseriesdisplayModel extends ItemModel
             'OR'
         );
 
-        // Filter by published state based on show_archived parameter
+        // Filter by published state based on the show_archived parameter
         $showArchived = $params->get('show_archived', '');
         if ($showArchived === '' || $showArchived === null) {
             $showArchived = $t_params->get('sddefault_show_archived', '0');
@@ -279,17 +268,38 @@ class CwmseriesdisplayModel extends ItemModel
             $orderparam = $t_params->get('series_detail_order', '1');
         }
 
-        $order = ($orderparam === 2) ? 'ASC' : 'DESC';
+        $order = ((int) $orderparam === 2) ? 'ASC' : 'DESC';
 
         $query->order($db->quoteName('study.studydate') . ' ' . $order);
         $db->setQuery($query, 0, (int) $t_params->get('series_detail_limit', 20));
         $studies = $db->loadObjectList();
 
-        if (\count($studies) < 1) {
-            return false;
+        // Batch-load media stats separately to avoid Cartesian product
+        if (!empty($studies)) {
+            $studyIds   = array_column($studies, 'id');
+            $mediaQuery = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('study_id'),
+                    'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+                    'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+                    'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+                ])
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->whereIn($db->quoteName('study_id'), $studyIds)
+                ->group($db->quoteName('study_id'));
+            $db->setQuery($mediaQuery);
+            $mediaStats = $db->loadObjectList('study_id');
+
+            foreach ($studies as $study) {
+                $stats                 = $mediaStats[$study->id] ?? null;
+                $study->mids           = $stats->mids ?? null;
+                $study->totalplays     = (int) ($stats->totalplays ?? 0);
+                $study->totaldownloads = (int) ($stats->totaldownloads ?? 0);
+                $study->study_id       = (int) $study->id;
+            }
         }
 
-        return $studies;
+        return $studies ?: [];
     }
 
     /**
