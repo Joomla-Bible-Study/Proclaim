@@ -1,6 +1,5 @@
--- Remove unused 'text' (Details Link Image) and 'pdf' columns from templates table
--- Neither field was rendered on the frontend
+-- Remove unused 'text' and 'pdf' columns from templates table.
+-- Moved to proclaim.script.php postflight() dropLegacyTemplateColumns()
+-- because ALTER TABLE … DROP COLUMN is not idempotent in MySQL
+-- and breaks if the column was already removed.
 -- @since 10.1.0
-
-ALTER TABLE `#__bsms_templates` DROP COLUMN `text`;
-ALTER TABLE `#__bsms_templates` DROP COLUMN `pdf`;

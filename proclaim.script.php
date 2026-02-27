@@ -770,6 +770,10 @@ class com_proclaimInstallerScript extends InstallerScript
                 );
             }
 
+            // Drop vestigial text/pdf columns from templates table.
+            // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
+            $this->dropLegacyTemplateColumns();
+
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
             // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
@@ -1353,6 +1357,45 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 10.1.0
      */
+    /**
+     * Drop unused text and pdf columns from the templates table.
+     *
+     * These columns were never rendered on the frontend. The drop is done in
+     * PHP rather than SQL because ALTER TABLE … DROP COLUMN is not idempotent
+     * in MySQL — it errors if the column was already removed.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function dropLegacyTemplateColumns(): void
+    {
+        try {
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
+            $prefix = $db->getPrefix();
+            $table  = $prefix . 'bsms_templates';
+
+            $columns = ['text', 'pdf'];
+
+            foreach ($columns as $column) {
+                $query = $db->getQuery(true)
+                    ->select('COUNT(*)')
+                    ->from('INFORMATION_SCHEMA.COLUMNS')
+                    ->where('TABLE_SCHEMA = DATABASE()')
+                    ->where($db->quoteName('TABLE_NAME') . ' = ' . $db->quote($table))
+                    ->where($db->quoteName('COLUMN_NAME') . ' = ' . $db->quote($column));
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    $db->setQuery('ALTER TABLE ' . $db->quoteName($table) . ' DROP COLUMN ' . $db->quoteName($column));
+                    $db->execute();
+                }
+            }
+        } catch (\Exception $e) {
+            // Non-fatal — column may already be gone
+        }
+    }
+
     /**
      * Add missing primary keys to Proclaim tables.
      *
