@@ -20,7 +20,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
-use CWM\Component\Proclaim\Site\View\UpdateFiltersTrait;
+use CWM\Component\Proclaim\Site\Helper\UpdateFiltersTrait;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;

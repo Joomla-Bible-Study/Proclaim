@@ -23,7 +23,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
 use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
-use CWM\Component\Proclaim\Site\View\UpdateFiltersTrait;
+use CWM\Component\Proclaim\Site\Helper\UpdateFiltersTrait;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;

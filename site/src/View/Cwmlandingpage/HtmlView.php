@@ -114,8 +114,6 @@ class HtmlView extends BaseHtmlView
             $document->setDescription($this->params->get('metadesc'));
         }
 
-        Cwmimages::getShowHide();
-
         // Get the main study list image
         $this->main = Cwmimages::mainStudyImage();
 

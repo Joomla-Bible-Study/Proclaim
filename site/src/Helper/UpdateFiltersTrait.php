@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Site\View;
+namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
