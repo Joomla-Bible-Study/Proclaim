@@ -374,8 +374,7 @@
                 <option value="1">JYES</option>
             </field>
             <field name="studieslisttemplateid" type="TemplateList" default=""
-                   label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"
-                   required="true"/>
+                   label="JBS_TPL_TEMPLATE_STUDIES_LIST" description="JBS_TPL_TEMPLATE_STUDIES_LIST_DESC"/>
         </fieldset>
         <!-- Messages: Teacher Display -->
         <fieldset name="LISTTEACHER" label="JBS_TPL_LIST_TEACHER" layoutContext="messages"
@@ -885,8 +884,7 @@
                 <option value="1">JYES</option>
             </field>
             <field name="detailstemplateid" type="TemplateList" default=""
-                   label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"
-                   required="true"/>
+                   label="JBS_TPL_TEMPLATE_STUDY_DETAIL" description="JBS_TPL_TEMPLATE_STUDY_DETAIL_DESC"/>
         </fieldset>
         <!-- Details: Scripture Display -->
         <fieldset name="DETAILS_SCRIPTURE" label="JBS_TPL_DETAILS_SCRIPTURE_SETTINGS" layoutContext="details"
@@ -1006,8 +1004,7 @@
                 <option value="1">JYES</option>
             </field>
             <field name="teachertemplateid" type="TemplateList" default=""
-                   label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC"
-                   required="true"/>
+                   label="JBS_TPL_TEMPLATE_TEACHER" description="JBS_TPL_TEMPLATE_TEACHER_DESC"/>
         </fieldset>
         <fieldset name="TEACHERDISPLAY" label="JBS_TPL_TEACHERS_LIST"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -1530,8 +1527,7 @@
                 <option value="1">JYES</option>
             </field>
             <field name="serieslisttemplateid" type="TemplateList" default=""
-                   label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"
-                   required="true"/>
+                   label="JBS_TPL_TEMPLATE_SERIES_LIST" description="JBS_TPL_TEMPLATE_SERIES_LIST_DESC"/>
         </fieldset>
         <fieldset name="SERIESDISPLAY" label="JBS_TPL_SERIES_LIST"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
@@ -1708,8 +1704,7 @@
                 <option value="1">JYES</option>
             </field>
             <field name="seriesdetailtemplateid" type="TemplateList" default=""
-                   label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC"
-                   required="true"/>
+                   label="JBS_TPL_TEMPLATE_SERIES_DETAIL" description="JBS_TPL_TEMPLATE_SERIES_DETAIL_DESC"/>
         </fieldset>
         <fieldset name="SERIESDETAILDISPLAY" label="JBS_TPL_SERIES_DETAILS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
