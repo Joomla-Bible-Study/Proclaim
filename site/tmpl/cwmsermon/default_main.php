@@ -79,7 +79,7 @@ if ($this->item->params->get('showrelated') === '1') {
 
 <?php
 // Social Networking begins here
-if (!$isPrint && $this->item->params->get('socialnetworking') > 0) {
+if (!$isPrint && !empty($this->page->social)) {
     echo $this->page->social;
 }
 // End Social Networking

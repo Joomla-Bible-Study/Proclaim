@@ -206,11 +206,12 @@
                        class="form-control"
                        label="JBS_TPL_MEDIA_PLAYER_HEIGHT"
                        description="JBS_TPL_MEDIA_PLAYER_HEIGHT_DESC"/>
-                <field name="embedshare" default="" type="list" class="form-select"
+                <field name="embedshare" type="list" default="" class="form-select"
                        label="JBS_TPL_MEDIA_EMBEDSHARE" description="JBS_TPL_MEDIA_EMBEDSHARE_DESC">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
-                    <option value="FALSE">JBS_TPL_NO_SHARE</option>
-                    <option value="TRUE">JBS_TPL_SHOW_SHARE</option>
+                    <option value="0">JBS_CMN_HIDE</option>
+                    <option value="1">JBS_TPL_SHARE_ADDTOANY</option>
+                    <option value="2">JBS_TPL_SHARE_LOCAL</option>
                 </field>
                 <field name="backcolor" type="ColorPicker"
                        default="#287585"

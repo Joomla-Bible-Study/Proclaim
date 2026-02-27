@@ -52,8 +52,9 @@
         display: none !important;
     }
 
-    /* Social sharing (AddToAny) - CSS fallback for custom templates */
+    /* Social sharing - CSS fallback for custom templates */
     .proclaim-share,
+    .proclaim-share-local,
     .a2a_kit,
     .a2a_default_style,
     [class*="a2a_button_"],

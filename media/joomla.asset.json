@@ -680,6 +680,22 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.share",
+            "type": "script",
+            "uri": "com_proclaim/proclaim-share.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.share-css",
+            "type": "style",
+            "uri": "com_proclaim/proclaim-share.min.css"
         }
     ]
 }
