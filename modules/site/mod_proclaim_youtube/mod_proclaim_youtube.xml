@@ -179,6 +179,14 @@
                        label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
                        description="MOD_PROCLAIM_YOUTUBE_CACHE_TIME_DESC"
                        filter="integer"/>
+
+                <field name="poll_interval"
+                       type="text"
+                       default="120"
+                       label="MOD_PROCLAIM_YOUTUBE_POLL_INTERVAL"
+                       description="MOD_PROCLAIM_YOUTUBE_POLL_INTERVAL_DESC"
+                       filter="integer"
+                       showon="show_live_badge:1"/>
             </fieldset>
         </fields>
     </config>

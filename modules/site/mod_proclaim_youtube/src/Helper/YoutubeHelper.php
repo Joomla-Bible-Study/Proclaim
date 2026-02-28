@@ -120,10 +120,11 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
-     * Verify and update the live status of a video in real-time
+     * Verify and update the live status of a video using a short-lived cache
      *
      * This is called after getting cached video data to ensure the
-     * isLive/isUpcoming status is accurate on page load.
+     * isLive/isUpcoming status is accurate on page load. Results are cached
+     * for 60 seconds to avoid excessive API calls from multiple page loads.
      *
      * @param   array  $video     Video data array
      * @param   int    $serverId  Server ID for API access
@@ -140,6 +141,29 @@ class YoutubeHelper implements DatabaseAwareInterface
             return $video;
         }
 
+        // Check cache first to avoid redundant API calls across page loads
+        $cacheKey = 'mod_proclaim_youtube_verify_' . $serverId . '_' . $video['videoId'];
+
+        try {
+            $cache = Factory::getContainer()->get('cache.output');
+            $cache->setLifeTime(1); // 1 minute
+
+            $cachedResult = $cache->get($cacheKey, 'mod_proclaim_youtube_status');
+
+            if ($cachedResult !== false) {
+                $decoded = json_decode($cachedResult, true, 512, JSON_THROW_ON_ERROR);
+
+                if ($decoded !== null) {
+                    $video['isLive']     = $decoded['isLive'] ?? false;
+                    $video['isUpcoming'] = $decoded['isUpcoming'] ?? false;
+
+                    return $video;
+                }
+            }
+        } catch (\Exception $e) {
+            // Cache not available, continue without it
+        }
+
         $youtube     = new CWMAddonYoutube();
         $statusInput = new Input([
             'server_id' => $serverId,
@@ -151,6 +175,19 @@ class YoutubeHelper implements DatabaseAwareInterface
         if ($result['success']) {
             $video['isLive']     = $result['isLive'] ?? false;
             $video['isUpcoming'] = $result['isUpcoming'] ?? false;
+
+            // Cache the status result for 60 seconds
+            try {
+                $cache = Factory::getContainer()->get('cache.output');
+                $cache->setLifeTime(1); // 1 minute
+                $cache->store(
+                    json_encode(['isLive' => $video['isLive'], 'isUpcoming' => $video['isUpcoming']]),
+                    $cacheKey,
+                    'mod_proclaim_youtube_status'
+                );
+            } catch (\Exception $e) {
+                // Cache not available, continue without it
+            }
         }
 
         return $video;
@@ -323,7 +360,9 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * AJAX method to get current video status (live/upcoming/none)
      *
-     * This bypasses the cache to get real-time status from the YouTube API.
+     * Uses a short-lived server-side cache (60s) to prevent excessive YouTube API calls
+     * when multiple module instances or rapid polling would otherwise exhaust the daily quota.
+     *
      * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
      *
      * If video_id is provided, checks the specific video's status using the Videos API.
@@ -360,7 +399,28 @@ class YoutubeHelper implements DatabaseAwareInterface
             ];
         }
 
-        $youtube = new CWMAddonYoutube();
+        // Check server-side cache to avoid redundant API calls (60-second TTL)
+        $statusCacheKey = 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId;
+
+        try {
+            $cache = Factory::getContainer()->get('cache.output');
+            $cache->setLifeTime(1); // 1 minute
+
+            $cachedStatus = $cache->get($statusCacheKey, 'mod_proclaim_youtube_status');
+
+            if ($cachedStatus !== false) {
+                $decoded = json_decode($cachedStatus, true, 512, JSON_THROW_ON_ERROR);
+
+                if ($decoded !== null) {
+                    return $decoded;
+                }
+            }
+        } catch (\Exception $e) {
+            // Cache not available, continue without it
+        }
+
+        $youtube      = new CWMAddonYoutube();
+        $statusResult = null;
 
         // If we have a specific video ID, check its status directly
         // This is more reliable than the search API for status transitions
@@ -373,7 +433,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             $result = $youtube->getVideoStatus($statusInput);
 
             if ($result['success']) {
-                return [
+                $statusResult = [
                     'success'    => true,
                     'isLive'     => $result['isLive'] ?? false,
                     'isUpcoming' => $result['isUpcoming'] ?? false,
@@ -382,54 +442,71 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        // Fall back to searching for live/upcoming videos
-        // Check for currently live videos
-        $liveInput = new Input([
-            'server_id'   => $serverId,
-            'max_results' => 1,
-            'event_type'  => 'live',
-        ]);
+        if ($statusResult === null) {
+            // Fall back to searching for live/upcoming videos
+            // Check for currently live videos
+            $liveInput = new Input([
+                'server_id'   => $serverId,
+                'max_results' => 1,
+                'event_type'  => 'live',
+            ]);
 
-        $result = $youtube->fetchLiveVideos($liveInput);
+            $result = $youtube->fetchLiveVideos($liveInput);
 
-        if ($result['success'] && !empty($result['videos'])) {
-            $video = $result['videos'][0];
+            if ($result['success'] && !empty($result['videos'])) {
+                $video = $result['videos'][0];
 
-            return [
-                'success'    => true,
-                'isLive'     => true,
-                'isUpcoming' => false,
-                'videoId'    => $video['videoId'] ?? '',
-            ];
+                $statusResult = [
+                    'success'    => true,
+                    'isLive'     => true,
+                    'isUpcoming' => false,
+                    'videoId'    => $video['videoId'] ?? '',
+                ];
+            }
         }
 
-        // Check for upcoming videos
-        $upcomingInput = new Input([
-            'server_id'   => $serverId,
-            'max_results' => 1,
-            'event_type'  => 'upcoming',
-        ]);
+        if ($statusResult === null) {
+            // Check for upcoming videos
+            $upcomingInput = new Input([
+                'server_id'   => $serverId,
+                'max_results' => 1,
+                'event_type'  => 'upcoming',
+            ]);
 
-        $result = $youtube->fetchLiveVideos($upcomingInput);
+            $result = $youtube->fetchLiveVideos($upcomingInput);
 
-        if ($result['success'] && !empty($result['videos'])) {
-            $video = $result['videos'][0];
+            if ($result['success'] && !empty($result['videos'])) {
+                $video = $result['videos'][0];
 
-            return [
-                'success'    => true,
-                'isLive'     => false,
-                'isUpcoming' => true,
-                'videoId'    => $video['videoId'] ?? '',
-            ];
+                $statusResult = [
+                    'success'    => true,
+                    'isLive'     => false,
+                    'isUpcoming' => true,
+                    'videoId'    => $video['videoId'] ?? '',
+                ];
+            }
         }
 
         // No live or upcoming video
-        return [
-            'success'    => true,
-            'isLive'     => false,
-            'isUpcoming' => false,
-            'videoId'    => '',
-        ];
+        if ($statusResult === null) {
+            $statusResult = [
+                'success'    => true,
+                'isLive'     => false,
+                'isUpcoming' => false,
+                'videoId'    => '',
+            ];
+        }
+
+        // Cache the result for 60 seconds to avoid redundant API calls
+        try {
+            $cache = Factory::getContainer()->get('cache.output');
+            $cache->setLifeTime(1); // 1 minute
+            $cache->store(json_encode($statusResult), $statusCacheKey, 'mod_proclaim_youtube_status');
+        } catch (\Exception $e) {
+            // Cache not available, continue without it
+        }
+
+        return $statusResult;
     }
 
     /**
