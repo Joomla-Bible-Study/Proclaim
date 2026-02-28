@@ -15,7 +15,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
 
 /**
  * Shared YouTube API quota tracker.
@@ -24,6 +26,9 @@ use Joomla\CMS\Component\ComponentHelper;
  * backend platform-stats task (proclaim.platformstats) draw from the same
  * YouTube Data API v3 daily quota.  This class provides a file-based
  * counter that both systems read/write so neither can starve the other.
+ *
+ * The daily budget and reset hour are configured per-server on the YouTube
+ * server record (youtube_daily_quota and youtube_quota_reset_hour params).
  *
  * Quota file location: JPATH_CACHE/mod_proclaim_youtube/quota_{serverId}.json
  *
@@ -46,17 +51,28 @@ class CwmyoutubeQuota
     public const COST_CHANNELS = 1;
 
     /**
-     * Get the configured daily quota budget from the component parameters.
+     * In-memory cache for server params to avoid repeated DB queries
+     * within the same request.
+     *
+     * @var    array<int, Registry>
+     * @since  10.1.0
+     */
+    private static array $serverParamsCache = [];
+
+    /**
+     * Get the configured daily quota budget from the server's params.
      *
      * Falls back to 10 000 (the YouTube default for new API keys).
+     *
+     * @param   int  $serverId  YouTube server record ID
      *
      * @return  int
      *
      * @since   10.1.0
      */
-    public static function getDailyBudget(): int
+    public static function getDailyBudget(int $serverId): int
     {
-        $params = ComponentHelper::getParams('com_proclaim');
+        $params = self::getServerParams($serverId);
 
         return max(1, (int) $params->get('youtube_daily_quota', 10000));
     }
@@ -64,13 +80,15 @@ class CwmyoutubeQuota
     /**
      * Get the UTC hour when the quota resets (YouTube resets at midnight PT).
      *
+     * @param   int  $serverId  YouTube server record ID
+     *
      * @return  int  0-23
      *
      * @since   10.1.0
      */
-    public static function getResetHour(): int
+    public static function getResetHour(int $serverId): int
     {
-        $params = ComponentHelper::getParams('com_proclaim');
+        $params = self::getServerParams($serverId);
 
         return max(0, min(23, (int) $params->get('youtube_quota_reset_hour', 7)));
     }
@@ -88,7 +106,7 @@ class CwmyoutubeQuota
     public static function recordUsage(int $serverId, int $units): void
     {
         $data          = self::loadQuotaFile($serverId);
-        $currentDate   = self::currentQuotaDate();
+        $currentDate   = self::currentQuotaDate($serverId);
 
         if (($data['date'] ?? '') !== $currentDate) {
             $data = ['date' => $currentDate, 'used' => 0];
@@ -112,7 +130,7 @@ class CwmyoutubeQuota
     {
         $data = self::loadQuotaFile($serverId);
 
-        if (($data['date'] ?? '') !== self::currentQuotaDate()) {
+        if (($data['date'] ?? '') !== self::currentQuotaDate($serverId)) {
             return 0;
         }
 
@@ -130,7 +148,7 @@ class CwmyoutubeQuota
      */
     public static function getRemaining(int $serverId): int
     {
-        return max(0, self::getDailyBudget() - self::getUsedToday($serverId));
+        return max(0, self::getDailyBudget($serverId) - self::getUsedToday($serverId));
     }
 
     /**
@@ -154,13 +172,15 @@ class CwmyoutubeQuota
      * YouTube resets at midnight Pacific Time (UTC-7 / UTC-8 depending on DST).
      * The reset hour config lets sites align with the actual reset.
      *
+     * @param   int  $serverId  YouTube server record ID
+     *
      * @return  string  Date string like "2026-02-28"
      *
      * @since   10.1.0
      */
-    private static function currentQuotaDate(): string
+    private static function currentQuotaDate(int $serverId): string
     {
-        $resetHour = self::getResetHour();
+        $resetHour = self::getResetHour($serverId);
         $now       = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
 
         // If we haven't passed the reset hour yet, we're still on "yesterday's" quota day
@@ -236,5 +256,40 @@ class CwmyoutubeQuota
         }
 
         @file_put_contents(self::quotaFilePath($serverId), json_encode($data), LOCK_EX);
+    }
+
+    /**
+     * Load a YouTube server's params from the database (cached per-request).
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  Registry
+     *
+     * @since   10.1.0
+     */
+    private static function getServerParams(int $serverId): Registry
+    {
+        if (isset(self::$serverParamsCache[$serverId])) {
+            return self::$serverParamsCache[$serverId];
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('id') . ' = ' . $serverId);
+
+            $db->setQuery($query);
+            $result = $db->loadResult();
+
+            $params = $result ? new Registry($result) : new Registry();
+        } catch (\Exception $e) {
+            $params = new Registry();
+        }
+
+        self::$serverParamsCache[$serverId] = $params;
+
+        return $params;
     }
 }

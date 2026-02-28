@@ -249,12 +249,6 @@
         <field name="rate_limit_window" type="number" default="60" min="10" max="600"
                label="JBS_ADM_RATE_LIMIT_WINDOW"
                description="JBS_ADM_RATE_LIMIT_WINDOW_DESC" filter="int"/>
-        <field name="youtube_daily_quota" type="number" default="10000" min="100" max="1000000"
-               label="JBS_ADM_YOUTUBE_DAILY_QUOTA"
-               description="JBS_ADM_YOUTUBE_DAILY_QUOTA_DESC" filter="int"/>
-        <field name="youtube_quota_reset_hour" type="number" default="7" min="0" max="23"
-               label="JBS_ADM_YOUTUBE_QUOTA_RESET_HOUR"
-               description="JBS_ADM_YOUTUBE_QUOTA_RESET_HOUR_DESC" filter="int"/>
         <field name="enable_csp" type="radio" default="0"
                label="JBS_ADM_ENABLE_CSP"
                description="JBS_ADM_ENABLE_CSP_DESC"
