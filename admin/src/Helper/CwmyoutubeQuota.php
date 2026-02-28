@@ -1,0 +1,240 @@
+<?php
+
+/**
+ * Part of Proclaim Package
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ */
+
+namespace CWM\Component\Proclaim\Administrator\Helper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Component\ComponentHelper;
+
+/**
+ * Shared YouTube API quota tracker.
+ *
+ * Both the frontend live-status polling (mod_proclaim_youtube) and the
+ * backend platform-stats task (proclaim.platformstats) draw from the same
+ * YouTube Data API v3 daily quota.  This class provides a file-based
+ * counter that both systems read/write so neither can starve the other.
+ *
+ * Quota file location: JPATH_CACHE/mod_proclaim_youtube/quota_{serverId}.json
+ *
+ * YouTube API costs (v3):
+ *   search.list  = 100 units per call
+ *   videos.list  =   1 unit  per call
+ *   channels.list =  1 unit  per call
+ *
+ * @since  10.1.0
+ */
+class CwmyoutubeQuota
+{
+    /**
+     * Known API costs by operation type.
+     *
+     * @since  10.1.0
+     */
+    public const COST_SEARCH   = 100;
+    public const COST_VIDEOS   = 1;
+    public const COST_CHANNELS = 1;
+
+    /**
+     * Get the configured daily quota budget from the component parameters.
+     *
+     * Falls back to 10 000 (the YouTube default for new API keys).
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function getDailyBudget(): int
+    {
+        $params = ComponentHelper::getParams('com_proclaim');
+
+        return max(1, (int) $params->get('youtube_daily_quota', 10000));
+    }
+
+    /**
+     * Get the UTC hour when the quota resets (YouTube resets at midnight PT).
+     *
+     * @return  int  0-23
+     *
+     * @since   10.1.0
+     */
+    public static function getResetHour(): int
+    {
+        $params = ComponentHelper::getParams('com_proclaim');
+
+        return max(0, min(23, (int) $params->get('youtube_quota_reset_hour', 7)));
+    }
+
+    /**
+     * Record that API units were consumed for a given server.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     * @param   int  $units     Number of quota units consumed
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function recordUsage(int $serverId, int $units): void
+    {
+        $data          = self::loadQuotaFile($serverId);
+        $currentDate   = self::currentQuotaDate();
+
+        if (($data['date'] ?? '') !== $currentDate) {
+            $data = ['date' => $currentDate, 'used' => 0];
+        }
+
+        $data['used'] = ($data['used'] ?? 0) + max(0, $units);
+
+        self::saveQuotaFile($serverId, $data);
+    }
+
+    /**
+     * Get the number of units already consumed today.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function getUsedToday(int $serverId): int
+    {
+        $data = self::loadQuotaFile($serverId);
+
+        if (($data['date'] ?? '') !== self::currentQuotaDate()) {
+            return 0;
+        }
+
+        return (int) ($data['used'] ?? 0);
+    }
+
+    /**
+     * Get the number of units remaining today.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public static function getRemaining(int $serverId): int
+    {
+        return max(0, self::getDailyBudget() - self::getUsedToday($serverId));
+    }
+
+    /**
+     * Check whether enough quota remains for a planned operation.
+     *
+     * @param   int  $serverId    The YouTube server record ID
+     * @param   int  $neededUnits Units the operation will consume
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public static function hasQuota(int $serverId, int $neededUnits = 1): bool
+    {
+        return self::getRemaining($serverId) >= $neededUnits;
+    }
+
+    /**
+     * Compute the "quota date" string based on the configured reset hour.
+     *
+     * YouTube resets at midnight Pacific Time (UTC-7 / UTC-8 depending on DST).
+     * The reset hour config lets sites align with the actual reset.
+     *
+     * @return  string  Date string like "2026-02-28"
+     *
+     * @since   10.1.0
+     */
+    private static function currentQuotaDate(): string
+    {
+        $resetHour = self::getResetHour();
+        $now       = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+
+        // If we haven't passed the reset hour yet, we're still on "yesterday's" quota day
+        if ((int) $now->format('G') < $resetHour) {
+            $now = $now->modify('-1 day');
+        }
+
+        return $now->format('Y-m-d');
+    }
+
+    /**
+     * Resolve the path to a server's quota file.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    private static function quotaFilePath(int $serverId): string
+    {
+        return JPATH_CACHE . '/mod_proclaim_youtube/quota_' . $serverId . '.json';
+    }
+
+    /**
+     * Load the quota data from the file.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  array{date: string, used: int}
+     *
+     * @since   10.1.0
+     */
+    private static function loadQuotaFile(int $serverId): array
+    {
+        $file = self::quotaFilePath($serverId);
+
+        if (!file_exists($file)) {
+            return ['date' => '', 'used' => 0];
+        }
+
+        $raw = @file_get_contents($file);
+
+        if ($raw === false) {
+            return ['date' => '', 'used' => 0];
+        }
+
+        $data = json_decode($raw, true);
+
+        if (!\is_array($data)) {
+            return ['date' => '', 'used' => 0];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Persist the quota data to disk.
+     *
+     * @param   int    $serverId  Server ID
+     * @param   array  $data      Quota data
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private static function saveQuotaFile(int $serverId, array $data): void
+    {
+        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
+
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        @file_put_contents(self::quotaFilePath($serverId), json_encode($data), LOCK_EX);
+    }
+}

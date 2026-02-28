@@ -20,6 +20,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Google;
@@ -443,6 +444,21 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => true, 'synced' => 0, 'remaining' => 0, 'errors' => []];
         }
 
+        // Estimate quota cost: 1 unit per videos.list call (50 IDs each)
+        $chunks        = array_chunk(array_keys($videoMap), 50);
+        $estimatedCost = \count($chunks) * CwmyoutubeQuota::COST_VIDEOS;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $estimatedCost)) {
+            $remaining = CwmyoutubeQuota::getRemaining($serverId);
+
+            return [
+                'success'   => true,
+                'synced'    => 0,
+                'remaining' => $totalMedia,
+                'errors'    => ['YouTube: daily quota budget exhausted (' . $remaining . ' units remaining, need ' . $estimatedCost . ')'],
+            ];
+        }
+
         $synced = 0;
         $errors = [];
 
@@ -453,14 +469,18 @@ class CWMAddonYoutube extends CWMAddon
 
             $youtube = new YouTube($client);
 
-            // Batch: YouTube allows up to 50 IDs per call
-            $chunks = array_chunk(array_keys($videoMap), 50);
-
             foreach ($chunks as $idBatch) {
+                // Re-check quota before each batch in case frontend used some
+                if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+                    $errors[] = 'YouTube: quota budget reached mid-sync, stopping';
+                    break;
+                }
+
                 try {
                     $response = @$youtube->videos->listVideos('statistics', [
                         'id' => implode(',', $idBatch),
                     ]);
+                    CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
                     foreach ($response->items as $item) {
                         $vid   = $item->id;
