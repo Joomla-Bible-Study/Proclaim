@@ -56,6 +56,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                  data-current-video="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                  data-is-live="<?php echo $isLive ? '1' : '0'; ?>"
                  data-is-upcoming="<?php echo $isUpcoming ? '1' : '0'; ?>"
+                 data-scheduled-start="<?php echo htmlspecialchars($video['scheduledStartTime'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                  data-token="<?php echo htmlspecialchars($statusToken, ENT_QUOTES, 'UTF-8'); ?>"
                  data-ajax-url="<?php echo htmlspecialchars($ajaxUrl, ENT_QUOTES, 'UTF-8'); ?>"
                  data-label-live="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'), ENT_QUOTES, 'UTF-8'); ?>"
@@ -169,6 +170,9 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     $basePollMs       = $basePollInterval * 1000;
     // Max backoff: 10 minutes
     $maxPollMs = 600000;
+    // Configurable poll window: hours before/after the scheduled event start
+    $pollWindowBefore = (int) $params->get('poll_window_before', 2);
+    $pollWindowAfter  = (int) $params->get('poll_window_after', 1);
 
     $inlineScript = <<<JS
 (function() {
@@ -188,8 +192,24 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     let unchangedCount = 0;
     const ajaxUrl = badgeEl.dataset.ajaxUrl;
 
+    // Poll window: only poll within N hours before / after the scheduled start
+    const pollWindowBeforeMs = {$pollWindowBefore} * 3600000;
+    const pollWindowAfterMs = {$pollWindowAfter} * 3600000;
+    let scheduledStart = badgeEl.dataset.scheduledStart ? new Date(badgeEl.dataset.scheduledStart).getTime() : 0;
+
+    function isWithinPollWindow() {
+        // Always poll if already live (status transitions need detection)
+        if (wasLive) return true;
+        // If no scheduled start time is known, poll normally (can't gate without data)
+        if (!scheduledStart) return true;
+        var now = Date.now();
+        var windowOpen = scheduledStart - pollWindowBeforeMs;
+        var windowClose = scheduledStart + pollWindowAfterMs;
+        return now >= windowOpen && now <= windowClose;
+    }
+
     function updateBadge(isLive, isUpcoming) {
-        let html = '';
+        var html = '';
         if (isLive) {
             html = '<span class="badge bg-danger"><span class="fas fa-circle me-1" aria-hidden="true"></span>' + labelLive + '</span>';
         } else if (isUpcoming) {
@@ -199,21 +219,48 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     }
 
     function getBackoffInterval() {
-        // Double the interval for every 3 consecutive unchanged polls, up to maxPollInterval
         var multiplier = Math.pow(2, Math.floor(unchangedCount / 3));
         return Math.min(basePollInterval * multiplier, maxPollInterval);
     }
 
+    function getWindowOpenDelay() {
+        // If outside the poll window, return ms until the window opens
+        if (!scheduledStart) return 0;
+        var windowOpen = scheduledStart - pollWindowBeforeMs;
+        var delay = windowOpen - Date.now();
+        return delay > 0 ? delay : 0;
+    }
+
     function schedulePoll() {
         currentInterval = getBackoffInterval();
+        if (!isWithinPollWindow()) {
+            // Schedule to wake up when the poll window opens
+            var delay = getWindowOpenDelay();
+            if (delay > 0) {
+                pollTimer = setTimeout(checkStatus, delay);
+                return;
+            }
+            // Window has closed — stop polling entirely
+            return;
+        }
         pollTimer = setTimeout(checkStatus, currentInterval);
     }
 
     function checkStatus() {
+        if (!isWithinPollWindow()) {
+            schedulePoll();
+            return;
+        }
+
         fetch(ajaxUrl, { method: 'GET', headers: { 'Accept': 'application/json' } })
         .then(function(response) { return response.json(); })
         .then(function(data) {
             if (data.success) {
+                // Update scheduledStartTime if the server returns a newer value
+                if (data.scheduledStartTime) {
+                    scheduledStart = new Date(data.scheduledStartTime).getTime();
+                }
+
                 var isLive = data.isLive;
                 var isUpcoming = data.isUpcoming;
                 if (isLive !== wasLive || isUpcoming !== wasUpcoming) {
@@ -243,7 +290,17 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         });
     }
 
-    var pollTimer = setTimeout(checkStatus, currentInterval);
+    // Start: if within window poll immediately, otherwise schedule for window open
+    var pollTimer;
+    if (isWithinPollWindow()) {
+        pollTimer = setTimeout(checkStatus, currentInterval);
+    } else {
+        var delay = getWindowOpenDelay();
+        if (delay > 0) {
+            pollTimer = setTimeout(checkStatus, delay);
+        }
+        // else: window has already closed, no polling needed
+    }
 
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
@@ -251,7 +308,11 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         } else {
             unchangedCount = 0;
             currentInterval = basePollInterval;
-            checkStatus();
+            if (isWithinPollWindow()) {
+                checkStatus();
+            } else {
+                schedulePoll();
+            }
         }
     });
 })();

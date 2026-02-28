@@ -157,6 +157,10 @@ class YoutubeHelper implements DatabaseAwareInterface
                     $video['isLive']     = $decoded['isLive'] ?? false;
                     $video['isUpcoming'] = $decoded['isUpcoming'] ?? false;
 
+                    if (!empty($decoded['scheduledStartTime'])) {
+                        $video['scheduledStartTime'] = $decoded['scheduledStartTime'];
+                    }
+
                     return $video;
                 }
             }
@@ -176,12 +180,30 @@ class YoutubeHelper implements DatabaseAwareInterface
             $video['isLive']     = $result['isLive'] ?? false;
             $video['isUpcoming'] = $result['isUpcoming'] ?? false;
 
+            if (!empty($result['scheduledStartTime'])) {
+                $video['scheduledStartTime'] = $result['scheduledStartTime'];
+                self::storeScheduledStart($serverId, $video['videoId'], $result['scheduledStartTime']);
+            } elseif (!empty($video['videoId'])) {
+                // Try persistent file cache if API didn't return it
+                $stored = self::getStoredScheduledStart($serverId, $video['videoId']);
+
+                if ($stored !== '') {
+                    $video['scheduledStartTime'] = $stored;
+                }
+            }
+
             // Cache the status result for 60 seconds
+            $cacheData = ['isLive' => $video['isLive'], 'isUpcoming' => $video['isUpcoming']];
+
+            if (!empty($video['scheduledStartTime'])) {
+                $cacheData['scheduledStartTime'] = $video['scheduledStartTime'];
+            }
+
             try {
                 $cache = Factory::getContainer()->get('cache.output');
                 $cache->setLifeTime(1); // 1 minute
                 $cache->store(
-                    json_encode(['isLive' => $video['isLive'], 'isUpcoming' => $video['isUpcoming']]),
+                    json_encode($cacheData),
                     $cacheKey,
                     'mod_proclaim_youtube_status'
                 );
@@ -237,6 +259,26 @@ class YoutubeHelper implements DatabaseAwareInterface
                     if (!empty($video['videoId']) && !\in_array($video['videoId'], $excludeVideos, true)) {
                         $video['isLive']     = false;
                         $video['isUpcoming'] = true;
+
+                        // Try persistent file cache first to avoid an API call
+                        $stored = self::getStoredScheduledStart($serverId, $video['videoId']);
+
+                        if ($stored !== '') {
+                            $video['scheduledStartTime'] = $stored;
+                        } else {
+                            // Fetch scheduledStartTime via Videos API for poll-window gating
+                            $statusInput = new Input([
+                                'server_id' => $serverId,
+                                'video_id'  => $video['videoId'],
+                            ]);
+
+                            $statusResult = $youtube->getVideoStatus($statusInput);
+
+                            if (!empty($statusResult['scheduledStartTime'])) {
+                                $video['scheduledStartTime'] = $statusResult['scheduledStartTime'];
+                                self::storeScheduledStart($serverId, $video['videoId'], $statusResult['scheduledStartTime']);
+                            }
+                        }
 
                         return $video;
                     }
@@ -439,6 +481,18 @@ class YoutubeHelper implements DatabaseAwareInterface
                     'isUpcoming' => $result['isUpcoming'] ?? false,
                     'videoId'    => $videoId,
                 ];
+
+                if (!empty($result['scheduledStartTime'])) {
+                    $statusResult['scheduledStartTime'] = $result['scheduledStartTime'];
+                    self::storeScheduledStart($serverId, $videoId, $result['scheduledStartTime']);
+                } elseif (!empty($videoId)) {
+                    // Try persistent file cache
+                    $stored = self::getStoredScheduledStart($serverId, $videoId);
+
+                    if ($stored !== '') {
+                        $statusResult['scheduledStartTime'] = $stored;
+                    }
+                }
             }
         }
 
@@ -562,5 +616,81 @@ class YoutubeHelper implements DatabaseAwareInterface
         } catch (\Exception $e) {
             return '';
         }
+    }
+
+    /**
+     * Store a scheduled start time in a persistent file cache.
+     *
+     * Joomla's output cache can be flushed at any time, and there may not be
+     * a linked Proclaim media record when an upcoming stream is first detected.
+     * This file-based store survives cache clears and persists for 24 hours.
+     *
+     * @param   int     $serverId           Server ID
+     * @param   string  $videoId            YouTube video ID
+     * @param   string  $scheduledStartTime ISO 8601 scheduled start time
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function storeScheduledStart(int $serverId, string $videoId, string $scheduledStartTime): void
+    {
+        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
+
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $file = $dir . '/schedule_' . $serverId . '_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $videoId) . '.json';
+        $data = [
+            'scheduledStartTime' => $scheduledStartTime,
+            'storedAt'           => time(),
+        ];
+
+        @file_put_contents($file, json_encode($data), LOCK_EX);
+    }
+
+    /**
+     * Retrieve a cached scheduled start time from the persistent file store.
+     *
+     * Returns the ISO 8601 time string if found and not expired (24h TTL),
+     * or an empty string if missing/expired.
+     *
+     * @param   int     $serverId  Server ID
+     * @param   string  $videoId   YouTube video ID
+     *
+     * @return  string  Scheduled start time or empty string
+     *
+     * @since   10.1.0
+     */
+    public static function getStoredScheduledStart(int $serverId, string $videoId): string
+    {
+        $file = JPATH_CACHE . '/mod_proclaim_youtube/schedule_'
+            . $serverId . '_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $videoId) . '.json';
+
+        if (!file_exists($file)) {
+            return '';
+        }
+
+        $raw = @file_get_contents($file);
+
+        if ($raw === false) {
+            return '';
+        }
+
+        $data = json_decode($raw, true);
+
+        if (!$data || empty($data['scheduledStartTime'])) {
+            return '';
+        }
+
+        // 24-hour TTL
+        if (isset($data['storedAt']) && (time() - $data['storedAt']) > 86400) {
+            @unlink($file);
+
+            return '';
+        }
+
+        return $data['scheduledStartTime'];
     }
 }
