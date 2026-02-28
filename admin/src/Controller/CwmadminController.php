@@ -2791,9 +2791,11 @@ class CwmadminController extends FormController
         session_write_close();
 
         try {
-            $admin  = Cwmparams::getAdmin();
-            $params = $admin->params;
-            $apiKey = (string) $params->get('api_bible_api_key', '');
+            // Prefer the live key from the form (user may not have saved yet)
+            $liveKey = $app->getInput()->getString('api_key', '');
+            $admin   = Cwmparams::getAdmin();
+            $params  = $admin->params;
+            $apiKey  = !empty($liveKey) ? $liveKey : (string) $params->get('api_bible_api_key', '');
 
             if (empty($apiKey)) {
                 echo json_encode([

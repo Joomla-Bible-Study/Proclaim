@@ -253,8 +253,13 @@ document.addEventListener('DOMContentLoaded', () => {
             syncBtn.disabled = true;
             statusEl.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.syncing}`;
 
+            // Send the live API key so sync works before the form is saved
+            const keyInput = document.querySelector('input[name="jform[params][api_bible_api_key]"]');
+            const liveKey = keyInput ? keyInput.value.trim() : '';
+            const keyParam = liveKey ? `&api_key=${encodeURIComponent(liveKey)}` : '';
+
             window.ProclaimFetch.fetchJson(
-                `${baseUrl}syncApiBibleTranslationsXHR&${token}=1`,
+                `${baseUrl}syncApiBibleTranslationsXHR&${token}=1${keyParam}`,
                 {},
                 { timeout: 30000, retries: 1 },
             )
@@ -548,6 +553,181 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Refresh the "Default Bible Version" dropdown from the current allTranslations data.
+     *
+     * Rebuilds `<optgroup>` elements grouped by language, preserving the current
+     * selected value. Also syncs the Choices.js fancy-select wrapper if present.
+     */
+    function refreshDefaultVersionDropdown() {
+        const select = document.getElementById('jform_params_default_bible_version');
+
+        if (!select || allTranslations.length === 0) {
+            return;
+        }
+
+        const currentValue = select.value;
+
+        // Read live form state to determine which sources are servable
+        const gdprRadio = document.querySelector('input[name="jform[params][gdpr_mode]"]:checked');
+        const isGdprEnabled = gdprRadio ? gdprRadio.value === '1' : false;
+
+        const getBibleRadio = document.querySelector('input[name="jform[params][provider_getbible]"]:checked');
+        const getBibleOn = getBibleRadio ? getBibleRadio.value === '1' : true;
+
+        const apiBibleRadio = document.querySelector('input[name="jform[params][provider_api_bible]"]:checked');
+        const apiBibleOn = apiBibleRadio ? apiBibleRadio.value === '1' : false;
+
+        const apiKeyInput = document.querySelector('input[name="jform[params][api_bible_api_key]"]');
+        const hasApiKey = apiKeyInput ? apiKeyInput.value.trim() !== '' : false;
+
+        const enabledSources = [];
+
+        if (!isGdprEnabled && getBibleOn) {
+            enabledSources.push('getbible');
+        }
+
+        if (!isGdprEnabled && apiBibleOn && hasApiKey) {
+            enabledSources.push('api_bible');
+        }
+
+        // Filter to servable translations (installed OR from an enabled provider)
+        const servable = allTranslations.filter((t) => {
+            const installed = parseInt(t.installed, 10) === 1;
+
+            if (installed) {
+                return true;
+            }
+
+            return enabledSources.includes(t.source || 'getbible');
+        });
+
+        // Group by language, admin language first
+        const groups = new Map();
+
+        servable.forEach((t) => {
+            const langCode = t.language ? t.language.substring(0, 2).toLowerCase() : '';
+            const langName = getLanguageName(t.language);
+
+            if (!groups.has(langName)) {
+                groups.set(langName, { code: langCode, items: [] });
+            }
+
+            const installed = parseInt(t.installed, 10) === 1;
+            const label = `${t.name} (${t.abbreviation.toUpperCase()})${installed ? ' \u2713' : ''}`;
+            groups.get(langName).items.push({ value: t.abbreviation, label });
+        });
+
+        // Sort groups: admin language first, then alphabetical
+        const sortedKeys = [...groups.keys()].sort((a, b) => {
+            const aCode = groups.get(a).code;
+            const bCode = groups.get(b).code;
+            const aIsNative = aCode === adminLanguage;
+            const bIsNative = bCode === adminLanguage;
+
+            if (aIsNative && !bIsNative) {
+                return -1;
+            }
+
+            if (!aIsNative && bIsNative) {
+                return 1;
+            }
+
+            return a.localeCompare(b);
+        });
+
+        // Rebuild <select> with <optgroup> elements
+        select.innerHTML = '';
+
+        // Add "- Select -" placeholder
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = `- ${Joomla.Text._('JSELECT') || 'Select'} -`;
+        select.appendChild(placeholder);
+
+        sortedKeys.forEach((langName) => {
+            const group = groups.get(langName);
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = langName;
+
+            group.items.sort((a, b) => a.label.localeCompare(b.label));
+
+            group.items.forEach((item) => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = item.label;
+
+                if (item.value === currentValue) {
+                    option.selected = true;
+                }
+
+                optgroup.appendChild(option);
+            });
+
+            select.appendChild(optgroup);
+        });
+
+        // Restore the selected value if it still exists
+        if (currentValue && select.querySelector(`option[value="${CSS.escape(currentValue)}"]`)) {
+            select.value = currentValue;
+        }
+
+        // Sync the Choices.js fancy-select wrapper if present
+        const fancySelect = select.closest('joomla-field-fancy-select');
+
+        if (fancySelect && fancySelect.choicesInstance) {
+            const ci = fancySelect.choicesInstance;
+            const newValue = select.value;
+
+            ci.clearStore();
+
+            const choices = Array.from(select.options).map((o) => ({
+                value: o.value,
+                label: o.textContent,
+                selected: o.selected,
+                placeholder: o.value === '',
+            }));
+
+            // Choices.js supports optgroup via grouping — rebuild from optgroups
+            const optgroups = select.querySelectorAll('optgroup');
+
+            if (optgroups.length > 0) {
+                const groupedChoices = [];
+
+                // Add placeholder option first (outside any group)
+                if (placeholder.value === '' && !placeholder.parentElement.tagName.match(/optgroup/i)) {
+                    groupedChoices.push({
+                        value: '',
+                        label: placeholder.textContent,
+                        selected: select.value === '',
+                        placeholder: true,
+                    });
+                }
+
+                optgroups.forEach((og) => {
+                    const groupItems = Array.from(og.options).map((o) => ({
+                        value: o.value,
+                        label: o.textContent,
+                        selected: o.selected,
+                    }));
+
+                    groupedChoices.push({
+                        label: og.label,
+                        choices: groupItems,
+                    });
+                });
+
+                ci.setChoices(groupedChoices, 'value', 'label', true);
+            } else {
+                ci.setChoices(choices, 'value', 'label', true);
+            }
+
+            if (newValue) {
+                ci.setChoiceByValue(newValue);
+            }
+        }
+    }
+
+    /**
      * Fetch and render the translations table.
      *
      * @param {boolean} silent  When true, skip the loading spinner (used after
@@ -594,6 +774,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Apply current filters and render
                 applyFilters();
+
+                // Refresh the Default Bible Version dropdown with current data
+                refreshDefaultVersionDropdown();
 
                 // Handle bundled auto-downloads
                 handleBundledAutoDownload(data.translations);

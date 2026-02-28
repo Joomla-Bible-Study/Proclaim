@@ -290,6 +290,7 @@
                filter="int"/>
         <field name="default_bible_version" type="BibleTranslation" default="kjv"
                servable_only="true"
+               layout="joomla.form.field.list-fancy-select"
                label="JBS_ADM_DEFAULT_BIBLE_VERSION"
                description="JBS_ADM_DEFAULT_BIBLE_VERSION_DESC"/>
 
