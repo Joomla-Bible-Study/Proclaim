@@ -163,6 +163,12 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php
     $wa = $app->getDocument()->getWebAssetManager();
+    $basePollInterval = (int) $params->get('poll_interval', 120);
+    // Clamp to minimum 60 seconds to protect API quota
+    $basePollInterval = max(60, $basePollInterval);
+    $basePollMs       = $basePollInterval * 1000;
+    // Max backoff: 10 minutes
+    $maxPollMs = 600000;
 
     $inlineScript = <<<JS
 (function() {
@@ -176,7 +182,10 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     const labelLive = badgeEl.dataset.labelLive;
     const labelUpcoming = badgeEl.dataset.labelUpcoming;
 
-    const pollInterval = wasUpcoming ? 30000 : 60000;
+    const basePollInterval = {$basePollMs};
+    const maxPollInterval = {$maxPollMs};
+    let currentInterval = basePollInterval;
+    let unchangedCount = 0;
     const ajaxUrl = badgeEl.dataset.ajaxUrl;
 
     function updateBadge(isLive, isUpcoming) {
@@ -189,14 +198,26 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         badgeEl.innerHTML = html;
     }
 
+    function getBackoffInterval() {
+        // Double the interval for every 3 consecutive unchanged polls, up to maxPollInterval
+        var multiplier = Math.pow(2, Math.floor(unchangedCount / 3));
+        return Math.min(basePollInterval * multiplier, maxPollInterval);
+    }
+
+    function schedulePoll() {
+        currentInterval = getBackoffInterval();
+        pollTimer = setTimeout(checkStatus, currentInterval);
+    }
+
     function checkStatus() {
         fetch(ajaxUrl, { method: 'GET', headers: { 'Accept': 'application/json' } })
         .then(function(response) { return response.json(); })
         .then(function(data) {
             if (data.success) {
-                const isLive = data.isLive;
-                const isUpcoming = data.isUpcoming;
+                var isLive = data.isLive;
+                var isUpcoming = data.isUpcoming;
                 if (isLive !== wasLive || isUpcoming !== wasUpcoming) {
+                    unchangedCount = 0;
                     updateBadge(isLive, isUpcoming);
                     if (isLive && !wasLive) {
                         wasLive = isLive;
@@ -205,25 +226,32 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                         return;
                     }
                     if (!isLive && !isUpcoming) {
-                        clearInterval(pollTimer);
                         return;
                     }
                     wasLive = isLive;
                     wasUpcoming = isUpcoming;
+                } else {
+                    unchangedCount++;
                 }
+                schedulePoll();
             }
         })
-        .catch(function(error) { console.log('YouTube status check failed:', error); });
+        .catch(function(error) {
+            console.log('YouTube status check failed:', error);
+            unchangedCount++;
+            schedulePoll();
+        });
     }
 
-    let pollTimer = setInterval(checkStatus, pollInterval);
+    var pollTimer = setTimeout(checkStatus, currentInterval);
 
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            clearInterval(pollTimer);
+            clearTimeout(pollTimer);
         } else {
+            unchangedCount = 0;
+            currentInterval = basePollInterval;
             checkStatus();
-            pollTimer = setInterval(checkStatus, pollInterval);
         }
     });
 })();
