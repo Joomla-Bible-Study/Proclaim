@@ -187,6 +187,26 @@
                        description="MOD_PROCLAIM_YOUTUBE_POLL_INTERVAL_DESC"
                        filter="integer"
                        showon="show_live_badge:1"/>
+
+                <field name="poll_window_before"
+                       type="number"
+                       default="2"
+                       min="1"
+                       max="24"
+                       label="MOD_PROCLAIM_YOUTUBE_POLL_WINDOW_BEFORE"
+                       description="MOD_PROCLAIM_YOUTUBE_POLL_WINDOW_BEFORE_DESC"
+                       filter="integer"
+                       showon="show_live_badge:1"/>
+
+                <field name="poll_window_after"
+                       type="number"
+                       default="1"
+                       min="1"
+                       max="12"
+                       label="MOD_PROCLAIM_YOUTUBE_POLL_WINDOW_AFTER"
+                       description="MOD_PROCLAIM_YOUTUBE_POLL_WINDOW_AFTER_DESC"
+                       filter="integer"
+                       showon="show_live_badge:1"/>
             </fieldset>
         </fields>
     </config>
