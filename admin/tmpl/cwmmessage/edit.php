@@ -259,7 +259,7 @@ echo Route::_(
                 <div class="col-lg-7">
                     <div>
                         <?php echo $this->form->renderField('studyintro'); ?>
-                        <?php echo $this->form->renderField('studytext'); ?>
+                        <?php echo $this->form->renderFieldset('scripture'); ?>
                     </div>
                 </div>
                 <?php
@@ -283,12 +283,14 @@ echo Route::_(
 
             </div>
         </div>
-        <!-- Scripture References — full width below the editor/sidebar columns -->
+        <?php if (!$this->simple->mode) { ?>
+        <!-- Study Text — full width below the editor/sidebar columns -->
         <div class="row mt-3">
             <div class="col-12">
-                <?php echo $this->form->renderFieldset('scripture'); ?>
+                <?php echo $this->form->renderField('studytext'); ?>
             </div>
         </div>
+        <?php } ?>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
