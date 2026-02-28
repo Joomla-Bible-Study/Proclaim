@@ -17,6 +17,7 @@ namespace CWM\Module\ProclaimYoutube\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseAwareInterface;
@@ -168,6 +169,11 @@ class YoutubeHelper implements DatabaseAwareInterface
             // Cache not available, continue without it
         }
 
+        // Quota gate: videos.list costs 1 unit
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            return $video;
+        }
+
         $youtube     = new CWMAddonYoutube();
         $statusInput = new Input([
             'server_id' => $serverId,
@@ -175,6 +181,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->getVideoStatus($statusInput);
+        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
         if ($result['success']) {
             $video['isLive']     = $result['isLive'] ?? false;
@@ -229,6 +236,11 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     private function fetchLiveVideo(CWMAddonYoutube $youtube, int $serverId, bool $showUpcoming = true, array $excludeVideos = []): ?array
     {
+        // Quota gate: search.list costs 100 units
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+            return null;
+        }
+
         // Check for currently live - never exclude live videos
         $input = new Input([
             'server_id'   => $serverId,
@@ -237,6 +249,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->fetchLiveVideos($input);
+        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
         if ($result['success'] && !empty($result['videos'])) {
             // Live videos are never excluded - return the first one
@@ -249,9 +262,15 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Check for upcoming only if enabled
         if ($showUpcoming) {
+            // Second search call — check quota again
+            if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+                return null;
+            }
+
             $input->set('event_type', 'upcoming');
             $input->set('max_results', 10);
             $result = $youtube->fetchLiveVideos($input);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 // Filter out excluded videos for upcoming streams
@@ -265,7 +284,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
                         if ($stored !== '') {
                             $video['scheduledStartTime'] = $stored;
-                        } else {
+                        } elseif (CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
                             // Fetch scheduledStartTime via Videos API for poll-window gating
                             $statusInput = new Input([
                                 'server_id' => $serverId,
@@ -273,6 +292,7 @@ class YoutubeHelper implements DatabaseAwareInterface
                             ]);
 
                             $statusResult = $youtube->getVideoStatus($statusInput);
+                            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
                             if (!empty($statusResult['scheduledStartTime'])) {
                                 $video['scheduledStartTime'] = $statusResult['scheduledStartTime'];
@@ -464,15 +484,15 @@ class YoutubeHelper implements DatabaseAwareInterface
         $youtube      = new CWMAddonYoutube();
         $statusResult = null;
 
-        // If we have a specific video ID, check its status directly
-        // This is more reliable than the search API for status transitions
-        if (!empty($videoId)) {
+        // If we have a specific video ID, check its status directly (1 unit)
+        if (!empty($videoId) && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
             $statusInput = new Input([
                 'server_id' => $serverId,
                 'video_id'  => $videoId,
             ]);
 
             $result = $youtube->getVideoStatus($statusInput);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
             if ($result['success']) {
                 $statusResult = [
@@ -485,7 +505,7 @@ class YoutubeHelper implements DatabaseAwareInterface
                 if (!empty($result['scheduledStartTime'])) {
                     $statusResult['scheduledStartTime'] = $result['scheduledStartTime'];
                     self::storeScheduledStart($serverId, $videoId, $result['scheduledStartTime']);
-                } elseif (!empty($videoId)) {
+                } else {
                     // Try persistent file cache
                     $stored = self::getStoredScheduledStart($serverId, $videoId);
 
@@ -494,10 +514,25 @@ class YoutubeHelper implements DatabaseAwareInterface
                     }
                 }
             }
+        } elseif (!empty($videoId)) {
+            // Quota exhausted — return last known status without API call
+            $stored = self::getStoredScheduledStart($serverId, $videoId);
+
+            $statusResult = [
+                'success'       => true,
+                'isLive'        => false,
+                'isUpcoming'    => true,
+                'videoId'       => $videoId,
+                'quotaExceeded' => true,
+            ];
+
+            if ($stored !== '') {
+                $statusResult['scheduledStartTime'] = $stored;
+            }
         }
 
-        if ($statusResult === null) {
-            // Fall back to searching for live/upcoming videos
+        // Fall back to search API only if no video ID was given (100 units each)
+        if ($statusResult === null && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
             // Check for currently live videos
             $liveInput = new Input([
                 'server_id'   => $serverId,
@@ -506,6 +541,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($liveInput);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];
@@ -519,7 +555,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        if ($statusResult === null) {
+        if ($statusResult === null && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
             // Check for upcoming videos
             $upcomingInput = new Input([
                 'server_id'   => $serverId,
@@ -528,6 +564,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($upcomingInput);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];
@@ -541,7 +578,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        // No live or upcoming video
+        // No live or upcoming video (or quota exhausted without a video ID)
         if ($statusResult === null) {
             $statusResult = [
                 'success'    => true,
@@ -550,6 +587,9 @@ class YoutubeHelper implements DatabaseAwareInterface
                 'videoId'    => '',
             ];
         }
+
+        // Include remaining quota so JS can decide whether to continue polling
+        $statusResult['quotaRemaining'] = CwmyoutubeQuota::getRemaining($serverId);
 
         // Cache the result for 60 seconds to avoid redundant API calls
         try {

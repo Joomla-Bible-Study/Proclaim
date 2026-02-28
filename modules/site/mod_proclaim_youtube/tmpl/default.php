@@ -261,6 +261,12 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                     scheduledStart = new Date(data.scheduledStartTime).getTime();
                 }
 
+                // Stop polling if daily quota is exhausted
+                if (typeof data.quotaRemaining === 'number' && data.quotaRemaining <= 0) {
+                    console.log('YouTube API quota exhausted — pausing polling');
+                    return;
+                }
+
                 var isLive = data.isLive;
                 var isUpcoming = data.isUpcoming;
                 if (isLive !== wasLive || isUpcoming !== wasUpcoming) {
