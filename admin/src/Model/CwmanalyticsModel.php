@@ -160,7 +160,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' ON ' . $db->quoteName('m2.id') . ' = ' . $db->quoteName('ps.media_id')
                 )
                 ->where($db->quoteName('m2.content_origin') . ' = 0')
-                ->where($db->quoteName('m2.published') . ' = 1');
+                ->whereIn($db->quoteName('m2.published'), [1, 2]);
 
             if ($locationId > 0 || !empty($accessibleIds)) {
                 $q3->leftJoin(
@@ -862,7 +862,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ? ' AND EXISTS (SELECT 1 FROM ' . $db->quoteName('#__bsms_studies') . ' sl2'
                   . ' WHERE sl2.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                   . ' AND sl2.' . $db->quoteName('location_id') . ' = ' . (int) $locationId
-                  . ' AND sl2.' . $db->quoteName('published') . ' = 1)'
+                  . ' AND sl2.' . $db->quoteName('published') . ' IN (1, 2))'
                 : '';
 
             // Raw SQL avoids query-builder quirks with correlated scalar subqueries.
@@ -1114,7 +1114,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
                 )
                 ->where($db->quoteName('m.study_id') . ' = ' . (int) $studyId)
-                ->where($db->quoteName('m.published') . ' = 1')
+                ->whereIn($db->quoteName('m.published'), [1, 2])
                 ->group($db->quoteName('m.id'))
                 ->order($db->quoteName('m.ordering') . ' ASC');
             $db->setQuery($query);
