@@ -777,6 +777,109 @@ class Cwmrestore
     }
 
     /**
+     * Correct AUTO_INCREMENT counters on all Proclaim tables.
+     *
+     * After a database restore the AUTO_INCREMENT value embedded in the
+     * backup's CREATE TABLE may be lower than the actual MAX(id) — especially
+     * for preserved tables like bible_verses that survive the DROP phase.
+     * This causes duplicate-key errors on the next INSERT.
+     *
+     * @return int Number of tables whose AUTO_INCREMENT was corrected
+     *
+     * @since 10.1.0
+     */
+    public static function correctAutoIncrements(): int
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $tables  = CwmdbHelper::getObjects();
+        $prefix  = $db->getPrefix();
+        $fixed   = 0;
+
+        foreach ($tables as $tableInfo) {
+            $abstractName = $tableInfo['name'];                       // e.g. #__bsms_studies
+            $realName     = str_replace('#__', $prefix, $abstractName);
+
+            try {
+                // Check whether the table has an `id` column
+                $db->setQuery('SHOW COLUMNS FROM ' . $db->quoteName($abstractName) . ' LIKE ' . $db->quote('id'));
+                $column = $db->loadObject();
+
+                if (!$column) {
+                    continue;
+                }
+
+                // Delete id=0 rows — these are restore artifacts, not real content.
+                // Joomla uses id=0 as the "new record" sentinel in forms, so a
+                // persisted row with id=0 causes conflicts and silent overwrites.
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName($abstractName))
+                    ->where($db->quoteName('id') . ' = 0');
+                $db->setQuery($query);
+                $db->execute();
+                $deletedZero = $db->getAffectedRows();
+
+                if ($deletedZero > 0) {
+                    Log::add(
+                        \sprintf('Deleted %d id=0 row(s) from %s', $deletedZero, $abstractName),
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                    $fixed++;
+                }
+
+                // Get current AUTO_INCREMENT from table status
+                $db->setQuery(
+                    'SHOW TABLE STATUS WHERE ' . $db->quoteName('Name') . ' = ' . $db->quote($realName)
+                );
+                $status = $db->loadObject();
+
+                if (!$status || $status->Auto_increment === null) {
+                    continue;
+                }
+
+                $currentAuto = (int) $status->Auto_increment;
+
+                // Get actual maximum ID in the table
+                $query = $db->getQuery(true);
+                $query->select('MAX(' . $db->quoteName('id') . ')')
+                    ->from($db->quoteName($abstractName));
+                $db->setQuery($query);
+                $maxId = (int) $db->loadResult();
+
+                // Fix if the counter is stale (max ID >= current auto_increment)
+                if ($maxId >= $currentAuto) {
+                    $newAuto = $maxId + 1;
+                    $db->setQuery(
+                        'ALTER TABLE ' . $db->quoteName($abstractName) . ' AUTO_INCREMENT = ' . $newAuto
+                    );
+                    $db->execute();
+                    $fixed++;
+
+                    Log::add(
+                        \sprintf(
+                            'Corrected AUTO_INCREMENT on %s: was %d, MAX(id)=%d, set to %d',
+                            $abstractName,
+                            $currentAuto,
+                            $maxId,
+                            $newAuto
+                        ),
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::add(
+                    'AUTO_INCREMENT check failed for ' . $abstractName . ': ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+        }
+
+        return $fixed;
+    }
+
+    /**
      * Verify that component config and tasks were restored successfully
      *
      * @return array ['config' => bool, 'tasks' => int, 'tables' => int]

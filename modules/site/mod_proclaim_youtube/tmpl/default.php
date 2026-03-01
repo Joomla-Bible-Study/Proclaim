@@ -113,7 +113,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         <?php if (!empty($matchedMessage) && !empty($matchedMessage->id)) : ?>
             <div class="mod-proclaim-youtube__message-link mt-3">
                 <?php $messageRoute = CwmrouteHelper::getMessageRoute((int) $matchedMessage->id); ?>
-                <a href="<?php echo Route::_($messageRoute); ?>" class="btn btn-outline-primary btn-sm">
+                <a href="<?php echo Route::_($messageRoute); ?>" class="button button-2">
                     <span class="icon-book me-1" aria-hidden="true"></span>
                     <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_VIEW_MESSAGE'); ?>
                 </a>

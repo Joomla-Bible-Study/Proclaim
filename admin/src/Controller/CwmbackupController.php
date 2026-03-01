@@ -595,6 +595,9 @@ class CwmbackupController extends FormController
             // Run post-restore data fixes (seed bible translations, template defaults, etc.)
             $this->runPostRestoreDataFixes();
 
+            // Correct AUTO_INCREMENT counters that may be stale from backup
+            $autoIncrementFixes = Cwmrestore::correctAutoIncrements();
+
             // Fix assets using the centralised Cwmassets engine (unless skipped for testing)
             if (!$skipAssetFix) {
                 Cwmassets::fixAllAssets();
@@ -626,6 +629,7 @@ class CwmbackupController extends FormController
                 'tables_restored'       => $integrity['tables'],
                 'tasks_restored'        => $integrity['tasks'],
                 'config_restored'       => $integrity['config'],
+                'auto_increment_fixes'  => $autoIncrementFixes,
             ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
