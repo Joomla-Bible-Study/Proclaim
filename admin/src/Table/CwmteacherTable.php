@@ -273,8 +273,13 @@ class CwmteacherTable extends Table
         }
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
-        if (isset($src['asset_id'])) {
-            $src['asset_id'] = $src['asset_id'] !== '' ? (int) $src['asset_id'] : null;
+        foreach ([
+            'id', 'list_show', 'published', 'asset_id', 'access', 'contact',
+            'landing_show', 'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($src[$field])) {
+                $src[$field] = $src[$field] !== '' ? (int) $src[$field] : null;
+            }
         }
 
         return parent::bind($src, $ignore);

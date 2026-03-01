@@ -219,8 +219,13 @@ class CwmmessagetypeTable extends Table
         }
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
-        if (isset($array['asset_id'])) {
-            $array['asset_id'] = $array['asset_id'] !== '' ? (int) $array['asset_id'] : null;
+        foreach ([
+            'id', 'published', 'asset_id', 'access',
+            'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);

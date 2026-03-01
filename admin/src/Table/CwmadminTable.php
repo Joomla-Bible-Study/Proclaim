@@ -127,8 +127,12 @@ class CwmadminTable extends Table
         }
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
-        if (isset($array['asset_id'])) {
-            $array['asset_id'] = $array['asset_id'] !== '' ? (int) $array['asset_id'] : null;
+        foreach ([
+            'id', 'drop_tables', 'asset_id', 'access', 'debug',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
