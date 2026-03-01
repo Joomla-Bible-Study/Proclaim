@@ -92,6 +92,22 @@ class HtmlView extends BaseHtmlView
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $seriesMessages = [];
 
+    // --- Messages list drill-down ---
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $messagesList = [];
+
+    /** @var string Search term for messages list filter @since 10.1.0 */
+    public string $messagesSearch = '';
+
+    /** @var int Current page number (1-based) for messages list @since 10.1.0 */
+    public int $messagesPage = 1;
+
+    /** @var int Total number of messages matching current filters @since 10.1.0 */
+    public int $messagesTotal = 0;
+
+    /** @var int Messages per page @since 10.1.0 */
+    public int $messagesPerPage = 25;
+
     // --- Message drill-down ---
     /** @var object|null @since 10.1.0 */
     public ?object $studyInfo = null;
@@ -246,6 +262,20 @@ class HtmlView extends BaseHtmlView
         } elseif ($this->drilldown === 'series') {
             // Series list
             $this->seriesList = $model->getSeriesList($s, $e, $l);
+        } elseif ($this->drilldown === 'messages') {
+            // Messages list (all messages regardless of series) — paginated
+            $this->messagesSearch = $input->getString('search', '');
+            $this->messagesPage   = max(1, $input->getInt('page', 1));
+            $this->messagesTotal  = $model->getMessagesCount($s, $e, $l, $this->messagesSearch);
+            $offset               = ($this->messagesPage - 1) * $this->messagesPerPage;
+            $this->messagesList   = $model->getMessagesList(
+                $s,
+                $e,
+                $l,
+                $this->messagesSearch,
+                $this->messagesPerPage,
+                $offset
+            );
         } elseif ($this->drilldown === 'message' && $this->drilldownId > 0) {
             // Message detail
             $this->studyInfo          = $model->getStudyInfo($this->drilldownId);

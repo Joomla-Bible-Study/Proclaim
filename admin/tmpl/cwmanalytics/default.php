@@ -114,7 +114,8 @@ $localBadge = !empty($this->platformStats)
     <!-- View navigation tabs -->
     <?php
     $isOverview = $this->drilldown === '';
-$isSeries       = $this->drilldown === 'series' || $this->drilldown === 'message';
+$isSeries       = $this->drilldown === 'series';
+$isMessages     = $this->drilldown === 'messages' || $this->drilldown === 'message';
 $isMedia        = $this->drilldown === 'media';
 $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId;
 ?>
@@ -129,6 +130,12 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
             <a href="<?php echo Route::_($baseUrl . '&drilldown=series' . $navParams); ?>"
                class="nav-link<?php echo $isSeries ? ' active' : ''; ?>">
                 <i class="icon-list me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_SERIES'); ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo Route::_($baseUrl . '&drilldown=messages' . $navParams); ?>"
+               class="nav-link<?php echo $isMessages ? ' active' : ''; ?>">
+                <i class="icon-book me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_MESSAGES'); ?>
             </a>
         </li>
         <li class="nav-item">
@@ -630,6 +637,8 @@ $showPeriodStrip     = $hasRealEvents;
         <?php echo $this->loadTemplate('series_list'); ?>
     <?php elseif ($this->drilldown === 'series' && $this->drilldownId > 0) : ?>
         <?php echo $this->loadTemplate('series_detail'); ?>
+    <?php elseif ($this->drilldown === 'messages') : ?>
+        <?php echo $this->loadTemplate('messages_list'); ?>
     <?php elseif ($this->drilldown === 'message' && $this->drilldownId > 0) : ?>
         <?php echo $this->loadTemplate('message'); ?>
     <?php elseif ($this->drilldown === 'media') : ?>

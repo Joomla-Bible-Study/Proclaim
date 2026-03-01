@@ -82,6 +82,16 @@ class BibleTranslationField extends GroupedlistField
      *
      * @since  10.1.0
      */
+    /**
+     * Get the field option groups.
+     *
+     * Returns translations grouped by language as `<optgroup>` sections.
+     * The admin's current language group is sorted first.
+     *
+     * @return  array  Associative array of group label => option arrays
+     *
+     * @since  10.1.0
+     */
     protected function getGroups(): array
     {
         $groups       = [];

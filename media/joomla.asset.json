@@ -51,6 +51,19 @@
             }
         },
         {
+            "name": "com_proclaim.media-analytics-modal",
+            "type": "script",
+            "uri": "com_proclaim/media-analytics-modal.min.js",
+            "dependencies": [
+                "core",
+                "com_proclaim.cwm-fetch",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.location-wizard",
             "type": "script",
             "uri": "com_proclaim/location-wizard.min.js",

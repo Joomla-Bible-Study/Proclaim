@@ -2815,11 +2815,14 @@ class CwmadminController extends FormController
                 30
             );
 
-            if ($response->code !== 200) {
+            $httpCode = $response->getStatusCode();
+            $httpBody = (string) $response->getBody();
+
+            if ($httpCode !== 200) {
                 // Parse API error message if available
                 $apiError = '';
                 try {
-                    $decoded = json_decode($response->body ?? '', true, 512, JSON_THROW_ON_ERROR);
+                    $decoded = json_decode($httpBody, true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException) {
                     $decoded = null;
                 }
@@ -2831,8 +2834,8 @@ class CwmadminController extends FormController
                 }
 
                 $detail = $apiError
-                    ? Text::sprintf('JBS_ADM_SYNC_FAILED_DETAIL', $response->code, $apiError)
-                    : Text::sprintf('JBS_ADM_SYNC_FAILED_CODE', $response->code);
+                    ? Text::sprintf('JBS_ADM_SYNC_FAILED_DETAIL', $httpCode, $apiError)
+                    : Text::sprintf('JBS_ADM_SYNC_FAILED_CODE', $httpCode);
 
                 echo json_encode([
                     'success' => false,
@@ -2844,20 +2847,20 @@ class CwmadminController extends FormController
             }
 
             try {
-                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+                $data = json_decode($httpBody, true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
                 $data = null;
             }
 
             if (!\is_array($data) || !isset($data['data'])) {
                 // Log the actual response for debugging
-                $snippet = substr($response->body ?? '', 0, 200);
+                $snippet = substr($httpBody, 0, 200);
 
                 echo json_encode([
                     'success' => false,
                     'message' => Text::sprintf(
                         'JBS_ADM_SYNC_FAILED_DETAIL',
-                        $response->code,
+                        $httpCode,
                         'Unexpected response format: ' . $snippet
                     ),
                 ], JSON_THROW_ON_ERROR);

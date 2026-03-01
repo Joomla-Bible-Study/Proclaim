@@ -1326,4 +1326,161 @@ class CwmanalyticsModel extends BaseDatabaseModel
             return [];
         }
     }
+
+    /**
+     * Build the WHERE clause fragments for messages queries.
+     *
+     * @param   DatabaseInterface  $db          Database driver.
+     * @param   int                $locationId  Campus filter; 0 = all.
+     * @param   string             $search      Title search term.
+     *
+     * @return  array{location: string, search: string}  SQL fragments to append.
+     *
+     * @since   10.1.0
+     */
+    private function buildMessagesFilters(DatabaseInterface $db, int $locationId, string $search): array
+    {
+        // Location filter
+        if ($locationId > 0) {
+            $locationFilter = ' AND st.' . $db->quoteName('location_id') . ' = ' . (int) $locationId;
+        } else {
+            $locationFilter = '';
+
+            try {
+                $user = Factory::getApplication()->getIdentity();
+
+                if ($user && !$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+                    $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                    if (!empty($accessible)) {
+                        $ids            = implode(',', array_map('intval', $accessible));
+                        $locationFilter = ' AND (st.' . $db->quoteName('location_id') . ' IS NULL'
+                            . ' OR st.' . $db->quoteName('location_id') . ' IN (' . $ids . '))';
+                    }
+                }
+            } catch (\Exception $e) {
+                // Fail open
+            }
+        }
+
+        // Search filter
+        $searchFilter = '';
+
+        if ($search !== '') {
+            $searchFilter = ' AND st.' . $db->quoteName('studytitle') . ' LIKE '
+                . $db->quote('%' . $db->escape($search, true) . '%');
+        }
+
+        return ['location' => $locationFilter, 'search' => $searchFilter];
+    }
+
+    /**
+     * Count published messages matching the given filters.
+     *
+     * Used for pagination on the Messages analytics tab.
+     *
+     * @param   string  $start       Period start (Y-m-d) — unused but kept for signature consistency.
+     * @param   string  $end         Period end (Y-m-d) — unused but kept for signature consistency.
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $search      Optional title search term.
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public function getMessagesCount(string $start, string $end, int $locationId = 0, string $search = ''): int
+    {
+        try {
+            $db      = $this->getDatabase();
+            $filters = $this->buildMessagesFilters($db, $locationId, $search);
+
+            $sql = 'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' st'
+                . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
+                . $filters['location']
+                . $filters['search'];
+
+            $db->setQuery($sql);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Get published messages with engagement stats for the Messages tab.
+     *
+     * Returns messages regardless of whether they belong to a series,
+     * solving the gap where un-attached messages were invisible in the
+     * Series → Messages drill-down path. Paginated via $limit/$offset.
+     *
+     * @param   string  $start       Period start (Y-m-d).
+     * @param   string  $end         Period end (Y-m-d).
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $search      Optional title search term.
+     * @param   int     $limit       Max rows to return (page size).
+     * @param   int     $offset      Row offset for pagination.
+     *
+     * @return  array<int, array<string, mixed>>
+     *
+     * @since   10.1.0
+     */
+    public function getMessagesList(
+        string $start,
+        string $end,
+        int $locationId = 0,
+        string $search = '',
+        int $limit = 25,
+        int $offset = 0
+    ): array {
+        try {
+            $db      = $this->getDatabase();
+            $filters = $this->buildMessagesFilters($db, $locationId, $search);
+
+            $sql = 'SELECT'
+                . ' st.' . $db->quoteName('id') . ' AS study_id,'
+                . ' st.' . $db->quoteName('studytitle') . ' AS title,'
+                . ' st.' . $db->quoteName('studydate') . ' AS study_date,'
+                . ' st.' . $db->quoteName('hits') . ' AS all_time_hits,'
+                . ' sr.' . $db->quoteName('series_text') . ' AS series_title,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
+                . ' THEN 1 ELSE 0 END), 0) AS views,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play')
+                . ' THEN 1 ELSE 0 END), 0) AS plays,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download')
+                . ' THEN 1 ELSE 0 END), 0) AS downloads,'
+                . ' COALESCE((SELECT SUM(mf2.' . $db->quoteName('plays') . ')'
+                . '  FROM ' . $db->quoteName('#__bsms_mediafiles') . ' mf2'
+                . '  WHERE mf2.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '  AND mf2.' . $db->quoteName('published') . ' IN (1, 2)), 0) AS all_time_plays,'
+                . ' COALESCE((SELECT SUM(mf3.' . $db->quoteName('downloads') . ')'
+                . '  FROM ' . $db->quoteName('#__bsms_mediafiles') . ' mf3'
+                . '  WHERE mf3.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '  AND mf3.' . $db->quoteName('published') . ' IN (1, 2)), 0) AS all_time_downloads'
+                . ' FROM ' . $db->quoteName('#__bsms_studies') . ' st'
+                . ' LEFT JOIN ' . $db->quoteName('#__bsms_series') . ' sr'
+                . '   ON sr.' . $db->quoteName('id') . ' = st.' . $db->quoteName('series_id')
+                . ' LEFT JOIN ' . $db->quoteName('#__bsms_analytics_events') . ' e'
+                . '   ON e.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '   AND e.' . $db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00')
+                . '   AND e.' . $db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
+                . $filters['location']
+                . $filters['search']
+                . ' GROUP BY st.' . $db->quoteName('id')
+                . ' ORDER BY (COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
+                . ' THEN 1 ELSE 0 END), 0)'
+                . ' + COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play')
+                . ' THEN 1 ELSE 0 END), 0)'
+                . ' + COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download')
+                . ' THEN 1 ELSE 0 END), 0)) DESC,'
+                . ' st.' . $db->quoteName('studydate') . ' DESC';
+
+            $db->setQuery($sql, $offset, $limit);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }

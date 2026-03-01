@@ -328,11 +328,11 @@ class CWMAddonVimeo extends CWMAddon
             try {
                 $response = $http->get($url, $headers);
 
-                if ($response->code !== 200) {
-                    throw new \RuntimeException('Vimeo oEmbed error: HTTP ' . $response->code);
+                if ($response->getStatusCode() !== 200) {
+                    throw new \RuntimeException('Vimeo oEmbed error: HTTP ' . $response->getStatusCode());
                 }
 
-                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+                $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
             } catch (\Exception $e) {
                 return ['success' => false, 'error' => $e->getMessage()];
             }
@@ -421,11 +421,11 @@ class CWMAddonVimeo extends CWMAddon
             $body     = json_encode(['description' => $description], JSON_THROW_ON_ERROR);
             $response = $http->patch('https://api.vimeo.com/videos/' . $videoId, $body, $headers);
 
-            if ($response->code >= 200 && $response->code < 300) {
+            if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
                 return ['success' => true];
             }
 
-            return ['success' => false, 'error' => 'Vimeo API error: HTTP ' . $response->code];
+            return ['success' => false, 'error' => 'Vimeo API error: HTTP ' . $response->getStatusCode()];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -514,13 +514,13 @@ class CWMAddonVimeo extends CWMAddon
 
                 $response = $http->get('https://api.vimeo.com/videos?' . $params, $headers);
 
-                if ($response->code !== 200) {
-                    $errors[] = 'Vimeo API error: HTTP ' . $response->code;
+                if ($response->getStatusCode() !== 200) {
+                    $errors[] = 'Vimeo API error: HTTP ' . $response->getStatusCode();
 
                     continue;
                 }
 
-                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+                $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
                 foreach ($data['data'] ?? [] as $video) {
                     $vid = null;
@@ -656,14 +656,14 @@ class CWMAddonVimeo extends CWMAddon
 
             $response = $http->get('https://api.vimeo.com/me', $headers);
 
-            if ($response->code !== 200) {
+            if ($response->getStatusCode() !== 200) {
                 return [
                     'success' => false,
-                    'error'   => Text::sprintf('JBS_ADDON_VIMEO_API_ERROR', $response->code),
+                    'error'   => Text::sprintf('JBS_ADDON_VIMEO_API_ERROR', $response->getStatusCode()),
                 ];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             return [
                 'success' => true,
@@ -805,11 +805,11 @@ class CWMAddonVimeo extends CWMAddon
         try {
             $response = $http->get($endpoint . '?' . http_build_query($params), $headers);
 
-            if ($response->code !== 200) {
-                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->getStatusCode() . ')'];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             if (!$data) {
                 return ['success' => false, 'error' => 'Invalid API response'];
@@ -907,11 +907,11 @@ class CWMAddonVimeo extends CWMAddon
                 $headers
             );
 
-            if ($response->code !== 200) {
-                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->code . ')'];
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->getStatusCode() . ')'];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             if (!$data) {
                 return ['success' => false, 'error' => 'Invalid API response'];
