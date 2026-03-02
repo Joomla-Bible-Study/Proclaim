@@ -990,16 +990,14 @@ try {
         $srvId      = (int) $srv->id;
         $budget     = max(1, (int) $srvParams->get('youtube_daily_quota', 10000));
         $used       = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota::getUsedToday($srvId);
-        $remaining  = max(0, $budget - $used);
-        $pct        = $budget > 0 ? round(($remaining / $budget) * 100) : 0;
+        $pctUsed    = $budget > 0 ? min(100, round(($used / $budget) * 100)) : 0;
 
         $youtubeServers[] = [
-            'id'        => $srvId,
-            'name'      => $srv->server_name,
-            'budget'    => $budget,
-            'used'      => $used,
-            'remaining' => $remaining,
-            'pct'       => $pct,
+            'id'      => $srvId,
+            'name'    => $srv->server_name,
+            'budget'  => $budget,
+            'used'    => $used,
+            'pctUsed' => $pctUsed,
         ];
     }
 } catch (\Exception $e) {
@@ -1022,13 +1020,13 @@ $logSize    = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::
                         <div class="card-body">
                             <h5 class="card-title"><?php echo $this->escape($ytSrv['name']); ?></h5>
                             <p class="card-text text-body-secondary mb-2">
-                                <?php echo Text::sprintf('JBS_ADM_YOUTUBE_QUOTA_REMAINING', number_format($ytSrv['remaining']), number_format($ytSrv['budget'])); ?>
+                                <?php echo Text::sprintf('JBS_ADM_YOUTUBE_QUOTA_USED', number_format($ytSrv['used']), number_format($ytSrv['budget'])); ?>
                             </p>
                             <div class="progress" style="height: 20px;" role="progressbar"
-                                 aria-valuenow="<?php echo $ytSrv['pct']; ?>" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar <?php echo $ytSrv['pct'] < 10 ? 'bg-danger' : ($ytSrv['pct'] < 30 ? 'bg-warning' : 'bg-success'); ?>"
-                                     style="width: <?php echo $ytSrv['pct']; ?>%">
-                                    <?php echo $ytSrv['pct']; ?>%
+                                 aria-valuenow="<?php echo $ytSrv['pctUsed']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar <?php echo $ytSrv['pctUsed'] >= 90 ? 'bg-danger' : ($ytSrv['pctUsed'] >= 70 ? 'bg-warning' : 'bg-success'); ?>"
+                                     style="width: <?php echo $ytSrv['pctUsed']; ?>%">
+                                    <?php echo $ytSrv['pctUsed']; ?>%
                                 </div>
                             </div>
                         </div>

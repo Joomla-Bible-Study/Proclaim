@@ -824,6 +824,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchChannelVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1128,6 +1137,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchLiveVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1327,6 +1345,15 @@ class CWMAddonYoutube extends CWMAddon
 
             return $result;
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'getVideoStatus']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }

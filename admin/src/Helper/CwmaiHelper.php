@@ -788,6 +788,21 @@ class CwmaiHelper
         // Record quota usage regardless of response (YouTube counts the call)
         CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
+        if ($response->getStatusCode() === 403) {
+            $body = (string) $response->getBody();
+
+            if (CwmyoutubeQuota::isQuotaExceededError($body)) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchYouTubeMetadata']
+                );
+            }
+
+            return $empty;
+        }
+
         if ($response->getStatusCode() !== 200) {
             return $empty;
         }

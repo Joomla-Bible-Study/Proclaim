@@ -167,6 +167,45 @@ class CwmyoutubeQuota
     }
 
     /**
+     * Mark the quota as fully exhausted for the current quota day.
+     *
+     * Call this when YouTube returns a 403 quotaExceeded error, which means
+     * the real quota was consumed by other applications sharing the same API
+     * key.  This syncs our local counter to reality so we stop wasting calls.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function markExhausted(int $serverId): void
+    {
+        $budget = self::getDailyBudget($serverId);
+        $data   = [
+            'date' => self::currentQuotaDate($serverId),
+            'used' => $budget,
+        ];
+
+        self::saveQuotaFile($serverId, $data);
+    }
+
+    /**
+     * Check whether an exception message indicates a YouTube quota exceeded error.
+     *
+     * @param   string  $message  Exception message or error string
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public static function isQuotaExceededError(string $message): bool
+    {
+        return stripos($message, 'quotaExceeded') !== false
+            || stripos($message, 'quota') !== false && stripos($message, 'exceeded') !== false;
+    }
+
+    /**
      * Compute the "quota date" string based on the configured reset hour.
      *
      * YouTube resets at midnight Pacific Time (UTC-7 / UTC-8 depending on DST).
