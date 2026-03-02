@@ -46,9 +46,11 @@ class CwmyoutubeQuota
      *
      * @since  10.1.0
      */
-    public const COST_SEARCH   = 100;
-    public const COST_VIDEOS   = 1;
-    public const COST_CHANNELS = 1;
+    public const COST_SEARCH         = 100;
+    public const COST_VIDEOS         = 1;
+    public const COST_CHANNELS       = 1;
+    public const COST_PLAYLISTS      = 1;
+    public const COST_PLAYLIST_ITEMS = 1;
 
     /**
      * In-memory cache for server params to avoid repeated DB queries
@@ -164,6 +166,45 @@ class CwmyoutubeQuota
     public static function hasQuota(int $serverId, int $neededUnits = 1): bool
     {
         return self::getRemaining($serverId) >= $neededUnits;
+    }
+
+    /**
+     * Mark the quota as fully exhausted for the current quota day.
+     *
+     * Call this when YouTube returns a 403 quotaExceeded error, which means
+     * the real quota was consumed by other applications sharing the same API
+     * key.  This syncs our local counter to reality so we stop wasting calls.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function markExhausted(int $serverId): void
+    {
+        $budget = self::getDailyBudget($serverId);
+        $data   = [
+            'date' => self::currentQuotaDate($serverId),
+            'used' => $budget,
+        ];
+
+        self::saveQuotaFile($serverId, $data);
+    }
+
+    /**
+     * Check whether an exception message indicates a YouTube quota exceeded error.
+     *
+     * @param   string  $message  Exception message or error string
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public static function isQuotaExceededError(string $message): bool
+    {
+        return stripos($message, 'quotaExceeded') !== false
+            || stripos($message, 'quota') !== false && stripos($message, 'exceeded') !== false;
     }
 
     /**

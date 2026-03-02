@@ -446,6 +446,15 @@ class HtmlView extends BaseHtmlView
         $wa = $this->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.print');
 
+        // Load timestamp seek handler for study text with clickable timestamps
+        if (
+            empty($this->print)
+            && !empty($this->item->studytext)
+            && str_contains($this->item->studytext, 'cwm-timestamp')
+        ) {
+            $wa->useScript('com_proclaim.cwm-timestamp');
+        }
+
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled). Skip in print mode.
         if (empty($this->print)) {

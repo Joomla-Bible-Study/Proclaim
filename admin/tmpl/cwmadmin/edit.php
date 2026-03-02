@@ -31,6 +31,7 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.bible-translations')
     ->useScript('com_proclaim.csv-import')
     ->useScript('com_proclaim.server-migration')
+    ->useScript('com_proclaim.admin-youtube-log')
     ->useStyle('com_proclaim.general');
 
 // Auto-register all component language strings for JavaScript.
@@ -214,6 +215,35 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SEO_METADATA'); ?></h3>
                     <?php echo $this->form->renderField('metakey', 'params'); ?>
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>
+                    <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_AI_API_KEY_DESC'); ?></p>
+                    <?php echo $this->form->renderField('ai_provider', 'params'); ?>
+                    <?php echo $this->form->renderField('ai_api_key', 'params'); ?>
+                    <?php
+                    // Inject the saved model as a select option so Joomla's list
+                    // field preserves the value until JS populates the full list.
+                    $savedAiModel = $this->item->params['ai_model'] ?? '';
+
+                    if ($savedAiModel !== '') {
+                        $modelField = $this->form->getField('ai_model', 'params');
+
+                        if ($modelField) {
+                            $modelField->addOption($savedAiModel, ['value' => $savedAiModel]);
+                        }
+                    }
+                    ?>
+                    <?php echo $this->form->renderField('ai_model', 'params'); ?>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="button" id="btn-fetch-ai-models" class="btn btn-sm btn-outline-secondary">
+                                <span class="icon-refresh" aria-hidden="true"></span>
+                                <?php echo Text::_('JBS_ADM_AI_FETCH_MODELS'); ?>
+                            </button>
+                            <span id="ai-models-status" class="ms-2 small text-body-secondary"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-lg-6">
@@ -940,6 +970,161 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYT
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 
+<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'youtubelog', Text::_('JBS_ADM_YOUTUBE_LOG_TAB')); ?>
+<?php
+// Load YouTube server quota data and log entries inline
+$youtubeServers = [];
+
+try {
+    $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+    $query = $db->getQuery(true)
+        ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('params')])
+        ->from($db->quoteName('#__bsms_servers'))
+        ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'))
+        ->where($db->quoteName('published') . ' = 1');
+    $db->setQuery($query);
+    $servers = $db->loadObjectList();
+
+    foreach ($servers as $srv) {
+        $srvParams  = new \Joomla\Registry\Registry($srv->params);
+        $srvId      = (int) $srv->id;
+        $budget     = max(1, (int) $srvParams->get('youtube_daily_quota', 10000));
+        $used       = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota::getUsedToday($srvId);
+        $pctUsed    = $budget > 0 ? min(100, round(($used / $budget) * 100)) : 0;
+
+        $youtubeServers[] = [
+            'id'      => $srvId,
+            'name'    => $srv->server_name,
+            'budget'  => $budget,
+            'used'    => $used,
+            'pctUsed' => $pctUsed,
+        ];
+    }
+} catch (\Exception $e) {
+    // If DB query fails, show empty state
+}
+
+$logEntries = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::getEntries(100);
+$logSize    = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::getFileSize();
+?>
+<div class="row" id="youtubelog-tab">
+    <div class="col-12">
+        <?php if (!empty($youtubeServers)) : ?>
+        <!-- Quota Status Cards -->
+        <div class="cwmadmin-panel mb-4">
+            <h3 class="tab-description"><?php echo Text::_('JBS_ADM_YOUTUBE_QUOTA_STATUS'); ?></h3>
+            <div class="row g-3">
+                <?php foreach ($youtubeServers as $ytSrv) : ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $this->escape($ytSrv['name']); ?></h5>
+                            <p class="card-text text-body-secondary mb-2">
+                                <?php echo Text::sprintf('JBS_ADM_YOUTUBE_QUOTA_USED', number_format($ytSrv['used']), number_format($ytSrv['budget'])); ?>
+                            </p>
+                            <div class="progress" style="height: 20px;" role="progressbar"
+                                 aria-valuenow="<?php echo $ytSrv['pctUsed']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar <?php echo $ytSrv['pctUsed'] >= 90 ? 'bg-danger' : ($ytSrv['pctUsed'] >= 70 ? 'bg-warning' : 'bg-success'); ?>"
+                                     style="width: <?php echo $ytSrv['pctUsed']; ?>%">
+                                    <?php echo $ytSrv['pctUsed']; ?>%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Log Viewer -->
+        <div class="cwmadmin-panel mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="tab-description mb-0"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_HEADING'); ?></h3>
+                <div class="d-flex gap-2 align-items-center">
+                    <!-- Level filter -->
+                    <select id="yt-log-level-filter" class="form-select form-select-sm" style="width:auto;">
+                        <option value=""><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_FILTER_ALL'); ?></option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                    </select>
+                    <?php if (!empty($logEntries)) : ?>
+                    <button type="button" id="btn-clear-youtube-log" class="btn btn-outline-danger btn-sm">
+                        <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_YOUTUBE_LOG_CLEAR'); ?>
+                    </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <p class="text-body-secondary small mb-3"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_DESC'); ?></p>
+
+            <?php if (empty($logEntries)) : ?>
+                <div class="alert alert-info"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_EMPTY'); ?></div>
+            <?php else : ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm" id="yt-log-table">
+                        <thead>
+                            <tr>
+                                <th style="width:160px;"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_TIMESTAMP'); ?></th>
+                                <th style="width:80px;"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_LEVEL'); ?></th>
+                                <th><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_MESSAGE'); ?></th>
+                                <th style="width:60px;"><?php echo Text::_('JBS_ADM_YOUTUBE_LOG_CONTEXT'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($logEntries as $entry) :
+                                $level     = $entry['level'] ?? 'info';
+                                $badgeClass = match ($level) {
+                                    'error'   => 'bg-danger',
+                                    'warning' => 'bg-warning text-dark',
+                                    default   => 'bg-info text-dark',
+                                };
+                                $timestamp = $entry['timestamp'] ?? '';
+                                $context   = $entry['context'] ?? [];
+                            ?>
+                            <tr class="yt-log-row" data-level="<?php echo $this->escape($level); ?>">
+                                <td class="text-nowrap small"><?php
+                                    if ($timestamp) {
+                                        try {
+                                            $dt = new \DateTimeImmutable($timestamp);
+                                            echo $dt->setTimezone(new \DateTimeZone($app->get('offset', 'UTC')))->format('Y-m-d H:i:s');
+                                        } catch (\Exception $e) {
+                                            echo $this->escape($timestamp);
+                                        }
+                                    }
+                                ?></td>
+                                <td><span class="badge <?php echo $badgeClass; ?>"><?php echo $this->escape(ucfirst($level)); ?></span></td>
+                                <td><?php echo $this->escape($entry['message'] ?? ''); ?></td>
+                                <td class="text-center">
+                                    <?php if (!empty($context)) : ?>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary yt-log-toggle-ctx" title="<?php echo Text::_('JBS_ADM_YOUTUBE_LOG_CONTEXT'); ?>">
+                                        <i class="icon-eye" aria-hidden="true"></i>
+                                    </button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php if (!empty($context)) : ?>
+                            <tr class="yt-log-ctx d-none" data-level="<?php echo $this->escape($level); ?>">
+                                <td colspan="4">
+                                    <pre class="mb-0 small bg-light p-2 rounded"><?php echo $this->escape(json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)); ?></pre>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php if ($logSize > 0) : ?>
+                <p class="text-body-secondary small mt-2">
+                    <?php echo Text::sprintf('JBS_ADM_YOUTUBE_LOG_FILESIZE', number_format($logSize / 1024, 1)); ?>
+                </p>
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
                value="<?php
@@ -958,3 +1143,11 @@ echo $input->getCmd('return'); ?>"/>
 echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
+<?php
+// AI model fetcher config + script
+$wa->useScript('com_proclaim.admin-ai-models');
+?>
+<div id="ai-models-config"
+     data-token="<?php echo Session::getFormToken(); ?>"
+     data-saved-model="<?php echo $this->escape($this->item->params['ai_model'] ?? ''); ?>"
+     style="display:none;"></div>

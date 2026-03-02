@@ -17,6 +17,7 @@ namespace CWM\Module\ProclaimYoutube\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
@@ -106,8 +107,31 @@ class YoutubeHelper implements DatabaseAwareInterface
                 break;
         }
 
-        // Cache the result
+        // All fetch methods returned null — fall back to last known good video
+        if (!$video) {
+            $video = self::getLastKnownVideo($serverId);
+
+            if ($video) {
+                // Clear live/upcoming flags — this is a fallback, not real-time
+                $video['isLive']     = false;
+                $video['isUpcoming'] = false;
+                $video['isFallback'] = true;
+
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_INFO,
+                    'Serving last known video (quota exhausted or API unavailable)',
+                    ['server_id' => $serverId, 'video_id' => $video['videoId'] ?? '']
+                );
+            }
+        }
+
+        // Cache the result and persist as "last known good"
         if ($video) {
+            // Persist as last known good — survives Joomla cache clears and quota exhaustion
+            if (empty($video['isFallback'])) {
+                self::storeLastKnownVideo($serverId, $video);
+            }
+
             try {
                 $cache = Factory::getContainer()->get('cache.output');
                 $cache->setLifeTime((int) ceil($cacheTime / 60));
@@ -181,7 +205,6 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->getVideoStatus($statusInput);
-        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
         if ($result['success']) {
             $video['isLive']     = $result['isLive'] ?? false;
@@ -238,6 +261,12 @@ class YoutubeHelper implements DatabaseAwareInterface
     {
         // Quota gate: search.list costs 100 units
         if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped live video search',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
             return null;
         }
 
@@ -249,7 +278,6 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->fetchLiveVideos($input);
-        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
         if ($result['success'] && !empty($result['videos'])) {
             // Live videos are never excluded - return the first one
@@ -270,7 +298,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             $input->set('event_type', 'upcoming');
             $input->set('max_results', 10);
             $result = $youtube->fetchLiveVideos($input);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 // Filter out excluded videos for upcoming streams
@@ -292,7 +319,6 @@ class YoutubeHelper implements DatabaseAwareInterface
                             ]);
 
                             $statusResult = $youtube->getVideoStatus($statusInput);
-                            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
                             if (!empty($statusResult['scheduledStartTime'])) {
                                 $video['scheduledStartTime'] = $statusResult['scheduledStartTime'];
@@ -343,6 +369,19 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     private function fetchLatestVideo(CWMAddonYoutube $youtube, int $serverId): ?array
     {
+        // Quota gate: channels.list + playlistItems.list = 2 units
+        $cost = CwmyoutubeQuota::COST_CHANNELS + CwmyoutubeQuota::COST_PLAYLIST_ITEMS;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped latest video fetch',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return null;
+        }
+
         $input = new Input([
             'server_id'   => $serverId,
             'max_results' => 1,
@@ -359,6 +398,70 @@ class YoutubeHelper implements DatabaseAwareInterface
         }
 
         return null;
+    }
+
+    /**
+     * Store the last successfully fetched video in a persistent file cache.
+     *
+     * This survives Joomla cache clears and quota exhaustion, ensuring the
+     * module can always show a video instead of "no video available."
+     *
+     * @param   int    $serverId  Server ID
+     * @param   array  $video     Video data array
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private static function storeLastKnownVideo(int $serverId, array $video): void
+    {
+        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
+
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $file = $dir . '/last_video_' . $serverId . '.json';
+        $data = [
+            'video'    => $video,
+            'storedAt' => time(),
+        ];
+
+        @file_put_contents($file, json_encode($data, JSON_UNESCAPED_SLASHES), LOCK_EX);
+    }
+
+    /**
+     * Retrieve the last known good video from the persistent file cache.
+     *
+     * No TTL — the file persists until overwritten by a newer successful fetch.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  array|null  Video data array or null if not found
+     *
+     * @since   10.1.0
+     */
+    private static function getLastKnownVideo(int $serverId): ?array
+    {
+        $file = JPATH_CACHE . '/mod_proclaim_youtube/last_video_' . $serverId . '.json';
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $raw = @file_get_contents($file);
+
+        if ($raw === false) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            return null;
+        }
+
+        return $data['video'] ?? null;
     }
 
     /**
@@ -492,7 +595,14 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->getVideoStatus($statusInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
+
+            if (!$result['success']) {
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'Video status check failed',
+                    ['server_id' => $serverId, 'video_id' => $videoId, 'error' => $result['error'] ?? 'Unknown']
+                );
+            }
 
             if ($result['success']) {
                 $statusResult = [
@@ -541,7 +651,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($liveInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];
@@ -564,7 +673,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($upcomingInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];

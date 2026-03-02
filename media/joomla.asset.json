@@ -100,6 +100,52 @@
             }
         },
         {
+            "name": "com_proclaim.admin-ai-models",
+            "type": "script",
+            "uri": "com_proclaim/admin-ai-models.min.js",
+            "dependencies": [
+                "core",
+                "com_proclaim.cwm-fetch"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.message-ai-assist",
+            "type": "script",
+            "uri": "com_proclaim/message-ai-assist.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-timestamp",
+            "type": "script",
+            "uri": "com_proclaim/cwm-timestamp.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.admin-youtube-log",
+            "type": "script",
+            "uri": "com_proclaim/admin-youtube-log.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.admin-imagetools",
             "type": "script",
             "uri": "com_proclaim/admin-imagetools.min.js",

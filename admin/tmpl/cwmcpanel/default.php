@@ -19,7 +19,9 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -339,6 +341,88 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
         </div>
         <div class="clearfix" style="margin:10px;"></div>
+        <!-- BEGIN: YOUTUBE API HEALTH -->
+        <?php
+        if ($isAdmin) :
+            $ytServers = [];
+
+            try {
+                $cpDb    = Factory::getContainer()->get(DatabaseInterface::class);
+                $cpQuery = $cpDb->getQuery(true)
+                    ->select([$cpDb->quoteName('id'), $cpDb->quoteName('server_name'), $cpDb->quoteName('params')])
+                    ->from($cpDb->quoteName('#__bsms_servers'))
+                    ->where($cpDb->quoteName('type') . ' = ' . $cpDb->quote('youtube'))
+                    ->where($cpDb->quoteName('published') . ' = 1');
+                $cpDb->setQuery($cpQuery);
+                $cpServers = $cpDb->loadObjectList();
+
+                foreach ($cpServers as $cpSrv) {
+                    $cpParams   = new \Joomla\Registry\Registry($cpSrv->params);
+                    $cpSrvId    = (int) $cpSrv->id;
+                    $cpBudget   = max(1, (int) $cpParams->get('youtube_daily_quota', 10000));
+                    $cpUsed     = CwmyoutubeQuota::getUsedToday($cpSrvId);
+                    $cpPctUsed  = $cpBudget > 0 ? round(($cpUsed / $cpBudget) * 100) : 0;
+
+                    $ytServers[] = [
+                        'id'      => $cpSrvId,
+                        'name'    => $cpSrv->server_name,
+                        'budget'  => $cpBudget,
+                        'used'    => $cpUsed,
+                        'pctUsed' => min(100, $cpPctUsed),
+                    ];
+                }
+            } catch (\Exception $e) {
+                // DB not available
+            }
+
+            if (!empty($ytServers)) :
+        ?>
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title mb-0">
+                            <i class="fa-brands fa-youtube text-danger me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_YOUTUBE_QUOTA_STATUS'); ?>
+                        </h5>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>#youtubelog"
+                           class="btn btn-sm btn-outline-secondary">
+                            <?php echo Text::_('JBS_CPL_YT_VIEW_DETAILS'); ?>
+                        </a>
+                    </div>
+                    <div class="row g-3">
+                        <?php foreach ($ytServers as $ytS) :
+                            $barClass = $ytS['pctUsed'] >= 90 ? 'bg-danger' : ($ytS['pctUsed'] >= 70 ? 'bg-warning' : 'bg-success');
+                        ?>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span><?php echo htmlspecialchars($ytS['name'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <span class="<?php echo $ytS['pctUsed'] >= 80 ? 'text-danger fw-bold' : 'text-body-secondary'; ?>">
+                                    <?php echo $ytS['pctUsed']; ?>%
+                                    <?php if ($ytS['pctUsed'] >= 80) : ?>
+                                        <i class="icon-warning-circle" aria-hidden="true"></i>
+                                    <?php endif; ?>
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 8px;" role="progressbar"
+                                 aria-valuenow="<?php echo $ytS['pctUsed']; ?>" aria-valuemin="0" aria-valuemax="100"
+                                 aria-label="<?php echo htmlspecialchars($ytS['name'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <div class="progress-bar <?php echo $barClass; ?>"
+                                     style="width: <?php echo $ytS['pctUsed']; ?>%"></div>
+                            </div>
+                            <div class="text-body-secondary" style="font-size: 0.75rem;">
+                                <?php echo Text::sprintf('JBS_ADM_YOUTUBE_QUOTA_USED', number_format($ytS['used']), number_format($ytS['budget'])); ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+            endif; // !empty($ytServers)
+        endif; // $isAdmin
+        ?>
         <!-- BEGIN: STATS -->
         <?php if ($isAdmin) : ?>
         <div class="fbstatscover d-none d-md-block">

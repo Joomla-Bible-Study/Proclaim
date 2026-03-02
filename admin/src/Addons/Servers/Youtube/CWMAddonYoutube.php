@@ -19,7 +19,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
@@ -503,6 +506,17 @@ class CWMAddonYoutube extends CWMAddon
                         }
                     }
                 } catch (Exception $e) {
+                    if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                        CwmyoutubeQuota::markExhausted($serverId);
+                        CwmyoutubeLogHelper::log(
+                            CwmyoutubeLogHelper::LEVEL_ERROR,
+                            'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                            ['server_id' => $serverId, 'method' => 'syncYoutubeStats']
+                        );
+
+                        break;
+                    }
+
                     $errors[] = 'YouTube batch: ' . $e->getMessage();
                 }
             }
@@ -738,6 +752,49 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Look up a server ID by its API key.
+     *
+     * Used by testApiConnection() where the server may not yet be saved
+     * (new server form) and only the API key is available.
+     *
+     * @param   string  $apiKey  YouTube API key
+     *
+     * @return  int  Server ID, or 0 if not found
+     *
+     * @since   10.1.0
+     */
+    protected function getServerIdByApiKey(string $apiKey): int
+    {
+        if (empty($apiKey)) {
+            return 0;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'));
+
+            $db->setQuery($query);
+            $servers = $db->loadObjectList();
+
+            foreach ($servers as $server) {
+                $serverId = (int) $server->id;
+                $config   = $this->getServerConfig($serverId);
+
+                if (($config['api_key'] ?? '') === $apiKey) {
+                    return $serverId;
+                }
+            }
+        } catch (\Exception $e) {
+            // Ignore — quota tracking is best-effort
+        }
+
+        return 0;
+    }
+
+    /**
      * Fetch videos from YouTube channel (XHR handler)
      *
      * @param   Input  $input  Request input
@@ -771,6 +828,19 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
         }
 
+        // Quota gate: channels.list (1) + playlistItems.list (1) = 2 units
+        $cost = CwmyoutubeQuota::COST_CHANNELS + CwmyoutubeQuota::COST_PLAYLIST_ITEMS;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped channel videos fetch',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -784,6 +854,8 @@ class CWMAddonYoutube extends CWMAddon
             ]);
 
             if (empty($channelResponse->items)) {
+                CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_CHANNELS);
+
                 return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_CHANNEL_NOT_FOUND')];
             }
 
@@ -800,6 +872,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             $response = $youtube->playlistItems->listPlaylistItems('snippet', $params);
+            CwmyoutubeQuota::recordUsage($serverId, $cost);
 
             $videos = [];
 
@@ -821,6 +894,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchChannelVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -862,6 +944,17 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
         }
 
+        // Quota gate: search.list = 100 units
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped video search',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -886,6 +979,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             $response = $youtube->search->listSearch('snippet', $params);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             $videos = [];
 
@@ -907,6 +1001,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'searchChannelVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -943,6 +1046,17 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
         }
 
+        // Quota gate: playlists.list = 1 unit
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_PLAYLISTS)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped channel playlists fetch',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -954,6 +1068,7 @@ class CWMAddonYoutube extends CWMAddon
                 'channelId'  => $channelId,
                 'maxResults' => 50,
             ]);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLISTS);
 
             $playlists = [];
 
@@ -970,6 +1085,15 @@ class CWMAddonYoutube extends CWMAddon
                 'playlists' => $playlists,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchChannelPlaylists']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1008,6 +1132,17 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
         }
 
+        // Quota gate: playlistItems.list = 1 unit
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_PLAYLIST_ITEMS)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped playlist videos fetch',
+                ['server_id' => $serverId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1025,6 +1160,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             $response = $youtube->playlistItems->listPlaylistItems('snippet', $params);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLIST_ITEMS);
 
             $videos = [];
 
@@ -1046,6 +1182,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchPlaylistVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1081,6 +1226,17 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
         }
 
+        // Quota gate: search.list = 100 units
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped live videos search',
+                ['server_id' => $serverId, 'event_type' => $eventType, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1103,6 +1259,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             $response = $youtube->search->listSearch('snippet', $params);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             $videos = [];
 
@@ -1125,6 +1282,15 @@ class CWMAddonYoutube extends CWMAddon
                 'totalResults'  => $response->pageInfo->totalResults ?? 0,
             ];
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'fetchLiveVideos']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1152,6 +1318,9 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_CHANNEL_ID')];
         }
 
+        // Look up server ID by API key for quota tracking
+        $serverId = $this->getServerIdByApiKey($apiKey);
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1163,6 +1332,11 @@ class CWMAddonYoutube extends CWMAddon
             $response = @$youtube->channels->listChannels('snippet,statistics', [
                 'id' => $channelId,
             ]);
+
+            // Record usage: channels.list = 1 unit
+            if ($serverId > 0) {
+                CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_CHANNELS);
+            }
 
             if (empty($response->items)) {
                 return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_CHANNEL_NOT_FOUND')];
@@ -1181,6 +1355,15 @@ class CWMAddonYoutube extends CWMAddon
                 ],
             ];
         } catch (Exception $e) {
+            if ($serverId > 0 && $e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'testApiConnection']
+                );
+            }
+
             $errorMessage = $e->getMessage();
 
             // Try to parse Google API error
@@ -1273,6 +1456,17 @@ class CWMAddonYoutube extends CWMAddon
             return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_NO_API_KEY')];
         }
 
+        // Quota gate: videos.list = 1 unit
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Quota exhausted — skipped video status check',
+                ['server_id' => $serverId, 'video_id' => $videoId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
+            return ['success' => false, 'error' => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', CwmyoutubeQuota::getRemaining($serverId), CwmyoutubeQuota::getDailyBudget($serverId))];
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1284,6 +1478,7 @@ class CWMAddonYoutube extends CWMAddon
             $response = $youtube->videos->listVideos('snippet,liveStreamingDetails', [
                 'id' => $videoId,
             ]);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
             if (empty($response->items)) {
                 return [
@@ -1324,6 +1519,15 @@ class CWMAddonYoutube extends CWMAddon
 
             return $result;
         } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => $serverId, 'method' => 'getVideoStatus']
+                );
+            }
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
@@ -1375,6 +1579,29 @@ class CWMAddonYoutube extends CWMAddon
             return;
         }
 
+        // Check YouTube API daily quota before making the call (videos.list = 1 unit)
+        if (!CwmyoutubeQuota::hasQuota((int) $server->id, CwmyoutubeQuota::COST_VIDEOS)) {
+            $remaining = CwmyoutubeQuota::getRemaining((int) $server->id);
+            $budget    = CwmyoutubeQuota::getDailyBudget((int) $server->id);
+
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Admin: Quota exhausted — skipped metadata detection',
+                ['server_id' => (int) $server->id, 'video_id' => $videoId, 'remaining' => $remaining, 'budget' => $budget]
+            );
+
+            try {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', $remaining, $budget),
+                    'warning'
+                );
+            } catch (\Exception $e) {
+                // Ignore if application not available
+            }
+
+            return;
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1384,6 +1611,9 @@ class CWMAddonYoutube extends CWMAddon
             $response = $youtube->videos->listVideos('snippet,contentDetails', [
                 'id' => $videoId,
             ]);
+
+            // Record quota usage (YouTube counts the call regardless of result)
+            CwmyoutubeQuota::recordUsage((int) $server->id, CwmyoutubeQuota::COST_VIDEOS);
 
             if (!empty($response->items)) {
                 $item = $response->items[0];
@@ -1405,9 +1635,90 @@ class CWMAddonYoutube extends CWMAddon
                         // Ignore invalid duration format
                     }
                 }
+
+                // Auto-import YouTube tags as topics when setting is enabled
+                $adminParams = Cwmparams::getAdmin()->params;
+
+                if ($adminParams->get('yt_auto_import_topics', '0') === '1') {
+                    $tags = $item->snippet->tags ?? [];
+
+                    if (!empty($tags)) {
+                        $this->importTagsAsTopics($tags);
+                    }
+                }
             }
         } catch (\Exception $e) {
-            // Log or ignore error
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted((int) $server->id);
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_ERROR,
+                    'YouTube API returned 403 quotaExceeded — local counter synced to exhausted',
+                    ['server_id' => (int) $server->id, 'method' => 'detectMetadata']
+                );
+            }
+        }
+    }
+
+    /**
+     * Import YouTube video tags as Proclaim topics
+     *
+     * Matches tags against existing topics and creates new topics for unmatched tags.
+     *
+     * @param   array  $tags  YouTube video tags
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function importTagsAsTopics(array $tags): void
+    {
+        $tagText      = implode(', ', $tags);
+        $matched      = CwmtopicSuggestionHelper::matchExistingTopics($tagText);
+        $matchedTexts = array_map(
+            fn ($m) => mb_strtolower(trim($m['text'])),
+            $matched
+        );
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+
+            if (empty($tag)) {
+                continue;
+            }
+
+            // Skip if already matched to an existing topic
+            if (\in_array(mb_strtolower($tag), $matchedTexts, true)) {
+                continue;
+            }
+
+            // Case-insensitive de-dup check
+            $query = $db->getQuery(true);
+            $query->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_topics'))
+                ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(:tag)')
+                ->bind(':tag', $tag);
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                continue;
+            }
+
+            // Insert new topic
+            $insert = $db->getQuery(true);
+            $insert->insert($db->quoteName('#__bsms_topics'))
+                ->columns($db->quoteName(['topic_text', 'published', 'language']))
+                ->values(
+                    $db->quote($tag) . ', 1, ' . $db->quote('*')
+                );
+            $db->setQuery($insert);
+
+            try {
+                $db->execute();
+            } catch (\Exception $e) {
+                // Skip duplicate or failed insert
+            }
         }
     }
 

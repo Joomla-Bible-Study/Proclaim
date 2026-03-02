@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
+use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
@@ -27,6 +28,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
@@ -3621,5 +3623,67 @@ class CwmadminController extends FormController
         }
 
         $app->close();
+    }
+
+    /**
+     * Fetch available AI models for the selected provider — AJAX endpoint
+     *
+     * Reads the provider and API key from POST data, queries the provider's
+     * models API, and returns a filtered list of text-generation models.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function fetchAiModelsXHR(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $input    = $this->input;
+        $provider = $input->getString('provider', 'claude');
+        $apiKey   = $input->getString('api_key', '');
+
+        if (empty($apiKey)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_AI_NO_API_KEY')]);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $models = CwmaiHelper::fetchAvailableModels($provider, $apiKey);
+            echo json_encode(['success' => true, 'models' => $models]);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Clear the YouTube event log file.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function clearYoutubeLog(): void
+    {
+        $this->checkToken();
+
+        CwmyoutubeLogHelper::clear();
+
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmadmin', false),
+            Text::_('JBS_ADM_YOUTUBE_LOG_CLEARED')
+        );
     }
 }

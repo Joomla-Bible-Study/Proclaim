@@ -9,9 +9,15 @@
         <fieldset name="resi_api" label="JBS_ADDON_RESI_API_SETTINGS">
             <field name="account_id" type="text" label="JBS_ADDON_RESI_ACCOUNT_ID"
                    description="JBS_ADDON_RESI_ACCOUNT_ID_DESC" class="inputbox" size="40" />
-            <field name="api_key" type="ApiKey" label="JBS_ADDON_RESI_API_KEY"
-                   description="JBS_ADDON_RESI_API_KEY_DESC" class="inputbox" size="60"
+            <field name="client_id" type="ApiKey" label="JBS_ADDON_RESI_CLIENT_ID"
+                   description="JBS_ADDON_RESI_CLIENT_ID_DESC" class="inputbox" size="60"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+            <field name="client_secret" type="ApiKey" label="JBS_ADDON_RESI_CLIENT_SECRET"
+                   description="JBS_ADDON_RESI_CLIENT_SECRET_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+            <field name="test_api" type="ResiTestApi" label="JBS_ADDON_RESI_TEST_API"
+                   description="JBS_ADDON_RESI_TEST_API_DESC"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Resi\Field" />
         </fieldset>
     </fields>
     <fields name="media">

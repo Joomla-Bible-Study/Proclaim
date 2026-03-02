@@ -315,6 +315,30 @@
         <field name="analytics_retention_days" type="number" default="90" min="7" max="3650" step="1"
                label="JBS_ANA_RETENTION_LABEL" description="JBS_ANA_RETENTION_DESC"
                filter="int"/>
+
+        <!-- AI Assistant Settings -->
+        <field name="ai_provider" type="list" default="claude"
+               label="JBS_ADM_AI_PROVIDER" description="JBS_ADM_AI_PROVIDER_DESC">
+            <option value="claude">Claude (Anthropic)</option>
+            <option value="openai">ChatGPT (OpenAI)</option>
+            <option value="gemini">Gemini (Google)</option>
+        </field>
+        <field name="ai_api_key" type="ApiKey" default=""
+               label="JBS_ADM_AI_API_KEY"
+               description="JBS_ADM_AI_API_KEY_DESC"
+               filter="string"/>
+        <field name="ai_model" type="list" default=""
+               label="JBS_ADM_AI_MODEL"
+               description="JBS_ADM_AI_MODEL_DESC">
+            <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
+        </field>
+        <field name="yt_auto_import_topics" type="radio" default="0"
+               label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"
+               description="JBS_ADM_YT_AUTO_IMPORT_TOPICS_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

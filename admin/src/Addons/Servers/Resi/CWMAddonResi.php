@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Http\HttpFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -332,13 +333,16 @@ class CWMAddonResi extends CWMAddon
     {
         return [
             'testApi',
+            'getMetadata',
         ];
     }
 
     /**
      * Handle testApi AJAX action
      *
-     * Tests the Resi.io configuration
+     * Tests the Resi.io OAuth credentials by calling POST /v1/oauth/token.
+     * Accepts client_id and client_secret from input (for unsaved servers)
+     * or falls back to DB lookup via server_id.
      *
      * @return  array  Response with success status
      *
@@ -350,6 +354,107 @@ class CWMAddonResi extends CWMAddon
         $input    = $app->getInput();
         $serverId = $input->getInt('server_id', 0);
 
+        // Allow testing unsaved credentials passed directly from the form
+        $clientId     = $input->getString('client_id', '');
+        $clientSecret = $input->getString('client_secret', '');
+
+        // If credentials not passed in request, load from DB
+        if ((empty($clientId) || empty($clientSecret)) && $serverId) {
+            $serverParams = $this->loadServerParams($serverId);
+
+            if ($serverParams === null) {
+                return [
+                    'success' => false,
+                    'error'   => Text::_('JBS_ADDON_RESI_SERVER_NOT_FOUND'),
+                ];
+            }
+
+            $clientId     = $clientId ?: ($serverParams['client_id'] ?? '');
+            $clientSecret = $clientSecret ?: ($serverParams['client_secret'] ?? '');
+        }
+
+        if (empty($clientId)) {
+            return [
+                'success' => false,
+                'error'   => Text::_('JBS_ADDON_RESI_NO_CLIENT_ID'),
+            ];
+        }
+
+        if (empty($clientSecret)) {
+            return [
+                'success' => false,
+                'error'   => Text::_('JBS_ADDON_RESI_NO_CLIENT_SECRET'),
+            ];
+        }
+
+        try {
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/json',
+            ];
+            $body = json_encode([
+                'client_id'     => $clientId,
+                'client_secret' => $clientSecret,
+                'grant_type'    => 'client_credentials',
+            ], JSON_THROW_ON_ERROR);
+
+            $response = $http->post('https://api.resi.io/v1/oauth/token', $body, $headers);
+
+            if ($response->getStatusCode() === 200) {
+                $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+                return [
+                    'success' => true,
+                    'message' => Text::sprintf(
+                        'JBS_ADDON_RESI_CONNECTION_SUCCESS',
+                        Text::sprintf('JBS_ADDON_RESI_TOKEN_EXPIRES', $data['expires_in'] ?? 'unknown')
+                    ),
+                ];
+            }
+
+            // Parse error response
+            $errorData = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $errorMsg  = $errorData['errors'][0]['message']
+                ?? $errorData['message']
+                ?? ('HTTP ' . $response->getStatusCode());
+
+            return [
+                'success' => false,
+                'error'   => Text::_('JBS_ADDON_RESI_API_ERROR') . ': ' . $errorMsg,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Handle getMetadata AJAX action
+     *
+     * Fetches video metadata from Resi API for a given video ID and server.
+     *
+     * @return  array  Response with video metadata
+     *
+     * @since   10.1.0
+     */
+    protected function handleGetMetadataAction(): array
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+        $serverId = $input->getInt('server_id', 0);
+        $videoId  = $input->getString('video_id', '');
+
+        if (empty($videoId)) {
+            return [
+                'success' => false,
+                'error'   => 'No video ID provided',
+            ];
+        }
+
         if (!$serverId) {
             return [
                 'success' => false,
@@ -357,53 +462,125 @@ class CWMAddonResi extends CWMAddon
             ];
         }
 
-        // Load server params
         try {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('params'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('id') . ' = ' . (int) $serverId);
-            $db->setQuery($query);
-            $paramsJson = $db->loadResult();
+            $token    = $this->getOAuthToken($serverId);
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept'        => 'application/json',
+            ];
 
-            if (!$paramsJson) {
+            $response = $http->get('https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers);
+
+            if ($response->getStatusCode() !== 200) {
+                $errorData = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+                $errorMsg  = $errorData['errors'][0]['message'] ?? ('HTTP ' . $response->getStatusCode());
+
                 return [
                     'success' => false,
-                    'error'   => Text::_('JBS_ADDON_RESI_SERVER_NOT_FOUND'),
+                    'error'   => Text::_('JBS_ADDON_RESI_API_ERROR') . ': ' . $errorMsg,
                 ];
             }
 
-            try {
-                $params = json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
-                return [
-                    'success' => false,
-                    'error'   => 'Invalid server params JSON',
-                ];
-            }
-            $accountId = $params['account_id'] ?? '';
-
-            if (empty($accountId)) {
-                return [
-                    'success' => false,
-                    'error'   => Text::_('JBS_ADDON_RESI_NO_ACCOUNT_ID'),
-                ];
-            }
-
-            // Test by constructing a Resi webplayer URL (users provide embed URLs directly)
-            $testUrl = 'https://control.resi.io/webplayer/video.html?id=' . base64_encode($accountId);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             return [
                 'success'  => true,
-                'message'  => Text::sprintf('JBS_ADDON_RESI_CONNECTION_SUCCESS', $accountId),
-                'test_url' => $testUrl,
+                'metadata' => [
+                    'title'       => $data['title'] ?? '',
+                    'description' => $data['description'] ?? '',
+                    'thumbnail'   => $data['thumbnail']['uri'] ?? '',
+                    'airDate'     => $data['airDate'] ?? '',
+                ],
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
                 'error'   => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Get an OAuth access token from the Resi API using client credentials.
+     *
+     * @param   int  $serverId  The server record ID
+     *
+     * @return  string  The access token
+     *
+     * @throws  \RuntimeException  If credentials are missing or the API call fails
+     *
+     * @since   10.1.0
+     */
+    private function getOAuthToken(int $serverId): string
+    {
+        $serverParams = $this->loadServerParams($serverId);
+
+        if ($serverParams === null) {
+            throw new \RuntimeException(Text::_('JBS_ADDON_RESI_SERVER_NOT_FOUND'));
+        }
+
+        $clientId     = $serverParams['client_id'] ?? '';
+        $clientSecret = $serverParams['client_secret'] ?? '';
+
+        if (empty($clientId) || empty($clientSecret)) {
+            throw new \RuntimeException(Text::_('JBS_ADDON_RESI_NO_CLIENT_ID'));
+        }
+
+        $factory  = new HttpFactory();
+        $http     = $factory->getHttp();
+        $headers  = [
+            'Content-Type' => 'application/json',
+            'Accept'       => 'application/json',
+        ];
+        $body = json_encode([
+            'client_id'     => $clientId,
+            'client_secret' => $clientSecret,
+            'grant_type'    => 'client_credentials',
+        ], JSON_THROW_ON_ERROR);
+
+        $response = $http->post('https://api.resi.io/v1/oauth/token', $body, $headers);
+
+        if ($response->getStatusCode() !== 200) {
+            $errorData = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $errorMsg  = $errorData['errors'][0]['message'] ?? ('HTTP ' . $response->getStatusCode());
+
+            throw new \RuntimeException(Text::_('JBS_ADDON_RESI_API_ERROR') . ': ' . $errorMsg);
+        }
+
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        return $data['access_token'] ?? '';
+    }
+
+    /**
+     * Load server params from the database.
+     *
+     * @param   int  $serverId  The server record ID
+     *
+     * @return  array|null  The decoded params array or null if not found
+     *
+     * @since   10.1.0
+     */
+    private function loadServerParams(int $serverId): ?array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        if (!$paramsJson) {
+            return null;
+        }
+
+        try {
+            return json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return null;
         }
     }
 
@@ -467,7 +644,10 @@ class CWMAddonResi extends CWMAddon
     }
 
     /**
-     * Detect metadata for a Resi video (MIME default only).
+     * Detect metadata for a Resi video.
+     *
+     * Sets MIME type default, then attempts to fetch title and thumbnail
+     * from the Resi API if OAuth credentials are configured.
      *
      * @param   Registry    $params      Media params (modified in place)
      * @param   object      $server      Server object
@@ -484,6 +664,59 @@ class CWMAddonResi extends CWMAddon
     {
         if (empty($params->get('mime_type'))) {
             $params->set('mime_type', 'video/mp4');
+        }
+
+        // Only fetch API metadata if we need title or thumbnail
+        if (!empty($params->get('title'))) {
+            return;
+        }
+
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        $videoId = $this->extractResiVideoId($filename);
+
+        if (empty($videoId)) {
+            return;
+        }
+
+        $serverParams = new Registry($server->params);
+        $clientId     = $serverParams->get('client_id');
+        $clientSecret = $serverParams->get('client_secret');
+
+        if (empty($clientId) || empty($clientSecret)) {
+            return;
+        }
+
+        try {
+            $token    = $this->getOAuthToken((int) $server->id);
+            $factory  = new HttpFactory();
+            $http     = $factory->getHttp();
+            $headers  = [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept'        => 'application/json',
+            ];
+
+            $response = $http->get('https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers);
+
+            if ($response->getStatusCode() !== 200) {
+                return;
+            }
+
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+            if (empty($params->get('title')) && !empty($data['title'])) {
+                $params->set('title', $data['title']);
+            }
+
+            if (empty($params->get('thumbnail')) && !empty($data['thumbnail']['uri'])) {
+                $params->set('thumbnail', $data['thumbnail']['uri']);
+            }
+        } catch (\Exception $e) {
+            // API failure is non-fatal — metadata is optional
         }
     }
 }
