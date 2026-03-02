@@ -53,7 +53,7 @@
             return '';
         }
 
-        let hasPlatform = media.some((m) => Number(m.external_plays || 0) > 0);
+        const hasPlatform = media.some((m) => Number(m.external_plays || 0) > 0);
 
         let thead = '<thead><tr>'
             + '<th>#</th>'

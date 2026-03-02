@@ -1,4 +1,3 @@
-/* jshint esversion: 11, browser: true */
 /* globals _ */
 (function (window, document) {
     'use strict';

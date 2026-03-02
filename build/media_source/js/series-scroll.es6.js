@@ -1,4 +1,3 @@
-/* jshint latedef: nofunc */
 /**
  * Infinite Scroll / Load More for Frontend Series Listing
  *
