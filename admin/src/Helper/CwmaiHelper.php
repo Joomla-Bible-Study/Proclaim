@@ -42,7 +42,17 @@ class CwmaiHelper
     private const PROVIDER_OPENAI  = 'openai';
 
     /**
+     * Cache TTL in seconds (5 minutes)
+     *
+     * @since 10.1.0
+     */
+    private const CACHE_TTL = 300;
+
+    /**
      * Generate sermon content (topics, description, study text) using AI
+     *
+     * Results are cached for 5 minutes per unique context to avoid redundant
+     * API calls when the user clicks AI Assist multiple times.
      *
      * @param   array  $context  Sermon context: title, scripture, video_title, video_description,
      *                           video_tags, existing_intro, existing_text, existing_topics
@@ -63,14 +73,36 @@ class CwmaiHelper
             throw new \RuntimeException(Text::_('JBS_CMN_AI_NO_API_KEY'));
         }
 
+        // Check session cache for recent result with the same context
+        $cacheKey = 'cwm_ai_' . md5(json_encode($context) . $provider . $model);
+        $session  = Factory::getApplication()->getSession();
+        $cached   = $session->get($cacheKey);
+
+        if ($cached !== null) {
+            $cached = json_decode($cached, true);
+
+            if (\is_array($cached) && !empty($cached['_ts']) && (time() - $cached['_ts']) < self::CACHE_TTL) {
+                unset($cached['_ts']);
+
+                return $cached;
+            }
+        }
+
         $systemPrompt = self::buildSystemPrompt();
         $userMessage  = self::buildUserMessage($context);
 
-        return match ($provider) {
+        $result = match ($provider) {
             self::PROVIDER_GEMINI => self::callGemini($apiKey, $model ?: 'gemini-2.0-flash', $systemPrompt, $userMessage),
             self::PROVIDER_OPENAI => self::callOpenAI($apiKey, $model ?: 'gpt-4o-mini', $systemPrompt, $userMessage),
             default               => self::callClaude($apiKey, $model ?: 'claude-haiku-4-5-20251001', $systemPrompt, $userMessage),
         };
+
+        // Cache the result in the session
+        $result['_ts'] = time();
+        $session->set($cacheKey, json_encode($result));
+        unset($result['_ts']);
+
+        return $result;
     }
 
     /**
@@ -449,7 +481,7 @@ PROMPT;
         $response = $http->post('https://api.anthropic.com/v1/messages', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body  = json_decode((string) $response->getBody(), true) ?? [];
+            $body   = json_decode((string) $response->getBody(), true) ?? [];
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -593,7 +625,11 @@ PROMPT;
         try {
             $parsed = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            throw new \RuntimeException(Text::_('JBS_CMN_AI_ERROR') . ': Invalid JSON response');
+            $snippet = mb_substr(trim($content), 0, 120);
+
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': Invalid JSON — ' . $snippet
+            );
         }
 
         return [
