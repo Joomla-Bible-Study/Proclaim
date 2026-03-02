@@ -796,9 +796,18 @@ class CwmsermonsModel extends ListModel
             'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
             'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
         ])
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1')
-            ->whereIn($db->quoteName('study_id'), $studyIds)
+            ->from($db->quoteName('#__bsms_mediafiles'));
+
+        // Include archived media when show_archived is enabled
+        $showArchived = $this->getState('filter.show_archived', '0');
+
+        if ($showArchived === '1' || $showArchived === '2') {
+            $query->where($db->quoteName('published') . ' IN (1, 2)');
+        } else {
+            $query->where($db->quoteName('published') . ' = 1');
+        }
+
+        $query->whereIn($db->quoteName('study_id'), $studyIds)
             ->group($db->quoteName('study_id'));
 
         $db->setQuery($query);

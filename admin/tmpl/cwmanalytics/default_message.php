@@ -46,7 +46,12 @@ $tsJson = json_encode([
 <!-- Message header -->
 <div class="card mb-3">
     <div class="card-body">
-        <h5 class="card-title mb-1"><?php echo $studyTitle; ?></h5>
+        <h5 class="card-title mb-1">
+            <?php echo $studyTitle; ?>
+            <?php if ($study && (int) ($study->published ?? 1) === 2) : ?>
+                <span class="badge bg-warning text-dark ms-1"><?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?></span>
+            <?php endif; ?>
+        </h5>
         <?php if ($studyDate) : ?>
             <p class="text-muted small mb-0"><?php echo Text::_('JBS_ANA_DATE'); ?>: <?php echo $studyDate; ?></p>
         <?php endif; ?>
@@ -178,14 +183,21 @@ $tsJson = json_encode([
                     $mediaLabel      = $mparams->get('media_button_text', '') ?: '#' . (int) $mf['media_id'];
                     $serverName      = htmlspecialchars((string) ($mf['server_name'] ?? '—'), ENT_QUOTES);
                     $isExternal      = (int) ($mf['content_origin'] ?? 0) === 1;
+                    $isMediaArchived = (int) ($mf['published'] ?? 1) === 2;
                     $platformPlays   = (int) ($mf['platform_play_count'] ?? 0);
                     $externalPlays   = (int) ($mf['external_plays'] ?? 0);
                     $totalReach      = (int) ($mf['total_reach'] ?? 0);
+                    $rowClass        = $isExternal ? 'table-secondary' : ($isMediaArchived ? 'table-warning' : '');
                 ?>
-                <tr<?php echo $isExternal ? ' class="table-secondary"' : ''; ?>>
+                <tr<?php echo $rowClass !== '' ? ' class="' . $rowClass . '"' : ''; ?>>
                     <td class="text-muted"><?php echo $i + 1; ?></td>
                     <td class="small"><?php echo $serverName; ?></td>
-                    <td><?php echo htmlspecialchars((string) $mediaLabel, ENT_QUOTES); ?></td>
+                    <td>
+                        <?php echo htmlspecialchars((string) $mediaLabel, ENT_QUOTES); ?>
+                        <?php if ($isMediaArchived) : ?>
+                            <span class="badge bg-warning text-dark ms-1"><?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?></span>
+                        <?php endif; ?>
+                    </td>
                     <td class="text-end text-success fw-semibold"><?php echo number_format((int) ($mf['all_time_plays'] ?? 0)); ?></td>
                     <?php if ($hasPlatformStats) : ?>
                     <td class="text-end text-body"><?php echo $platformPlays > 0 ? number_format($platformPlays) : '—'; ?></td>

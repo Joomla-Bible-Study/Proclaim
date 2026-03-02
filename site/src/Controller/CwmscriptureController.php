@@ -46,9 +46,18 @@ class CwmscriptureController extends BaseController
         $app   = Factory::getApplication();
         $input = $app->getInput();
 
-        header('Content-Type: application/json; charset=utf-8');
+        // Clean any prior output, then start a fresh buffer to capture stray
+        // PHP warnings/notices that may occur during provider execution.
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        ob_start();
 
         if (!Session::checkToken('get')) {
+            ob_end_clean();
+            header('Content-Type: application/json; charset=utf-8');
+            header('Cache-Control: no-store');
             echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
             $app->close();
 
@@ -59,8 +68,7 @@ class CwmscriptureController extends BaseController
         $version   = $input->getString('version', 'kjv');
 
         if (empty($reference)) {
-            echo json_encode(['success' => false, 'message' => 'No reference provided'], JSON_THROW_ON_ERROR);
-            $app->close();
+            $this->sendJson($app, ['success' => false, 'message' => 'No reference provided']);
 
             return;
         }
@@ -143,7 +151,7 @@ class CwmscriptureController extends BaseController
             $providerName = ($provider instanceof AbstractBibleProvider) ? $provider->getName() : 'unknown';
 
             if ($result->hasText()) {
-                echo json_encode([
+                $this->sendJson($app, [
                     'success'     => true,
                     'text'        => $result->text,
                     'copyright'   => $result->copyright,
@@ -151,25 +159,46 @@ class CwmscriptureController extends BaseController
                     'fallback'    => $usedVersion !== $version,
                     'provider'    => $providerName,
                     'requested'   => $version,
-                ], JSON_THROW_ON_ERROR);
+                ]);
             } else {
-                echo json_encode([
+                $this->sendJson($app, [
                     'success'   => false,
                     'retryable' => $transient,
                     'message'   => 'No passage text returned',
                     'provider'  => $providerName,
                     'requested' => $version,
-                ], JSON_THROW_ON_ERROR);
+                ]);
             }
         } catch (\Throwable $e) {
-            echo json_encode([
+            $this->sendJson($app, [
                 'success'   => false,
                 'retryable' => false,
                 'message'   => $e->getMessage(),
                 'requested' => $version,
-            ], JSON_THROW_ON_ERROR);
+            ]);
+        }
+    }
+
+    /**
+     * Discard any buffered PHP output and send a clean JSON response.
+     *
+     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app   Application instance
+     * @param   array                                             $data  Response payload
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function sendJson($app, array $data): void
+    {
+        // Discard any stray PHP warnings/notices captured during execution
+        while (ob_get_level()) {
+            ob_end_clean();
         }
 
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        echo json_encode($data, JSON_THROW_ON_ERROR);
         $app->close();
     }
 }

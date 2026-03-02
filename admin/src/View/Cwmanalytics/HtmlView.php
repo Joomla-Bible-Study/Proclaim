@@ -92,6 +92,22 @@ class HtmlView extends BaseHtmlView
     /** @var array<int, array<string, mixed>> @since 10.1.0 */
     public array $seriesMessages = [];
 
+    // --- Messages list drill-down ---
+    /** @var array<int, array<string, mixed>> @since 10.1.0 */
+    public array $messagesList = [];
+
+    /** @var string Search term for messages list filter @since 10.1.0 */
+    public string $messagesSearch = '';
+
+    /** @var int Current page number (1-based) for messages list @since 10.1.0 */
+    public int $messagesPage = 1;
+
+    /** @var int Total number of messages matching current filters @since 10.1.0 */
+    public int $messagesTotal = 0;
+
+    /** @var int Messages per page @since 10.1.0 */
+    public int $messagesPerPage = 25;
+
     // --- Message drill-down ---
     /** @var object|null @since 10.1.0 */
     public ?object $studyInfo = null;
@@ -131,6 +147,9 @@ class HtmlView extends BaseHtmlView
 
     /** @var string Export URL for CSV download @since 10.1.0 */
     public string $exportUrl = '';
+
+    /** @var string Status filter: '', 'published', or 'archived' @since 10.1.0 */
+    public string $statusFilter = '';
 
     /** @var bool True when rendering the print-optimized report @since 10.1.0 */
     public bool $isPrint = false;
@@ -201,6 +220,9 @@ class HtmlView extends BaseHtmlView
         // --- Campus filter ---
         $this->locationId = $input->getInt('location_id', 0);
 
+        // --- Status filter ---
+        $this->statusFilter = $input->getCmd('status', '');
+
         // --- Drill-down params ---
         $this->drilldown   = $input->getCmd('drilldown', '');
         $this->drilldownId = $input->getInt('id', 0);
@@ -245,7 +267,22 @@ class HtmlView extends BaseHtmlView
             $this->seriesMessages = $model->getSeriesMessages($this->drilldownId, $s, $e);
         } elseif ($this->drilldown === 'series') {
             // Series list
-            $this->seriesList = $model->getSeriesList($s, $e, $l);
+            $this->seriesList = $model->getSeriesList($s, $e, $l, $this->statusFilter);
+        } elseif ($this->drilldown === 'messages') {
+            // Messages list (all messages regardless of series) — paginated
+            $this->messagesSearch = $input->getString('search', '');
+            $this->messagesPage   = max(1, $input->getInt('page', 1));
+            $this->messagesTotal  = $model->getMessagesCount($s, $e, $l, $this->messagesSearch, $this->statusFilter);
+            $offset               = ($this->messagesPage - 1) * $this->messagesPerPage;
+            $this->messagesList   = $model->getMessagesList(
+                $s,
+                $e,
+                $l,
+                $this->messagesSearch,
+                $this->messagesPerPage,
+                $offset,
+                $this->statusFilter
+            );
         } elseif ($this->drilldown === 'message' && $this->drilldownId > 0) {
             // Message detail
             $this->studyInfo          = $model->getStudyInfo($this->drilldownId);
@@ -275,7 +312,8 @@ class HtmlView extends BaseHtmlView
             'index.php?option=com_proclaim&task=cwmanalytics.exportCsv' .
             '&date_start=' . urlencode($s) .
             '&date_end=' . urlencode($e) .
-            '&location_id=' . (int) $l,
+            '&location_id=' . (int) $l .
+            ($this->statusFilter !== '' ? '&status=' . urlencode($this->statusFilter) : ''),
             false
         );
 

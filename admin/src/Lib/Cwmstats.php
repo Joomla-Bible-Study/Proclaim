@@ -139,7 +139,8 @@ class Cwmstats
         // Delegate to CwmcountHelper for simple published count (no date filtering)
         // Note: CwmcountHelper does NOT filter by access, so only use for super admins
         if (empty($start) && empty($end) && $isAdmin) {
-            return CwmcountHelper::getCountByState('#__bsms_studies', 1);
+            return CwmcountHelper::getCountByState('#__bsms_studies', 1)
+                + CwmcountHelper::getCountByState('#__bsms_studies', 2);
         }
 
         if ($start !== self::$total_messages_start || $end !== self::$total_messages_end || !self::$total_messages) {
@@ -151,7 +152,7 @@ class Cwmstats
             $query
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies', 's'))
-                ->where($db->quoteName('s.published') . ' = 1');
+                ->whereIn($db->quoteName('s.published'), [1, 2]);
 
             // Apply hybrid security filter: location-based + Joomla view-level access
             CwmlocationHelper::applySecurityFilter($query, 's');
@@ -257,7 +258,7 @@ class Cwmstats
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->from($db->quoteName('#__bsms_studies', 's'))
-                ->where($db->quoteName('s.published') . ' = 1')
+                ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->where($db->quoteName('s.hits') . ' > 0');
 
             // Apply hybrid security filter: location-based + Joomla view-level access
@@ -325,7 +326,7 @@ class Cwmstats
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->from($db->quoteName('#__bsms_studies', 's'))
-                ->where($db->quoteName('s.published') . ' = 1')
+                ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->where($db->quoteName('s.hits') . ' > 0')
                 ->where($db->quoteName('s.studydate') . ' > ' . $db->quote($last_month));
 
@@ -358,13 +359,14 @@ class Cwmstats
     /**
      * Get Total Media Files
      *
-     * @return int Number of Records under Media Files that are published.
+     * @return int Number of published + archived media files (excludes trashed).
      *
      * @since 9.0.0
      */
     public static function getTotalMediaFiles(): int
     {
-        return CwmcountHelper::getCountByState('#__bsms_mediafiles', 1);
+        return CwmcountHelper::getCountByState('#__bsms_mediafiles', 1)
+            + CwmcountHelper::getCountByState('#__bsms_mediafiles', 2);
     }
 
     /**
@@ -401,7 +403,7 @@ class Cwmstats
                 ->select($db->quoteName('s.access', 'saccess'))
                 ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
                 ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
-                ->where($db->quoteName('mf.published') . ' = 1')
+                ->whereIn($db->quoteName('mf.published'), [1, 2])
                 ->where($db->quoteName('mf.downloads') . ' > 0');
 
             // Apply hybrid security filter: location-based + Joomla view-level access
@@ -464,7 +466,7 @@ class Cwmstats
                 ->select($db->quoteName('s.access', 'saccess'))
                 ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
                 ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
-                ->where($db->quoteName('mf.published') . ' = 1')
+                ->whereIn($db->quoteName('mf.published'), [1, 2])
                 ->where($db->quoteName('mf.downloads') . ' > 0')
                 ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
 
@@ -497,7 +499,7 @@ class Cwmstats
     /**
      * Total Downloads
      *
-     * @return  int Number of Media Files Downloaded in Published state
+     * @return  int Total downloads across published + archived media files
      *
      * @since 9.0.0
      */
@@ -512,7 +514,7 @@ class Cwmstats
         $query
             ->select('SUM(' . $db->quoteName('downloads') . ')')
             ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1')
+            ->whereIn($db->quoteName('published'), [1, 2])
             ->where($db->quoteName('downloads') . ' > 0');
         $db->setQuery($query);
 
@@ -557,7 +559,7 @@ class Cwmstats
                 ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
                 ->from($db->quoteName('#__bsms_studies', 's'))
                 ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
-                ->where($db->quoteName('mf.published') . ' = 1');
+                ->whereIn($db->quoteName('mf.published'), [1, 2]);
 
             // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
             if ($format >= 2) {
@@ -662,7 +664,7 @@ class Cwmstats
             'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "3" THEN 1 ELSE 0 END) as popup_squeezebox',
         ])
             ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1');
+            ->whereIn($db->quoteName('published'), [1, 2]);
 
         $db->setQuery($query);
 
@@ -717,7 +719,7 @@ class Cwmstats
         $query = $db->getQuery(true);
         $query->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('published') . ' = 1');
+            ->whereIn($db->quoteName('published'), [1, 2]);
         $db->setQuery($query);
         $rows = $db->loadColumn();
 
@@ -982,8 +984,8 @@ class Cwmstats
             ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
-            ->where($db->quoteName('m.published') . ' = 1')
-            ->where($db->quoteName('s.published') . ' = 1');
+            ->whereIn($db->quoteName('m.published'), [1, 2])
+            ->whereIn($db->quoteName('s.published'), [1, 2]);
 
         // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
         if ($format >= 2) {

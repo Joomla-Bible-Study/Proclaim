@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Component\ComponentHelper;
@@ -39,7 +40,10 @@ $columns   = 11;
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
-    ->useScript('multiselect');
+    ->useScript('multiselect')
+    ->useScript('com_proclaim.media-analytics-modal');
+
+CwmlangHelper::registerAllForJs();
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
 $workflow_state    = false;
@@ -342,14 +346,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                             echo $this->escape($item->series_text); ?>
                                 </td>
                                 <td class="d-none d-md-table-cell text-center">
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                        echo Text::sprintf('JBS_CMN_HITS', $this->escape($item->hits)); ?></button>
-                                    <br/>
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                        echo Text::sprintf('JBS_CMN_PLAYS', $this->escape($item->totalplays)); ?></button>
-                                    <br/>
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                        echo Text::sprintf('JBS_CMN_DOWNLOADS', $this->escape($item->totaldownloads)); ?></button>
+                                    <button type="button" class="btn btn-sm btn-info px-2"
+                                            data-cwm-analytics-study="<?php echo (int) $item->id; ?>"
+                                            title="<?php echo $this->escape(
+                                                Text::sprintf('JBS_CMN_HITS', $item->hits)
+                                                . ' | ' . Text::sprintf('JBS_CMN_PLAYS', $item->totalplays)
+                                                . ' | ' . Text::sprintf('JBS_CMN_DOWNLOADS', $item->totaldownloads)
+                                            ); ?>">
+                                        <i class="icon-eye fs-5" aria-hidden="true"></i>
+                                        <span class="visually-hidden"><?php echo Text::_('JBS_CPL_STATISTIC'); ?></span>
+                                    </button>
                                 </td>
                                 <?php
                                         if (Multilanguage::isEnabled()) : ?>
@@ -406,3 +412,4 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
         </div>
     </div>
 </form>
+<?php echo LayoutHelper::render('analytics.modal', null, JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'); ?>

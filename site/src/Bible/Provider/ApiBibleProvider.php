@@ -364,12 +364,13 @@ class ApiBibleProvider extends AbstractBibleProvider
             $factory  = new HttpFactory();
             $http     = $factory->getHttp();
             $response = $http->get($url, ['api-key' => $this->apiKey], $timeout);
+            $code     = $response->getStatusCode();
 
-            if ($response->code === 200) {
-                return $response->body;
+            if ($code === 200) {
+                return (string) $response->getBody();
             }
 
-            Log::add('ApiBible: HTTP ' . $response->code . ' from ' . strtok($url, '?'), Log::ERROR, 'com_proclaim.bible');
+            Log::add('ApiBible: HTTP ' . $code . ' from ' . strtok($url, '?'), Log::ERROR, 'com_proclaim.bible');
         } catch (\Exception $e) {
             Log::add('ApiBible: HTTP error: ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
         }

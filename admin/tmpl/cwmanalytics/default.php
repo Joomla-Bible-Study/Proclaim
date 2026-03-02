@@ -114,9 +114,11 @@ $localBadge = !empty($this->platformStats)
     <!-- View navigation tabs -->
     <?php
     $isOverview = $this->drilldown === '';
-$isSeries       = $this->drilldown === 'series' || $this->drilldown === 'message';
+$isSeries       = $this->drilldown === 'series';
+$isMessages     = $this->drilldown === 'messages' || $this->drilldown === 'message';
 $isMedia        = $this->drilldown === 'media';
-$navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId;
+$navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&location_id=' . (int) $this->locationId
+    . ($this->statusFilter !== '' ? '&status=' . htmlspecialchars($this->statusFilter, ENT_QUOTES) : '');
 ?>
     <ul class="nav nav-tabs mb-0" style="border-bottom:0">
         <li class="nav-item">
@@ -129,6 +131,12 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
             <a href="<?php echo Route::_($baseUrl . '&drilldown=series' . $navParams); ?>"
                class="nav-link<?php echo $isSeries ? ' active' : ''; ?>">
                 <i class="icon-list me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_SERIES'); ?>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo Route::_($baseUrl . '&drilldown=messages' . $navParams); ?>"
+               class="nav-link<?php echo $isMessages ? ' active' : ''; ?>">
+                <i class="icon-book me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_DRILL_MESSAGES'); ?>
             </a>
         </li>
         <li class="nav-item">
@@ -154,7 +162,7 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                 <div class="btn-group" role="group" aria-label="<?php echo Text::_('JBS_ANA_DATE_PRESET'); ?>">
                     <?php foreach ($presets as $key => $label) : ?>
                         <?php
-                    $presetHref = Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId . ($this->drilldown !== '' ? '&drilldown=' . htmlspecialchars($this->drilldown, ENT_QUOTES) : ''));
+                    $presetHref = Route::_($baseUrl . '&preset=' . $key . '&location_id=' . $this->locationId . ($this->drilldown !== '' ? '&drilldown=' . htmlspecialchars($this->drilldown, ENT_QUOTES) : '') . ($this->statusFilter !== '' ? '&status=' . htmlspecialchars($this->statusFilter, ENT_QUOTES) : ''));
                         ?>
                         <a href="<?php echo $presetHref; ?>"
                            class="btn <?php echo $key === $this->preset ? 'btn-primary' : 'btn-outline-secondary'; ?>">
@@ -187,6 +195,20 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                     </select>
                 <?php endif; ?>
 
+                <!-- Status filter -->
+                <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_STATUS_FILTER'); ?></label>
+                <select name="status" class="form-select form-select-sm" style="width:140px">
+                    <option value=""<?php echo $this->statusFilter === '' ? ' selected' : ''; ?>>
+                        <?php echo Text::_('JBS_ANA_STATUS_ALL'); ?>
+                    </option>
+                    <option value="published"<?php echo $this->statusFilter === 'published' ? ' selected' : ''; ?>>
+                        <?php echo Text::_('JBS_ANA_STATUS_PUBLISHED'); ?>
+                    </option>
+                    <option value="archived"<?php echo $this->statusFilter === 'archived' ? ' selected' : ''; ?>>
+                        <?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?>
+                    </option>
+                </select>
+
                 <button type="submit" class="btn btn-sm btn-primary">
                     <i class="icon-search me-1" aria-hidden="true"></i><?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>
                 </button>
@@ -197,7 +219,8 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                 $printParams = '&preset=' . urlencode($this->preset)
                     . '&date_start=' . urlencode($this->dateStart)
                     . '&date_end=' . urlencode($this->dateEnd)
-                    . '&location_id=' . (int) $this->locationId;
+                    . '&location_id=' . (int) $this->locationId
+                    . ($this->statusFilter !== '' ? '&status=' . urlencode($this->statusFilter) : '');
 
                 if ($this->drilldown !== '') {
                     $printParams .= '&drilldown=' . urlencode($this->drilldown);
@@ -630,6 +653,8 @@ $showPeriodStrip     = $hasRealEvents;
         <?php echo $this->loadTemplate('series_list'); ?>
     <?php elseif ($this->drilldown === 'series' && $this->drilldownId > 0) : ?>
         <?php echo $this->loadTemplate('series_detail'); ?>
+    <?php elseif ($this->drilldown === 'messages') : ?>
+        <?php echo $this->loadTemplate('messages_list'); ?>
     <?php elseif ($this->drilldown === 'message' && $this->drilldownId > 0) : ?>
         <?php echo $this->loadTemplate('message'); ?>
     <?php elseif ($this->drilldown === 'media') : ?>

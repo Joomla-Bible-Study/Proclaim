@@ -21,6 +21,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Registry\Registry;
 
 /**
  * Analytics dashboard controller.
@@ -116,5 +118,123 @@ class CwmanalyticsController extends BaseController
 
         echo $csv;
         exit;
+    }
+
+    /**
+     * Return quick-stats analytics for a single message as JSON.
+     *
+     * Called via AJAX from the Messages and Media Files list views.
+     * Returns KPI totals, per-media breakdown, and platform stats.
+     *
+     * @return  never
+     *
+     * @throws \Exception
+     * @since   10.1.0
+     */
+    public function getStudyAnalyticsXHR(): never
+    {
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN_NOTICE'));
+        }
+
+        $app     = Factory::getApplication();
+        $studyId = $app->getInput()->getInt('study_id', 0);
+
+        if ($studyId <= 0) {
+            $this->sendJsonResponse(false, 'Missing study_id');
+        }
+
+        // Access control: verify the user can see this study
+        $user = $app->getIdentity();
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('access'), $db->quoteName('location_id')])
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('id') . ' = ' . (int) $studyId);
+        $db->setQuery($query);
+        $study = $db->loadObject();
+
+        if (!$study) {
+            $this->sendJsonResponse(false, 'Study not found');
+        }
+
+        if (!$user->authorise('core.admin')) {
+            $viewLevels = $user->getAuthorisedViewLevels();
+
+            if (!\in_array((int) $study->access, $viewLevels, true)) {
+                $this->sendJsonResponse(false, 'Access denied');
+            }
+        }
+
+        // Default to last 30 days
+        $start = date('Y-m-d', strtotime('-29 days'));
+        $end   = date('Y-m-d');
+
+        /** @var CwmanalyticsModel $model */
+        $model = $this->getModel('Cwmanalytics', 'Administrator');
+
+        $info          = $model->getStudyInfo($studyId);
+        $kpi           = $model->getStudyKpi($studyId, $start, $end);
+        $mediaFiles    = $model->getStudyMediaFiles($studyId, $start, $end);
+        $platformStats = $model->getPlatformStatsForStudy($studyId);
+
+        // Parse media_params to extract button labels
+        foreach ($mediaFiles as &$mf) {
+            $label = '';
+
+            if (!empty($mf['media_params'])) {
+                try {
+                    $params = new Registry($mf['media_params']);
+                    $label  = $params->get('media_button_text', '');
+                } catch (\Exception $e) {
+                    // Ignore malformed params
+                }
+            }
+
+            $mf['label'] = $label;
+            unset($mf['media_params']);
+        }
+
+        unset($mf);
+
+        $this->sendJsonResponse(true, '', [
+            'info'          => $info,
+            'kpi'           => $kpi,
+            'media'         => $mediaFiles,
+            'platformStats' => $platformStats,
+            'periodStart'   => $start,
+            'periodEnd'     => $end,
+        ]);
+    }
+
+    /**
+     * Send a JSON response and terminate execution.
+     *
+     * @param   bool    $success  Whether the request succeeded.
+     * @param   string  $message  Optional message.
+     * @param   array   $data     Optional data payload.
+     *
+     * @return  never
+     *
+     * @since   10.1.0
+     */
+    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
+    {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        $response = json_encode([
+            'success' => $success,
+            'message' => $message,
+            'data'    => $data,
+        ], JSON_THROW_ON_ERROR);
+
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        echo $response;
+
+        Factory::getApplication()->close();
     }
 }

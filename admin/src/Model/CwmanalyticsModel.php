@@ -160,7 +160,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' ON ' . $db->quoteName('m2.id') . ' = ' . $db->quoteName('ps.media_id')
                 )
                 ->where($db->quoteName('m2.content_origin') . ' = 0')
-                ->where($db->quoteName('m2.published') . ' = 1');
+                ->whereIn($db->quoteName('m2.published'), [1, 2]);
 
             if ($locationId > 0 || !empty($accessibleIds)) {
                 $q3->leftJoin(
@@ -851,9 +851,16 @@ class CwmanalyticsModel extends BaseDatabaseModel
     /**
      * Get all published series with their engagement totals for the date range.
      *
+     * @param   string  $start       Period start (Y-m-d).
+     * @param   string  $end         Period end (Y-m-d).
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
+     *
+     * @return  array<int, array<string, mixed>>
+     *
      * @since 10.1.0
      */
-    public function getSeriesList(string $start, string $end, int $locationId = 0): array
+    public function getSeriesList(string $start, string $end, int $locationId = 0, string $status = ''): array
     {
         try {
             $db = $this->getDatabase();
@@ -862,8 +869,17 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ? ' AND EXISTS (SELECT 1 FROM ' . $db->quoteName('#__bsms_studies') . ' sl2'
                   . ' WHERE sl2.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                   . ' AND sl2.' . $db->quoteName('location_id') . ' = ' . (int) $locationId
-                  . ' AND sl2.' . $db->quoteName('published') . ' = 1)'
+                  . ' AND sl2.' . $db->quoteName('published') . ' IN (1, 2))'
                 : '';
+
+            // Status filter for series
+            if ($status === 'published') {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' = 1';
+            } elseif ($status === 'archived') {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' = 2';
+            } else {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' IN (1, 2)';
+            }
 
             // Raw SQL avoids query-builder quirks with correlated scalar subqueries.
             // One LEFT JOIN on series_id (no study JOIN) prevents Cartesian product.
@@ -871,6 +887,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' sr.' . $db->quoteName('id') . ' AS series_id,'
                 . ' sr.' . $db->quoteName('series_text') . ' AS title,'
                 . ' sr.' . $db->quoteName('series_thumbnail') . ' AS thumb,'
+                . ' sr.' . $db->quoteName('published') . ','
                 . ' (SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' sc'
                 . '  WHERE sc.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                 . '  AND sc.' . $db->quoteName('published') . ' IN (1, 2)) AS message_count,'
@@ -889,7 +906,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . '   ON e.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                 . '   AND e.' . $db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00')
                 . '   AND e.' . $db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59')
-                . ' WHERE sr.' . $db->quoteName('published') . ' = 1'
+                . ' WHERE' . $seriesPublishedFilter
                 . $locationFilter
                 . ' GROUP BY sr.' . $db->quoteName('id')
                 . ' ORDER BY COUNT(e.' . $db->quoteName('id') . ') DESC'
@@ -989,6 +1006,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('s.studytitle', 'title'),
                     $db->quoteName('s.studydate', 'study_date'),
                     $db->quoteName('s.hits', 'all_time_views'),
+                    $db->quoteName('s.published'),
                     $db->quoteName('s.series_id'),
                     $db->quoteName('sr.series_text', 'series_title'),
                 ])
@@ -1089,6 +1107,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('m.plays', 'all_time_plays'),
                     $db->quoteName('m.downloads', 'all_time_downloads'),
                     $db->quoteName('m.content_origin'),
+                    $db->quoteName('m.published'),
                     $db->quoteName('m.ordering'),
                     $db->quoteName('sv.server_name'),
                     $db->quoteName('sv.type', 'server_type'),
@@ -1114,7 +1133,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
                 )
                 ->where($db->quoteName('m.study_id') . ' = ' . (int) $studyId)
-                ->where($db->quoteName('m.published') . ' = 1')
+                ->whereIn($db->quoteName('m.published'), [1, 2])
                 ->group($db->quoteName('m.id'))
                 ->order($db->quoteName('m.ordering') . ' ASC');
             $db->setQuery($query);
@@ -1320,6 +1339,179 @@ class CwmanalyticsModel extends BaseDatabaseModel
             }
 
             $db->setQuery($query, 0, 30);
+
+            return (array) ($db->loadAssocList() ?? []);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Build the WHERE clause fragments for messages queries.
+     *
+     * @param   DatabaseInterface  $db          Database driver.
+     * @param   int                $locationId  Campus filter; 0 = all.
+     * @param   string             $search      Title search term.
+     * @param   string             $status      Status filter: '', 'published', or 'archived'.
+     *
+     * @return  array{location: string, search: string, status: string}  SQL fragments to append.
+     *
+     * @since   10.1.0
+     */
+    private function buildMessagesFilters(DatabaseInterface $db, int $locationId, string $search, string $status = ''): array
+    {
+        // Location filter
+        if ($locationId > 0) {
+            $locationFilter = ' AND st.' . $db->quoteName('location_id') . ' = ' . (int) $locationId;
+        } else {
+            $locationFilter = '';
+
+            try {
+                $user = Factory::getApplication()->getIdentity();
+
+                if ($user && !$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+                    $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                    if (!empty($accessible)) {
+                        $ids            = implode(',', array_map('intval', $accessible));
+                        $locationFilter = ' AND (st.' . $db->quoteName('location_id') . ' IS NULL'
+                            . ' OR st.' . $db->quoteName('location_id') . ' IN (' . $ids . '))';
+                    }
+                }
+            } catch (\Exception $e) {
+                // Fail open
+            }
+        }
+
+        // Search filter
+        $searchFilter = '';
+
+        if ($search !== '') {
+            $searchFilter = ' AND st.' . $db->quoteName('studytitle') . ' LIKE '
+                . $db->quote('%' . $db->escape($search, true) . '%');
+        }
+
+        // Status filter
+        $statusFilter = '';
+
+        if ($status === 'published') {
+            $statusFilter = ' AND st.' . $db->quoteName('published') . ' = 1';
+        } elseif ($status === 'archived') {
+            $statusFilter = ' AND st.' . $db->quoteName('published') . ' = 2';
+        }
+
+        return ['location' => $locationFilter, 'search' => $searchFilter, 'status' => $statusFilter];
+    }
+
+    /**
+     * Count published messages matching the given filters.
+     *
+     * Used for pagination on the Messages analytics tab.
+     *
+     * @param   string  $start       Period start (Y-m-d) — unused but kept for signature consistency.
+     * @param   string  $end         Period end (Y-m-d) — unused but kept for signature consistency.
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $search      Optional title search term.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
+     *
+     * @return  int
+     *
+     * @since   10.1.0
+     */
+    public function getMessagesCount(string $start, string $end, int $locationId = 0, string $search = '', string $status = ''): int
+    {
+        try {
+            $db      = $this->getDatabase();
+            $filters = $this->buildMessagesFilters($db, $locationId, $search, $status);
+
+            $sql = 'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' st'
+                . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
+                . $filters['location']
+                . $filters['search']
+                . $filters['status'];
+
+            $db->setQuery($sql);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Get published messages with engagement stats for the Messages tab.
+     *
+     * Returns messages regardless of whether they belong to a series,
+     * solving the gap where un-attached messages were invisible in the
+     * Series → Messages drill-down path. Paginated via $limit/$offset.
+     *
+     * @param   string  $start       Period start (Y-m-d).
+     * @param   string  $end         Period end (Y-m-d).
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $search      Optional title search term.
+     * @param   int     $limit       Max rows to return (page size).
+     * @param   int     $offset      Row offset for pagination.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
+     *
+     * @return  array<int, array<string, mixed>>
+     *
+     * @since   10.1.0
+     */
+    public function getMessagesList(
+        string $start,
+        string $end,
+        int $locationId = 0,
+        string $search = '',
+        int $limit = 25,
+        int $offset = 0,
+        string $status = ''
+    ): array {
+        try {
+            $db      = $this->getDatabase();
+            $filters = $this->buildMessagesFilters($db, $locationId, $search, $status);
+
+            $sql = 'SELECT'
+                . ' st.' . $db->quoteName('id') . ' AS study_id,'
+                . ' st.' . $db->quoteName('studytitle') . ' AS title,'
+                . ' st.' . $db->quoteName('studydate') . ' AS study_date,'
+                . ' st.' . $db->quoteName('hits') . ' AS all_time_hits,'
+                . ' st.' . $db->quoteName('published') . ','
+                . ' sr.' . $db->quoteName('series_text') . ' AS series_title,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
+                . ' THEN 1 ELSE 0 END), 0) AS views,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play')
+                . ' THEN 1 ELSE 0 END), 0) AS plays,'
+                . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download')
+                . ' THEN 1 ELSE 0 END), 0) AS downloads,'
+                . ' COALESCE((SELECT SUM(mf2.' . $db->quoteName('plays') . ')'
+                . '  FROM ' . $db->quoteName('#__bsms_mediafiles') . ' mf2'
+                . '  WHERE mf2.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '  AND mf2.' . $db->quoteName('published') . ' IN (1, 2)), 0) AS all_time_plays,'
+                . ' COALESCE((SELECT SUM(mf3.' . $db->quoteName('downloads') . ')'
+                . '  FROM ' . $db->quoteName('#__bsms_mediafiles') . ' mf3'
+                . '  WHERE mf3.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '  AND mf3.' . $db->quoteName('published') . ' IN (1, 2)), 0) AS all_time_downloads'
+                . ' FROM ' . $db->quoteName('#__bsms_studies') . ' st'
+                . ' LEFT JOIN ' . $db->quoteName('#__bsms_series') . ' sr'
+                . '   ON sr.' . $db->quoteName('id') . ' = st.' . $db->quoteName('series_id')
+                . ' LEFT JOIN ' . $db->quoteName('#__bsms_analytics_events') . ' e'
+                . '   ON e.' . $db->quoteName('study_id') . ' = st.' . $db->quoteName('id')
+                . '   AND e.' . $db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00')
+                . '   AND e.' . $db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59')
+                . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
+                . $filters['location']
+                . $filters['search']
+                . $filters['status']
+                . ' GROUP BY st.' . $db->quoteName('id')
+                . ' ORDER BY (COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
+                . ' THEN 1 ELSE 0 END), 0)'
+                . ' + COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('play')
+                . ' THEN 1 ELSE 0 END), 0)'
+                . ' + COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('download')
+                . ' THEN 1 ELSE 0 END), 0)) DESC,'
+                . ' st.' . $db->quoteName('studydate') . ' DESC';
+
+            $db->setQuery($sql, $offset, $limit);
 
             return (array) ($db->loadAssocList() ?? []);
         } catch (\Exception $e) {

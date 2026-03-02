@@ -241,8 +241,14 @@ class CwmsermonModel extends FormModel
                         'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
                     ])
                     ->from($db->quoteName('#__bsms_mediafiles'))
-                    ->where($db->quoteName('study_id') . ' = ' . (int) $pk)
-                    ->where($db->quoteName('published') . ' = 1');
+                    ->where($db->quoteName('study_id') . ' = ' . (int) $pk);
+
+                // Include archived media when viewing archived messages
+                if (is_numeric($archived) && (int) $archived === 2) {
+                    $mediaQuery->where($db->quoteName('published') . ' IN (1, 2)');
+                } else {
+                    $mediaQuery->where($db->quoteName('published') . ' = 1');
+                }
                 $db->setQuery($mediaQuery);
                 $mediaStats = $db->loadObject();
 

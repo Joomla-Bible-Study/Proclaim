@@ -370,36 +370,39 @@ abstract class AbstractBibleProvider implements BibleProviderInterface
                 continue;
             }
 
+            $code = $response->getStatusCode();
+            $body = (string) $response->getBody();
+
             // Non-retryable client errors — fail immediately
-            if (\in_array($response->code, [400, 404], true)) {
-                Log::add('HTTP ' . $response->code . ' from ' . $host . ' (not retryable)', Log::WARNING, 'com_proclaim.bible');
+            if (\in_array($code, [400, 404], true)) {
+                Log::add('HTTP ' . $code . ' from ' . $host . ' (not retryable)', Log::WARNING, 'com_proclaim.bible');
                 $this->lastErrorTransient = false;
 
                 return null;
             }
 
             // Retryable server errors
-            if (\in_array($response->code, [429, 503], true)) {
-                Log::add('HTTP ' . $response->code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
+            if (\in_array($code, [429, 503], true)) {
+                Log::add('HTTP ' . $code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
                 $this->lastErrorTransient = true;
 
                 continue;
             }
 
-            if ($response->code === 200) {
+            if ($code === 200) {
                 // Detect DDoS gatekeeper HTML pages returned with 200
-                if (self::isHtmlResponse($response->body)) {
+                if (self::isHtmlResponse($body)) {
                     Log::add('HTML gatekeeper detected from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
                     $this->lastErrorTransient = true;
 
                     continue;
                 }
 
-                return $response->body;
+                return $body;
             }
 
             // Other non-200 codes — log and retry
-            Log::add('HTTP ' . $response->code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
+            Log::add('HTTP ' . $code . ' from ' . $host . ' (attempt ' . $attempt . ')', Log::WARNING, 'com_proclaim.bible');
             $this->lastErrorTransient = true;
         }
 

@@ -326,11 +326,11 @@ class CWMAddonWistia extends CWMAddon
         try {
             $response = $http->get($url, $headers);
 
-            if ($response->code !== 200) {
-                throw new \RuntimeException('Wistia oEmbed error: HTTP ' . $response->code);
+            if ($response->getStatusCode() !== 200) {
+                throw new \RuntimeException('Wistia oEmbed error: HTTP ' . $response->getStatusCode());
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             throw new \RuntimeException('Wistia oEmbed error: ' . $e->getMessage());
         }
@@ -425,11 +425,11 @@ class CWMAddonWistia extends CWMAddon
                 $headers
             );
 
-            if ($response->code >= 200 && $response->code < 300) {
+            if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
                 return ['success' => true];
             }
 
-            return ['success' => false, 'error' => 'Wistia API error: HTTP ' . $response->code];
+            return ['success' => false, 'error' => 'Wistia API error: HTTP ' . $response->getStatusCode()];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -497,13 +497,13 @@ class CWMAddonWistia extends CWMAddon
                     $headers
                 );
 
-                if ($response->code !== 200) {
-                    $errors[] = 'Wistia stats for ' . $hash . ': HTTP ' . $response->code;
+                if ($response->getStatusCode() !== 200) {
+                    $errors[] = 'Wistia stats for ' . $hash . ': HTTP ' . $response->getStatusCode();
 
                     continue;
                 }
 
-                $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+                $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
                 foreach ($mediaIds as $mediaId) {
                     static::upsertPlatformStats(
@@ -630,14 +630,14 @@ class CWMAddonWistia extends CWMAddon
 
             $response = $http->get('https://api.wistia.com/v1/account.json', $headers);
 
-            if ($response->code !== 200) {
+            if ($response->getStatusCode() !== 200) {
                 return [
                     'success' => false,
-                    'error'   => Text::sprintf('JBS_ADDON_WISTIA_API_ERROR', $response->code),
+                    'error'   => Text::sprintf('JBS_ADDON_WISTIA_API_ERROR', $response->getStatusCode()),
                 ];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             return [
                 'success' => true,
@@ -781,11 +781,11 @@ class CWMAddonWistia extends CWMAddon
                 $headers
             );
 
-            if ($response->code !== 200) {
-                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->getStatusCode() . ')'];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             if (!\is_array($data)) {
                 return ['success' => false, 'error' => 'Invalid API response'];
@@ -794,7 +794,7 @@ class CWMAddonWistia extends CWMAddon
             // Total count is in the WTotal-Count response header
             $total = 0;
 
-            foreach ((array) $response->headers as $headerName => $headerValue) {
+            foreach ($response->getHeaders() as $headerName => $headerValue) {
                 if (strtolower((string) $headerName) === 'wtotal-count') {
                     $total = (int) (\is_array($headerValue) ? $headerValue[0] : $headerValue);
                     break;
@@ -872,11 +872,11 @@ class CWMAddonWistia extends CWMAddon
                 $headers
             );
 
-            if ($response->code !== 200) {
-                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->code . ')'];
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Wistia API error (HTTP ' . $response->getStatusCode() . ')'];
             }
 
-            $data = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
             if (!\is_array($data)) {
                 return ['success' => false, 'error' => 'Invalid API response'];

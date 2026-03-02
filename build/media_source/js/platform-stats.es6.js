@@ -23,15 +23,24 @@
     };
 
     /**
-     * Get the CSRF token value from the page.
+     * Get the CSRF token name from the page.
+     *
+     * Joomla's CSRF token is a hidden input whose name is a 32-char hex hash.
+     * We match on that pattern to avoid false positives from other hidden
+     * inputs with value="1" (e.g. delete_physical_files).
      *
      * @returns {string}
      */
     function getToken() {
-        const el = document.querySelector('input[name^="csrf."]')
-            || document.querySelector('input[type="hidden"][name][value="1"]');
+        const inputs = document.querySelectorAll('input[type="hidden"][value="1"]');
 
-        return el ? el.name : '';
+        for (const input of inputs) {
+            if (/^[0-9a-f]{32}$/.test(input.name)) {
+                return input.name;
+            }
+        }
+
+        return '';
     }
 
     /**

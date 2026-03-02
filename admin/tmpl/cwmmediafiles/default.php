@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -27,7 +28,10 @@ use Joomla\CMS\Session\Session;
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
-    ->useScript('multiselect');
+    ->useScript('multiselect')
+    ->useScript('com_proclaim.media-analytics-modal');
+
+CwmlangHelper::registerAllForJs();
 
 $app       = Factory::getApplication();
 $user      = $this->getCurrentUser();
@@ -225,9 +229,15 @@ if ($saveOrder && !empty($this->items)) {
                                     <?php echo HTMLHelper::_('date', $item->createdate, Text::_('DATE_FORMAT_LC4')); ?>
                                 </td>
                                 <td class="d-none d-md-table-cell text-center">
-                                    <span class="badge bg-info"><?php echo Text::sprintf('JBS_CMN_PLAYS', (int) $item->plays); ?></span>
-                                    <br/>
-                                    <span class="badge bg-info"><?php echo Text::sprintf('JBS_CMN_DOWNLOADS', (int) $item->downloads); ?></span>
+                                    <button type="button" class="btn btn-sm btn-info px-2"
+                                            data-cwm-analytics-study="<?php echo (int) $item->study_id; ?>"
+                                            title="<?php echo $this->escape(
+                                                Text::sprintf('JBS_CMN_PLAYS', (int) $item->plays)
+                                                . ' | ' . Text::sprintf('JBS_CMN_DOWNLOADS', (int) $item->downloads)
+                                            ); ?>">
+                                        <i class="icon-eye fs-5" aria-hidden="true"></i>
+                                        <span class="visually-hidden"><?php echo Text::_('JBS_CPL_STATISTIC'); ?></span>
+                                    </button>
                                 </td>
                                 <?php if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
@@ -268,3 +278,4 @@ if ($saveOrder && !empty($this->items)) {
         </div>
     </div>
 </form>
+<?php echo LayoutHelper::render('analytics.modal', null, JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'); ?>

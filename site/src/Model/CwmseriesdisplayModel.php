@@ -284,8 +284,16 @@ class CwmseriesdisplayModel extends ItemModel
                     'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
                     'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
                 ])
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->whereIn($db->quoteName('study_id'), $studyIds)
+                ->from($db->quoteName('#__bsms_mediafiles'));
+
+            // Include archived media when show_archived is enabled
+            if ($showArchived === '1' || $showArchived === '2') {
+                $mediaQuery->where($db->quoteName('published') . ' IN (1, 2)');
+            } else {
+                $mediaQuery->where($db->quoteName('published') . ' = 1');
+            }
+
+            $mediaQuery->whereIn($db->quoteName('study_id'), $studyIds)
                 ->group($db->quoteName('study_id'));
             $db->setQuery($mediaQuery);
             $mediaStats = $db->loadObjectList('study_id');

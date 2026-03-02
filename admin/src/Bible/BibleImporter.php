@@ -132,14 +132,16 @@ class BibleImporter
         try {
             $response = $http->get($booksUrl, $headers, self::HTTP_TIMEOUT);
 
-            if ($response->code !== 200) {
-                Log::add('BibleImporter: HTTP ' . $response->code . ' fetching book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
+            $code = $response->getStatusCode();
+
+            if ($code !== 200) {
+                Log::add('BibleImporter: HTTP ' . $code . ' fetching book list for "' . $abbreviation . '"', Log::ERROR, 'com_proclaim.bible');
 
                 return -1;
             }
 
             try {
-                $books = json_decode($response->body, true, 512, JSON_THROW_ON_ERROR);
+                $books = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
                 $books = null;
             }
@@ -176,12 +178,12 @@ class BibleImporter
             try {
                 $bookResponse = $http->get($bookUrl, [], self::HTTP_TIMEOUT);
 
-                if ($bookResponse->code !== 200) {
+                if ($bookResponse->getStatusCode() !== 200) {
                     continue;
                 }
 
                 try {
-                    $bookData = json_decode($bookResponse->body, true, 512, JSON_THROW_ON_ERROR);
+                    $bookData = json_decode((string) $bookResponse->getBody(), true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException) {
                     continue;
                 }

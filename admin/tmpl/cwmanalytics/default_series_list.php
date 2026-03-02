@@ -61,12 +61,16 @@ $preset  = Factory::getApplication()->getInput()->getString('preset', '30d');
                     $platformPlays  = (int) ($row['platform_plays'] ?? 0);
                     $localPlays     = (int) ($row['plays'] ?? 0);
                     $totalReach     = $localPlays + $platformPlays;
+                    $isArchived     = (int) ($row['published'] ?? 1) === 2;
                 ?>
-                <tr>
+                <tr<?php echo $isArchived ? ' class="table-secondary"' : ''; ?>>
                     <td>
                         <a href="<?php echo $drillUrl; ?>" class="fw-semibold text-decoration-none">
                             <?php echo htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES); ?>
                         </a>
+                        <?php if ($isArchived) : ?>
+                            <span class="badge bg-warning text-dark ms-1"><?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?></span>
+                        <?php endif; ?>
                     </td>
                     <td class="text-center text-muted"><?php echo (int) ($row['message_count'] ?? 0); ?></td>
                     <td class="text-end text-body"><?php echo number_format((int) ($row['views'] ?? 0)); ?></td>
