@@ -205,7 +205,6 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->getVideoStatus($statusInput);
-        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
         if ($result['success']) {
             $video['isLive']     = $result['isLive'] ?? false;
@@ -279,7 +278,6 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->fetchLiveVideos($input);
-        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
         if ($result['success'] && !empty($result['videos'])) {
             // Live videos are never excluded - return the first one
@@ -300,7 +298,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             $input->set('event_type', 'upcoming');
             $input->set('max_results', 10);
             $result = $youtube->fetchLiveVideos($input);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 // Filter out excluded videos for upcoming streams
@@ -322,7 +319,6 @@ class YoutubeHelper implements DatabaseAwareInterface
                             ]);
 
                             $statusResult = $youtube->getVideoStatus($statusInput);
-                            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
                             if (!empty($statusResult['scheduledStartTime'])) {
                                 $video['scheduledStartTime'] = $statusResult['scheduledStartTime'];
@@ -374,7 +370,7 @@ class YoutubeHelper implements DatabaseAwareInterface
     private function fetchLatestVideo(CWMAddonYoutube $youtube, int $serverId): ?array
     {
         // Quota gate: channels.list + playlistItems.list = 2 units
-        $cost = CwmyoutubeQuota::COST_CHANNELS + CwmyoutubeQuota::COST_CHANNELS;
+        $cost = CwmyoutubeQuota::COST_CHANNELS + CwmyoutubeQuota::COST_PLAYLIST_ITEMS;
 
         if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
             CwmyoutubeLogHelper::log(
@@ -392,7 +388,6 @@ class YoutubeHelper implements DatabaseAwareInterface
         ]);
 
         $result = $youtube->fetchChannelVideos($input);
-        CwmyoutubeQuota::recordUsage($serverId, $cost);
 
         if ($result['success'] && !empty($result['videos'])) {
             $video               = $result['videos'][0];
@@ -600,7 +595,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->getVideoStatus($statusInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
             if (!$result['success']) {
                 CwmyoutubeLogHelper::log(
@@ -657,7 +651,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($liveInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];
@@ -680,7 +673,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             ]);
 
             $result = $youtube->fetchLiveVideos($upcomingInput);
-            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_SEARCH);
 
             if ($result['success'] && !empty($result['videos'])) {
                 $video = $result['videos'][0];

@@ -46,9 +46,11 @@ class CwmyoutubeQuota
      *
      * @since  10.1.0
      */
-    public const COST_SEARCH   = 100;
-    public const COST_VIDEOS   = 1;
-    public const COST_CHANNELS = 1;
+    public const COST_SEARCH         = 100;
+    public const COST_VIDEOS         = 1;
+    public const COST_CHANNELS       = 1;
+    public const COST_PLAYLISTS      = 1;
+    public const COST_PLAYLIST_ITEMS = 1;
 
     /**
      * In-memory cache for server params to avoid repeated DB queries

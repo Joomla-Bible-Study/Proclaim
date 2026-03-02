@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
@@ -1124,11 +1125,13 @@ class Cwmpodcast
 
             // Check if this is a YouTube URL - try API first
             if ($this->isYouTubeUrl($filename)) {
-                $videoId = $this->extractYouTubeVideoId($filename);
-                $apiKey  = $this->getYouTubeApiKey();
+                $videoId   = $this->extractYouTubeVideoId($filename);
+                $ytInfo    = $this->getYouTubeServerInfo();
+                $apiKey    = $ytInfo['api_key'] ?? null;
+                $ytSrvId   = $ytInfo['server_id'] ?? 0;
 
                 if ($videoId && $apiKey) {
-                    $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
+                    $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey, $ytSrvId);
 
                     if ($durationSeconds > 0) {
                         // Success - save the duration
@@ -1439,11 +1442,13 @@ class Cwmpodcast
 
         // Check if this is a YouTube URL - try API first
         if ($this->isYouTubeUrl($filename)) {
-            $videoId = $this->extractYouTubeVideoId($filename);
-            $apiKey  = $this->getYouTubeApiKey();
+            $videoId  = $this->extractYouTubeVideoId($filename);
+            $ytInfo   = $this->getYouTubeServerInfo();
+            $apiKey   = $ytInfo['api_key'] ?? null;
+            $ytSrvId  = $ytInfo['server_id'] ?? 0;
 
             if ($videoId && $apiKey) {
-                $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
+                $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey, $ytSrvId);
 
                 if ($durationSeconds > 0) {
                     return $this->saveDuration($media->id, $params, $title, $durationSeconds, $db, true);
@@ -1837,11 +1842,13 @@ class Cwmpodcast
 
         // Get duration via YouTube API if needed
         if ($needsDuration) {
-            $videoId = $this->extractYouTubeVideoId($params->get('filename'));
-            $apiKey  = $this->getYouTubeApiKey();
+            $videoId  = $this->extractYouTubeVideoId($params->get('filename'));
+            $ytInfo   = $this->getYouTubeServerInfo();
+            $apiKey   = $ytInfo['api_key'] ?? null;
+            $ytSrvId  = $ytInfo['server_id'] ?? 0;
 
             if ($videoId && $apiKey) {
-                $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey);
+                $durationSeconds = $this->getYouTubeDuration($videoId, $apiKey, $ytSrvId);
 
                 if ($durationSeconds > 0) {
                     $duration = $this->formatTime($durationSeconds);
@@ -2972,11 +2979,25 @@ class Cwmpodcast
      */
     public function getYouTubeApiKey(): ?string
     {
+        $info = $this->getYouTubeServerInfo();
+
+        return $info ? $info['api_key'] : null;
+    }
+
+    /**
+     * Get YouTube server info (API key and server ID) from a configured YouTube server.
+     *
+     * @return  array{api_key: string, server_id: int}|null  Server info or null if not found
+     *
+     * @since 10.1.0
+     */
+    public function getYouTubeServerInfo(): ?array
+    {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find a YouTube server with an API key
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('params'))
+        $query->select([$db->quoteName('id'), $db->quoteName('params')])
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('type') . ' = ' . $db->q('youtube'))
             ->where($db->quoteName('published') . ' = 1');
@@ -2989,7 +3010,7 @@ class Cwmpodcast
             $apiKey = $params->get('api_key', '');
 
             if (!empty($apiKey)) {
-                return $apiKey;
+                return ['api_key' => $apiKey, 'server_id' => (int) $server->id];
             }
         }
 
@@ -2999,15 +3020,21 @@ class Cwmpodcast
     /**
      * Get video duration from YouTube API.
      *
-     * @param   string  $videoId  YouTube video ID
-     * @param   string  $apiKey   YouTube API key
+     * @param   string  $videoId   YouTube video ID
+     * @param   string  $apiKey    YouTube API key
+     * @param   int     $serverId  YouTube server ID for quota tracking (0 to skip tracking)
      *
      * @return  int  Duration in seconds, or 0 if failed
      *
      * @since 10.1.0
      */
-    public function getYouTubeDuration(string $videoId, string $apiKey): int
+    public function getYouTubeDuration(string $videoId, string $apiKey, int $serverId = 0): int
     {
+        // Quota gate: videos.list = 1 unit
+        if ($serverId > 0 && !CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            return 0;
+        }
+
         // Build API URL
         $apiUrl = 'https://www.googleapis.com/youtube/v3/videos?'
             . 'id=' . urlencode($videoId)
@@ -3032,6 +3059,22 @@ class Cwmpodcast
             $data = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return 0;
+        }
+
+        // Record usage and check for quota exceeded
+        if ($serverId > 0) {
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
+
+            // Check for 403 quota exceeded in the response
+            if (isset($data['error']['code']) && (int) $data['error']['code'] === 403) {
+                $errorMessage = $data['error']['message'] ?? '';
+
+                if (CwmyoutubeQuota::isQuotaExceededError($errorMessage)) {
+                    CwmyoutubeQuota::markExhausted($serverId);
+                }
+
+                return 0;
+            }
         }
 
         if (!isset($data['items'][0]['contentDetails']['duration'])) {
