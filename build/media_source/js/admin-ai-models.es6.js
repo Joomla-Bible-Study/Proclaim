@@ -3,6 +3,8 @@
  *
  * Fetches available models from the selected AI provider's API and
  * populates the model dropdown. Scopes models to the active provider.
+ * Caches the model list in localStorage (1 hour TTL) to avoid repeated
+ * API calls on every page load.
  *
  * @package  Proclaim
  * @since    10.1.0
@@ -23,6 +25,68 @@
     const token      = config.dataset.token || '';
     const savedModel = config.dataset.savedModel || '';
     const baseUrl    = `index.php?option=com_proclaim&format=raw&${token}=1`;
+
+    /** Cache TTL: 1 hour in milliseconds */
+    const CACHE_TTL = 60 * 60 * 1000;
+
+    /**
+     * Build a localStorage cache key for the given provider.
+     *
+     * @param {string} provider
+     * @returns {string}
+     */
+    function cacheKey(provider) {
+        return `cwm_ai_models_${provider}`;
+    }
+
+    /**
+     * Read cached models from localStorage.
+     *
+     * @param {string} provider
+     * @returns {Array<{id: string, name: string}>|null}  Models array or null if expired/missing
+     */
+    function getCachedModels(provider) {
+        try {
+            const raw = localStorage.getItem(cacheKey(provider));
+
+            if (!raw) {
+                return null;
+            }
+
+            const entry = JSON.parse(raw);
+
+            if (!entry || !entry.ts || !Array.isArray(entry.models)) {
+                return null;
+            }
+
+            if (Date.now() - entry.ts > CACHE_TTL) {
+                localStorage.removeItem(cacheKey(provider));
+
+                return null;
+            }
+
+            return entry.models;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Write models to localStorage cache.
+     *
+     * @param {string} provider
+     * @param {Array<{id: string, name: string}>} models
+     */
+    function setCachedModels(provider, models) {
+        try {
+            localStorage.setItem(cacheKey(provider), JSON.stringify({
+                ts: Date.now(),
+                models,
+            }));
+        } catch {
+            // localStorage full or unavailable — ignore
+        }
+    }
 
     /**
      * Read the current API key value from the password input.
@@ -75,8 +139,10 @@
 
     /**
      * Fetch available models from the selected provider.
+     *
+     * @param {boolean} [bypassCache=false]  Skip localStorage cache (force fresh fetch)
      */
-    async function fetchModels() {
+    async function fetchModels(bypassCache) {
         const provider = providerSel.value || 'claude';
         const apiKey   = getApiKey();
 
@@ -87,6 +153,23 @@
             }
 
             return;
+        }
+
+        // Try localStorage cache first (unless explicitly bypassed)
+        if (!bypassCache) {
+            const cached = getCachedModels(provider);
+
+            if (cached) {
+                setModelOptions(cached, savedModel);
+
+                if (statusEl) {
+                    const tpl = (Joomla.Text._ && Joomla.Text._('JBS_ADM_AI_MODELS_LOADED'))
+                        || '%d models loaded';
+                    statusEl.textContent = tpl.replace('%d', cached.length);
+                }
+
+                return;
+            }
         }
 
         if (fetchBtn) {
@@ -106,10 +189,12 @@
             const data = await window.ProclaimFetch.fetchJson(url, { method: 'GET' }, { retries: 1 });
 
             if (data.success && data.models) {
+                setCachedModels(provider, data.models);
                 setModelOptions(data.models, savedModel);
 
                 if (statusEl) {
-                    const tpl = (Joomla.Text._ && Joomla.Text._('JBS_ADM_AI_MODELS_LOADED')) || '%d models loaded';
+                    const tpl = (Joomla.Text._ && Joomla.Text._('JBS_ADM_AI_MODELS_LOADED'))
+                        || '%d models loaded';
                     statusEl.textContent = tpl.replace('%d', data.models.length);
                 }
             } else if (statusEl) {
@@ -126,12 +211,17 @@
         }
     }
 
-    // Bind fetch button
+    // Bind fetch button — always bypasses cache for a fresh list
     if (fetchBtn) {
-        fetchBtn.addEventListener('click', fetchModels);
+        fetchBtn.addEventListener('click', () => fetchModels(true));
     }
 
-    // Reset model dropdown when provider changes (models are provider-scoped)
+    // Auto-restore models on page load from cache or API
+    if (savedModel && getApiKey()) {
+        fetchModels(false);
+    }
+
+    // Reset model dropdown and clear cache when provider changes
     providerSel.addEventListener('change', () => {
         const defaultOpt = modelSel.querySelector('option[value=""]');
 

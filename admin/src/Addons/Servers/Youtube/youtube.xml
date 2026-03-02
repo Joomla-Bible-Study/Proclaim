@@ -24,6 +24,13 @@
                    label="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR"
                    description="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR_DESC" filter="int"/>
         </fieldset>
+        <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
+            <field name="yt_description_format" type="textarea" rows="4"
+                   default="{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}"
+                   label="JBS_ADDON_YOUTUBE_DESC_FORMAT"
+                   description="JBS_ADDON_YOUTUBE_DESC_FORMAT_DESC"
+                   filter="raw" />
+        </fieldset>
     </fields>
     <fields name="media">
         <fieldset name="files_settings" label="JBS_ADDON_YOUTUBE_FILE_SETTINGS">

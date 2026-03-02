@@ -119,6 +119,16 @@ echo Route::_(
         'vimeo'   => 'bg-info',
         'legacy'  => 'bg-secondary',
     ];
+
+    // Pre-scan mediafiles for YouTube type
+    $hasYouTubeMedia = false;
+
+    foreach ($this->mediafiles as $mf) {
+        if (strtolower(trim($mf->server_type ?? '')) === 'youtube') {
+            $hasYouTubeMedia = true;
+            break;
+        }
+    }
     ?>
     <div class="card mb-3" id="media">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -128,12 +138,20 @@ echo Route::_(
                     <span class="badge bg-secondary"><?php echo $mediaCount; ?></span>
                 <?php endif; ?>
             </h4>
-            <?php if (!empty($this->item->id)) : ?>
-                <a class="btn btn-success btn-sm" href="<?php echo $addMediaLink; ?>">
-                    <span class="icon-plus" aria-hidden="true"></span>
-                    <?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>
-                </a>
-            <?php endif; ?>
+            <div class="d-flex gap-2">
+                <?php if (!empty($this->item->id) && $hasYouTubeMedia) : ?>
+                    <button type="button" class="btn btn-outline-danger btn-sm" id="btn-yt-sync">
+                        <span class="icon-youtube" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_CMN_YT_SYNC_BUTTON'); ?>
+                    </button>
+                <?php endif; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                    <a class="btn btn-success btn-sm" href="<?php echo $addMediaLink; ?>">
+                        <span class="icon-plus" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_STY_ADD_MEDIA_FILE'); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
         <div class="card-body p-0">
             <?php if (empty($this->item->id)) : ?>
@@ -261,12 +279,23 @@ echo Route::_(
                 <?php if (CwmaiHelper::isConfigured()) : ?>
                     <!-- AI Assist — generates description and study text from sermon context -->
                     <div class="row mt-2">
-                        <div class="col-12">
+                        <div class="col-12 d-flex align-items-center flex-wrap gap-2">
                             <button type="button" class="btn btn-primary btn-sm" id="btn-ai-assist">
                                 <span class="icon-wand-magic-sparkles" aria-hidden="true"></span>
                                 <?php echo Text::_('JBS_CMN_AI_ASSIST'); ?>
                             </button>
-                            <small class="text-body-secondary ms-2"><?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?></small>
+                            <div class="form-check form-check-inline ms-2 mb-0">
+                                <input class="form-check-input" type="checkbox" id="ai-gen-topics" checked>
+                                <label class="form-check-label" for="ai-gen-topics"><?php echo Text::_('JBS_CMN_AI_GEN_TOPICS'); ?></label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="checkbox" id="ai-gen-intro" checked>
+                                <label class="form-check-label" for="ai-gen-intro"><?php echo Text::_('JBS_CMN_AI_GEN_INTRO'); ?></label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="checkbox" id="ai-gen-text" checked>
+                                <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?></label>
+                            </div>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -423,14 +452,22 @@ echo Route::_(
                             aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="ai-loading" class="text-center py-4">
-                        <span class="spinner-border" role="status" aria-hidden="true"></span>
-                        <p class="mt-2"><?php echo Text::_('JBS_CMN_AI_GENERATING'); ?></p>
+                    <div id="ai-loading" class="text-center py-4" style="display:none;">
+                        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JBS_CMN_AI_GENERATING'); ?></span>
+                        </div>
+                        <h6 id="ai-progress-text" class="mb-3"><?php echo Text::_('JBS_CMN_AI_GENERATING'); ?></h6>
+                        <div class="progress mx-auto mb-3" style="height: 10px; max-width: 400px;">
+                            <div id="ai-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                 role="progressbar" style="width: 5%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div id="ai-progress-steps" class="text-start mx-auto" style="max-width: 400px;">
+                        </div>
                     </div>
                     <div id="ai-error" class="alert alert-danger" style="display:none;"></div>
                     <div id="ai-results" style="display:none;">
                         <!-- AI Topics -->
-                        <div class="mb-3">
+                        <div class="mb-3" id="ai-topics-section">
                             <h6><?php echo Text::_('JBS_CMN_AI_TOPICS'); ?></h6>
                             <div id="ai-topics-list"></div>
                             <button type="button" class="btn btn-success btn-sm mt-2" id="btn-ai-add-topics">
@@ -438,7 +475,7 @@ echo Route::_(
                             </button>
                         </div>
                         <!-- AI Description -->
-                        <div class="mb-3">
+                        <div class="mb-3" id="ai-intro-section">
                             <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_DESCRIPTION'); ?></label>
                             <div class="alert alert-info small mb-1">
                                 <?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?>
@@ -450,12 +487,100 @@ echo Route::_(
                             </button>
                         </div>
                         <!-- AI Study Text -->
-                        <div class="mb-3">
+                        <div class="mb-3" id="ai-text-section">
                             <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_STUDY_TEXT'); ?></label>
                             <textarea id="ai-studytext" class="form-control" rows="6"></textarea>
                             <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-text">
                                 <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
                                 &rarr; <?php echo Text::_('JBS_STY_STUDY_TEXT'); ?>
+                            </button>
+                        </div>
+                        <!-- Suggested YouTube Chapters -->
+                        <div id="ai-chapters-section" class="mb-3" style="display:none;">
+                            <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_CHAPTERS'); ?></label>
+                            <div class="alert alert-info small mb-1">
+                                <?php echo Text::_('JBS_CMN_AI_CHAPTERS_DESC'); ?>
+                            </div>
+                            <textarea id="ai-chapters-text" class="form-control font-monospace" rows="6" readonly></textarea>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-copy-chapters">
+                                    <span class="icon-copy" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <?php echo Text::_('JCLOSE'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($hasYouTubeMedia && !empty($this->item->id)) : ?>
+    <!-- YouTube Sync Modal -->
+    <div class="modal fade" id="ytSyncModal" tabindex="-1" aria-labelledby="ytSyncModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ytSyncModalLabel">
+                        <span class="icon-youtube" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_CMN_YT_SYNC_MODAL_TITLE'); ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="yt-sync-loading" class="text-center py-4" style="display:none;">
+                        <div class="spinner-border text-danger mb-3" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JBS_CMN_YT_SYNC_LOADING'); ?></span>
+                        </div>
+                        <p><?php echo Text::_('JBS_CMN_YT_SYNC_LOADING'); ?></p>
+                    </div>
+                    <div id="yt-sync-error" class="alert alert-danger" style="display:none;"></div>
+                    <div id="yt-sync-results" style="display:none;">
+                        <!-- Tags → Topics -->
+                        <div class="mb-4" id="yt-tags-section">
+                            <h6><?php echo Text::_('JBS_CMN_YT_SYNC_TAGS_HEADING'); ?></h6>
+                            <p class="text-muted small"><?php echo Text::_('JBS_CMN_YT_SYNC_TAGS_DESC'); ?></p>
+                            <div id="yt-matched-section" style="display:none;">
+                                <label class="form-label fw-semibold"><?php echo Text::_('JBS_CMN_YT_SYNC_MATCHED_TOPICS'); ?></label>
+                                <div id="yt-matched-list" class="mb-2"></div>
+                            </div>
+                            <div id="yt-new-section" style="display:none;">
+                                <label class="form-label fw-semibold"><?php echo Text::_('JBS_CMN_YT_SYNC_NEW_TOPICS'); ?></label>
+                                <p class="text-muted small mb-1"><?php echo Text::_('JBS_CMN_YT_SYNC_NEW_TOPICS_DESC'); ?></p>
+                                <div id="yt-new-list" class="mb-2"></div>
+                            </div>
+                            <div id="yt-no-tags" class="text-muted" style="display:none;">
+                                <?php echo Text::_('JBS_CMN_YT_SYNC_NO_TAGS'); ?>
+                            </div>
+                            <button type="button" class="btn btn-success btn-sm mt-2" id="btn-yt-add-topics" style="display:none;">
+                                <?php echo Text::_('JBS_CMN_ADD_SELECTED'); ?>
+                            </button>
+                        </div>
+                        <!-- Description -->
+                        <div class="mb-4" id="yt-desc-section" style="display:none;">
+                            <h6><?php echo Text::_('JBS_CMN_YT_SYNC_DESC_HEADING'); ?></h6>
+                            <p class="text-muted small"><?php echo Text::_('JBS_CMN_YT_SYNC_DESC_DESC'); ?></p>
+                            <textarea id="yt-description-text" class="form-control" rows="4" readonly></textarea>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btn-yt-apply-desc">
+                                <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
+                                &rarr; <?php echo Text::_('JBS_CMN_DESCRIPTION'); ?>
+                            </button>
+                        </div>
+                        <!-- Chapters -->
+                        <div class="mb-3" id="yt-chapters-section" style="display:none;">
+                            <h6><?php echo Text::_('JBS_CMN_AI_CHAPTERS'); ?></h6>
+                            <p class="text-muted small"><?php echo Text::_('JBS_CMN_YT_SYNC_CHAPTERS_DESC'); ?></p>
+                            <textarea id="yt-chapters-text" class="form-control font-monospace" rows="4" readonly></textarea>
+                            <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="btn-yt-copy-chapters">
+                                <span class="icon-copy" aria-hidden="true"></span>
+                                <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
                             </button>
                         </div>
                     </div>
@@ -485,4 +610,5 @@ $wa->useScript('com_proclaim.message-ai-assist');
 <div id="message-ai-config"
      data-token="<?php echo Session::getFormToken(); ?>"
      data-media-id="<?php echo $firstMediaId; ?>"
+     data-has-youtube="<?php echo $hasYouTubeMedia ? '1' : '0'; ?>"
      style="display:none;"></div>

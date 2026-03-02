@@ -332,6 +332,13 @@
                description="JBS_ADM_AI_MODEL_DESC">
             <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
         </field>
+        <field name="yt_auto_import_topics" type="radio" default="0"
+               label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"
+               description="JBS_ADM_YT_AUTO_IMPORT_TOPICS_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

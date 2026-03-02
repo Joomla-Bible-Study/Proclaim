@@ -102,8 +102,9 @@ class CwmmessageController extends FormController
         $this->checkToken();
 
         // Set the model
-        /** @var CwmmessagesModel $model */
-        $model = $this->getModel('Cwmmessage', 'Administrator', []);
+        if ($model === null) {
+            $model = $this->getModel('Cwmmessage', 'Administrator', []);
+        }
 
         // Preset the redirect
         $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages' . $this->getRedirectToListAppend(), false));
@@ -281,6 +282,10 @@ class CwmmessageController extends FormController
             'video_title'       => '',
             'video_description' => '',
             'video_tags'        => [],
+            'video_chapters'    => [],
+            'generate_topics'   => (bool) $input->post->getInt('generate_topics', 1),
+            'generate_intro'    => (bool) $input->post->getInt('generate_intro', 1),
+            'generate_text'     => (bool) $input->post->getInt('generate_text', 1),
         ];
 
         // Attempt to get video metadata from attached media file
@@ -296,6 +301,40 @@ class CwmmessageController extends FormController
             echo json_encode($result);
         } catch (\Exception $e) {
             echo json_encode(['error' => $e->getMessage()]);
+        }
+
+        Factory::getApplication()->close();
+    }
+
+    /**
+     * AJAX endpoint: sync metadata from YouTube for a media file
+     *
+     * Fetches raw YouTube metadata (tags, description, chapters) and matches
+     * tags against existing topics. No AI is involved.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function syncFromYouTube(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $mediaFileId = $this->input->post->getInt('media_file_id', 0);
+
+        try {
+            $result = CwmaiHelper::syncFromYouTube($mediaFileId);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR);
         }
 
         Factory::getApplication()->close();
