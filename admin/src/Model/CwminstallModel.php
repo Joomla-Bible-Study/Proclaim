@@ -330,13 +330,16 @@ class CwminstallModel extends ListModel
             $hasDbChanges = !empty($this->versionStack) || !empty($this->subFiles);
         }
 
-        // Determine install type for UI labels
+        // Determine install type for UI labels:
+        // - install:   fresh install (no existing schema)
+        // - migration: major version jump (e.g. 9.x → 10.x) requiring data transformation
+        // - upgrade:   same major version, with or without DB changes
         if ($this->callstack['subversiontype_version'] <= 000) {
             $this->callstack['install_type'] = 'install';
-        } elseif ($hasDbChanges) {
-            $this->callstack['install_type'] = 'migration';
         } else {
-            $this->callstack['install_type'] = 'upgrade';
+            $installedMajor                  = (int) $this->callstack['subversiontype_version'];
+            $currentMajor                    = (int) BIBLESTUDY_VERSION;
+            $this->callstack['install_type'] = ($installedMajor < $currentMajor) ? 'migration' : 'upgrade';
         }
 
         // Set finishing steps based on whether DB changes are needed.
