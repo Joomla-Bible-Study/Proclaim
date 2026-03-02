@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>info@christianwebministries.org</authorEmail>
 	<authorUrl>www.christianwebministries.org</authorUrl>
-	<version>10.1.0-rc4-dev</version>
+	<version>10.1.0-beta1</version>
 	<description>PLG_TASK_PROCLAIM_XML_DESCRIPTION</description>
 	<namespace path="src">CWM\Plugin\Task\Proclaim</namespace>
 	<files>
