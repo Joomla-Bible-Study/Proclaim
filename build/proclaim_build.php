@@ -567,6 +567,27 @@ function doBuild(bool $verbose = false): void
             $excludeFile = true;
         }
 
+        // Exclude non-essential files from addon vendor directories
+        if (!$excludeFile && str_contains($relativePath, '/vendor/')) {
+            $basename  = basename($relativePath);
+            $upperBase = strtoupper(pathinfo($basename, PATHINFO_FILENAME));
+
+            // Composer metadata (not needed at runtime)
+            if ($basename === 'installed.json' || $basename === 'installed.php') {
+                $excludeFile = true;
+            }
+
+            // Docs, changelogs, and readmes
+            if (\in_array($upperBase, ['README', 'CHANGELOG', 'BACKERS', 'AUTHORS', 'CONTRIBUTING', 'UPGRADE', 'SECURITY'], true)) {
+                $excludeFile = true;
+            }
+
+            // LICENSE files in subdirectories (keep root LICENSE only)
+            if ($upperBase === 'LICENSE' || $upperBase === 'COPYING') {
+                $excludeFile = true;
+            }
+        }
+
         if ($excludeFile) {
             continue;
         }

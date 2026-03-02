@@ -7,7 +7,6 @@
     },
     "extra": {
         "google/apiclient-services": [
-            "Drive",
             "YouTube"
         ]
     }
