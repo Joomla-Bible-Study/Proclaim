@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -147,6 +149,16 @@ class CwmmessageController extends FormController
             return $tag !== '' && $tag !== null;
         });
 
+        // Auto-match existing topics from text if none manually assigned
+        if (empty($iTags)) {
+            $text = strip_tags(($data['studyintro'] ?? '') . ' ' . ($data['studytext'] ?? ''));
+
+            if (!empty(trim($text))) {
+                $matched = CwmtopicSuggestionHelper::matchExistingTopics($text);
+                $iTags   = array_column($matched, 'id');
+            }
+        }
+
         // Remove Exerting StudyTopics tags
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $qurey = $db->getQuery(true);
@@ -194,6 +206,99 @@ class CwmmessageController extends FormController
         }
 
         return parent::save($key, $urlVar);
+    }
+
+    /**
+     * AJAX endpoint: suggest topics from sermon text
+     *
+     * Reads studyintro and studytext from POST, returns matched existing topics
+     * and keyword suggestions as JSON.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function suggestTopics(): void
+    {
+        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $input     = $this->input;
+        $introText = $input->post->getString('studyintro', '');
+        $studyText = $input->post->getString('studytext', '');
+        $text      = strip_tags($introText . ' ' . $studyText);
+
+        $existing  = CwmtopicSuggestionHelper::matchExistingTopics($text);
+        $excludes  = array_column($existing, 'text');
+        $suggested = CwmtopicSuggestionHelper::extractKeywordSuggestions($text, $excludes);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'existing'  => $existing,
+            'suggested' => $suggested,
+        ]);
+
+        Factory::getApplication()->close();
+    }
+
+    /**
+     * AJAX endpoint: generate sermon content using AI
+     *
+     * Gathers sermon context (title, scripture, media metadata) and calls the
+     * configured AI provider to generate topics, description, and study text.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function aiAssist(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $input = $this->input;
+
+        // Build context from POST data
+        $context = [
+            'title'             => $input->post->getString('title', ''),
+            'scripture'         => $input->post->getString('scripture', ''),
+            'existing_intro'    => $input->post->getString('studyintro', ''),
+            'existing_text'     => $input->post->getString('studytext', ''),
+            'existing_topics'   => $input->post->getString('topics', ''),
+            'video_title'       => '',
+            'video_description' => '',
+            'video_tags'        => [],
+        ];
+
+        // Attempt to get video metadata from attached media file
+        $mediaFileId = $input->post->getInt('media_file_id', 0);
+
+        if ($mediaFileId > 0) {
+            $videoContext = CwmaiHelper::getVideoContext($mediaFileId);
+            $context      = array_merge($context, $videoContext);
+        }
+
+        try {
+            $result = CwmaiHelper::generateSermonContent($context);
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+
+        Factory::getApplication()->close();
     }
 
     /**

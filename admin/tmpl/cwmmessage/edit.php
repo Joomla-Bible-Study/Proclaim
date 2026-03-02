@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -59,6 +60,7 @@ if ($input->getInt('id')) {
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.general');
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -256,10 +258,25 @@ echo Route::_(
         <div class="row">
             <?php
             if (!$this->simple->mode) { ?>
+                <?php if (CwmaiHelper::isConfigured()) : ?>
+                    <!-- AI Assist — generates description and study text from sermon context -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-ai-assist">
+                                <span class="icon-wand-magic-sparkles" aria-hidden="true"></span>
+                                <?php echo Text::_('JBS_CMN_AI_ASSIST'); ?>
+                            </button>
+                            <small class="text-body-secondary ms-2"><?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?></small>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <div class="col-lg-7">
                     <div>
                         <?php echo $this->form->renderField('studyintro'); ?>
-                        <?php echo $this->form->renderFieldset('scripture'); ?>
+                        <div class="scripture-stacked mb-3">
+                            <?php echo $this->form->renderField('scriptures'); ?>
+                            <?php echo $this->form->renderField('secondary_reference'); ?>
+                        </div>
                     </div>
                 </div>
                 <?php
@@ -305,6 +322,41 @@ echo Route::_(
                     <?php echo $this->form->renderField('access'); ?>
                     <?php echo $this->form->renderField('language'); ?>
                     <?php echo $this->form->renderField('topics'); ?>
+                    <!-- Suggest Topics button -->
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-suggest-topics">
+                            <span class="icon-lightbulb" aria-hidden="true"></span>
+                            <?php echo Text::_('JBS_CMN_SUGGEST_TOPICS'); ?>
+                        </button>
+                    </div>
+                    <!-- Suggestion results panel (hidden until populated) -->
+                    <div id="topic-suggestions-panel" class="card mb-3" style="display:none;">
+                        <div class="card-body">
+                            <div id="topic-suggestions-loading" class="text-center py-2" style="display:none;">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <?php echo Text::_('JBS_CMN_SUGGESTING_TOPICS'); ?>
+                            </div>
+                            <div id="topic-suggestions-results" style="display:none;">
+                                <div id="matched-topics-section" style="display:none;">
+                                    <h6><?php echo Text::_('JBS_CMN_MATCHED_TOPICS'); ?></h6>
+                                    <div id="matched-topics-list" class="mb-2"></div>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" id="btn-add-matched">
+                                        <?php echo Text::_('JBS_CMN_ADD_SELECTED'); ?>
+                                    </button>
+                                </div>
+                                <div id="suggested-keywords-section" style="display:none;">
+                                    <h6><?php echo Text::_('JBS_CMN_SUGGESTED_KEYWORDS'); ?></h6>
+                                    <div id="suggested-keywords-list" class="mb-2"></div>
+                                    <button type="button" class="btn btn-outline-success btn-sm" id="btn-add-keywords">
+                                        <?php echo Text::_('JBS_CMN_ADD_AS_NEW_TOPICS'); ?>
+                                    </button>
+                                </div>
+                                <div id="no-suggestions" class="text-muted" style="display:none;">
+                                    <?php echo Text::_('JBS_CMN_NO_SUGGESTIONS'); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <?php echo $this->form->renderField('messagetype', null, $messagetype); ?>
                     <?php echo $this->form->renderField('thumbnailm'); ?>
                 </div>
@@ -356,4 +408,81 @@ echo Route::_(
         <?php
         echo HTMLHelper::_('form.token'); ?>
     </div>
+
+    <?php if (CwmaiHelper::isConfigured()) : ?>
+    <!-- AI Assist Modal -->
+    <div class="modal fade" id="aiAssistModal" tabindex="-1" aria-labelledby="aiAssistModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aiAssistModalLabel">
+                        <span class="icon-wand-magic-sparkles" aria-hidden="true"></span>
+                        <?php echo Text::_('JBS_CMN_AI_ASSIST'); ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="ai-loading" class="text-center py-4">
+                        <span class="spinner-border" role="status" aria-hidden="true"></span>
+                        <p class="mt-2"><?php echo Text::_('JBS_CMN_AI_GENERATING'); ?></p>
+                    </div>
+                    <div id="ai-error" class="alert alert-danger" style="display:none;"></div>
+                    <div id="ai-results" style="display:none;">
+                        <!-- AI Topics -->
+                        <div class="mb-3">
+                            <h6><?php echo Text::_('JBS_CMN_AI_TOPICS'); ?></h6>
+                            <div id="ai-topics-list"></div>
+                            <button type="button" class="btn btn-success btn-sm mt-2" id="btn-ai-add-topics">
+                                <?php echo Text::_('JBS_CMN_ADD_SELECTED'); ?>
+                            </button>
+                        </div>
+                        <!-- AI Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_DESCRIPTION'); ?></label>
+                            <div class="alert alert-info small mb-1">
+                                <?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?>
+                            </div>
+                            <textarea id="ai-studyintro" class="form-control" rows="3"></textarea>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-intro">
+                                <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
+                                &rarr; <?php echo Text::_('JBS_CMN_DESCRIPTION'); ?>
+                            </button>
+                        </div>
+                        <!-- AI Study Text -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_STUDY_TEXT'); ?></label>
+                            <textarea id="ai-studytext" class="form-control" rows="6"></textarea>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-text">
+                                <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
+                                &rarr; <?php echo Text::_('JBS_STY_STUDY_TEXT'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <?php echo Text::_('JCLOSE'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 </form>
+
+<?php
+// Build config data for the external topic-suggest / AI assist script
+$firstMediaId = 0;
+
+if (!empty($this->mediafiles)) {
+    $firstMediaId = (int) $this->mediafiles[0]->id;
+}
+
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->useScript('com_proclaim.message-ai-assist');
+?>
+<div id="message-ai-config"
+     data-token="<?php echo Session::getFormToken(); ?>"
+     data-media-id="<?php echo $firstMediaId; ?>"
+     style="display:none;"></div>

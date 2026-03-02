@@ -215,6 +215,22 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('metakey', 'params'); ?>
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
                 </div>
+                <div class="cwmadmin-panel mb-4">
+                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>
+                    <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_AI_API_KEY_DESC'); ?></p>
+                    <?php echo $this->form->renderField('ai_provider', 'params'); ?>
+                    <?php echo $this->form->renderField('ai_api_key', 'params'); ?>
+                    <?php echo $this->form->renderField('ai_model', 'params'); ?>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="button" id="btn-fetch-ai-models" class="btn btn-sm btn-outline-secondary">
+                                <span class="icon-refresh" aria-hidden="true"></span>
+                                <?php echo Text::_('JBS_ADM_AI_FETCH_MODELS'); ?>
+                            </button>
+                            <span id="ai-models-status" class="ms-2 small text-body-secondary"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
@@ -958,3 +974,11 @@ echo $input->getCmd('return'); ?>"/>
 echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
+<?php
+// AI model fetcher config + script
+$wa->useScript('com_proclaim.admin-ai-models');
+?>
+<div id="ai-models-config"
+     data-token="<?php echo Session::getFormToken(); ?>"
+     data-saved-model="<?php echo $this->escape($this->item->params['ai_model'] ?? ''); ?>"
+     style="display:none;"></div>

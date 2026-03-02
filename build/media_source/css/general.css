@@ -1031,6 +1031,19 @@ button.cwmadmin-action-card {
 }
 
 /* ==========================================================================
+   Stacked Form Fields (label on top, full-width controls)
+   ========================================================================== */
+
+.scripture-stacked > .control-group {
+  display: block;
+}
+
+.scripture-stacked > .control-group > .control-label {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+/* ==========================================================================
    Mobile Responsive Styles
    ========================================================================== */
 
