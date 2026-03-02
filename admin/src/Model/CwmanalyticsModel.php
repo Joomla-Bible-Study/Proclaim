@@ -851,9 +851,16 @@ class CwmanalyticsModel extends BaseDatabaseModel
     /**
      * Get all published series with their engagement totals for the date range.
      *
+     * @param   string  $start       Period start (Y-m-d).
+     * @param   string  $end         Period end (Y-m-d).
+     * @param   int     $locationId  Filter by campus; 0 = all.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
+     *
+     * @return  array<int, array<string, mixed>>
+     *
      * @since 10.1.0
      */
-    public function getSeriesList(string $start, string $end, int $locationId = 0): array
+    public function getSeriesList(string $start, string $end, int $locationId = 0, string $status = ''): array
     {
         try {
             $db = $this->getDatabase();
@@ -865,12 +872,22 @@ class CwmanalyticsModel extends BaseDatabaseModel
                   . ' AND sl2.' . $db->quoteName('published') . ' IN (1, 2))'
                 : '';
 
+            // Status filter for series
+            if ($status === 'published') {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' = 1';
+            } elseif ($status === 'archived') {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' = 2';
+            } else {
+                $seriesPublishedFilter = ' sr.' . $db->quoteName('published') . ' IN (1, 2)';
+            }
+
             // Raw SQL avoids query-builder quirks with correlated scalar subqueries.
             // One LEFT JOIN on series_id (no study JOIN) prevents Cartesian product.
             $sql = 'SELECT'
                 . ' sr.' . $db->quoteName('id') . ' AS series_id,'
                 . ' sr.' . $db->quoteName('series_text') . ' AS title,'
                 . ' sr.' . $db->quoteName('series_thumbnail') . ' AS thumb,'
+                . ' sr.' . $db->quoteName('published') . ','
                 . ' (SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' sc'
                 . '  WHERE sc.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                 . '  AND sc.' . $db->quoteName('published') . ' IN (1, 2)) AS message_count,'
@@ -889,7 +906,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . '   ON e.' . $db->quoteName('series_id') . ' = sr.' . $db->quoteName('id')
                 . '   AND e.' . $db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00')
                 . '   AND e.' . $db->quoteName('created') . ' <= ' . $db->quote($end . ' 23:59:59')
-                . ' WHERE sr.' . $db->quoteName('published') . ' = 1'
+                . ' WHERE' . $seriesPublishedFilter
                 . $locationFilter
                 . ' GROUP BY sr.' . $db->quoteName('id')
                 . ' ORDER BY COUNT(e.' . $db->quoteName('id') . ') DESC'
@@ -989,6 +1006,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('s.studytitle', 'title'),
                     $db->quoteName('s.studydate', 'study_date'),
                     $db->quoteName('s.hits', 'all_time_views'),
+                    $db->quoteName('s.published'),
                     $db->quoteName('s.series_id'),
                     $db->quoteName('sr.series_text', 'series_title'),
                 ])
@@ -1089,6 +1107,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                     $db->quoteName('m.plays', 'all_time_plays'),
                     $db->quoteName('m.downloads', 'all_time_downloads'),
                     $db->quoteName('m.content_origin'),
+                    $db->quoteName('m.published'),
                     $db->quoteName('m.ordering'),
                     $db->quoteName('sv.server_name'),
                     $db->quoteName('sv.type', 'server_type'),
@@ -1333,12 +1352,13 @@ class CwmanalyticsModel extends BaseDatabaseModel
      * @param   DatabaseInterface  $db          Database driver.
      * @param   int                $locationId  Campus filter; 0 = all.
      * @param   string             $search      Title search term.
+     * @param   string             $status      Status filter: '', 'published', or 'archived'.
      *
-     * @return  array{location: string, search: string}  SQL fragments to append.
+     * @return  array{location: string, search: string, status: string}  SQL fragments to append.
      *
      * @since   10.1.0
      */
-    private function buildMessagesFilters(DatabaseInterface $db, int $locationId, string $search): array
+    private function buildMessagesFilters(DatabaseInterface $db, int $locationId, string $search, string $status = ''): array
     {
         // Location filter
         if ($locationId > 0) {
@@ -1371,7 +1391,16 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . $db->quote('%' . $db->escape($search, true) . '%');
         }
 
-        return ['location' => $locationFilter, 'search' => $searchFilter];
+        // Status filter
+        $statusFilter = '';
+
+        if ($status === 'published') {
+            $statusFilter = ' AND st.' . $db->quoteName('published') . ' = 1';
+        } elseif ($status === 'archived') {
+            $statusFilter = ' AND st.' . $db->quoteName('published') . ' = 2';
+        }
+
+        return ['location' => $locationFilter, 'search' => $searchFilter, 'status' => $statusFilter];
     }
 
     /**
@@ -1383,21 +1412,23 @@ class CwmanalyticsModel extends BaseDatabaseModel
      * @param   string  $end         Period end (Y-m-d) — unused but kept for signature consistency.
      * @param   int     $locationId  Filter by campus; 0 = all.
      * @param   string  $search      Optional title search term.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
      *
      * @return  int
      *
      * @since   10.1.0
      */
-    public function getMessagesCount(string $start, string $end, int $locationId = 0, string $search = ''): int
+    public function getMessagesCount(string $start, string $end, int $locationId = 0, string $search = '', string $status = ''): int
     {
         try {
             $db      = $this->getDatabase();
-            $filters = $this->buildMessagesFilters($db, $locationId, $search);
+            $filters = $this->buildMessagesFilters($db, $locationId, $search, $status);
 
             $sql = 'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_studies') . ' st'
                 . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
                 . $filters['location']
-                . $filters['search'];
+                . $filters['search']
+                . $filters['status'];
 
             $db->setQuery($sql);
 
@@ -1420,6 +1451,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
      * @param   string  $search      Optional title search term.
      * @param   int     $limit       Max rows to return (page size).
      * @param   int     $offset      Row offset for pagination.
+     * @param   string  $status      Status filter: '', 'published', or 'archived'.
      *
      * @return  array<int, array<string, mixed>>
      *
@@ -1431,17 +1463,19 @@ class CwmanalyticsModel extends BaseDatabaseModel
         int $locationId = 0,
         string $search = '',
         int $limit = 25,
-        int $offset = 0
+        int $offset = 0,
+        string $status = ''
     ): array {
         try {
             $db      = $this->getDatabase();
-            $filters = $this->buildMessagesFilters($db, $locationId, $search);
+            $filters = $this->buildMessagesFilters($db, $locationId, $search, $status);
 
             $sql = 'SELECT'
                 . ' st.' . $db->quoteName('id') . ' AS study_id,'
                 . ' st.' . $db->quoteName('studytitle') . ' AS title,'
                 . ' st.' . $db->quoteName('studydate') . ' AS study_date,'
                 . ' st.' . $db->quoteName('hits') . ' AS all_time_hits,'
+                . ' st.' . $db->quoteName('published') . ','
                 . ' sr.' . $db->quoteName('series_text') . ' AS series_title,'
                 . ' COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
                 . ' THEN 1 ELSE 0 END), 0) AS views,'
@@ -1467,6 +1501,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' WHERE st.' . $db->quoteName('published') . ' IN (1, 2)'
                 . $filters['location']
                 . $filters['search']
+                . $filters['status']
                 . ' GROUP BY st.' . $db->quoteName('id')
                 . ' ORDER BY (COALESCE(SUM(CASE WHEN e.' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view')
                 . ' THEN 1 ELSE 0 END), 0)'

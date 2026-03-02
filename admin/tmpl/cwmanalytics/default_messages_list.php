@@ -24,7 +24,8 @@ use Joomla\CMS\Router\Route;
 
 $baseUrl   = 'index.php?option=com_proclaim&view=cwmanalytics';
 $navParams = '&drilldown=messages&preset=' . htmlspecialchars($this->preset, ENT_QUOTES)
-    . '&location_id=' . (int) $this->locationId;
+    . '&location_id=' . (int) $this->locationId
+    . ($this->statusFilter !== '' ? '&status=' . htmlspecialchars($this->statusFilter, ENT_QUOTES) : '');
 
 if ($this->preset === 'custom') {
     $navParams .= '&date_start=' . urlencode($this->dateStart)
@@ -62,6 +63,18 @@ $page       = $this->messagesPage;
                     <i class="icon-search" aria-hidden="true"></i>
                 </button>
             </div>
+            <select name="status" class="form-select form-select-sm" style="width:140px"
+                    onchange="this.form.submit()">
+                <option value=""<?php echo $this->statusFilter === '' ? ' selected' : ''; ?>>
+                    <?php echo Text::_('JBS_ANA_STATUS_ALL'); ?>
+                </option>
+                <option value="published"<?php echo $this->statusFilter === 'published' ? ' selected' : ''; ?>>
+                    <?php echo Text::_('JBS_ANA_STATUS_PUBLISHED'); ?>
+                </option>
+                <option value="archived"<?php echo $this->statusFilter === 'archived' ? ' selected' : ''; ?>>
+                    <?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?>
+                </option>
+            </select>
             <?php if ($this->messagesSearch !== '') : ?>
                 <a href="<?php echo Route::_($baseUrl . $navParams); ?>" class="btn btn-sm btn-outline-secondary">
                     <i class="icon-times me-1" aria-hidden="true"></i><?php echo Text::_('JSEARCH_FILTER_CLEAR'); ?>
@@ -103,12 +116,16 @@ $page       = $this->messagesPage;
                         . '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES)
                         . '&location_id=' . (int) $this->locationId
                     );
+                    $isArchived = (int) ($row['published'] ?? 1) === 2;
                     ?>
-                    <tr>
+                    <tr<?php echo $isArchived ? ' class="table-secondary"' : ''; ?>>
                         <td>
                             <a href="<?php echo $drillUrl; ?>">
                                 <?php echo htmlspecialchars((string) ($row['title'] ?? ''), ENT_QUOTES); ?>
                             </a>
+                            <?php if ($isArchived) : ?>
+                                <span class="badge bg-warning text-dark ms-1"><?php echo Text::_('JBS_ANA_STATUS_ARCHIVED'); ?></span>
+                            <?php endif; ?>
                         </td>
                         <td class="small text-muted d-none d-md-table-cell">
                             <?php echo htmlspecialchars((string) ($row['study_date'] ?? ''), ENT_QUOTES); ?>
