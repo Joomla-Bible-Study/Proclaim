@@ -1,4 +1,3 @@
-/* jshint latedef: nofunc */
 /**
  * AJAX Filtering & Searching for Frontend Sermon Listing
  *

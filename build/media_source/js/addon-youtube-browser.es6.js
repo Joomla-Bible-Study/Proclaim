@@ -3,7 +3,6 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @description YouTube Video Browser for Proclaim Media Files
  */
-/* jshint esversion: 11 */
 (() => {
     'use strict';
 

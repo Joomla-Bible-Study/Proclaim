@@ -3,7 +3,6 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @description Media File Edit — AJAX server switching + server picker modal
  */
-/* jshint esversion: 6 */
 (function () {
     'use strict';
 
