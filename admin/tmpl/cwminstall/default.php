@@ -27,6 +27,18 @@ if ($this->totalSteps != '0') {
     $progressText = Text::sprintf('JBS_MIG_STEP_PROGRESS', $this->doneSteps, $this->totalSteps);
 }
 
+// Dynamic heading based on install type
+$workingKey  = match ($this->installType) {
+    'install'  => 'JBS_MIG_WORKING_INSTALL',
+    'upgrade'  => 'JBS_MIG_WORKING_UPGRADE',
+    default    => 'JBS_MIG_WORKING',
+};
+$finishedKey = match ($this->installType) {
+    'install'  => 'JBS_MIG_DONE_INSTALL',
+    'upgrade'  => 'JBS_MIG_DONE_UPGRADE',
+    default    => 'JBS_MIG_MIGRATION_DONE',
+};
+
 // Determine progress bar color based on percentage
 $progressClass = 'bg-primary';
 if ($this->percentage >= 100) {
@@ -54,7 +66,7 @@ if ($this->more) {
             <div class="card-header bg-primary text-white">
                 <h3 class="card-title mb-0">
                     <i class="fas fa-database me-2"></i>
-                    <?php echo $this->more ? Text::_('JBS_MIG_WORKING') : Text::_('JBS_MIG_MIGRATION_DONE'); ?>
+                    <?php echo $this->more ? Text::_($workingKey) : Text::_($finishedKey); ?>
                 </h3>
             </div>
             <div class="card-body">

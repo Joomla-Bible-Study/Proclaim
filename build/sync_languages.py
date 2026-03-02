@@ -29,43 +29,58 @@ OP_VAULT = os.environ.get('OP_VAULT', 'CWM')  # Default vault, can override with
 # 3. Standard 1Password item: "Google Translate API - Proclaim"
 # 4. Empty (translation disabled)
 
+def _get_op_account():
+    """Get the first 1Password account URL for --account flag (triggers biometric)."""
+    import subprocess
+    try:
+        result = subprocess.run(
+            ['op', 'account', 'list', '--format', 'json'],
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0:
+            accounts = json.loads(result.stdout)
+            if accounts:
+                return accounts[0].get('url', '')
+    except Exception:
+        pass
+    return ''
+
 def check_op_cli():
-    """Check if 1Password CLI is available and authenticated."""
+    """Check if 1Password CLI is installed (auth is handled by get_api_key_from_op via --account)."""
     try:
         import subprocess
         result = subprocess.run(['op', '--version'], capture_output=True, text=True, timeout=5)
-        if result.returncode != 0:
-            return False
-        # Verify authentication — op whoami fails if not signed in
-        auth = subprocess.run(['op', 'whoami'], capture_output=True, text=True, timeout=5)
-        if auth.returncode != 0:
-            print("  1Password CLI is installed but not signed in. Run: op signin")
-            return False
-        return True
+        return result.returncode == 0
     except Exception:
         return False
 
 def get_api_key_from_op(item_ref=None):
     """
     Retrieve API key from 1Password.
+    Uses --account flag to trigger biometric unlock in non-interactive shells.
     Searches all vaults if OP_VAULT is not explicitly set.
     """
     import subprocess
 
+    account = _get_op_account()
+    account_args = ['--account', account] if account else []
+
     if item_ref:
         # Use provided reference directly
-        cmd = ['op', 'read', item_ref]
+        cmd = ['op', 'read', item_ref] + account_args
     else:
         # Try configured vault first, then fall back to all-vault search
-        cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT, '--fields', 'credential', '--format', 'json', '--reveal']
+        cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--vault', OP_VAULT,
+               '--fields', 'credential', '--format', 'json', '--reveal'] + account_args
 
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
 
         # If vault-specific lookup failed, retry across all vaults
         if result.returncode != 0 and not item_ref:
-            cmd = ['op', 'item', 'get', OP_ITEM_NAME, '--fields', 'credential', '--format', 'json', '--reveal']
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            cmd = ['op', 'item', 'get', OP_ITEM_NAME,
+                   '--fields', 'credential', '--format', 'json', '--reveal'] + account_args
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
 
         if result.returncode == 0:
             if item_ref:
@@ -85,6 +100,7 @@ def create_op_item(api_key, vault=None):
     import subprocess
 
     target_vault = vault or OP_VAULT
+    account = _get_op_account()
     print(f"Creating 1Password item '{OP_ITEM_NAME}' in vault '{target_vault}'...")
 
     cmd = [
@@ -94,6 +110,8 @@ def create_op_item(api_key, vault=None):
         '--vault', target_vault,
         f'credential={api_key}',
     ]
+    if account:
+        cmd += ['--account', account]
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
@@ -129,7 +147,11 @@ def setup_api_key():
             return False
         # Delete existing item
         import subprocess
-        subprocess.run(['op', 'item', 'delete', OP_ITEM_NAME, '--vault', OP_VAULT], capture_output=True)
+        del_cmd = ['op', 'item', 'delete', OP_ITEM_NAME, '--vault', OP_VAULT]
+        account = _get_op_account()
+        if account:
+            del_cmd += ['--account', account]
+        subprocess.run(del_cmd, capture_output=True)
 
     # Prompt for API key
     print("\nEnter your Google Translate API key")

@@ -23,6 +23,13 @@ use Joomla\CMS\Router\Route;
 // Clear Session after finish
 $session = Factory::getApplication()->getSession();
 $session->set('migration_stack', '', 'CWM');
+
+// Dynamic finished heading based on install type
+$finishedKey = match ($this->installType) {
+    'install'  => 'JBS_MIG_DONE_INSTALL',
+    'upgrade'  => 'JBS_MIG_DONE_UPGRADE',
+    default    => 'JBS_MIG_MIGRATION_DONE',
+};
 ?>
 
 <div class="row">
@@ -47,7 +54,7 @@ $session->set('migration_stack', '', 'CWM');
             <div class="card-body text-center py-4">
                 <i class="fas fa-check-circle mb-3" style="font-size: 4rem;"></i>
                 <h2 class="card-title mb-2">
-                    <?php echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_('JBS_MIG_MIGRATION_DONE')); ?>
+                    <?php echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_($finishedKey)); ?>
                 </h2>
                 <p class="card-text mb-0">
                     <?php echo Text::_('JBS_MIG_SUCCESS_DESC'); ?>

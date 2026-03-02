@@ -96,6 +96,8 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected string $type;
+    /** @var string Install type: 'install', 'migration', or 'upgrade' @since 10.1.0 */
+    public string $installType = 'migration';
     /** @var array The pre-versions to process
      * @since    7.0.0
      */
@@ -155,6 +157,11 @@ class HtmlView extends BaseHtmlView
         $this->setLayout($layout);
 
         $this->percentage = $percent;
+
+        // Set install type from callstack (determined in model's getSteps)
+        if (!empty($this->callstack['install_type'])) {
+            $this->installType = $this->callstack['install_type'];
+        }
 
         // Note: Auto-submit is now handled in the template for better control
 

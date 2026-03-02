@@ -330,6 +330,15 @@ class CwminstallModel extends ListModel
             $hasDbChanges = !empty($this->versionStack) || !empty($this->subFiles);
         }
 
+        // Determine install type for UI labels
+        if ($this->callstack['subversiontype_version'] <= 000) {
+            $this->callstack['install_type'] = 'install';
+        } elseif ($hasDbChanges) {
+            $this->callstack['install_type'] = 'migration';
+        } else {
+            $this->callstack['install_type'] = 'upgrade';
+        }
+
         // Set finishing steps based on whether DB changes are needed.
         // When no SQL/PHP migrations need to run, skip one-time data migrations
         // that have already been applied — only run essential housekeeping.
