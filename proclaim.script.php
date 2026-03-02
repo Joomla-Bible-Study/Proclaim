@@ -13,6 +13,7 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -780,6 +781,29 @@ class com_proclaimInstallerScript extends InstallerScript
             // information_schema first so this is safe on fresh installs where
             // the install SQL already created the PKs.
             $this->ensurePrimaryKeys();
+
+            // Set helpURL for wiki-based help if not already configured
+            try {
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
+                $query  = $db->getQuery(true)
+                    ->select($db->quoteName('params'))
+                    ->from($db->quoteName('#__extensions'))
+                    ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                    ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+                $params = new \Joomla\Registry\Registry($db->setQuery($query)->loadResult() ?: '{}');
+
+                if (empty($params->get('helpURL'))) {
+                    $params->set('helpURL', 'https://github.com/Joomla-Bible-Study/Proclaim/wiki/Help-{keyref}');
+                    $update = $db->getQuery(true)
+                        ->update($db->quoteName('#__extensions'))
+                        ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+                        ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                        ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+                    $db->setQuery($update)->execute();
+                }
+            } catch (\Exception $e) {
+                // Non-critical — help will fall back to default behavior
+            }
         }
         // Detect 9.x legacy schema and warn the user to run the upgrade wizard
         if ($type === 'install') {
