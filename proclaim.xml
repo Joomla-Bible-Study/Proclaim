@@ -151,7 +151,6 @@
             <filename>api.php</filename>
             <filename>config.xml</filename>
             <folder>forms</folder>
-            <folder>help</folder>
             <folder>helpers</folder>
             <folder>language</folder>
             <folder>layouts</folder>

@@ -68,6 +68,15 @@
                 description="JBS_ADM_FIELD_IGNORED_EXTENSIONS_DESC"/>
 
         <field
+                name="helpURL"
+                type="url"
+                default="https://github.com/Joomla-Bible-Study/Proclaim/wiki/Help-{keyref}"
+                label="JBS_ADM_FIELD_HELP_URL_LABEL"
+                description="JBS_ADM_FIELD_HELP_URL_DESC"
+                size="60"
+                filter="url"/>
+
+        <field
                 name="upload_mime"
                 type="text"
                 size="50"
