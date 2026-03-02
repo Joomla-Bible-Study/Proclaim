@@ -7,8 +7,9 @@
     </config>
     <fields name="params">
         <fieldset name="wistia_api" label="JBS_ADDON_WISTIA_API_SETTINGS">
-            <field name="api_token" type="text" label="JBS_ADDON_WISTIA_API_TOKEN"
-                   description="JBS_ADDON_WISTIA_API_TOKEN_DESC" class="inputbox" size="60" />
+            <field name="api_token" type="ApiKey" label="JBS_ADDON_WISTIA_API_TOKEN"
+                   description="JBS_ADDON_WISTIA_API_TOKEN_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
             <field name="project_id" type="text" label="JBS_ADDON_WISTIA_PROJECT_ID"
                    description="JBS_ADDON_WISTIA_PROJECT_ID_DESC" class="inputbox" size="40" />
         </fieldset>

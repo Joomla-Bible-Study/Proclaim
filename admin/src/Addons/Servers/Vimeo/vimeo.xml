@@ -7,8 +7,9 @@
     </config>
     <fields name="params">
         <fieldset name="vimeo_api" label="JBS_ADDON_VIMEO_API_SETTINGS">
-            <field name="access_token" type="text" label="JBS_ADDON_VIMEO_ACCESS_TOKEN"
-                   description="JBS_ADDON_VIMEO_ACCESS_TOKEN_DESC" class="inputbox" size="60" />
+            <field name="access_token" type="ApiKey" label="JBS_ADDON_VIMEO_ACCESS_TOKEN"
+                   description="JBS_ADDON_VIMEO_ACCESS_TOKEN_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
             <field name="user_id" type="text" label="JBS_ADDON_VIMEO_USER_ID"
                    description="JBS_ADDON_VIMEO_USER_ID_DESC" class="inputbox" size="40" />
         </fieldset>

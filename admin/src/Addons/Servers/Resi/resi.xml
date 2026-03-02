@@ -9,8 +9,9 @@
         <fieldset name="resi_api" label="JBS_ADDON_RESI_API_SETTINGS">
             <field name="account_id" type="text" label="JBS_ADDON_RESI_ACCOUNT_ID"
                    description="JBS_ADDON_RESI_ACCOUNT_ID_DESC" class="inputbox" size="40" />
-            <field name="api_key" type="text" label="JBS_ADDON_RESI_API_KEY"
-                   description="JBS_ADDON_RESI_API_KEY_DESC" class="inputbox" size="60" />
+            <field name="api_key" type="ApiKey" label="JBS_ADDON_RESI_API_KEY"
+                   description="JBS_ADDON_RESI_API_KEY_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
         </fieldset>
     </fields>
     <fields name="media">

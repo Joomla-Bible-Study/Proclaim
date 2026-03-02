@@ -280,7 +280,7 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="api_bible_api_key" type="text" default=""
+        <field name="api_bible_api_key" type="ApiKey" default=""
                label="JBS_ADM_API_BIBLE_KEY"
                description="JBS_ADM_API_BIBLE_KEY_DESC"
                filter="string"
