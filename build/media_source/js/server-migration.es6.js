@@ -494,7 +494,7 @@
             let failedInGroup = 0;
             let safety = Math.ceil(group.count / BATCH_SIZE) * 2 + 5;
 
-            while (safety-- > 0) {
+            while ((safety -= 1) >= 0) {
                 progressText.textContent = Joomla.Text._('JBS_SMG_MIGRATING')
                     .replace('%d', Math.min(migratedTotal + BATCH_SIZE, totalFiles))
                     .replace('%t', totalFiles);
@@ -629,16 +629,16 @@
      */
     function publishedBadge(state) {
         switch (state) {
-        case 1:
-            return '<span class="badge bg-success">Published</span>';
-        case 0:
-            return '<span class="badge bg-secondary">Unpublished</span>';
-        case 2:
-            return '<span class="badge bg-info">Archived</span>';
-        case -2:
-            return '<span class="badge bg-danger">Trashed</span>';
-        default:
-            return `<span class="badge bg-light text-dark">${state}</span>`;
+            case 1:
+                return '<span class="badge bg-success">Published</span>';
+            case 0:
+                return '<span class="badge bg-secondary">Unpublished</span>';
+            case 2:
+                return '<span class="badge bg-info">Archived</span>';
+            case -2:
+                return '<span class="badge bg-danger">Trashed</span>';
+            default:
+                return `<span class="badge bg-light text-dark">${state}</span>`;
         }
     }
 

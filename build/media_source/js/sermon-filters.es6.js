@@ -436,6 +436,9 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Object}  overrides   Extra params to merge (e.g. limitstart)
      * @param {boolean} appendMode  If true, append results instead of replacing
      */
+    // Save the native submit so the error fallback can do a real POST
+    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
+
     async function fetchResults(overrides, appendMode) {
         // Cancel any in-flight request
         if (abortController) {
@@ -629,9 +632,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resetScrollState();
         fetchResults({ limitstart: 0 });
     });
-
-    // Save the native submit so the error fallback can do a real POST
-    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
 
     // Override the native submit() so searchtools' form.submit() goes through AJAX
     form.submit = function () {
