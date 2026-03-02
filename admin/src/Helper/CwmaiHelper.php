@@ -54,10 +54,17 @@ class CwmaiHelper
      * Results are cached for 5 minutes per unique context to avoid redundant
      * API calls when the user clicks AI Assist multiple times.
      *
-     * @param   array  $context  Sermon context: title, scripture, video_title, video_description,
-     *                           video_tags, existing_intro, existing_text, existing_topics
+     * Context keys for field toggles (all default to true):
+     *   generate_topics — include topic generation
+     *   generate_intro  — include description generation
+     *   generate_text   — include study text generation
      *
-     * @return  array  Generated content: ['topics' => string[], 'studyintro' => string, 'studytext' => string]
+     * @param   array  $context  Sermon context: title, scripture, video_title, video_description,
+     *                           video_tags, existing_intro, existing_text, existing_topics,
+     *                           generate_topics, generate_intro, generate_text, video_chapters
+     *
+     * @return  array  Generated content: ['topics' => string[], 'studyintro' => string, 'studytext' => string,
+     *                 'chapters' => array]
      *
      * @throws  \RuntimeException  If API call fails or is not configured
      * @since   10.1.0
@@ -88,7 +95,18 @@ class CwmaiHelper
             }
         }
 
-        $systemPrompt = self::buildSystemPrompt();
+        // Determine which fields to generate
+        $fields = [
+            'topics' => !empty($context['generate_topics'] ?? true),
+            'intro'  => !empty($context['generate_intro'] ?? true),
+            'text'   => !empty($context['generate_text'] ?? true),
+        ];
+
+        $hasChapters     = !empty($context['video_chapters']);
+        $hasYouTube      = !empty($context['video_title']) || !empty($context['video_description']);
+        $suggestChapters = $fields['text'] && !$hasChapters && $hasYouTube;
+
+        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
         $userMessage  = self::buildUserMessage($context);
 
         $result = match ($provider) {
@@ -119,7 +137,7 @@ class CwmaiHelper
      */
     public static function getVideoContext(int $mediaFileId): array
     {
-        $empty = ['video_title' => '', 'video_description' => '', 'video_tags' => []];
+        $empty = ['video_title' => '', 'video_description' => '', 'video_tags' => [], 'video_chapters' => []];
 
         if ($mediaFileId <= 0) {
             return $empty;
@@ -371,24 +389,88 @@ class CwmaiHelper
     /**
      * Build the system prompt for sermon content generation
      *
+     * @param   array  $fields           Which fields to generate: ['topics' => bool, 'intro' => bool, 'text' => bool]
+     * @param   bool   $hasChapters      Whether the video already has chapter timestamps
+     * @param   bool   $suggestChapters  Whether the AI should suggest chapter timestamps
+     *
      * @return  string
      *
      * @since   10.1.0
      */
-    private static function buildSystemPrompt(): string
-    {
-        return <<<'PROMPT'
-You are a ministry content assistant helping organize sermon and Bible study records. Your task is to analyze sermon information and generate:
+    private static function buildSystemPrompt(
+        array $fields = ['topics' => true, 'intro' => true, 'text' => true],
+        bool $hasChapters = false,
+        bool $suggestChapters = false
+    ): string {
+        $instructions = [];
+        $jsonKeys     = [];
 
-1. **Topics** (5-10 relevant topic tags) — short single words or two-word phrases that categorize the sermon. Examples: "Faith", "Prayer", "Holy Spirit", "Spiritual Growth", "Forgiveness". Use title case.
+        $instructions[] = 'You are a ministry content assistant helping organize sermon and Bible study records. '
+            . 'Your task is to analyze sermon information and generate the requested content.';
 
-2. **Study Introduction** (studyintro) — a compelling 2-3 sentence summary suitable for display in sermon listings and search results. Write in third person. Do not use markdown formatting.
+        $index = 1;
 
-3. **Study Text** (studytext) — a more detailed 2-4 paragraph description that expands on the sermon's themes, key points, and application. Write in third person. Use simple HTML for paragraphs (<p> tags only). Do not use markdown.
+        if (!empty($fields['topics'])) {
+            $instructions[] = $index . '. **Topics** (5-10 relevant topic tags) — short single words or two-word phrases '
+                . 'that categorize the sermon. Examples: "Faith", "Prayer", "Holy Spirit", "Spiritual Growth", '
+                . '"Forgiveness". Use title case.';
+            $jsonKeys[] = '"topics":["Topic1","Topic2"]';
+            $index++;
+        }
 
-Respond ONLY with valid JSON in this exact format:
-{"topics":["Topic1","Topic2"],"studyintro":"Brief summary...","studytext":"<p>Detailed description...</p>"}
-PROMPT;
+        if (!empty($fields['intro'])) {
+            $instructions[] = $index . '. **Study Introduction** (studyintro) — a compelling 2-3 sentence summary suitable '
+                . 'for display in sermon listings and search results. Write in third person. Do not use markdown formatting.';
+            $jsonKeys[] = '"studyintro":"Brief summary..."';
+            $index++;
+        }
+
+        if (!empty($fields['text'])) {
+            $textInstruction = $index . '. **Study Text** (studytext) — a more detailed 2-4 paragraph description that '
+                . 'expands on the sermon\'s themes, key points, and application. Write in third person. '
+                . 'Use simple HTML for paragraphs (<p> tags only). Do not use markdown.';
+
+            if ($hasChapters) {
+                $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
+                    . '<a href="#" class="cwm-timestamp" data-seconds="SECONDS">TIME</a> where SECONDS is the total '
+                    . 'seconds and TIME is the display format (e.g. 2:30). Weave these naturally into the study text.';
+            }
+
+            $instructions[] = $textInstruction;
+            $jsonKeys[]     = '"studytext":"<p>Detailed description...</p>"';
+            $index++;
+        }
+
+        if ($suggestChapters) {
+            $instructions[] = $index . '. **Suggested Chapters** (chapters) — the attached YouTube video has no chapter '
+                . 'markers. Based on the sermon content, suggest 3-8 logical chapter timestamps. The first chapter must '
+                . 'start at 0:00. Return as an array of objects with "time" (display format like "0:00" or "1:23:45") '
+                . 'and "label" (short chapter title).';
+            $jsonKeys[] = '"chapters":[{"time":"0:00","label":"Introduction"},{"time":"2:30","label":"Main Point"}]';
+        }
+
+        // Instruct AI to return empty values for fields not requested
+        if (empty($fields['topics'])) {
+            $jsonKeys[] = '"topics":[]';
+        }
+
+        if (empty($fields['intro'])) {
+            $jsonKeys[] = '"studyintro":""';
+        }
+
+        if (empty($fields['text'])) {
+            $jsonKeys[] = '"studytext":""';
+        }
+
+        if (!$suggestChapters) {
+            $jsonKeys[] = '"chapters":[]';
+        }
+
+        $instructions[] = '';
+        $instructions[] = 'Respond ONLY with valid JSON in this exact format:';
+        $instructions[] = '{' . implode(',', $jsonKeys) . '}';
+
+        return implode("\n\n", $instructions);
     }
 
     /**
@@ -438,6 +520,16 @@ PROMPT;
             $parts[] = 'Current Topics: ' . $topics;
         }
 
+        if (!empty($context['video_chapters'])) {
+            $chapterLines = [];
+
+            foreach ($context['video_chapters'] as $ch) {
+                $chapterLines[] = $ch['time'] . ' ' . $ch['label'];
+            }
+
+            $parts[] = "Video Chapters:\n" . implode("\n", $chapterLines);
+        }
+
         if (empty($parts)) {
             $parts[] = 'No sermon details provided. Generate generic church sermon content.';
         }
@@ -465,7 +557,7 @@ PROMPT;
 
         $payload = json_encode([
             'model'      => $model,
-            'max_tokens' => 1024,
+            'max_tokens' => 2048,
             'system'     => $systemPrompt,
             'messages'   => [
                 ['role' => 'user', 'content' => $userMessage],
@@ -528,7 +620,7 @@ PROMPT;
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 1024,
+                'maxOutputTokens'  => 2048,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -636,6 +728,7 @@ PROMPT;
             'topics'     => (array) ($parsed['topics'] ?? []),
             'studyintro' => (string) ($parsed['studyintro'] ?? ''),
             'studytext'  => (string) ($parsed['studytext'] ?? ''),
+            'chapters'   => (array) ($parsed['chapters'] ?? []),
         ];
     }
 
@@ -668,9 +761,20 @@ PROMPT;
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
         $db->setQuery($query);
         $serverParams = new Registry($db->loadResult());
-        $apiKey       = $serverParams->get('key', '');
+        $apiKey       = $serverParams->get('api_key', '');
 
         if (empty($apiKey)) {
+            return $empty;
+        }
+
+        // Check YouTube API daily quota before making the call
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Admin: Quota exhausted — skipped YouTube metadata fetch',
+                ['server_id' => $serverId, 'video_id' => $videoId, 'remaining' => CwmyoutubeQuota::getRemaining($serverId)]
+            );
+
             return $empty;
         }
 
@@ -680,6 +784,9 @@ PROMPT;
             . urlencode($videoId) . '&key=' . urlencode($apiKey);
 
         $response = $http->get($url);
+
+        // Record quota usage regardless of response (YouTube counts the call)
+        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
 
         if ($response->getStatusCode() !== 200) {
             return $empty;
@@ -692,10 +799,13 @@ PROMPT;
             return $empty;
         }
 
+        $description = $item['description'] ?? '';
+
         return [
             'video_title'       => $item['title'] ?? '',
-            'video_description' => $item['description'] ?? '',
+            'video_description' => $description,
             'video_tags'        => $item['tags'] ?? [],
+            'video_chapters'    => self::parseYouTubeChapters($description),
         ];
     }
 
@@ -736,6 +846,139 @@ PROMPT;
             'video_title'       => $data['title'] ?? '',
             'video_description' => $data['description'] ?? '',
             'video_tags'        => [],
+        ];
+    }
+
+    /**
+     * Parse YouTube chapter timestamps from a video description
+     *
+     * YouTube requires: 3+ chapters, first at 0:00, each at least 10 seconds apart.
+     *
+     * @param   string  $description  Video description text
+     *
+     * @return  array  Array of ['time' => '2:30', 'seconds' => 150, 'label' => 'Main Point']
+     *
+     * @since   10.1.0
+     */
+    public static function parseYouTubeChapters(string $description): array
+    {
+        if (empty($description)) {
+            return [];
+        }
+
+        $chapters = [];
+
+        // Match lines starting with a timestamp like "0:00", "1:23", "1:23:45"
+        if (!preg_match_all('/^(\d{1,2}:\d{2}(?::\d{2})?)\s+(.+)$/m', $description, $matches, PREG_SET_ORDER)) {
+            return [];
+        }
+
+        foreach ($matches as $match) {
+            $time    = trim($match[1]);
+            $label   = trim($match[2]);
+            $parts   = array_map('intval', explode(':', $time));
+            $seconds = 0;
+
+            if (\count($parts) === 3) {
+                $seconds = $parts[0] * 3600 + $parts[1] * 60 + $parts[2];
+            } elseif (\count($parts) === 2) {
+                $seconds = $parts[0] * 60 + $parts[1];
+            }
+
+            $chapters[] = [
+                'time'    => $time,
+                'seconds' => $seconds,
+                'label'   => $label,
+            ];
+        }
+
+        // YouTube rules: minimum 3 chapters, first must be at 0:00
+        if (\count($chapters) < 3) {
+            return [];
+        }
+
+        if ($chapters[0]['seconds'] !== 0) {
+            return [];
+        }
+
+        // Each chapter must be at least 10 seconds apart
+        for ($i = 1, $count = \count($chapters); $i < $count; $i++) {
+            if ($chapters[$i]['seconds'] - $chapters[$i - 1]['seconds'] < 10) {
+                return [];
+            }
+        }
+
+        return $chapters;
+    }
+
+    /**
+     * Sync metadata from YouTube for a media file without AI involvement
+     *
+     * Fetches raw YouTube metadata and matches tags against existing topics.
+     *
+     * @param   int  $mediaFileId  The media file record ID
+     *
+     * @return  array  Sync result with video_title, video_description, video_tags, video_chapters,
+     *                 matched_topics, and optionally error
+     *
+     * @since   10.1.0
+     */
+    public static function syncFromYouTube(int $mediaFileId): array
+    {
+        if ($mediaFileId <= 0) {
+            return ['error' => Text::_('JBS_CMN_YT_SYNC_NO_MEDIA')];
+        }
+
+        // Look up the server ID to check quota before making the API call
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('m.server_id'))
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->join(
+                'LEFT',
+                $db->quoteName('#__bsms_servers', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id')
+            )
+            ->where([
+                $db->quoteName('m.id') . ' = ' . (int) $mediaFileId,
+                'LOWER(' . $db->quoteName('s.type') . ') = ' . $db->quote('youtube'),
+            ]);
+        $db->setQuery($query);
+        $serverId = (int) $db->loadResult();
+
+        if ($serverId > 0 && !CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            $remaining = CwmyoutubeQuota::getRemaining($serverId);
+            $budget    = CwmyoutubeQuota::getDailyBudget($serverId);
+
+            return [
+                'error'       => Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', $remaining, $budget),
+                'quota_error' => true,
+            ];
+        }
+
+        $videoContext = self::getVideoContext($mediaFileId);
+
+        if (
+            empty($videoContext['video_title'])
+            && empty($videoContext['video_description'])
+            && empty($videoContext['video_tags'])
+        ) {
+            return ['error' => Text::_('JBS_CMN_YT_SYNC_NO_METADATA')];
+        }
+
+        $matchedTopics = [];
+
+        if (!empty($videoContext['video_tags'])) {
+            $tagText       = implode(', ', $videoContext['video_tags']);
+            $matchedTopics = CwmtopicSuggestionHelper::matchExistingTopics($tagText);
+        }
+
+        return [
+            'video_title'       => $videoContext['video_title'] ?? '',
+            'video_description' => $videoContext['video_description'] ?? '',
+            'video_tags'        => $videoContext['video_tags'] ?? [],
+            'video_chapters'    => $videoContext['video_chapters'] ?? [],
+            'matched_topics'    => $matchedTopics,
         ];
     }
 

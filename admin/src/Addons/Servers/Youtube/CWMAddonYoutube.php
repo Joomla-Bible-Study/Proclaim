@@ -19,7 +19,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
@@ -1375,6 +1378,29 @@ class CWMAddonYoutube extends CWMAddon
             return;
         }
 
+        // Check YouTube API daily quota before making the call (videos.list = 1 unit)
+        if (!CwmyoutubeQuota::hasQuota((int) $server->id, CwmyoutubeQuota::COST_VIDEOS)) {
+            $remaining = CwmyoutubeQuota::getRemaining((int) $server->id);
+            $budget    = CwmyoutubeQuota::getDailyBudget((int) $server->id);
+
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Admin: Quota exhausted — skipped metadata detection',
+                ['server_id' => (int) $server->id, 'video_id' => $videoId, 'remaining' => $remaining, 'budget' => $budget]
+            );
+
+            try {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_CMN_YT_QUOTA_EXHAUSTED', $remaining, $budget),
+                    'warning'
+                );
+            } catch (\Exception $e) {
+                // Ignore if application not available
+            }
+
+            return;
+        }
+
         try {
             $client = new Google\Client();
             $client->setApplicationName('Proclaim');
@@ -1384,6 +1410,9 @@ class CWMAddonYoutube extends CWMAddon
             $response = $youtube->videos->listVideos('snippet,contentDetails', [
                 'id' => $videoId,
             ]);
+
+            // Record quota usage (YouTube counts the call regardless of result)
+            CwmyoutubeQuota::recordUsage((int) $server->id, CwmyoutubeQuota::COST_VIDEOS);
 
             if (!empty($response->items)) {
                 $item = $response->items[0];
@@ -1405,9 +1434,83 @@ class CWMAddonYoutube extends CWMAddon
                         // Ignore invalid duration format
                     }
                 }
+
+                // Auto-import YouTube tags as topics when setting is enabled
+                $adminParams = Cwmparams::getAdmin()->params;
+
+                if ($adminParams->get('yt_auto_import_topics', '0') === '1') {
+                    $tags = $item->snippet->tags ?? [];
+
+                    if (!empty($tags)) {
+                        $this->importTagsAsTopics($tags);
+                    }
+                }
             }
         } catch (\Exception $e) {
             // Log or ignore error
+        }
+    }
+
+    /**
+     * Import YouTube video tags as Proclaim topics
+     *
+     * Matches tags against existing topics and creates new topics for unmatched tags.
+     *
+     * @param   array  $tags  YouTube video tags
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function importTagsAsTopics(array $tags): void
+    {
+        $tagText      = implode(', ', $tags);
+        $matched      = CwmtopicSuggestionHelper::matchExistingTopics($tagText);
+        $matchedTexts = array_map(
+            fn ($m) => mb_strtolower(trim($m['text'])),
+            $matched
+        );
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+
+            if (empty($tag)) {
+                continue;
+            }
+
+            // Skip if already matched to an existing topic
+            if (\in_array(mb_strtolower($tag), $matchedTexts, true)) {
+                continue;
+            }
+
+            // Case-insensitive de-dup check
+            $query = $db->getQuery(true);
+            $query->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_topics'))
+                ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(:tag)')
+                ->bind(':tag', $tag);
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                continue;
+            }
+
+            // Insert new topic
+            $insert = $db->getQuery(true);
+            $insert->insert($db->quoteName('#__bsms_topics'))
+                ->columns($db->quoteName(['topic_text', 'published', 'language']))
+                ->values(
+                    $db->quote($tag) . ', 1, ' . $db->quote('*')
+                );
+            $db->setQuery($insert);
+
+            try {
+                $db->execute();
+            } catch (\Exception $e) {
+                // Skip duplicate or failed insert
+            }
         }
     }
 

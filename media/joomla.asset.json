@@ -124,6 +124,28 @@
             }
         },
         {
+            "name": "com_proclaim.cwm-timestamp",
+            "type": "script",
+            "uri": "com_proclaim/cwm-timestamp.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.admin-youtube-log",
+            "type": "script",
+            "uri": "com_proclaim/admin-youtube-log.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.admin-imagetools",
             "type": "script",
             "uri": "com_proclaim/admin-imagetools.min.js",

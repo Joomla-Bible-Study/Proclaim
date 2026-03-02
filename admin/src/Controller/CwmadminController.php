@@ -28,6 +28,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
@@ -3665,5 +3666,24 @@ class CwmadminController extends FormController
         }
 
         $this->app->close();
+    }
+
+    /**
+     * Clear the YouTube event log file.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function clearYoutubeLog(): void
+    {
+        $this->checkToken();
+
+        CwmyoutubeLogHelper::clear();
+
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmadmin', false),
+            Text::_('JBS_ADM_YOUTUBE_LOG_CLEARED')
+        );
     }
 }
