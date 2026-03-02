@@ -21,7 +21,7 @@ A Joomla 5+ component for managing and displaying Bible studies and sermons, dev
 
 This repository is the source code for development. For a ready-to-install package:
 - **Latest stable release:** [GitHub Releases](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest)
-- **Detailed changes:** [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Whats-New-10.1)
+- **Detailed changes:** [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/What's-New-v10.1)
 - **Full changelog:** [Commit History](https://github.com/Joomla-Bible-Study/Proclaim/commits/development)
 
 ## Features
@@ -40,7 +40,7 @@ This repository is the source code for development. For a ready-to-install packa
 Full documentation is maintained in the [Proclaim Wiki](https://github.com/Joomla-Bible-Study/Proclaim/wiki).
 
 - [Wiki Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) -- Main documentation
-- [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Whats-New-10.1) -- Release notes
+- [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/What's-New-v10.1) -- Release notes
 - [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) -- Configure your environment
 - [Standards and Conventions](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Standards-and-Conventions) -- Coding standards
 - [Database Schema](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Database-Schema) -- Entity relationships
