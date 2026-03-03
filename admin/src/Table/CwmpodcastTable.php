@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
@@ -130,15 +131,6 @@ class CwmpodcastTable extends Table
     public ?string $podcastimage = null;
 
     /**
-     * Podcast Summary
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $podcastsummary = null;
-
-    /**
      * Podcast Search Words
      *
      * @var string|null
@@ -164,15 +156,6 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $language = null;
-
-    /**
-     * Podcast name
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $podcastname = null;
 
     /**
      * Editor Name
@@ -260,6 +243,38 @@ class CwmpodcastTable extends Table
     public ?string $linktype = null;
 
     /**
+     * iTunes category for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_category = 'Religion & Spirituality';
+
+    /**
+     * iTunes subcategory for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_subcategory = 'Christianity';
+
+    /**
+     * iTunes explicit flag (true/false)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_explicit = 'false';
+
+    /**
+     * iTunes show type (episodic/serial)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_type = 'episodic';
+
+    /**
      * Created date
      *
      * @var string|null
@@ -314,6 +329,14 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?int $access = null;
+
+    /**
+     * Platform links JSON (multi-platform subscription links)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $platform_links = null;
 
     /**
      * Params
@@ -372,10 +395,90 @@ class CwmpodcastTable extends Table
             $this->location_id = null;
         }
 
+        // Validate podcastlink: must be empty or a numeric menu item ID
+        if (!empty($this->podcastlink) && !ctype_digit((string) $this->podcastlink)) {
+            throw new \UnexpectedValueException(
+                Text::_('JBS_PDC_PODCAST_URL_LEGACY_ERROR')
+            );
+        }
+
+        // Validate podcast artwork image on save
+        if (!empty($this->podcastimage)) {
+            $fullPath = JPATH_ROOT . '/' . ltrim($this->podcastimage, '/');
+
+            if (is_file($fullPath)) {
+                $imageInfo = @getimagesize($fullPath);
+
+                if ($imageInfo !== false) {
+                    [$width, $height, $type] = $imageInfo;
+
+                    // Block save: wrong format
+                    if ($type !== IMAGETYPE_JPEG && $type !== IMAGETYPE_PNG) {
+                        throw new \UnexpectedValueException(
+                            Text::_('JBS_PDC_VALIDATE_IMAGE_FORMAT')
+                        );
+                    }
+
+                    // Block save: too small
+                    if ($width < 1400 || $height < 1400) {
+                        throw new \UnexpectedValueException(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_SMALL', $width, $height)
+                        );
+                    }
+
+                    // Warn only: too large
+                    if ($width > 3000 || $height > 3000) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_LARGE', $width, $height),
+                            'warning'
+                        );
+                    }
+
+                    // Warn only: not square
+                    if ($width !== $height) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_SQUARE', $width, $height),
+                            'warning'
+                        );
+                    }
+                }
+            }
+        }
+
         // Auto-prepend https:// to URL fields missing a schema
-        foreach (['website', 'podcastlink', 'alternatelink'] as $field) {
+        // website uses type="url" (Joomla handles validation), podcastlink stores menu item IDs
+        foreach (['alternatelink'] as $field) {
             if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
                 $this->$field = 'https://' . $this->$field;
+            }
+        }
+
+        // Auto-prepend https:// to URLs in platform_links JSON
+        if (!empty($this->platform_links) && \is_string($this->platform_links)) {
+            try {
+                $links = json_decode($this->platform_links, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $links = null;
+            }
+
+            if (\is_array($links)) {
+                $changed = false;
+
+                foreach ($links as &$link) {
+                    if (
+                        !empty($link['url'])
+                        && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $link['url'])
+                    ) {
+                        $link['url'] = 'https://' . $link['url'];
+                        $changed     = true;
+                    }
+                }
+
+                unset($link);
+
+                if ($changed) {
+                    $this->platform_links = json_encode($links);
+                }
             }
         }
 
@@ -408,6 +511,14 @@ class CwmpodcastTable extends Table
         if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // JSON-encode platform_links subform array for DB storage
+        if (isset($array['platform_links']) && \is_array($array['platform_links'])) {
+            $array['platform_links'] = json_encode(
+                array_values($array['platform_links']),
+                JSON_THROW_ON_ERROR
+            );
         }
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings

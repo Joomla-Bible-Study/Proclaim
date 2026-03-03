@@ -339,6 +339,13 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <!-- Podcast Index API Integration -->
+        <field name="podcastindex_api_key" type="text" default=""
+               label="JBS_PDC_PODCASTINDEX_API_KEY"
+               description="JBS_PDC_PODCASTINDEX_API_KEY_DESC" />
+        <field name="podcastindex_api_secret" type="password" default=""
+               label="JBS_PDC_PODCASTINDEX_API_SECRET"
+               description="JBS_PDC_PODCASTINDEX_API_SECRET_DESC" />
     </fields>
     <fieldset>
         <field name="drop_tables" type="radio" default="0"

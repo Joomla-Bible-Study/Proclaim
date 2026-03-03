@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <field name="platform" type="PodcastPlatform" label="JBS_PDC_PLATFORM"
+           description="JBS_PDC_PLATFORM_DESC" default="custom" class="form-select"
+           addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+    <field name="url" type="url" label="JBS_PDC_LINK_URL"
+           description="JBS_PDC_LINK_URL_DESC" class="form-control"
+           filter="url" hint="https://" />
+    <field name="label" type="text" label="JBS_PDC_LINK_LABEL"
+           description="JBS_PDC_LINK_LABEL_DESC" class="form-control"
+           hint="JBS_PDC_LINK_LABEL_HINT" filter="string" />
+    <field name="badge_image" type="text" label="JBS_PDC_LINK_BADGE"
+           description="JBS_PDC_LINK_BADGE_DESC" class="form-control"
+           hint="images/biblestudy/badge.png" filter="string" />
+</form>

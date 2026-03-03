@@ -17,11 +17,15 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastIndexHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmpodcastModel;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
@@ -108,5 +112,71 @@ class CwmpodcastController extends FormController
         $title = $validData['title'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'podcast', $id);
+    }
+
+    /**
+     * Submit the podcast feed to Podcast Index for directory listing.
+     *
+     * Called via AJAX from the admin edit form's Directory Submission card.
+     * Requires podcastindex_api_key and podcastindex_api_secret in component options.
+     *
+     * @return  void  Sends JSON response
+     *
+     * @since   10.1.0
+     */
+    public function submitToIndex(): void
+    {
+        $this->checkToken();
+
+        $app = Factory::getApplication();
+        $id  = $this->input->getInt('id', 0);
+
+        try {
+            if ($id <= 0) {
+                throw new \InvalidArgumentException(Text::_('JBS_PDC_SUBMIT_ERROR_NO_ID'));
+            }
+
+            $params    = ComponentHelper::getParams('com_proclaim');
+            $apiKey    = $params->get('podcastindex_api_key', '');
+            $apiSecret = $params->get('podcastindex_api_secret', '');
+
+            if (empty($apiKey) || empty($apiSecret)) {
+                throw new \RuntimeException(Text::_('JBS_PDC_SUBMIT_ERROR_NO_API_KEYS'));
+            }
+
+            // Load the podcast to get its filename (RSS feed)
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'filename', 'title']))
+                ->from($db->quoteName('#__bsms_podcast'))
+                ->where($db->quoteName('id') . ' = :pid')
+                ->bind(':pid', $id, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $podcast = $db->loadObject();
+
+            if (!$podcast || empty($podcast->filename)) {
+                throw new \RuntimeException(Text::_('JBS_PDC_SUBMIT_ERROR_NO_FEED'));
+            }
+
+            $feedUrl = Uri::root() . $podcast->filename;
+            $helper  = new CwmpodcastIndexHelper($apiKey, $apiSecret);
+            $result  = $helper->submitFeed($feedUrl);
+
+            $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_PDC_SUBMIT_SUCCESS', $podcast->title),
+                'data'    => $result,
+            ]);
+        } catch (\Exception $e) {
+            $app->setHeader('Content-Type', 'application/json; charset=utf-8');
+            $app->setHeader('Status', '500');
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        $app->close();
     }
 }
