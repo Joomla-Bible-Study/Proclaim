@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
@@ -399,6 +400,49 @@ class CwmpodcastTable extends Table
             throw new \UnexpectedValueException(
                 Text::_('JBS_PDC_PODCAST_URL_LEGACY_ERROR')
             );
+        }
+
+        // Validate podcast artwork image on save
+        if (!empty($this->podcastimage)) {
+            $fullPath = JPATH_ROOT . '/' . ltrim($this->podcastimage, '/');
+
+            if (is_file($fullPath)) {
+                $imageInfo = @getimagesize($fullPath);
+
+                if ($imageInfo !== false) {
+                    [$width, $height, $type] = $imageInfo;
+
+                    // Block save: wrong format
+                    if ($type !== IMAGETYPE_JPEG && $type !== IMAGETYPE_PNG) {
+                        throw new \UnexpectedValueException(
+                            Text::_('JBS_PDC_VALIDATE_IMAGE_FORMAT')
+                        );
+                    }
+
+                    // Block save: too small
+                    if ($width < 1400 || $height < 1400) {
+                        throw new \UnexpectedValueException(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_SMALL', $width, $height)
+                        );
+                    }
+
+                    // Warn only: too large
+                    if ($width > 3000 || $height > 3000) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_LARGE', $width, $height),
+                            'warning'
+                        );
+                    }
+
+                    // Warn only: not square
+                    if ($width !== $height) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_SQUARE', $width, $height),
+                            'warning'
+                        );
+                    }
+                }
+            }
         }
 
         // Auto-prepend https:// to URL fields missing a schema

@@ -24,6 +24,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * Podcast model class
@@ -102,6 +103,11 @@ class CwmpodcastModel extends AdminModel
 
         if (empty($data)) {
             $data = $this->getItem();
+
+            // Auto-populate website with site URL for new podcasts
+            if ((int) ($data->id ?? 0) === 0 && empty($data->website)) {
+                $data->website = rtrim(Uri::root(), '/');
+            }
         }
 
         return $data;
