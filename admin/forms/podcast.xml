@@ -118,14 +118,17 @@
         <field name="podcast_subscribe_desc" type="text" label="JBS_PDC_SUBSCRIBE_WORDS"
                description="JBS_PDC_SUBSCRIBE_WORDS_DESC" size="20" default=""/>
 
-        <field name="alternatelink" type="text" label="JBS_PDC_ALTERNATE_LINK" description="JBS_PDC_ALTERNATE_LINK_DESC"
-               size="65" hint="https://" filter="string"/>
+        <field name="platform_links" type="subform"
+               label="JBS_PDC_PLATFORM_LINKS" description="JBS_PDC_PLATFORM_LINKS_DESC"
+               formsource="podcast_link_row"
+               multiple="true" layout="joomla.form.field.subform.repeatable-table"
+               min="0" max="20"
+               buttons="add,remove,move" />
 
-        <field name="alternateimage" type="media" label="JBS_PDC_ALTERNATE_IMAGE" directory="biblestudy"
-               description="JBS_PDC_ALTERNATE_IMAGE_DESC"/>
-
-        <field name="alternatewords" type="text" size="20" label="JBS_PDC_ALTERNATE_WORDS"
-               description="JBS_PDC_ALTERNATE_WORDS_DESC"/>
+        <!-- Legacy alternate link fields — hidden for migration, remove in 11.0 -->
+        <field name="alternatelink" type="hidden" filter="string"/>
+        <field name="alternateimage" type="hidden"/>
+        <field name="alternatewords" type="hidden"/>
 
         <field name="podcast_subscribe_show" type="list" default="1" label="JBS_PDC_PODCAST_SHOW"
                description="JBS_PDC_PODCAST_SHOW_DESC">

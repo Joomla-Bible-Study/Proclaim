@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastPlatformHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
@@ -30,29 +31,6 @@ use Joomla\Database\DatabaseInterface;
 class Cwmpodcastsubscribe
 {
     private string $baseUri;
-
-    /**
-     * Map link URLs to FontAwesome icons and labels.
-     * Matched in order — first match wins.  The RSS fallback is used
-     * when no other pattern matches.
-     *
-     * @var  array<int, array{pattern: string, icon: string, label: string}>
-     *
-     * @since 10.1.0
-     */
-    private static array $linkIconMap = [
-        ['pattern' => 'itpc://',             'icon' => 'fa-brands fa-itunes-note', 'label' => 'iTunes'],
-        ['pattern' => 'apple.com/podcast',   'icon' => 'fa-brands fa-apple',       'label' => 'Apple Podcasts'],
-        ['pattern' => 'podcasts.apple.com',  'icon' => 'fa-brands fa-apple',       'label' => 'Apple Podcasts'],
-        ['pattern' => 'spotify.com',         'icon' => 'fa-brands fa-spotify',     'label' => 'Spotify'],
-        ['pattern' => 'youtube.com',         'icon' => 'fa-brands fa-youtube',     'label' => 'YouTube'],
-        ['pattern' => 'google.com/podcasts', 'icon' => 'fa-brands fa-google',      'label' => 'Google Podcasts'],
-        ['pattern' => 'overcast.fm',         'icon' => 'fa-solid fa-podcast',      'label' => 'Overcast'],
-        ['pattern' => 'pocketcasts.com',     'icon' => 'fa-solid fa-podcast',      'label' => 'Pocket Casts'],
-        ['pattern' => 'stitcher.com',        'icon' => 'fa-solid fa-podcast',      'label' => 'Stitcher'],
-        ['pattern' => 'amazon.com',          'icon' => 'fa-brands fa-amazon',      'label' => 'Amazon Music'],
-        ['pattern' => 'music.amazon',        'icon' => 'fa-brands fa-amazon',      'label' => 'Amazon Music'],
-    ];
 
     /**
      * Build Subscribe Table
@@ -79,11 +57,20 @@ class Cwmpodcastsubscribe
             $podcastshow = (int) ($podcast->podcast_subscribe_show ?: 2);
 
             $links = match ($podcastshow) {
-                3 => $this->buildAlternatePodcast($podcast),
+                3 => $this->buildPlatformLinks($podcast),
                 4 => $this->buildStandardPodcast($podcast)
-                    . $this->buildAlternatePodcast($podcast),
+                    . $this->buildPlatformLinks($podcast),
                 default => $this->buildStandardPodcast($podcast),
             };
+
+            // Fallback to legacy alternate link if no platform_links
+            if (
+                ($podcastshow === 3 || $podcastshow === 4)
+                && empty($podcast->platform_links)
+                && !empty($podcast->alternatelink)
+            ) {
+                $links .= $this->buildAlternatePodcast($podcast);
+            }
 
             $title = htmlspecialchars($podcast->title, ENT_QUOTES, 'UTF-8');
 
@@ -194,7 +181,71 @@ class Cwmpodcastsubscribe
     }
 
     /**
-     * Build Alternate Podcast link
+     * Build platform links from the JSON platform_links column.
+     *
+     * Reads the platform_links JSON data and renders each link with
+     * the appropriate icon and label from podcast-platforms.xml.
+     *
+     * @param   object  $podcast  Podcast data with platform_links column
+     *
+     * @return  string  HTML for all platform links (empty string if none)
+     *
+     * @since   10.1.0
+     */
+    public function buildPlatformLinks(object $podcast): string
+    {
+        if (empty($podcast->platform_links)) {
+            return '';
+        }
+
+        try {
+            $links = json_decode($podcast->platform_links, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return '';
+        }
+
+        if (empty($links)) {
+            return '';
+        }
+
+        $platforms = CwmpodcastPlatformHelper::getPlatformDefinitions();
+        $html      = '';
+
+        foreach ($links as $link) {
+            $url      = htmlspecialchars($link['url'] ?? '', ENT_QUOTES, 'UTF-8');
+            $label    = htmlspecialchars($link['label'] ?? '', ENT_QUOTES, 'UTF-8');
+            $platform = $link['platform'] ?? 'custom';
+
+            if (empty($url)) {
+                continue;
+            }
+
+            // Badge image override
+            if (!empty($link['badge_image'])) {
+                $image = $this->buildPodcastImage($link['badge_image'], $label);
+
+                if ($image) {
+                    $html .= '<a href="' . $url . '" class="podcast-badge">' . $image . '</a>';
+
+                    continue;
+                }
+            }
+
+            // Platform icon from XML definitions
+            $pDef   = $platforms[$platform] ?? null;
+            $icon   = $pDef ? $pDef['icon'] : 'fa-solid fa-headphones';
+            $pLabel = $pDef ? $pDef['label'] : 'Subscribe';
+
+            $html .= '<a href="' . $url . '">'
+                . '<i class="' . $icon . '" aria-hidden="true"></i> '
+                . ($label ?: $pLabel) . '</a>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Build Alternate Podcast link (legacy fallback)
      *
      * Uses a custom image badge when configured; otherwise detects the
      * service from the URL and renders the appropriate FontAwesome icon.
@@ -204,6 +255,8 @@ class Cwmpodcastsubscribe
      * @return string
      *
      * @since    7.1
+     *
+     * @deprecated 10.1.0  Use buildPlatformLinks() instead. Will be removed in 11.0.
      */
     public function buildAlternatePodcast(object $podcast): string
     {
@@ -218,34 +271,11 @@ class Cwmpodcastsubscribe
             }
         }
 
-        $iconInfo = $this->detectLinkIcon($podcast->alternatelink ?? '');
+        $iconInfo = CwmpodcastPlatformHelper::detectPlatformByUrl($podcast->alternatelink ?? '');
 
         return '<a href="' . $link . '">'
             . '<i class="' . $iconInfo['icon'] . '" aria-hidden="true"></i> '
             . ($words ?: $iconInfo['label'])
             . '</a>';
-    }
-
-    /**
-     * Detect the appropriate FontAwesome icon for a podcast link URL.
-     *
-     * @param   string  $url  The subscribe URL
-     *
-     * @return  array{icon: string, label: string}
-     *
-     * @since   10.1.0
-     */
-    private function detectLinkIcon(string $url): array
-    {
-        $lower = strtolower($url);
-
-        foreach (self::$linkIconMap as $entry) {
-            if (str_contains($lower, $entry['pattern'])) {
-                return ['icon' => $entry['icon'], 'label' => $entry['label']];
-            }
-        }
-
-        // Default fallback: generic headphones icon
-        return ['icon' => 'fa-solid fa-headphones', 'label' => 'Subscribe'];
     }
 }

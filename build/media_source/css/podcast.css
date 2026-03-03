@@ -97,6 +97,24 @@
     object-fit: contain;
 }
 
+/* Admin: Platform Links subform — icon preview inline with dropdown */
+.platform-links-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.platform-icon-preview {
+    font-size: 2em;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* Vertically center all cells in platform links subform rows */
+#subfieldList_jform_platform_links tbody tr td {
+    vertical-align: middle;
+}
+
 /* Mobile responsive layout */
 @media (max-width: 576px) {
     .podcastsubscribe .prow {

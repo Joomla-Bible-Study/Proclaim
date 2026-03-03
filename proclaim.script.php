@@ -775,6 +775,9 @@ class com_proclaimInstallerScript extends InstallerScript
             // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
             $this->dropLegacyTemplateColumns();
 
+            // Migrate existing alternate link data to platform_links JSON
+            $this->migratePodcastAlternateLinks();
+
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
             // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
@@ -1575,6 +1578,116 @@ class com_proclaimInstallerScript extends InstallerScript
             Factory::getApplication()->enqueueMessage(
                 $migrated . ' study image(s) migrated from stock image field to thumbnail.',
                 'message'
+            );
+        }
+    }
+
+    /**
+     * Migrate existing alternate link data to the new platform_links JSON column.
+     *
+     * Converts alternatelink/alternatewords/alternateimage into a single-entry
+     * platform_links JSON array.  Idempotent: skips rows that already have
+     * platform_links populated or have no alternate link set.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function migratePodcastAlternateLinks(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Check if the platform_links column exists yet
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from('INFORMATION_SCHEMA.COLUMNS')
+                ->where('TABLE_SCHEMA = DATABASE()')
+                ->where($db->quoteName('TABLE_NAME') . ' = ' . $db->quote($db->getPrefix() . 'bsms_podcast'))
+                ->where($db->quoteName('COLUMN_NAME') . ' = ' . $db->quote('platform_links'));
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() === 0) {
+                return;
+            }
+
+            // Find podcasts with alternate link but no platform_links yet
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'alternatelink', 'alternatewords', 'alternateimage']))
+                ->from($db->quoteName('#__bsms_podcast'))
+                ->where($db->quoteName('alternatelink') . ' IS NOT NULL')
+                ->where($db->quoteName('alternatelink') . ' != ' . $db->quote(''))
+                ->where('(' . $db->quoteName('platform_links') . ' IS NULL OR '
+                    . $db->quoteName('platform_links') . ' = ' . $db->quote('') . ')');
+            $db->setQuery($query);
+            $rows = $db->loadObjectList();
+
+            // Load platform patterns from XML for auto-detection
+            $platformPatterns = [];
+            $xmlFile          = JPATH_ADMINISTRATOR . '/components/com_proclaim/forms/podcast-platforms.xml';
+
+            if (file_exists($xmlFile)) {
+                $xml = simplexml_load_file($xmlFile);
+
+                if ($xml !== false) {
+                    foreach ($xml->platform as $p) {
+                        $pattern = (string) ($p['pattern'] ?? '');
+
+                        if ($pattern !== '') {
+                            $platformPatterns[] = [
+                                'key'     => (string) $p['key'],
+                                'pattern' => $pattern,
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $migrated = 0;
+
+            foreach ($rows as $row) {
+                // Auto-detect platform from URL (e.g. itpc:// → apple, spotify.com → spotify)
+                $detectedPlatform = 'custom';
+                $lower            = strtolower($row->alternatelink);
+
+                foreach ($platformPatterns as $pp) {
+                    foreach (explode('|', $pp['pattern']) as $pat) {
+                        if (str_contains($lower, trim($pat))) {
+                            $detectedPlatform = $pp['key'];
+                            break 2;
+                        }
+                    }
+                }
+
+                $links = [
+                    [
+                        'platform'    => $detectedPlatform,
+                        'url'         => $row->alternatelink,
+                        'label'       => $row->alternatewords ?: '',
+                        'badge_image' => $row->alternateimage ?: '',
+                    ],
+                ];
+
+                $update = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_podcast'))
+                    ->set($db->quoteName('platform_links') . ' = ' . $db->quote(json_encode($links)))
+                    ->where($db->quoteName('id') . ' = ' . (int) $row->id);
+                $db->setQuery($update);
+                $db->execute();
+
+                $migrated++;
+            }
+
+            if ($migrated > 0) {
+                Factory::getApplication()->enqueueMessage(
+                    $migrated . ' podcast alternate link(s) migrated to platform links.',
+                    'message'
+                );
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Podcast alternate link migration notice: ' . $e->getMessage(),
+                'warning'
             );
         }
     }

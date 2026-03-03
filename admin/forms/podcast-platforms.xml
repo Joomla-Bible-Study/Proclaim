@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Podcast Platform Definitions — single source of truth
+
+    PHP reads this file to:
+    1. Populate the platform dropdown in the subform (admin)
+    2. Map platform keys to icons/labels for frontend rendering
+    3. Provide submission URLs for the Directory Submission card
+
+    To add a new platform: add a <platform> element below.
+    To update an icon or URL pattern: edit the existing element.
+-->
+<platforms>
+    <platform key="apple" icon="fa-brands fa-apple" label="JBS_PDC_PLATFORM_APPLE"
+              pattern="apple.com/podcast|podcasts.apple.com|itpc://"
+              url_hint="https://podcasts.apple.com/us/podcast/your-show/id123456789"
+              submit_url="https://podcasters.apple.com/" />
+
+    <platform key="spotify" icon="fa-brands fa-spotify" label="JBS_PDC_PLATFORM_SPOTIFY"
+              pattern="spotify.com|open.spotify.com"
+              url_hint="https://open.spotify.com/show/your-show-id"
+              submit_url="https://podcasters.spotify.com/" />
+
+    <platform key="youtube" icon="fa-brands fa-youtube" label="JBS_PDC_PLATFORM_YOUTUBE"
+              pattern="youtube.com|youtu.be"
+              url_hint="https://www.youtube.com/playlist?list=your-podcast-playlist"
+              submit_url="https://studio.youtube.com/" />
+
+    <platform key="amazon" icon="fa-brands fa-amazon" label="JBS_PDC_PLATFORM_AMAZON"
+              pattern="amazon.com|music.amazon"
+              url_hint="https://music.amazon.com/podcasts/your-show-id"
+              submit_url="https://podcasters.amazon.com/" />
+
+    <platform key="podcastindex" icon="fa-solid fa-podcast" label="JBS_PDC_PLATFORM_PODCASTINDEX"
+              pattern="podcastindex.org"
+              url_hint="https://podcastindex.org/podcast/123456"
+              submit_url="https://podcastindex.org/"
+              api_class="CwmpodcastIndexHelper" />
+
+    <platform key="iheart" icon="fa-solid fa-heart" label="JBS_PDC_PLATFORM_IHEART"
+              pattern="iheart.com"
+              url_hint="https://www.iheart.com/podcast/your-show-id"
+              submit_url="https://www.iheart.com/content/submit-your-podcast/" />
+
+    <platform key="overcast" icon="fa-solid fa-podcast" label="JBS_PDC_PLATFORM_OVERCAST"
+              pattern="overcast.fm"
+              url_hint="https://overcast.fm/itunes123456789"
+              submit_url="https://overcast.fm/podcasterinfo" />
+
+    <platform key="pocketcasts" icon="fa-solid fa-podcast" label="JBS_PDC_PLATFORM_POCKETCASTS"
+              pattern="pocketcasts.com"
+              url_hint="https://pocketcasts.com/podcast/your-show-id"
+              submit_url="https://www.pocketcasts.com/submit/" />
+
+    <platform key="tunein" icon="fa-solid fa-radio" label="JBS_PDC_PLATFORM_TUNEIN"
+              pattern="tunein.com"
+              url_hint="https://tunein.com/podcasts/your-show-id" />
+
+    <platform key="custom" icon="fa-solid fa-headphones" label="JBS_PDC_PLATFORM_CUSTOM"
+              url_hint="https://" />
+</platforms>

@@ -316,6 +316,14 @@ class CwmpodcastTable extends Table
     public ?int $access = null;
 
     /**
+     * Platform links JSON (multi-platform subscription links)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $platform_links = null;
+
+    /**
      * Params
      *
      * @var string|null
@@ -379,6 +387,35 @@ class CwmpodcastTable extends Table
             }
         }
 
+        // Auto-prepend https:// to URLs in platform_links JSON
+        if (!empty($this->platform_links) && \is_string($this->platform_links)) {
+            try {
+                $links = json_decode($this->platform_links, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $links = null;
+            }
+
+            if (\is_array($links)) {
+                $changed = false;
+
+                foreach ($links as &$link) {
+                    if (
+                        !empty($link['url'])
+                        && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $link['url'])
+                    ) {
+                        $link['url'] = 'https://' . $link['url'];
+                        $changed     = true;
+                    }
+                }
+
+                unset($link);
+
+                if ($changed) {
+                    $this->platform_links = json_encode($links);
+                }
+            }
+        }
+
         return parent::check();
     }
 
@@ -408,6 +445,14 @@ class CwmpodcastTable extends Table
         if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // JSON-encode platform_links subform array for DB storage
+        if (isset($array['platform_links']) && \is_array($array['platform_links'])) {
+            $array['platform_links'] = json_encode(
+                array_values($array['platform_links']),
+                JSON_THROW_ON_ERROR
+            );
         }
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
