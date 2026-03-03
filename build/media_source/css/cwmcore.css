@@ -564,7 +564,7 @@ div.JBSM .img-rounded {
   top: 50%;
   left: 50%;
   z-index: 1;
-  color: #fff;
+  color: #fff; /* Intentional: play icon renders over dark image overlay */
   font-size: 1.5rem;
   line-height: 1;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);

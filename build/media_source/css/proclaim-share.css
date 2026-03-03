@@ -22,7 +22,7 @@
     height: 32px;
     border-radius: 50%;
     border: none;
-    color: #fff;
+    color: #fff; /* Intentional: icon on colored platform buttons */
     font-size: 14px;
     text-decoration: none;
     cursor: pointer;
@@ -33,7 +33,7 @@
 .proclaim-share-btn:hover {
     opacity: 0.85;
     transform: scale(1.1);
-    color: #fff;
+    color: #fff; /* Intentional: icon on colored platform buttons */
     text-decoration: none;
 }
 
@@ -42,26 +42,26 @@
     outline-offset: 2px;
 }
 
-/* Platform colors */
+/* Platform brand colors — intentionally hardcoded per brand guidelines */
 .proclaim-share-facebook {
-    background-color: #1877f2;
+    background-color: #1877f2; /* Facebook brand blue */
 }
 
 .proclaim-share-x {
-    background-color: #000;
+    background-color: #000; /* X/Twitter brand black */
 }
 
 .proclaim-share-email {
-    background-color: #6c757d;
+    background-color: #6c757d; /* Neutral gray for email */
 }
 
 .proclaim-share-copy {
-    background-color: #0d9488;
+    background-color: #0d9488; /* Teal for copy action */
 }
 
 /* Copied feedback state */
 .proclaim-share-copy.copied {
-    background-color: #16a34a;
+    background-color: #16a34a; /* Green success indicator */
 }
 
 /* Print: hide share buttons */
