@@ -125,7 +125,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
             </div>
         <?php endif; ?>
 
-    <?php else : ?>
+    <?php elseif ((bool) $params->get('show_no_video', 0)) : ?>
         <?php
         $noVideoMessage = $params->get('no_video_message', '');
         if (empty($noVideoMessage)) {

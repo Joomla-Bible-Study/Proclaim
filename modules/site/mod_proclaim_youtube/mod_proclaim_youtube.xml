@@ -148,12 +148,23 @@
                     <option value="0">JNO</option>
                 </field>
 
+                <field name="show_no_video"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="0"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_NO_VIDEO_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
                 <field name="no_video_message"
                        type="text"
                        label="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG"
                        description="MOD_PROCLAIM_YOUTUBE_NO_VIDEO_MSG_DESC"
                        default=""
-                       size="50"/>
+                       size="50"
+                       showon="show_no_video:1"/>
             </fieldset>
 
             <fieldset name="advanced" label="JGLOBAL_FIELDSET_ADVANCED">
