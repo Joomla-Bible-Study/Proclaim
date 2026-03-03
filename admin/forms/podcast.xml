@@ -17,31 +17,32 @@
 
         <field name="description" type="editor" label="JBS_PDC_PODCAST_DESCRIPTION"
                description="JBS_PDC_PODCAST_DESCRIPTION_DESC" height="200"
-               buttons="true" filter="safehtml"/>
+               buttons="true" filter="safehtml" required="true"/>
 
-        <field name="subtitle" type="textarea" label="JBS_PDC_PODCAST_SUBTITLE"
-               description="JBS_PDC_PODCAST_SUBTITLE_DESC"
-               size="20" cols="60" rows="5"/>
+        <!-- Legacy subtitle — hidden, deprecated by Apple in 2018 -->
+        <field name="subtitle" type="hidden"/>
 
-        <field name="website" type="text" label="JBS_PDC_WEBSITE_URL"
-               size="80" hint="https://" filter="string"/>
+        <field name="website" type="url" label="JBS_PDC_WEBSITE_URL"
+               description="JBS_PDC_WEBSITE_URL_DESC"
+               size="80" hint="https://www.example.com" filter="url" required="true"/>
 
-        <field name="podcastlink" type="text" label="JBS_PDC_PODCAST_URL"
-               size="80" hint="https://" filter="string"/>
+        <field name="podcastlink" type="menuitem" label="JBS_PDC_PODCAST_URL"
+               description="JBS_PDC_PODCAST_URL_DESC"
+               published="1" class="form-select">
+            <option value="">JBS_PDC_PODCAST_URL_NONE</option>
+        </field>
 
-        <field name="author" type="text" label="JBS_PDC_PODCAST_AUTHOR"
-               size="50"/>
+        <field name="author" type="text" label="JBS_PDC_SHOW_AUTHOR"
+               description="JBS_PDC_SHOW_AUTHOR_DESC" size="50" required="true"/>
 
-        <field name="editor_name" type="text" label="JBS_PDC_EDITORS_NAME"
-               size="50"/>
+        <field name="editor_name" type="text" label="JBS_PDC_OWNER_NAME"
+               description="JBS_PDC_OWNER_NAME_DESC" size="50" required="true"/>
 
-        <field name="editor_email" type="email" label="JBS_PDC_EDITORS_EMAIL"
-               size="50" validate="email"/>
+        <field name="editor_email" type="email" label="JBS_PDC_OWNER_EMAIL"
+               description="JBS_PDC_OWNER_EMAIL_DESC" size="50" validate="email" required="true"/>
 
-        <field name="podcastsearch" type="text" label="JBS_PDC_PODCAST_SEARCH_WORDS"
-               size="80"/>
-
-        <field name="podcastlanguage" type="language" label="JBS_PDC_PODCAST_LANGUAGE"/>
+        <!-- Legacy podcastsearch — hidden, itunes:keywords deprecated by Apple in 2018 -->
+        <field name="podcastsearch" type="hidden"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
                description="JBS_FLD_LOCATION_DESC" global="true">
@@ -54,27 +55,173 @@
         </field>
 
         <field name="detailstemplateid" type="TemplateList"
-               label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK">
+               label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"
+               description="JBS_PDC_TEMPLATE_FOR_DETAILS_DESC">
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
 
-        <field name="image" type="media" label="JBS_PDC_IMAGE" directory="biblestudy"
-               description="JBS_PDC_IMAGE_DESC"/>
-
-        <field name="podcastimage" type="media" label="JBS_PDC_PODCAST_LOGO" directory="biblestudy"
-               description="JBS_PDC_PODCAST_LOGO_DESC"/>
+        <field name="podcastimage" type="media" label="JBS_PDC_PODCAST_IMAGE" directory="biblestudy"
+               description="JBS_PDC_PODCAST_IMAGE_DESC" required="true"/>
 
         <field name="podcast_image_subscribe" type="media" directory="biblestudy"
                label="JBS_PDC_SUBSCRIBE_IMAGE" description="JBS_PDC_SUBSCRIBE_IMAGE_DESC"/>
 
         <field name="filename" type="text" label="JBS_PDC_PODCAST_XML_FILENAME"
-               description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50"/>
+               description="JBS_PDC_PODCAST_XML_FILENAME_DESC" size="50" required="true" filter="trim"/>
 
         <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
                size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" filter="int"/>
 
+        <field name="itunes_category" type="list" default="Religion &amp; Spirituality"
+               label="JBS_PDC_ITUNES_CATEGORY" description="JBS_PDC_ITUNES_CATEGORY_DESC">
+            <option value="Arts">Arts</option>
+            <option value="Business">Business</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Education">Education</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Government">Government</option>
+            <option value="Health &amp; Fitness">Health &amp; Fitness</option>
+            <option value="History">History</option>
+            <option value="Kids &amp; Family">Kids &amp; Family</option>
+            <option value="Leisure">Leisure</option>
+            <option value="Music">Music</option>
+            <option value="News">News</option>
+            <option value="Religion &amp; Spirituality">Religion &amp; Spirituality</option>
+            <option value="Science">Science</option>
+            <option value="Society &amp; Culture">Society &amp; Culture</option>
+            <option value="Sports">Sports</option>
+            <option value="Technology">Technology</option>
+            <option value="True Crime">True Crime</option>
+            <option value="TV &amp; Film">TV &amp; Film</option>
+        </field>
+
+        <field name="itunes_subcategory" type="list" default="Christianity"
+               label="JBS_PDC_ITUNES_SUBCATEGORY" description="JBS_PDC_ITUNES_SUBCATEGORY_DESC">
+            <option value="">JBS_PDC_SUBCATEGORY_NONE</option>
+            <!-- Arts -->
+            <option value="Books">Books</option>
+            <option value="Design">Design</option>
+            <option value="Fashion &amp; Beauty">Fashion &amp; Beauty</option>
+            <option value="Food">Food</option>
+            <option value="Performing Arts">Performing Arts</option>
+            <option value="Visual Arts">Visual Arts</option>
+            <!-- Business -->
+            <option value="Careers">Careers</option>
+            <option value="Entrepreneurship">Entrepreneurship</option>
+            <option value="Investing">Investing</option>
+            <option value="Management">Management</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Non-Profit">Non-Profit</option>
+            <!-- Comedy -->
+            <option value="Comedy Interviews">Comedy Interviews</option>
+            <option value="Improv">Improv</option>
+            <option value="Stand-Up">Stand-Up</option>
+            <!-- Education -->
+            <option value="Courses">Courses</option>
+            <option value="How To">How To</option>
+            <option value="Language Learning">Language Learning</option>
+            <option value="Self-Improvement">Self-Improvement</option>
+            <!-- Fiction -->
+            <option value="Comedy Fiction">Comedy Fiction</option>
+            <option value="Drama">Drama</option>
+            <option value="Science Fiction">Science Fiction</option>
+            <!-- Health & Fitness -->
+            <option value="Alternative Health">Alternative Health</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Medicine">Medicine</option>
+            <option value="Mental Health">Mental Health</option>
+            <option value="Nutrition">Nutrition</option>
+            <option value="Sexuality">Sexuality</option>
+            <!-- Kids & Family -->
+            <option value="Education for Kids">Education for Kids</option>
+            <option value="Parenting">Parenting</option>
+            <option value="Pets &amp; Animals">Pets &amp; Animals</option>
+            <option value="Stories for Kids">Stories for Kids</option>
+            <!-- Leisure -->
+            <option value="Animation &amp; Manga">Animation &amp; Manga</option>
+            <option value="Automotive">Automotive</option>
+            <option value="Aviation">Aviation</option>
+            <option value="Crafts">Crafts</option>
+            <option value="Games">Games</option>
+            <option value="Hobbies">Hobbies</option>
+            <option value="Home &amp; Garden">Home &amp; Garden</option>
+            <option value="Video Games">Video Games</option>
+            <!-- Music -->
+            <option value="Music Commentary">Music Commentary</option>
+            <option value="Music History">Music History</option>
+            <option value="Music Interviews">Music Interviews</option>
+            <!-- News -->
+            <option value="Business News">Business News</option>
+            <option value="Daily News">Daily News</option>
+            <option value="Entertainment News">Entertainment News</option>
+            <option value="News Commentary">News Commentary</option>
+            <option value="Politics">Politics</option>
+            <option value="Sports News">Sports News</option>
+            <option value="Tech News">Tech News</option>
+            <!-- Religion & Spirituality -->
+            <option value="Buddhism">Buddhism</option>
+            <option value="Christianity">Christianity</option>
+            <option value="Hinduism">Hinduism</option>
+            <option value="Islam">Islam</option>
+            <option value="Judaism">Judaism</option>
+            <option value="Religion">Religion</option>
+            <option value="Spirituality">Spirituality</option>
+            <!-- Science -->
+            <option value="Astronomy">Astronomy</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Earth Sciences">Earth Sciences</option>
+            <option value="Life Sciences">Life Sciences</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Natural Sciences">Natural Sciences</option>
+            <option value="Nature">Nature</option>
+            <option value="Physics">Physics</option>
+            <option value="Social Sciences">Social Sciences</option>
+            <!-- Society & Culture -->
+            <option value="Documentary">Documentary</option>
+            <option value="Personal Journals">Personal Journals</option>
+            <option value="Philosophy">Philosophy</option>
+            <option value="Places &amp; Travel">Places &amp; Travel</option>
+            <option value="Relationships">Relationships</option>
+            <!-- Sports -->
+            <option value="Baseball">Baseball</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Fantasy Sports">Fantasy Sports</option>
+            <option value="Football">Football</option>
+            <option value="Golf">Golf</option>
+            <option value="Hockey">Hockey</option>
+            <option value="Rugby">Rugby</option>
+            <option value="Running">Running</option>
+            <option value="Soccer">Soccer</option>
+            <option value="Swimming">Swimming</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Volleyball">Volleyball</option>
+            <option value="Wilderness">Wilderness</option>
+            <option value="Wrestling">Wrestling</option>
+            <!-- Technology (no subcategories in Apple spec) -->
+            <!-- True Crime (no subcategories in Apple spec) -->
+            <!-- TV & Film -->
+            <option value="After Shows">After Shows</option>
+            <option value="Film History">Film History</option>
+            <option value="Film Interviews">Film Interviews</option>
+            <option value="Film Reviews">Film Reviews</option>
+            <option value="TV Reviews">TV Reviews</option>
+        </field>
+
+        <field name="itunes_explicit" type="list" default="false"
+               label="JBS_PDC_ITUNES_EXPLICIT" description="JBS_PDC_ITUNES_EXPLICIT_DESC">
+            <option value="false">JNO</option>
+            <option value="true">JYES</option>
+        </field>
+
+        <field name="itunes_type" type="list" default="episodic"
+               label="JBS_PDC_ITUNES_TYPE" description="JBS_PDC_ITUNES_TYPE_DESC">
+            <option value="episodic">JBS_PDC_TYPE_EPISODIC</option>
+            <option value="serial">JBS_PDC_TYPE_SERIAL</option>
+        </field>
+
         <field name="episodetitle" type="list" default="0"
-               label="JBS_PDC_EPISODE_TITLE">
+               label="JBS_PDC_EPISODE_TITLE" description="JBS_PDC_EPISODE_TITLE_DESC">
             <option value="0">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
             <option value="1">JBS_PDC_EPISODE_TITLE_ONLY</option>
             <option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
@@ -87,17 +234,8 @@
         <field name="custom" type="Custom" codeset="podcast" input="textarea"
                label="JBS_CMN_CUSTOM" description="JBS_PDC_EPISODES_CUSTOM_DESC" cols="48" rows="2"/>
 
-        <field name="episodesubtitle" type="list" default="0"
-               label="JBS_PDC_EPISODE_SUBTITLE">
-            <option value="0">JBS_CMN_TEACHER</option>
-            <option value="1">JBS_PDC_EPISODE_TEACHER_SCRIPTURE</option>
-            <option value="2">JBS_PDC_EPISODE_SCRIPTURE_ONLY</option>
-            <option value="3">JBS_PDC_EPISODE_TITLE_ONLY</option>
-            <option value="4">JBS_PDC_EPISODE_DATE_SCRIPTURE_TITLE</option>
-            <option value="5">JBS_PDC_EPISODE_SCRIPTURE_TITLE</option>
-            <option value="6">JBS_PDC_BOOK_CHAPTER</option>
-            <option value="7">JBS_CMN_CUSTOM</option>
-        </field>
+        <!-- Legacy episodesubtitle — hidden, itunes:subtitle deprecated by Apple in 2018 -->
+        <field name="episodesubtitle" type="hidden"/>
 
         <field name="linktype" type="list" default="0"
                label="JBS_PDC_LINKTYPE" description="JBS_PDC_LINKTYPE_DESC">
@@ -106,8 +244,8 @@
             <option value="2">JBS_PDC_LINK_MEDIA_PLAYER</option>
         </field>
 
-        <field name="customsubtitle" type="Custom" codeset="podcast" input="textarea"
-               label="JBS_CMN_CUSTOM" description="JBS_PDC_EPISODES_CUSTOM_DESC" cols="48" rows="2"/>
+        <!-- Legacy customsubtitle — hidden, itunes:subtitle deprecated by Apple in 2018 -->
+        <field name="customsubtitle" type="hidden"/>
 
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="true" filter="rules" component="com_proclaim"
@@ -129,6 +267,9 @@
         <field name="alternatelink" type="hidden" filter="string"/>
         <field name="alternateimage" type="hidden"/>
         <field name="alternatewords" type="hidden"/>
+
+        <!-- Legacy image field — hidden for migration, remove in 11.0 -->
+        <field name="image" type="hidden"/>
 
         <field name="podcast_subscribe_show" type="list" default="1" label="JBS_PDC_PODCAST_SHOW"
                description="JBS_PDC_PODCAST_SHOW_DESC">

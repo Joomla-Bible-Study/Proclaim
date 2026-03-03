@@ -13,7 +13,6 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -777,6 +776,12 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Migrate existing alternate link data to platform_links JSON
             $this->migratePodcastAlternateLinks();
+
+            // Copy legacy image field to podcastimage where podcastimage is empty
+            $this->migratePodcastImageField();
+
+            // Match legacy podcastlink URLs to Joomla menu item IDs
+            $this->migratePodcastLinkToMenuItem();
 
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
@@ -1687,6 +1692,184 @@ class com_proclaimInstallerScript extends InstallerScript
         } catch (\Exception $e) {
             Factory::getApplication()->enqueueMessage(
                 'Podcast alternate link migration notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Copy legacy `image` field value to `podcastimage` where podcastimage is empty.
+     *
+     * The `image` field has been removed from the form in favour of a single
+     * `podcastimage` field.  Existing data is preserved by copying values
+     * during upgrade.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function migratePodcastImageField(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_podcast'))
+                ->set($db->quoteName('podcastimage') . ' = ' . $db->quoteName('image'))
+                ->where($db->quoteName('image') . ' IS NOT NULL')
+                ->where($db->quoteName('image') . ' != ' . $db->quote(''))
+                ->where('(' . $db->quoteName('podcastimage') . ' IS NULL OR '
+                    . $db->quoteName('podcastimage') . ' = ' . $db->quote('') . ')');
+            $db->setQuery($query);
+            $affected = $db->execute();
+
+            $count = $db->getAffectedRows();
+
+            if ($count > 0) {
+                Factory::getApplication()->enqueueMessage(
+                    $count . ' podcast image(s) migrated from legacy image field to podcast artwork.',
+                    'message'
+                );
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Podcast image migration notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Match legacy podcastlink URL strings to Joomla menu item IDs.
+     *
+     * Before 10.1, podcastlink stored raw URLs. Now it stores menu item IDs.
+     * This migration attempts to match stored URLs against published site
+     * menu items by comparing URL path segments against menu item routes.
+     * Unmatched URLs are left as-is so the edit form can display a warning.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function migratePodcastLinkToMenuItem(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Find podcasts with non-empty, non-numeric podcastlink (legacy URLs)
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'podcastlink']))
+                ->from($db->quoteName('#__bsms_podcast'))
+                ->where($db->quoteName('podcastlink') . ' IS NOT NULL')
+                ->where($db->quoteName('podcastlink') . ' != ' . $db->quote(''))
+                ->where($db->quoteName('podcastlink') . ' NOT REGEXP ' . $db->quote('^[0-9]+$'));
+            $db->setQuery($query);
+            $podcasts = $db->loadObjectList();
+
+            if (empty($podcasts)) {
+                return;
+            }
+
+            // Load all published site menu items
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'link', 'path', 'alias']))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('client_id') . ' = 0');
+            $db->setQuery($query);
+            $menuItems = $db->loadObjectList();
+
+            if (empty($menuItems)) {
+                return;
+            }
+
+            // Build lookup maps for matching
+            // 1. Full link match (index.php?option=com_proclaim&view=...)
+            // 2. Path/alias match against URL path segments
+            $byLink  = [];
+            $byAlias = [];
+
+            foreach ($menuItems as $mi) {
+                $byLink[$mi->link] = $mi->id;
+
+                // Extract last segment of menu path (the alias)
+                $alias = $mi->alias ?: basename($mi->path ?? '');
+
+                if ($alias !== '') {
+                    // Store by alias — if duplicates, first wins
+                    if (!isset($byAlias[$alias])) {
+                        $byAlias[$alias] = $mi->id;
+                    }
+                }
+
+                // Also index by full path for multi-level menus
+                if (!empty($mi->path) && !isset($byAlias[$mi->path])) {
+                    $byAlias[$mi->path] = $mi->id;
+                }
+            }
+
+            $matched   = 0;
+            $unmatched = 0;
+
+            foreach ($podcasts as $podcast) {
+                $url     = trim($podcast->podcastlink);
+                $matchId = null;
+
+                // Try direct link match (stored as index.php?option=...)
+                if (isset($byLink[$url])) {
+                    $matchId = $byLink[$url];
+                }
+
+                if ($matchId === null) {
+                    // Extract path from URL
+                    $parsed = parse_url($url);
+                    $path   = trim($parsed['path'] ?? $url, '/');
+
+                    // Try full path match
+                    if ($path !== '' && isset($byAlias[$path])) {
+                        $matchId = $byAlias[$path];
+                    }
+
+                    // Try last segment only (e.g. "https://example.com/sermons" → "sermons")
+                    if ($matchId === null && $path !== '') {
+                        $lastSegment = basename($path);
+
+                        if ($lastSegment !== '' && isset($byAlias[$lastSegment])) {
+                            $matchId = $byAlias[$lastSegment];
+                        }
+                    }
+                }
+
+                if ($matchId !== null) {
+                    $update = $db->getQuery(true)
+                        ->update($db->quoteName('#__bsms_podcast'))
+                        ->set($db->quoteName('podcastlink') . ' = ' . $db->quote((string) $matchId))
+                        ->where($db->quoteName('id') . ' = ' . (int) $podcast->id);
+                    $db->setQuery($update);
+                    $db->execute();
+                    $matched++;
+                } else {
+                    $unmatched++;
+                }
+            }
+
+            if ($matched > 0) {
+                Factory::getApplication()->enqueueMessage(
+                    $matched . ' podcast link(s) matched to menu items.',
+                    'message'
+                );
+            }
+
+            if ($unmatched > 0) {
+                Factory::getApplication()->enqueueMessage(
+                    $unmatched . ' podcast link(s) could not be matched to a menu item. '
+                    . 'Please edit those podcasts and select the correct sermon page menu item.',
+                    'warning'
+                );
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Podcast link migration notice: ' . $e->getMessage(),
                 'warning'
             );
         }

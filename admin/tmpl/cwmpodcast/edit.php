@@ -155,9 +155,24 @@ $wa->addInlineScript(
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
                 <?php echo $this->form->renderField('description'); ?>
-                <?php echo $this->form->renderField('subtitle'); ?>
                 <?php echo $this->form->renderField('website'); ?>
+                <?php
+                // Detect legacy URL in podcastlink (non-numeric = unmatched URL from pre-10.1)
+                $legacyPodcastLink = '';
+                $rawPodcastLink    = $this->item->podcastlink ?? '';
+                if ($rawPodcastLink !== '' && !ctype_digit((string) $rawPodcastLink)) {
+                    $legacyPodcastLink = $rawPodcastLink;
+                }
+                ?>
+                <?php if ($legacyPodcastLink !== '') : ?>
+                <div class="alert alert-warning">
+                    <strong><?php echo Text::_('JBS_PDC_PODCAST_URL_LEGACY_LABEL'); ?></strong>
+                    <mark class="bg-light text-dark px-1"><?php echo $this->escape($legacyPodcastLink); ?></mark>
+                    <p class="mb-0 mt-1"><?php echo Text::_('JBS_PDC_PODCAST_URL_LEGACY_HELP'); ?></p>
+                </div>
+                <?php endif; ?>
                 <?php echo $this->form->renderField('podcastlink'); ?>
+                <?php echo $this->form->renderField('author'); ?>
             </div>
             <div class="col-lg-3">
                 <?php echo $this->form->renderField('published'); ?>
@@ -168,24 +183,43 @@ $wa->addInlineScript(
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'author', Text::_('JBS_PDC_PODCAST_AUTHOR')); ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'author', Text::_('JBS_PDC_FEED_OWNER')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <?php echo $this->form->renderField('author'); ?>
                 <?php echo $this->form->renderField('editor_name'); ?>
                 <?php echo $this->form->renderField('editor_email'); ?>
-                <?php echo $this->form->renderField('podcastsearch'); ?>
-                <?php echo $this->form->renderField('podcastlanguage'); ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images', Text::_('JBS_STY_IMAGES')); ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images', Text::_('JBS_PDC_PODCAST_IMAGES')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <?php echo $this->form->renderField('image'); ?>
                 <?php echo $this->form->renderField('podcastimage'); ?>
                 <?php echo $this->form->renderField('podcast_image_subscribe'); ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'rss', Text::_('JBS_PDC_RSS_SETTINGS')); ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('filename'); ?>
+                <?php echo $this->form->renderField('podcastlimit'); ?>
+                <?php echo $this->form->renderField('itunes_category'); ?>
+                <?php echo $this->form->renderField('itunes_subcategory'); ?>
+                <?php echo $this->form->renderField('itunes_explicit'); ?>
+                <?php echo $this->form->renderField('itunes_type'); ?>
+                <?php echo $this->form->renderField('linktype'); ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'episode', Text::_('JBS_PDC_EPISODE_OPTIONS')); ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('episodetitle'); ?>
+                <?php echo $this->form->renderField('custom'); ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
@@ -249,20 +283,6 @@ $wa->addInlineScript(
             </div>
         </div>
         <?php endif; ?>
-        <?php echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'episode', Text::_('JBS_PDC_EPISODE_OPTIONS')); ?>
-        <div class="row">
-            <div class="col-lg-9">
-                <?php echo $this->form->renderField('filename'); ?>
-                <?php echo $this->form->renderField('podcastlimit'); ?>
-                <?php echo $this->form->renderField('linktype'); ?>
-                <?php echo $this->form->renderField('episodetitle'); ?>
-                <?php echo $this->form->renderField('custom'); ?>
-                <?php echo $this->form->renderField('episodesubtitle'); ?>
-                <?php echo $this->form->renderField('customsubtitle'); ?>
-            </div>
-        </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>

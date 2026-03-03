@@ -130,15 +130,6 @@ class CwmpodcastTable extends Table
     public ?string $podcastimage = null;
 
     /**
-     * Podcast Summary
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $podcastsummary = null;
-
-    /**
      * Podcast Search Words
      *
      * @var string|null
@@ -164,15 +155,6 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $language = null;
-
-    /**
-     * Podcast name
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $podcastname = null;
 
     /**
      * Editor Name
@@ -258,6 +240,38 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $linktype = null;
+
+    /**
+     * iTunes category for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_category = 'Religion & Spirituality';
+
+    /**
+     * iTunes subcategory for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_subcategory = 'Christianity';
+
+    /**
+     * iTunes explicit flag (true/false)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_explicit = 'false';
+
+    /**
+     * iTunes show type (episodic/serial)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_type = 'episodic';
 
     /**
      * Created date
@@ -380,8 +394,16 @@ class CwmpodcastTable extends Table
             $this->location_id = null;
         }
 
+        // Validate podcastlink: must be empty or a numeric menu item ID
+        if (!empty($this->podcastlink) && !ctype_digit((string) $this->podcastlink)) {
+            throw new \UnexpectedValueException(
+                Text::_('JBS_PDC_PODCAST_URL_LEGACY_ERROR')
+            );
+        }
+
         // Auto-prepend https:// to URL fields missing a schema
-        foreach (['website', 'podcastlink', 'alternatelink'] as $field) {
+        // website uses type="url" (Joomla handles validation), podcastlink stores menu item IDs
+        foreach (['alternatelink'] as $field) {
             if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
                 $this->$field = 'https://' . $this->$field;
             }

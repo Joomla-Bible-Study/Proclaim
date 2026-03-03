@@ -5,7 +5,7 @@
            addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
     <field name="url" type="url" label="JBS_PDC_LINK_URL"
            description="JBS_PDC_LINK_URL_DESC" class="form-control"
-           filter="url" validate="url" hint="https://" />
+           filter="url" hint="https://" />
     <field name="label" type="text" label="JBS_PDC_LINK_LABEL"
            description="JBS_PDC_LINK_LABEL_DESC" class="form-control"
            hint="JBS_PDC_LINK_LABEL_HINT" filter="string" />

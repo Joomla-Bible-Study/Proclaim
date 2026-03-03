@@ -23,6 +23,7 @@ use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -135,11 +136,7 @@ class Cwmpodcast
                 $podinfo->podcastlink = $podinfo->website;
             }
 
-            if (!isset($podinfo->subtitle)) {
-                $podinfo->subtitle = $podinfo->title;
-            }
-
-            $imagePath = $protocol . $podinfo->website . '/' . Cwmimages::getImagePath($podinfo->podcastimage)->path;
+            $imagePath = $this->resolveUrl($podinfo->website, $protocol) . '/' . Cwmimages::getImagePath($podinfo->podcastimage)->path;
 
             // Cache sanitized description to avoid processing twice
             $sanitizedDescription = $this->sanitizeHtmlForPodcast($podinfo->description);
@@ -151,33 +148,31 @@ class Cwmpodcast
 <channel>
 	<generator>Proclaim</generator>
 	<title>' . $escapedTitle . '</title>
-	<link>' . $protocol . $podinfo->podcastlink . '</link>
+	<link>' . $this->resolveUrl($podinfo->podcastlink, $protocol) . '</link>
 	<image>
 	    <url>' . $imagePath . '</url>
         <title>' . $escapedTitle . '</title>
-        <link>' . $protocol . $podinfo->podcastlink . '</link>
+        <link>' . $this->resolveUrl($podinfo->podcastlink, $protocol) . '</link>
 	</image>
 	<description><![CDATA[' . $sanitizedDescription . ']]></description>
 	<language>' . $podlanguage . '</language>
-	<itunes:type>episodic</itunes:type>
+	<itunes:type>' . $this->escapeHTML($podinfo->itunes_type ?: 'episodic') . '</itunes:type>
 	<copyright>© ' . $year . ' All rights reserved.</copyright>
-	<atom:link href="' . $protocol . $podinfo->website . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
+	<atom:link href="' . $this->resolveUrl($podinfo->website, $protocol) . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
 	<lastBuildDate>' . $date . '</lastBuildDate>
-	<itunes:summary><![CDATA[' . $sanitizedDescription . ']]></itunes:summary>
-	<itunes:subtitle>' . $this->escapeHTML($podinfo->subtitle) . '</itunes:subtitle>
-	<itunes:author>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:author>
+	<itunes:author>' . $this->escapeHTML($podinfo->author ?: $podinfo->editor_name) . '</itunes:author>
 	<itunes:owner>
 		<itunes:name>' . $this->escapeHTML($podinfo->editor_name) . '</itunes:name>
 		<itunes:email>' . $podinfo->editor_email . '</itunes:email>
 	</itunes:owner>
 	<itunes:image href="' . $imagePath . '" />
-	<itunes:category text="Religion &amp; Spirituality">
-		<itunes:category text="Christianity" />
+	<itunes:category text="' . $this->escapeHTML($podinfo->itunes_category ?: 'Religion & Spirituality') . '">' .
+            ($podinfo->itunes_subcategory ? '
+		<itunes:category text="' . $this->escapeHTML($podinfo->itunes_subcategory) . '" />' : '') . '
 	</itunes:category>
-	<itunes:explicit>no</itunes:explicit>
+	<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
 	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
-	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
-    <itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>';
+	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>';
 
             $episodedetail = '';
 
@@ -187,10 +182,7 @@ class Cwmpodcast
                 $episode->size = $episode->params->get('size', '30000000');
 
                 $title    = $this->getEpisodeTitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
-                $subtitle = $this->getEpisodeSubtitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate);
-
                 $title    = $this->escapeHTML($title);
-                $subtitle = $this->escapeHTML($subtitle);
 
                 $file          = str_replace(' ', '%20', $episode->params->get('filename'));
                 $path          = Cwmhelper::mediaBuildUrl($episode->srparams->get('path'), $file, $params, false, false, true);
@@ -214,15 +206,12 @@ class Cwmpodcast
 		<description><![CDATA[' . $sanitizedIntro . ']]></description>
 		<content:encoded><![CDATA[' . $sanitizedIntro . ']]></content:encoded>
 		<pubDate>' . $episodedate . '</pubDate>
-		<itunes:subtitle>' . $subtitle . '</itunes:subtitle>
-		<itunes:summary><![CDATA[' . $sanitizedIntro . ']]></itunes:summary>
-		<itunes:keywords>' . $podinfo->podcastsearch . '</itunes:keywords>
 		<itunes:duration>' . $duration . '</itunes:duration>';
 
                 $episodedetail .= $this->getEnclosureXml($episode, $protocol, $path);
 
                 $episodedetail .= '
-		<itunes:explicit>no</itunes:explicit>
+		<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
 	</item>';
             }
 
@@ -290,48 +279,29 @@ class Cwmpodcast
     }
 
     /**
-     * Get Episode Subtitle
+     * Resolve a URL-like value (full URL, bare domain, or Joomla menu item ID).
      *
-     * @param   object    $podinfo            Podcast Info
-     * @param   object    $episode            Episode Info
-     * @param   string    $scripture          Scripture Reference
-     * @param   Registry  $params             Params
-     * @param   int       $detailstemplateid  Template ID
-     * @param   string    $episodedate        Episode Date
+     * @param   string  $value     The stored value (URL, bare domain, or numeric menu item ID)
+     * @param   string  $protocol  Protocol prefix for legacy bare domains
      *
-     * @return string
-     * @since  8.0.0
+     * @return  string  The resolved absolute URL
      *
-     * @throws \Exception
+     * @since   10.1.0
      */
-    private function getEpisodeSubtitle($podinfo, $episode, $scripture, $params, $detailstemplateid, $episodedate): string
+    private function resolveUrl(string $value, string $protocol): string
     {
-        switch ($podinfo->episodesubtitle) {
-            case 0:
-                return (string) $episode->teachername;
-            case 1:
-                if ($scripture && $episode->teachername) {
-                    return $scripture . ' - ' . $episode->teachername;
-                }
-                return $episode->teachername ?: $scripture;
-            case 2:
-                return (string) $scripture;
-            case 3:
-                return (string) $episode->studytitle;
-            case 4:
-                return $episodedate ? $episodedate . ' - ' . $scripture : $scripture;
-            case 5:
-                return $scripture . ' - ' . $episode->studytitle;
-            case 6:
-                return $episode->bookname . ' ' . $episode->chapter_begin;
-            case 7:
-                if ($this->templateid !== $detailstemplateid || $this->template === null) {
-                    $this->template   = Cwmparams::getTemplateparams($detailstemplateid);
-                    $this->templateid = $detailstemplateid;
-                }
-                return (string) $this->getListing()->getFluidCustom($podinfo->custom, $episode, $params, $this->template, 'podcast');
+        // Already a full URL (has protocol)
+        if (preg_match('#^[a-z][a-z0-9+\-.]*://#i', $value)) {
+            return rtrim($value, '/');
         }
-        return '';
+
+        // Numeric = Joomla menu item ID
+        if (ctype_digit($value)) {
+            return Route::link('site', 'index.php?Itemid=' . $value);
+        }
+
+        // Legacy bare domain — prepend protocol
+        return $protocol . $value;
     }
 
     /**
@@ -353,7 +323,7 @@ class Cwmpodcast
         }
 
         $view = ($podinfo->linktype === '2' || (int) $podinfo->linktype === 2) ? 'cwmpopup&amp;player=1' : 'cwmsermon';
-        return $protocol . $podinfo->website . '/index.php?option=com_proclaim&amp;view=' . $view . '&amp;id=' . $episode->slug . '&amp;t=' . $detailstemplateid;
+        return $this->resolveUrl($podinfo->website, $protocol) . '/index.php?option=com_proclaim&amp;view=' . $view . '&amp;id=' . $episode->slug . '&amp;t=' . $detailstemplateid;
     }
 
     /**
