@@ -140,6 +140,58 @@ foreach ($overrideFieldMap as $context => $fieldName) {
     }
 }
 
+// ─── 2c. Build settings schema from XML field definitions ───────────────
+// The schema drives the element settings modal in JS: modal HTML, state
+// defaults, populate, save, change detection, loadFromParams, syncToForm.
+$schemaXmlPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/forms/layout-element-settings.xml';
+$settingsSchema = [];
+
+if (is_file($schemaXmlPath)) {
+    $xml = simplexml_load_file($schemaXmlPath);
+
+    if ($xml) {
+        $fieldset = $xml->xpath('//fieldset[@name="element_settings"]/field');
+
+        foreach ($fieldset as $fieldXml) {
+            $fieldType = strtolower((string) ($fieldXml['type'] ?? 'text'));
+            $schemaType = ($fieldType === 'text') ? 'text' : 'select';
+
+            $entry = [
+                'name'        => (string) $fieldXml['name'],
+                'type'        => $schemaType,
+                'label'       => Text::_((string) ($fieldXml['label'] ?? '')),
+                'description' => Text::_((string) ($fieldXml['description'] ?? '')),
+                'default'     => (string) ($fieldXml['default'] ?? ''),
+                'showFor'     => (string) ($fieldXml['showFor'] ?? '*'),
+            ];
+
+            if ($schemaType === 'select') {
+                $optionsFilter = (string) ($fieldXml['optionsFilter'] ?? '');
+                $optionsSource = (string) ($fieldXml['optionsSource'] ?? '');
+
+                if ($optionsFilter !== '') {
+                    // Options rebuilt at modal-open time by JS (element type, link type)
+                    $entry['optionsFilter'] = $optionsFilter;
+                } elseif ($optionsSource !== '') {
+                    // Options loaded from an existing registered script option key
+                    $entry['optionsKey'] = 'com_proclaim.' . $optionsSource . 'Options';
+                } else {
+                    // Inline <option> children in the XML
+                    $entry['options'] = [];
+                    foreach ($fieldXml->option as $opt) {
+                        $entry['options'][] = [
+                            'value' => (string) ($opt['value'] ?? ''),
+                            'label' => Text::_((string) $opt),
+                        ];
+                    }
+                }
+            }
+
+            $settingsSchema[] = $entry;
+        }
+    }
+}
+
 // ─── 3. Register all script options ─────────────────────────────────────
 if ($templateId !== null) {
     $document->addScriptOptions('com_proclaim.templateId', (int) $templateId);
@@ -159,6 +211,10 @@ if (!empty($settingsConfig)) {
 
 if (!empty($landingSectionSettings)) {
     $document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSectionSettings);
+}
+
+if (!empty($settingsSchema)) {
+    $document->addScriptOptions('com_proclaim.settingsSchema', $settingsSchema);
 }
 
 if (!empty($dateFormatOptions)) {

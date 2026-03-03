@@ -24,7 +24,7 @@ $show_link = $params->get('show_link', 1);
 
 $Listing = new Cwmlisting();
 ?>
-<div class="container-fluid">
+<div class="com-proclaim container-fluid">
     <?php
     if ($params->get('pageheader')) {
         ?>

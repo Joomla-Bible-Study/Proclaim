@@ -609,6 +609,7 @@ class Cwmlisting
         $l->show_version = $this->params->get($paramtext . 'show_version', '');
         $l->show_tooltip = $this->params->get($paramtext . 'show_tooltip', '');
         $l->separator    = $this->params->get($paramtext . 'separator', '');
+        $l->icon_size    = $this->params->get($paramtext . 'icon_size', '');
 
         return $l;
     }
@@ -1592,6 +1593,11 @@ class Cwmlisting
 
         if ($customclass && !$classAppliedToImg) {
             $colClass .= ' ' . $customclass;
+        }
+
+        // Apply icon size CSS class from Layout Editor (for media icon elements)
+        if (!empty($row->icon_size)) {
+            $colClass .= ' ' . htmlspecialchars($row->icon_size, ENT_QUOTES, 'UTF-8');
         }
 
         if ($header === 0) {

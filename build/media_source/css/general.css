@@ -59,11 +59,6 @@ body.dark,
   --color-shadow-light: rgba(0, 0, 0, 0.3);
 }
 
-/* Panel Form */
-div.current .panelform {
-  border: 1px solid var(--color-gray-light) !important;
-}
-
 /* Inline Fields */
 .inlineFields div {
   float: left;
@@ -554,23 +549,23 @@ table.fbstat .col2 {
 /* --- Cards Style (opt-in via template setting) --- */
 
 .proclaim-listing--cards .proclaim-item {
-  background: var(--color-background-light);
-  border: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
   border-radius: 0.5rem;
   padding: 1rem;
   margin-bottom: 0.75rem;
-  box-shadow: 0 1px 3px var(--color-shadow-light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
 .proclaim-listing--cards .proclaim-item:last-child {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
   margin-bottom: 0;
 }
 
 .proclaim-listing--cards .proclaim-item:hover {
-  box-shadow: 0 4px 12px var(--color-shadow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transform: translateY(-1px);
 }
 
@@ -630,7 +625,8 @@ table.fbstat .col2 {
 }
 
 .proclaim-listing--cards .proclaim-archived {
-  border-color: var(--color-gray-light);
+  border-color: var(--bs-border-color, #dee2e6);
+  opacity: 0.7;
 }
 
 /* Cards mobile adjustments */
@@ -644,11 +640,11 @@ table.fbstat .col2 {
   .proclaim-listing--cards .proclaim-item {
     padding: 0.75rem;
     margin-bottom: 0.5rem;
-    box-shadow: 0 1px 2px var(--color-shadow-light);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   }
 
   .proclaim-listing--cards .proclaim-item:hover {
-    box-shadow: 0 1px 2px var(--color-shadow-light);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
     transform: none;
   }
 }
@@ -849,7 +845,7 @@ table.fbstat .col2 {
 }
 
 /* Dark mode: warning alerts keep amber background, so btn-close stays black (cancel Bootstrap's auto-invert) */
-[data-bs-theme="dark"] .alert-warning .btn-close {
+[data-bs-theme="dark"] .com-proclaim .alert-warning .btn-close {
   filter: none;
 }
 
@@ -859,33 +855,38 @@ table.fbstat .col2 {
 
 /* Bootstrap's table-secondary renders #e2e3e5 background even in dark mode.
    Override both the custom property AND the resolved background-color so the
-   row is a subtle tint instead of a blinding light gray. */
-[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > td,
-[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > th {
+   row is a subtle tint instead of a blinding light gray.
+   Dual selectors handle data-bs-theme on <html> above .com-proclaim, or within. */
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > td,
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > th,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary > td,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary > th {
   --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
   --bs-table-color: var(--bs-body-color);
   background-color: rgba(255, 255, 255, 0.04) !important;
   color: var(--bs-body-color);
 }
 
-[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > td,
-[data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > th {
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > td,
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > th,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary:hover > td,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary:hover > th {
   --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
   background-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 /* Prefers-color-scheme fallback (for templates not using data-bs-theme) */
 @media (prefers-color-scheme: dark) {
-  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > td,
-  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary > th {
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary > td,
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary > th {
     --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
     --bs-table-color: var(--bs-body-color);
     background-color: rgba(255, 255, 255, 0.04) !important;
     color: var(--bs-body-color);
   }
 
-  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary:hover > td,
-  html:not([data-bs-theme="light"]) .table > :not(caption) > tr.table-secondary:hover > th {
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary:hover > td,
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary:hover > th {
     --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
     background-color: rgba(255, 255, 255, 0.07) !important;
   }

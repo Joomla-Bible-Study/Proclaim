@@ -40,7 +40,7 @@ $doc->getWebAssetManager()->addInlineStyle($style);
 $playerParam = (int) $this->params->get('player');
 $player      = $this->player;
 ?>
-<div id="popupwindow" class="popupwindow">
+<div id="popupwindow" class="com-proclaim popupwindow">
     <div class="popuptitle">
         <p class="popuptitle"><?php echo $this->headertext; ?></p>
     </div>

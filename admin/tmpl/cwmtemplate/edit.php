@@ -105,7 +105,27 @@ $elementSectionMap = [
     'custom'            => 'JBS_TPL_SECTION_CUSTOM', 'dcustom' => 'JBS_TPL_SECTION_CUSTOM',
 ];
 
-$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap, $deprecatedElements): array {
+// Tags control conditional field visibility in the Layout Editor settings modal.
+// Each tag corresponds to a showFor value in layout-element-settings.xml.
+$elementTagMap = [
+    'date'              => ['date'],
+    'scripture1'        => ['scripture'],
+    'scripture2'        => ['scripture'],
+    'scriptures'        => ['scripture', 'allScriptures'],
+    'secondary'         => ['scripture'],
+    'jbsmedia'          => ['image', 'mediaIcon'],
+    'downloads'         => ['image'],
+    'thumbnail'         => ['image'],
+    'teacherimage'      => ['image'],
+    'seriesthumbnail'   => ['image'],
+    'teachercard'       => ['image'],
+    'studyintro'        => ['blockContent'],
+    'studytext'         => ['blockContent'],
+    'description'       => ['blockContent'],
+    'seriesdescription' => ['blockContent'],
+];
+
+$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap, $deprecatedElements, $elementTagMap): array {
     $elements = [];
     $seen     = [];
 
@@ -128,6 +148,7 @@ $extractElements = function (array $fieldsetNames, string $prefix) use ($form, $
                 'id'      => $elementId,
                 'label'   => Text::_($field->getAttribute('label')),
                 'section' => Text::_($elementSectionMap[$elementId] ?? 'JBS_TPL_SECTION_OTHER'),
+                'tags'    => $elementTagMap[$elementId] ?? [],
             ];
 
             if (\in_array($elementId, $deprecatedElements, true)) {

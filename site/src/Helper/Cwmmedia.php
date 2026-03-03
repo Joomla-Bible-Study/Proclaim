@@ -265,7 +265,6 @@ class Cwmmedia
         $mediaimage = null;
         $button     = $imageparams->get('media_button_type', 'btn-link');
         $buttontext = $imageparams->get('media_button_text', 'Audio');
-        $textsize   = $imageparams->get('media_icon_text_size', '24');
 
         if ($imageparams->get('media_button_color')) {
             $color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
@@ -290,7 +289,7 @@ class Cwmmedia
                 }
 
                 $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' .
-                    $buttontext . ' <span class="' . $icon . '" style="font-size:' . $textsize . 'px;"></span></span>';
+                    $buttontext . ' <span class="' . $icon . '"></span></span>';
                 break;
             case 3:
                 // Icon only
@@ -303,7 +302,7 @@ class Cwmmedia
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
-                $mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
+                $mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '"></span>';
                 break;
         }
 
@@ -312,42 +311,42 @@ class Cwmmedia
 
             switch ($filename) {
                 case preg_match('/(youtube.com|youtu.be)/', $filename) === 1:
-                    $mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fab fa-youtube" title="YouTube"></span>';
                     break;
 
                 case preg_match('/(vimeo.com)/', $filename) === 1:
-                    $mediaimage = '<span class="fab fa-vimeo" title="Vimeo" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fab fa-vimeo" title="Vimeo"></span>';
                     break;
 
                 case preg_match('/(wistia.com|wistia.net)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-play-circle" title="Wistia" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-play-circle" title="Wistia"></span>';
                     break;
 
                 case preg_match('/(resi.io)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-video" title="Resi" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-video" title="Resi"></span>';
                     break;
 
                 case preg_match('/(pdf|PDF)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-file-pdf" title="PDF"></span>';
                     break;
 
                 case preg_match('/(mp3|MP3)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-play" title="Audio" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-play" title="Audio"></span>';
                     break;
 
                 case preg_match('/(mp4|MP4)/', $filename) === 1:
                 case preg_match('/(m4v|M4V)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-television" title="Video"></span>';
                     break;
 
                 case preg_match('/(pptx|ppt|PPTX|PPT)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint"></span>';
                     break;
                 case preg_match('/(docx|DOCX)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-word" title="Word" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-word" title="Word"></span>';
                     break;
                 default:
-                    $mediaimage = '<span class="fas fa-file" title="' . $filename . '" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-file" title="' . $filename . '"></span>';
                     break;
             }
         }

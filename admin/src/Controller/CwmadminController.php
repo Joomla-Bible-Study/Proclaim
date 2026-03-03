@@ -297,7 +297,6 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
@@ -336,7 +335,6 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
@@ -379,7 +377,6 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
@@ -426,7 +423,6 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);

@@ -33,6 +33,7 @@ if (!empty($defaultImage) && file_exists(JPATH_ROOT . '/' . $defaultImage)) {
 // Add lazy loading attribute for images
 $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
 ?>
+<div class="com-proclaim">
 <h2><?php echo Text::_('JBS_CMN_SERIES_PODCASTS'); ?></h2>
 <form action="<?php echo Route::_('index.php?option=com_proclaim&view=cwmseriespodcastlist'); ?>" method="post" name="adminForm" id="adminForm">
     <div id="effect-1" class="effects" role="list" aria-label="<?php echo Text::_('JBS_CMN_SERIES_PODCASTS'); ?>">
@@ -99,3 +100,4 @@ $imgAttribs = array_merge($this->attribs ?? [], ['loading' => 'lazy']);
     <input type="hidden" name="boxchecked" value="0"/>
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
+</div>

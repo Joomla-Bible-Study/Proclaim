@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout Editor Element Settings — single source of truth
+
+    Every field defined here drives the element settings modal in the
+    Layout Editor.  PHP reads this XML, builds a schema array, and
+    passes it to JavaScript via Joomla.getOptions().  The JS builds
+    the modal, manages state, and syncs form fields — all from this
+    schema.  To add a new per-element setting, add a <field> here.
+
+    Custom attributes:
+      showFor         visibility tag (* = always, date, scripture, allScriptures, mediaIcon)
+      optionsFilter   options rebuilt at modal-open time (elementType, linkType)
+      optionsSource   options loaded from existing PHP option registration key
+-->
+<form>
+    <fieldset name="element_settings">
+        <field name="element" type="ElementOptions"
+               label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"
+               default="1" showFor="*" optionsFilter="elementType" />
+
+        <field name="linktype" type="LinkOptions"
+               label="JBS_TPL_TYPE_OF_LINK" description="JBS_TPL_TYPE_OF_LINK_DESC"
+               default="0" showFor="*" optionsFilter="linkType" />
+
+        <field name="custom" type="text"
+               label="JBS_TPL_CUSTOMCLASS" description="JBS_TPL_CUSTOMCLASS_DESC"
+               default="" showFor="*" />
+
+        <field name="date_format" type="list"
+               label="JBS_TPL_DATE_FORMAT" description="JBS_TPL_DATE_FORMAT_DESC"
+               default="" showFor="date" optionsSource="dateFormat" />
+
+        <field name="show_verses" type="list"
+               label="JBS_TPL_VERSES_SHOW_VERSES" description="JBS_TPL_VERSES_SHOW_VERSES_DESC"
+               default="" showFor="scripture" optionsSource="showVerses" />
+
+        <field name="show_version" type="list"
+               label="JBS_TPL_SHOW_VERSION" description="JBS_TPL_SHOW_VERSION_DESC"
+               default="0" showFor="scripture" optionsSource="showVersion" />
+
+        <field name="show_tooltip" type="list"
+               label="JBS_TPL_SHOW_SCRIPTURE_TOOLTIPS" description="JBS_TPL_SHOW_TOOLTIP_ELEMENT_DESC"
+               default="0" showFor="scripture" optionsSource="showTooltip" />
+
+        <field name="separator" type="list"
+               label="JBS_TPL_SCRIPTURE_SEPARATOR" description="JBS_TPL_SCRIPTURE_SEPARATOR_DESC"
+               default="" showFor="allScriptures" optionsSource="separator" />
+
+        <field name="icon_size" type="list"
+               label="JBS_TPL_ICON_SIZE" description="JBS_TPL_ICON_SIZE_DESC"
+               default="" showFor="mediaIcon">
+            <option value="">JBS_TPL_ICON_SIZE_DEFAULT</option>
+            <option value="proclaim-icon-sm">JBS_TPL_ICON_SIZE_SMALL</option>
+            <option value="proclaim-icon-md">JBS_TPL_ICON_SIZE_MEDIUM</option>
+            <option value="proclaim-icon-lg">JBS_TPL_ICON_SIZE_LARGE</option>
+            <option value="proclaim-icon-xl">JBS_TPL_ICON_SIZE_XL</option>
+        </field>
+    </fieldset>
+</form>

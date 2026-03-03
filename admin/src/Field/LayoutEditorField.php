@@ -51,6 +51,32 @@ class LayoutEditorField extends FormField
     protected $type = 'LayoutEditor';
 
     /**
+     * Tags controlling conditional field visibility in the Layout Editor settings modal.
+     * Each tag corresponds to a showFor value in layout-element-settings.xml.
+     *
+     * @var  array<string, string[]>
+     *
+     * @since 10.1.0
+     */
+    protected static array $elementTagMap = [
+        'date'              => ['date'],
+        'scripture1'        => ['scripture'],
+        'scripture2'        => ['scripture'],
+        'scriptures'        => ['scripture', 'allScriptures'],
+        'secondary'         => ['scripture'],
+        'jbsmedia'          => ['image', 'mediaIcon'],
+        'downloads'         => ['image'],
+        'thumbnail'         => ['image'],
+        'teacherimage'      => ['image'],
+        'seriesthumbnail'   => ['image'],
+        'teachercard'       => ['image'],
+        'studyintro'        => ['blockContent'],
+        'studytext'         => ['blockContent'],
+        'description'       => ['blockContent'],
+        'seriesdescription' => ['blockContent'],
+    ];
+
+    /**
      * Element definitions for the messages context
      *
      * @var  array
@@ -199,10 +225,17 @@ class LayoutEditorField extends FormField
         $elements = [];
 
         foreach ($this->messageElements as $element) {
-            $elements[] = [
+            $entry = [
                 'id'    => $element['id'],
                 'label' => Text::_($element['label']),
+                'tags'  => self::$elementTagMap[$element['id']] ?? [],
             ];
+
+            if (!empty($element['deprecated'])) {
+                $entry['deprecated'] = true;
+            }
+
+            $elements[] = $entry;
         }
 
         return [

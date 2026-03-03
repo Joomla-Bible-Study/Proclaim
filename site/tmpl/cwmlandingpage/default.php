@@ -23,6 +23,7 @@ use Joomla\CMS\Language\Text;
 $CWMLanding = $this->landing;
 $params     = $this->params;
 ?>
+<div class="com-proclaim">
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
 <div id="proclaim_landing" class="container proclaim-main-content" role="main">
     <div id="bsms_header">
@@ -140,3 +141,4 @@ foreach ($sections as $section) {
 } // End foreach sections
 ?>
 </div><!-- end div id="proclaim_landing" -->
+</div>

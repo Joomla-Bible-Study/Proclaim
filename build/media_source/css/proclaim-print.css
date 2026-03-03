@@ -84,9 +84,9 @@
     }
 
     /* Media players and interactive elements */
-    iframe,
-    video,
-    audio,
+    .com-proclaim iframe,
+    .com-proclaim video,
+    .com-proclaim audio,
     .proclaim-media-player,
     .cwm-fancybox,
     .fancybox-container,
@@ -177,7 +177,7 @@
        3. PRINT-OPTIMIZED TYPOGRAPHY
        ========================================================== */
 
-    body {
+    .com-proclaim {
         font-size: 12pt !important;
         line-height: 1.5 !important;
         color: #000 !important;
@@ -190,7 +190,7 @@
         margin: 0 !important;
     }
 
-    h1, .page-header h1 {
+    .com-proclaim h1, .com-proclaim .page-header h1 {
         font-size: 18pt !important;
         color: #000 !important;
         border-bottom: 1pt solid #ccc;
@@ -198,7 +198,7 @@
         margin-bottom: 12pt;
     }
 
-    h2, h3, h4 {
+    .com-proclaim h2, .com-proclaim h3, .com-proclaim h4 {
         color: #000 !important;
         page-break-after: avoid;
     }
@@ -233,7 +233,7 @@
         page-break-after: avoid;
     }
 
-    p, li, dd {
+    .com-proclaim p, .com-proclaim li, .com-proclaim dd {
         orphans: 3;
         widows: 3;
     }
@@ -260,20 +260,23 @@
        6. IMAGES AND TABLES
        ========================================================== */
 
-    img {
+    .com-proclaim img {
         max-width: 100% !important;
         page-break-inside: avoid;
     }
 
-    table {
+    .com-proclaim table {
         border-collapse: collapse;
     }
 
-    table, th, td {
+    .com-proclaim table,
+    .com-proclaim th,
+    .com-proclaim td {
         border: 1pt solid #ccc;
     }
 
-    th, td {
+    .com-proclaim th,
+    .com-proclaim td {
         padding: 4pt 8pt;
     }
 
@@ -543,8 +546,13 @@
     margin: 0;
 }
 
-/* Landscape orientation for wide tables */
-@page {
+/* Landscape orientation for analytics report only.
+   Named pages scope @page to elements with page: proclaim-report. */
+@page proclaim-report {
     size: landscape;
     margin: 0.5in;
+}
+
+.proclaim-analytics-report {
+    page: proclaim-report;
 }
