@@ -13,6 +13,7 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\CwmrouteHelper;
 use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
 use Joomla\CMS\Application\SiteApplication;
@@ -32,6 +33,9 @@ use Joomla\Registry\Registry;
 /** @var int $serverId */
 /** @var \stdClass $module */
 /** @var SiteApplication $app */
+/** @var array $fallbackSermons */
+/** @var \stdClass|null $fallbackTemplate */
+/** @var Registry|null $fallbackParams */
 
 $moduleId        = $module->id ?? 0;
 $isLive          = $video['isLive'] ?? false;
@@ -125,6 +129,20 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
             </div>
         <?php endif; ?>
 
+    <?php elseif (!empty($fallbackSermons) && $fallbackTemplate && $fallbackParams) : ?>
+        <div class="mod-proclaim-youtube__fallback">
+            <?php
+            $listing = new Cwmlisting();
+            $fallbackParams->set('listing_item_style', 'grid');
+            $fallbackParams->set('grid_card_size', 'medium');
+            echo $listing->getFluidListing(
+                $fallbackSermons,
+                $fallbackParams,
+                $fallbackTemplate,
+                'sermons'
+            );
+            ?>
+        </div>
     <?php elseif ((bool) $params->get('show_no_video', 0)) : ?>
         <?php
         $noVideoMessage = $params->get('no_video_message', '');

@@ -165,6 +165,38 @@
                        default=""
                        size="50"
                        showon="show_no_video:1"/>
+
+                <field name="fallback_sermons"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS"
+                       description="MOD_PROCLAIM_YOUTUBE_FALLBACK_SERMONS_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="fallback_count"
+                       type="number"
+                       default="6"
+                       min="1"
+                       max="12"
+                       label="MOD_PROCLAIM_YOUTUBE_FALLBACK_COUNT"
+                       description="MOD_PROCLAIM_YOUTUBE_FALLBACK_COUNT_DESC"
+                       filter="integer"
+                       showon="fallback_sermons:1"/>
+
+                <field name="fallback_template"
+                       type="sql"
+                       label="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE"
+                       description="MOD_PROCLAIM_YOUTUBE_FALLBACK_TEMPLATE_DESC"
+                       default="1"
+                       class="form-select"
+                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
+                       key_field="id"
+                       value_field="title"
+                       showon="fallback_sermons:1">
+                </field>
             </fieldset>
 
             <fieldset name="advanced" label="JGLOBAL_FIELDSET_ADVANCED">

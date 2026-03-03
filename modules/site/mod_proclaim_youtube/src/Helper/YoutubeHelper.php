@@ -465,6 +465,39 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
+     * Get recent sermons from Proclaim as a fallback when no YouTube video is available.
+     *
+     * Reuses the same CwmsermonsModel that mod_proclaim uses, so sermons include
+     * batch-loaded teachers, scriptures, and media stats.
+     *
+     * @param   SiteApplication  $app    Application instance
+     * @param   int              $limit  Number of sermons to return
+     *
+     * @return  array  Array of sermon objects, or empty array on failure
+     *
+     * @since   10.1.0
+     */
+    public function getRecentSermons(SiteApplication $app, int $limit = 6): array
+    {
+        try {
+            $component = $app->bootComponent('com_proclaim');
+
+            /** @var \CWM\Component\Proclaim\Site\Model\CwmsermonsModel $model */
+            $model = $component->getMVCFactory()
+                ->createModel('Cwmsermons', 'Site', ['ignore_request' => true]);
+
+            // Set minimal state: latest sermons by date, limited to $limit
+            $params = new Registry();
+            $params->set('moduleitems', $limit);
+            $model->setModuleState($params);
+
+            return $model->getItems();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * Get YouTube embed URL for a video
      *
      * @param   string  $videoId  YouTube video ID

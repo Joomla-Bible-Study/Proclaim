@@ -16,6 +16,7 @@ namespace CWM\Module\ProclaimYoutube\Site\Dispatcher;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Module\ProclaimYoutube\Site\Helper\YoutubeHelper;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
@@ -97,16 +98,45 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $matchedMessage = $helper->findMatchingMessage($video);
         }
 
-        $data['video']          = $video;
-        $data['embedUrl']       = $embedUrl;
-        $data['responsive']     = $responsive;
-        $data['playerWidth']    = $playerWidth;
-        $data['playerHeight']   = $playerHeight;
-        $data['aspectRatio']    = $aspectRatio;
-        $data['helper']         = $helper;
-        $data['matchedMessage'] = $matchedMessage;
-        $data['serverId']       = (int) $data['params']->get('server_id', 0);
-        $data['app']            = $this->getApplication();
+        // Fallback: show recent sermons when no video is available
+        $fallbackSermons  = [];
+        $fallbackTemplate = null;
+
+        if (!($video && $embedUrl) && (bool) $data['params']->get('fallback_sermons', 1)) {
+            $limit           = (int) $data['params']->get('fallback_count', 6);
+            $fallbackSermons = $helper->getRecentSermons($this->getApplication(), $limit);
+
+            $templateId = (int) $data['params']->get('fallback_template', 1) ?: 1;
+
+            if (!empty($fallbackSermons)) {
+                $fallbackTemplate = Cwmparams::getTemplateparams($templateId);
+
+                // Merge admin → template params (same pattern as mod_proclaim Dispatcher)
+                // Clone to avoid mutating the static cache in Cwmparams
+                $mergedParams = clone Cwmparams::getAdmin()->params;
+                $mergedParams->merge($fallbackTemplate->params);
+                $data['fallbackParams'] = $mergedParams;
+
+                // Register Proclaim CSS assets for card styling
+                $wa = $this->getApplication()->getDocument()->getWebAssetManager();
+                $wa->useStyle('com_proclaim.cwmcore');
+                $wa->useStyle('com_proclaim.general');
+            }
+        }
+
+        $data['video']            = $video;
+        $data['embedUrl']         = $embedUrl;
+        $data['responsive']       = $responsive;
+        $data['playerWidth']      = $playerWidth;
+        $data['playerHeight']     = $playerHeight;
+        $data['aspectRatio']      = $aspectRatio;
+        $data['helper']           = $helper;
+        $data['matchedMessage']   = $matchedMessage;
+        $data['serverId']         = (int) $data['params']->get('server_id', 0);
+        $data['app']              = $this->getApplication();
+        $data['fallbackSermons']  = $fallbackSermons;
+        $data['fallbackTemplate'] = $fallbackTemplate;
+        $data['fallbackParams']   = $data['fallbackParams'] ?? null;
 
         return $data;
     }
