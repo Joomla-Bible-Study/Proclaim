@@ -11,8 +11,8 @@
 
 .scripture-text {
     padding: 1em;
-    background: #fafaf8;
-    border: 1px solid #e0ddd5;
+    background: var(--bs-tertiary-bg, #fafaf8);
+    border: 1px solid var(--bs-border-color, #e0ddd5);
     border-radius: 4px;
     line-height: 1.8;
     font-size: 1em;
@@ -25,7 +25,7 @@
 .scripture-body sup {
     font-size: 0.65em;
     font-weight: 700;
-    color: #8b4513;
+    color: var(--bs-emphasis-color, #8b4513);
     margin-right: 2px;
     vertical-align: super;
     line-height: 0;
@@ -34,9 +34,9 @@
 .scripture-copyright {
     margin-top: 0.75em;
     padding-top: 0.5em;
-    border-top: 1px solid #e0ddd5;
+    border-top: 1px solid var(--bs-border-color, #e0ddd5);
     font-size: 0.8em;
-    color: #888;
+    color: var(--bs-secondary-color, #888);
     font-style: italic;
 }
 

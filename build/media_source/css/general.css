@@ -1,20 +1,27 @@
-/* CSS Custom Properties - Light Mode (Default) */
+/*
+ * CSS Custom Properties — Admin General Styles (Light Mode Default)
+ *
+ * These variables are used by the admin installer UI, stats tables,
+ * form footers, and legacy FB admin layout.  They invert automatically
+ * in dark mode (see below).  Frontend site styles use Bootstrap
+ * variables (--bs-*) instead — see cwmcore.css for site-side tokens.
+ */
 :root {
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-gray-light: #cccccc;
-  --color-gray-medium: #666666;
-  --color-gray-dark: #536482;
-  --color-border: #ccc;
-  --color-background-light: #fafafa;
-  --color-background-alt: #eeeeee;
-  --color-background-row0: #F7F8F9;
-  --color-accent: #7F9DB9;
-  --color-link: #08c;
-  --color-install-border: #99CCFF;
-  --color-install-bg: #D9D9FF;
-  --color-shadow: rgba(0, 0, 0, 0.15);
-  --color-shadow-light: rgba(0, 0, 0, 0.1);
+  --color-white: #ffffff;              /* Surface / card backgrounds */
+  --color-black: #000000;              /* Primary text */
+  --color-gray-light: #cccccc;         /* Muted text, secondary labels */
+  --color-gray-medium: #666666;        /* Table headers, subtitles */
+  --color-gray-dark: #536482;          /* Emphasis text, descriptions */
+  --color-border: #ccc;                /* Default borders, dividers */
+  --color-background-light: #fafafa;   /* Subtle backgrounds, panels */
+  --color-background-alt: #eeeeee;     /* Alternating row / hover fills */
+  --color-background-row0: #F7F8F9;    /* Zebra-stripe even rows */
+  --color-accent: #7F9DB9;             /* Headings, feature highlights */
+  --color-link: #08c;                  /* Hyperlinks */
+  --color-install-border: #99CCFF;     /* Installer step borders */
+  --color-install-bg: #D9D9FF;         /* Installer step backgrounds */
+  --color-shadow: rgba(0, 0, 0, 0.15); /* Drop shadows */
+  --color-shadow-light: rgba(0, 0, 0, 0.1); /* Subtle shadows */
 }
 
 /* CSS Custom Properties - Dark Mode */
@@ -71,7 +78,7 @@ body.dark,
 #loading {
   border-radius: 7px;
   background-color: var(--color-white);
-  border: 1px solid black;
+  border: 1px solid var(--color-border);
   padding: 16px;
   position: fixed;
   right: 0;
@@ -88,7 +95,7 @@ body.dark,
 
 /* Inline Player */
 .inlinePlayer {
-  border: 1px solid black;
+  border: 1px solid var(--color-border);
   position: absolute;
   max-width: 290px;
   width: 100%;
@@ -107,7 +114,7 @@ body.dark,
 #extensions,
 #done {
   margin: 7px;
-  border: 2px dotted #e3e1e1;
+  border: 2px dotted var(--color-border);
   background-color: var(--color-background-light);
   max-width: 450px;
   width: 100%;
@@ -155,16 +162,16 @@ body.dark,
   height: 150px;
   max-width: 200px;
   width: 100%;
-  outline: 1px solid #ddd;
-  border-top: 1px solid #fff;
+  outline: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-background-light);
   padding: 10px 10px 40px 10px;
 }
 .finishbutton {
-  color: #fff;
-  background: #f0f0f0;
+  color: var(--color-gray-dark);
+  background: var(--color-background-light);
 }
 .finishbutton1:hover {
-  background: #f0f088;
+  background: var(--color-background-alt);
 }
 
 /* Image Center */
@@ -213,7 +220,7 @@ img.imgcenter {
 .fbactivemenu,
 .fbsubmenu,
 .fbright {
-  background: #fff;
+  background: var(--color-white);
 }
 .fbsubmenu {
   padding: 5px 5px 5px 15px;
@@ -226,17 +233,17 @@ img.imgcenter {
   font-size: 10px;
   text-align: right;
   padding: 5px;
-  background: #FBFBFB;
-  border-bottom: 1px solid #CCC;
-  border-left: 1px solid #CCC;
-  border-right: 1px solid #CCC;
+  background: var(--color-background-light);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
 }
 .fbfunctitle {
   font-size: 16px;
   text-align: left;
   padding: 5px;
-  background: #FBFBFB;
-  border: 1px solid #CCC;
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
   font-weight: bold;
   margin-bottom: 10px;
   clear: both;
@@ -259,13 +266,13 @@ img.imgcenter {
 td.fbtdtitle {
   font-weight: bold;
   padding-left: 10px;
-  color: #666;
+  color: var(--color-gray-medium);
 }
 #fbcongifcover fieldset {
-  border: 1px solid #CFDCEB;
+  border: 1px solid var(--color-border);
 }
 #fbcongifcover fieldset legend {
-  color: #666;
+  color: var(--color-gray-medium);
 }
 .fbwelcome {
   clear: both;
@@ -274,7 +281,7 @@ td.fbtdtitle {
   font-size: 12px;
   color: var(--color-gray-dark);
   line-height: 140%;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
 }
 .fbwelcome h3 {
   margin: 0;
@@ -314,15 +321,15 @@ table.thisform td {
 }
 table.fbstat {
   background-color: var(--color-white);
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   padding: 1px;
   width: 100%;
 }
 table.fbstat th {
-  background: #EEE;
-  border-bottom: 1px solid #CCC;
-  border-top: 1px solid #EEE;
-  color: #666;
+  background: var(--color-background-alt);
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-background-alt);
+  color: var(--color-gray-medium);
   font-size: 11px;
   padding: 3px 4px;
   text-align: left;
@@ -342,10 +349,10 @@ table.fbstat caption {
   text-align: left;
 }
 table.fbstat .col1 {
-  background-color: #F1F3F5;
+  background-color: var(--color-background-light);
 }
 table.fbstat .col2 {
-  background-color: #FBFBFB;
+  background-color: var(--color-white);
 }
 
 /* PayPal */
@@ -780,7 +787,7 @@ table.fbstat .col2 {
 .sermon-list-separator {
   border: 0;
   height: 4px;
-  background-color: white;
+  background-color: var(--color-white);
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
 }
 

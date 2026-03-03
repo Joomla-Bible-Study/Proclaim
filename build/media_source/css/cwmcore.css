@@ -1,20 +1,31 @@
-/* CSS Custom Properties */
+/*
+ * CSS Custom Properties — Site Core Styles
+ *
+ * These variables drive the frontend sermon listing tables, media
+ * containers, teacher tables, and popup windows.  All text colors
+ * meet WCAG AA (4.5:1 minimum) or AAA (7:1) contrast ratios against
+ * a white background — see inline notes.
+ *
+ * NOTE: These do NOT yet have dark-mode overrides.  Frontend dark
+ * mode relies on Bootstrap variables (--bs-*) in newer components;
+ * legacy table styles here will need a dark-mode block in the future.
+ */
 :root {
-  --color-white: #ffffff;
-  --color-black: #000000;
+  --color-white: #ffffff;              /* Surface / card backgrounds */
+  --color-black: #000000;              /* Primary text */
   /* WCAG AA compliant colors (4.5:1 contrast ratio minimum) */
-  --color-gray-dark: #595959;      /* Was #666666, now 7:1 contrast */
-  --color-gray-medium: #595959;    /* Was #707070, now 7:1 contrast */
-  --color-gray-light: #767676;     /* Was #999999, now 4.5:1 contrast */
-  --color-gray-border: #C5C1BE;    /* Border only, no text contrast needed */
-  --color-off-white: #fffff0;
-  --color-background-light: #eeeeee;
-  --color-background-cell: #e3e2e2;
-  --color-scripture: #a01a1a;      /* Was #c02121, now 7:1 contrast for AAA */
-  --color-pagelinks-bg: #F2F2F2;
-  --color-dropdowns-bg: #767676;   /* Was #A9A9A9, now 4.5:1 contrast */
+  --color-gray-dark: #595959;          /* Emphasis text — 7:1 contrast (was #666) */
+  --color-gray-medium: #595959;        /* Table headers, titles — 7:1 (was #707070) */
+  --color-gray-light: #767676;         /* Muted text, dates, series — 4.5:1 AA (was #999) */
+  --color-gray-border: #C5C1BE;        /* Borders, dividers — decorative, no text contrast needed */
+  --color-off-white: #fffff0;          /* Zebra-stripe even rows (ivory tint) */
+  --color-background-light: #eeeeee;   /* Subtle panel backgrounds */
+  --color-background-cell: #e3e2e2;    /* Active/selected cell highlight */
+  --color-scripture: #a01a1a;          /* Scripture reference text — 7:1 AAA (was #c02121) */
+  --color-pagelinks-bg: #F2F2F2;       /* Pagination link backgrounds */
+  --color-dropdowns-bg: #767676;       /* Dropdown header fills — 4.5:1 AA (was #A9A9A9) */
   --transition-default: all 0.5s;
-  --focus-outline-color: #005fcc;
+  --focus-outline-color: #005fcc;      /* Keyboard focus ring — WCAG 3:1 against white */
   --focus-outline-width: 3px;
 }
 
@@ -210,7 +221,7 @@
   border-bottom: 1px solid var(--color-gray-light);
 }
 #bsm_teachertable .lastrow td {
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid var(--color-gray-border);
   padding-bottom: 7px;
   padding-top: 7px;
 }
@@ -266,7 +277,7 @@ div.listingfooter ul li {
 #listintro td {
   margin: 0;
   font-weight: bold;
-  color: black;
+  color: var(--color-black);
 }
 #bsdropdownmenu {
   margin-bottom: 10px;
@@ -288,26 +299,26 @@ div.listingfooter ul li {
 }
 .bsms_media_container .lastcol,
 #bsmsmoduletable .lastcol {
-  border-right: grey 2px solid;
+  border-right: var(--color-gray-border) 2px solid;
 }
 .bsms_media_container .lastrow td,
 #bsmsmoduletable .lastrow td {
-  border-bottom: 2px solid grey;
+  border-bottom: 2px solid var(--color-gray-border);
   padding-bottom: 7px;
 }
 .bsms_media_container th,
 #bsmsmoduletable th {
   background-color: var(--color-gray-medium);
   font-weight: bold;
-  color: white;
+  color: var(--color-white);
 }
 .bsms_media_container th.firstrow,
 #bsmsmoduletable th.firstrow {
-  border-bottom: grey 2px solid;
+  border-bottom: var(--color-gray-border) 2px solid;
 }
 .bsms_media_container tr.lastrow th,
 #bsmsmoduletable tr.lastrow th {
-  border-bottom: 2px solid grey;
+  border-bottom: 2px solid var(--color-gray-border);
   padding-bottom: 3px;
 }
 .bsms_media_container tr.bsodd td,
@@ -322,7 +333,7 @@ div.listingfooter ul li {
 #bsmsmoduletable .date {
   white-space: nowrap;
   font-size: 1.2em;
-  color: grey;
+  color: var(--color-gray-light);
   font-weight: bold;
 }
 .bsms_media_container .scripture1,
@@ -342,7 +353,7 @@ div.listingfooter ul li {
 .bsms_media_container .series_text,
 #bsmsmoduletable .series_text {
   white-space: nowrap;
-  color: grey;
+  color: var(--color-gray-light);
 }
 .bsms_media_container .duration,
 #bsmsmoduletable .duration {
@@ -424,7 +435,7 @@ div.listingfooter ul li {
 #bsmsmoduletable .row2col1,
 #bsmsmoduletable .row3col1,
 #bsmsmoduletable .row4col1 {
-  border-left: grey 2px solid;
+  border-left: var(--color-gray-border) 2px solid;
 }
 .bslisttable th.row1col1,
 .bslisttable th.row1col2,
@@ -434,7 +445,7 @@ div.listingfooter ul li {
 #bsmsmoduletable th.row1col2,
 #bsmsmoduletable th.row1col3,
 #bsmsmoduletable th.row1col4 {
-  border-top: grey 2px solid;
+  border-top: var(--color-gray-border) 2px solid;
   padding-top: 3px;
 }
 
@@ -456,7 +467,7 @@ div.listingfooter ul li {
 }
 p.popuptitle {
   font-weight: bold;
-  color: white;
+  color: var(--color-white);
 }
 .popupfooter {
   margin: 5px;
@@ -464,7 +475,7 @@ p.popuptitle {
 }
 p.popupfooter {
   font-weight: bold;
-  color: grey;
+  color: var(--color-gray-light);
 }
 
 /* JBSM Layout */
@@ -499,7 +510,7 @@ div.JBSM .img-rounded {
   border-radius: 25px;
 }
 .black {
-  color: black;
+  color: var(--color-black);
 }
 
 /* Effects */
