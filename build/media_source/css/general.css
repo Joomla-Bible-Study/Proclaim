@@ -792,16 +792,6 @@ table.fbstat .col2 {
   gap: 0.5rem;
 }
 
-/* Centered Pagination (legacy — kept for any custom templates) */
-.pagination-centered,
-.pagelinks {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 /* Proclaim Pagination Bar — counter + links side-by-side, centered */
 .proclaim-pagination-bar {
   display: flex;
@@ -820,12 +810,6 @@ table.fbstat .col2 {
   font-size: 0.875rem;
   color: var(--bs-secondary-color, #6c757d);
   white-space: nowrap;
-}
-
-/* Normalize disabled pagination button to match enabled button background */
-.proclaim-pagination-bar .page-item.disabled .page-link {
-  background-color: var(--bs-pagination-bg, #fff);
-  border-color: var(--bs-pagination-border-color, #dee2e6);
 }
 
 /* Mobile: compact wrapping pagination */
