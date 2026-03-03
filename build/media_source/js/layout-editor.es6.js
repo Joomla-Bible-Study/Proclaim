@@ -274,29 +274,6 @@
     };
 
     /**
-         * Check if an element renders media icons (font icons or buttons).
-         * These elements support an "Icon Size" setting in the Layout Editor.
-         * @param {string} elementId - The element ID to check
-         * @returns {boolean} True if the element renders media icons
-         */
-    const isMediaIconElement = (elementId) => {
-        return elementId.toLowerCase() === 'jbsmedia';
-    };
-
-    /**
-         * Get icon size options for media icon elements.
-         * Each option maps to a CSS class that overrides inline font-size.
-         * @returns {Array} Icon size options
-         */
-    const getIconSizeOptions = () => [
-        { value: '', label: 'Default (1.5em)' },
-        { value: 'proclaim-icon-sm', label: 'Small (1em)' },
-        { value: 'proclaim-icon-md', label: 'Medium (1.5em)' },
-        { value: 'proclaim-icon-lg', label: 'Large (2em)' },
-        { value: 'proclaim-icon-xl', label: 'Extra Large (3em)' },
-    ];
-
-    /**
          * Check if an element produces block-level HTML content
          * These elements should not use <p> as a wrapper since their content
          * contains <div> or other block elements, which is invalid inside <p>.
