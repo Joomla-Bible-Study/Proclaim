@@ -1003,7 +1003,7 @@ class Cwmmedia
                     'keyboard'    => true,
                     'modalWidth'  => 30,
                     'bodyHeight'  => 30,
-                    'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>',
+                    'footer'      => '<div class="alert alert-secondary">' . Text::_('JBS_TERMS_FOOTER') . '</div>',
                 ];
 
                 $modalBody = '<div class="alert alert-success">' . $params->get('terms') .

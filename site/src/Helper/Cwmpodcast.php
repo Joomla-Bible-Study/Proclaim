@@ -1038,7 +1038,7 @@ class Cwmpodcast
             }
 
             if (!empty($result['info'])) {
-                $html .= '<div class="alert alert-info mb-0"><ul class="mb-0">';
+                $html .= '<div class="alert alert-secondary mb-0"><ul class="mb-0">';
                 foreach ($result['info'] as $info) {
                     $html .= '<li>' . htmlspecialchars($info) . '</li>';
                 }

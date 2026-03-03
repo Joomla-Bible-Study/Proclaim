@@ -39,12 +39,12 @@ $paginationStyle = $this->params->get('pagination_style', 'pagination');
     <?php
     $showArchived = $this->params->get('show_archived', '0');
 if ($showArchived === '1') : ?>
-        <div class="alert alert-info proclaim-archive-notice">
+        <div class="alert alert-secondary proclaim-archive-notice">
             <i class="fas fa-archive" aria-hidden="true"></i>
             <?php echo Text::_('JBS_CMN_VIEWING_ARCHIVED'); ?>
         </div>
     <?php elseif ($showArchived === '2') : ?>
-        <div class="alert alert-info proclaim-archive-notice">
+        <div class="alert alert-secondary proclaim-archive-notice">
             <i class="fas fa-archive" aria-hidden="true"></i>
             <?php echo Text::_('JBS_CMN_VIEWING_ALL'); ?>
         </div>

@@ -132,13 +132,14 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
             $noVideoMessage = Text::_('MOD_PROCLAIM_YOUTUBE_NO_VIDEO');
         }
         ?>
-        <div class="mod-proclaim-youtube__no-video alert alert-info">
+        <div class="mod-proclaim-youtube__no-video alert alert-secondary">
             <?php echo htmlspecialchars($noVideoMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 </div>
 
-<style>
+<?php
+$app->getDocument()->getWebAssetManager()->addInlineStyle(<<<'CSS'
 .mod-proclaim-youtube__player--responsive {
     width: 100%;
 }
@@ -159,7 +160,8 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
 .mod-proclaim-youtube__badge .badge {
     font-size: 0.9em;
 }
-</style>
+CSS);
+?>
 
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php

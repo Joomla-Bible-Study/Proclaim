@@ -40,7 +40,7 @@ if (!empty($this->seriesstudies)) {
     $seriesstudies = $listing->getFluidListing($this->seriesstudies, $this->params, $t, $type = 'sermons');
     echo $seriesstudies;
 } else {
-    echo '<div class="alert alert-info">' . Text::_('JBS_CMN_NO_RECORDS') . '</div>';
+    echo '<div class="alert alert-secondary">' . Text::_('JBS_CMN_NO_RECORDS') . '</div>';
 }
 ?>
         </div>
