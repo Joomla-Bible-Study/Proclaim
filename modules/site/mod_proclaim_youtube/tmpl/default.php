@@ -45,7 +45,7 @@ $showDescription = (bool) $params->get('show_description', 0);
 $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
 ?>
 
-<div class="mod-proclaim-youtube">
+<div class="com-proclaim mod-proclaim-youtube">
     <?php if ($video && $embedUrl) : ?>
         <?php if ($showLiveBadge) : ?>
             <?php

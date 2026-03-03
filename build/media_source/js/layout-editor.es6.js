@@ -260,14 +260,41 @@
     };
 
     /**
-         * Check if an element is an image element
+         * Check if an element is an image or inline-icon element.
+         * These only need None and DIV wrappers — headers/blockquote make no sense.
          * @param {string} elementId - The element ID to check
-         * @returns {boolean} True if the element is an image element
+         * @returns {boolean} True if the element is an image or inline-icon element
          */
     const isImageElement = (elementId) => {
-        const imageElements = ['teacherimage', 'thumbnail', 'seriesthumbnail', 'teachercard'];
+        const imageElements = [
+            'teacherimage', 'thumbnail', 'seriesthumbnail', 'teachercard',
+            'jbsmedia', 'downloads',
+        ];
         return imageElements.includes(elementId.toLowerCase());
     };
+
+    /**
+         * Check if an element renders media icons (font icons or buttons).
+         * These elements support an "Icon Size" setting in the Layout Editor.
+         * @param {string} elementId - The element ID to check
+         * @returns {boolean} True if the element renders media icons
+         */
+    const isMediaIconElement = (elementId) => {
+        return elementId.toLowerCase() === 'jbsmedia';
+    };
+
+    /**
+         * Get icon size options for media icon elements.
+         * Each option maps to a CSS class that overrides inline font-size.
+         * @returns {Array} Icon size options
+         */
+    const getIconSizeOptions = () => [
+        { value: '', label: 'Default (1.5em)' },
+        { value: 'proclaim-icon-sm', label: 'Small (1em)' },
+        { value: 'proclaim-icon-md', label: 'Medium (1.5em)' },
+        { value: 'proclaim-icon-lg', label: 'Large (2em)' },
+        { value: 'proclaim-icon-xl', label: 'Extra Large (3em)' },
+    ];
 
     /**
          * Check if an element produces block-level HTML content
@@ -277,7 +304,7 @@
          * @returns {boolean} True if the element produces block content
          */
     const isBlockContentElement = (elementId) => {
-        const blockElements = ['jbsmedia', 'studyintro', 'studytext', 'description', 'seriesdescription'];
+        const blockElements = ['studyintro', 'studytext', 'description', 'seriesdescription'];
         return blockElements.includes(elementId.toLowerCase());
     };
 
@@ -426,6 +453,151 @@
     const isScriptureElement = (elementId) => {
         const id = elementId.toLowerCase();
         return id.includes('scripture') || id.includes('secondary');
+    };
+
+    // =====================================================================
+    // Settings Schema — drives the element settings modal
+    // Loaded from PHP (translated) with English-only fallback.
+    // =====================================================================
+
+    /**
+         * Fallback schema (English only) — used when PHP options are unavailable.
+         * Must stay in sync with admin/forms/layout-element-settings.xml.
+         * @type {Array}
+         */
+    const FALLBACK_SCHEMA = [
+        {
+            name: 'element', type: 'select', label: 'Element Type',
+            description: 'HTML element type to wrap this content',
+            default: '1', showFor: '*', optionsFilter: 'elementType',
+        },
+        {
+            name: 'linktype', type: 'select', label: 'Link Type',
+            description: 'How this element should link to the detail view',
+            default: '0', showFor: '*', optionsFilter: 'linkType',
+        },
+        {
+            name: 'custom', type: 'text', label: 'Custom CSS Class',
+            description: 'Additional CSS class to apply to this element',
+            default: '', showFor: '*',
+        },
+        {
+            name: 'date_format', type: 'select', label: 'Date Format',
+            description: 'Choose a date format for this element, or use global template setting',
+            default: '', showFor: 'date', optionsKey: 'com_proclaim.dateFormatOptions',
+        },
+        {
+            name: 'show_verses', type: 'select', label: 'Chapters/Verses',
+            description: 'Choose whether just chapter(s) of Bible message book shown or verses too',
+            default: '', showFor: 'scripture', optionsKey: 'com_proclaim.showVersesOptions',
+        },
+        {
+            name: 'show_version', type: 'select', label: 'Show Bible Version',
+            description: 'Append the Bible version abbreviation to the scripture reference',
+            default: '0', showFor: 'scripture', optionsKey: 'com_proclaim.showVersionOptions',
+        },
+        {
+            name: 'show_tooltip', type: 'select', label: 'Show Verse Tooltip',
+            description: 'Show verse text in a popover when hovering over this scripture reference',
+            default: '0', showFor: 'scripture', optionsKey: 'com_proclaim.showTooltipOptions',
+        },
+        {
+            name: 'separator', type: 'select', label: 'Scripture Separator',
+            description: 'How to display multiple scripture references',
+            default: '', showFor: 'allScriptures', optionsKey: 'com_proclaim.separatorOptions',
+        },
+        {
+            name: 'icon_size', type: 'select', label: 'Icon Size',
+            description: "Override the size of media icons in this element. Default uses each media file's own icon size setting.",
+            default: '', showFor: 'mediaIcon',
+            options: [
+                { value: '', label: 'Default (1.5em)' },
+                { value: 'proclaim-icon-sm', label: 'Small (1em)' },
+                { value: 'proclaim-icon-md', label: 'Medium (1.5em)' },
+                { value: 'proclaim-icon-lg', label: 'Large (2em)' },
+                { value: 'proclaim-icon-xl', label: 'Extra Large (3em)' },
+            ],
+        },
+    ];
+
+    /**
+         * Get settings schema from PHP or use fallback
+         * @returns {Array} Settings field schema
+         */
+    const getSettingsSchema = () => {
+        if (window.Joomla && typeof Joomla.getOptions === 'function') {
+            const schema = Joomla.getOptions('com_proclaim.settingsSchema');
+            if (schema && Array.isArray(schema) && schema.length > 0) {
+                return schema;
+            }
+        }
+        return FALLBACK_SCHEMA;
+    };
+
+    /**
+         * Get the tags array for an element from its definition.
+         * Tags control which conditional settings fields are visible.
+         * @param {Object} elementDef - Element definition object
+         * @returns {string[]} Array of tag strings
+         */
+    const getElementTags = (elementDef) => {
+        if (elementDef && Array.isArray(elementDef.tags)) {
+            return elementDef.tags;
+        }
+        return [];
+    };
+
+    /**
+         * Convert a schema field name to a DOM element ID
+         * @param {string} fieldName - Schema field name (e.g. 'date_format')
+         * @returns {string} DOM element ID (e.g. 'layout-date-format')
+         */
+    const fieldToId = (fieldName) => `layout-${fieldName.replace(/_/g, '-')}`;
+
+    /**
+         * Convert a schema field name to a DOM group ID
+         * @param {string} fieldName - Schema field name
+         * @returns {string} DOM group element ID
+         */
+    const fieldToGroupId = (fieldName) => `layout-${fieldName.replace(/_/g, '-')}-group`;
+
+    /**
+         * Populate a <select> element with options from a script options key
+         * @param {HTMLSelectElement} selectEl - The select element
+         * @param {string} optionsKey - Joomla script options key
+         */
+    const populateFromOptionsKey = (selectEl, optionsKey) => {
+        if (!selectEl) { return; }
+        const opts = (window.Joomla?.getOptions?.(optionsKey)) || [];
+        if (Array.isArray(opts) && opts.length > 0) {
+            selectEl.innerHTML = opts.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
+        }
+    };
+
+    /**
+         * Populate a <select> element with inline options from the schema
+         * @param {HTMLSelectElement} selectEl - The select element
+         * @param {Array} options - Array of {value, label} objects
+         */
+    const populateFromInlineOptions = (selectEl, options) => {
+        if (!selectEl || !Array.isArray(options)) { return; }
+        selectEl.innerHTML = options.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
+    };
+
+    /**
+         * Create a default element state object.
+         * Single source of truth — used everywhere a new element state is created
+         * (sidebar drag, openSettings fallback, etc.).
+         * Defaults are derived from the settings schema.
+         * @param {Object} overrides - Properties to merge over defaults
+         * @returns {Object} Element state
+         */
+    const createDefaultElementState = (overrides = {}) => {
+        const defaults = { row: 0, col: 1, colspan: '1' };
+        getSettingsSchema().forEach((field) => {
+            defaults[field.name] = field.default;
+        });
+        return { ...defaults, ...overrides };
     };
 
     // Cache the loaded configurations (loaded once on first use)
@@ -2174,6 +2346,29 @@
                 return;
             }
 
+            // Build modal body from settings schema
+            const schema = getSettingsSchema();
+            const bodyHtml = schema.map((field) => {
+                const groupId = fieldToGroupId(field.name);
+                const elId = fieldToId(field.name);
+                const hidden = field.showFor !== '*' ? ' style="display:none;"' : '';
+
+                if (field.type === 'text') {
+                    return `<div class="form-group" id="${groupId}"${hidden}>
+                        <label class="form-label" for="${elId}">${field.label}</label>
+                        <input type="text" class="form-control" id="${elId}" data-field="${field.name}">
+                        <div class="form-text">${field.description}</div>
+                    </div>`;
+                }
+
+                // Select — options populated at open time for filtered fields
+                return `<div class="form-group" id="${groupId}"${hidden}>
+                    <label class="form-label" for="${elId}">${field.label}</label>
+                    <select class="form-select" id="${elId}" data-field="${field.name}"></select>
+                    <div class="form-text">${field.description}</div>
+                </div>`;
+            }).join('\n');
+
             const modal = document.createElement('div');
             modal.className = 'modal fade layout-settings-modal';
             modal.id = 'layoutSettingsModal';
@@ -2190,60 +2385,7 @@
                             <h5 class="modal-title" id="layoutSettingsModalLabel">${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}</h5>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label class="form-label" for="layout-element-type">${this.trans('JBS_TPL_ELEMENT') || 'Element Type'}</label>
-                                <select class="form-select" id="layout-element-type">
-                                    ${getElementTypeOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_ELEMENT_DESC') || 'HTML element type to wrap this content'}</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="layout-link-type">${this.trans('JBS_TPL_TYPE_OF_LINK') || 'Link Type'}</label>
-                                <select class="form-select" id="layout-link-type">
-                                    ${getLinkTypeOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_TYPE_OF_LINK_DESC') || 'How this element should link to the detail view'}</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="layout-custom-class">${this.trans('JBS_TPL_CUSTOMCLASS') || 'Custom CSS Class'}</label>
-                                <input type="text" class="form-control" id="layout-custom-class" placeholder="e.g., my-custom-class">
-                                <div class="form-text">${this.trans('JBS_TPL_CUSTOMCLASS_DESC') || 'Additional CSS class to apply to this element'}</div>
-                            </div>
-                            <div class="form-group" id="layout-date-format-group" style="display:none;">
-                                <label class="form-label" for="layout-date-format">${this.trans('JBS_TPL_DATE_FORMAT') || 'Date Format'}</label>
-                                <select class="form-select" id="layout-date-format">
-                                    ${getDateFormatOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_DATE_FORMAT_DESC') || 'Choose a date format for this element, or use global template setting'}</div>
-                            </div>
-                            <div class="form-group" id="layout-show-verses-group" style="display:none;">
-                                <label class="form-label" for="layout-show-verses">${this.trans('JBS_TPL_VERSES_SHOW_VERSES') || 'Chapters/Verses'}</label>
-                                <select class="form-select" id="layout-show-verses">
-                                    ${getShowVersesOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_VERSES_SHOW_VERSES_DESC') || 'Choose whether just chapter(s) of Bible message book shown or verses too'}</div>
-                            </div>
-                            <div class="form-group" id="layout-show-version-group" style="display:none;">
-                                <label class="form-label" for="layout-show-version">${this.trans('JBS_TPL_SHOW_VERSION') || 'Show Bible Version'}</label>
-                                <select class="form-select" id="layout-show-version">
-                                    ${getShowVersionOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_SHOW_VERSION_DESC') || 'Append the Bible version abbreviation to the scripture reference (e.g. Luke 7:36-38 KJV)'}</div>
-                            </div>
-                            <div class="form-group" id="layout-show-tooltip-group" style="display:none;">
-                                <label class="form-label" for="layout-show-tooltip">${this.trans('JBS_TPL_SHOW_SCRIPTURE_TOOLTIPS') || 'Show Verse Tooltip'}</label>
-                                <select class="form-select" id="layout-show-tooltip">
-                                    ${getShowTooltipOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_SHOW_TOOLTIP_ELEMENT_DESC') || 'Show verse text in a popover when hovering over this scripture reference'}</div>
-                            </div>
-                            <div class="form-group" id="layout-separator-group" style="display:none;">
-                                <label class="form-label" for="layout-separator">${this.trans('JBS_TPL_SCRIPTURE_SEPARATOR') || 'Scripture Separator'}</label>
-                                <select class="form-select" id="layout-separator">
-                                    ${getSeparatorOptions().map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('')}
-                                </select>
-                                <div class="form-text">${this.trans('JBS_TPL_SCRIPTURE_SEPARATOR_DESC') || 'How to display multiple scripture references'}</div>
-                            </div>
+                            ${bodyHtml}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
@@ -2395,14 +2537,11 @@
                 // Add new element with default values
                 // Image elements default to None (0), block-content to DIV (8), others to Paragraph (1)
                 const defaultElement = isImageElement(elementId) ? '0' : (isBlockContentElement(elementId) ? '8' : '1');
-                this.state.set(elementId, {
+                this.state.set(elementId, createDefaultElementState({
                     row,
                     col,
-                    colspan: '1',
                     element: defaultElement,
-                    custom: '',
-                    linktype: '0', // Default: No link
-                });
+                }));
             }
 
             // Make sure the item has proper buttons if it came from palette
@@ -2806,15 +2945,7 @@
 
             // If no state exists, create default state
             if (!data) {
-                data = {
-                    row: 1,
-                    col: 1,
-                    colspan: '1',
-                    element: '1',
-                    custom: '',
-                    linktype: '0',
-                    date_format: '',
-                };
+                data = createDefaultElementState({ row: 1 });
                 this.state.set(elementId, data);
             }
 
@@ -2825,77 +2956,50 @@
                 modalTitle.textContent = `${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Element Settings'}: ${elementDef.label}`;
             }
 
-            // Populate modal fields
-            const elementTypeEl = document.getElementById('layout-element-type');
-            const linkTypeEl = document.getElementById('layout-link-type');
-            const customClassEl = document.getElementById('layout-custom-class');
-            const dateFormatEl = document.getElementById('layout-date-format');
-            const dateFormatGroup = document.getElementById('layout-date-format-group');
-            const showVersesEl = document.getElementById('layout-show-verses');
-            const showVersesGroup = document.getElementById('layout-show-verses-group');
-            const showVersionEl = document.getElementById('layout-show-version');
-            const showVersionGroup = document.getElementById('layout-show-version-group');
-            const showTooltipEl = document.getElementById('layout-show-tooltip');
-            const showTooltipGroup = document.getElementById('layout-show-tooltip-group');
-            const separatorEl = document.getElementById('layout-separator');
-            const separatorGroup = document.getElementById('layout-separator-group');
+            // Get element tags for conditional visibility
+            const tags = getElementTags(elementDef);
 
-            // Rebuild link type options based on current context
-            if (linkTypeEl) {
-                const contextLinkOptions = getLinkTypeOptions(this.currentContext);
-                linkTypeEl.innerHTML = contextLinkOptions.map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('');
-            }
+            // Populate all modal fields from schema
+            const schema = getSettingsSchema();
+            this.originalModalValues = {};
 
-            // Rebuild element type options (limited for image elements)
-            if (elementTypeEl) {
-                const elementOptions = getElementTypeOptions(elementId);
-                elementTypeEl.innerHTML = elementOptions.map((opt) => `<option value="${opt.value}">${opt.label}</option>`).join('');
-            }
+            schema.forEach((field) => {
+                const el = document.getElementById(fieldToId(field.name));
+                const group = document.getElementById(fieldToGroupId(field.name));
 
-            if (elementTypeEl) { elementTypeEl.value = String(data.element) || '1'; }
-            if (linkTypeEl) { linkTypeEl.value = String(data.linktype) || '0'; }
-            if (customClassEl) { customClassEl.value = data.custom || ''; }
-            if (dateFormatEl) { dateFormatEl.value = data.date_format || ''; }
-            if (showVersesEl) { showVersesEl.value = data.show_verses || ''; }
-            if (showVersionEl) { showVersionEl.value = data.show_version || '0'; }
-            if (showTooltipEl) { showTooltipEl.value = data.show_tooltip || '0'; }
-            if (separatorEl) { separatorEl.value = data.separator || ''; }
+                // Rebuild options for filtered/keyed fields
+                if (field.type === 'select') {
+                    if (field.optionsFilter === 'elementType') {
+                        const opts = getElementTypeOptions(elementId);
+                        if (el) {
+                            el.innerHTML = opts.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
+                        }
+                    } else if (field.optionsFilter === 'linkType') {
+                        const opts = getLinkTypeOptions(this.currentContext);
+                        if (el) {
+                            el.innerHTML = opts.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
+                        }
+                    } else if (field.optionsKey) {
+                        populateFromOptionsKey(el, field.optionsKey);
+                    } else if (field.options) {
+                        populateFromInlineOptions(el, field.options);
+                    }
+                }
 
-            // Store original values for change detection when modal closes
-            this.originalModalValues = {
-                element: elementTypeEl ? elementTypeEl.value : '',
-                linktype: linkTypeEl ? linkTypeEl.value : '',
-                custom: customClassEl ? customClassEl.value : '',
-                date_format: dateFormatEl ? dateFormatEl.value : '',
-                show_verses: showVersesEl ? showVersesEl.value : '',
-                show_version: showVersionEl ? showVersionEl.value : '',
-                show_tooltip: showTooltipEl ? showTooltipEl.value : '',
-                separator: separatorEl ? separatorEl.value : '',
-            };
+                // Set value from state
+                if (el) {
+                    el.value = String(data[field.name] ?? field.default);
+                }
 
-            // Show date format field only for date-related elements
-            const isDateElement = elementId.toLowerCase().includes('date')
-                    || elementId.toLowerCase().includes('studydate');
-            if (dateFormatGroup) {
-                dateFormatGroup.style.display = isDateElement ? 'block' : 'none';
-            }
+                // Conditional visibility based on element tags
+                if (group) {
+                    const visible = field.showFor === '*' || tags.includes(field.showFor);
+                    group.style.display = visible ? 'block' : 'none';
+                }
 
-            // Show show_verses and show_version fields only for scripture elements
-            const isScripture = isScriptureElement(elementId);
-            if (showVersesGroup) {
-                showVersesGroup.style.display = isScripture ? 'block' : 'none';
-            }
-            if (showVersionGroup) {
-                showVersionGroup.style.display = isScripture ? 'block' : 'none';
-            }
-            if (showTooltipGroup) {
-                showTooltipGroup.style.display = isScripture ? 'block' : 'none';
-            }
-            // Separator only for "All Scriptures" element (not scripture1/scripture2/secondary)
-            const isAllScriptures = elementId === 'scriptures' || elementId === 'dscriptures';
-            if (separatorGroup) {
-                separatorGroup.style.display = isAllScriptures ? 'block' : 'none';
-            }
+                // Track original values for change detection
+                this.originalModalValues[field.name] = el ? el.value : '';
+            });
 
             // Show modal
             const modalInstance = this.getModalInstance();
@@ -2943,15 +3047,13 @@
             const data = this.state.get(this.currentSettingsElement);
             if (!data) { return; }
 
-            // Get values from modal (colspan is managed by drag resizing, not the modal)
-            data.element = document.getElementById('layout-element-type').value;
-            data.linktype = document.getElementById('layout-link-type').value;
-            data.custom = document.getElementById('layout-custom-class').value;
-            data.date_format = document.getElementById('layout-date-format').value;
-            data.show_verses = document.getElementById('layout-show-verses').value;
-            data.show_version = document.getElementById('layout-show-version').value;
-            data.show_tooltip = document.getElementById('layout-show-tooltip').value;
-            data.separator = document.getElementById('layout-separator').value;
+            // Read values from modal fields (colspan is managed by drag resizing, not the modal)
+            getSettingsSchema().forEach((field) => {
+                const el = document.getElementById(fieldToId(field.name));
+                if (el) {
+                    data[field.name] = el.value;
+                }
+            });
 
             // Update visual display
             const card = this.canvas.querySelector(`.element-card[data-element="${this.currentSettingsElement}"]`);
@@ -3056,35 +3158,12 @@
                 return false;
             }
 
-            const elementTypeEl = document.getElementById('layout-element-type');
-            const linkTypeEl = document.getElementById('layout-link-type');
-            const customClassEl = document.getElementById('layout-custom-class');
-            const dateFormatEl = document.getElementById('layout-date-format');
-            const showVersesEl = document.getElementById('layout-show-verses');
-            const showVersionEl = document.getElementById('layout-show-version');
-            const showTooltipEl = document.getElementById('layout-show-tooltip');
-            const separatorEl = document.getElementById('layout-separator');
-
-            const current = {
-                element: elementTypeEl ? elementTypeEl.value : '',
-                linktype: linkTypeEl ? linkTypeEl.value : '',
-                custom: customClassEl ? customClassEl.value : '',
-                date_format: dateFormatEl ? dateFormatEl.value : '',
-                show_verses: showVersesEl ? showVersesEl.value : '',
-                show_version: showVersionEl ? showVersionEl.value : '',
-                show_tooltip: showTooltipEl ? showTooltipEl.value : '',
-                separator: separatorEl ? separatorEl.value : '',
-            };
-
-            // Compare each field (colspan is managed by drag resizing, not the modal)
-            return current.element !== this.originalModalValues.element
-                    || current.linktype !== this.originalModalValues.linktype
-                    || current.custom !== this.originalModalValues.custom
-                    || current.date_format !== this.originalModalValues.date_format
-                    || current.show_verses !== this.originalModalValues.show_verses
-                    || current.show_version !== this.originalModalValues.show_version
-                    || current.show_tooltip !== this.originalModalValues.show_tooltip
-                    || current.separator !== this.originalModalValues.separator;
+            // Compare each schema field (colspan is managed by drag resizing, not the modal)
+            return getSettingsSchema().some((field) => {
+                const el = document.getElementById(fieldToId(field.name));
+                const current = el ? el.value : '';
+                return current !== (this.originalModalValues[field.name] ?? '');
+            });
         }
 
         /**
@@ -3095,6 +3174,7 @@
             if (!contextDef) { return; }
 
             const { prefix } = contextDef;
+            const schema = getSettingsSchema();
 
             // Get params from Joomla script options (passed from PHP)
             // Use defensive check in case Joomla object is not available
@@ -3103,64 +3183,44 @@
             contextDef.elements.forEach((element) => {
                 const fieldPrefix = prefix + element.id;
 
-                // Read from script options first, fall back to form fields
+                // Read layout fields (row/col/colspan) from script options first
                 let row = parseInt(templateParams[`${fieldPrefix}row`], 10) || 0;
                 let col = parseInt(templateParams[`${fieldPrefix}col`], 10) || 1;
                 let colspan = templateParams[`${fieldPrefix}colspan`] || '1';
-                let elementType = templateParams[`${fieldPrefix}element`];
-                if (elementType === undefined || elementType === null || elementType === '') {
-                    elementType = '1';
+
+                // Read all schema-defined settings fields
+                const fieldValues = {};
+                schema.forEach((field) => {
+                    fieldValues[field.name] = templateParams[`${fieldPrefix}${field.name}`] ?? field.default;
+                });
+
+                // Special handling: element type empty/null/undefined → default '1'
+                if (!fieldValues.element) {
+                    fieldValues.element = '1';
                 }
-                let custom = templateParams[`${fieldPrefix}custom`] || '';
-                let linktype = templateParams[`${fieldPrefix}linktype`] || '0';
-                let dateFormat = templateParams[`${fieldPrefix}date_format`] || '';
-                let showVerses = templateParams[`${fieldPrefix}show_verses`] || '';
-                let showVersion = templateParams[`${fieldPrefix}show_version`] || '0';
-                let showTooltip = templateParams[`${fieldPrefix}show_tooltip`] || '0';
-                let separator = templateParams[`${fieldPrefix}separator`] || '';
 
                 // Try form fields as fallback (in case they're loaded)
                 const rowField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}row]"]`);
                 if (rowField) {
                     row = parseInt(rowField.value, 10) || row;
+
                     const colField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}col]"]`);
                     const colspanField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}colspan]"]`);
-                    const elementField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}element]"]`);
-                    const customField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}custom]"]`);
-                    const linktypeField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}linktype]"]`);
-                    const dateFormatField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}date_format]"]`);
-                    const showVersesField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_verses]"]`);
-                    const showVersionField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_version]"]`);
-                    const showTooltipField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}show_tooltip]"]`);
-                    const separatorField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}separator]"]`);
-
                     if (colField) { col = parseInt(colField.value, 10) || col; }
                     if (colspanField) { colspan = colspanField.value || colspan; }
-                    if (elementField) { elementType = elementField.value || elementType; }
-                    if (customField) { custom = customField.value || custom; }
-                    if (linktypeField) { linktype = linktypeField.value || linktype; }
-                    if (dateFormatField) { dateFormat = dateFormatField.value || dateFormat; }
-                    if (showVersesField) { showVerses = showVersesField.value || showVerses; }
-                    if (showVersionField) { showVersion = showVersionField.value || showVersion; }
-                    if (showTooltipField) { showTooltip = showTooltipField.value || showTooltip; }
-                    if (separatorField) { separator = separatorField.value || separator; }
+
+                    // Override schema fields from form inputs
+                    schema.forEach((field) => {
+                        const formField = document.querySelector(`[name="${this.options.paramsPrefix}[${fieldPrefix}${field.name}]"]`);
+                        if (formField) {
+                            fieldValues[field.name] = formField.value || fieldValues[field.name];
+                        }
+                    });
                 }
 
                 // Only add to canvas if row > 0 (element is visible)
                 if (row > 0) {
-                    const data = {
-                        row,
-                        col,
-                        colspan,
-                        element: elementType,
-                        custom,
-                        linktype,
-                        date_format: dateFormat,
-                        show_verses: showVerses,
-                        show_version: showVersion,
-                        show_tooltip: showTooltip,
-                        separator,
-                    };
+                    const data = { row, col, colspan, ...fieldValues };
 
                     this.state.set(element.id, data);
 
@@ -3279,24 +3339,11 @@
             const { prefix } = contextDef;
             const form = document.getElementById(this.options.formId);
 
+            const schema = getSettingsSchema();
+
             contextDef.elements.forEach((element) => {
                 const fieldPrefix = prefix + element.id;
                 const data = this.state.get(element.id);
-
-                // Field names for this element
-                const fieldNames = {
-                    row: `${this.options.paramsPrefix}[${fieldPrefix}row]`,
-                    col: `${this.options.paramsPrefix}[${fieldPrefix}col]`,
-                    colspan: `${this.options.paramsPrefix}[${fieldPrefix}colspan]`,
-                    element: `${this.options.paramsPrefix}[${fieldPrefix}element]`,
-                    custom: `${this.options.paramsPrefix}[${fieldPrefix}custom]`,
-                    linktype: `${this.options.paramsPrefix}[${fieldPrefix}linktype]`,
-                    date_format: `${this.options.paramsPrefix}[${fieldPrefix}date_format]`,
-                    show_verses: `${this.options.paramsPrefix}[${fieldPrefix}show_verses]`,
-                    show_version: `${this.options.paramsPrefix}[${fieldPrefix}show_version]`,
-                    show_tooltip: `${this.options.paramsPrefix}[${fieldPrefix}show_tooltip]`,
-                    separator: `${this.options.paramsPrefix}[${fieldPrefix}separator]`,
-                };
 
                 // Helper to get or create a hidden input field
                 const getOrCreateField = (name, value) => {
@@ -3315,21 +3362,19 @@
                 };
 
                 if (data) {
-                    // Element is in layout - set all values
-                    getOrCreateField(fieldNames.row, data.row);
-                    getOrCreateField(fieldNames.col, data.col);
-                    getOrCreateField(fieldNames.colspan, data.colspan);
-                    getOrCreateField(fieldNames.element, data.element);
-                    getOrCreateField(fieldNames.custom, data.custom);
-                    getOrCreateField(fieldNames.linktype, data.linktype);
-                    getOrCreateField(fieldNames.date_format, data.date_format || '');
-                    getOrCreateField(fieldNames.show_verses, data.show_verses || '');
-                    getOrCreateField(fieldNames.show_version, data.show_version || '0');
-                    getOrCreateField(fieldNames.show_tooltip, data.show_tooltip || '0');
-                    getOrCreateField(fieldNames.separator, data.separator || '');
+                    // Element is in layout — sync layout fields
+                    getOrCreateField(`${this.options.paramsPrefix}[${fieldPrefix}row]`, data.row);
+                    getOrCreateField(`${this.options.paramsPrefix}[${fieldPrefix}col]`, data.col);
+                    getOrCreateField(`${this.options.paramsPrefix}[${fieldPrefix}colspan]`, data.colspan);
+
+                    // Sync all schema-defined settings fields
+                    schema.forEach((field) => {
+                        const name = `${this.options.paramsPrefix}[${fieldPrefix}${field.name}]`;
+                        getOrCreateField(name, data[field.name] ?? field.default);
+                    });
                 } else {
                     // Element not in layout - set row to 0 (hidden)
-                    getOrCreateField(fieldNames.row, '0');
+                    getOrCreateField(`${this.options.paramsPrefix}[${fieldPrefix}row]`, '0');
                 }
             });
         }

@@ -15,8 +15,13 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmteacher\HtmlView $this */
 
+?>
+<div class="com-proclaim">
+<?php
 if ($this->params->get('teachertemplate')) {
     echo $this->loadTemplate($this->params->get('teachertemplate'));
 } else {
     echo $this->loadTemplate('main');
 }
+?>
+</div>

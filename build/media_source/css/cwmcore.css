@@ -52,60 +52,103 @@
    Accessibility - Focus Styles
    ========================================================================== */
 
-/* Focus styles for all interactive elements */
-a:focus,
-button:focus,
-input:focus,
-select:focus,
-textarea:focus,
-[role="button"]:focus,
-[tabindex]:focus {
+/* Focus styles for all interactive elements (scoped to Proclaim content) */
+.com-proclaim a:focus,
+.com-proclaim button:focus,
+.com-proclaim input:focus,
+.com-proclaim select:focus,
+.com-proclaim textarea:focus,
+.com-proclaim [role="button"]:focus,
+.com-proclaim [tabindex]:focus {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
 /* Focus-visible for keyboard-only focus indication */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-[role="button"]:focus-visible,
-[tabindex]:focus-visible {
+.com-proclaim a:focus-visible,
+.com-proclaim button:focus-visible,
+.com-proclaim input:focus-visible,
+.com-proclaim select:focus-visible,
+.com-proclaim textarea:focus-visible,
+.com-proclaim [role="button"]:focus-visible,
+.com-proclaim [tabindex]:focus-visible {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
 /* Remove outline on mouse click but keep for keyboard */
-a:focus:not(:focus-visible),
-button:focus:not(:focus-visible),
-[role="button"]:focus:not(:focus-visible) {
+.com-proclaim a:focus:not(:focus-visible),
+.com-proclaim button:focus:not(:focus-visible),
+.com-proclaim [role="button"]:focus:not(:focus-visible) {
   outline: none;
 }
 
 /* High contrast mode support */
 @media (forced-colors: active) {
-  a:focus,
-  button:focus,
-  [role="button"]:focus {
+  .com-proclaim a:focus,
+  .com-proclaim button:focus,
+  .com-proclaim [role="button"]:focus {
     outline: 3px solid CanvasText;
   }
 }
 
-/* Reduced motion preference */
+/* Reduced motion preference (scoped to Proclaim content) */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  .com-proclaim *,
+  .com-proclaim *::before,
+  .com-proclaim *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 
-  .overlay {
+  .com-proclaim .overlay {
     transition: none;
   }
+}
+
+/* ==========================================================
+   Media Icon Sizing
+   Uses em units so icons scale relative to the parent font-size,
+   adapting to the display context.  1.5em at a 16px base ≈ 24px,
+   matching the previous hardcoded value.
+   The Layout Editor "Icon Size" setting applies one of the
+   override classes below.
+   ========================================================== */
+.bsms_media_file .fas,
+.bsms_media_file .fab,
+.bsms_media_file .far,
+.bsms_media_file [class*="fa-"] {
+  font-size: 1.5em;
+}
+
+.proclaim-icon-sm .fas,
+.proclaim-icon-sm .fab,
+.proclaim-icon-sm .far,
+.proclaim-icon-sm [class*="fa-"] {
+  font-size: 1em;
+}
+
+.proclaim-icon-md .fas,
+.proclaim-icon-md .fab,
+.proclaim-icon-md .far,
+.proclaim-icon-md [class*="fa-"] {
+  font-size: 1.5em;
+}
+
+.proclaim-icon-lg .fas,
+.proclaim-icon-lg .fab,
+.proclaim-icon-lg .far,
+.proclaim-icon-lg [class*="fa-"] {
+  font-size: 2em;
+}
+
+.proclaim-icon-xl .fas,
+.proclaim-icon-xl .fab,
+.proclaim-icon-xl .far,
+.proclaim-icon-xl [class*="fa-"] {
+  font-size: 3em;
 }
 
 /* Teacher Table */
@@ -773,9 +816,8 @@ p.expand {
   border-radius: 9px;
 }
 
-table span a,
-.proclaim-listing a,
-a:not([class]) {
+.com-proclaim table span a,
+.proclaim-listing a {
     text-decoration: none;
 }
 

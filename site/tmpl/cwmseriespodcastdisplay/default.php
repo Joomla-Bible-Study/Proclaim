@@ -25,7 +25,7 @@ use Joomla\Registry\Registry;
 
 $CWMedia = new Cwmmedia();
 ?>
-
+<div class="com-proclaim">
 <form action="<?php echo htmlspecialchars(Uri::getInstance()->toString()); ?>" method="post" name="adminForm" id="adminForm">
     <div class="container-fluid">
         <div class="row">
@@ -131,3 +131,4 @@ $CWMedia = new Cwmmedia();
     <input type="hidden" name="boxchecked" value="0" />
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
+</div>

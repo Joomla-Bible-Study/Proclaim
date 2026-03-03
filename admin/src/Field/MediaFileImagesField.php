@@ -83,7 +83,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -104,7 +103,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -122,7 +120,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -143,9 +140,7 @@ class MediaFileImagesField extends ListField
                         $media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get(
                             'media_icon_type'
                         ) .
-                        '","media_icon_text_size":"' . $media->params->get(
-                            'media_icon_text_size'
-                        ) . '","media_image":"' .
+                        '","media_image":"' .
                         $media->params->get('media_image') . '"}',
                         $media->media_image
                     );

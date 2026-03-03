@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmterms\HtmlView $this */
 ?>
+<div class="com-proclaim">
         <div class="termstext">
             <?php
             echo $this->termstext;
@@ -34,4 +35,5 @@ use Joomla\CMS\Language\Text;
                 . '&mid=' . $this->media->id . '">'
                 . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
             } ?></div>
+</div>
 </div>

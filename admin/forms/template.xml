@@ -562,6 +562,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="jbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="jbsmediaicon_size" type="hidden" default=""/>
         </fieldset>
         <fieldset name="DISPLAYELEMENTS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="titlerow" type="RowOptions" size="1" default="1" label="JBS_CMN_TITLE"
@@ -588,6 +589,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="datelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="datedate_format" type="hidden" default=""/>
             <field name="teacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="teachercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1891,6 +1893,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="djbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="djbsmediaicon_size" type="hidden" default=""/>
             <field name="dcustomrow" type="RowOptions" size="1" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dcustomcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1930,6 +1933,7 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="ddatelinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="ddatedate_format" type="hidden" default=""/>
             <field name="dteacherrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="dteachercol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"

@@ -15,6 +15,9 @@
 
 /** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplay\HtmlView $this */
 
+?>
+<div class="com-proclaim">
+<?php
 if ($this->params->get('useexpert_seriesdetail') > 0) {
     echo $this->loadTemplate('custom');
 } elseif ($this->params->get('seriesdisplaytemplate')) {
@@ -22,3 +25,5 @@ if ($this->params->get('useexpert_seriesdetail') > 0) {
 } else {
     echo $this->loadTemplate('main');
 }
+?>
+</div>

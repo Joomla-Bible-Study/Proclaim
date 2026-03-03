@@ -18,6 +18,7 @@
 use Joomla\CMS\Language\Text;
 
 ?>
+<div class="com-proclaim">
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
 <?php
 
@@ -37,3 +38,5 @@ if ($this->params->get('sermonstemplate')) {
 }
 
 echo $this->loadTemplate('formfooter');
+?>
+</div>

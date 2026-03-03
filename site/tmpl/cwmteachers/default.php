@@ -18,6 +18,7 @@ use Joomla\CMS\Language\Text;
 /** @var CWM\Component\Proclaim\Site\View\Cwmteachers\HtmlView $this */
 
 ?>
+<div class="com-proclaim">
 <a href="#proclaim-main-content" class="proclaim-skip-link"><?php echo Text::_('JBS_CMN_SKIP_TO_CONTENT'); ?></a>
 <?php
 
@@ -26,3 +27,5 @@ if ($this->params->get('teacherstemplate')) {
 } else {
     echo $this->loadTemplate('main');
 }
+?>
+</div>
