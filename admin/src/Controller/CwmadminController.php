@@ -29,6 +29,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
@@ -3681,5 +3682,42 @@ class CwmadminController extends FormController
             Route::_('index.php?option=com_proclaim&view=cwmadmin', false),
             Text::_('JBS_ADM_YOUTUBE_LOG_CLEARED')
         );
+    }
+
+    /**
+     * Reset YouTube Quota Counter — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetYoutubeQuotaXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $serverId = $this->input->getInt('server_id', 0);
+
+        if ($serverId <= 0) {
+            echo json_encode(['success' => false, 'error' => 'Invalid server ID']);
+            $this->app->close();
+
+            return;
+        }
+
+        CwmyoutubeQuota::resetQuota($serverId);
+
+        CwmyoutubeLogHelper::log(
+            'info',
+            'Quota counter reset by administrator',
+            ['server_id' => $serverId]
+        );
+
+        echo json_encode(['success' => true]);
+        $this->app->close();
     }
 }

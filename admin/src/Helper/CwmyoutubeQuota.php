@@ -203,8 +203,41 @@ class CwmyoutubeQuota
      */
     public static function isQuotaExceededError(string $message): bool
     {
-        return stripos($message, 'quotaExceeded') !== false
-            || stripos($message, 'quota') !== false && stripos($message, 'exceeded') !== false;
+        // Check for Google's specific daily quota error reason
+        if (stripos($message, 'quotaExceeded') !== false) {
+            // Exclude transient rate limits (rateLimitExceeded, userRateLimitExceeded)
+            // which share the 403 status but don't mean daily quota is gone
+            if (stripos($message, 'rateLimitExceeded') !== false
+                || stripos($message, 'userRateLimitExceeded') !== false) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Reset the local quota counter for a given server.
+     *
+     * Deletes the quota file so the next check starts fresh at 0.
+     * This does not affect actual Google API usage — it only resets
+     * the local tracker.
+     *
+     * @param   int  $serverId  The YouTube server record ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public static function resetQuota(int $serverId): void
+    {
+        $file = self::quotaFilePath($serverId);
+
+        if (file_exists($file)) {
+            @unlink($file);
+        }
     }
 
     /**

@@ -1022,13 +1022,19 @@ $logSize    = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::
                             <p class="card-text text-body-secondary mb-2">
                                 <?php echo Text::sprintf('JBS_ADM_YOUTUBE_QUOTA_USED', number_format($ytSrv['used']), number_format($ytSrv['budget'])); ?>
                             </p>
-                            <div class="progress" style="height: 20px;" role="progressbar"
-                                 aria-valuenow="<?php echo $ytSrv['pctUsed']; ?>" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress mb-2" style="height: 20px;" role="progressbar"
+                                 aria-valuenow="<?php echo $ytSrv['pctUsed']; ?>" aria-valuemin="0" aria-valuemax="100"
+                                 data-server-id="<?php echo $ytSrv['id']; ?>">
                                 <div class="progress-bar <?php echo $ytSrv['pctUsed'] >= 90 ? 'bg-danger' : ($ytSrv['pctUsed'] >= 70 ? 'bg-warning' : 'bg-success'); ?>"
                                      style="width: <?php echo $ytSrv['pctUsed']; ?>%">
                                     <?php echo $ytSrv['pctUsed']; ?>%
                                 </div>
                             </div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-reset-yt-quota"
+                                    data-server-id="<?php echo $ytSrv['id']; ?>">
+                                <i class="icon-refresh" aria-hidden="true"></i>
+                                <?php echo Text::_('JBS_ADM_YOUTUBE_QUOTA_RESET'); ?>
+                            </button>
                         </div>
                     </div>
                 </div>

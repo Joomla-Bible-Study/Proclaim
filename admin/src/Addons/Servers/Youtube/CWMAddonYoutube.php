@@ -303,25 +303,12 @@ class CWMAddonYoutube extends CWMAddon
      */
     public function convertYoutube(string $url = ''): string
     {
-        $string = $url;
+        $videoId = self::extractMediaId($url);
 
-        if (preg_match('/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i', $url)) {
-            $string = preg_replace(
-                "/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-                "//www.youtube.com/embed/$2?enablejsapi=1",
-                $url
-            );
-        }
-
-        if (preg_match('/https?:\/\/www\.youtube\.com\/live\//', $url)) {
-            // Find the position of the last "/"
-            $lastSlashPosition = strrpos($url, '/');
-
-            // Extract the part after the last "/"
-            if ($lastSlashPosition !== false) {
-                $videoID = substr($url, $lastSlashPosition + 1);
-                $string  = "//www.youtube.com/embed/$videoID?enablejsapi=1";
-            }
+        if ($videoId !== null) {
+            $string = '//www.youtube.com/embed/' . $videoId . '?enablejsapi=1';
+        } else {
+            $string = $url;
         }
 
         $string = (new Cwmmedia())->ensureHttpJoomla($string);
