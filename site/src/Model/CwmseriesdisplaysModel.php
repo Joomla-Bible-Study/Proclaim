@@ -68,7 +68,7 @@ class CwmseriesdisplaysModel extends ListModel
             'language',
             's.language',
             'search',
-
+            'teacher',
             ];
         }
 

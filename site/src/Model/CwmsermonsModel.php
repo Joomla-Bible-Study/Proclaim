@@ -101,10 +101,11 @@ class CwmsermonsModel extends ListModel
                 'language',
                 'study.language',
                 'book',
+                'teacher',
                 'series',
                 'search',
                 'messagetype',
-                'series',
+                'year',
                 'topic',
             ];
         }

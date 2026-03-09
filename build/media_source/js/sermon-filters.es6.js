@@ -280,13 +280,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear existing search params
         url.search = '';
 
-        // Only push limitstart for pagination — filter/sort state stays
-        // in the form, not the URL, so the address bar stays clean.
-        const limitstart = params.get('limitstart');
+        // Push active filter, list, and pagination params into the URL
+        // so filter state survives a page refresh.
+        // Convert bracket notation (filter[teacher]) to underscore (filter_teacher)
+        // because Joomla's getUserStateFromRequest reads the underscore format.
+        params.forEach((value, key) => {
+            if (!value) {
+                return;
+            }
 
-        if (limitstart && limitstart !== '0') {
-            url.searchParams.set('limitstart', limitstart);
-        }
+            if (key.startsWith('filter') || key.startsWith('list') || key === 'limitstart') {
+                if (key === 'limitstart' && value === '0') {
+                    return;
+                }
+
+                const urlKey = key.replace(/\[([^\]]+)\]/g, '_$1');
+                url.searchParams.set(urlKey, value);
+            }
+        });
 
         history.pushState({ proclaimAjax: true }, '', url.toString());
     }
@@ -560,6 +571,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result.filterOptions) {
                     updateFilterDropdowns(result.filterOptions);
                 }
+
+                // Sync the Clear button state after AJAX filter change
+                updateClearButton();
             }
         } catch (err) {
             if (err.name === 'AbortError') {
@@ -638,6 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInProgress = false;
         resetScrollState();
         fetchResults({ limitstart: 0 });
+        updateClearButton();
     };
 
     /**
@@ -700,6 +715,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Update the Clear button disabled state based on active filters.
+     *
+     * Joomla's searchtools only runs checkActiveStatus() at init.  Since
+     * AJAX filtering doesn't reload the page, we must manually sync the
+     * Clear button after each filter change.
+     */
+    function updateClearButton() {
+        if (!clearButton) {
+            return;
+        }
+
+        const searchField = form.querySelector('input[name="filter_search"], input[name="filter[search]"]');
+        const hasSearch = searchField && searchField.value.length > 0;
+        let hasFilter = false;
+
+        form.querySelectorAll('select[name^="filter_"], select[name^="filter["]').forEach((select) => {
+            if (select.value !== '') {
+                hasFilter = true;
+            }
+        });
+
+        clearButton.disabled = !hasFilter && !hasSearch;
+    }
+
 
     // ─── Pagination Style Setup ────────────────────────────────
 
@@ -754,8 +794,10 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const [key, value] of url.searchParams.entries()) {
                 overrides[key] = value;
 
-                // Also sync form fields
-                const field = form.querySelector(`[name="${key}"]`);
+                // Convert underscore URL params back to bracket notation for form fields
+                // e.g. filter_teacher → filter[teacher]
+                const formKey = key.replace(/^(filter|list)_(.+)$/, '$1[$2]');
+                const field = form.querySelector(`[name="${formKey}"], [name="${key}"]`);
 
                 if (field) {
                     field.value = value;
