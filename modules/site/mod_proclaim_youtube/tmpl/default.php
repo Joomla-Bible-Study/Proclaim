@@ -208,7 +208,6 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     <?php endif; ?>
 </div>
 
-
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php
     $wa               = $app->getDocument()->getWebAssetManager();

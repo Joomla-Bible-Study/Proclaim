@@ -589,7 +589,6 @@
 
                 const tags            = data.video_tags || [];
                 const matchedTopics   = data.matched_topics || [];
-                const matchedIds      = matchedTopics.map((m) => String(m.id));
                 const matchedTextsLc  = matchedTopics.map((m) => m.text.toLowerCase());
 
                 // Matched existing topics (pre-checked)
