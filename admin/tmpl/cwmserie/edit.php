@@ -33,19 +33,9 @@ if ($input->getInt('id')) {
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmserie\HtmlView $this */
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmserie.cancel', 'formId' => 'item-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task)
-	{
-		if (task == "cwmserie.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
-		{
-			Joomla.submitform(task, document.getElementById("item-form"));
-		}
-	};
-'
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 ?>
 
 <form action="<?php

@@ -23,22 +23,11 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmtopic.cancel', 'formId' => 'item-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
+    ->useScript('com_proclaim.form-validate-submit')
     ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task) {
-		if (task == "cwmtopic.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
-		{
-			Joomla.submitform(task, document.getElementById("item-form"))
-		}
-		else
-		{
-			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
-		}
-	}
-
-	document.addEventListener("DOMContentLoaded", function() {
+        'document.addEventListener("DOMContentLoaded", function() {
 		const translated = document.getElementById("topic_text_translated");
 		if (translated && translated.value !== "") {
 			const target = document.getElementById("jform_topic_text");
@@ -46,8 +35,7 @@ $wa->useScript('keepalive')
 				target.setAttribute("readonly", "readonly");
 			}
 		}
-	});
-'
+	});'
     );
 
 // Create shortcut to parameters.

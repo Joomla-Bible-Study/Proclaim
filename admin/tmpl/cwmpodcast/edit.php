@@ -46,17 +46,9 @@ $this->getDocument()->addScriptOptions('com_proclaim.platformIcons', $platformIc
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.podcast');
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmpodcast.cancel', 'formId' => 'podcast-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        "Joomla.submitbutton = function (task) {
-            if (task === 'cwmpodcast.cancel' || document.formvalidator.isValid(document.getElementById('podcast-form'))) {
-                Joomla.submitform(task, document.getElementById('podcast-form'));
-            } else {
-                alert('" . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . "');
-            }
-        }"
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 
 if ($hasIndexApi && (int) $this->item->id > 0) {
     $submitUrl = Route::_('index.php?option=com_proclaim&task=cwmpodcast.submitToIndex&format=json', false);

@@ -61,22 +61,9 @@ if ($input->getInt('id')) {
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.general');
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmmessage.cancel', 'formId' => 'message-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task) {
-		if (task == "cwmmessage.cancel" || document.formvalidator.isValid(document.getElementById("message-form")))
-		{
-			Joomla.submitform(task, document.getElementById("message-form"));
-		}
-		else
-		{
-			alert("' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . '")
-		}
-	}
-'
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 
 // In the case of modal
 $isModal = $input->get('layout') === 'modal';

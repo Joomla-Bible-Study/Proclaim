@@ -34,22 +34,12 @@ if ($input->getInt('id')) {
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmteacher.cancel', 'formId' => 'teacher-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
+    ->useScript('com_proclaim.form-validate-submit')
     ->useScript('com_proclaim.phone-input')
     ->useStyle('com_proclaim.intl-tel-input-css')
-    ->useStyle('com_proclaim.phone-input-css')
-    ->addInlineScript(
-        '
-    Joomla.submitbutton = function (task)
-    {
-        if (task == "cwmteacher.cancel" || document.formvalidator.isValid(document.getElementById("teacher-form")))
-        {
-            Joomla.submitform(task, document.getElementById("teacher-form"));
-        }
-    };
-'
-    );
+    ->useStyle('com_proclaim.phone-input-css');
 
 // In case of modal
 $isModal = $input->get('layout') === 'modal';

@@ -33,20 +33,10 @@ if ($input->getInt('a_id')) {
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmtemplatecode.cancel', 'formId' => 'item-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->useScript('com_proclaim.templatecode-snippets')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task)
-	{
-		if (task == "cwmtemplatecode.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
-		{
-			Joomla.submitform(task, document.getElementById("item-form"));
-		}
-	};
-	'
-    );
+    ->useScript('com_proclaim.form-validate-submit')
+    ->useScript('com_proclaim.templatecode-snippets');
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"

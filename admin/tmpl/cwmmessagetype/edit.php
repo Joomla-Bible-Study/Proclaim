@@ -30,22 +30,9 @@ $app    = Factory::getApplication();
 $input  = $app->getInput();
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmmessagetype.cancel', 'formId' => 'messagetype-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task) {
-		if (task == "cwmmessagetype.cancel" || document.formvalidator.isValid(document.id("messagetype-form")))
-		{
-			Joomla.submitform(task, document.getElementById("messagetype-form"))
-		}
-		else
-		{
-			alert(' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ')
-		}
-	}
-'
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"

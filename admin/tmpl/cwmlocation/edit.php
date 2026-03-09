@@ -23,22 +23,9 @@ use Joomla\CMS\Router\Route;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmlocation\HtmlView $this */
 
 $wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmlocation.cancel', 'formId' => 'item-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task) {
-		if (task == "cwmlocation.cancel" || document.formvalidator.isValid(document.id("item-form")))
-		{
-			Joomla.submitform(task, document.getElementById("item-form"))
-		}
-		else
-		{
-			alert(' . $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')) . ')
-		}
-	}
-'
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 // Create shortcut to parameters.
 
 /** @type Joomla\Registry\Registry $params */
