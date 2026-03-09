@@ -237,7 +237,7 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                     <i class="icon-download me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_EXPORT_CSV'); ?>
                 </a>
                 <a href="<?php echo htmlspecialchars($printUrl, ENT_QUOTES); ?>"
-                   onclick="window.open(this.href,'printAnalytics','width=900,height=700,scrollbars=yes');return false;"
+                   target="printAnalytics"
                    class="btn btn-sm btn-outline-secondary">
                     <i class="icon-print me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_PRINT_REPORT'); ?>
                 </a>

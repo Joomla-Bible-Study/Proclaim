@@ -22,6 +22,6 @@ use Joomla\CMS\Language\Text;
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php echo Text::_('JCANCEL'); ?>
 </button>
-<button type="button" class="btn btn-success" onclick="transferFileSize()" data-bs-dismiss="modal">
+<button type="button" class="btn btn-success" id="btn-transfer-filesize" data-bs-dismiss="modal">
     <?php echo Text::_('JBS_MED_CONVERTER'); ?>
 </button>

@@ -19,7 +19,7 @@
 <div class="row g-3">
     <div class="col-auto">
         <label for="Text1" class="visually-hidden">Size</label>
-        <input type="text" class="form-control" name="size_converter" id="Text1" onchange="decOnly(this);" size="5" placeholder="Size">
+        <input type="text" class="form-control" name="size_converter" id="Text1" size="5" placeholder="Size">
     </div>
     <div class="col-auto">
         <label for="Select1" class="visually-hidden">Unit</label>

@@ -145,11 +145,11 @@ echo Route::_(
                 <div class="p-4 text-center text-muted">
                     <span class="icon-info-circle fs-1 d-block mb-2" aria-hidden="true"></span>
                     <p class="mb-2"><?php echo Text::_('JBS_STY_SAVE_FIRST'); ?></p>
-                    <a class="btn btn-primary btn-sm" href="#"
-                       onclick="Joomla.submitbutton('cwmmessage.apply'); return false;">
+                    <button type="button" class="btn btn-primary btn-sm"
+                            data-submit-task="cwmmessage.apply">
                         <span class="icon-save" aria-hidden="true"></span>
                         <?php echo Text::_('JAPPLY'); ?>
-                    </a>
+                    </button>
                 </div>
             <?php elseif ($mediaCount === 0) : ?>
                 <div class="p-4 text-center text-muted">

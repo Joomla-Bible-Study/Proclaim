@@ -604,7 +604,7 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
 
     <!-- Print button (hidden in actual print output) -->
     <div class="proclaim-no-print" style="text-align:center; margin-top:20px">
-        <button type="button" onclick="window.print()" class="btn btn-primary">
+        <button type="button" class="btn btn-primary js-print-btn">
             <i class="icon-print me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_PRINT_REPORT'); ?>
         </button>
     </div>

@@ -31,10 +31,24 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useStyle('com_proclaim.server-types')
     ->addInlineScript(
-        "window.setType = function(type) {
-            window.parent.Joomla.submitbutton('cwmserver.setType', type);
-            window.parent.Joomla.Modal.getCurrent().close();
-        };"
+        "document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                var card = e.target.closest('[data-type-payload]');
+                if (!card) return;
+                var type = card.getAttribute('data-type-payload');
+                window.parent.Joomla.submitbutton('cwmserver.setType', type);
+                window.parent.Joomla.Modal.getCurrent().close();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                var card = e.target.closest('[data-type-payload]');
+                if (!card) return;
+                e.preventDefault();
+                var type = card.getAttribute('data-type-payload');
+                window.parent.Joomla.submitbutton('cwmserver.setType', type);
+                window.parent.Joomla.Modal.getCurrent().close();
+            });
+        });"
     );
 
 $this->recordId = $app->getInput()->getInt('recordId');
@@ -76,8 +90,7 @@ $typeIcons = [
                     <div class="card h-100 border-2 server-type-card"
                          role="button"
                          tabindex="0"
-                         onclick="window.setType('<?php echo $this->escape($encoded); ?>')"
-                         onkeypress="if(event.key==='Enter'||event.key===' ')window.setType('<?php echo $this->escape($encoded); ?>')">
+                         data-type-payload="<?php echo $this->escape($encoded); ?>">
                         <div class="card-body text-center py-4">
                             <div class="mb-3">
                                 <span class="<?php echo $this->escape($iconData['icon']); ?> fa-3x"

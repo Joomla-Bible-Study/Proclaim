@@ -270,6 +270,38 @@
         document.addEventListener('hidden.bs.modal', (e) => {
             ProclaimA11y.releaseFocus(e.target);
         });
+
+        // Print buttons: delegate click to window.print()
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.js-print-btn')) {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        // Submit-task buttons: delegate click to Joomla.submitbutton()
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-submit-task]');
+            if (btn) {
+                e.preventDefault();
+                Joomla.submitbutton(btn.dataset.submitTask);
+            }
+        });
+
+        // Converter modal: decimal-only input and transfer button
+        const converterInput = document.getElementById('Text1');
+        if (converterInput) {
+            converterInput.addEventListener('change', function () {
+                decOnly(this);
+            });
+        }
+
+        const transferBtn = document.getElementById('btn-transfer-filesize');
+        if (transferBtn) {
+            transferBtn.addEventListener('click', () => {
+                transferFileSize();
+            });
+        }
     });
 
     function decOnly(i) {
@@ -314,15 +346,13 @@
         const ty = document.getElementById('Select1').value;
         const ss = bandwidth(size, ty);
         if (ss === 'error') {
-            alert('Numbers only please.');
+            if (typeof Joomla !== 'undefined' && Joomla.renderMessages) {
+                Joomla.renderMessages({ warning: ['Numbers only please.'] });
+            }
             return false;
         }
         document.getElementById('jform_params_size').value = ss;
         return true;
     }
 
-    // Export utilities to window
-    window.decOnly = decOnly;
-    window.bandwidth = bandwidth;
-    window.transferFileSize = transferFileSize;
 }(window, window.document));

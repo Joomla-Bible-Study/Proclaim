@@ -45,8 +45,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>"
                         <h2 class="card-title"><?php echo Text::_('JBS_CMN_EXPORT'); ?></h2>
                         <div class="d-flex align-items-center gap-2">
                             <?php echo $templateSelect; ?>
-                            <button type="submit" class="btn btn-primary"
-                                    onclick="Joomla.submitbutton('cwmtemplates.templateExport')">
+                            <button type="button" class="btn btn-primary"
+                                    data-submit-task="cwmtemplates.templateExport">
                                 <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
                             </button>
                         </div>
@@ -60,8 +60,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>"
                         <div class="d-flex align-items-center gap-2">
                             <input class="form-control w-auto" id="template_import"
                                    name="template_import" type="file" />
-                            <button type="submit" class="btn btn-primary"
-                                    onclick="Joomla.submitbutton('cwmtemplates.templateImport')">
+                            <button type="button" class="btn btn-primary"
+                                    data-submit-task="cwmtemplates.templateImport">
                                 <?php echo Text::_('JBS_CMN_SUBMIT'); ?>
                             </button>
                         </div>
