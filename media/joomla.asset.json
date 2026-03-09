@@ -771,6 +771,26 @@
             "attributes": {
                 "defer": true
             }
+        },
+        {
+            "name": "com_proclaim.sermons-simple2",
+            "type": "style",
+            "uri": "com_proclaim/sermons-simple2.min.css"
+        },
+        {
+            "name": "com_proclaim.server-types",
+            "type": "style",
+            "uri": "com_proclaim/server-types.min.css"
+        },
+        {
+            "name": "com_proclaim.location-wizard",
+            "type": "style",
+            "uri": "com_proclaim/location-wizard.min.css"
+        },
+        {
+            "name": "com_proclaim.topics-field",
+            "type": "style",
+            "uri": "com_proclaim/topics-field.min.css"
         }
     ]
 }

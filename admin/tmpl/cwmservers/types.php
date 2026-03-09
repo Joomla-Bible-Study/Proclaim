@@ -29,18 +29,12 @@ if ($app->isClient('site')) {
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
+    ->useStyle('com_proclaim.server-types')
     ->addInlineScript(
         "window.setType = function(type) {
             window.parent.Joomla.submitbutton('cwmserver.setType', type);
             window.parent.Joomla.Modal.getCurrent().close();
         };"
-    )
-    ->addInlineStyle(
-        '.server-type-card:hover, .server-type-card:focus {
-            border-color: var(--bs-primary) !important;
-            box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
-            outline: none;
-        }'
     );
 
 $this->recordId = $app->getInput()->getInt('recordId');
@@ -82,7 +76,6 @@ $typeIcons = [
                     <div class="card h-100 border-2 server-type-card"
                          role="button"
                          tabindex="0"
-                         style="cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;"
                          onclick="window.setType('<?php echo $this->escape($encoded); ?>')"
                          onkeypress="if(event.key==='Enter'||event.key===' ')window.setType('<?php echo $this->escape($encoded); ?>')">
                         <div class="card-body text-center py-4">

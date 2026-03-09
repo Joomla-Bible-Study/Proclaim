@@ -1,0 +1,23 @@
+/**
+ * Topics form field - Choices.js spacing overrides
+ *
+ * @package    Proclaim.Admin
+ * @subpackage Field
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+.proclaim-topics-field + .choices .choices__inner {
+    padding: 7.5px 10px;
+}
+
+.proclaim-topics-field + .choices .choices__input,
+.proclaim-topics-field + .choices .choices__input--cloned {
+    margin-left: 5px;
+    min-width: 150px !important;
+    width: 150px !important;
+}
+
+.proclaim-topics-field + .choices .choices__item {
+    margin-right: 5px;
+}

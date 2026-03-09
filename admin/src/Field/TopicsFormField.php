@@ -55,21 +55,8 @@ class TopicsFormField extends FormField
         $wa->usePreset('choicesjs');
         $wa->useScript('webcomponent.field-fancy-select');
 
-        // Add custom CSS for topic field spacing and input width
-        $wa->addInlineStyle('
-            #' . $this->id . ' + .choices .choices__inner {
-                padding: 7.5px 10px;
-            }
-            #' . $this->id . ' + .choices .choices__input,
-            #' . $this->id . ' + .choices .choices__input--cloned {
-                margin-left: 5px;
-                min-width: 150px !important;
-                width: 150px !important;
-            }
-            #' . $this->id . ' + .choices .choices__item {
-                margin-right: 5px;
-            }
-        ');
+        // Load topics field CSS
+        $wa->useStyle('com_proclaim.topics-field');
 
         // Get all available topics
         $allTopics = $this->getAllTopics();
@@ -191,7 +178,7 @@ class TopicsFormField extends FormField
         $html .= '<select';
         $html .= ' id="' . $this->id . '"';
         $html .= ' multiple="multiple"';
-        $html .= ' class="form-select"';
+        $html .= ' class="form-select proclaim-topics-field"';
         $html .= ' data-placeholder="' . htmlspecialchars($hint, ENT_QUOTES, 'UTF-8') . '"';
         $html .= '>';
 

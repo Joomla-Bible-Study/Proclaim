@@ -25,7 +25,7 @@ $wa    = $this->getDocument()->getWebAssetManager();
 $token = Session::getFormToken();
 
 $wa->useScript('com_proclaim.location-wizard');
-$wa->addInlineStyle('.wizard-step { display: none; } .wizard-step.active { display: block; }');
+$wa->useStyle('com_proclaim.location-wizard');
 
 $scenarioLabels = [
     '2A' => Text::_('JBS_WIZARD_SCENARIO_2A'),

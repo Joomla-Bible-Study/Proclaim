@@ -24,112 +24,7 @@ use Joomla\Registry\Registry;
 
 $wa = $this->getDocument()->getWebAssetManager();
 
-$wa->addInlineStyle(
-    "
-.title {
-    text-transform: uppercase;
-    font-family: 'Fjalla One', sans-serif;
-    font-size: 16px;
-    text-align: left;
-    margin-top: 10px;
-    margin-bottom: 2px;
-    padding: 0;
-    color: #444;
-    font-weight: 700;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-.authordate {
-    font-size: 12px;
-    color: #777;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.media__item__wrapper {
-    line-height: 1.5;
-    overflow: hidden;
-}
-.media__item__info {
-    overflow: hidden;
-}
-.media__item__details {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.media__container {
-    display: flex;
-    margin-top: 1em;
-}
-.media__view {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    width: 100%;
-}
-@media (max-width: 991px) {
-    .media__view {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 575px) {
-    .media__view {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-.sf_hidden {
-    display: none !important;
-}
-img, svg {
-    vertical-align: middle;
-}
-.thumbnail {
-    position: relative;
-}
-.caption {
-    position: absolute;
-    margin: 0;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-.overlay-div {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: #000;
-    opacity: .7;
-}
-/* Clamp overlay text on image to 3 lines max */
-.media__item__wrapper .card-img-overlay .overlay-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    font-size: clamp(0.75rem, 1.5vw, 1.1rem);
-    padding: 0 0.25rem;
-}
-/* Constrain card images to uniform 16:9 aspect ratio */
-.media__item__wrapper .card {
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-}
-.media__item__wrapper .card .card-img,
-.media__item__wrapper .card picture img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 20%;
-}
-.media__item__wrapper .card picture {
-    display: contents;
-}"
-);
+$wa->useStyle('com_proclaim.sermons-simple2');
 
 // Add template accent color for pagination
 $accentColor = $this->params->get('backcolor', '#287585');
@@ -148,7 +43,7 @@ $listing      = $this->listing;
 $defaultImage = $this->params->get('default_study_image', '');
 ?>
 
-<div class="container">
+<div class="container cwm-simple2">
     <div class="row">
         <div class="col-sm-12 content">
             <div id="filters">
