@@ -116,10 +116,11 @@
                 if (permission === 'granted') {
                     notifyGranted = true;
                     notifyLabel.textContent = notifyEl.dataset.labelEnabled;
-                    notifyBtn.classList.replace('btn-outline-secondary', 'btn-outline-success');
+                    notifyBtn.classList.replace('text-muted', 'text-success');
                 } else if (permission === 'denied') {
                     notifyLabel.textContent = notifyEl.dataset.labelDenied;
-                    notifyBtn.disabled = true;
+                    notifyBtn.style.opacity = '0.5';
+                    notifyBtn.style.pointerEvents = 'none';
                 }
             }
 

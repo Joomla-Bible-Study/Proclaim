@@ -27,25 +27,34 @@
     border: 0;
 }
 
+.mod-proclaim-youtube__status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .mod-proclaim-youtube__badge .badge {
     font-size: 0.9em;
 }
 
 .mod-proclaim-youtube__countdown {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9em;
 }
 
 .mod-proclaim-youtube__countdown-timer {
-    font-size: 1.1em;
     font-weight: 600;
 }
 
-.mod-proclaim-youtube__countdown-date {
-    margin-top: 0.25em;
+.mod-proclaim-youtube__notify {
+    margin-left: auto;
 }
 
-.mod-proclaim-youtube__notify {
-    text-align: center;
+.mod-proclaim-youtube__notify-btn:hover {
+    text-decoration: underline;
 }
 
 /* Mini-player (PiP) */

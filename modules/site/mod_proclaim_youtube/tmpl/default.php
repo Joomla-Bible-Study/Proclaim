@@ -56,56 +56,59 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                 . '&video_id=' . urlencode($video['videoId'] ?? '')
                 . '&token=' . urlencode($statusToken);
             ?>
-            <div id="mod-proclaim-youtube-badge-<?php echo $moduleId; ?>" class="mod-proclaim-youtube__badge mb-2"
-                 data-server-id="<?php echo $serverId; ?>"
-                 data-current-video="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                 data-is-live="<?php echo $isLive ? '1' : '0'; ?>"
-                 data-is-upcoming="<?php echo $isUpcoming ? '1' : '0'; ?>"
-                 data-scheduled-start="<?php echo htmlspecialchars($video['scheduledStartTime'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                 data-token="<?php echo htmlspecialchars($statusToken, ENT_QUOTES, 'UTF-8'); ?>"
-                 data-ajax-url="<?php echo htmlspecialchars($ajaxUrl, ENT_QUOTES, 'UTF-8'); ?>"
-                 data-label-live="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'), ENT_QUOTES, 'UTF-8'); ?>"
-                 data-label-upcoming="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'), ENT_QUOTES, 'UTF-8'); ?>">
-                <?php if ($isLive) : ?>
-                    <span class="badge bg-danger">
-                        <span class="fas fa-circle me-1" aria-hidden="true"></span>
-                        <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'); ?>
-                    </span>
-                <?php elseif ($isUpcoming) : ?>
-                    <span class="badge bg-warning text-dark">
-                        <span class="fas fa-clock me-1" aria-hidden="true"></span>
-                        <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'); ?>
-                    </span>
+            <div class="mod-proclaim-youtube__status-bar mb-2">
+                <div id="mod-proclaim-youtube-badge-<?php echo $moduleId; ?>" class="mod-proclaim-youtube__badge"
+                     data-server-id="<?php echo $serverId; ?>"
+                     data-current-video="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                     data-is-live="<?php echo $isLive ? '1' : '0'; ?>"
+                     data-is-upcoming="<?php echo $isUpcoming ? '1' : '0'; ?>"
+                     data-scheduled-start="<?php echo htmlspecialchars($video['scheduledStartTime'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                     data-token="<?php echo htmlspecialchars($statusToken, ENT_QUOTES, 'UTF-8'); ?>"
+                     data-ajax-url="<?php echo htmlspecialchars($ajaxUrl, ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-live="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-upcoming="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'), ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php if ($isLive) : ?>
+                        <span class="badge bg-danger">
+                            <span class="fas fa-circle me-1" aria-hidden="true"></span>
+                            <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'); ?>
+                        </span>
+                    <?php elseif ($isUpcoming) : ?>
+                        <span class="badge bg-warning text-dark">
+                            <span class="fas fa-clock me-1" aria-hidden="true"></span>
+                            <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'); ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+
+                <?php if ((bool) $params->get('show_countdown', 1) && $isUpcoming && !empty($video['scheduledStartTime'])) : ?>
+                    <div id="mod-proclaim-youtube-countdown-<?php echo $moduleId; ?>"
+                         class="mod-proclaim-youtube__countdown"
+                         data-label-live-in="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_IN'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-starting-soon="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_STARTING_SOON'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-scheduled-for="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_SCHEDULED_FOR'), ENT_QUOTES, 'UTF-8'); ?>">
+                        <span class="mod-proclaim-youtube__countdown-timer text-muted"></span>
+                        <span class="mod-proclaim-youtube__countdown-sep text-muted" aria-hidden="true">&middot;</span>
+                        <span class="mod-proclaim-youtube__countdown-date small text-muted"></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ((bool) $params->get('show_notify_button', 1) && $isUpcoming) : ?>
+                    <div id="mod-proclaim-youtube-notify-<?php echo $moduleId; ?>"
+                         class="mod-proclaim-youtube__notify"
+                         data-video-title="<?php echo htmlspecialchars($video['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                         data-video-id="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-notify="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-enabled="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ENABLED'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-denied="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_DENIED'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-live-title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_TITLE'), ENT_QUOTES, 'UTF-8'); ?>"
+                         data-label-live-body="<?php echo htmlspecialchars(Text::sprintf('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_BODY', $video['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                        <span role="button" class="mod-proclaim-youtube__notify-btn text-muted small" style="cursor:pointer;">
+                            <span class="fas fa-bell me-1" aria-hidden="true"></span>
+                            <span class="mod-proclaim-youtube__notify-label"><?php echo Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'); ?></span>
+                        </span>
+                    </div>
                 <?php endif; ?>
             </div>
-
-            <?php if ((bool) $params->get('show_countdown', 1) && $isUpcoming && !empty($video['scheduledStartTime'])) : ?>
-                <div id="mod-proclaim-youtube-countdown-<?php echo $moduleId; ?>"
-                     class="mod-proclaim-youtube__countdown mb-2"
-                     data-label-live-in="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_IN'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-starting-soon="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_STARTING_SOON'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-scheduled-for="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_SCHEDULED_FOR'), ENT_QUOTES, 'UTF-8'); ?>">
-                    <div class="mod-proclaim-youtube__countdown-timer text-muted"></div>
-                    <div class="mod-proclaim-youtube__countdown-date small text-muted"></div>
-                </div>
-            <?php endif; ?>
-
-            <?php if ((bool) $params->get('show_notify_button', 1) && $isUpcoming) : ?>
-                <div id="mod-proclaim-youtube-notify-<?php echo $moduleId; ?>"
-                     class="mod-proclaim-youtube__notify mb-2"
-                     data-video-title="<?php echo htmlspecialchars($video['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                     data-video-id="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-notify="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-enabled="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ENABLED'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-denied="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_DENIED'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-live-title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_TITLE'), ENT_QUOTES, 'UTF-8'); ?>"
-                     data-label-live-body="<?php echo htmlspecialchars(Text::sprintf('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_BODY', $video['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
-                    <button type="button" class="btn btn-outline-secondary btn-sm mod-proclaim-youtube__notify-btn">
-                        <span class="fas fa-bell me-1" aria-hidden="true"></span>
-                        <span class="mod-proclaim-youtube__notify-label"><?php echo Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'); ?></span>
-                    </button>
-                </div>
-            <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($showTitle && !empty($video['title'])) : ?>
