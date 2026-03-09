@@ -335,7 +335,7 @@ class HtmlView extends BaseHtmlView
 
         // Prepare meta information (under development)
         if ($this->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->params->get('metakey'));
+            $this->document->setMetaData('keywords', $this->params->get('metakey'));
         }
 
         if ($this->params->get('metadesc')) {
@@ -347,11 +347,11 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->params->get('menu-meta_keywords')) {
-            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+            $this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
         }
 
         if ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
+            $this->document->setMetaData('robots', $this->params->get('robots'));
         }
 
         // Schema.org structured data

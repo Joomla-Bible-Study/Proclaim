@@ -22,7 +22,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\Registry\Registry;
 
@@ -205,25 +204,15 @@ class HtmlView extends BaseHtmlView
          *  If this is a direct new window, then all we need to do is perform hitPlay and close this window
          */
         if ($close === 1) {
-            echo HTMLHelper::_(
-                'content.prepare',
-                '<script language="javascript" type="text/javascript">window.close();</script>'
-            );
+            $app->getDocument()->getWebAssetManager()
+                ->addInlineScript('window.close();');
         }
 
         $this->getMedia = new Cwmmedia();
         $this->media    = $this->getMedia->getMediaRows2($mediaid);
 
-        // Use getModel()->getState() if possible, otherwise fallback to get('State')
-        // In Joomla 4 MVC, the model is usually available.
         $model = $this->getModel();
-        if ($model) {
-            $state = $model->getState();
-        } else {
-            // Fallback for when model is not explicitly set or found
-            // Suppress deprecated warning for get('State') as it is the fallback
-            $state = @$this->get('State');
-        }
+        $state = $model ? $model->getState() : null;
 
         if ($state instanceof Registry) {
             $this->state = $state;

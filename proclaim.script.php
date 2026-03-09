@@ -202,6 +202,9 @@ class com_proclaimInstallerScript extends InstallerScript
         '/modules/mod_proclaim_youtube/helper.php',
         // Dead helper classes removed in 10.1.0
         '/administrator/components/com_proclaim/src/Helper/Cwmsearchfilters.php',
+        // Dead site server picker removed in 10.1.0
+        '/components/com_proclaim/src/Model/CwmserverslistModel.php',
+        '/components/com_proclaim/forms/filter_serverslist.xml',
     ];
 
     /**
@@ -244,6 +247,8 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/View/CWMSermon',
         '/components/com_proclaim/src/View/CWMSermons',
         '/components/com_proclaim/src/View/CWMServersList',
+        '/components/com_proclaim/src/View/Cwmserverslist',
+        '/components/com_proclaim/tmpl/cwmserverslist',
         '/components/com_proclaim/src/View/CWMSqueezeBox',
         '/components/com_proclaim/src/View/CWMTeacher',
         '/components/com_proclaim/src/View/CWMTeachers',
@@ -287,7 +292,7 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/View/CWMSeriesDisplays' => '/components/com_proclaim/src/View/Cwmseriesdisplays',
         '/components/com_proclaim/src/View/CWMSermon'         => '/components/com_proclaim/src/View/Cwmsermon',
         '/components/com_proclaim/src/View/CWMSermons'        => '/components/com_proclaim/src/View/Cwmsermons',
-        '/components/com_proclaim/src/View/CWMServersList'    => '/components/com_proclaim/src/View/Cwmserverslist',
+        // CWMServersList removed — dead legacy modal picker (no frontend usage)
         '/components/com_proclaim/src/View/CWMSqueezeBox'     => '/components/com_proclaim/src/View/Cwmsqueezebox',
         '/components/com_proclaim/src/View/CWMTeacher'        => '/components/com_proclaim/src/View/Cwmteacher',
         '/components/com_proclaim/src/View/CWMTeachers'       => '/components/com_proclaim/src/View/Cwmteachers',

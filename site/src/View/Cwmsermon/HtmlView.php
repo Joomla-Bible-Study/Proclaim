@@ -561,15 +561,15 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->item->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->item->params->get('metakey'));
+            $this->document->setMetaData('keywords', $this->item->params->get('metakey'));
         } elseif ($this->params->get('menu-meta_keywords')) {
-            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+            $this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
         } else {
-            $this->document->setMetadata('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
+            $this->document->setMetaData('keywords', $this->item->topic_text . ',' . $this->item->studytitle);
         }
 
         if ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
+            $this->document->setMetaData('robots', $this->params->get('robots'));
         }
 
         if ($app->get('MetaAuthor') === '1') {

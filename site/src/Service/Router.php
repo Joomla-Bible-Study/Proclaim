@@ -135,10 +135,6 @@ class Router extends RouterView
         $popup = new RouterViewConfiguration('cwmpopup');
         $this->registerView($popup);
 
-        // Servers list view
-        $serversList = new RouterViewConfiguration('cwmserverslist');
-        $this->registerView($serversList);
-
         // Terms view
         $terms = new RouterViewConfiguration('cwmterms');
         $terms->setKey('id');
