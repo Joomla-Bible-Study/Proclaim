@@ -102,7 +102,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                          data-label-denied="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_DENIED'), ENT_QUOTES, 'UTF-8'); ?>"
                          data-label-live-title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_TITLE'), ENT_QUOTES, 'UTF-8'); ?>"
                          data-label-live-body="<?php echo htmlspecialchars(Text::sprintf('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_BODY', $video['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
-                        <span role="button" class="mod-proclaim-youtube__notify-btn text-muted small" style="cursor:pointer;">
+                        <span role="button" class="mod-proclaim-youtube__notify-btn text-muted small">
                             <span class="fas fa-bell me-1" aria-hidden="true"></span>
                             <span class="mod-proclaim-youtube__notify-label"><?php echo Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'); ?></span>
                         </span>
@@ -128,7 +128,6 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                     width="<?php echo $playerWidth; ?>"
                     height="<?php echo $playerHeight; ?>"
                 <?php endif; ?>
-                style="border:0;"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin"
                 allowfullscreen

@@ -18,13 +18,16 @@
     overflow: hidden;
 }
 
+.mod-proclaim-youtube__player iframe {
+    border: 0;
+}
+
 .mod-proclaim-youtube__player--responsive iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border: 0;
 }
 
 .mod-proclaim-youtube__status-bar {
@@ -51,6 +54,10 @@
 
 .mod-proclaim-youtube__notify {
     margin-left: auto;
+}
+
+.mod-proclaim-youtube__notify-btn {
+    cursor: pointer;
 }
 
 .mod-proclaim-youtube__notify-btn:hover {
