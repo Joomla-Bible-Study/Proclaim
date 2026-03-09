@@ -524,7 +524,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then((data) => {
                     // PHP-level error (exception caught in controller)
                     if (data.error) {
-                        statusEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_WEBP_ERROR')}: ${data.error}</span>`;
+                        statusEl.replaceChildren(Object.assign(document.createElement('span'), {
+                            className: 'text-danger',
+                            textContent: Joomla.Text._('JBS_ADM_WEBP_ERROR') + ': ' + data.error,
+                        }));
                         // Still continue to next type — don't abort entirely
                         typeIndex += 1;
                         convertType();
@@ -637,7 +640,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.regenerateThumbsXHR&${token}=1&type=${currentType}&limit=10&offset=${offset}`)
                     .then((data) => {
                         if (data.error) {
-                            statusEl.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
+                            statusEl.replaceChildren(Object.assign(document.createElement('span'), {
+                                className: 'text-danger',
+                                textContent: 'Error: ' + data.error,
+                            }));
                             activeOperation = null;
                             setOperationRunning(false);
                             return;
@@ -915,7 +921,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsEl.style.display = 'block';
 
                 if (data.error) {
-                    resultsEl.innerHTML = `<span class="text-danger">${Joomla.Text._('JBS_ADM_ERROR_LOADING')}: ${data.error}</span>`;
+                    resultsEl.replaceChildren(Object.assign(document.createElement('span'), {
+                        className: 'text-danger',
+                        textContent: Joomla.Text._('JBS_ADM_ERROR_LOADING') + ': ' + data.error,
+                    }));
                     return;
                 }
 
@@ -1112,7 +1121,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         if (unresStatusEl) {
                             unresStatusEl.style.display = 'block';
-                            unresStatusEl.innerHTML = `<span class="text-danger">${data.error || Joomla.Text._('JBS_ADM_ERROR_LOADING')}</span>`;
+                            unresStatusEl.replaceChildren(Object.assign(document.createElement('span'), {
+                                className: 'text-danger',
+                                textContent: data.error || Joomla.Text._('JBS_ADM_ERROR_LOADING'),
+                            }));
                         }
                         clearBtn.disabled = false;
                         clearBtn.style.display = '';

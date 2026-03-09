@@ -1342,11 +1342,17 @@
                         // and dark mode support.
                         container.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
                     } else {
-                        container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
+                        container.replaceChildren(Object.assign(document.createElement('div'), {
+                            className: 'alert alert-danger',
+                            textContent: data.error || 'Failed to load content',
+                        }));
                     }
                 })
                 .catch((error) => {
-                    container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
+                    container.replaceChildren(Object.assign(document.createElement('div'), {
+                        className: 'alert alert-danger',
+                        textContent: 'Error loading content: ' + (error.message || 'Unknown error'),
+                    }));
                     console.error('Fieldset load error:', error);
                 });
         }
@@ -1760,11 +1766,17 @@
                             Joomla.initCustomSelect(container);
                         }
                     } else {
-                        container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load settings'}</div>`;
+                        container.replaceChildren(Object.assign(document.createElement('div'), {
+                            className: 'alert alert-danger',
+                            textContent: data.error || 'Failed to load settings',
+                        }));
                     }
                 })
                 .catch((error) => {
-                    container.innerHTML = `<div class="alert alert-danger">Error loading settings: ${error.message}</div>`;
+                    container.replaceChildren(Object.assign(document.createElement('div'), {
+                        className: 'alert alert-danger',
+                        textContent: 'Error loading settings: ' + (error.message || 'Unknown error'),
+                    }));
                     console.error('Section fieldset load error:', error);
                 });
         }

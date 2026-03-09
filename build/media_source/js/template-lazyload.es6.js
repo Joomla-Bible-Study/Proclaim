@@ -108,14 +108,21 @@
 
                         resolve({ success: true, fieldset: fieldsetName });
                     } else {
-                        container.innerHTML = `<div class="alert alert-danger">${data.error || 'Failed to load content'}</div>`;
-                        reject(new Error(data.error || 'Failed to load content'));
+                        const errMsg = data.error || 'Failed to load content';
+                        container.replaceChildren(Object.assign(document.createElement('div'), {
+                            className: 'alert alert-danger',
+                            textContent: errMsg,
+                        }));
+                        reject(new Error(errMsg));
                     }
                 })
                 .catch((error) => {
                     loadingFieldsets.delete(fieldsetName);
                     loadingPromises.delete(fieldsetName);
-                    container.innerHTML = `<div class="alert alert-danger">Error loading content: ${error.message}</div>`;
+                    container.replaceChildren(Object.assign(document.createElement('div'), {
+                        className: 'alert alert-danger',
+                        textContent: 'Error loading content: ' + (error.message || 'Unknown error'),
+                    }));
                     console.error('Fieldset load error:', error);
                     reject(error);
                 });
@@ -276,7 +283,10 @@
                 }
             })
             .catch((error) => {
-                container.innerHTML = `<div class="alert alert-danger">Failed to load Layout Editor: ${error.message}</div>`;
+                container.replaceChildren(Object.assign(document.createElement('div'), {
+                    className: 'alert alert-danger',
+                    textContent: 'Failed to load Layout Editor: ' + (error.message || 'Unknown error'),
+                }));
             });
     }
 
