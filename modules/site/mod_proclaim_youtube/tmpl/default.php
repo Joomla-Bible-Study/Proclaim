@@ -37,6 +37,7 @@ use Joomla\Registry\Registry;
 /** @var \stdClass|null $fallbackTemplate */
 /** @var Registry|null $fallbackParams */
 
+$app->getDocument()->getWebAssetManager()->useStyle('com_proclaim.mod-youtube');
 $moduleId        = $module->id ?? 0;
 $isLive          = $video['isLive'] ?? false;
 $isUpcoming      = $video['isUpcoming'] ?? false;
@@ -77,6 +78,34 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                     </span>
                 <?php endif; ?>
             </div>
+
+            <?php if ((bool) $params->get('show_countdown', 1) && $isUpcoming && !empty($video['scheduledStartTime'])) : ?>
+                <div id="mod-proclaim-youtube-countdown-<?php echo $moduleId; ?>"
+                     class="mod-proclaim-youtube__countdown mb-2"
+                     data-label-live-in="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_IN'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-starting-soon="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_STARTING_SOON'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-scheduled-for="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_SCHEDULED_FOR'), ENT_QUOTES, 'UTF-8'); ?>">
+                    <div class="mod-proclaim-youtube__countdown-timer text-muted"></div>
+                    <div class="mod-proclaim-youtube__countdown-date small text-muted"></div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ((bool) $params->get('show_notify_button', 1) && $isUpcoming) : ?>
+                <div id="mod-proclaim-youtube-notify-<?php echo $moduleId; ?>"
+                     class="mod-proclaim-youtube__notify mb-2"
+                     data-video-title="<?php echo htmlspecialchars($video['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                     data-video-id="<?php echo htmlspecialchars($video['videoId'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-notify="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-enabled="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ENABLED'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-denied="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_DENIED'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-live-title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_TITLE'), ENT_QUOTES, 'UTF-8'); ?>"
+                     data-label-live-body="<?php echo htmlspecialchars(Text::sprintf('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_BODY', $video['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                    <button type="button" class="btn btn-outline-secondary btn-sm mod-proclaim-youtube__notify-btn">
+                        <span class="fas fa-bell me-1" aria-hidden="true"></span>
+                        <span class="mod-proclaim-youtube__notify-label"><?php echo Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'); ?></span>
+                    </button>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($showTitle && !empty($video['title'])) : ?>
@@ -108,6 +137,26 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
             <?php endif; ?>
         </div>
 
+        <?php if ((bool) $params->get('enable_mini_player', 1) && $isLive) : ?>
+            <div id="mod-proclaim-youtube-miniplayer-<?php echo $moduleId; ?>"
+                 class="mod-proclaim-youtube__miniplayer"
+                 style="display:none;">
+                <div class="mod-proclaim-youtube__miniplayer-controls">
+                    <button type="button" class="mod-proclaim-youtube__miniplayer-expand btn btn-sm btn-light"
+                            aria-label="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_EXPAND'), ENT_QUOTES, 'UTF-8'); ?>"
+                            title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_EXPAND'), ENT_QUOTES, 'UTF-8'); ?>">
+                        <span class="fas fa-expand" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="mod-proclaim-youtube__miniplayer-close btn btn-sm btn-light"
+                            aria-label="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_CLOSE'), ENT_QUOTES, 'UTF-8'); ?>"
+                            title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_CLOSE'), ENT_QUOTES, 'UTF-8'); ?>">
+                        <span class="fas fa-times" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="mod-proclaim-youtube__miniplayer-frame"></div>
+            </div>
+        <?php endif; ?>
+
         <?php if ($showDescription && !empty($video['truncatedDescription'])) : ?>
             <div class="mod-proclaim-youtube__description mt-2">
                 <p><?php echo htmlspecialchars($video['truncatedDescription'], ENT_QUOTES, 'UTF-8'); ?></p>
@@ -133,15 +182,15 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
         <div class="mod-proclaim-youtube__fallback">
             <?php
             $listing = new Cwmlisting();
-            $fallbackParams->set('listing_item_style', 'grid');
-            $fallbackParams->set('grid_card_size', 'medium');
-            echo $listing->getFluidListing(
-                $fallbackSermons,
-                $fallbackParams,
-                $fallbackTemplate,
-                'sermons'
-            );
-            ?>
+        $fallbackParams->set('listing_item_style', 'grid');
+        $fallbackParams->set('grid_card_size', 'medium');
+        echo $listing->getFluidListing(
+            $fallbackSermons,
+            $fallbackParams,
+            $fallbackTemplate,
+            'sermons'
+        );
+        ?>
         </div>
     <?php elseif ((bool) $params->get('show_no_video', 0)) : ?>
         <?php
@@ -156,193 +205,24 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
     <?php endif; ?>
 </div>
 
-<?php
-$app->getDocument()->getWebAssetManager()->addInlineStyle(<<<'CSS'
-.mod-proclaim-youtube__player--responsive {
-    width: 100%;
-}
-.mod-proclaim-youtube__player--responsive .mod-proclaim-youtube__player-wrapper {
-    position: relative;
-    width: 100%;
-    height: 0;
-    overflow: hidden;
-}
-.mod-proclaim-youtube__player--responsive iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-.mod-proclaim-youtube__badge .badge {
-    font-size: 0.9em;
-}
-CSS);
-?>
 
 <?php if ($video && $embedUrl && $showLiveBadge && ($isLive || $isUpcoming)) : ?>
     <?php
-    $wa = $app->getDocument()->getWebAssetManager();
+    $wa               = $app->getDocument()->getWebAssetManager();
     $basePollInterval = (int) $params->get('poll_interval', 120);
     // Clamp to minimum 60 seconds to protect API quota
     $basePollInterval = max(60, $basePollInterval);
-    $basePollMs       = $basePollInterval * 1000;
-    // Max backoff: 10 minutes
-    $maxPollMs = 600000;
-    // Configurable poll window: hours before/after the scheduled event start
-    $pollWindowBefore = (int) $params->get('poll_window_before', 2);
-    $pollWindowAfter  = (int) $params->get('poll_window_after', 1);
 
-    $inlineScript = <<<JS
-(function() {
-    'use strict';
-
-    const badgeEl = document.getElementById('mod-proclaim-youtube-badge-{$moduleId}');
-    if (!badgeEl) return;
-
-    let wasLive = badgeEl.dataset.isLive === '1';
-    let wasUpcoming = badgeEl.dataset.isUpcoming === '1';
-    const labelLive = badgeEl.dataset.labelLive;
-    const labelUpcoming = badgeEl.dataset.labelUpcoming;
-
-    const basePollInterval = {$basePollMs};
-    const maxPollInterval = {$maxPollMs};
-    let currentInterval = basePollInterval;
-    let unchangedCount = 0;
-    const ajaxUrl = badgeEl.dataset.ajaxUrl;
-
-    // Poll window: only poll within N hours before / after the scheduled start
-    const pollWindowBeforeMs = {$pollWindowBefore} * 3600000;
-    const pollWindowAfterMs = {$pollWindowAfter} * 3600000;
-    let scheduledStart = badgeEl.dataset.scheduledStart ? new Date(badgeEl.dataset.scheduledStart).getTime() : 0;
-
-    function isWithinPollWindow() {
-        // Always poll if already live (status transitions need detection)
-        if (wasLive) return true;
-        // If no scheduled start time is known, poll normally (can't gate without data)
-        if (!scheduledStart) return true;
-        var now = Date.now();
-        var windowOpen = scheduledStart - pollWindowBeforeMs;
-        var windowClose = scheduledStart + pollWindowAfterMs;
-        return now >= windowOpen && now <= windowClose;
-    }
-
-    function updateBadge(isLive, isUpcoming) {
-        var html = '';
-        if (isLive) {
-            html = '<span class="badge bg-danger"><span class="fas fa-circle me-1" aria-hidden="true"></span>' + labelLive + '</span>';
-        } else if (isUpcoming) {
-            html = '<span class="badge bg-warning text-dark"><span class="fas fa-clock me-1" aria-hidden="true"></span>' + labelUpcoming + '</span>';
-        }
-        badgeEl.innerHTML = html;
-    }
-
-    function getBackoffInterval() {
-        var multiplier = Math.pow(2, Math.floor(unchangedCount / 3));
-        return Math.min(basePollInterval * multiplier, maxPollInterval);
-    }
-
-    function getWindowOpenDelay() {
-        // If outside the poll window, return ms until the window opens
-        if (!scheduledStart) return 0;
-        var windowOpen = scheduledStart - pollWindowBeforeMs;
-        var delay = windowOpen - Date.now();
-        return delay > 0 ? delay : 0;
-    }
-
-    function schedulePoll() {
-        currentInterval = getBackoffInterval();
-        if (!isWithinPollWindow()) {
-            // Schedule to wake up when the poll window opens
-            var delay = getWindowOpenDelay();
-            if (delay > 0) {
-                pollTimer = setTimeout(checkStatus, delay);
-                return;
-            }
-            // Window has closed — stop polling entirely
-            return;
-        }
-        pollTimer = setTimeout(checkStatus, currentInterval);
-    }
-
-    function checkStatus() {
-        if (!isWithinPollWindow()) {
-            schedulePoll();
-            return;
-        }
-
-        fetch(ajaxUrl, { method: 'GET', headers: { 'Accept': 'application/json' } })
-        .then(function(response) { return response.json(); })
-        .then(function(data) {
-            if (data.success) {
-                // Update scheduledStartTime if the server returns a newer value
-                if (data.scheduledStartTime) {
-                    scheduledStart = new Date(data.scheduledStartTime).getTime();
-                }
-
-                // Stop polling if daily quota is exhausted
-                if (typeof data.quotaRemaining === 'number' && data.quotaRemaining <= 0) {
-                    console.log('YouTube API quota exhausted — pausing polling');
-                    return;
-                }
-
-                var isLive = data.isLive;
-                var isUpcoming = data.isUpcoming;
-                if (isLive !== wasLive || isUpcoming !== wasUpcoming) {
-                    unchangedCount = 0;
-                    updateBadge(isLive, isUpcoming);
-                    if (isLive && !wasLive) {
-                        wasLive = isLive;
-                        wasUpcoming = isUpcoming;
-                        setTimeout(function() { window.location.reload(); }, 2000);
-                        return;
-                    }
-                    if (!isLive && !isUpcoming) {
-                        return;
-                    }
-                    wasLive = isLive;
-                    wasUpcoming = isUpcoming;
-                } else {
-                    unchangedCount++;
-                }
-                schedulePoll();
-            }
-        })
-        .catch(function(error) {
-            console.log('YouTube status check failed:', error);
-            unchangedCount++;
-            schedulePoll();
-        });
-    }
-
-    // Start: if within window poll immediately, otherwise schedule for window open
-    var pollTimer;
-    if (isWithinPollWindow()) {
-        pollTimer = setTimeout(checkStatus, currentInterval);
-    } else {
-        var delay = getWindowOpenDelay();
-        if (delay > 0) {
-            pollTimer = setTimeout(checkStatus, delay);
-        }
-        // else: window has already closed, no polling needed
-    }
-
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            clearTimeout(pollTimer);
-        } else {
-            unchangedCount = 0;
-            currentInterval = basePollInterval;
-            if (isWithinPollWindow()) {
-                checkStatus();
-            } else {
-                schedulePoll();
-            }
-        }
-    });
-})();
-JS;
-
-    $wa->addInlineScript($inlineScript, [], ['name' => 'mod_proclaim_youtube_status_' . $moduleId]);
-endif; ?>
+    // Register script options for this module instance
+    $existing   = $app->getDocument()->getScriptOptions('mod_proclaim_youtube') ?: [];
+    $existing[] = [
+        'moduleId'         => $moduleId,
+        'pollInterval'     => $basePollInterval * 1000,
+        'maxPollInterval'  => 600000,
+        'pollWindowBefore' => (int) $params->get('poll_window_before', 2),
+        'pollWindowAfter'  => (int) $params->get('poll_window_after', 1),
+    ];
+    $app->getDocument()->addScriptOptions('mod_proclaim_youtube', $existing, false);
+    $wa->useScript('com_proclaim.mod-youtube-status');
+    ?>
+<?php endif; ?>

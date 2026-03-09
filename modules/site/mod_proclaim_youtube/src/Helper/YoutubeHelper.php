@@ -59,9 +59,9 @@ class YoutubeHelper implements DatabaseAwareInterface
     {
         $this->freshFetch = false;
         $serverId         = (int) $params->get('server_id', 0);
-        $priorityMode  = $params->get('priority_mode', 'live_first');
-        $showUpcoming  = (bool) $params->get('show_upcoming', 1);
-        $excludeVideos = $this->parseExcludedIds($params->get('exclude_videos', ''));
+        $priorityMode     = $params->get('priority_mode', 'live_first');
+        $showUpcoming     = (bool) $params->get('show_upcoming', 1);
+        $excludeVideos    = $this->parseExcludedIds($params->get('exclude_videos', ''));
 
         if (!$serverId) {
             return null;
@@ -628,7 +628,7 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * AJAX method to get current video status (live/upcoming/none)
      *
-     * Uses a short-lived server-side cache (60s) to prevent excessive YouTube API calls
+     * Uses a short-lived server-side cache (2 min) to prevent excessive YouTube API calls
      * when multiple module instances or rapid polling would otherwise exhaust the daily quota.
      *
      * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
@@ -667,7 +667,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             ];
         }
 
-        // Check server-side cache to avoid redundant API calls (60-second TTL)
+        // Check server-side cache to avoid redundant API calls (2-minute TTL)
         $statusCacheKey = 'mod_proclaim_youtube_status_' . $serverId . '_' . $videoId;
 
         try {
@@ -932,9 +932,15 @@ class YoutubeHelper implements DatabaseAwareInterface
             return '';
         }
 
-        $data = json_decode($raw, true);
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            @unlink($file);
 
-        if (!$data || empty($data['scheduledStartTime'])) {
+            return '';
+        }
+
+        if (empty($data['scheduledStartTime'])) {
             return '';
         }
 

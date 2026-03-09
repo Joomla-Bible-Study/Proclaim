@@ -128,6 +128,39 @@
                     <option value="0">JNO</option>
                 </field>
 
+                <field name="show_countdown"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_COUNTDOWN_DESC"
+                       showon="show_live_badge:1">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="show_notify_button"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY"
+                       description="MOD_PROCLAIM_YOUTUBE_SHOW_NOTIFY_DESC"
+                       showon="show_live_badge:1">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="enable_mini_player"
+                       type="radio"
+                       class="btn-group btn-group-yesno"
+                       default="1"
+                       label="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER"
+                       description="MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_DESC"
+                       showon="show_live_badge:1">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
                 <field name="auto_link_message"
                        type="radio"
                        class="btn-group btn-group-yesno"

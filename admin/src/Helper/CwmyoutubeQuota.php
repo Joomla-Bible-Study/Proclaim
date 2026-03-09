@@ -302,13 +302,13 @@ class CwmyoutubeQuota
             return ['date' => '', 'used' => 0];
         }
 
-        $data = json_decode($raw, true);
-
-        if (!\is_array($data)) {
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
             return ['date' => '', 'used' => 0];
         }
 
-        return $data;
+        return \is_array($data) ? $data : ['date' => '', 'used' => 0];
     }
 
     /**

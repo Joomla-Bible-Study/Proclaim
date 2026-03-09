@@ -755,6 +755,22 @@
             "name": "com_proclaim.share-css",
             "type": "style",
             "uri": "com_proclaim/proclaim-share.min.css"
+        },
+        {
+            "name": "com_proclaim.mod-youtube",
+            "type": "style",
+            "uri": "com_proclaim/mod-youtube.min.css"
+        },
+        {
+            "name": "com_proclaim.mod-youtube-status",
+            "type": "script",
+            "uri": "com_proclaim/mod-youtube-status.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }
