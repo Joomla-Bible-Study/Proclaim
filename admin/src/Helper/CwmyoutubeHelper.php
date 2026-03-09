@@ -164,21 +164,84 @@ class CwmyoutubeHelper
     }
 
     /**
+     * Find a published message by matching a YouTube video ID in media file params.
+     *
+     * Searches #__bsms_mediafiles for a record whose params→filename contains the
+     * given video ID, then returns the parent message (study) if published.
+     *
+     * @param   string  $videoId  YouTube video ID (11-char alphanumeric)
+     *
+     * @return  object|null  The message object or null if not found
+     *
+     * @since   10.1.0
+     */
+    public static function findMessageByVideoId(string $videoId): ?object
+    {
+        if (empty($videoId)) {
+            return null;
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // YouTube URLs are stored in params JSON as filename like
+        // "//www.youtube.com/embed/{videoId}?enablejsapi=1"
+        $searchId = $db->quote('%' . $db->escape($videoId, true) . '%');
+
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('s.id'),
+                $db->quoteName('s.studytitle'),
+                $db->quoteName('s.studydate'),
+                $db->quoteName('s.alias'),
+                $db->quoteName('t.teachername'),
+                $db->quoteName('t.id', 'teacher_id'),
+            ])
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->join('INNER', $db->quoteName('#__bsms_studies', 's') . ' ON '
+                . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id'))
+            ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+            ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+            ->where($db->quoteName('m.params') . ' LIKE ' . $searchId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->whereIn($db->quoteName('m.published'), [1, 2])
+            ->order($db->quoteName('s.studydate') . ' DESC')
+            ->setLimit(1);
+
+        $db->setQuery($query);
+
+        return $db->loadObject();
+    }
+
+    /**
      * Match a YouTube video title to a Proclaim message
      *
      * Tries multiple strategies:
-     * 1. Parse title and try part1 as title, part2 as teacher
-     * 2. Try reversed: part1 as teacher, part2 as title
-     * 3. Fall back to full title search without teacher filter
+     * 1. Match by YouTube video ID in media file URLs (exact)
+     * 2. Parse title and try part1 as title, part2 as teacher
+     * 3. Try reversed: part1 as teacher, part2 as title
+     * 4. Fall back to full title search without teacher filter
      *
      * @param   string  $videoTitle  The YouTube video title
+     * @param   string  $videoId     Optional YouTube video ID for exact URL matching
      *
      * @return  object|null  The matched message object or null
      *
      * @since   10.1.0
      */
-    public static function matchVideoToMessage(string $videoTitle): ?object
+    public static function matchVideoToMessage(string $videoTitle, string $videoId = ''): ?object
     {
+        // Strategy 0: Exact match by video ID in media file URLs
+        if (!empty($videoId)) {
+            $message = self::findMessageByVideoId($videoId);
+
+            if ($message) {
+                return $message;
+            }
+        }
+
         if (empty($videoTitle)) {
             return null;
         }

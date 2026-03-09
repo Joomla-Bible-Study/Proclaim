@@ -60,8 +60,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $video    = $helper->getVideo($data['params'], $this->getApplication());
         $serverId = (int) $data['params']->get('server_id', 0);
 
-        // Verify live status in real-time (bypasses cache for status only)
-        if ($video && $serverId) {
+        // Verify live status — skip if getVideo() already fetched fresh data from API
+        if ($video && $serverId && !$helper->wasFreshFetch()) {
             $video = $helper->verifyLiveStatus($video, $serverId);
         }
 

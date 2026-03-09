@@ -38,6 +38,14 @@ class YoutubeHelper implements DatabaseAwareInterface
     use DatabaseAwareTrait;
 
     /**
+     * Whether the last getVideo() call fetched fresh data from the API
+     *
+     * @var    bool
+     * @since  10.1.0
+     */
+    private bool $freshFetch = false;
+
+    /**
      * Get the video to display based on priority mode
      *
      * @param   Registry         $params  Module parameters
@@ -49,7 +57,8 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function getVideo(Registry $params, SiteApplication $app): ?array
     {
-        $serverId      = (int) $params->get('server_id', 0);
+        $this->freshFetch = false;
+        $serverId         = (int) $params->get('server_id', 0);
         $priorityMode  = $params->get('priority_mode', 'live_first');
         $showUpcoming  = (bool) $params->get('show_upcoming', 1);
         $excludeVideos = $this->parseExcludedIds($params->get('exclude_videos', ''));
@@ -73,6 +82,11 @@ class YoutubeHelper implements DatabaseAwareInterface
                 $decoded = json_decode($cachedVideo, true, 512, JSON_THROW_ON_ERROR);
 
                 if ($decoded !== null) {
+                    // Sentinel: cached "no video available" result
+                    if (!empty($decoded['_noVideo'])) {
+                        return null;
+                    }
+
                     return $decoded;
                 }
             }
@@ -80,31 +94,72 @@ class YoutubeHelper implements DatabaseAwareInterface
             // Cache not available, continue without it
         }
 
-        $youtube = new CWMAddonYoutube();
-        $video   = null;
+        $this->freshFetch = true;
+        $youtube          = new CWMAddonYoutube();
+        $video            = null;
 
-        // Priority mode logic
-        switch ($priorityMode) {
-            case 'live_first':
-                // First check for live videos
-                $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
+        // Smart pre-check: if we have a last-known live/upcoming video,
+        // verify its status with videos.list (1 unit) instead of search.list (100 units)
+        if ($priorityMode !== 'latest_only') {
+            $lastKnown = self::getLastKnownVideo($serverId);
 
-                // If no live video, get latest uploaded
-                if (!$video) {
-                    $video = $this->fetchLatestVideo($youtube, $serverId);
+            if (
+                $lastKnown
+                && !empty($lastKnown['videoId'])
+                && (($lastKnown['isLive'] ?? false) || ($lastKnown['isUpcoming'] ?? false))
+                && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)
+            ) {
+                $statusInput = new Input([
+                    'server_id' => $serverId,
+                    'video_id'  => $lastKnown['videoId'],
+                ]);
+
+                $status = $youtube->getVideoStatus($statusInput);
+
+                if ($status['success'] && (($status['isLive'] ?? false) || ($status['isUpcoming'] ?? false))) {
+                    $lastKnown['isLive']     = $status['isLive'] ?? false;
+                    $lastKnown['isUpcoming'] = $status['isUpcoming'] ?? false;
+
+                    if (!empty($status['scheduledStartTime'])) {
+                        $lastKnown['scheduledStartTime'] = $status['scheduledStartTime'];
+                        self::storeScheduledStart($serverId, $lastKnown['videoId'], $status['scheduledStartTime']);
+                    }
+
+                    $video = $lastKnown;
+
+                    CwmyoutubeLogHelper::log(
+                        CwmyoutubeLogHelper::LEVEL_INFO,
+                        'Pre-check: last-known video still active (saved search.list quota)',
+                        ['server_id' => $serverId, 'video_id' => $lastKnown['videoId'], 'isLive' => $video['isLive']]
+                    );
                 }
-                break;
+            }
+        }
 
-            case 'live_only':
-                // Only get live videos
-                $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
-                break;
+        // Priority mode logic (skip if pre-check already found an active video)
+        if (!$video) {
+            switch ($priorityMode) {
+                case 'live_first':
+                    // First check for live videos
+                    $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
 
-            case 'latest_only':
-            default:
-                // Only get the latest uploaded
-                $video = $this->fetchLatestVideo($youtube, $serverId);
-                break;
+                    // If no live video, get latest uploaded
+                    if (!$video) {
+                        $video = $this->fetchLatestVideo($youtube, $serverId);
+                    }
+                    break;
+
+                case 'live_only':
+                    // Only get live videos
+                    $video = $this->fetchLiveVideo($youtube, $serverId, $showUpcoming, $excludeVideos);
+                    break;
+
+                case 'latest_only':
+                default:
+                    // Only get the latest uploaded
+                    $video = $this->fetchLatestVideo($youtube, $serverId);
+                    break;
+            }
         }
 
         // All fetch methods returned null — fall back to last known good video
@@ -125,23 +180,38 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        // Cache the result and persist as "last known good"
-        if ($video) {
-            // Persist as last known good — survives Joomla cache clears and quota exhaustion
-            if (empty($video['isFallback'])) {
-                self::storeLastKnownVideo($serverId, $video);
-            }
+        // Persist as last known good — survives Joomla cache clears and quota exhaustion
+        if ($video && empty($video['isFallback'])) {
+            self::storeLastKnownVideo($serverId, $video);
+        }
 
-            try {
-                $cache = Factory::getContainer()->get('cache.output');
-                $cache->setLifeTime((int) ceil($cacheTime / 60));
-                $cache->store(json_encode($video), $cacheKey, 'mod_proclaim_youtube');
-            } catch (\Exception $e) {
-                // Cache not available, continue without it
-            }
+        // Cache the result (including null) to prevent repeated API calls
+        try {
+            $cache = Factory::getContainer()->get('cache.output');
+            // Shorter TTL for null results so new videos are detected within 60 seconds
+            $ttl = $video ? $cacheTime : 60;
+            $cache->setLifeTime((int) ceil($ttl / 60));
+            $cacheData = $video ?? ['_noVideo' => true];
+            $cache->store(json_encode($cacheData), $cacheKey, 'mod_proclaim_youtube');
+        } catch (\Exception $e) {
+            // Cache not available, continue without it
         }
 
         return $video;
+    }
+
+    /**
+     * Whether the last getVideo() call fetched fresh data from the YouTube API
+     *
+     * When true, the caller can skip verifyLiveStatus() since the data is already current.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    public function wasFreshFetch(): bool
+    {
+        return $this->freshFetch;
     }
 
     /**
@@ -149,7 +219,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * This is called after getting cached video data to ensure the
      * isLive/isUpcoming status is accurate on page load. Results are cached
-     * for 60 seconds to avoid excessive API calls from multiple page loads.
+     * for 2 minutes to avoid excessive API calls from multiple page loads.
      *
      * @param   array  $video     Video data array
      * @param   int    $serverId  Server ID for API access
@@ -171,7 +241,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         try {
             $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(1); // 1 minute
+            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
 
             $cachedResult = $cache->get($cacheKey, 'mod_proclaim_youtube_status');
 
@@ -222,7 +292,7 @@ class YoutubeHelper implements DatabaseAwareInterface
                 }
             }
 
-            // Cache the status result for 60 seconds
+            // Cache the status result for 2 minutes
             $cacheData = ['isLive' => $video['isLive'], 'isUpcoming' => $video['isUpcoming']];
 
             if (!empty($video['scheduledStartTime'])) {
@@ -231,7 +301,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
             try {
                 $cache = Factory::getContainer()->get('cache.output');
-                $cache->setLifeTime(1); // 1 minute
+                $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
                 $cache->store(
                     json_encode($cacheData),
                     $cacheKey,
@@ -602,7 +672,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         try {
             $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(1); // 1 minute
+            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
 
             $cachedStatus = $cache->get($statusCacheKey, 'mod_proclaim_youtube_status');
 
@@ -732,10 +802,10 @@ class YoutubeHelper implements DatabaseAwareInterface
         // Include remaining quota so JS can decide whether to continue polling
         $statusResult['quotaRemaining'] = CwmyoutubeQuota::getRemaining($serverId);
 
-        // Cache the result for 60 seconds to avoid redundant API calls
+        // Cache the result for 2 minutes to avoid redundant API calls
         try {
             $cache = Factory::getContainer()->get('cache.output');
-            $cache->setLifeTime(1); // 1 minute
+            $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
             $cache->store(json_encode($statusResult), $statusCacheKey, 'mod_proclaim_youtube_status');
         } catch (\Exception $e) {
             // Cache not available, continue without it
@@ -758,7 +828,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function findMatchingMessage(array $video): ?object
     {
-        if (empty($video['title'])) {
+        if (empty($video['title']) && empty($video['videoId'])) {
             return null;
         }
 
@@ -773,7 +843,10 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        return \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeHelper::matchVideoToMessage($video['title']);
+        return \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeHelper::matchVideoToMessage(
+            $video['title'] ?? '',
+            $video['videoId'] ?? ''
+        );
     }
 
     /**
