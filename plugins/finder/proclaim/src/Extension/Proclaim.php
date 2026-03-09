@@ -73,7 +73,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      * @var    string
      * @since  7.1.0
      */
-    protected $type_title = 'Studies';
+    protected $type_title = 'Messages';
 
     /**
      * The table name.

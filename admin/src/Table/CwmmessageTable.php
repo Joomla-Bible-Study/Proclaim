@@ -539,6 +539,22 @@ class CwmmessageTable extends Table
             $this->location_id = null;
         }
 
+        // Normalise studydate: ensure it has full HH:MM:SS for DATETIME column
+        if (!empty($this->studydate)) {
+            $d = trim($this->studydate);
+
+            // Date only (no time) → append 00:00:00
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $d)) {
+                $this->studydate = $d . ' 00:00:00';
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}$/', $d)) {
+                // Has hours only → append :00:00
+                $this->studydate = $d . ':00:00';
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $d)) {
+                // Has hours and minutes but no seconds → append :00
+                $this->studydate = $d . ':00';
+            }
+        }
+
         // Sanitise publish dates — empty strings are invalid for NOT NULL DATETIME columns
         if (empty($this->publish_up)) {
             $this->publish_up = $this->getDatabase()->getNullDate();

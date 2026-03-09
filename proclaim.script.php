@@ -205,6 +205,9 @@ class com_proclaimInstallerScript extends InstallerScript
         // Dead site server picker removed in 10.1.0
         '/components/com_proclaim/src/Model/CwmserverslistModel.php',
         '/components/com_proclaim/forms/filter_serverslist.xml',
+        // Dead site form XMLs (no frontend models use them) removed in 10.1.0
+        '/components/com_proclaim/forms/mediafile.xml',
+        '/components/com_proclaim/forms/message.xml',
     ];
 
     /**

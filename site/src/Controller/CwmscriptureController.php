@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Controller;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
 use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
@@ -26,7 +27,7 @@ use Joomla\Registry\Registry;
 /**
  * Scripture AJAX controller.
  *
- * Provides endpoint for frontend Bible version switching.
+ * Provides an endpoint for frontend Bible version switching.
  *
  * @since  10.1.0
  */
@@ -58,7 +59,11 @@ class CwmscriptureController extends BaseController
             ob_end_clean();
             header('Content-Type: application/json; charset=utf-8');
             header('Cache-Control: no-store');
-            echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
+            try {
+                echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                echo '{"success":false,"message":"JSON encoding error"}';
+            }
             $app->close();
 
             return;
@@ -133,7 +138,7 @@ class CwmscriptureController extends BaseController
             }
 
             // Fallback 3: hard fallback to KJV (bundled, always auto-downloaded)
-            if (!$result->hasText() && $usedVersion !== 'kjv') {
+            if ($usedVersion !== 'kjv' && !$result->hasText()) {
                 try {
                     $localProvider = BibleProviderFactory::getProvider('local');
                     $kjvResult     = $localProvider->getPassage($reference, 'kjv');
@@ -182,14 +187,14 @@ class CwmscriptureController extends BaseController
     /**
      * Discard any buffered PHP output and send a clean JSON response.
      *
-     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app   Application instance
-     * @param   array                                             $data  Response payload
+     * @param   CMSApplicationInterface  $app   Application instance
+     * @param   array                    $data  Response payload
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    private function sendJson($app, array $data): void
+    private function sendJson(CMSApplicationInterface $app, array $data): void
     {
         // Discard any stray PHP warnings/notices captured during execution
         while (ob_get_level()) {
@@ -198,7 +203,11 @@ class CwmscriptureController extends BaseController
 
         header('Content-Type: application/json; charset=utf-8');
         header('Cache-Control: no-store');
-        echo json_encode($data, JSON_THROW_ON_ERROR);
+        try {
+            echo json_encode($data, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            echo '{"success":false,"message":"JSON encoding error"}';
+        }
         $app->close();
     }
 }

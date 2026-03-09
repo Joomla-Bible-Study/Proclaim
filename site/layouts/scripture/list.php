@@ -6,10 +6,9 @@
  * Renders multiple scripture references with a configurable separator.
  * Override this layout via Joomla template overrides to customise presentation.
  *
- * @var   array  $displayData  {
- *     @var  string[]  parts      Rendered scripture reference strings
- *     @var  string    separator  Separator key: newline|middot|pipe|semicolon
- * }
+ * @var   array  $displayData
+ *   - string[]  parts      Rendered scripture reference strings
+ *   - string    separator  Separator key: newline|middot|pipe|semicolon
  *
  * @package    Proclaim.Site
  * @copyright  (C) 2026 CWM Team All rights reserved

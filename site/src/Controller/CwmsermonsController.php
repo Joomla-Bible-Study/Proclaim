@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
@@ -95,7 +96,7 @@ class CwmsermonsController extends BaseController
         }
 
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['success' => $id > 0]);
+        echo json_encode(['success' => $id > 0], JSON_THROW_ON_ERROR);
         $app->close();
     }
 
@@ -141,7 +142,7 @@ class CwmsermonsController extends BaseController
                 $input->set('list_' . $key, $value);
             }
 
-            /** @var \CWM\Component\Proclaim\Site\Model\CwmsermonsModel $model */
+            /** @var CwmsermonsModel $model */
             $model    = $this->getModel('Cwmsermons', 'Site');
             $state    = $model->getState();
             $template = $state->get('template');
@@ -175,7 +176,10 @@ class CwmsermonsController extends BaseController
 
                 $options = [];
 
-                foreach ($field->options as $opt) {
+                /** @var \stdClass[] $fieldOptions ListField::__get('options') */
+                $fieldOptions = $field->__get('options');
+
+                foreach ($fieldOptions as $opt) {
                     // Skip placeholder options (empty value)
                     if ((string) $opt->value === '') {
                         continue;
