@@ -378,6 +378,107 @@ class Cwmbackup
     }
 
     /**
+     * Count the number of rows in a Proclaim table.
+     *
+     * @param   string  $table  Full table name (with prefix)
+     *
+     * @return  int  Row count
+     *
+     * @since   10.2.0
+     */
+    public function getTableRowCount(string $table): int
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName($table));
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    /**
+     * Export table structure (DDL) only — DROP + CREATE statements.
+     *
+     * @param   string  $table  Full table name (with prefix)
+     *
+     * @return  string  SQL DDL statements
+     *
+     * @since   10.2.0
+     */
+    public function getExportTableStructure(string $table): string
+    {
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $prefix = $db->getPrefix();
+        $export = '';
+
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
+
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
+        $db->setQuery($query);
+        $table_def = $db->loadObject();
+
+        foreach ($table_def as $value) {
+            if (substr_count($value, 'CREATE')) {
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export = str_replace('TYPE=', 'ENGINE=', $export);
+            }
+        }
+
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Export a range of rows from a table as INSERT statements.
+     *
+     * @param   string  $table   Full table name (with prefix)
+     * @param   int     $offset  Starting row offset
+     * @param   int     $limit   Maximum rows to export
+     *
+     * @return  string  SQL INSERT statements for the row range
+     *
+     * @since   10.2.0
+     */
+    public function getExportTableRows(string $table, int $offset, int $limit): string
+    {
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(\ini_get('max_execution_time'));
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName($table));
+        $db->setQuery($query, $offset, $limit);
+        $results = $db->loadObjectList();
+
+        $export = '';
+
+        if ($results) {
+            foreach ($results as $result) {
+                $data   = [];
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
+
+                foreach ($result as $key => $value) {
+                    if ($value === null) {
+                        $data[] = $db->quoteName($key) . "=NULL";
+                    } else {
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                    }
+                }
+
+                $export .= implode(',', $data) . ";\n";
+            }
+        }
+
+        return $export;
+    }
+
+    /**
      * Get Export Table
      *
      * @param   string  $table  Table name
