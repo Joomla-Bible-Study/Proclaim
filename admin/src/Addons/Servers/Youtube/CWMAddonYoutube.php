@@ -1638,6 +1638,18 @@ class CWMAddonYoutube extends CWMAddon
                     }
                 }
 
+                // Auto-extract chapters from video description if not already set
+                $existingChapters = $params->get('chapters', []);
+
+                if (empty($existingChapters)) {
+                    $description = $item->snippet->description ?? '';
+                    $chapters    = \CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper::parseYouTubeChapters($description);
+
+                    if (!empty($chapters)) {
+                        $params->set('chapters', $chapters);
+                    }
+                }
+
                 // Auto-import YouTube tags as topics when setting is enabled
                 $adminParams = Cwmparams::getAdmin()->params;
 

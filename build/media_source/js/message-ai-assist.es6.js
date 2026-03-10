@@ -20,9 +20,10 @@
         return;
     }
 
-    const token      = config.dataset.token || '';
-    const mediaId    = parseInt(config.dataset.mediaId, 10) || 0;
-    const ajaxBase   = `index.php?option=com_proclaim&format=raw&${token}=1`;
+    const token          = config.dataset.token || '';
+    const mediaId        = parseInt(config.dataset.mediaId, 10) || 0;
+    const youtubeMediaId = parseInt(config.dataset.youtubeMediaId, 10) || 0;
+    const ajaxBase       = `index.php?option=com_proclaim&format=raw&${token}=1`;
 
     // ---- Helpers ----
 
@@ -147,6 +148,83 @@
         btn.insertAdjacentElement('afterend', badge);
 
         setTimeout(() => badge.remove(), 3000);
+    }
+
+    /**
+     * Parse chapter text lines (e.g. "0:00 Introduction") into structured array.
+     *
+     * @param {string} text  Multi-line chapter text
+     * @returns {Array<{time: string, label: string}>}
+     */
+    function parseChaptersText(text) {
+        if (!text) {
+            return [];
+        }
+
+        const chapters = [];
+
+        text.split('\n').forEach((line) => {
+            const match = line.trim().match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s+(.+)$/);
+
+            if (match) {
+                chapters.push({ time: match[1], label: match[2].trim() });
+            }
+        });
+
+        return chapters;
+    }
+
+    /**
+     * Save chapters to the media file via AJAX and show feedback.
+     *
+     * @param {HTMLElement} btn       The button that was clicked
+     * @param {HTMLTextAreaElement} textarea  The chapters textarea
+     */
+    function applyChaptersToMedia(btn, textarea) {
+        // Use YouTube media ID when available (chapters from YouTube apply to that file)
+        const targetMediaId = youtubeMediaId || mediaId;
+
+        if (!textarea || !textarea.value || !targetMediaId) {
+            return;
+        }
+
+        const chapters = parseChaptersText(textarea.value);
+
+        if (!chapters.length) {
+            return;
+        }
+
+        btn.disabled = true;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+        fetch(`${ajaxBase}&task=cwmmediafile.saveChapters&media_id=${targetMediaId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ chapters }),
+        })
+            .then((r) => r.json())
+            .then((data) => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+
+                if (data.success) {
+                    showAppliedFeedback(
+                        btn,
+                        (Joomla.Text._('JBS_CMN_AI_CHAPTERS_APPLIED') || '{count} chapters saved')
+                            .replace('{count}', data.count),
+                    );
+                } else {
+                    showAppliedFeedback(btn, data.error || 'Error');
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
     }
 
     // ---- Suggest Topics ----
@@ -510,6 +588,16 @@
             }
         });
 
+        // Apply chapters to media file
+        const btnApplyChapters = document.getElementById('btn-apply-chapters');
+
+        if (btnApplyChapters) {
+            btnApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('ai-chapters-text');
+                applyChaptersToMedia(btnApplyChapters, textarea);
+            });
+        }
+
         // Copy chapters to clipboard
         const btnCopyChapters = document.getElementById('btn-copy-chapters');
 
@@ -693,6 +781,16 @@
                     setEditorValue('studyintro', desc);
                     showAppliedFeedback(btnYtApplyDesc, 'Applied');
                 }
+            });
+        }
+
+        // Apply YouTube chapters to media file
+        const btnYtApplyChapters = document.getElementById('btn-yt-apply-chapters');
+
+        if (btnYtApplyChapters) {
+            btnYtApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('yt-chapters-text');
+                applyChaptersToMedia(btnYtApplyChapters, textarea);
             });
         }
 

@@ -417,6 +417,106 @@ class CwmmediafileController extends FormController
     }
 
     /**
+     * Save chapters to a media file's params via AJAX.
+     *
+     * Called from the message edit page when applying AI-suggested or
+     * YouTube-imported chapters to a media file.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    public function saveChapters(): void
+    {
+        CWMAddon::prepareAjaxEnvironment();
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+
+            return;
+        }
+
+        $app     = Factory::getApplication();
+        $mediaId = $app->getInput()->getInt('media_id', 0);
+
+        if (!$mediaId) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No media_id provided']);
+
+            return;
+        }
+
+        // Parse chapters from POST body (JSON)
+        $rawBody = file_get_contents('php://input');
+
+        try {
+            $payload  = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
+            $chapters = $payload['chapters'] ?? [];
+        } catch (\JsonException) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'Invalid JSON body']);
+
+            return;
+        }
+
+        if (empty($chapters) || !\is_array($chapters)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No chapters provided']);
+
+            return;
+        }
+
+        // Sanitize and compute seconds for each chapter
+        $clean = [];
+
+        foreach ($chapters as $ch) {
+            $ch    = (array) $ch;
+            $time  = preg_replace('/[^\d:]/', '', $ch['time'] ?? '0:00');
+            $label = trim(strip_tags($ch['label'] ?? ''));
+
+            if (empty($time) || empty($label)) {
+                continue;
+            }
+
+            $clean[] = [
+                'time'    => $time,
+                'seconds' => \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel::timeToSeconds($time),
+                'label'   => $label,
+            ];
+        }
+
+        if (empty($clean)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No valid chapters after sanitization']);
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        if ($paramsJson === null) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'Media file not found']);
+
+            return;
+        }
+
+        $params = new \Joomla\Registry\Registry($paramsJson ?: '{}');
+        $params->set('chapters', $clean);
+
+        $update = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($update);
+        $db->execute();
+
+        CWMAddon::outputJson(['success' => true, 'count' => \count($clean)]);
+    }
+
+    /**
      * Function that allows child controller access to model data after the data has been saved.
      *
      * @param   BaseModel  $model      The data model object.

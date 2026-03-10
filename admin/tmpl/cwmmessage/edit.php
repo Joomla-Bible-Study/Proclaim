@@ -489,7 +489,11 @@ echo Route::_(
                                 <?php echo Text::_('JBS_CMN_AI_CHAPTERS_DESC'); ?>
                             </div>
                             <textarea id="ai-chapters-text" class="form-control font-monospace" rows="6" readonly></textarea>
-                            <div class="mt-2">
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" id="btn-apply-chapters">
+                                    <span class="icon-save" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_APPLY_CHAPTERS'); ?>
+                                </button>
                                 <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-copy-chapters">
                                     <span class="icon-copy" aria-hidden="true"></span>
                                     <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
@@ -565,10 +569,16 @@ echo Route::_(
                             <h6><?php echo Text::_('JBS_CMN_AI_CHAPTERS'); ?></h6>
                             <p class="text-muted small"><?php echo Text::_('JBS_CMN_YT_SYNC_CHAPTERS_DESC'); ?></p>
                             <textarea id="yt-chapters-text" class="form-control font-monospace" rows="4" readonly></textarea>
-                            <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="btn-yt-copy-chapters">
-                                <span class="icon-copy" aria-hidden="true"></span>
-                                <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
-                            </button>
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" id="btn-yt-apply-chapters">
+                                    <span class="icon-save" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_APPLY_CHAPTERS'); ?>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-yt-copy-chapters">
+                                    <span class="icon-copy" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -585,10 +595,19 @@ echo Route::_(
 
 <?php
 // Build config data for the external topic-suggest / AI assist script
-$firstMediaId = 0;
+// Use the YouTube media file for chapter/sync operations; fall back to the first media file
+$firstMediaId   = 0;
+$youtubeMediaId = 0;
 
 if (!empty($this->mediafiles)) {
     $firstMediaId = (int) $this->mediafiles[0]->id;
+
+    foreach ($this->mediafiles as $mf) {
+        if (strtolower(trim($mf->server_type ?? '')) === 'youtube') {
+            $youtubeMediaId = (int) $mf->id;
+            break;
+        }
+    }
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
@@ -597,5 +616,6 @@ $wa->useScript('com_proclaim.message-ai-assist');
 <div id="message-ai-config"
      data-token="<?php echo Session::getFormToken(); ?>"
      data-media-id="<?php echo $firstMediaId; ?>"
+     data-youtube-media-id="<?php echo $youtubeMediaId; ?>"
      data-has-youtube="<?php echo $hasYouTubeMedia ? '1' : '0'; ?>"
      style="display:none;"></div>
