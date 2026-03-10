@@ -46,6 +46,7 @@ Text::script('JBS_IBM_PREPARING_IMPORT');
 Text::script('JBS_IBM_ANALYZING_FILE');
 Text::script('JBS_IBM_IMPORTING_DATA');
 Text::script('JBS_IBM_BATCH');
+Text::script('JBS_IBM_DATA_MIGRATION');
 Text::script('JBS_IBM_FIXING_ASSETS');
 Text::script('JBS_IBM_IMPORT_COMPLETE');
 Text::script('JBS_IBM_COMPLETE');

@@ -278,7 +278,7 @@
         /**
      * Make AJAX request
      */
-        async fetchJson(url, options = {}) {
+        async fetchJson(url, options = {}, timeout = 60000) {
             const defaultOptions = {
                 method: 'POST',
                 headers: {
@@ -289,7 +289,7 @@
             return window.ProclaimFetch.fetchJson(
                 url,
                 { ...defaultOptions, ...options },
-                { timeout: 60000, retries: 0 },
+                { timeout, retries: 0 },
             );
         }
 
@@ -297,10 +297,12 @@
      * Start export process
      */
         async startExport(mode) {
+            const CHUNK_SIZE = 2000;
+
             this.showModal(Joomla.Text._('JBS_IBM_EXPORTING_DATABASE'));
 
             try {
-                // Step 1: Get list of tables and export ID
+                // Step 1: Get list of tables with row counts
                 this.updateProgress(5, Joomla.Text._('JBS_IBM_GETTING_TABLES'), '');
 
                 const tablesUrl = `index.php?option=com_proclaim&task=cwmbackup.getExportTablesXHR&format=json&${Joomla.getOptions('csrf.token')}=1`;
@@ -310,30 +312,71 @@
                     throw new Error(tablesResult.message || 'Failed to get tables');
                 }
 
-                const { tables } = tablesResult.data;
-                const { exportId } = tablesResult.data;
-                const totalTables = tables.length;
+                const { tables, exportId } = tablesResult.data;
 
-                // Step 2: Export each table
-                for (let i = 0; i < totalTables; i++) {
+                // Calculate total work units (chunks) for progress tracking
+                let totalChunks = 0;
+                for (const tableInfo of tables) {
+                    if (tableInfo.rows > CHUNK_SIZE) {
+                        totalChunks += Math.ceil(tableInfo.rows / CHUNK_SIZE);
+                    } else {
+                        totalChunks += 1;
+                    }
+                }
+
+                // Step 2: Export each table (with chunking for large tables)
+                let completedChunks = 0;
+
+                for (const tableInfo of tables) {
                     if (this.isCancelled) {
                         throw new Error('Export cancelled by user');
                     }
 
-                    const table = tables[i];
-                    const percent = 10 + ((i / totalTables) * 80);
+                    if (tableInfo.rows > CHUNK_SIZE) {
+                        // Chunked export for large tables
+                        const totalTableChunks = Math.ceil(tableInfo.rows / CHUNK_SIZE);
 
-                    this.updateProgress(
-                        percent,
-                        Joomla.Text._('JBS_IBM_EXPORTING_TABLE'),
-                        `${table} (${i + 1}/${totalTables})`,
-                    );
+                        for (let offset = 0; offset < tableInfo.rows; offset += CHUNK_SIZE) {
+                            if (this.isCancelled) {
+                                throw new Error('Export cancelled by user');
+                            }
 
-                    const exportUrl = `index.php?option=com_proclaim&task=cwmbackup.exportTableXHR&format=json&table=${encodeURIComponent(table)}&exportId=${encodeURIComponent(exportId)}&${Joomla.getOptions('csrf.token')}=1`;
-                    const exportResult = await this.fetchJson(exportUrl);
+                            const percent = 10 + ((completedChunks / totalChunks) * 80);
+                            const chunkNum = Math.floor(offset / CHUNK_SIZE) + 1;
 
-                    if (!exportResult.success) {
-                        throw new Error(exportResult.message || `Failed to export table: ${table}`);
+                            this.updateProgress(
+                                percent,
+                                Joomla.Text._('JBS_IBM_EXPORTING_TABLE'),
+                                `${tableInfo.name} (${chunkNum}/${totalTableChunks})`,
+                            );
+
+                            const exportUrl = `index.php?option=com_proclaim&task=cwmbackup.exportTableXHR&format=json&table=${encodeURIComponent(tableInfo.name)}&offset=${offset}&limit=${CHUNK_SIZE}&exportId=${encodeURIComponent(exportId)}&${Joomla.getOptions('csrf.token')}=1`;
+                            const exportResult = await this.fetchJson(exportUrl);
+
+                            if (!exportResult.success) {
+                                throw new Error(exportResult.message || `Failed to export: ${tableInfo.name}`);
+                            }
+
+                            completedChunks += 1;
+                        }
+                    } else {
+                        // Small table or virtual table — export in one call
+                        const percent = 10 + ((completedChunks / totalChunks) * 80);
+
+                        this.updateProgress(
+                            percent,
+                            Joomla.Text._('JBS_IBM_EXPORTING_TABLE'),
+                            tableInfo.name,
+                        );
+
+                        const exportUrl = `index.php?option=com_proclaim&task=cwmbackup.exportTableXHR&format=json&table=${encodeURIComponent(tableInfo.name)}&exportId=${encodeURIComponent(exportId)}&${Joomla.getOptions('csrf.token')}=1`;
+                        const exportResult = await this.fetchJson(exportUrl);
+
+                        if (!exportResult.success) {
+                            throw new Error(exportResult.message || `Failed to export: ${tableInfo.name}`);
+                        }
+
+                        completedChunks += 1;
                     }
                 }
 
@@ -440,13 +483,13 @@
 
                 const { totalBatches } = infoResult.data;
 
-                // Step 3: Import in batches
+                // Step 3: Import in batches (20-83%)
                 for (let batch = 0; batch < totalBatches; batch++) {
                     if (this.isCancelled) {
                         throw new Error('Import cancelled by user');
                     }
 
-                    const percent = 20 + ((batch / totalBatches) * 70);
+                    const percent = 20 + ((batch / totalBatches) * 63);
 
                     this.updateProgress(
                         percent,
@@ -462,12 +505,42 @@
                     }
                 }
 
-                // Step 4: Finalize import
-                this.updateProgress(92, Joomla.Text._('JBS_IBM_FIXING_ASSETS'), '');
+                // Step 4: Post-restore data fixes — run each step individually (83-93%)
+                const POST_RESTORE_STEPS = 6;
+
+                for (let step = 0; step < POST_RESTORE_STEPS; step++) {
+                    if (this.isCancelled) {
+                        throw new Error('Import cancelled by user');
+                    }
+
+                    const percent = 83 + ((step / POST_RESTORE_STEPS) * 10);
+
+                    this.updateProgress(
+                        percent,
+                        Joomla.Text._('JBS_IBM_DATA_MIGRATION'),
+                        `${step + 1} / ${POST_RESTORE_STEPS}`,
+                    );
+
+                    const stepUrl = `index.php?option=com_proclaim&task=cwmbackup.postRestoreStepXHR&format=json&step=${step}&${Joomla.getOptions('csrf.token')}=1`;
+
+                    try {
+                        const stepResult = await this.fetchJson(stepUrl, {}, 300000);
+
+                        if (!stepResult.success) {
+                            // Log but continue — individual step failures should not halt import
+                            console.warn(`Post-restore step ${step} failed:`, stepResult.message);
+                        }
+                    } catch (stepError) {
+                        console.warn(`Post-restore step ${step} error:`, stepError.message);
+                    }
+                }
+
+                // Step 5: Finalize import — assets, templatecodes, cleanup (93-99%)
+                this.updateProgress(93, Joomla.Text._('JBS_IBM_FIXING_ASSETS'), '');
 
                 // Check if skip asset fix is enabled (dev testing option)
                 const skipAssetFix = document.getElementById('skip_asset_fix')?.checked ? '1' : '0';
-                const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeImportXHR&format=json&sessionId=${sessionId}&skipAssetFix=${skipAssetFix}&${Joomla.getOptions('csrf.token')}=1`;
+                const finalizeUrl = `index.php?option=com_proclaim&task=cwmbackup.finalizeImportXHR&format=json&sessionId=${sessionId}&skipAssetFix=${skipAssetFix}&dataFixesRun=1&${Joomla.getOptions('csrf.token')}=1`;
                 const finalizeResult = await this.fetchJson(finalizeUrl);
 
                 if (!finalizeResult.success) {

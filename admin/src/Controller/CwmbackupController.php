@@ -81,8 +81,26 @@ class CwmbackupController extends FormController
         $tableNames[] = '_component_config';
         $tableNames[] = '_scheduled_tasks';
 
+        // Build table info with row counts for chunked export
+        $backup    = new Cwmbackup();
+        $tableInfo = [];
+
+        foreach ($tableNames as $name) {
+            $rows = 0;
+
+            if (!str_starts_with($name, '_')) {
+                try {
+                    $rows = $backup->getTableRowCount($name);
+                } catch (\Exception $e) {
+                    Log::add('Failed to count rows for ' . $name . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+                }
+            }
+
+            $tableInfo[] = ['name' => $name, 'rows' => $rows];
+        }
+
         // Return the export ID so it can be passed to later calls
-        $this->sendJsonResponse(true, '', ['tables' => $tableNames, 'exportId' => $exportId]);
+        $this->sendJsonResponse(true, '', ['tables' => $tableInfo, 'exportId' => $exportId]);
     }
 
     /**
@@ -105,6 +123,8 @@ class CwmbackupController extends FormController
         $config   = $app->getConfig();
         $table    = $input->get('table', '', 'string');
         $exportId = $input->get('exportId', '', 'string');
+        $offset   = $input->getInt('offset', -1);
+        $limit    = $input->getInt('limit', 0);
 
         if (empty($table)) {
             $this->sendJsonResponse(false, 'No table specified');
@@ -121,9 +141,29 @@ class CwmbackupController extends FormController
             $this->sendJsonResponse(false, 'Export file not found. Please start again.');
         }
 
-        // Export the table and append directly to file
-        $backup    = new Cwmbackup();
-        $tableData = $backup->getExportTableData($table);
+        $backup = new Cwmbackup();
+
+        // Chunked export: offset >= 0 and limit > 0 triggers row-range mode
+        if ($offset >= 0 && $limit > 0 && !str_starts_with($table, '_')) {
+            $tableData = '';
+
+            // First chunk includes DDL (DROP + CREATE)
+            if ($offset === 0) {
+                $tableData .= $backup->getExportTableStructure($table);
+            }
+
+            $tableData .= $backup->getExportTableRows($table, $offset, $limit);
+
+            // Add separator after the last chunk
+            $rowCount = $backup->getTableRowCount($table);
+
+            if ($offset + $limit >= $rowCount) {
+                $tableData .= "\n-- --------------------------------------------------------\n\n";
+            }
+        } else {
+            // Full export (small tables or virtual tables)
+            $tableData = $backup->getExportTableData($table);
+        }
 
         // Append to temp file
         if (file_put_contents($tmpPath, $tableData, FILE_APPEND) === false) {
@@ -526,6 +566,85 @@ class CwmbackupController extends FormController
     }
 
     /**
+     * Run a single post-restore data fix step via AJAX.
+     *
+     * Called sequentially by the JS after batch import completes.
+     * Each step is independent — failure of one does not block others.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.2.0
+     */
+    public function postRestoreStepXHR(): void
+    {
+        // Register a shutdown handler to catch fatal errors
+        register_shutdown_function(function () {
+            $error = error_get_last();
+
+            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
+                    'data'    => [],
+                ], JSON_THROW_ON_ERROR);
+            }
+        });
+
+        try {
+            if (!Session::checkToken('get') && !Session::checkToken()) {
+                $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+            }
+
+            $app  = Factory::getApplication();
+            $step = $app->getInput()->getInt('step', -1);
+
+            // Give each step up to 5 minutes
+            if (\function_exists('set_time_limit')) {
+                set_time_limit(300);
+            }
+
+            $labels = [
+                'Fixing teacher aliases',
+                'Populating study-teacher links',
+                'Migrating scripture references',
+                'Seeding Bible translations',
+                'Fixing media file legacy paths',
+                'Migrating template defaults',
+            ];
+
+            $totalSteps = \count($labels);
+
+            if ($step < 0 || $step >= $totalSteps) {
+                $this->sendJsonResponse(false, 'Invalid post-restore step: ' . $step);
+            }
+
+            match ($step) {
+                0 => CwmmigrationHelper::fixTeacherAliases(),
+                1 => CwmmigrationHelper::populateStudyTeachers(),
+                2 => CwmscriptureMigration::migrate(),
+                3 => CwmmigrationHelper::seedBibleTranslations(),
+                4 => CwmmigrationHelper::fixMediafileLegacyPaths(),
+                5 => (new CwmtemplatemigrationHelper())->migrateAll(),
+            };
+
+            Log::add('Post-restore step ' . $step . ' completed: ' . $labels[$step], Log::INFO, 'com_proclaim');
+
+            $this->sendJsonResponse(true, '', [
+                'step'       => $step,
+                'label'      => $labels[$step],
+                'totalSteps' => $totalSteps,
+            ]);
+        } catch (\Exception $e) {
+            $this->sendJsonResponse(false, 'Post-restore step error: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Finalize import-fix assets and ownership
      *
      * @return void
@@ -575,11 +694,12 @@ class CwmbackupController extends FormController
                 $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
             }
 
-            $app          = Factory::getApplication();
-            $input        = $app->getInput();
-            $sessionId    = $input->get('sessionId', '', 'string');
-            $skipAssetFix = $input->get('skipAssetFix', '0', 'string') === '1';
-            $session      = $app->getSession();
+            $app           = Factory::getApplication();
+            $input         = $app->getInput();
+            $sessionId     = $input->get('sessionId', '', 'string');
+            $skipAssetFix  = $input->get('skipAssetFix', '0', 'string') === '1';
+            $dataFixesRun  = $input->get('dataFixesRun', '0', 'string') === '1';
+            $session       = $app->getSession();
 
             // Retrieve and clean up the import file path before clearing session
             $importFilePath = $session->get('proclaim_import_' . $sessionId, '', 'CWM');
@@ -592,8 +712,10 @@ class CwmbackupController extends FormController
             // after the backup was created get applied (e.g. bible_translations).
             $schemaFixed = $this->fixSchemaAfterRestore();
 
-            // Run post-restore data fixes (seed bible translations, template defaults, etc.)
-            $this->runPostRestoreDataFixes();
+            // Run post-restore data fixes unless already run via postRestoreStepXHR
+            if (!$dataFixesRun) {
+                $this->runPostRestoreDataFixes();
+            }
 
             // Correct AUTO_INCREMENT counters that may be stale from backup
             $autoIncrementFixes = Cwmrestore::correctAutoIncrements();
