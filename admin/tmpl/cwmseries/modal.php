@@ -35,6 +35,8 @@ HTMLHelper::_('behavior.multiselect');
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('core')
+    ->useScript('multiselect')
+    ->useScript('modal-content-select')
     ->useScript('com_proclaim.cwmadmin-series-modal');
 
 $function  = $app->getInput()->getCmd('function', 'jSelectSeries');
@@ -159,7 +161,8 @@ foreach ($this->items as $i => $item) : ?>
 
                     <th scope="row">
                         <?php
-            $attribs = 'data-function="' . $this->escape($onclick) . '"'
+            $attribs = 'data-content-select data-content-type="com_proclaim.serie"'
+                . ' data-function="' . $this->escape($onclick) . '"'
                 . ' data-id="' . $item->id . '"'
                 . ' data-title="' . $this->escape($item->series_text) . '"'
                 . ' data-uri="' . $this->escape(

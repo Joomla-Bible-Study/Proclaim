@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -37,6 +38,54 @@ class CwmserieController extends FormController
      * @since 7.0
      */
     protected $view_list = 'cwmseries';
+
+    /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+
+        // When editing in modal then redirect to modalreturn layout
+        if ($result && $this->input->get('layout') === 'modal') {
+            $id     = $this->input->get('id');
+            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+                . '&layout=modalreturn&from-task=cancel';
+
+            $this->setRedirect(Route::_($return, false));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Post-save hook — redirects to modalreturn when saving in modal layout.
+     *
+     * @param   BaseDatabaseModel  $model      The data model object.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        if ($this->input->get('layout') === 'modal' && $this->task === 'save') {
+            $id     = $model->getState('cwmserie.id', '');
+            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+                . '&layout=modalreturn&from-task=save';
+
+            $this->setRedirect(Route::_($return, false));
+        }
+    }
 
     /**
      * Method to run batch operations.

@@ -90,9 +90,8 @@
             <option value="-1">JBS_CMN_SELECT_LOCATION</option>
         </field>
 
-        <field name="series_id" type="Series" label="JBS_CMN_SERIES">
-            <option value="-1">JBS_CMN_SELECT_SERIES</option>
-        </field>
+        <field name="series_id" type="Modal_Series" label="JBS_CMN_SERIES"
+               select="true" new="true" edit="true" clear="true"/>
 
         <field name="topics" type="TopicsForm" label="JBS_CMN_TOPIC_TAG"
                description="JBS_CMN_TOPIC_TAG_DESC" multiple="true"/>

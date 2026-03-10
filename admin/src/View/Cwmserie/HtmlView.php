@@ -94,6 +94,14 @@ class HtmlView extends BaseHtmlView
         $this->form  = $model->getForm();
         $this->item  = $model->getItem();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'serie', (int)$this->item->id);
+
+        // For modalreturn layout, just load item data and render (no toolbar, no extras)
+        if ($this->getLayout() === 'modalreturn') {
+            parent::display($tpl);
+
+            return;
+        }
+
         $admin       = Cwmparams::getAdmin();
         $registry    = new Registry();
         $registry->loadString($admin->params);
@@ -109,10 +117,21 @@ class HtmlView extends BaseHtmlView
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // Set the toolbar
-        $this->addToolbar();
+        $input          = Factory::getApplication()->getInput();
+        $forcedLanguage = $input->get('forcedLanguage', '', 'cmd');
 
-        $isNew = ($this->item->id < 1);
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage) {
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+        }
+
+        // Set the toolbar
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+        } else {
+            $this->addModalToolbar();
+        }
 
         // Display the template
         parent::display($tpl);
@@ -151,5 +170,33 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
         ToolbarHelper::help('serie', true);
+    }
+
+    /**
+     * Add toolbar for modal layout (Apply/Save/Cancel only).
+     *
+     * @return void
+     *
+     * @since  10.1.0
+     */
+    protected function addModalToolbar(): void
+    {
+        $isNew   = ($this->item->id === 0);
+        $toolbar = $this->getDocument()->getToolbar();
+
+        ToolbarHelper::title(
+            Text::_('JBS_CMN_SERIES') . ': <small><small>[' . ($isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT')) . ']</small></small>',
+            'tree tree'
+        );
+
+        $canCreate = $isNew && $this->canDo->get('core.create', 'com_proclaim');
+        $canEdit   = $this->canDo->get('core.edit', 'com_proclaim');
+
+        if ($canCreate || $canEdit) {
+            $toolbar->apply('cwmserie.apply');
+            $toolbar->save('cwmserie.save');
+        }
+
+        $toolbar->cancel('cwmserie.cancel');
     }
 }
