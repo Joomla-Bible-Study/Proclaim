@@ -327,6 +327,17 @@ class CwmmessageModel extends AdminModel
             } else {
                 $this->data->teachers = [];
             }
+        } elseif ($this->data) {
+            // New record — seed teachers subform from admin default if configured
+            $admin   = Cwmparams::getAdmin();
+            $params  = new Registry($admin->params);
+            $default = (int) $params->get('teacher_id', 0);
+
+            if ($default > 0) {
+                $this->data->teachers = [
+                    ['teacher_id' => $default],
+                ];
+            }
         }
 
         return $this->data;
