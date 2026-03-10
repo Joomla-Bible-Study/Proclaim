@@ -292,7 +292,7 @@
 
         // Create toolbar container
         const toolbar = document.createElement('div');
-        toolbar.className = 'card card-body bg-light mb-3';
+        toolbar.className = 'card card-body bg-body-tertiary mb-3';
         toolbar.innerHTML = '<h4 class="card-title mb-3">'
             + '<span class="icon-youtube me-2" aria-hidden="true"></span>'
             + (cfg.toolbarTitle || 'YouTube Integration') + '</h4>'
