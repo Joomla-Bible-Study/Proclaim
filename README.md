@@ -14,7 +14,7 @@ A Joomla 5+ component for managing and displaying Bible studies and sermons, dev
 
 | Branch      | Description                                           |
 |-------------|-------------------------------------------------------|
-| Development | Next minor release (10.1.x) -- new features and fixes |
+| Development | Next minor release (10.2.x) -- new features and fixes |
 | Main        | Current stable release -- bug fixes only              |
 
 ## Looking for an Installable Package?
