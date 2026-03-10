@@ -1,0 +1,30 @@
+.cwm-chapter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.cwm-chapter-item {
+    background: var(--template-bg-dark-3, #f0f0f0);
+    border: 1px solid var(--template-bg-dark-7, #ddd);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.cwm-chapter-item:hover {
+    background: var(--template-bg-dark-7, #e0e0e0);
+}
+
+.cwm-chapter-item.active {
+    background: var(--link-color, #1a73e8);
+    color: #fff;
+    border-color: transparent;
+}
+
+.cwm-chapter-time {
+    font-weight: 600;
+    margin-right: 0.25rem;
+}

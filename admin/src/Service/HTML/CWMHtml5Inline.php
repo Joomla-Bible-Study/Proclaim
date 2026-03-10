@@ -169,12 +169,32 @@ class CWMHtml5Inline
             $header = str_replace('{{title}}', $media->studytitle, $header);
         }
 
-        $render .= '<div class="media playhit" data-id="' . (int) $media->id . '">';
+        $chapters     = $media->params->get('chapters', []);
+        $chaptersAttr = '';
+
+        if (!empty($chapters)) {
+            $chaptersAttr = " data-chapters='" . htmlspecialchars(json_encode($chapters), ENT_QUOTES, 'UTF-8') . "'";
+        }
+
+        $render .= '<div class="media playhit" data-id="' . (int) $media->id . '"' . $chaptersAttr . '>';
+
+        // Build subtitle/caption track tags for HTML5 players
+        $subtitleTracks = $media->params->get('subtitle_tracks', []);
+        $trackTags      = '';
+
+        foreach ($subtitleTracks as $track) {
+            $track     = (object) $track;
+            $trackTags .= '<track kind="' . htmlspecialchars($track->kind ?? 'captions', ENT_QUOTES, 'UTF-8') . '"'
+                . ' src="' . htmlspecialchars($track->src ?? '', ENT_QUOTES, 'UTF-8') . '"'
+                . ' srclang="' . htmlspecialchars($track->srclang ?? '', ENT_QUOTES, 'UTF-8') . '"'
+                . ' label="' . htmlspecialchars($track->label ?? '', ENT_QUOTES, 'UTF-8') . '">';
+        }
 
         # If MP3 media
         if (self::isMimeTypeAllowed($media->params->get('mime_type'), $audioFormats)) {
             $render .= '<audio controls>';
             $render .= '<source src="' . $media->path1 . '" type="' . $media->params->get('mime_type') . '">';
+            $render .= $trackTags;
             $render .= 'Your browser does not support the audio element.';
             $render .= '</audio>';
         }
@@ -182,6 +202,7 @@ class CWMHtml5Inline
         if (self::isMimeTypeAllowed($media->params->get('mime_type'), $videoFormats)) {
             $render .= '<video width="' . $media->playerwidth . '" height="' . $height . '" controls>';
             $render .= '<source src="' . $media->path1 . '" type="' . $media->params->get('mime_type') . '">';
+            $render .= $trackTags;
             $render .= 'Your browser does not support the video tag.';
             $render .= '</video>';
         }

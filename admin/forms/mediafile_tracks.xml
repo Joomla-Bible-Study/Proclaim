@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="chapters" label="JBS_MED_CHAPTERS">
+            <field name="chapters" type="subform" label="JBS_MED_CHAPTERS"
+                   description="JBS_MED_CHAPTERS_DESC"
+                   layout="joomla.form.field.subform.repeatable-table"
+                   multiple="true" min="0" max="50"
+                   buttons="add,remove,move">
+                <form>
+                    <field name="time" type="text" label="JBS_MED_CHAPTER_TIME"
+                           hint="0:00 or 1:30:00" size="10" required="true"
+                           filter="STRING"/>
+                    <field name="label" type="text" label="JBS_MED_CHAPTER_LABEL"
+                           required="true" filter="STRING"/>
+                </form>
+            </field>
+        </fieldset>
+        <fieldset name="subtitle_tracks" label="JBS_MED_SUBTITLE_TRACKS">
+            <field name="subtitle_tracks" type="subform" label="JBS_MED_SUBTITLE_TRACKS"
+                   description="JBS_MED_SUBTITLE_TRACKS_DESC"
+                   layout="joomla.form.field.subform.repeatable-table"
+                   multiple="true" min="0" max="10"
+                   buttons="add,remove,move">
+                <form>
+                    <field name="label" type="text" label="JBS_MED_TRACK_LABEL"
+                           hint="English" required="true" filter="STRING"/>
+                    <field name="srclang" type="text" label="JBS_MED_TRACK_LANGUAGE"
+                           hint="en" size="5" required="true" filter="STRING"/>
+                    <field name="src" type="text" label="JBS_MED_TRACK_URL"
+                           description="JBS_MED_TRACK_URL_DESC"
+                           hint="https://example.com/subtitles.vtt"
+                           required="true" filter="URL"/>
+                    <field name="kind" type="list" label="JBS_MED_TRACK_KIND" default="captions">
+                        <option value="captions">JBS_MED_TRACK_CAPTIONS</option>
+                        <option value="subtitles">JBS_MED_TRACK_SUBTITLES</option>
+                    </field>
+                </form>
+            </field>
+        </fieldset>
+    </fields>
+</form>

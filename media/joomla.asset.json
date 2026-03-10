@@ -124,9 +124,25 @@
             }
         },
         {
+            "name": "com_proclaim.cwm-player-chapters",
+            "type": "script",
+            "uri": "com_proclaim/cwm-player-chapters.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-chapters",
+            "type": "style",
+            "uri": "com_proclaim/cwm-chapters.css"
+        },
+        {
             "name": "com_proclaim.cwm-timestamp",
             "type": "script",
-            "uri": "com_proclaim/cwm-timestamp.min.js",
+            "uri": "com_proclaim/cwm-player-chapters.min.js",
             "dependencies": [
                 "core"
             ],
@@ -618,6 +634,17 @@
             ],
             "attributes": {
                 "type": "module"
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-youtube-tracks",
+            "type": "script",
+            "uri": "com_proclaim/cwm-youtube-tracks.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
             }
         },
         {

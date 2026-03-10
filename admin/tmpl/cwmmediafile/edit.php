@@ -65,6 +65,37 @@ $this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
 ]);
 
 $this->useCoreUI = true;
+
+// YouTube-specific integration for Chapters & Tracks tab
+$serverType = $this->state ? $this->state->get('type', '') : '';
+if (strtolower($serverType) === 'youtube' && !$new) {
+    $wa->useScript('com_proclaim.cwm-youtube-tracks');
+
+    // Check if OAuth is connected
+    $sParams = $this->state->get('s_params', []);
+    $oauthConnected = !empty($sParams['access_token']);
+
+    $this->getDocument()->addScriptOptions('com_proclaim.youtubeTracks', [
+        'isYouTube'         => true,
+        'mediaId'           => (int) $this->item->id,
+        'oauthConnected'    => $oauthConnected,
+        'baseUrl'           => \Joomla\CMS\Uri\Uri::base(),
+        'token'             => Session::getFormToken(),
+        'toolbarTitle'      => Text::_('JBS_MED_YOUTUBE_INTEGRATION'),
+        'importChaptersBtn' => Text::_('JBS_MED_IMPORT_CHAPTERS_YOUTUBE'),
+        'listCaptionsBtn'   => Text::_('JBS_MED_DOWNLOAD_CAPTIONS_YOUTUBE'),
+        'importing'         => Text::_('JBS_MED_IMPORTING_CHAPTERS'),
+        'importSuccess'     => Text::_('JBS_MED_IMPORT_CHAPTERS_SUCCESS'),
+        'importFailed'      => Text::_('JBS_MED_IMPORT_CHAPTERS_NONE'),
+        'importError'       => Text::_('JBS_MED_IMPORT_CHAPTERS_ERROR'),
+        'loadingCaptions'   => Text::_('JBS_MED_LOADING_CAPTIONS'),
+        'noCaptions'        => Text::_('JBS_MED_NO_CAPTIONS_FOUND'),
+        'captionError'      => Text::_('JBS_MED_CAPTION_ERROR'),
+        'downloadBtn'       => Text::_('JBS_MED_DOWNLOAD_VTT'),
+        'downloaded'        => Text::_('JBS_MED_CAPTION_ADDED'),
+        'oauthRequired'     => Text::_('JBS_MED_OAUTH_REQUIRED_CAPTIONS'),
+    ]);
+}
 ?>
 <form action="<?php
 echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$this->item->id; ?>"
@@ -112,6 +143,19 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         <div id="addon-options-content">
             <?php if ($this->addon !== null) : ?>
                 <?php echo $this->addon->renderOptionsFields($this->media_form, $new); ?>
+            <?php endif; ?>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'tracks', Text::_('JBS_MED_CHAPTERS_AND_TRACKS')); ?>
+        <div id="tracks-content">
+            <?php if ($this->tracks_form !== null) : ?>
+                <?php foreach ($this->tracks_form->getFieldsets('params') as $name => $fieldset) : ?>
+                    <h3><?php echo Text::_($fieldset->label); ?></h3>
+                    <?php foreach ($this->tracks_form->getFieldset($name) as $field) : ?>
+                        <?php echo $field->renderField(); ?>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>

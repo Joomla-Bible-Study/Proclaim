@@ -24,6 +24,17 @@
                    label="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR"
                    description="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR_DESC" filter="int"/>
         </fieldset>
+        <fieldset name="youtube_oauth" label="JBS_ADDON_YOUTUBE_OAUTH_SETTINGS">
+            <field name="oauth_note" type="note" label="JBS_ADDON_YOUTUBE_OAUTH_NOTE"
+                   description="JBS_ADDON_YOUTUBE_OAUTH_NOTE_DESC" />
+            <field name="client_id" type="text" label="JBS_ADDON_YOUTUBE_CLIENT_ID"
+                   description="JBS_ADDON_YOUTUBE_CLIENT_ID_DESC" class="inputbox" size="60" />
+            <field name="client_secret" type="ApiKey" label="JBS_ADDON_YOUTUBE_CLIENT_SECRET"
+                   description="JBS_ADDON_YOUTUBE_CLIENT_SECRET_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+            <field name="oauth_status" type="YoutubeOAuthStatus" label="JBS_ADDON_YOUTUBE_OAUTH_STATUS"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
+        </fieldset>
         <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
             <field name="yt_description_format" type="textarea" rows="4"
                    default="{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}"
