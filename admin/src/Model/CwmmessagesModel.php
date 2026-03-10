@@ -274,17 +274,17 @@ class CwmmessagesModel extends ListModel
             $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('locations.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
-        // Join over Plays/Downloads
-        $query->select(
-            'SUM(' . $db->quoteName('mediafile.plays') . ') AS ' . $db->quoteName('totalplays')
-            . ', SUM(' . $db->quoteName('mediafile.downloads') . ') AS ' . $db->quoteName('totaldownloads')
-            . ', ' . $db->quoteName('mediafile.study_id')
-        );
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id')
-        );
-        $query->group($db->quoteName('study.id'));
+        // Plays/Downloads totals via scalar subqueries (avoids GROUP BY on the main query)
+        $playsSubquery = $db->getQuery(true)
+            ->select('COALESCE(SUM(' . $db->quoteName('mf.plays') . '), 0)')
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
+        $downloadsSubquery = $db->getQuery(true)
+            ->select('COALESCE(SUM(' . $db->quoteName('mf.downloads') . '), 0)')
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
+        $query->select('(' . $playsSubquery . ') AS ' . $db->quoteName('totalplays'));
+        $query->select('(' . $downloadsSubquery . ') AS ' . $db->quoteName('totaldownloads'));
 
         // Join over the users for the checked out user.
         $query->select($db->quoteName('uc.name', 'editor'))
