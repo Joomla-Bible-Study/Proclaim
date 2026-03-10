@@ -247,6 +247,17 @@ class CWMAddonSoundcloud extends CWMAddon
      *
      * @since   10.1.0
      */
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function normalizeFilename(string $filename): string
+    {
+        return $this->convertSoundcloud($filename);
+    }
+
     public function convertSoundcloud(string $url = ''): string
     {
         if (empty($url)) {

@@ -208,7 +208,10 @@ class HtmlView extends BaseHtmlView
 
             if ($this->canDo->get('core.edit', 'com_proclaim')) {
                 ToolbarHelper::divider();
-                ToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);
+                $toolbar = $this->getDocument()->getToolbar();
+                $toolbar->confirmButton('undo', 'JBS_STY_RESET_HITS', 'resetHits')
+                    ->message('JBS_STY_RESET_HITS_CONFIRM')
+                    ->listCheck(false);
             }
         }
 

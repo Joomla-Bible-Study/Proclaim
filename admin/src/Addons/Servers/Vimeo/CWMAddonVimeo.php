@@ -231,6 +231,17 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @since   10.1.0
      */
+    /**
+     * {@inheritdoc}
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function normalizeFilename(string $filename): string
+    {
+        return $this->convertVimeo($filename);
+    }
+
     public function convertVimeo(string $url = ''): string
     {
         if (empty($url)) {

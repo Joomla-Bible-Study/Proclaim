@@ -151,6 +151,18 @@ class CwmmediafileModel extends AdminModel
                 $set_path = $path->get('path') . '/';
             }
 
+            // Normalize URLs to canonical embed format on save
+            $addon = CWMAddon::getInstance($table->type);
+
+            if ($addon) {
+                $filename   = $params->get('filename', '');
+                $normalized = $addon->normalizeFilename($filename);
+
+                if ($normalized !== $filename) {
+                    $params->set('filename', $normalized);
+                }
+            }
+
             // Auto-detect missing metadata (size, MIME type, duration)
             $this->autoDetectMetadata($params, $table, $set_path, $path);
 

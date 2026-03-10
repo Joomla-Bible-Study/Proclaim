@@ -975,6 +975,22 @@ abstract class CWMAddon
     }
 
     /**
+     * Normalize a user-entered URL to the canonical embed format for storage.
+     * Called on save to ensure consistent URLs in the database.
+     * Override in each platform addon.
+     *
+     * @param   string  $filename  The raw user-entered URL or filename
+     *
+     * @return  string  The normalized URL (or original if no normalization needed)
+     *
+     * @since   10.1.0
+     */
+    public function normalizeFilename(string $filename): string
+    {
+        return $filename;
+    }
+
+    /**
      * Build the complete embed URL with all form field params applied.
      * Override in each platform addon.
      *
