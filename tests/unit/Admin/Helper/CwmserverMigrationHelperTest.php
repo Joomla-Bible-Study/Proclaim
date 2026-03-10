@@ -792,7 +792,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
             'youtube', 'vimeo', 'wistia', 'resi',
             'soundcloud', 'dailymotion', 'rumble', 'facebook',
             'embed', 'article', 'virtuemart', 'docman', 'local',
-            'direct',
+            'direct', 'googledrive',
         ];
 
         $actual = CwmserverMigrationHelper::getTargetTypes();
