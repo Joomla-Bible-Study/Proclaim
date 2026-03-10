@@ -190,13 +190,9 @@ class CwmpodcastsModel extends ListModel
         $query->select($db->quoteName('uc.name', 'editor'))
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('podcast.checked_out'));
 
-        // Join location name for display (graceful — column may not exist on older installs)
-        $columns = $db->getTableColumns('#__bsms_podcast');
-
-        if (isset($columns['location_id'])) {
-            $query->select($db->quoteName('loc.location_text', 'location_text'))
-                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('podcast.location_id'));
-        }
+        // Join location name for display
+        $query->select($db->quoteName('loc.location_text', 'location_text'))
+            ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('podcast.location_id'));
 
         // Filter by access level (dropdown).
         if ($access = $this->getState('filter.access')) {
@@ -205,7 +201,7 @@ class CwmpodcastsModel extends ListModel
 
         // Restrict non-admin users: hybrid location + access-level filter
         if (!$user->authorise('core.admin')) {
-            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+            if (CwmlocationHelper::isEnabled()) {
                 $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
                 if (!empty($accessible)) {
@@ -223,14 +219,12 @@ class CwmpodcastsModel extends ListModel
         }
 
         // Filter by location (dropdown)
-        if (isset($columns['location_id'])) {
-            $location = $this->getState('filter.location');
+        $location = $this->getState('filter.location');
 
-            if (is_numeric($location)) {
-                $locationVal = (int) $location;
-                $query->where($db->quoteName('podcast.location_id') . ' = :locationId')
-                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
-            }
+        if (is_numeric($location)) {
+            $locationVal = (int) $location;
+            $query->where($db->quoteName('podcast.location_id') . ' = :locationId')
+                ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
         }
 
         // Filter by published state

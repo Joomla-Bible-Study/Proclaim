@@ -154,6 +154,14 @@ class CwmserverModel extends AdminModel
     }
 
     /**
+     * Cached server config XML per addon type.
+     *
+     * @var array<string, \SimpleXMLElement|false>
+     * @since 10.2.0
+     */
+    private static array $configCache = [];
+
+    /**
      * Return the configuration xml of a server
      *
      * @param   string  $addon  Type of server
@@ -164,21 +172,33 @@ class CwmserverModel extends AdminModel
      */
     public function getConfig(string $addon): \SimpleXMLElement|bool
     {
+        $key = strtolower($addon);
+
+        if (isset(self::$configCache[$key])) {
+            return self::$configCache[$key];
+        }
+
         $path = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst(
             $addon
-        ) . '/' . strtolower($addon) . '.xml';
+        ) . '/' . $key . '.xml';
 
         if (!is_file($path)) {
+            self::$configCache[$key] = false;
+
             return false;
         }
 
         $contents = file_get_contents($path);
 
         if ($contents === false) {
+            self::$configCache[$key] = false;
+
             return false;
         }
 
-        return simplexml_load_string($contents);
+        self::$configCache[$key] = simplexml_load_string($contents);
+
+        return self::$configCache[$key];
     }
 
     /**

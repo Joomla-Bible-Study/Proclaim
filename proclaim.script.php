@@ -296,12 +296,12 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/View/CWMSermon'         => '/components/com_proclaim/src/View/Cwmsermon',
         '/components/com_proclaim/src/View/CWMSermons'        => '/components/com_proclaim/src/View/Cwmsermons',
         // CWMServersList removed — dead legacy modal picker (no frontend usage)
-        '/components/com_proclaim/src/View/CWMSqueezeBox'     => '/components/com_proclaim/src/View/Cwmsqueezebox',
-        '/components/com_proclaim/src/View/CWMTeacher'        => '/components/com_proclaim/src/View/Cwmteacher',
-        '/components/com_proclaim/src/View/CWMTeachers'       => '/components/com_proclaim/src/View/Cwmteachers',
-        '/components/com_proclaim/src/View/CWMTerms'          => '/components/com_proclaim/src/View/Cwmterms',
-        '/components/com_proclaim/src/View/CWMcommentform'    => '/components/com_proclaim/src/View/Cwmcommentform',
-        '/components/com_proclaim/src/View/Teacher'           => '/components/com_proclaim/src/View/Cwmteacher',
+        '/components/com_proclaim/src/View/CWMSqueezeBox'  => '/components/com_proclaim/src/View/Cwmsqueezebox',
+        '/components/com_proclaim/src/View/CWMTeacher'     => '/components/com_proclaim/src/View/Cwmteacher',
+        '/components/com_proclaim/src/View/CWMTeachers'    => '/components/com_proclaim/src/View/Cwmteachers',
+        '/components/com_proclaim/src/View/CWMTerms'       => '/components/com_proclaim/src/View/Cwmterms',
+        '/components/com_proclaim/src/View/CWMcommentform' => '/components/com_proclaim/src/View/Cwmcommentform',
+        '/components/com_proclaim/src/View/Teacher'        => '/components/com_proclaim/src/View/Cwmteacher',
         // Site tmpl folders - CWM prefix renamed to Cwm
         '/components/com_proclaim/tmpl/CWMCommentForm'   => '/components/com_proclaim/tmpl/Cwmcommentform',
         '/components/com_proclaim/tmpl/CWMCommentList'   => '/components/com_proclaim/tmpl/Cwmcommentlist',

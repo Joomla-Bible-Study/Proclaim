@@ -213,13 +213,7 @@ class CwmlocationModel extends AdminModel
      */
     private function countByLocationId(string $table, int $locationId): int
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $columns = $db->getTableColumns($table);
-
-        if (!isset($columns['location_id'])) {
-            return 0;
-        }
-
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('COUNT(*)')
             ->from($db->quoteName($table))
