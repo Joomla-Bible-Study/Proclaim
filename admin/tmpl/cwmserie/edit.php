@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,30 +21,21 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
 $app   = Factory::getApplication();
-$input = $app->input;
+$input = $app->getInput();
 
-// Set up defaults
+// Set up defaults — use original image path, not thumbnail
 if ($input->getInt('id')) {
-    $series_thumbnail = $this->item->series_thumbnail;
+    $imageDefault = !empty($this->item->image) ? $this->item->image : ($this->item->series_thumbnail ?? '');
 } else {
-    $series_thumbnail = $this->admin_params->get('default_series_image');
+    $imageDefault = $this->admin_params->get('default_series_image', '');
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmserie\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
+$this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmserie.cancel', 'formId' => 'item-form']);
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task)
-	{
-		if (task == "cwmserie.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
-		{
-			Joomla.submitform(task, document.getElementById("item-form"));
-		}
-	};
-'
-    );
+    ->useScript('com_proclaim.form-validate-submit');
 ?>
 
 <form action="<?php
@@ -61,90 +52,94 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <div>
-                    <fieldset class="adminform">
-                        <?php
-                        echo $this->form->getLabel('description'); ?>
-                        <?php
-                        echo $this->form->getInput('description'); ?>
-                    </fieldset>
-                </div>
+                <?php echo $this->form->renderField('description'); ?>
             </div>
             <div class="col-lg-3">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('teacher'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('teacher'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('landing_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('landing_show'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('pc_show'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('pc_show'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('image'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('image', null, $series_thumbnail); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('access'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('language'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('teacher'); ?>
+                <?php echo $this->form->renderField('landing_show'); ?>
+                <?php echo $this->form->renderField('pc_show'); ?>
+                <?php echo $this->form->renderField('image', null, $imageDefault); ?>
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('location_id'); ?>
+                <?php echo $this->form->renderField('access'); ?>
+                <?php echo $this->form->renderField('language'); ?>
             </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php
+                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
+        <?php
+        $msgCount = \count($this->messages);
+        echo HTMLHelper::_(
+            'uitab.addTab',
+            'myTab',
+            'messages',
+            Text::sprintf('JBS_SER_MESSAGES_COUNT', $msgCount)
+        ); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php if ($msgCount > 0) : ?>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="w-5 text-center"><?php echo Text::_('JSTATUS'); ?></th>
+                            <th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_DATE'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_TEACHER'); ?></th>
+                            <th class="w-15"><?php echo Text::_('JBS_CMN_LOCATION'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($this->messages as $i => $msg) : ?>
+                        <tr>
+                            <td class="text-center">
+                                <?php echo HTMLHelper::_('jgrid.published', $msg->published, $i, '', false); ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $msg->id); ?>">
+                                    <?php echo $this->escape($msg->studytitle); ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php echo HTMLHelper::_('date', $msg->studydate, Text::_('DATE_FORMAT_LC4')); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->escape($msg->teachername ?? ''); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->escape($msg->location_text ?? ''); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="mt-2">
+                    <a class="btn btn-secondary btn-sm"
+                       href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[series]=' . (int) $this->item->id); ?>">
+                        <?php echo Text::_('JBS_SER_VIEW_ALL_MESSAGES'); ?>
+                    </a>
+                </div>
+                <?php else : ?>
+                <div class="alert alert-info">
+                    <?php echo Text::_('JBS_SER_NO_MESSAGES_IN_SERIES'); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
         <?php
         if ($this->canDo->get('core.admin')) : ?>

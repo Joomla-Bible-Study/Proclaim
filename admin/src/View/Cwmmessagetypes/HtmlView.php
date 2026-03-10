@@ -4,18 +4,19 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessageTypes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmessagetypes;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagetypesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -36,42 +37,58 @@ class HtmlView extends BaseHtmlView
     /**
      * Filter Levels
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
     /**
      * Side Bar
      *
-     * @var object
+     * @var string
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Items
      *
-     * @var object
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -84,16 +101,21 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmmessagetypesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -123,8 +145,6 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmmessagetype.add');
@@ -142,8 +162,9 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmmessagetypes.publish');
             $childBar->unpublish('cwmmessagetypes.unpublish');
             $childBar->archive('cwmmessagetypes.archive');
+            $childBar->checkin('cwmmessagetypes.checkin')->listCheck(true);
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmmessagetypes.trash')->listCheck(true);
             }
 
@@ -166,6 +187,8 @@ class HtmlView extends BaseHtmlView
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
+
+        ToolbarHelper::help('messagetypes', true);
     }
 
     /**
@@ -177,10 +200,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'messagetypes.message_type' => Text::_('JGRID_HEADING_ORDERING'),
             'messagetypes.published'    => Text::_('JSTATUS'),
-            'messagetypes.id'           => Text::_('JGRID_HEADING_ID')
-        );
+            'messagetypes.id'           => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

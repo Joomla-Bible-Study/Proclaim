@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -16,17 +16,19 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\Input\Input;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -93,7 +95,7 @@ class CwmteacherModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {
@@ -103,7 +105,7 @@ class CwmteacherModel extends AdminModel
             $id = $jinput->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -136,9 +138,9 @@ class CwmteacherModel extends AdminModel
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = new Input();
+        $jinput = Factory::getApplication()->getInput();
 
-        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
+        // The front end calls this model and uses a_id to avoid id clashes, so we need to check for that first.
         if ($jinput->get('a_id')) {
             $pk = $jinput->get('a_id', 0);
         } else {
@@ -152,21 +154,41 @@ class CwmteacherModel extends AdminModel
 
         $this->data = parent::getItem($pk);
 
-        return $this->data;
-    }
+        // Auto-populate social_links from legacy columns if not yet migrated
+        if ($this->data && !empty($this->data->id) && empty($this->data->social_links)) {
+            $migrated = [];
 
-    /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool
-    {
-        return true;
+            if (!empty($this->data->facebooklink)) {
+                $migrated[] = ['platform' => 'facebook', 'url' => $this->data->facebooklink, 'label' => ''];
+            }
+
+            if (!empty($this->data->twitterlink)) {
+                $migrated[] = ['platform' => 'x-twitter', 'url' => $this->data->twitterlink, 'label' => ''];
+            }
+
+            if (!empty($this->data->bloglink)) {
+                $migrated[] = ['platform' => 'blog', 'url' => $this->data->bloglink, 'label' => ''];
+            }
+
+            for ($i = 1; $i <= 3; $i++) {
+                $linkField  = 'link' . $i;
+                $labelField = 'linklabel' . $i;
+
+                if (!empty($this->data->$linkField)) {
+                    $migrated[] = [
+                        'platform' => 'other',
+                        'url'      => $this->data->$linkField,
+                        'label'    => $this->data->$labelField ?? '',
+                    ];
+                }
+            }
+
+            if (!empty($migrated)) {
+                $this->data->social_links = json_encode($migrated);
+            }
+        }
+
+        return $this->data;
     }
 
     /**
@@ -185,34 +207,8 @@ class CwmteacherModel extends AdminModel
      */
     public function validate($form, $data, $group = null): bool|array
     {
-        $app   = Factory::getApplication();
-        $input = $app->getInput();
-
         if (!$this->getCurrentUser()->authorise('core.admin', 'com_proclaim') && isset($data['rules'])) {
             unset($data['rules']);
-        }
-
-        // Check for duplicates on new teachers
-        if (
-            (!isset($data['id']) || (int) $data['id'] === 0) && $data['alias'] === null &&
-            in_array(
-                $input->get('task'),
-                ['apply', 'save', 'save2new']
-            )
-        ) {
-            if ((int) $app->get('unicodeslugs') === 1) {
-                $data['alias'] = OutputFilter::stringUrlUnicodeSlug($data['teachername']);
-            } else {
-                $data['alias'] = OutputFilter::stringURLSafe($data['teachername']);
-            }
-
-            $table = $this->getTable();
-
-            if ($table->load(['alias' => $data['alias']])) {
-                $this->setError(Text::_('JBS_TCH_DUPLICATE'));
-
-                return false;
-            }
         }
 
         return parent::validate($form, $data, $group);
@@ -230,15 +226,19 @@ class CwmteacherModel extends AdminModel
      */
     protected function canEditState($record): bool
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $text = '';
 
         if (!empty($record) && $this->getState('task') === 'trash') {
             $query = $db->getQuery(true);
-            $query->select('id, studytitle')
-                ->from('#__bsms_studies')
-                ->where('teacher_id = ' . $record->id)
-                ->where('published != ' . $db->q('-2'));
+            $query->select($db->quoteName(['s.id', 's.studytitle']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+                )
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $record->id)
+                ->where($db->quoteName('s.published') . ' != ' . $db->q('-2'));
             $db->setQuery($query, 10);
             $studies = $db->loadObjectList();
 
@@ -268,49 +268,139 @@ class CwmteacherModel extends AdminModel
      */
     public function save($data): bool
     {
-        /** @var Registry $params */
-        $params        = Cwmparams::getAdmin()->params;
-        $path          = 'images/biblestudy/teachers/' . $data['id'];
-        $prefix        = 'thumb_';
-        $image         = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
+        $filter = InputFilter::getInstance();
 
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
-            if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['teacher_image']     = "";
-                $data['teacher_thumbnail'] = "";
-            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
-                // Modify the image and model data
-                Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_teacher_size', 100));
-                $data['teacher_image']     = $data['image'];
-                $data['teacher_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
-                // Out Fix removing redundant 'thumb_' in path.
-                $x = substr_count(basename($data['image']), $prefix);
+        if (isset($data['metadata']['author'])) {
+            $data['metadata']['author'] = $filter->clean($data['metadata']['author'], 'TRIM');
+        }
 
-                while ($x > 1) {
-                    if (str_starts_with(basename($data['image']), $prefix)) {
-                        $str                       = substr(basename($data['image']), strlen($prefix));
-                        $data['teacher_image']     = $path . '/' . $str;
-                        $data['teacher_thumbnail'] = $path . '/' . $str;
-                        $data['image']             = $path . '/' . $str;
+        if (isset($data['created_by_alias'])) {
+            $data['created_by_alias'] = $filter->clean($data['created_by_alias'], 'TRIM');
+        }
+
+        // Sync social_links subform → legacy columns for frontend backward compatibility
+        if (!empty($data['social_links']) && \is_array($data['social_links'])) {
+            $data['social_links'] = json_encode(array_values($data['social_links']));
+
+            try {
+                $decoded = json_decode($data['social_links'], true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\JsonException) {
+                $decoded = [];
+            }
+
+            // Map platform → legacy column (first match wins)
+            $legacyMap = [
+                'facebook'  => 'facebooklink',
+                'x-twitter' => 'twitterlink',
+                'blog'      => 'bloglink',
+            ];
+
+            foreach ($legacyMap as $platform => $column) {
+                foreach ($decoded as $link) {
+                    if (($link['platform'] ?? '') === $platform && !empty($link['url'])) {
+                        $data[$column] = $link['url'];
+                        break;
                     }
-
-                    $x--;
                 }
             }
+        } elseif (isset($data['social_links']) && \is_string($data['social_links'])) {
+            // Already JSON string — leave as-is
+        } else {
+            $data['social_links'] = '';
         }
+
+        /** @var Registry $params */
+        $params        = Cwmparams::getAdmin()->params;
+        $app           = Factory::getApplication();
+        $image         = HTMLHelper::cleanImageURL($data['image']);
+        $data['image'] = $image->url;
 
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
 
-        // Fix Save of an update file to match paths.
-        if ($data['teacher_image'] !== $data['image']) {
-            $data['teacher_thumbnail'] = $data['image'];
-            $data['teacher_image']     = $data['image'];
+        // If no image, clear thumbnail fields and save
+        if (empty($data['image'])) {
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
+
+            return parent::save($data);
         }
+
+        // Core component images — save path as-is without thumbnail processing
+        if (CwmImageMigration::isCoreImage($data['image'])) {
+            return parent::save($data);
+        }
+
+        // Correct legacy thumb_ paths
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/teachers/')) {
+            $dir          = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
+
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
+        }
+
+        // Store the original image path for processing after save
+        $originalImage = $data['image'];
+        $teacherName   = $data['teachername'] ?? $data['alias'] ?? null;
+        $isNew         = empty($data['id']);
+
+        // Validate image before processing
+        $absolutePath = JPATH_ROOT . '/' . $originalImage;
+        $validation   = Cwmthumbnail::validate($absolutePath);
+
+        if (!$validation['valid']) {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_STY_IMAGE_VALIDATION_FAILED', $validation['error']),
+                'error'
+            );
+            $data['image']             = '';
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
+
+            return parent::save($data);
+        }
+
+        // For new records, save first to get the ID
+        if ($isNew) {
+            $data['image']             = '';
+            $data['teacher_image']     = '';
+            $data['teacher_thumbnail'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            // Get the new ID from the saved record
+            $data['id'] = $this->getState($this->getName() . '.id');
+        }
+
+        // Build path with title-ID format
+        $alias = ApplicationHelper::stringURLSafe($teacherName ?: 'teacher');
+        $path  = 'images/biblestudy/teachers/' . $alias . '-' . (int)$data['id'];
+
+        $result = Cwmthumbnail::create(
+            $originalImage,
+            $path,
+            $params->get('thumbnail_teacher_size', 300),
+            $teacherName
+        );
+
+        if ($result === false) {
+            $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
+
+            return $isNew || parent::save($data);
+        }
+
+        // Update paths with new locations
+        $data['image']             = $result['image'];
+        $data['teacher_image']     = $result['image'];
+        $data['teacher_thumbnail'] = $result['thumbnail'];
 
         return parent::save($data);
     }
@@ -320,7 +410,7 @@ class CwmteacherModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since   1.6
@@ -328,16 +418,20 @@ class CwmteacherModel extends AdminModel
     protected function canDelete($record): bool
     {
         $app        = Factory::getApplication();
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $user       = $app->getIdentity();
         $canDoState = $user->authorise('core.edit.state', $this->option);
         $text       = '';
 
         // Iterate the items to delete each one.
         $query = $db->getQuery(true);
-        $query->select('id, studytitle')
-            ->from('#__bsms_studies')
-            ->where('teacher_id = ' . $record->id);
+        $query->select($db->quoteName(['s.id', 's.studytitle']))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+            )
+            ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $record->id);
         $db->setQuery($query);
         $studies = $db->loadObjectList();
 
@@ -379,10 +473,14 @@ class CwmteacherModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table): void
     {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
         $table->teachername = htmlspecialchars_decode($table->teachername, ENT_QUOTES);
         $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
 
@@ -390,18 +488,97 @@ class CwmteacherModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->teachername);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_teachers');
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_teachers'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
         }
+    }
+
+    /**
+     * Get messages (sermons) by this teacher.
+     *
+     * @return  array  List of message objects
+     *
+     * @since   10.1.0
+     */
+    public function getMessages(): array
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        $query->select([
+            $db->quoteName('study.id'),
+            $db->quoteName('study.studytitle'),
+            $db->quoteName('study.studydate'),
+            $db->quoteName('study.published'),
+            $db->quoteName('study.access'),
+        ]);
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
+
+        // Join over Series
+        $query->select($db->quoteName('series.series_text'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
+        );
+
+        // Join over Location
+        $query->select($db->quoteName('loc.location_text'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('study.location_id')
+        );
+
+        // Filter by teacher via junction table OR legacy teacher_id
+        $query->where(
+            '(' . $db->quoteName('study.id') . ' IN ('
+            . $db->getQuery(true)
+                ->select($db->quoteName('st.study_id'))
+                ->from($db->quoteName('#__bsms_study_teachers', 'st'))
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
+            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
+        );
+
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $query->order($db->quoteName('study.studydate') . ' DESC');
+
+        $db->setQuery($query, 0, 20);
+
+        return $db->loadObjectList() ?: [];
     }
 
     /**
@@ -419,4 +596,5 @@ class CwmteacherModel extends AdminModel
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
     }
+
 }

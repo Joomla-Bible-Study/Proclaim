@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,23 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
- * helper to get related studies to the current one
+ * Helper to get related studies using weighted multi-dimension scoring.
+ *
+ * Scoring weights:
+ * - Same series:   3 points
+ * - Same teacher:  2 points
+ * - Same topic:    2 points per overlap
+ * - Same book:     1 point per overlap
+ * - Metakey match: 1 point per keyword
  *
  * @package  Proclaim.Site
  * @since    7.1.0
@@ -30,922 +40,486 @@ use Joomla\Registry\Registry;
 class Cwmrelatedstudies
 {
     /**
-     * Remove array declaration for php 7.3.x
+     * Score map: study_id => total score
      *
-     * @var  array Score
-     *
-     * @since    7.2
+     * @var  array<int, int>
+     * @since 10.1.0
      */
-    public array $score;
+    public array $scores = [];
 
     /**
-     * Get Related
+     * Get Related studies as card HTML.
      *
-     * @param   object    $row     JTable
+     * @param   object    $row     Study data
      * @param   Registry  $params  Item Params
      *
-     * @return string|bool
+     * @return string|bool  HTML string of card grid, or false if no related studies
      *
      * @throws \Exception
      * @since    7.2
      */
-    public function getRelated(object $row, Registry $params)
+    public function getRelated(object $row, Registry $params): string|bool
     {
-        $this->score = [];
-        $keygo       = true;
-        $topicsgo    = true;
-        $keywords    = $params->get('metakey');
-        $topics      = $row->tp_id;
-        $topicslist  = $this->getTopics();
-        $compare     = null;
+        $this->scores = [];
+        $studyId      = (int) ($row->id ?? 0);
+        $limit        = (int) $params->get('related_limit', 5);
 
-        if (!$keywords && !$row->studyintro) {
-            $keygo = false;
-        }
-
-        if (!$topics) {
-            $topicsgo = false;
-        }
-
-        if (!$keygo && !$topicsgo) {
+        if ($studyId === 0) {
             return false;
         }
 
-        $studies = $this->getStudies();
-
-        if ($studies) {
-            foreach ($studies as $study) {
-                if (is_string($study->params) && !empty($study->params) && $study->params !== "{}") {
-                    if (json_decode($study->params, false, 512, JSON_INVALID_UTF8_IGNORE)) {
-                        $registry = new Registry();
-                        $registry->loadString($study->params);
-                        $sparams = $registry;
-                        $compare = $sparams->get('metakey');
-                    }
-                }
-
-                if ($compare) {
-                    $this->parseKeys($keywords, $compare, $study->id);
-                }
-
-                if ($study->tp_id) {
-                    $this->parseKeys($topicslist, $study->tp_id, $study->id);
-                }
-            }
-        } else {
-            return false;
-        }
-
-        // Only one item in score here
-        if (!$this->score) {
-            return false;
-        }
-
-        return $this->getRelatedLinks($row->id);
-    }
-
-    /**
-     * Get Topics for rendering.
-     *
-     * @return string
-     *
-     * @since    7.2
-     */
-    public function getTopics(): string
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery('true');
-        $query->select('id');
-        $query->from('#__bsms_topics');
-        $query->where('published = 1');
-        $db->setQuery($query);
-        $topics     = $db->loadObjectList();
-        $topicslist = [];
-
-        foreach ($topics as $value) {
-            foreach ($value as $v) {
-                $topicslist[] = $v;
-            }
-        }
-
-        return implode(',', $topicslist);
-    }
-
-    /**
-     * Get Studies
-     *
-     * @return array
-     *
-     * @throws \Exception
-     * @since    7.2
-     */
-    public function getStudies(): array
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery('true');
-        $query->select('s.id, s.params, s.access');
-        $query->from('#__bsms_studies as s');
-        $query->select('group_concat(stp.id separator ", ") AS tp_id');
-        $query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
-        $query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
-        $query->group('s.id');
-        $query->where('s.published = 1');
-        $db->setQuery($query);
-        $studies = $db->loadObjectList();
-
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        foreach ($studies as $i => $iValue) {
-            if (($iValue->access > 1) && !in_array($iValue->access, $groups, true)) {
-                unset($studies[$i]);
-            }
+        // Dimension 1: Same series (3 points)
+        $seriesId = (int) ($row->series_id ?? 0);
+
+        if ($seriesId > 0) {
+            $this->scoreBySeries($db, $studyId, $seriesId, $groups);
         }
 
-        return $studies;
+        // Dimension 2: Same teacher (2 points)
+        $teacherId = (int) ($row->teacher_id ?? 0);
+
+        if ($teacherId > 0) {
+            $this->scoreByTeacher($db, $studyId, $teacherId, $groups);
+        }
+
+        // Dimension 3: Topic overlap (2 points each)
+        $this->scoreByTopics($db, $studyId, $groups);
+
+        // Dimension 4: Scripture book overlap (1 point each)
+        $this->scoreByBooks($db, $studyId, $groups);
+
+        // Dimension 5: Metakey overlap (1 point each)
+        $keywords = (string) $params->get('metakey');
+
+        if (!empty($keywords)) {
+            $this->scoreByMetakeys($db, $studyId, $keywords, $groups);
+        }
+
+        if (empty($this->scores)) {
+            return false;
+        }
+
+        return $this->buildCards($db, $studyId, $limit, $params);
     }
 
     /**
-     * Parse keys
+     * Score studies in the same series.
      *
-     * @param   string  $source   String of source
-     * @param   string  $compare  String to compare
-     * @param   int     $id       ID of study
+     * @param   object  $db        Database driver
+     * @param   int     $studyId   Current study ID
+     * @param   int     $seriesId  Series ID to match
+     * @param   array   $groups    Authorised view levels
      *
-     * @return bool
+     * @return  void
      *
-     * @since    7.2
+     * @since   10.1.0
      */
-    public function parseKeys(string $source, string $compare, int $id): bool
+    private function scoreBySeries(object $db, int $studyId, int $seriesId, array $groups): void
     {
-        $sourceisarray  = false;
-        $compareisarray = false;
-        $sourcearray    = [];
-        $comparearray   = [];
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('series_id') . ' = ' . $seriesId)
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
 
-        if (substr_count($source, ',')) {
-            $sourcearray   = explode(',', $source);
-            $sourceisarray = true;
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 3);
         }
-
-        if (substr_count($compare, ',')) {
-            $comparearray   = explode(',', $compare);
-            $compareisarray = true;
-        }
-
-        if ($sourceisarray && $compareisarray) {
-            foreach ($sourcearray as $sarray) {
-                if (in_array($sarray, $comparearray, true)) {
-                    $this->score[] = $id;
-                }
-            }
-        }
-
-        if (
-            ($sourceisarray && !$compareisarray && in_array($compare, $sourcearray, true))
-            || (!$sourceisarray && $compareisarray && in_array($source, $comparearray, true))
-            || (!$sourceisarray && !$compareisarray && strcmp($source, $compare))
-        ) {
-            $this->score[] = $id;
-        }
-
-        return true;
     }
 
     /**
-     * Look for Related Links.
+     * Score studies by the same teacher.
      *
-     * @param   int  $id  Id to link to
+     * @param   object  $db         Database driver
+     * @param   int     $studyId    Current study ID
+     * @param   int     $teacherId  Teacher ID to match
+     * @param   array   $groups     Authorised view levels
      *
-     * @return string
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByTeacher(object $db, int $studyId, int $teacherId, array $groups): void
+    {
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('s.id'))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            )
+            ->where($db->quoteName('stj.teacher_id') . ' = ' . $teacherId)
+            ->where($db->quoteName('s.id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')');
+
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 2);
+        }
+    }
+
+    /**
+     * Score studies by topic overlap (2 points per shared topic).
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID
+     * @param   array   $groups   Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByTopics(object $db, int $studyId, array $groups): void
+    {
+        // Get current study's topic IDs
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('topic_id'))
+            ->from($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . $studyId);
+
+        $db->setQuery($query);
+        $topicIds = $db->loadColumn();
+
+        if (empty($topicIds)) {
+            return;
+        }
+
+        // Find other studies with overlapping topics, counting overlaps
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('st.study_id'))
+            ->select('COUNT(*) AS ' . $db->quoteName('overlap'))
+            ->from($db->quoteName('#__bsms_studytopics', 'st'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id')
+            )
+            ->where($db->quoteName('st.topic_id') . ' IN (' . implode(',', array_map('intval', $topicIds)) . ')')
+            ->where($db->quoteName('st.study_id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')')
+            ->group($db->quoteName('st.study_id'));
+
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        foreach ($rows as $r) {
+            $this->addScore((int) $r->study_id, 2 * (int) $r->overlap);
+        }
+    }
+
+    /**
+     * Score studies by scripture book overlap (1 point per shared book).
+     *
+     * Checks both junction table and legacy booknumber field.
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID
+     * @param   array   $groups   Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByBooks(object $db, int $studyId, array $groups): void
+    {
+        // Collect book numbers from both junction table and legacy column in one query
+        $query = $db->getQuery(true)
+            ->select('DISTINCT ' . $db->quoteName('booknumber'))
+            ->from($db->quoteName('#__bsms_study_scriptures'))
+            ->where($db->quoteName('study_id') . ' = ' . $studyId)
+            ->where($db->quoteName('booknumber') . ' > 0')
+            ->union(
+                $db->getQuery(true)
+                    ->select($db->quoteName('booknumber'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = ' . $studyId)
+                    ->where($db->quoteName('booknumber') . ' > 0')
+            );
+
+        $db->setQuery($query);
+        $bookNumbers = array_unique(array_filter(array_map('intval', $db->loadColumn() ?: [])));
+
+        if (empty($bookNumbers)) {
+            return;
+        }
+
+        $bookList = implode(',', $bookNumbers);
+
+        // Find matches via junction table
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('ss.study_id'))
+            ->select('COUNT(DISTINCT ' . $db->quoteName('ss.booknumber') . ') AS ' . $db->quoteName('overlap'))
+            ->from($db->quoteName('#__bsms_study_scriptures', 'ss'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('ss.study_id')
+            )
+            ->where($db->quoteName('ss.booknumber') . ' IN (' . $bookList . ')')
+            ->where($db->quoteName('ss.study_id') . ' != ' . $studyId)
+            ->where($db->quoteName('s.published') . ' = 1')
+            ->where($db->quoteName('s.access') . ' IN (' . implode(',', $groups) . ')')
+            ->group($db->quoteName('ss.study_id'));
+
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        foreach ($rows as $r) {
+            $this->addScore((int) $r->study_id, (int) $r->overlap);
+        }
+
+        // Also match via legacy booknumber column
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('booknumber') . ' IN (' . $bookList . ')')
+            ->where($db->quoteName('id') . ' != ' . $studyId)
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
+
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        foreach ($ids as $id) {
+            $this->addScore((int) $id, 1);
+        }
+    }
+
+    /**
+     * Score studies by metakey overlap (1 point per shared keyword).
+     *
+     * @param   object  $db        Database driver
+     * @param   int     $studyId   Current study ID
+     * @param   string  $keywords  Comma-separated keywords
+     * @param   array   $groups    Authorised view levels
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function scoreByMetakeys(object $db, int $studyId, string $keywords, array $groups): void
+    {
+        $keys = array_filter(array_map('trim', explode(',', $keywords)));
+
+        if (empty($keys)) {
+            return;
+        }
+
+        // Use SQL LIKE matching to avoid loading all studies into PHP.
+        // Each keyword match adds 1 point. We run one query per keyword
+        // but only return IDs (no heavy params deserialization).
+        foreach ($keys as $key) {
+            $key = trim($key);
+
+            if ($key === '') {
+                continue;
+            }
+
+            $escaped = $db->quote('%' . $db->escape($key, true) . '%');
+            $query   = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->where($db->quoteName('id') . ' != ' . $studyId)
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $escaped);
+
+            $db->setQuery($query);
+            $ids = $db->loadColumn();
+
+            foreach ($ids as $id) {
+                $this->addScore((int) $id, 1);
+            }
+        }
+    }
+
+    /**
+     * Add points to a study's score.
+     *
+     * @param   int  $studyId  Study ID
+     * @param   int  $points   Points to add
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function addScore(int $studyId, int $points): void
+    {
+        if (!isset($this->scores[$studyId])) {
+            $this->scores[$studyId] = 0;
+        }
+
+        $this->scores[$studyId] += $points;
+    }
+
+    /**
+     * Build card grid HTML for the top-scoring related studies.
+     *
+     * @param   object  $db       Database driver
+     * @param   int     $studyId  Current study ID (excluded)
+     * @param   int     $limit    Max cards to show
+     *
+     * @return  string  HTML card grid
      *
      * @throws \Exception
-     * @since    7.2
+     * @since   10.1.0
      */
-    public function getRelatedLinks(int $id): string
+    private function buildCards(object $db, int $studyId, int $limit, Registry $params): string
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
-        $link = implode(', ', $this->score);
+        // Sort by score desc
+        arsort($this->scores);
 
-        $query = $db->getQuery('true');
-        $query->select('s.studytitle, s.alias, s.id, s.booknumber, s.chapter_begin');
-        $query->from('#__bsms_studies as s');
-        $query->select('b.bookname');
-        $query->join('LEFT', '#__bsms_books as b on b.booknumber = s.booknumber');
-        $query->where($db->quoteName('s.id') . "IN (" . $link . ")");
-        $query->where('s.id != ' . $id);
-        $db->setQuery($query);
-        $studyrecords = $db->loadObjectList();
+        // Take top N
+        $topIds = \array_slice(array_keys($this->scores), 0, $limit);
 
-        $related = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success"><option value="">' .
-            Text::_('JBS_CMN_SELECT_RELATED_STUDY') . '</option>';
-        $input   = Factory::getApplication()->input;
-
-        foreach ($studyrecords as $studyrecord) {
-            $related .= '<option value="'
-                . Route::_(
-                    'index.php?option=com_proclaim&view=cwmsermon&id=' . (int)$studyrecord->id . '&t=' . $input->get(
-                        't',
-                        '1',
-                        'int'
-                    )
-                )
-                . '">' . $studyrecord->studytitle;
-
-            if (!empty($studyrecord->bookname)) {
-                $related .= ' - ' . Text::_($studyrecord->bookname)
-                    . ' ' . $studyrecord->chapter_begin;
-            }
-
-            $related .= '</option>';
+        if (empty($topIds)) {
+            return '';
         }
 
-        $related .= '</select>';
+        $idList = implode(',', $topIds);
 
-        return '<div class="related col-lg-4"><form action="#">' . $related . '</form></div>';
-    }
+        $query = $db->getQuery(true)
+            ->select($db->quoteName([
+                's.id', 's.studytitle', 's.alias', 's.studydate',
+                's.booknumber', 's.chapter_begin', 's.thumbnailm', 's.image',
+            ]))
+            ->select($db->quoteName('t.teachername'))
+            ->select($db->quoteName('b.bookname'))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj2') . ' ON '
+                . $db->quoteName('stj2.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj2.ordering') . ' = 0'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't')
+                . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj2.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_books', 'b')
+                . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber')
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'ser')
+                . ' ON ' . $db->quoteName('ser.id') . ' = ' . $db->quoteName('s.series_id')
+            )
+            ->where($db->quoteName('s.id') . ' IN (' . $idList . ')')
+            ->where($db->quoteName('s.id') . ' != ' . $studyId)
+            ->where('(' . $db->quoteName('ser.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' <= 0)');
 
-    /**
-     * Remove Common Words form render.
-     *
-     * @param   string  $input  Home
-     *
-     * @return array
-     *
-     * @since    7.2
-     */
-    public function removeCommonWords(string $input): array
-    {
-        $commonWords = [
-            'a',
-            'able',
-            'about',
-            'above',
-            'abroad',
-            'according',
-            'accordingly',
-            'across',
-            'actually',
-            'adj',
-            'after',
-            'afterwards',
-            'again',
-            'against',
-            'ago',
-            'ahead',
-            'ain\'t',
-            'all',
-            'allow',
-            'allows',
-            'almost',
-            'alone',
-            'along',
-            'alongside',
-            'already',
-            'also',
-            'although',
-            'always',
-            'am',
-            'amid',
-            'amidst',
-            'among',
-            'amongst',
-            'an',
-            'and',
-            'another',
-            'any',
-            'anybody',
-            'anyhow',
-            'anyone',
-            'anything',
-            'anyway',
-            'anyways',
-            'anywhere',
-            'apart',
-            'appear',
-            'appreciate',
-            'appropriate',
-            'are',
-            'aren\'t',
-            'around',
-            'as',
-            'a\'s',
-            'aside',
-            'ask',
-            'asking',
-            'associated',
-            'at',
-            'available',
-            'away',
-            'awfully',
-            'b',
-            'back',
-            'backward',
-            'backwards',
-            'be',
-            'became',
-            'because',
-            'become',
-            'becomes',
-            'becoming',
-            'been',
-            'before',
-            'beforehand',
-            'begin',
-            'behind',
-            'being',
-            'below',
-            'beside',
-            'besides',
-            'best',
-            'better',
-            'between',
-            'beyond',
-            'both',
-            'brief',
-            'but',
-            'by',
-            'c',
-            'came',
-            'can',
-            'cannot',
-            'cant',
-            'can\'t',
-            'caption',
-            'cause',
-            'causes',
-            'certain',
-            'certainly',
-            'changes',
-            'clearly',
-            'c\'mon',
-            'co',
-            'co.',
-            'com',
-            'comes',
-            'concerning',
-            'consequently',
-            'consider',
-            'considering',
-            'contain',
-            'containing',
-            'contains',
-            'corresponding',
-            'could',
-            'couldn\'t',
-            'course',
-            'c\'s',
-            'currently',
-            'd',
-            'dare',
-            'daren\'t',
-            'definitely',
-            'described',
-            'despite',
-            'did',
-            'didn\'t',
-            'different',
-            'directly',
-            'do',
-            'does',
-            'doesn\'t',
-            'doing',
-            'done',
-            'don\'t',
-            'down',
-            'downwards',
-            'during',
-            'e',
-            'each',
-            'edu',
-            'eg',
-            'eight',
-            'eighty',
-            'either',
-            'else',
-            'elsewhere',
-            'end',
-            'ending',
-            'enough',
-            'entirely',
-            'especially',
-            'et',
-            'etc',
-            'even',
-            'ever',
-            'evermore',
-            'every',
-            'everybody',
-            'everyone',
-            'everything',
-            'everywhere',
-            'ex',
-            'exactly',
-            'example',
-            'except',
-            'f',
-            'fairly',
-            'far',
-            'farther',
-            'few',
-            'fewer',
-            'fifth',
-            'first',
-            'five',
-            'followed',
-            'following',
-            'follows',
-            'for',
-            'forever',
-            'former',
-            'formerly',
-            'forth',
-            'forward',
-            'found',
-            'four',
-            'from',
-            'further',
-            'furthermore',
-            'g',
-            'get',
-            'gets',
-            'getting',
-            'given',
-            'gives',
-            'go',
-            'goes',
-            'going',
-            'gone',
-            'got',
-            'gotten',
-            'greetings',
-            'h',
-            'had',
-            'hadn\'t',
-            'half',
-            'happens',
-            'hardly',
-            'has',
-            'hasn\'t',
-            'have',
-            'haven\'t',
-            'having',
-            'he',
-            'he\'d',
-            'he\'ll',
-            'hello',
-            'help',
-            'hence',
-            'her',
-            'here',
-            'hereafter',
-            'hereby',
-            'herein',
-            'here\'s',
-            'hereupon',
-            'hers',
-            'herself',
-            'he\'s',
-            'he',
-            'hi',
-            'him',
-            'himself',
-            'his',
-            'hither',
-            'hopefully',
-            'how',
-            'howbeit',
-            'however',
-            'hundred',
-            'i',
-            'i\'d',
-            'ie',
-            'if',
-            'ignored',
-            'i\'ll',
-            'i\'m',
-            'immediate',
-            'in',
-            'inasmuch',
-            'inc',
-            'inc.',
-            'indeed',
-            'indicate',
-            'indicated',
-            'indicates',
-            'inner',
-            'inside',
-            'insofar',
-            'instead',
-            'into',
-            'inward',
-            'is',
-            'isn\'t',
-            'it',
-            'it\'d',
-            'it\'ll',
-            'its',
-            'it\'s',
-            'itself',
-            'i\'ve',
-            'j',
-            'just',
-            'k',
-            'keep',
-            'keeps',
-            'kept',
-            'know',
-            'known',
-            'knows',
-            'l',
-            'last',
-            'lately',
-            'later',
-            'latter',
-            'latterly',
-            'least',
-            'less',
-            'lest',
-            'let',
-            'let\'s',
-            'like',
-            'liked',
-            'likely',
-            'likewise',
-            'little',
-            'look',
-            'looking',
-            'looks',
-            'low',
-            'lower',
-            'ltd',
-            'm',
-            'made',
-            'mainly',
-            'make',
-            'makes',
-            'many',
-            'may',
-            'maybe',
-            'mayn\'t',
-            'me',
-            'mean',
-            'meantime',
-            'meanwhile',
-            'merely',
-            'might',
-            'mightn\'t',
-            'mine',
-            'minus',
-            'miss',
-            'more',
-            'moreover',
-            'most',
-            'mostly',
-            'mr',
-            'mrs',
-            'much',
-            'must',
-            'mustn\'t',
-            'my',
-            'myself',
-            'n',
-            'name',
-            'namely',
-            'nd',
-            'near',
-            'nearly',
-            'necessary',
-            'need',
-            'needn\'t',
-            'needs',
-            'neither',
-            'never',
-            'neverf',
-            'neverless',
-            'nevertheless',
-            'new',
-            'next',
-            'nine',
-            'ninety',
-            'no',
-            'nobody',
-            'non',
-            'none',
-            'nonetheless',
-            'noone',
-            'no-one',
-            'nor',
-            'normally',
-            'not',
-            'nothing',
-            'notwithstanding',
-            'novel',
-            'now',
-            'nowhere',
-            'o',
-            'obviously',
-            'of',
-            'off',
-            'often',
-            'oh',
-            'ok',
-            'okay',
-            'old',
-            'on',
-            'once',
-            'one',
-            'ones',
-            'one\'s',
-            'only',
-            'onto',
-            'opposite',
-            'or',
-            'other',
-            'others',
-            'otherwise',
-            'ought',
-            'oughtn\'t',
-            'our',
-            'ours',
-            'ourselves',
-            'out',
-            'outside',
-            'over',
-            'overall',
-            'own',
-            'p',
-            'particular',
-            'particularly',
-            'past',
-            'per',
-            'perhaps',
-            'placed',
-            'please',
-            'plus',
-            'possible',
-            'presumably',
-            'probably',
-            'provided',
-            'provides',
-            'q',
-            'que',
-            'quite',
-            'qv',
-            'r',
-            'rather',
-            'rd',
-            're',
-            'really',
-            'reasonably',
-            'recent',
-            'recently',
-            'regarding',
-            'regardless',
-            'regards',
-            'relatively',
-            'respectively',
-            'right',
-            'round',
-            's',
-            'said',
-            'same',
-            'saw',
-            'say',
-            'saying',
-            'says',
-            'second',
-            'secondly',
-            'see',
-            'seeing',
-            'seem',
-            'seemed',
-            'seeming',
-            'seems',
-            'seen',
-            'self',
-            'selves',
-            'sensible',
-            'sent',
-            'serious',
-            'seriously',
-            'seven',
-            'several',
-            'shall',
-            'shan\'t',
-            'she',
-            'she\'d',
-            'she\'ll',
-            'she\'s',
-            'should',
-            'shouldn\'t',
-            'since',
-            'six',
-            'so',
-            'some',
-            'somebody',
-            'someday',
-            'somehow',
-            'someone',
-            'something',
-            'sometime',
-            'sometimes',
-            'somewhat',
-            'somewhere',
-            'soon',
-            'sorry',
-            'specified',
-            'specify',
-            'specifying',
-            'still',
-            'sub',
-            'such',
-            'sup',
-            'sure',
-            't',
-            'take',
-            'taken',
-            'taking',
-            'tell',
-            'tends',
-            'th',
-            'than',
-            'thank',
-            'thanks',
-            'thanx',
-            'that',
-            'that\'ll',
-            'thats',
-            'that\'s',
-            'that\'ve',
-            'the',
-            'their',
-            'theirs',
-            'them',
-            'themselves',
-            'then',
-            'thence',
-            'there',
-            'thereafter',
-            'thereby',
-            'there\'d',
-            'therefore',
-            'therein',
-            'there\'ll',
-            'there\'re',
-            'theres',
-            'there\'s',
-            'thereupon',
-            'there\'ve',
-            'these',
-            'they',
-            'they\'d',
-            'they\'ll',
-            'they\'re',
-            'they\'ve',
-            'thing',
-            'things',
-            'think',
-            'third',
-            'thirty',
-            'this',
-            'thorough',
-            'thoroughly',
-            'those',
-            'though',
-            'three',
-            'through',
-            'throughout',
-            'thru',
-            'thus',
-            'till',
-            'to',
-            'together',
-            'too',
-            'took',
-            'toward',
-            'towards',
-            'tried',
-            'tries',
-            'truly',
-            'try',
-            'trying',
-            't\'s',
-            'twice',
-            'two',
-            'u',
-            'un',
-            'under',
-            'underneath',
-            'undoing',
-            'unfortunately',
-            'unless',
-            'unlike',
-            'unlikely',
-            'until',
-            'unto',
-            'up',
-            'upon',
-            'upwards',
-            'us',
-            'use',
-            'used',
-            'useful',
-            'uses',
-            'using',
-            'usually',
-            'v',
-            'value',
-            'various',
-            'versus',
-            'very',
-            'via',
-            'viz',
-            'vs',
-            'w',
-            'want',
-            'wants',
-            'was',
-            'wasn\'t',
-            'way',
-            'we',
-            'we\'d',
-            'welcome',
-            'well',
-            'we\'ll',
-            'went',
-            'were',
-            'we\'re',
-            'weren\'t',
-            'we\'ve',
-            'what',
-            'whatever',
-            'what\'ll',
-            'what\'s',
-            'what\'ve',
-            'when',
-            'whence',
-            'whenever',
-            'where',
-            'whereafter',
-            'whereas',
-            'whereby',
-            'wherein',
-            'where\'s',
-            'whereupon',
-            'wherever',
-            'whether',
-            'which',
-            'whichever',
-            'while',
-            'whilst',
-            'whither',
-            'who',
-            'who\'d',
-            'whoever',
-            'whole',
-            'who\'ll',
-            'whom',
-            'whomever',
-            'who\'s',
-            'whose',
-            'why',
-            'will',
-            'willing',
-            'wish',
-            'with',
-            'within',
-            'without',
-            'wonder',
-            'won\'t',
-            'would',
-            'wouldn\'t',
-            'x',
-            'y',
-            'yes',
-            'yet',
-            'you',
-            'you\'d',
-            'you\'ll',
-            'your',
-            'you\'re',
-            'yours',
-            'yourself',
-            'yourselves',
-            'you\'ve',
-            'z',
-            'zero',
-        ];
-        $content     = strip_tags($input);
-        $content     = strtolower($content);
-        $content     = preg_replace("/[^a-zA-Z 0-9]+/", " ", $content);
-        $content     = preg_replace('/\b(' . implode('|', $commonWords) . ')\b/', '', $content);
-        $content     = preg_replace('/\s\s+/', ' ', $content);
-        $content     = str_replace(' ', ',', $content);
-        $content     = substr($content, 1);
-        $content     = substr($content, 0, -1);
+        // Cascading series date window for non-admin users
+        $user = Factory::getApplication()->getIdentity();
 
-        return explode(',', $content);
+        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $db->quote($db->getNullDate());
+            $nowDate  = $db->quote((new Date())->toSql());
+            $query->where(
+                '((' . $db->quoteName('ser.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('ser.publish_up') . ' <= ' . $nowDate . ')'
+                . ' AND (' . $db->quoteName('ser.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('ser.publish_down') . ' >= ' . $nowDate . ')'
+                . ' OR ' . $db->quoteName('s.series_id') . ' <= 0)'
+            );
+        }
+
+        $db->setQuery($query);
+        $studies = $db->loadObjectList('id') ?: [];
+
+        if (empty($studies)) {
+            return '';
+        }
+
+        $input      = Factory::getApplication()->getInput();
+        $templateId = $input->get('t', 1, 'int');
+
+        // Load related-studies CSS via WAM
+        Factory::getApplication()->getDocument()->getWebAssetManager()
+            ->useStyle('com_proclaim.related-studies');
+
+        $html = '<div class="proclaim-related-studies">';
+        $html .= '<h4>' . Text::_('JBS_CMN_RELATED_STUDIES') . '</h4>';
+        $html .= '<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">';
+
+        // Output in score order
+        foreach ($topIds as $id) {
+            if (!isset($studies[$id])) {
+                continue;
+            }
+
+            $study = $studies[$id];
+            $url   = Route::_(
+                'index.php?option=com_proclaim&view=cwmsermon&id=' . (int) $study->id . '&t=' . $templateId
+            );
+            $title = htmlspecialchars($study->studytitle, ENT_QUOTES, 'UTF-8');
+
+            $html .= '<div class="col">';
+            $html .= '<a href="' . $url . '" class="proclaim-related-card">';
+            $html .= '<div class="card">';
+
+            // Optional thumbnail — prefer image column, fall back to deriving from thumbnailm
+            $studyImg = $study->image ?? '';
+
+            if (!empty($studyImg)) {
+                $imageObj    = Cwmimages::getImagePath($studyImg);
+                $pictureHtml = Cwmimages::renderPicture($imageObj, $study->studytitle, 'card-img-top');
+
+                if ($pictureHtml !== '') {
+                    $html .= $pictureHtml;
+                }
+            } elseif (!empty($study->thumbnailm)) {
+                $imageObj    = Cwmimages::getStudyOriginal($study->thumbnailm);
+                $pictureHtml = Cwmimages::renderPicture($imageObj, $study->studytitle, 'card-img-top');
+
+                if ($pictureHtml !== '') {
+                    $html .= $pictureHtml;
+                }
+            }
+
+            $html .= '<div class="card-body">';
+            $html .= '<h5 class="card-title">' . $title . '</h5>';
+            $html .= '<p class="proclaim-related-meta">';
+
+            if (!empty($study->teachername)) {
+                $html .= '<span>' . htmlspecialchars($study->teachername, ENT_QUOTES, 'UTF-8') . '</span>';
+            }
+
+            if (!empty($study->studydate)) {
+                $dateFormat = (int) $params->get('date_format', 0);
+                $customDate = $params->get('custom_date_format', '');
+
+                if (!empty($customDate)) {
+                    $formattedDate = HTMLHelper::_('date', $study->studydate, $customDate, null);
+                } else {
+                    $formattedDate = match ($dateFormat) {
+                        1       => HTMLHelper::_('date', $study->studydate, 'M J', null),
+                        2       => HTMLHelper::_('date', $study->studydate, 'n/j/Y', null),
+                        4       => HTMLHelper::_('date', $study->studydate, 'l, F j, Y', null),
+                        5       => HTMLHelper::_('date', $study->studydate, 'F j, Y', null),
+                        6       => HTMLHelper::_('date', $study->studydate, 'j F Y', null),
+                        7       => date('j/n/Y', strtotime($study->studydate)),
+                        8       => HTMLHelper::_('date', $study->studydate, Text::_('DATE_FORMAT_LC'), null),
+                        default => HTMLHelper::_('date', $study->studydate, 'M j, Y', null),
+                    };
+                }
+
+                $html .= '<span>' . $formattedDate . '</span>';
+            }
+
+            $html .= '</p>';
+            $html .= '</div></div></a></div>';
+        }
+
+        $html .= '</div></div>';
+
+        return $html;
     }
 }

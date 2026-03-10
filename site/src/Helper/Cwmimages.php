@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,9 +17,9 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Image\Image;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -49,22 +49,20 @@ class Cwmimages
     public static function mainStudyImage(?Registry $params = null): object
     {
         if ($params === null) {
-            $database = Factory::getContainer()->get('DatabaseDriver');
-            $query    = $database->getQuery(true);
-            $query->select('*')->from('#__bsms_admin')->where('id = ' . 1);
-            $database->setQuery($query);
-            $params = $database->loadObject();
-
-            // Convert parameter fields to objects.
-            $registry = new Registry();
-            $registry->loadString($params->params);
-            $params = $registry;
+            $params = Cwmparams::getAdmin()->params;
         }
 
-        if (!$params->get('default_main_image')) {
-            $path = 'media/com_proclaim/images/openbible.png';
-        } else {
-            $path = $params->get('default_main_image');
+        $path = $params->get('default_main_image', '');
+
+        if (empty($path)) {
+            $tmp            = new \stdClass();
+            $tmp->path      = null;
+            $tmp->size      = 0;
+            $tmp->width     = 0;
+            $tmp->height    = 0;
+            $tmp->webp_path = null;
+
+            return $tmp;
         }
 
         return self::getImagePath($path);
@@ -88,27 +86,87 @@ class Cwmimages
      */
     public static function getImagePath(string $path): object
     {
-        $tmp         = new \stdClass();
-        $tmp->path   = null;
-        $tmp->size   = null;
-        $tmp->width  = 0;
-        $tmp->height = 0;
+        $tmp            = new \stdClass();
+        $tmp->path      = null;
+        $tmp->size      = 0;
+        $tmp->width     = 0;
+        $tmp->height    = 0;
+        $tmp->webp_path = null;
 
-        $path       = HTMLHelper::_('cleanImageURL', $path);
-        $FileExists = file_exists(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        $IsFile     = is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
+        if (empty($path)) {
+            return $tmp;
+        }
 
-        if ($path->attributes['width'] === 0 && $IsFile) {
-            $tmp       = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-            $tmp->path = $path->url;
-        } elseif ($FileExists) {
-            $tmp->path   = $path->url;
-            $tmp->size   = filesize(JPATH_ROOT . DIRECTORY_SEPARATOR . $tmp->path);
-            $tmp->width  = $path->attributes['width'];
-            $tmp->height = $path->attributes['height'];
+        $imagePath  = HTMLHelper::_('cleanImageURL', $path);
+        $fullPath   = JPATH_ROOT . DIRECTORY_SEPARATOR . $imagePath->url;
+        $fileExists = file_exists($fullPath) && is_file($fullPath);
+
+        if ($imagePath->attributes['width'] === 0 && $fileExists) {
+            $tmp       = Image::getImageFileProperties($fullPath);
+            $tmp->path = $imagePath->url;
+        } elseif ($fileExists) {
+            $tmp->path   = $imagePath->url;
+            $tmp->size   = filesize($fullPath);
+            $tmp->width  = (int) $imagePath->attributes['width'];
+            $tmp->height = (int) $imagePath->attributes['height'];
+        }
+
+        // Check for WebP sibling file
+        if ($tmp->path !== null) {
+            $ext     = pathinfo($tmp->path, PATHINFO_EXTENSION);
+            $webpUrl = preg_replace('/\.' . preg_quote($ext, '/') . '$/', '.webp', $tmp->path);
+
+            if ($ext !== 'webp' && is_file(JPATH_ROOT . DIRECTORY_SEPARATOR . $webpUrl)) {
+                $tmp->webp_path = $webpUrl;
+            }
         }
 
         return $tmp;
+    }
+
+    /**
+     * Render a <picture> element with optional WebP source and lazy loading
+     *
+     * @param   object  $image  Image object from getImagePath() / getStudyThumbnail() etc.
+     * @param   string  $alt    Alt text for the image
+     * @param   string  $class  CSS class(es) for the <img> tag
+     * @param   bool    $lazy   Whether to add loading="lazy" (default true)
+     *
+     * @return string HTML <picture> element or empty string if no image
+     *
+     * @since 10.1.0
+     */
+    public static function renderPicture(
+        object $image,
+        string $alt = '',
+        string $class = '',
+        bool $lazy = true
+    ): string {
+        if (empty($image->path)) {
+            return '';
+        }
+
+        $base     = Uri::base();
+        $altAttr  = htmlspecialchars($alt, ENT_QUOTES, 'UTF-8');
+        $loading  = $lazy ? ' loading="lazy"' : ' loading="eager"';
+        $width    = $image->width > 0 ? ' width="' . (int) $image->width . '"' : '';
+        $height   = $image->height > 0 ? ' height="' . (int) $image->height . '"' : '';
+        $cssClass = $class !== '' ? ' class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"' : '';
+
+        $html = '';
+
+        if (!empty($image->webp_path)) {
+            $html .= '<picture>';
+            $html .= '<source srcset="' . $base . $image->webp_path . '" type="image/webp">';
+            $html .= '<img src="' . $base . $image->path . '"' . $width . $height
+                . ' alt="' . $altAttr . '"' . $cssClass . $loading . '>';
+            $html .= '</picture>';
+        } else {
+            $html .= '<img src="' . $base . $image->path . '"' . $width . $height
+                . ' alt="' . $altAttr . '"' . $cssClass . $loading . '>';
+        }
+
+        return $html;
     }
 
     /**
@@ -129,14 +187,62 @@ class Cwmimages
      */
     public static function getStudyThumbnail(string $image = 'openbible.png'): object
     {
-        $folder = self::getStudiesImageFolder();
-        $path   = $folder . '/' . $image;
+        $path = $image;
 
-        if (substr_count($image, '/')) {
-            $path = $image;
+        if (!str_contains($image, '/')) {
+            $path = self::getStudiesImageFolder() . '/' . $image;
         }
 
         return self::getImagePath($path);
+    }
+
+    /**
+     * Get the full-size original study image from a thumbnail path.
+     *
+     * Strips the `thumb_` prefix from the filename to locate the original.
+     * Falls back to the thumbnail if the original doesn't exist.
+     *
+     * @param   string  $thumbnailPath  The thumbnail path (may contain thumb_ prefix)
+     *
+     * @return object Image object from getImagePath()
+     *
+     * @since  10.1.0
+     */
+    public static function getStudyOriginal(string $thumbnailPath): object
+    {
+        if (empty($thumbnailPath)) {
+            return self::getImagePath('');
+        }
+
+        $dir      = \dirname($thumbnailPath);
+        $basename = basename($thumbnailPath);
+
+        // Strip thumb_ prefix to get original filename
+        if (str_starts_with($basename, 'thumb_')) {
+            $originalBasename = substr($basename, 6);
+            $originalPath     = $dir . '/' . $originalBasename;
+
+            // Use original if it exists on disk
+            $fullPath = JPATH_ROOT . '/' . $originalPath;
+
+            if (is_file($fullPath)) {
+                return self::getImagePath($originalPath);
+            }
+
+            // Thumbnail is always .jpg but original may have a different extension
+            $nameWithoutExt = pathinfo($originalBasename, PATHINFO_FILENAME);
+
+            foreach (['png', 'webp', 'gif', 'jpeg'] as $ext) {
+                $altPath = $dir . '/' . $nameWithoutExt . '.' . $ext;
+
+                if (is_file(JPATH_ROOT . '/' . $altPath)) {
+                    return self::getImagePath($altPath);
+                }
+            }
+        }
+
+        // Fallback to whatever was passed (the thumbnail itself)
+        return self::getImagePath($thumbnailPath);
     }
 
     /**
@@ -148,7 +254,7 @@ class Cwmimages
      */
     private static function getStudiesImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('image_folder', 'images');
     }
 
     /**
@@ -173,11 +279,10 @@ class Cwmimages
             return self::getImagePath('');
         }
 
-        $folder = self::getSeriesImageFolder();
-        $path   = $folder . '/' . $image;
+        $path = $image;
 
-        if (substr_count($image, '/')) {
-            $path = $image;
+        if (!str_contains($image, '/')) {
+            $path = self::getSeriesImageFolder() . '/' . $image;
         }
 
         return self::getImagePath($path);
@@ -192,7 +297,7 @@ class Cwmimages
      */
     private static function getSeriesImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('series_image_folder', 'images');
     }
 
     /**
@@ -228,7 +333,7 @@ class Cwmimages
      */
     private static function getTeacherImageFolder(): string
     {
-        return 'images';
+        return Cwmparams::getAdmin()->params->get('teacher_image_folder', 'images');
     }
 
     /**
@@ -252,24 +357,23 @@ class Cwmimages
      */
     public static function getTeacherImage(?string $image1 = null, ?string $image2 = null): object
     {
-        $folder = self::getTeacherImageFolder();
-        $path   = '';
+        $path = '';
 
         if ($image1 === null && $image2 === null) {
             return self::getImagePath($path);
         }
 
-        if ($image2 && (!$image1 || strncmp($image1, '- ', 2) === 0)) {
+        if ($image2 && (!$image1 || str_starts_with($image1, '- '))) {
             $path = $image2;
 
-            if (!substr_count((string) $path, '/')) {
-                $path = $folder . '/' . $image2;
+            if (!str_contains((string) $path, '/')) {
+                $path = self::getTeacherImageFolder() . '/' . $image2;
             }
         } else {
-            $path = $folder . '/' . $image1;
+            $path = (string) $image1;
 
-            if (substr_count((string) $image1, '/') > 0) {
-                $path = $image1;
+            if (!str_contains($path, '/')) {
+                $path = self::getTeacherImageFolder() . '/' . $image1;
             }
         }
 
@@ -347,7 +451,7 @@ class Cwmimages
      *
      * @return object
      *
-     * @since version
+     * @since 9.0.0
      */
     public static function extracted(?string $image1, ?string $image2, string $folder): object
     {
@@ -355,17 +459,17 @@ class Cwmimages
             return self::getImagePath('');
         }
 
-        if (!$image1 || strncmp($image1, '- ', 2) === 0) {
-            $path = $image2;
+        if (!$image1 || str_starts_with($image1, '- ')) {
+            $path = (string) $image2;
 
-            if (!substr_count((string) $path, '/')) {
+            if (!str_contains($path, '/')) {
                 $path = $folder . '/' . $image2;
             }
         } else {
-            $path = $folder . '/' . $image1;
+            $path = $image1;
 
-            if (substr_count($image1, '/') > 0) {
-                $path = $image1;
+            if (!str_contains($image1, '/')) {
+                $path = $folder . '/' . $image1;
             }
         }
 

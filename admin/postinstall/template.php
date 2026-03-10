@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -13,9 +13,9 @@
 \defined('_JEXEC') or die;
 
 // Always load Proclaim API if it exists.
-$api = '../components/com_proclaim/api.php';
+$api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+if (!\defined('CWM_LOADED')) {
     require_once $api;
 }
 
@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
 /**
  * Checks if the template is set up right.
  *
- * This check returns true Templates is not setup yet, meaning
+ * This check returns true Templates is not set up yet, meaning
  * that the message concerning it should be displayed.
  *
  * @return  bool
@@ -73,6 +73,6 @@ function admin_postinstall_template_condition(): bool
  */
 function admin_postinstall_template_action(): void
 {
-    $url = 'index.php?option=com_proclaim&view=templates';
+    $url = 'index.php?option=com_proclaim&view=cwmtemplates';
     Factory::getApplication()->redirect($url);
 }

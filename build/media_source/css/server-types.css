@@ -1,0 +1,20 @@
+/**
+ * Server type picker card styles
+ *
+ * @package    Proclaim.Admin
+ * @subpackage cwmservers
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+.server-type-card {
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.server-type-card:hover,
+.server-type-card:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+    outline: none;
+}

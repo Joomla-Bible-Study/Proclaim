@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,6 +20,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Virtuemart Category List Form Field class for the Proclaim component
@@ -53,11 +54,11 @@ class DocmanField extends ListField
             return [Text::_('JBS_CMN_DOCMAN_NOT_INSTALLED')];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('dm.docman_document_id, dm.title');
-        $query->from('#__docman_documents AS dm');
-        $query->order('dm.docman_document_id DESC');
+        $query->select($db->quoteName('dm.docman_document_id') . ', ' . $db->quoteName('dm.title'));
+        $query->from($db->quoteName('#__docman_documents', 'dm'));
+        $query->order($db->quoteName('dm.docman_document_id') . ' DESC');
         $db->setQuery((string)$query);
         $docs    = $db->loadObjectList();
         $options = [];

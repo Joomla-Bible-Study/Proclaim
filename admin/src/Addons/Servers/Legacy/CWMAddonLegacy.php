@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,15 +17,21 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Legacy;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 /**
  * Class CWMAddonLegacy
  *
- * @package  Proclaim.Admin
- * @since    9.0.0
+ * @package     Proclaim.Admin
+ * @since       9.0.0
+ * @deprecated  10.1.0  Legacy servers will be removed in 11.0.0.
+ *              Use the Server Migration tool in Admin Center to migrate
+ *              media files to core server addons (YouTube, Vimeo, Local, etc.).
  */
 class CWMAddonLegacy extends CWMAddon
 {
@@ -63,25 +69,18 @@ class CWMAddonLegacy extends CWMAddon
     /**
      * Render Fields for the general view.
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function renderGeneral($media_form, bool $new): string
+    public function renderGeneral(object $media_form, bool $new): string
     {
         $html = '';
 
-        foreach ($media_form->getFieldset('general') as $field) :
-            $html .= '<div class="control-group">';
-            $html .= '<div class="control-label">';
-            $html .= $field->label;
-            $html .= '</div>';
-            $html .= '<div class="controls">';
-
-            // Way to set defaults on new media
+        foreach ($media_form->getFieldset('general') as $field) {
             if ($new) {
                 $s_name = $field->fieldname;
 
@@ -90,10 +89,8 @@ class CWMAddonLegacy extends CWMAddon
                 }
             }
 
-            $html .= $field->input;
-            $html .= '</div>';
-            $html .= '</div>';
-        endforeach;
+            $html .= $field->renderField();
+        }
 
         return $html;
     }
@@ -101,53 +98,47 @@ class CWMAddonLegacy extends CWMAddon
     /**
      * Render Layout and fields
      *
-     * @param object  $media_form  Media files form
-     * @param bool    $new         If the media is new
+     * @param   object  $media_form  Media files form
+     * @param bool      $new         If the media is new
      *
      * @return string
      *
      * @since 9.1.3
      */
-    public function render($media_form, bool $new): string
+    public function render(object $media_form, bool $new): string
     {
-        $html = '';
-
-        $html .= HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
-
-        $html .= '<div class="row-fluid">';
-
-        foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
-            if ($name !== 'general') {
-                $html .= '<div class="col-6">';
-
-                foreach ($media_form->getFieldset($name) as $field) :
-                    $html .= '<div class="control-group">';
-                    $html .= '<div class="control-label">';
-                    $html .= $field->label;
-                    $html .= '</div>';
-                    $html .= '<div class="controls">';
-
-                    // Way to set defaults on new media
-                    if ($new) {
-                        $s_name = $field->fieldname;
-
-                        if (isset($media_form->s_params[$s_name])) {
-                            $field->setValue($media_form->s_params[$s_name]);
-                        }
-                    }
-
-                    $html .= $field->input;
-                    $html .= '</div>';
-                    $html .= '</div>';
-                endforeach;
-
-                $html .= '</div>';
-            }
-        }
-
-        $html .= '</div>';
+        $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL'));
+        $html .= $this->renderOptionsFields($media_form, $new);
         $html .= HTMLHelper::_('uitab.endTab');
 
         return $html;
+    }
+
+    /**
+     * Detect metadata for a legacy server file (remote HTTP detection).
+     *
+     * @param   Registry    $params      Media params (modified in place)
+     * @param   object      $server      Server object
+     * @param   string      $set_path    Server path prefix
+     * @param   Registry    $path        Server params
+     * @param   Cwmpodcast  $jbspodcast  Podcast helper
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     * @deprecated  10.1.0  Legacy servers will be removed in 11.0.0.
+     */
+    #[\Override]
+    public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
+    {
+        $filename = $params->get('filename');
+
+        if (empty($filename)) {
+            return;
+        }
+
+        // Legacy servers store URLs — use the shared remote detection helper
+        $url = Cwmhelper::mediaBuildUrl($set_path, $filename, $params, false, false, true);
+        $this->detectRemoteMetadata($params, $url, $jbspodcast);
     }
 }

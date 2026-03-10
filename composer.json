@@ -29,59 +29,56 @@
   "config": {
     "optimize-autoloader": true,
     "platform": {
-      "php": "8.1.0"
+      "php": "8.3.0"
     },
     "vendor-dir": "libraries/vendor",
     "github-protocols": [
       "https"
     ],
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
+    "allow-plugins": {}
   },
   "support": {
     "issues": "https://www.christianwebministries.org/issues",
     "forum": "https://www.christianwebministries.org/forum",
     "docs": "https://www.christianwebministries.org/docs"
   },
+  "autoload": {
+    "psr-4": {
+      "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
+      "CWM\\Component\\Proclaim\\Site\\": "site/src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CWM\\Component\\Proclaim\\Tests\\": "tests/unit/"
+    }
+  },
   "require": {
-    "php": "^8.1.0",
-    "ircmaxell/password-compat": "1.*",
-    "leafo/lessphp": "dev-master",
-    "phpmailer/phpmailer": "6.*",
-    "symfony/yaml": "6.*",
-    "simplepie/simplepie": "1.*",
-    "google/recaptcha": "^1.1",
-    "typo3/phar-stream-wrapper": "^3.1.7",
+    "php": "^8.3.0",
     "ext-mbstring": "*",
-    "jfcherng/php-diff": "^6.16.2",
     "ext-json": "*",
     "ext-simplexml": "*",
-    "psr/log": "^3.0.1",
     "ext-gd": "*",
-    "composer/ca-bundle": "^1.3.7"
+    "simplepie/simplepie": "^1.8",
+    "google/recaptcha": "^1.3",
+    "typo3/phar-stream-wrapper": "^3.1.7",
+    "jfcherng/php-diff": "^6.16",
+    "psr/log": "^3.0",
+    "composer/ca-bundle": "^1.3",
+    "ext-zip": "*",
+    "ext-libxml": "*",
+    "ext-fileinfo": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.6.11",
-    "friendsofphp/php-cs-fixer": "3.*",
-    "squizlabs/php_codesniffer": "^3.11",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
-    "phan/phan": "^5.4.2",
+    "phpunit/phpunit": "^11.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phan/phan": "^5.4",
     "roave/security-advisories": "dev-latest",
-    "phing/phing": "*",
-    "pdepend/pdepend": "2.*",
-    "phpmd/phpmd": "^2.4",
-    "pear/versioncontrol_git": "dev-master",
-    "pear/pear_exception": "dev-master",
-    "pear/cache_lite": "1.7.16"
+    "pdepend/pdepend": "^2.16",
+    "phpmd/phpmd": "^2.15"
   },
   "replace": {
     "paragonie/random_compat": "9.99.99",
-    "symfony/polyfill-php70": "*",
-    "symfony/polyfill-php71": "*",
-    "symfony/polyfill-php72": "*",
-    "symfony/polyfill-php73": "*",
-    "symfony/polyfill-php74": "*",
     "symfony/polyfill-php80": "*",
     "symfony/polyfill-php81": "*"
   },
@@ -91,8 +88,33 @@
     }
   },
   "scripts": {
-    "phpcs": "phpcs . --standard=./build/psr12/ruleset.xml",
-    "post-install-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards",
-    "post-update-cmd": "\"libraries/vendor/bin/phpcs\" --config-set installed_paths /libraries/vendor/squizlabs/php_codesniffer/src/Standards"
+    "test": "phpunit",
+    "test:unit": "phpunit --testsuite 'Proclaim Unit Tests'",
+    "test:integration": "phpunit --testsuite 'Proclaim Integration Tests'",
+    "test:js": "npm test",
+    "test:all": ["@test", "@test:js"],
+    "lint:syntax": "php build/proclaim_build.php lint-syntax",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "lint:fix": "php-cs-fixer fix",
+    "check": ["@lint:syntax", "@lint", "@test"],
+    "check:all": ["@lint:syntax", "@lint", "@test:all"],
+    "build:assets": "npm ci && npm run build",
+    "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
+    "build:full": ["@check:all", "@build"],
+    "setup": "php build/proclaim_build.php setup",
+    "joomla-install": "php build/proclaim_build.php install-joomla",
+    "joomla-latest": "php build/proclaim_build.php joomla-latest",
+    "symlink": "php build/proclaim_build.php link",
+    "clean": "php build/proclaim_build.php clean",
+    "build": "php build/proclaim_build.php build",
+    "version": "php build/bump.php",
+    "sync-languages": "python3 build/sync_languages.py",
+    "sync-languages-force": "python3 build/sync_languages.py --force",
+    "sync-languages-setup": "python3 build/sync_languages.py setup",
+    "vendor:check": "node build/check-vendor-versions.js",
+    "vendor:update": "node build/update-vendors.js",
+    "post-install-cmd": [
+      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""
+    ]
   }
 }

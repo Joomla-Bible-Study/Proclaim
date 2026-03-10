@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,15 +16,14 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteachers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
-use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -36,85 +35,83 @@ use Joomla\Registry\Registry;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Document
-     *
-     * @var Document
-     *
-     * @since 7.0
-     */
-    public $document;
-
-    /**
      * Template Table
      *
-     * @var CwmtemplateTable
+     * @var \stdClass
      *
      * @since 7.0
      */
-    public $template;
+    protected \stdClass $template;
 
     /**
      * Items
      *
-     * @var object
+     * @var array|null
      *
      * @since 7.0
      */
-    protected $items = null;
+    protected ?array $items = [];
 
     /**
      * Pagination
      *
-     * @var object
+     * @var Pagination
      *
      * @since 7.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /**
      * State
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected Registry $state;
+    protected ?Registry $state = null;
 
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected Registry $params;
+    protected ?Registry $params = null;
 
     /**
      * Admin
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $admin;
+    protected ?object $admin;
 
     /**
      * Page
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?object $page;
 
     /**
-     * Request Url
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting|null
+     * @since 10.0.0
+     */
+    public ?Cwmlisting $listing = null;
+
+    /**
+     * Studies the element CSS class
      *
      * @var string
-     *
-     * @since 7.0
+     * @since 10.0.0
      */
-    protected $request_url;
+    public string $classelement = '';
 
     /**
      * Execute and display a template script.
@@ -126,51 +123,49 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $state = $this->get('State');
         $items = $this->get('Items');
-
 
         $params = $state->template->params;
 
         $this->template = $state->get('template');
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'worning');
+        if (\count($errors = $this->get('Errors'))) {
+            Factory::getApplication()->enqueueMessage(implode("\n", $errors), 'warning');
         }
 
         // Load the Admin settings and params from the template
         $this->admin = $state->get('administrator');
-        $uri         = new Uri();
 
-        $images = new Cwmimages();
+        $useCustomTemplate = $params->get('useexpert_teacherdetail') > 0
+            || \is_string($params->get('teacherstemplate'));
+        $pagebuilder = $useCustomTemplate ? new Cwmpagebuilder() : null;
 
-        if ($params->get('useexpert_teacherdetail') > 0 || is_string($params->get('teacherstemplate'))) {
-            $pagebuilder = new Cwmpagebuilder();
+        foreach ($items as $item) {
+            if (isset($item->teacher_thumbnail)) {
+                $image             = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail, $item->teacher_image ?? '');
+                $item->image       = Cwmimages::renderPicture($image, $item->teachername ?? '');
+                $item->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+                    . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
+                $item->teacherlink = Route::_(
+                    'index.php?option=com_proclaim&view=teacher&id=' . $item->slug . '&t=' . $this->template->id
+                );
 
-            foreach ($items as $i => $item) {
-                if (isset($item->teacher_thumbnail)) {
-                    $image                  = $images::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb);
-                    $items[$i]->image       = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width
-                        . '" alt="' . $item->teachername . '" />';
-                    $items[$i]->slug        = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-                        . str_replace(' ', '-', htmlspecialchars_decode($item->teachername, ENT_QUOTES));
-                    $items[$i]->teacherlink = Route::_(
-                        'index.php?option=com_proclaim&view=teacher&id=' . $item->slug . '&t=' . $this->template->id
-                    );
-
-                    if (isset($items[$i]->information)) {
-                        $items[$i]->text        = $items[$i]->information;
-                        $information            = $pagebuilder->runContentPlugins($items[$i], $params);
-                        $items[$i]->information = $information->text;
+                if ($pagebuilder !== null) {
+                    if (isset($item->information)) {
+                        $item->text        = $item->information;
+                        $information       = $pagebuilder->runContentPlugins($item, $params);
+                        $item->information = $information->text;
                     }
 
-                    if (isset($items[$i]->short)) {
-                        $items[$i]->text  = $items[$i]->short;
-                        $short            = $pagebuilder->runContentPlugins($items[$i], $params);
-                        $items[$i]->short = $short->text;
+                    if (isset($item->short)) {
+                        $item->text  = $item->short;
+                        $short       = $pagebuilder->runContentPlugins($item, $params);
+                        $item->short = $short->text;
                     }
                 }
             }
@@ -181,10 +176,12 @@ class HtmlView extends BaseHtmlView
         $this->page->pagelinks = $pagination->getPagesLinks();
         $this->page->counter   = $pagination->getPagesCounter();
         $this->pagination      = $pagination;
-        $stringuri             = $uri->toString();
-        $this->request_url     = $stringuri;
         $this->params          = $params;
         $this->items           = $items;
+
+        // Pre-create listing helper for template use
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('teachers_element'));
 
         $this->prepareDocument();
 
@@ -201,15 +198,14 @@ class HtmlView extends BaseHtmlView
      */
     protected function prepareDocument(): void
     {
-        $app   = Factory::getApplication('site');
+        $app   = Factory::getApplication();
         $menus = $app->getMenu();
 
         /** @var Registry $itemparams */
         $itemparams = $app->getParams();
-        $title      = null;
 
         // Because the application sets a default page title,
-        // we need to get it from the menu item itself
+        // We need to get it from the menu item itself
         $menu = $menus->getActive();
 
         if ($menu) {
@@ -222,9 +218,9 @@ class HtmlView extends BaseHtmlView
 
         if (empty($title)) {
             $title = $app->get('sitename');
-        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
+        } elseif ($app->get('sitename_pagetitles', 0) === 1) {
             $title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
+        } elseif ($app->get('sitename_pagetitles', 0) === 2) {
             $title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
         }
 

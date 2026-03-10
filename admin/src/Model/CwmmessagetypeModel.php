@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
-use Exception;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
-use Joomla\Input\Input;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * MessageType model class
@@ -33,44 +32,6 @@ use Joomla\CMS\Table\Table;
 class CwmmessagetypeModel extends AdminModel
 {
     /**
-     * Method to store a record
-     *
-     * @access    public
-     * @return    bool    True on success
-     *
-     * @since     7.0.0
-     */
-    public function store(): bool
-    {
-        $row   = new CwmmessageTable($this->_db);
-        $input = new Input();
-        $data  = $input->get('post');
-
-        // Bind the form fields to the hello table
-        if (!$row->bind($data)) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Make sure the record is valid
-        if (!$row->check()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        // Store the table in the database
-        if (!$row->store()) {
-            $this->setError($this->_db->getErrorMsg());
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Abstract method for getting the form from the model.
      *
      * @param   array  $data      Data for the form.
@@ -78,31 +39,17 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  mixed  A JForm object on success, false on failure
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): mixed
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
         return $this->loadForm(
             'com_proclaim.messagetype',
             'messagetype',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
-    }
-
-    /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool
-    {
-        return true;
     }
 
     /**
@@ -114,10 +61,10 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  Table  A Table object
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmmessagetype', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmmessagetype', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -127,12 +74,12 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  mixed   The default data is an empty array.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since   7.0
      */
     protected function loadFormData(): mixed
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.messagetype.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -148,11 +95,13 @@ class CwmmessagetypeModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
     protected function prepareTable($table): void
     {
-        jimport('joomla.filter.output');
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
 
         $table->message_type = htmlspecialchars_decode($table->message_type, ENT_QUOTES);
         $table->alias        = ApplicationHelper::stringURLSafe($table->alias);
@@ -161,17 +110,31 @@ class CwmmessagetypeModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->message_type);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_message_type');
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_message_type'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
         }
     }
 

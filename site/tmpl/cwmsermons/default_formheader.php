@@ -4,7 +4,7 @@
  * Default FormHeader
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -12,6 +12,8 @@
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
+
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,7 +23,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 
-$input = Factory::getApplication()->input;
+$input = Factory::getApplication()->getInput();
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $input->get('t', '1', 'int')); ?>"

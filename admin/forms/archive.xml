@@ -3,12 +3,12 @@
     <fieldset>
         <field name="timeframe" type="int" default=""
                label="JBS_ARCHIVE_TIMEFRAME_LABEL"
-               description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" labelclass="control-label" class="col-2"
+               description="JBS_ARCHIVE_TIMEFRAME_DESC" size="5" class="col-2"
                required="required">
         </field>
         <field name="switch" type="radio" default="year"
                label="JBS_ARCHIVE_SWICH_LABEL" description="JBS_ARCHIVE_SWICH_DESC"
-               class="btn-group" labelclass="control-label">
+               class="btn-group">
             <option value="year">JBS_CMN_YEARS</option>
             <option value="month">JBS_CMN_MONTHS</option>
             <option value="day">JBS_CMN_DAYS</option>

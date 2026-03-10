@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplay;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -37,98 +39,106 @@ class HtmlView extends BaseHtmlView
     /**
      * State
      *
-     * @var array
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected $state = null;
+    protected ?Registry $state = null;
 
     /**
      * Item
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $item = null;
+    protected ?object $item = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $items = null;
+    protected ?object $items = null;
 
     /**
      * Pagination
      *
-     * @var array
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $pagination = null;
+    protected ?object $pagination = null;
 
-    /** @var  object Admin
+    /** @var  object|null Admin
      *
      * @since 7.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
-    /** @var  Registry Admin Params
+    /** @var  Registry|null Admin Params
      *
      * @since 7.0
      */
-    protected $adminParams;
+    protected ?Registry $adminParams = null;
 
-    /** @var  object Page
+    /** @var  object|null Page
      *
      * @since 7.0
      */
-    protected $page;
+    protected ?object $page = null;
 
-    /** @var  object Series Studies
+    /** @var  ?array Series Studies
      *
      * @since 7.0
      */
-    protected $seriesstudies;
+    protected ?array $seriesstudies = [];
 
-    /** @var  CwmtemplateTable Template
+    /** @var  \stdClass|null Template
      *
      * @since 7.0
      */
-    protected $template;
+    protected ?\stdClass $template = null;
 
-    /** @var  Registry Params
+    /** @var  Registry|null Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
 
-    /** @var  string Article
+    /** @var  string|null Article
      *
      * @since 7.0
      */
-    protected $article;
+    protected ?string $article = null;
 
-    /** @var  string Passage Link
+    /** @var  string|null Passage Link
      *
      * @since 7.0
      */
-    protected $passageLink;
+    protected ?string $passageLink = null;
 
-    /** @var  object Studies
+    /** @var  ?array Studies
      *
      * @since 7.0
      */
-    protected $studies;
+    protected ?array $studies = [];
 
-    /** @var  string Request URL
+    /** @var  string|null Request URL
      *
      * @since 7.0
      */
-    protected $requestUrl;
+    protected ?string $requestUrl = null;
+
+    /**
+     * Listing helper instance for template use
+     *
+     * @var Cwmlisting|null
+     * @since 10.0.0
+     */
+    public ?Cwmlisting $listing = null;
 
     /**
      * Execute and display a template script.
@@ -140,6 +150,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $mainframe = Factory::getApplication();
@@ -159,18 +170,21 @@ class HtmlView extends BaseHtmlView
         $mainframe->setUserState('sid', $items->id);
         $this->seriesstudies = $this->get('Studies');
 
+        CwmanalyticsHelper::logEvent('page_view', 0, 0, '', (int) $items->id);
+
         // Get the series image
         $image               = Cwmimages::getSeriesThumbnail($items->series_thumbnail);
-        $items->image        = '<img src="' . $image->path . '" height="' . $image->height . '" width="' . $image->width . '" alt="" />';
-        $teacherimage        = Cwmimages::getTeacherThumbnail($items->thumb);
-        $items->teacherimage = '<img src="' . $teacherimage->path . '" height="' . $teacherimage->height . '" width="'
-            . $teacherimage->width . '" alt="" />';
+        $items->image        = Cwmimages::renderPicture($image, $items->series_text ?? '');
+        $teacherimage        = Cwmimages::getTeacherThumbnail($items->teacher_thumbnail ?? '');
+        $items->teacherimage = Cwmimages::renderPicture($teacherimage, $items->teachername ?? '');
 
         $items->slug = $items->alias ? ($items->id . ':' . $items->alias) :
             str_replace(' ', '-', htmlspecialchars_decode($items->series_text, ENT_QUOTES))
             . ':' . $items->id;
 
-        if ($params->get('useexpert_list') > 0 || is_string($params->get('seriesdisplaytemplate')) == true) {
+        $studies = $this->seriesstudies;
+
+        if ($params->get('useexpert_list') > 0 || \is_string($params->get('seriesdisplaytemplate'))) {
             // Get studies associated with the series
             $pagebuilder = new Cwmpagebuilder();
             $whereitem   = $items->id;
@@ -184,47 +198,9 @@ class HtmlView extends BaseHtmlView
                 $params,
                 $limit,
                 $seriesorder,
-                $this->template
             );
 
-            foreach ($studies as $i => $study) {
-                $pelements               = $pagebuilder->buildPage($study, $params, $this->template);
-                $studies[$i]->scripture1 = $pelements->scripture1;
-                $studies[$i]->scripture2 = $pelements->scripture2;
-                $studies[$i]->media      = $pelements->media;
-                $studies[$i]->studydate  = $pelements->studydate;
-                $studies[$i]->topics     = $pelements->topics;
-
-                if (isset($pelements->study_thumbnail)) {
-                    $studies[$i]->study_thumbnail = $pelements->study_thumbnail;
-                } else {
-                    $studies[$i]->study_thumbnail = null;
-                }
-
-                if (isset($pelements->series_thumbnail)) {
-                    $studies[$i]->series_thumbnail = $pelements->series_thumbnail;
-                } else {
-                    $studies[$i]->series_thumbnail = null;
-                }
-
-                $studies[$i]->detailslink = $pelements->detailslink;
-
-                if (isset($pelements->studyintro)) {
-                    $studies[$i]->studyintro = $pelements->studyintro;
-                }
-
-                if (isset($pelements->secondary_reference)) {
-                    $studies[$i]->secondary_reference = $pelements->secondary_reference;
-                } else {
-                    $studies[$i]->secondary_reference = '';
-                }
-
-                if (isset($pelements->sdescription)) {
-                    $studies[$i]->sdescription = $pelements->sdescription;
-                } else {
-                    $studies[$i]->sdescription = '';
-                }
-            }
+            $pagebuilder->enrichStudies($studies, $params, $this->template);
 
             $this->page = $items;
         }
@@ -239,10 +215,10 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $mainframe->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        if (!in_array($items->access, $groups) && $items->access) {
+        if (!\in_array($items->access, $groups, true) && $items->access) {
             $mainframe->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return;
@@ -250,7 +226,7 @@ class HtmlView extends BaseHtmlView
 
         $input->set('returnid', $items->id);
 
-        // Passage link to BibleGateway
+        // Scripture links plugin
         $plugin = PluginHelper::getPlugin('content', 'scripturelinks');
 
         if ($plugin) {
@@ -262,12 +238,25 @@ class HtmlView extends BaseHtmlView
         }
 
         // End process prepare content plugins
-        $this->params     = &$params;
+        $this->params     = $params;
         $this->items      = $items;
         $this->studies    = $studies;
         $uri              = new Uri();
         $stringuri        = $uri->toString();
         $this->requestUrl = $stringuri;
+
+        // Pre-create listing helper for template use
+        $this->listing = new Cwmlisting();
+
+        // Schema.org structured data
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildSeriesDetail(
+                $this->items,
+                $this->studies ?? [],
+                Uri::getInstance()->toString(),
+                $mainframe->get('sitename')
+            )
+        );
 
         parent::display($tpl);
     }

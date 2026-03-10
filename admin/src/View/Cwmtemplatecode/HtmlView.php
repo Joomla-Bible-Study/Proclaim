@@ -4,18 +4,19 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTemplateCode;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplatecode;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplatecodeModel;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
@@ -37,55 +38,55 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $defaultcode;
+    public string $defaultcode = '';
 
     /**
      * Type
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    public $type;
+    public mixed $type = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var     ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
      * Form
      *
-     * @var mixed
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Defaults
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $defaults;
+    protected ?object $defaults = null;
 
     /**
      * Execute and display a template script.
@@ -98,10 +99,15 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
-        $item       = $this->get("Item");
+        /** @var CwmtemplatecodeModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form = $model->getForm();
+        $item       = $model->getItem();
 
         if ((int)$item->id === 0) {
             ClientHelper::setCredentialsFromRequest('ftp');
@@ -113,11 +119,11 @@ class HtmlView extends BaseHtmlView
         $this->type = null;
 
         if ($item->id !== 0) {
-            $this->type = $this->get('Type');
+            $this->type = $model->getType();
         }
 
         $this->item  = $item;
-        $this->state = $this->get("State");
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'templatecode', (int)$this->item->id);
 
         $this->setLayout("edit");
@@ -136,7 +142,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ((int)$this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(

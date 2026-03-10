@@ -4,21 +4,26 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMSeries;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmseries;
 
 // No Direct Access
-use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Model\CwmseriesModel;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\State;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -33,52 +38,68 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Can Do
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    public $canDo;
-
-    /**
-     * Filter Levels
+     * Items
      *
      * @var array
      * @since    7.0.0
      */
-    public $f_levels;
-
-    /**
-     * Side Bar
-     *
-     * @var string
-     * @since    7.0.0
-     */
-    public $sidebar;
-
-    /**
-     * Items
-     *
-     * @var object
-     * @since    7.0.0
-     */
-    protected $items;
+    protected array $items;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var Pagination
      * @since    7.0.0
      */
-    protected $pagination;
+    protected Pagination $pagination;
 
     /**
      * State
      *
-     * @var mixed
+     * @var State|Registry
      * @since    7.0.0
      */
-    protected $state;
+    protected State|Registry $state;
+
+    /**
+     * Filter Form
+     *
+     * @var Form
+     * @since    7.0.0
+     */
+    public Form $filterForm;
+
+    /**
+     * The active search filters
+     *
+     * @var  array
+     * @since 4.0.0
+     */
+    public array $activeFilters;
+
+    /**
+     * Can Do
+     *
+     * @var ?object
+     * @since    7.0.0
+     */
+    public ?object $canDo = null;
+
+    /**
+     * All transitions, which can be executed if the items
+     *
+     * @var  array
+     * @since 4.0.0
+     */
+    protected array $transitions = [];
+
+    /**
+     * Is this view an Empty State
+     *
+     * @var   bool
+     * @since 4.0.0
+     */
+    private bool $isEmptyState = false;
 
     /**
      * Execute and display a template script.
@@ -91,24 +112,40 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmseriesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
-        $this->canDo      = ContentHelper::getActions('com_proclaim', 'serie');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
+        $this->canDo         = ContentHelper::getActions('com_proclaim', 'serie');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // We don't need toolbar in the modal window.
+        // We don't need a toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
+
+            // We do not need to filter by language when multilingual is disabled
+            if (!Multilanguage::isEnabled()) {
+                unset($this->activeFilters['language']);
+                $this->filterForm->removeField('language', 'filter');
+            }
         }
+
+        // Add form control fields
+        $this->filterForm
+            ->addControlField('task', '')
+            ->addControlField('boxchecked', '0');
 
         // Display the template
         parent::display($tpl);
@@ -125,16 +162,15 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        /** @var Toolbar $toolbar */
+        $toolbar = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(Text::_('JBS_CMN_SERIES'), 'tree-2 tree-2');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
-        if ($this->canDo->get('core.create')) {
+        if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmserie.add');
         }
 
@@ -150,6 +186,7 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmseries.publish');
             $childBar->unpublish('cwmseries.unpublish');
             $childBar->archive('cwmseries.archive');
+            $childBar->checkin('cwmseries.checkin')->listCheck(true);
 
             if ($canDo->get('core.edit.state')) {
                 $childBar->trash('cwmseries.trash');
@@ -174,6 +211,8 @@ class HtmlView extends BaseHtmlView
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
+
+        $toolbar->help('series', true);
     }
 
     /**
@@ -185,12 +224,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
-            'series.ordering'  => Text::_('JGRID_HEADING_ORDERING'),
-            'series.published' => Text::_('JSTATUS'),
-            'access_level'     => Text::_('JGRID_HEADING_ACCESS'),
-            'series.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
-            'series.id'        => Text::_('JGRID_HEADING_ID')
-        );
+        return [
+            'serie.topic_text' => Text::_('JBS_CMN_TOPICS'),
+            'serie.published'  => Text::_('JSTATUS'),
+            'serie.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

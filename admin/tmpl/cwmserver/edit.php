@@ -4,7 +4,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,12 +20,15 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-// Create shortcut to parameters.
-$app = Factory::getApplication();
-$input = $app->input;
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmserver\HtmlView $this */
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+// Create shortcut to parameters.
+$app   = Factory::getApplication();
+$input = $app->getInput();
+
+$isNewRecord = ((int)$this->item->id === 0 && empty($this->item->type));
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -43,6 +46,15 @@ $wa->useScript('keepalive')
 		}
 	}"
     );
+
+if ($isNewRecord) {
+    $wa->addInlineScript(
+        "document.addEventListener('DOMContentLoaded', function () {
+            var btn = document.getElementById('jform_type_select');
+            if (btn) { btn.click(); }
+        });"
+    );
+}
 ?>
 <form action="<?php
 echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int)$this->item->id); ?>"
@@ -52,32 +64,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
       class="form-validate" enctype="multipart/form-data">
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
             <div class="col-lg-9">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('server_name'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('server_name'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('type'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('type'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('server_name'); ?>
+                <?php echo $this->form->renderField('type'); ?>
             </div>
             <div class="col-lg-3">
                 <?php
@@ -103,7 +97,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
-        if ($this->server_form !== "no-data-type") : ?>
+        if ($this->server_form !== null) : ?>
             <?php
             if ($this->server_form->getFieldsets('params')) : ?>
                 <?php
@@ -119,16 +113,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                         <div class="col-12 col-lg-12">
                             <?php
                             foreach ($this->server_form->getFieldset($fieldsets->name) as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                    </div>
-                                </div>
+                                <?php echo $field->renderField(); ?>
                                 <?php
                             endforeach; ?>
                         </div>
@@ -146,45 +131,35 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
                 <div class="row">
                     <div class="accordion" id="accordionlist">
                         <?php
-                        $test = $this->server_form->getFieldsets('media');
-                        foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
+                foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
                             <div class="accordion-item">
                                 <h2 class="accordion-heading" id="<?php
-                                echo Text::_($name) ?>">
+                        echo Text::_($name) ?>">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse<?php
-                                            echo Text::_($name) ?>" aria-expanded="false"
+                                    echo Text::_($name) ?>" aria-expanded="false"
                                             aria-controls="collapse<?php
-                                            echo Text::_($name) ?>">
+                                    echo Text::_($name) ?>">
                                         <?php
-                                        echo Text::_($fieldset->label); ?>
+                                echo Text::_($fieldset->label); ?>
                                     </button>
                                 </h2>
                                 <div id="collapse<?php
-                                echo Text::_($name) ?>" class="accordion-collapse collapse"
+                        echo Text::_($name) ?>" class="accordion-collapse collapse"
                                      aria-labelledby="heading<?php
-                                        echo $name; ?>"
+                                echo $name; ?>"
                                      data-bs-parent="#accordionlist">
                                     <div class="accordion-body">
                                         <?php
-                                        foreach ($this->server_form->getFieldset($name) as $field) : ?>
-                                            <div class="control-group">
-                                                <div class="control-label">
-                                                    <?php
-                                                    echo $field->label; ?>
-                                                </div>
-                                                <div class="controls">
-                                                    <?php
-                                                    echo $field->input; ?>
-                                                </div>
-                                            </div>
+                                foreach ($this->server_form->getFieldset($name) as $field) : ?>
+                                            <?php echo $field->renderField(); ?>
                                             <?php
-                                        endforeach; ?>
+                                endforeach; ?>
                                     </div>
                                 </div>
                             </div>
                             <?php
-                        endforeach; ?>
+                endforeach; ?>
                     </div>
                 </div>
                 <?php
@@ -197,9 +172,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>

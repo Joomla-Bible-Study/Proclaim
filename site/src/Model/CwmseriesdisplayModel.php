@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -17,9 +17,11 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -54,10 +56,10 @@ class CwmseriesdisplayModel extends ItemModel
     public function getItem($pk = null): mixed
     {
         // Initialise variables.
-        $pk = (!empty($pk)) ? $pk : (int)$this->getState('series.id');
+        $pk = (!empty($pk)) ? $pk : (int) $this->getState('series.id');
 
         if (!isset($this->_item[$pk])) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = $this->getDatabase();
             $query = $db->getQuery(true);
             $query->select(
                 $this->getState(
@@ -65,14 +67,18 @@ class CwmseriesdisplayModel extends ItemModel
                     'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END AS slug'
                 )
             );
-            $query->from('#__bsms_series AS se');
+            $query->from($db->quoteName('#__bsms_series', 'se'));
 
             // Join over teachers
             $query->select(
-                't.id AS tid, t.teachername, t.title AS teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+                $db->quoteName(
+                    ['t.id', 't.teachername', 't.title', 't.teacher_thumbnail'],
+                    ['tid', null, 'teachertitle', null]
+                )
             );
-            $query->join('LEFT', '#__bsms_teachers AS t ON se.teacher = t.id');
-            $query->where('se.id = ' . (int)$pk);
+            $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON ' . $db->quoteName('se.teacher') . ' = ' . $db->quoteName('t.id'));
+            $query->where($db->quoteName('se.id') . ' = :id')
+                ->bind(':id', $pk, ParameterType::INTEGER);
             $db->setQuery($query);
             $data = $db->loadObject();
 
@@ -91,132 +97,217 @@ class CwmseriesdisplayModel extends ItemModel
     /**
      * Get Studies
      *
-     * @return mixed
+     * @return array
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getStudies(): mixed
+    public function getStudies(): array
     {
         $app = Factory::getApplication();
-        $sid = (int)$app->getUserState('sid');
+        $sid = (int) $app->getUserState('sid');
 
         /** @var Registry $params */
         $params          = $app->getParams();
-        $user            = $user = Factory::getApplication()->getSession()->get('user');
-        $groups          = implode(',', $user->getAuthorisedViewLevels());
-        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $user            = $app->getIdentity();
+        $groups          = $user->getAuthorisedViewLevels();
+        $db              = $this->getDatabase();
         $query           = $db->getQuery(true);
         $template_params = Cwmparams::getTemplateparams();
         $t_params        = $template_params->params;
+        $nullDate        = $db->getNullDate();
+
         $query->select(
             $this->getState(
                 'list.select',
-                'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
-                // Use created if modified is 0
-                'CASE WHEN study.modified = ' . $db->quote(
-                    $db->getNullDate()
-                ) . ' THEN study.studydate ELSE study.modified END AS modified, ' .
-                'study.modified_by, user_name AS modified_by_name,' .
-                // Use created if publish_up is 0
-                'CASE WHEN study.publish_up = ' . $db->quote(
-                    $db->getNullDate()
-                ) . ' THEN study.studydate ELSE study.publish_up END AS publish_up,' .
-                'study.publish_down,
-		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length(
-                    'study.studytext'
-                ) . ' AS readmore' . ','
+                implode(', ', $db->quoteName([
+                    'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+                    'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+                    'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+                    'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+                    'study.booknumber2', 'study.location_id',
+                ]))
             )
-            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END AS slug '
         );
-        $query->from('#__bsms_studies AS study');
+        $quotedNullDate = $db->quote($nullDate);
+        // Use studydate as fallback for modified
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.modified') . ' = ' . $quotedNullDate
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.modified')
+            . ' END AS ' . $db->quoteName('modified')
+        );
+        $query->select($db->quoteName('study.modified_by') . ', ' . $db->quoteName('study.user_name', 'modified_by_name'));
+        // Use studydate as fallback for publish_up
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.publish_up') . ' = ' . $quotedNullDate
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.publish_up')
+            . ' END AS ' . $db->quoteName('publish_up')
+        );
+        $query->select(implode(', ', $db->quoteName([
+            'study.publish_down', 'study.series_id', 'study.download_id',
+            'study.thumbnailm', 'study.thumbhm', 'study.thumbwm',
+            'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
+            'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
+        ])));
+        $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
+        $query->select(
+            'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('
+            . $db->quote(':') . ', ' . $db->quoteName('study.id') . ', ' . $db->quoteName('study.alias')
+            . ') ELSE ' . $db->quoteName('study.id') . ' END AS ' . $db->quoteName('slug')
+        );
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
 
         // Join over Message Types
-        $query->select('messageType.message_type AS message_type');
-        $query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
+        $query->select($db->quoteName('messageType.message_type', 'message_type'));
+        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'messageType') . ' ON ' . $db->quoteName('messageType.id') . ' = ' . $db->quoteName('study.messagetype'));
 
         // Join over Teachers
         $query->select(
-            'teacher.teachername AS teachername, teacher.title AS teachertitle,' .
-            'teacher.teacher_thumbnail AS thumb, teacher.thumbh, teacher.thumbw'
+            $db->quoteName('teacher.teachername', 'teachername') . ', ' .
+            $db->quoteName('teacher.title', 'teachertitle') . ', ' .
+            $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
-        $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id') . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')');
 
         // Join over Series
         $query->select(
-            'series.series_text, series.series_thumbnail, series.description AS sdescription, series.access AS series_access'
+            $db->quoteName(
+                ['series.series_text', 'series.series_thumbnail', 'series.description', 'series.access'],
+                [null, null, 'sdescription', 'series_access']
+            )
         );
-        $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id'));
 
         // Join over Books
-        $query->select('book.bookname');
-        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+        $query->select($db->quoteName('book.bookname'));
+        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber'));
 
-        $query->select('book2.bookname as bookname2');
-        $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
-
-        // Join over Plays/Downloads
-        $query->select(
-            'SUM(mediafile.plays) AS totalplays, SUM(mediafile.downloads) AS totaldownloads, mediafile.study_id'
-        );
-        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->select($db->quoteName('book2.bookname', 'bookname2'));
+        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON ' . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2'));
 
         // Join over Locations
-        $query->select('locations.location_text');
-        $query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
+        $query->select($db->quoteName('locations.location_text'));
+        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id'));
 
         // Join over topics
-        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-        $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
+        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
+        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('st.study_id'));
         $query->select(
-            'GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) AS topics_text, GROUP_CONCAT(DISTINCT t.params)'
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.id') . '), ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.topic_text') . ') AS topics_text, ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.params') . ')'
         );
-        $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
+        $query->join('LEFT', $db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'));
 
         // Join over users
-        $query->select('users.name AS submitted');
-        $query->join('LEFT', '#__users AS users ON study.user_id = users.id');
+        $query->select($db->quoteName('users.name', 'submitted'));
+        $query->join('LEFT', $db->quoteName('#__users', 'users') . ' ON ' . $db->quoteName('study.user_id') . ' = ' . $db->quoteName('users.id'));
 
-        $query->group('study.id');
+        $query->group($db->quoteName('study.id'));
 
-        $query->select('GROUP_CONCAT(DISTINCT m.id) AS mids');
-        $query->join('LEFT', '#__bsms_mediafiles AS m ON study.id = m.study_id');
+        // Filter only for the authorized view
+        $query->whereIn($db->quoteName('study.access'), $groups);
+        $query->extendWhere(
+            'AND',
+            [
+                $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
+                $db->quoteName('study.series_id') . ' <= 0',
+            ],
+            'OR'
+        );
 
-        // Filter only for authorized view
-        $query->where('(series.access IN (' . $groups . ') OR study.series_id <= 0)');
-        $query->where('study.access IN (' . $groups . ')');
+        // Filter by published state based on the show_archived parameter
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $t_params->get('sddefault_show_archived', '0');
+        }
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->whereIn($db->quoteName('study.published'), [2]);
+                break;
+            case '2': // Both published and archived
+                $query->whereIn($db->quoteName('study.published'), [1, 2]);
+                break;
+            default: // Published only (backward compatible)
+                $query->whereIn($db->quoteName('study.published'), [1]);
+                break;
+        }
 
-        // Select only published studies
-        $query->where('study.published = 1');
-        $query->where('(series.published = 1 OR study.series_id <= 0)');
-        $query->where('study.series_id = ' . $sid);
+        // Cascading series date window for non-admin users (like Joomla categories)
+        $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
+        $canEdit      = $user->authorise('core.edit', 'com_proclaim');
+
+        if (!$canEditState && !$canEdit) {
+            $quotedNow = $db->quote((new Date())->toSql());
+            $query->where(
+                '(('
+                . $db->quoteName('series.published') . ' = 1'
+                . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $quotedNow . ')'
+                . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $quotedNow . ')'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+            );
+        } else {
+            $query->extendWhere(
+                'AND',
+                [
+                    $db->quoteName('series.published') . ' = 1',
+                    $db->quoteName('study.series_id') . ' <= 0',
+                ],
+                'OR'
+            );
+        }
+
+        $query->where($db->quoteName('study.series_id') . ' = :sid')
+            ->bind(':sid', $sid, ParameterType::INTEGER);
 
         // Order by order filter
-        $orderparam = (int)$params->get('default_order');
+        $orderparam = (int) $params->get('default_order');
 
         if (empty($orderparam)) {
             $orderparam = $t_params->get('series_detail_order', '1');
         }
 
-        if ($orderparam === 2) {
-            $order = "ASC";
-        } else {
-            $order = "DESC";
-        }
+        $order = ((int) $orderparam === 2) ? 'ASC' : 'DESC';
 
-        $query->order('study.studydate ' . $order);
-        $db->setQuery($query, 0, $t_params->get('series_detail_limit', 20));
+        $query->order($db->quoteName('study.studydate') . ' ' . $order);
+        $db->setQuery($query, 0, (int) $t_params->get('series_detail_limit', 20));
         $studies = $db->loadObjectList();
 
-        if (count($studies) < 1) {
-            return false;
+        // Batch-load media stats separately to avoid Cartesian product
+        if (!empty($studies)) {
+            $studyIds   = array_column($studies, 'id');
+            $mediaQuery = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('study_id'),
+                    'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+                    'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+                    'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+                ])
+                ->from($db->quoteName('#__bsms_mediafiles'));
+
+            // Include archived media when show_archived is enabled
+            if ($showArchived === '1' || $showArchived === '2') {
+                $mediaQuery->where($db->quoteName('published') . ' IN (1, 2)');
+            } else {
+                $mediaQuery->where($db->quoteName('published') . ' = 1');
+            }
+
+            $mediaQuery->whereIn($db->quoteName('study_id'), $studyIds)
+                ->group($db->quoteName('study_id'));
+            $db->setQuery($mediaQuery);
+            $mediaStats = $db->loadObjectList('study_id');
+
+            foreach ($studies as $study) {
+                $stats                 = $mediaStats[$study->id] ?? null;
+                $study->mids           = $stats->mids ?? null;
+                $study->totalplays     = (int) ($stats->totalplays ?? 0);
+                $study->totaldownloads = (int) ($stats->totaldownloads ?? 0);
+                $study->study_id       = (int) $study->id;
+            }
         }
 
-        return $studies;
+        return $studies ?: [];
     }
 
     /**
@@ -234,10 +325,10 @@ class CwmseriesdisplayModel extends ItemModel
         $app = Factory::getApplication();
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('series.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -253,7 +344,7 @@ class CwmseriesdisplayModel extends ItemModel
         $t = (int) $params->get('seriesid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -261,7 +352,7 @@ class CwmseriesdisplayModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlatest;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Model\CwmlatestModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
@@ -38,22 +39,19 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery('true');
-        $query->select('id')
-            ->from('#__bsms_studies')
-            ->where('published = 1')
-            ->order('studydate DESC LIMIT 1');
-        $db->setQuery($query);
-        $id    = $db->loadResult();
-        $input = Factory::getApplication()->input;
+        /** @var CwmlatestModel $model */
+        $model = $this->getModel();
+        $id    = $model->getLatestStudyId();
+
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
         $t     = $input->get('t', '1');
 
         // @todo move to slug asap, this will require a new query to load both alias and ID.
         $link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
-        $app  = Factory::getApplication();
 
         $app->redirect($link);
     }

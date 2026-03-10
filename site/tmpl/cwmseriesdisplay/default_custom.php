@@ -4,7 +4,7 @@
  * Default Custom
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,20 +14,25 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+/** @var CWM\Component\Proclaim\Site\View\Cwmseriesdisplays\HtmlView $this */
+
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-
 $mainframe = Factory::getApplication();
-$input     = Factory::getApplication();
+$input     = $mainframe->getInput();
 $option    = $input->get('option', '', 'cmd');
-$document  = Factory::getApplication()->getDocument();
+$document  = $mainframe->getDocument();
 $params    = $this->params;
 $url       = $this->params->get('stylesheet');
 
 if ($url) {
-    $document->addStyleSheet($url);
+    $document->getWebAssetManager()->registerAndUseStyle(
+        'com_proclaim.template-custom-' . md5($url),
+        $url,
+        ['version' => false]
+    );
 }
 $JBSMSerieslist = new Cwmserieslist();
 $t              = $this->template->id;
@@ -36,35 +41,35 @@ $t              = $this->template->id;
 echo str_replace("&", "&amp;", $this->request_url); ?>" method="post" name="adminForm">
     <div id="proclaim" class="noRefTagger"> <!-- This div is the container for the whole page -->
         <?php
-        echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params, $this->template);
-        ?>
+        echo $JBSMSerieslist->getSeriesDetailsExp($this->items, $this->params);
+?>
         <table class="table table-striped bslisttable"> <?php
-            $studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->template);
-            echo $studies;
-        ?></table>
+    $studies = $JBSMSerieslist->getSeriesstudiesExp($this->items->id, $this->params, $this->template);
+echo $studies;
+?></table>
         <?php
-        if ($this->params->get('series_list_return') > 0) {
-            ?>
+if ($this->params->get('series_list_return') > 0) {
+    ?>
             <table class="table table-striped">
                 <tr class="seriesreturnlink">
                     <td>
                         <?php
-                        echo '<a href="' . Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t)
-                            . '"><< ' . Text::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
-                            . Route::_(
-                                'index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t
-                            )
-                            . '">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_(
-                                'JBS_SER_STUDIES_FROM_THIS_SERIES'
-                            ) . ' >>'
-                            . '</a>';
-                        ?>
+                echo '<a href="' . Route::_('index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t)
+                    . '"><< ' . Text::_('JBS_SER_RETURN_SERIES_LIST') . '</a> | <a href="'
+                    . Route::_(
+                        'index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t
+                    )
+                    . '">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_(
+                        'JBS_SER_STUDIES_FROM_THIS_SERIES'
+                    ) . ' >>'
+                    . '</a>';
+    ?>
                     </td>
                 </tr>
             </table>
             <?php
-        }
-        ?>
+}
+?>
     </div>
     <!--end of bspagecontainer div-->
     <input name="option" value="com_proclaim" type="hidden">

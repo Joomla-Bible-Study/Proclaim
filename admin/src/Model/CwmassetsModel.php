@@ -4,10 +4,12 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
+
+declare(strict_types=1);
 
 namespace CWM\Component\Proclaim\Administrator\Model;
 
@@ -20,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * class Assets model
@@ -78,6 +81,11 @@ class CwmassetsModel extends ListModel
      * @since 7.0
      */
     private string $versionSwitch = '';
+
+    /** @var string Model name
+     * @since 7.0
+     */
+    protected $name = '';
 
     /**
      * Constructor.
@@ -167,7 +175,7 @@ class CwmassetsModel extends ListModel
     {
         [$usec, $sec] = explode(" ", microtime());
 
-        return ((float)$usec + (float)$sec);
+        return (float)$usec + (float)$sec;
     }
 
     /**
@@ -179,8 +187,7 @@ class CwmassetsModel extends ListModel
      */
     private function getSteps(): void
     {
-        $fix     = new Cwmassets();
-        $results = $fix->build();
+        $results = Cwmassets::build();
 
         $this->versionStack = $results->query;
         $this->totalSteps   = $results->count;
@@ -206,8 +213,8 @@ class CwmassetsModel extends ListModel
         ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzdeflate($stack, 9);
             }
 
@@ -286,10 +293,10 @@ class CwmassetsModel extends ListModel
             return;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
             $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzinflate($stack);
             }
         }
@@ -351,8 +358,7 @@ class CwmassetsModel extends ListModel
     public function checkAssets(): array
     {
         $return = [];
-        $result = '';
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         // First get the new parent_id
         if ($this->parent_id === 0) {
@@ -367,26 +373,35 @@ class CwmassetsModel extends ListModel
             // Put the table into the return array
             // Get the total number of rows and collect the table into a query
             $query = $db->getQuery(true);
-            $query->select('j.id as jid, j.asset_id as jasset_id, a.id as aid, a.rules as arules, a.parent_id')
-                ->from($db->qn($object['name']) . ' as j')
-                ->leftJoin('#__assets as a ON (a.id = j.asset_id)');
+            $query->select(
+                $db->quoteName('j.id', 'jid') . ', '
+                . $db->quoteName('j.asset_id', 'jasset_id') . ', '
+                . $db->quoteName('a.id', 'aid') . ', '
+                . $db->quoteName('a.rules', 'arules') . ', '
+                . $db->quoteName('a.parent_id')
+            )
+                ->from($db->quoteName($object['name'], 'j'))
+                ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')');
             $db->setQuery($query);
             $results     = $db->loadObjectList();
             $nullrows    = 0;
             $matchrows   = 0;
             $arulesrows  = 0;
             $nomatchrows = 0;
-            $numrows     = count($results);
+            $numrows     = \count($results);
+            $lastResult  = null;
 
             // Now go through each record to test it for asset id
             foreach ($results as $result) {
+                $lastResult = $result;
+
                 // If there is no jasset_id it means that this has not been set and should be
                 if (!$result->jasset_id) {
                     $nullrows++;
                 }
 
                 // If there is a jasset_id but no match to the parent_id then a mismatch has occurred
-                if ($this->parent_id !== (int)(int)$result->parent_id && $result->jasset_id) {
+                if ($this->parent_id !== (int)$result->parent_id && $result->jasset_id) {
                     $nomatchrows++;
                 }
 
@@ -409,9 +424,9 @@ class CwmassetsModel extends ListModel
                 'arulesrows'       => $arulesrows,
                 'nomatchrows'      => $nomatchrows,
                 'parent_id'        => $this->parent_id,
-                'result_parent_id' => $result->parent_id,
-                'id'               => $result->jid,
-                'assetid'          => $result->jasset_id,
+                'result_parent_id' => $lastResult ? $lastResult->parent_id : null,
+                'id'               => $lastResult ? $lastResult->jid : null,
+                'assetid'          => $lastResult ? $lastResult->jasset_id : null,
             ];
         }
 
@@ -419,7 +434,7 @@ class CwmassetsModel extends ListModel
     }
 
     /**
-     * Set Parent ID
+     * Set Parent ID (ensures parent asset exists)
      *
      * @return void
      *
@@ -427,6 +442,7 @@ class CwmassetsModel extends ListModel
      */
     public function parentId(): void
     {
-        $this->parent_id = Cwmassets::parentId();
+        // Use ensureParentAsset to create if missing
+        $this->parent_id = Cwmassets::ensureParentAsset();
     }
 }

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,12 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Component\Proclaim\Administrator\Table\CwmmessageTable;
+use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -29,7 +33,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
-use Joomla\Input\Input;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -65,6 +69,7 @@ class CwmmessageModel extends AdminModel
         'teacher'       => 'batchTeacher',
         'series'        => 'batchSeries',
         'messageType'   => 'batchMessagetype',
+        'location'      => 'batchLocation',
     ];
 
     /**
@@ -79,12 +84,12 @@ class CwmmessageModel extends AdminModel
      */
     public function isDuplicate(int $study_id, int $topic_id): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__bsms_studytopics')
-            ->where('study_id = ' . $study_id)
-            ->where('topic_id = ' . $topic_id);
+            ->from($db->quoteName('#__bsms_studytopics'))
+            ->where($db->quoteName('study_id') . ' = ' . (int) $study_id)
+            ->where($db->quoteName('topic_id') . ' = ' . (int) $topic_id);
         $db->setQuery($query);
         $tresult = $db->loadObject();
 
@@ -106,7 +111,7 @@ class CwmmessageModel extends AdminModel
     public function getTopics(): string
     {
         // Do search in case of present study only, suppress otherwise
-        $input          = new Input();
+        $input          = Factory::getApplication()->getInput();
         $translatedList = [];
         $id             = $input->get('a_id', 0, 'int');
 
@@ -115,16 +120,16 @@ class CwmmessageModel extends AdminModel
         }
 
         if ($id > 0) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
 
-            $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-            $query->from('#__bsms_studytopics AS studytopics');
+            $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
+            $query->from($db->quoteName('#__bsms_studytopics', 'studytopics'));
 
-            $query->join('LEFT', '#__bsms_topics AS topic ON topic.id = studytopics.topic_id');
-            $query->where('studytopics.study_id = ' . (int)$id);
+            $query->join('LEFT', $db->quoteName('#__bsms_topics', 'topic') . ' ON ' . $db->quoteName('topic.id') . ' = ' . $db->quoteName('studytopics.topic_id'));
+            $query->where($db->quoteName('studytopics.study_id') . ' = ' . (int)$id);
 
-            $db->setQuery($query->__toString());
+            $db->setQuery($query);
             $topics = $db->loadObjectList();
 
             if ($topics) {
@@ -149,15 +154,15 @@ class CwmmessageModel extends AdminModel
      * @throws \Exception
      * @since 7.0.1
      */
-    public function getAlltopics()
+    public function getAlltopics(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
-        $query->select('topic.id, topic.topic_text, topic.params AS topic_params');
-        $query->from('#__bsms_topics AS topic');
+        $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
+        $query->from($db->quoteName('#__bsms_topics', 'topic'));
 
-        $db->setQuery($query->__toString());
+        $db->setQuery($query);
         $topics         = $db->loadObjectList();
         $translatedList = [];
 
@@ -177,32 +182,48 @@ class CwmmessageModel extends AdminModel
     /**
      * Returns a list of media files associated with this study
      *
-     * @return object
+     * @return array
      * @throws \Exception
      * @since   7.0
      */
-    public function getMediaFiles()
+    public function getMediaFiles(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
 
-        $query->select('m.id, m.language, m.published, m.createdate, m.params, m.access');
-        $query->from('#__bsms_mediafiles AS m');
-        $query->where('m.study_id = ' . (int)$this->getItem()->id);
-        $query->where('(m.published = 0 OR m.published = 1)');
-        $query->order('m.createdate DESC');
+        $query->select(
+            $db->quoteName(
+                [
+                    'm.id', 'm.language', 'm.published', 'm.createdate',
+                    'm.params', 'm.access', 'm.ordering', 'm.metadata',
+                    'm.server_id', 'm.hits', 'm.downloads', 'm.plays',
+                ]
+            )
+        );
+        $query->from($db->quoteName('#__bsms_mediafiles', 'm'));
+        $query->where($db->quoteName('m.study_id') . ' = ' . (int) $this->getItem()->id);
+        $query->whereIn($db->quoteName('m.published'), [0, 1, 2]);
+        $query->order($db->quoteName('m.ordering') . ' ASC, ' . $db->quoteName('m.createdate') . ' DESC');
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = m.access');
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join('LEFT', $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('m.access'));
 
-        $db->setQuery($query->__toString());
+        // Join over the server to get name and type.
+        $query->select($db->quoteName(['s.server_name', 's.type'], ['server_name', 'server_type']));
+        $query->join('LEFT', $db->quoteName('#__bsms_servers', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id'));
+
+        $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {
             $reg = new Registry();
             $reg->loadString($mediafile->params);
             $mediafiles[$i]->params = $reg;
+
+            $meta = new Registry();
+            $meta->loadString($mediafile->metadata);
+            $mediafiles[$i]->metadata = $meta;
         }
 
         return $mediafiles;
@@ -236,6 +257,89 @@ class CwmmessageModel extends AdminModel
 
         $this->data = parent::getItem($pk);
 
+        // Load scripture references from junction table for the subform
+        if ($this->data && !empty($this->data->id)) {
+            $refs = CwmscriptureHelper::getScripturesForStudy((int) $this->data->id);
+
+            $subformData = [];
+
+            if (!empty($refs)) {
+                // Junction table has data — use it
+                foreach ($refs as $ref) {
+                    $subformData[] = [
+                        'reference_text' => $ref->referenceText,
+                        'bible_version'  => $ref->bibleVersion,
+                    ];
+                }
+            } else {
+                // Fallback: build from legacy flat columns for pre-migration records
+                $bn1 = (int) ($this->data->booknumber ?? 0);
+
+                if ($bn1 > 0) {
+                    $subformData[] = [
+                        'reference_text' => CwmscriptureHelper::formatReference(
+                            $bn1,
+                            (int) ($this->data->chapter_begin ?? 0),
+                            (int) ($this->data->verse_begin ?? 0),
+                            (int) ($this->data->chapter_end ?? 0),
+                            (int) ($this->data->verse_end ?? 0)
+                        ),
+                        'bible_version' => (string) ($this->data->bible_version ?? ''),
+                    ];
+                }
+
+                $bn2 = (int) ($this->data->booknumber2 ?? 0);
+
+                if ($bn2 > 0) {
+                    $subformData[] = [
+                        'reference_text' => CwmscriptureHelper::formatReference(
+                            $bn2,
+                            (int) ($this->data->chapter_begin2 ?? 0),
+                            (int) ($this->data->verse_begin2 ?? 0),
+                            (int) ($this->data->chapter_end2 ?? 0),
+                            (int) ($this->data->verse_end2 ?? 0)
+                        ),
+                        'bible_version' => (string) ($this->data->bible_version2 ?? ''),
+                    ];
+                }
+            }
+
+            $this->data->scriptures = $subformData;
+
+            // Load teachers from junction table for the subform
+            $teachers = CwmstudyteacherHelper::getTeachersForStudy((int) $this->data->id);
+
+            if (!empty($teachers)) {
+                $teacherSubform = [];
+
+                foreach ($teachers as $t) {
+                    $teacherSubform[] = [
+                        'teacher_id' => (int) $t->teacher_id,
+                    ];
+                }
+
+                $this->data->teachers = $teacherSubform;
+            } elseif (!empty($this->data->teacher_id) && (int) $this->data->teacher_id > 0) {
+                // Fallback: build from legacy flat column for pre-migration records
+                $this->data->teachers = [
+                    ['teacher_id' => (int) $this->data->teacher_id],
+                ];
+            } else {
+                $this->data->teachers = [];
+            }
+        } elseif ($this->data) {
+            // New record — seed teachers subform from admin default if configured
+            $admin   = Cwmparams::getAdmin();
+            $params  = new Registry($admin->params);
+            $default = (int) $params->get('teacher_id', 0);
+
+            if ($default > 0) {
+                $this->data->teachers = [
+                    ['teacher_id' => $default],
+                ];
+            }
+        }
+
         return $this->data;
     }
 
@@ -252,11 +356,18 @@ class CwmmessageModel extends AdminModel
     public function save($data): bool
     {
         /** @var Registry $params */
-        $app           = Factory::getApplication();
-        $params        = Cwmparams::getAdmin()->params;
-        $input         = $app->input;
-        $path          = 'images/biblestudy/studies/' . (int)$data['id'];
-        $image         = HTMLHelper::cleanImageURL((string)$data['image']);
+        $app    = Factory::getApplication();
+        $params = Cwmparams::getAdmin()->params;
+        $input  = $app->getInput();
+        $image  = HTMLHelper::cleanImageURL((string)$data['image']);
+
+        // Extract subform data before table binding strips it
+        $scripturesData = $data['scriptures'] ?? [];
+        unset($data['scriptures']);
+
+        $teachersData = $data['teachers'] ?? [];
+        unset($data['teachers']);
+
         $data['image'] = $image->url;
         $this->cleanCache();
 
@@ -264,25 +375,203 @@ class CwmmessageModel extends AdminModel
             $data['id'] = $input->get('a_id');
         }
 
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], 'thumb_') !== false) {
-            if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['thumbnailm'] = "";
-            } elseif (!str_starts_with(basename($data['image']), 'thumb_')) {
-                // Modify model data
-                $data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
-            }
+        // Correct legacy thumb_ paths submitted from pre-migration records
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/studies/')) {
+            $dir            = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName   = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
 
-            return parent::save($data);
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
         }
 
-        Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_study_size', 100));
+        // If no image, save without touching thumbnailm (preserve existing thumbnail)
+        if (empty($data['image'])) {
+            if (!parent::save($data)) {
+                return false;
+            }
 
-        // Modify model data
-        $data['thumbnailm'] = $path . '/thumb_' . basename($data['image']);
+            $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
 
-        return parent::save($data);
+            return true;
+        }
+
+        // Core component images (media/com_proclaim/images/*) — save path as-is
+        if (CwmImageMigration::isCoreImage($data['image'])) {
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
+
+            return true;
+        }
+
+        // Always regenerate thumbnail + WebP on save (Cwmthumbnail::create skips
+        // the file copy when the original is already in the destination folder)
+
+        // Store the original image path for processing after save
+        $originalImage = $data['image'];
+        $studyTitle    = $data['studytitle'] ?? $data['alias'] ?? null;
+        $isNew         = empty($data['id']);
+
+        // Validate image before processing
+        $absolutePath = JPATH_ROOT . '/' . $originalImage;
+        $validation   = Cwmthumbnail::validate($absolutePath);
+
+        if (!$validation['valid']) {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_STY_IMAGE_VALIDATION_FAILED', $validation['error']),
+                'error'
+            );
+            $data['image']      = '';
+            $data['thumbnailm'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
+
+            return true;
+        }
+
+        // For new records, save first to get the ID
+        if ($isNew) {
+            $data['image']      = '';
+            $data['thumbnailm'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            // Get the new ID from the saved record
+            $data['id'] = $this->getState($this->getName() . '.id');
+        }
+
+        // Build path with title-ID format
+        $alias  = ApplicationHelper::stringURLSafe($studyTitle ?: 'study');
+        $path   = 'images/biblestudy/studies/' . $alias . '-' . (int)$data['id'];
+        $result = Cwmthumbnail::create(
+            $originalImage,
+            $path,
+            $params->get('thumbnail_study_size', 600),
+            $studyTitle
+        );
+
+        if ($result === false) {
+            $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
+
+            if ($isNew) {
+                $this->saveScriptures($scripturesData);
+                $this->saveTeachers($teachersData);
+
+                return true;
+            }
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            $this->saveScriptures($scripturesData);
+            $this->saveTeachers($teachersData);
+
+            return true;
+        }
+
+        // Update paths with new locations
+        $data['image']      = $result['image'];
+        $data['thumbnailm'] = $result['thumbnail'];
+
+        if (!parent::save($data)) {
+            return false;
+        }
+
+        $this->saveScriptures($scripturesData);
+        $this->saveTeachers($teachersData);
+
+        return true;
+    }
+
+    /**
+     * Process and save scripture references from the subform data.
+     *
+     * @param   array  $scripturesData  Subform array of ['reference_text' => ..., 'bible_version' => ...]
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    private function saveScriptures(array $scripturesData): void
+    {
+        $studyId = (int) $this->getState($this->getName() . '.id');
+
+        if ($studyId <= 0) {
+            return;
+        }
+
+        $scriptures = [];
+
+        $ordering = 0;
+
+        foreach ($scripturesData as $entry) {
+            $text    = trim($entry['reference_text'] ?? '');
+            $version = trim($entry['bible_version'] ?? '');
+
+            if ($text === '') {
+                continue;
+            }
+
+            $parsed = CwmscriptureHelper::parseReference($text);
+
+            if ($parsed !== null) {
+                $parsed->bibleVersion  = $version;
+                $parsed->ordering      = $ordering;
+                $parsed->referenceText = $text;
+            } else {
+                // Unparsable — store raw text so user can fix later
+                $parsed = new ScriptureReference(
+                    booknumber:    0,
+                    referenceText: $text,
+                    bibleVersion:  $version,
+                    ordering:      $ordering,
+                );
+            }
+
+            $scriptures[] = $parsed;
+            $ordering++;
+        }
+
+        CwmscriptureHelper::saveScriptures($studyId, $scriptures);
+        CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+    }
+
+    /**
+     * Save teachers from the subform data to the junction table.
+     *
+     * @param   array  $teachersData  Subform array of ['teacher_id' => int]
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    private function saveTeachers(array $teachersData): void
+    {
+        $studyId = (int) $this->getState($this->getName() . '.id');
+
+        if ($studyId <= 0) {
+            return;
+        }
+
+        CwmstudyteacherHelper::saveTeachers($studyId, $teachersData);
+        CwmstudyteacherHelper::syncLegacyColumn($studyId, $teachersData);
     }
 
     /**
@@ -331,8 +620,8 @@ class CwmmessageModel extends AdminModel
 
         // Get ID of the article from input, for frontend, we use a_id while backend uses id
         $messageIdFromInput = $app->isClient('site')
-            ? $app->input->getInt('a_id', 0)
-            : $app->input->getInt('id', 0);
+            ? $app->getInput()->getInt('a_id', 0)
+            : $app->getInput()->getInt('id', 0);
 
         // On edit article, we get ID of article from article.id state, but on save, we use data from input
         $id = (int)$this->getState('message.id', $messageIdFromInput);
@@ -366,17 +655,46 @@ class CwmmessageModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
+     * Determine whether a record can be edited by the current user.
      *
-     * @param   int  $pk  The numeric id of the primary key.
+     * Checks permissions in priority order:
+     *   1. `core.edit`     — standard Joomla edit permission
+     *   2. `core.edit.own` — user created the message
+     *   3. Teacher check   — user is listed as a teacher on this message
      *
-     * @return  bool  False on failure or error, true otherwise.
+     * The teacher check delegates to CwmlocationHelper::userIsTeacher(), which
+     * is currently a stub (returns false) until a user_id column is added to
+     * #__bsms_teachers (Phase N). Once that column exists the stub will be
+     * replaced with a real DB lookup and this method will automatically work.
      *
-     * @since   11.1
+     * @param   object  $record  The record to check.
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
      */
-    public function checkout($pk = null): bool
+    protected function canEdit($record): bool
     {
-        return true;
+        $user = Factory::getApplication()->getIdentity();
+
+        // Standard edit permission
+        if ($user->authorise('core.edit', 'com_proclaim.message.' . (int) $record->id)) {
+            return true;
+        }
+
+        // Edit-own permission: user created the message
+        if ($user->authorise('core.edit.own', 'com_proclaim.message.' . (int) $record->id)) {
+            if ((int) ($record->created_by ?? 0) === (int) $user->id) {
+                return true;
+            }
+        }
+
+        // Teacher permission: user is listed as a teacher on this message
+        if (CwmlocationHelper::userIsTeacher((int) $user->id, (int) $record->id)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -392,8 +710,8 @@ class CwmmessageModel extends AdminModel
      */
     public function saveorder($pks = null, $order = null): mixed
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $row        = new CwmmessageTable($db);
+        $row        = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createTable('Cwmmessage', 'Administrator');
         $conditions = [];
 
         // Update ordering values
@@ -407,9 +725,7 @@ class CwmmessageModel extends AdminModel
                 $row->ordering = $order[$i];
 
                 if (!$row->store()) {
-                    $this->setError($this->_db->getErrorMsg());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
 
                 // Remember to reorder within position and client_id
@@ -457,25 +773,28 @@ class CwmmessageModel extends AdminModel
     protected function batchTeacher($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getIdentity();
+        $user      = Factory::getApplication()->getIdentity();
         /** @var CwmmessageTable $table */
-        $table = $this->getTable();
+        $table     = $this->getTable();
+        $teacherId = (int) $value;
 
         foreach ($pks as $pk) {
             if ($user->authorise('core.edit', $contexts[$pk])) {
                 $table->reset();
                 $table->load($pk);
-                $table->teacher_id = (int)$value;
+                $table->teacher_id = $teacherId;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
-            } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
 
-                return false;
+                // Update junction table to match
+                $teachers = $teacherId > 0
+                    ? [['teacher_id' => $teacherId]]
+                    : [];
+                CwmstudyteacherHelper::saveTeachers((int) $pk, $teachers);
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -509,7 +828,7 @@ class CwmmessageModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise and internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -528,14 +847,10 @@ class CwmmessageModel extends AdminModel
                 $table->series_id = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -571,18 +886,67 @@ class CwmmessageModel extends AdminModel
                 $table->messagetype = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
         // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch-update the location for a group of messages.
+     *
+     * When the location system is enabled, non-admin users may only assign
+     * locations they have visibility over. Passing an empty string clears
+     * the location_id (set to NULL).
+     *
+     * @param   string  $value     The new location ID, or '' to clear.
+     * @param   array   $pks       An array of primary key IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmmessageTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
         $this->cleanCache();
 
         return true;
@@ -619,12 +983,12 @@ class CwmmessageModel extends AdminModel
      */
     protected function prepareTable($table): void
     {
-        $date = Factory::getDate();
+        $date = new Date();
         $user = Factory::getApplication()->getIdentity();
 
         // Set the publishing date to now
         if ($table->published === Workflow::CONDITION_PUBLISHED && (int)$table->publish_up === 0) {
-            $table->publish_up = Factory::getDate()->toSql();
+            $table->publish_up = (new Date())->toSql();
         }
 
         if ($table->published === Workflow::CONDITION_PUBLISHED && (int)$table->publish_down === 0) {
@@ -638,12 +1002,22 @@ class CwmmessageModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->studytitle);
         }
 
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true)
-                    ->select('MAX(ordering)')
+                    ->select('MAX(' . $db->quoteName('ordering') . ')')
                     ->from($db->quoteName('#__bsms_studies'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
@@ -651,9 +1025,9 @@ class CwmmessageModel extends AdminModel
                 $table->ordering = $max + 1;
             }
         } else {
-            // Set the values
+            // Set the values for existing records
             $table->modified    = $date->toSql();
-            $table->modified_by = $user->get('id');
+            $table->modified_by = $user->id;
         }
     }
 }

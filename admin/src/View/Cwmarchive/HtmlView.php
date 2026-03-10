@@ -4,17 +4,19 @@
  * View html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMArchive;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmarchive;
 
 // Check to ensure this file is included in Joomla!
+use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -42,9 +44,14 @@ class HtmlView extends BaseHtmlView
      * @since  11.1
      * @see    ViewLegacy::loadTemplate()
      */
-    public function display($tpl = null)
+    #[\Override]
+    public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
+        /** @var CwmarchiveModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form = $model->getForm();
 
         $this->setLayout('edit');
 
@@ -63,13 +70,20 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since  7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
         ToolbarHelper::title(Text::_('JBS_CMN_ARCHIVE'), 'archive');
-        ToolbarHelper::preferences('com_proclaim', '600', '800', 'JBS_ADM_PERMISSIONS');
-        ToolbarHelper::custom('administration.back', 'back', 'back', 'JTOOLBAR_BACK', false);
-        ToolbarHelper::help('proclaim', true);
+
+        $toolbar = Toolbar::getInstance();
+
+        // Add back to admin tools button
+        $toolbar->linkButton('back', 'JTOOLBAR_BACK')
+            ->url('index.php?option=com_proclaim&view=cwmadmin')
+            ->icon('fas fa-arrow-left')
+            ->listCheck(false);
+
+        ToolbarHelper::help('cwmarchive', true);
     }
 }

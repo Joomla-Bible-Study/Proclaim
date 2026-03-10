@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,6 +19,8 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Teachers model class
@@ -45,8 +47,6 @@ class CwmteachersModel extends ListModel
                 'teacher.id',
                 'title',
                 'teacher.title',
-                'catid',
-                'teacher.catid',
                 'access',
                 'teacher.access',
                 'access_level',
@@ -54,15 +54,12 @@ class CwmteachersModel extends ListModel
                 'teacher.published',
                 'ordering',
                 'teacher.ordering',
-                'teahername',
+                'teachername',
                 'teacher.teachername',
                 'alias',
                 'teacher.alias',
                 'language',
                 'teacher.language',
-                'access',
-                'teacher.access',
-                'access_level',
             ];
         }
 
@@ -86,12 +83,12 @@ class CwmteachersModel extends ListModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function populateState($ordering = 'teacher.teachername', $direction = 'asc')
+    protected function populateState($ordering = 'teacher.teachername', $direction = 'asc'): void
     {
         $app = Factory::getApplication();
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -101,10 +98,10 @@ class CwmteachersModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         // List state information.
@@ -137,45 +134,55 @@ class CwmteachersModel extends ListModel
     /**
      * Build an SQL query to load the list data.
      *
-     * @return  \Joomla\Database\QueryInterface
+     * @return  QueryInterface
      *
+     * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = $this->getCurrentUser();
 
-        $query->select($this->getState('list.select', 'teacher.*'));
-        $query->from('#__bsms_teachers AS teacher');
+        $query->select($this->getState('list.select', $db->quoteName('teacher') . '.*'));
+        $query->from($db->quoteName('#__bsms_teachers', 'teacher'));
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', '`#__languages` AS l ON l.lang_code = teacher.language');
+        $query->select($db->quoteName('l.title', 'language_title'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('teacher.language')
+        );
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = teacher.access');
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('teacher.access')
+        );
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('teacher.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('teacher.access = ' . (int)$access);
+            $query->where($db->quoteName('teacher.access') . ' = ' . (int) $access);
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('teacher.access IN (' . $groups . ')');
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('teacher.access'), $user->getAuthorisedViewLevels());
         }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('teacher.published = ' . (int)$published);
+            $query->where($db->quoteName('teacher.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(teacher.published = 0 OR teacher.published = 1)');
+            $query->where('(' . $db->quoteName('teacher.published') . ' = 0 OR ' . $db->quoteName('teacher.published') . ' = 1)');
         }
 
         // Filter by search in title.
@@ -183,10 +190,10 @@ class CwmteachersModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('teacher.id = ' . (int)substr($search, 3));
+                $query->where($db->quoteName('teacher.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(teacher.teachername LIKE ' . $search . ' OR teacher.alias LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('teacher.teachername') . ' LIKE ' . $search . ' OR ' . $db->quoteName('teacher.alias') . ' LIKE ' . $search . ')');
             }
         }
 

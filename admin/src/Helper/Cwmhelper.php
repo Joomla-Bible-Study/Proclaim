@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use Exception;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
-use stdClass;
 
 /**
  * Core Bible Study Helper
@@ -40,65 +38,6 @@ class Cwmhelper
      * @since 8.0.0
      */
     public static string $extension = 'com_proclaim';
-
-    /**
-     * Get tooltip.
-     *
-     * @param   object     $row       JTable
-     * @param   Registry   $params    Item Params
-     * @param   stdClass  $template  Template Table
-     *
-     * @return string
-     *
-     * @throws Exception
-     * @since  9.0.0
-     */
-    public static function getTooltip(object $row, Registry $params, stdClass $template): string
-    {
-        $JBSMElements = new Cwmlisting();
-
-        $linktext = '<span class="hasTip" title="' . $params->get('tip_title') . '  :: ';
-
-        $tip1 = $JBSMElements->getElement($params->get('tip_item1'), $row, $params, $template, $type = 0);
-        $tip2 = $JBSMElements->getElement($params->get('tip_item2'), $row, $params, $template, $type = 0);
-        $tip3 = $JBSMElements->getElement($params->get('tip_item3'), $row, $params, $template, $type = 0);
-        $tip4 = $JBSMElements->getElement($params->get('tip_item4'), $row, $params, $template, $type = 0);
-        $tip5 = $JBSMElements->getElement($params->get('tip_item5'), $row, $params, $template, $type = 0);
-
-        $linktext .=  $params->get('tip_item1_title') .': ' . $tip1 . ' - ';
-        $linktext .=  $params->get('tip_item2_title') .': ' . $tip2 . ' - ';
-        $linktext .=  $params->get('tip_item3_title') .': ' . $tip3 . ' - ';
-        $linktext .=  $params->get('tip_item4_title') .': ' . $tip4 . ' - ';
-        $linktext .=  $params->get('tip_item5_title') .': ' . $tip5 . ' - ';
-        $linktext .= '">';
-
-        return $linktext;
-    }
-
-    /**
-     * Get ShowHide.
-     *
-     * @return string
-     *
-     * @deprecated 7.1.8
-     *
-     * @since      8.2.0
-     */
-    public static function getShowhide(): string
-    {
-        return '
-        function HideContent(d) {
-        document.getElementById(d).style.display = "none";
-        }
-        function ShowContent(d) {
-        document.getElementById(d).style.display = "block";
-        }
-        function ReverseDisplay(d) {
-        if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
-        else { document.getElementById(d).style.display = "none"; }
-        }
-        ';
-    }
 
     /**
      * Method to get file size
@@ -132,19 +71,19 @@ class Cwmhelper
 
         try {
             $headers = @get_headers($url, true);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return 0;
         }
 
-        if (is_array($headers)) {
+        if (\is_array($headers)) {
             $head = array_change_key_case($headers);
         } else {
             return 0;
         }
 
-        if (isset($head['content-length']) && is_array($head['content-length'])) {
-            if (count($head['content-length']) >= 1) {
-                $dif  = count($head['content-length']) - 1;
+        if (isset($head['content-length']) && \is_array($head['content-length'])) {
+            if (\count($head['content-length']) >= 1) {
+                $dif  = \count($head['content-length']) - 1;
                 $size = $head['content-length'][$dif];
             } else {
                 $size = $head['content-length'][0];
@@ -168,11 +107,11 @@ class Cwmhelper
      */
     public static function setFileSize(int $id, int $size): void
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles')
-            ->where('id = ' . (int)$id);
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $id);
 
         $db->setQuery($query);
         $media = $db->loadObject();
@@ -181,7 +120,7 @@ class Cwmhelper
         $reg->loadString($media->params);
         $reg->set('size', $size);
 
-        $update         = new stdClass();
+        $update         = new \stdClass();
         $update->id     = $id;
         $update->params = $reg->toString();
 
@@ -275,20 +214,20 @@ class Cwmhelper
     {
         try {
             $app = Factory::getApplication();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return;
         }
-        $options = array();
+        $options = [];
 
         $options[1] = [
             'defaultgroup' => 'com_proclaim',
             'cachebase'    => $app->get('cache_path', JPATH_CACHE),
-            'result'       => true
+            'result'       => true,
         ];
         $options[2] = [
             'defaultgroup' => 'mod_proclaim',
             'cachebase'    => $app->get('cache_path', JPATH_CACHE),
-            'result'       => true
+            'result'       => true,
         ];
 
         foreach ($options as $option) {
@@ -311,7 +250,7 @@ class Cwmhelper
      */
     public static function removeHttp(string $url): array|string
     {
-        $disallowed = array('http://', 'https://');
+        $disallowed = ['http://', 'https://'];
 
         foreach ($disallowed as $d) {
             if (str_starts_with($url, $d)) {
@@ -327,13 +266,13 @@ class Cwmhelper
      *
      * @param   ?Registry  $params  AdminTable + parameters
      *
-     * @return  stdClass
+     * @return  \stdClass
      *
      * @since 9.1.6
      */
-    public static function getSimpleView(?Registry $params = null): stdClass
+    public static function getSimpleView(?Registry $params = null): \stdClass
     {
-        $simple = new stdClass();
+        $simple = new \stdClass();
 
         if ($params === null) {
             $params = Cwmparams::getAdmin()->params;

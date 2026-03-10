@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -46,6 +46,7 @@ class IconTypeField extends ListField
      *
      * @since   9.1.3
      */
+    #[\Override]
     protected function getInput(): string
     {
         $data = $this->getLayoutData();
@@ -57,7 +58,7 @@ class IconTypeField extends ListField
             'fa fa fa-television' => 'far fa-tv',
             'fa fa-file'          => 'fas fa-file',
             'fa fa-file-pdf'      => 'fas fa-file-pdf',
-            'fa fa-vimeo'         => 'fab fa-vimeo'
+            'fa fa-vimeo'         => 'fab fa-vimeo',
         ];
 
         if (isset($convert[$this->value])) {
@@ -76,6 +77,7 @@ class IconTypeField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $MediaHelper = new Cwmmedia();

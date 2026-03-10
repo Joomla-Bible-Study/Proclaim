@@ -1,7 +1,7 @@
 ------------------------------------------------------
-Proclaim
+Proclaim - A Christian Web Ministries Project
 
-Copyright (C) 2024 Christian Web Ministries Team All rights reserved.
+Copyright (C) 2026 CWM Team All rights reserved.
 
 Proclaim is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,12 +15,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Proclaim includes or is derivative work of other software licensed
-under the GNU General Public License or other free or open source
-software licenses.
-
-Joomla! standard Contact Manager component (com_contact)
-Copyright (C) 2005 - 2024 Open Source Matters.
-http://www.joomla.org
 ------------------------------------------------------

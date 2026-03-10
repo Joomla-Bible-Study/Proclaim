@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,10 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -33,111 +36,191 @@ class CwmmediafileTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Study id
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $study_id = null;
+    public ?int $study_id = null;
 
     /**
      * Server id
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $server_id = null;
+    public ?int $server_id = null;
 
     /**
      * Podcast ID
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $podcast_id = null;
+    public ?string $podcast_id = null;
 
     /**
      * Hold transitive data (i.e statistics)
      *
-     * @var null
+     * @var string|null
      * @since    7.0.0
      */
-    public $metadata = '';
+    public ?string $metadata = '';
 
     /**
      * Ordering
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $ordering = null;
+    public ?string $ordering = null;
 
     /**
      * Create Date
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $createdate = null;
+    public ?string $createdate = null;
 
-    public $hits = 0;
+    /**
+     * Hits
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public ?int $hits = 0;
 
     /**
      * Published
      *
-     * @var string
+     * @var int
      * @since    7.0.0
      */
-    public $published = 1;
+    public ?int $published = 1;
 
     /**
      * Comment Text
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $comment = null;
+    public ?string $comment = null;
 
-    public $downloads = 0;
+    /**
+     * Downloads
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public ?int $downloads = 0;
 
-    public $plays = 0;
+    /**
+     * Plays
+     *
+     * @var int
+     * @since 9.0.0
+     */
+    public ?int $plays = 0;
 
     /**
      * Media configuration
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $params = null;
+    public ?string $params = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
 
-    public $created_by;
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since    10.0.0
+     */
+    public ?string $created = null;
 
-    public $created_by_alias;
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $created_by = null;
 
-    public $modified;
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public ?string $created_by_alias = '';
 
-    public $modified_by;
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.0.0
+     */
+    public ?string $modified = null;
 
-    public $checked_out;
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $modified_by = null;
 
-    public $checked_out_time;
+    /**
+     * Checked Out
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked Out Time
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since    7.0.0
      */
@@ -154,25 +237,36 @@ class CwmmediafileTable extends Table
      * @param   mixed  $array   An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @since    7.0.0
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'study_id', 'server_id', 'hits', 'published', 'downloads', 'plays',
+            'asset_id', 'access', 'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
+        }
+
         // Bind the podcast_id
-        if (isset($array['podcast_id']) && is_array($array['podcast_id'])) {
+        if (isset($array['podcast_id']) && \is_array($array['podcast_id'])) {
             $array['podcast_id'] = implode(',', $array['podcast_id']);
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }
@@ -187,16 +281,17 @@ class CwmmediafileTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -206,62 +301,92 @@ class CwmmediafileTable extends Table
     }
 
     /**
-     * Method to check a row in if the necessary properties/fields exist.  Checking
-     * a row in will allow other users the ability to edit the row.
+     * Method to delete a row from the database by primary key value.
+     * Also attempts to delete the physical file from disk if the server supports it.
      *
-     * @param   mixed  $pk  An optional primary key value to check out.  If not set the instance property value is used.
+     * @param   mixed  $pk  Primary key value to delete (null uses instance property)
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success
      *
-     * @throws  \UnexpectedValueException
-     * @since   11.1
-     * @link    http://docs.joomla.org/Table/checkIn
+     * @since   10.1.0
      */
-    public function checkIn($pk = null): bool
+    #[\Override]
+    public function delete($pk = null): bool
     {
-        // If there is no checked_out or checked_out_time field, just return true.
-        if (!property_exists($this, 'checked_out') || !property_exists($this, 'checked_out_time')) {
-            return true;
+        $pk = $pk ?? $this->id;
+
+        // Load record to get server_id and params before deletion
+        if ($pk !== $this->id) {
+            $this->load($pk);
         }
 
-        if (is_null($pk)) {
-            $pk = array();
+        // Attempt physical file deletion — never block DB deletion
+        $this->deletePhysicalFile();
 
-            foreach ($this->_tbl_keys as $key) {
-                $pk[$this->$key] = $this->$key;
+        return parent::delete($pk);
+    }
+
+    /**
+     * Attempt to delete the physical file associated with this media record
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private function deletePhysicalFile(): void
+    {
+        try {
+            // Check user choice from delete confirmation dialog (default 1 = delete files)
+            $deletePhysical = (int) Factory::getApplication()->getInput()->get('delete_physical_files', 1, 'int');
+
+            if ($deletePhysical === 0) {
+                Log::add(
+                    'Media file #' . ($this->id ?? '?') . ': physical file deletion skipped by user choice',
+                    Log::INFO,
+                    'com_proclaim'
+                );
+
+                return;
             }
-        } elseif (!is_array($pk)) {
-            $pk = array($this->_tbl_key => $pk);
-        }
 
-        foreach ($this->_tbl_keys as $key) {
-            $pk[$key] = empty($pk[$key]) ? $this->$key : $pk[$key];
-
-            if ($pk[$key] === null) {
-                throw new \UnexpectedValueException('Null primary key not allowed.');
+            if (empty($this->server_id)) {
+                return;
             }
-        }
 
-        // Check the row in by primary key.
-        $query = $this->_db->getQuery(true)
-            ->update($this->_tbl)
-            ->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
-            ->set(
-                $this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote(
-                    $this->_db->getNullDate()
-                )
+            // Load server record
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('type'), $db->quoteName('params')])
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('id') . ' = ' . (int) $this->server_id);
+            $db->setQuery($query);
+            $server = $db->loadObject();
+
+            if (!$server || empty($server->type)) {
+                return;
+            }
+
+            // Parse media file params to get filename
+            $mediaParams = new Registry($this->params ?: '{}');
+            $filename    = $mediaParams->get('filename', '');
+
+            if (empty($filename)) {
+                return;
+            }
+
+            // Parse server params
+            $serverParams = new Registry($server->params ?: '{}');
+
+            // Get addon and attempt deletion
+            $addon = CWMAddon::getInstance($server->type);
+            $addon->deleteFile($filename, $serverParams);
+        } catch (\Exception $e) {
+            Log::add(
+                'Media file #' . ($this->id ?? '?') . ': physical file deletion failed — ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
             );
-        $this->appendPrimaryKeys($query, $pk);
-        $this->_db->setQuery($query);
-
-        // Check for a database error.
-        $this->_db->execute();
-
-        // Set table values in the object.
-        $this->checked_out      = 0;
-        $this->checked_out_time = '';
-
-        return true;
+        }
     }
 
     /**
@@ -273,6 +398,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -287,6 +413,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Media File: ' . $this->id;
@@ -305,6 +432,7 @@ class CwmmediafileTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

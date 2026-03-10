@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -17,7 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
-use Exception;
+use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -75,7 +75,15 @@ class HtmlView extends BaseHtmlView
      * @var array
      * @since    7.0.0
      */
-    protected array $activeFilters;
+    public array $activeFilters;
+    /**
+     * Can Do
+     *
+     * @var ?object
+     * @since    7.0.0
+     */
+    public ?object $canDo = null;
+
     /**
      * All transition, which can be executed of one if the items
      *
@@ -99,27 +107,32 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmmessagesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
             PluginHelper::importPlugin('workflow');
 
-            $this->transitions = $this->get('Transitions');
+            $this->transitions = $model->getTransitions();
         }
 
         // Check for errors.
-        if ($this->transitions === false || \count($errors = $this->get('Errors'))) {
+        if ($this->transitions === false || \count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -132,7 +145,7 @@ class HtmlView extends BaseHtmlView
                 unset($this->activeFilters['language']);
                 $this->filterForm->removeField('language', 'filter');
             }
-        } elseif ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+        } elseif ($forcedLanguage = Factory::getApplication()->getInput()->get('forcedLanguage', '', 'CMD')) {
             // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
             $languageXml = new \SimpleXMLElement(
                 '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
@@ -152,13 +165,13 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = $this->getCurrentUser();
+        $canDo   = ContentHelper::getActions('com_proclaim');
+        $user    = $this->getCurrentUser();
         $toolbar = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::_('JBS_CMN_STUDIES'), 'book book');
@@ -183,7 +196,7 @@ class HtmlView extends BaseHtmlView
                     ->buttonClass('text-center py-2 h3');
 
                 $cmd      = "Joomla.submitbutton('cwmmessages.runTransition');";
-                $messages = "{error: [Joomla.JText._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST')]}";
+                $messages = "{error: [Joomla.Text._('JLIB_HTML_PLEASE_MAKE_A_SELECTION_FROM_THE_LIST')]}";
                 $alert    = 'Joomla.renderMessages(' . $messages . ')';
                 $cmd      = 'if (document.adminForm.boxchecked.value == 0) { ' . $alert . ' } else { ' . $cmd . ' }';
 
@@ -207,7 +220,7 @@ class HtmlView extends BaseHtmlView
 
                 $childBar->checkin('cwmmessages.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmessages.trash')->listCheck(true);
                 }
             }
@@ -234,12 +247,19 @@ class HtmlView extends BaseHtmlView
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
+
+            // Delete confirmation dialog for physical files
+            $wa = $this->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.delete-confirm');
+
+            Text::script('JBS_DEL_PHYSICAL_FILES_TITLE');
+            Text::script('JBS_DEL_PHYSICAL_FILES_WARNING');
+            Text::script('JBS_DEL_PHYSICAL_FILES_COUNT');
+            Text::script('JBS_DEL_DELETE_EVERYTHING');
+            Text::script('JBS_DEL_RECORDS_ONLY');
+            Text::script('JCANCEL');
         }
 
-        if ($user->authorise('core.admin', 'com_proclaim') || $user->authorise('core.options', 'com_proclaim')) {
-            $toolbar->preferences('com_proclaim');
-        }
-		$help_url='https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=19&Itemid=315&tmpl=component';
-        $toolbar->help('Messages', false, $help_url);
+        ToolbarHelper::help('messages', true);
     }
 }

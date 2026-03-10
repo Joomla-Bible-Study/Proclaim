@@ -1,0 +1,1107 @@
+/*
+ * CSS Custom Properties — Site Core Styles
+ *
+ * These variables drive the frontend sermon listing tables, media
+ * containers, teacher tables, and popup windows.  All text colors
+ * meet WCAG AA (4.5:1 minimum) or AAA (7:1) contrast ratios against
+ * a white background — see inline notes.
+ *
+ * NOTE: These do NOT yet have dark-mode overrides.  Frontend dark
+ * mode relies on Bootstrap variables (--bs-*) in newer components;
+ * legacy table styles here will need a dark-mode block in the future.
+ */
+:root {
+  --color-white: #ffffff;              /* Surface / card backgrounds */
+  --color-black: #000000;              /* Primary text */
+  /* WCAG AA compliant colors (4.5:1 contrast ratio minimum) */
+  --color-gray-dark: #595959;          /* Emphasis text — 7:1 contrast (was #666) */
+  --color-gray-medium: #595959;        /* Table headers, titles — 7:1 (was #707070) */
+  --color-gray-light: #767676;         /* Muted text, dates, series — 4.5:1 AA (was #999) */
+  --color-gray-border: #C5C1BE;        /* Borders, dividers — decorative, no text contrast needed */
+  --color-off-white: #fffff0;          /* Zebra-stripe even rows (ivory tint) */
+  --color-background-light: #eeeeee;   /* Subtle panel backgrounds */
+  --color-background-cell: #e3e2e2;    /* Active/selected cell highlight */
+  --color-scripture: #a01a1a;          /* Scripture reference text — 7:1 AAA (was #c02121) */
+  --color-pagelinks-bg: #F2F2F2;       /* Pagination link backgrounds */
+  --color-dropdowns-bg: #767676;       /* Dropdown header fills — 4.5:1 AA (was #A9A9A9) */
+  --transition-default: all 0.5s;
+  --focus-outline-color: #005fcc;      /* Keyboard focus ring — WCAG 3:1 against white */
+  --focus-outline-width: 3px;
+}
+
+/* ==========================================================================
+   Accessibility - Skip Links
+   ========================================================================== */
+
+/* Skip link - hidden until focused */
+.proclaim-skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s ease;
+}
+
+.proclaim-skip-link:focus {
+  top: 0;
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Main content landmark */
+.proclaim-main-content {
+  scroll-margin-top: 1rem;
+}
+
+/* ==========================================================================
+   Accessibility - Focus Styles
+   ========================================================================== */
+
+/* Focus styles for all interactive elements (scoped to Proclaim content) */
+.com-proclaim a:focus,
+.com-proclaim button:focus,
+.com-proclaim input:focus,
+.com-proclaim select:focus,
+.com-proclaim textarea:focus,
+.com-proclaim [role="button"]:focus,
+.com-proclaim [tabindex]:focus {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Focus-visible for keyboard-only focus indication */
+.com-proclaim a:focus-visible,
+.com-proclaim button:focus-visible,
+.com-proclaim input:focus-visible,
+.com-proclaim select:focus-visible,
+.com-proclaim textarea:focus-visible,
+.com-proclaim [role="button"]:focus-visible,
+.com-proclaim [tabindex]:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 2px;
+}
+
+/* Remove outline on mouse click but keep for keyboard */
+.com-proclaim a:focus:not(:focus-visible),
+.com-proclaim button:focus:not(:focus-visible),
+.com-proclaim [role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .com-proclaim a:focus,
+  .com-proclaim button:focus,
+  .com-proclaim [role="button"]:focus {
+    outline: 3px solid CanvasText;
+  }
+}
+
+/* Reduced motion preference (scoped to Proclaim content) */
+@media (prefers-reduced-motion: reduce) {
+  .com-proclaim *,
+  .com-proclaim *::before,
+  .com-proclaim *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .com-proclaim .overlay {
+    transition: none;
+  }
+}
+
+/* ==========================================================
+   Media Icon Sizing
+   Uses em units so icons scale relative to the parent font-size,
+   adapting to the display context.  1.5em at a 16px base ≈ 24px,
+   matching the previous hardcoded value.
+   The Layout Editor "Icon Size" setting applies one of the
+   override classes below.
+   ========================================================== */
+.bsms_media_file .fas,
+.bsms_media_file .fab,
+.bsms_media_file .far,
+.bsms_media_file [class*="fa-"] {
+  font-size: 1.5em;
+}
+
+.proclaim-icon-sm .fas,
+.proclaim-icon-sm .fab,
+.proclaim-icon-sm .far,
+.proclaim-icon-sm [class*="fa-"] {
+  font-size: 1em;
+}
+
+.proclaim-icon-md .fas,
+.proclaim-icon-md .fab,
+.proclaim-icon-md .far,
+.proclaim-icon-md [class*="fa-"] {
+  font-size: 1.5em;
+}
+
+.proclaim-icon-lg .fas,
+.proclaim-icon-lg .fab,
+.proclaim-icon-lg .far,
+.proclaim-icon-lg [class*="fa-"] {
+  font-size: 2em;
+}
+
+.proclaim-icon-xl .fas,
+.proclaim-icon-xl .fab,
+.proclaim-icon-xl .far,
+.proclaim-icon-xl [class*="fa-"] {
+  font-size: 3em;
+}
+
+/* Teacher Table */
+#bsm_teachertable {
+  margin: 0;
+  border-collapse: separate;
+}
+#bsm_teachertable .bsm_studiestitlerow {
+  background-color: var(--color-gray-dark);
+}
+#bsm_teachertable td {
+  text-align: left;
+  padding: 0 5px;
+  border: none;
+}
+#bsm_teachertable .titlerow {
+  border-bottom: thick;
+}
+#bsm_teachertable .title {
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 3px solid var(--color-gray-light);
+  padding: 4px 0 4px 4px;
+}
+#bsm_teachertable .bsm_separator {
+  border-bottom: 1px solid var(--color-gray-light);
+}
+#bsm_teachertable .bsm_teachername {
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--color-black);
+  white-space: nowrap;
+}
+#bsm_teachertable .bsm_teacheremail,
+#bsm_teachertable .bsm_teacherwebsite,
+#bsm_teachertable .bsm_teacherphone {
+  font-weight: normal;
+  font-size: 11px;
+}
+#bsm_teachertable .bsm_short {
+  padding: 8px 4px 4px;
+}
+#bsm_teachertable .bsm_titletitle,
+#bsm_teachertable .bsm_titlescripture,
+#bsm_teachertable .bsm_titledate {
+  font-weight: bold;
+  color: var(--color-white);
+}
+#bsm_teachertable .bsm_teacherlong {
+  padding: 8px 4px 4px;
+  border-bottom: 1px solid var(--color-gray-light);
+}
+#bsm_teachertable tr.bsodd {
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-light);
+}
+#bsm_teachertable tr.bseven {
+  background-color: var(--color-off-white);
+  border-bottom: 1px solid var(--color-gray-light);
+}
+#bsm_teachertable .lastrow td {
+  border-bottom: 1px solid var(--color-gray-border);
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+#bsm_teachertable .bsm_teacherfooter {
+  border-top: 1px solid var(--color-gray-light);
+  padding: 4px 1px 1px 4px;
+}
+
+/* Landing Page */
+.landingtable {
+  clear: both;
+  width: auto;
+  display: table;
+}
+.landingrow {
+  display: inline;
+  padding: 1em;
+}
+.landingcell {
+  display: table-cell;
+}
+.landinglink a {
+  display: inline;
+}
+.landing_title {
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+#landing_td {
+  width: 33%;
+}
+.landing_separator {
+  height: 15px;
+}
+
+/* Listing Page — header image */
+.proclaim-page-header-img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Listing Page */
+div.listingfooter ul li {
+  list-style: none outside none;
+}
+#listingfooter li,
+#listingfooter ul {
+  display: inline;
+}
+#listintro p,
+#listintro td {
+  margin: 0;
+  font-weight: bold;
+  color: var(--color-black);
+}
+#bsdropdownmenu {
+  margin-bottom: 10px;
+}
+
+/* Media Container */
+.bsms_media_container div.bsms_media_file:not(:first-child) {
+  padding-left: 10px;
+}
+.bsms_media_container span.fa-play,
+.bsms_media_container span.icon-play {
+  padding-right: 4px;
+  background-image: none;
+}
+.bsms_media_container,
+#bsmsmoduletable {
+  margin: 0;
+  border-collapse: separate;
+}
+.bsms_media_container .lastcol,
+#bsmsmoduletable .lastcol {
+  border-right: var(--color-gray-border) 2px solid;
+}
+.bsms_media_container .lastrow td,
+#bsmsmoduletable .lastrow td {
+  border-bottom: 2px solid var(--color-gray-border);
+  padding-bottom: 7px;
+}
+.bsms_media_container th,
+#bsmsmoduletable th {
+  background-color: var(--color-gray-medium);
+  font-weight: bold;
+  color: var(--color-white);
+}
+.bsms_media_container th.firstrow,
+#bsmsmoduletable th.firstrow {
+  border-bottom: var(--color-gray-border) 2px solid;
+}
+.bsms_media_container tr.lastrow th,
+#bsmsmoduletable tr.lastrow th {
+  border-bottom: 2px solid var(--color-gray-border);
+  padding-bottom: 3px;
+}
+.bsms_media_container tr.bsodd td,
+#bsmsmoduletable tr.bsodd td {
+  background-color: var(--color-white);
+}
+.bsms_media_container tr.bseven td,
+#bsmsmoduletable tr.bseven td {
+  background-color: var(--color-off-white);
+}
+.bsms_media_container .date,
+#bsmsmoduletable .date {
+  white-space: nowrap;
+  font-size: 1.2em;
+  color: var(--color-gray-light);
+  font-weight: bold;
+}
+.bsms_media_container .scripture1,
+.bsms_media_container .scripture2,
+#bsmsmoduletable .scripture1,
+#bsmsmoduletable .scripture2 {
+  white-space: nowrap;
+  color: var(--color-scripture);
+  font-weight: bold;
+}
+.bsms_media_container .title,
+#bsmsmoduletable .title {
+  font-size: 1.2em;
+  color: var(--color-gray-medium);
+  font-weight: bold;
+}
+.bsms_media_container .series_text,
+#bsmsmoduletable .series_text {
+  white-space: nowrap;
+  color: var(--color-gray-light);
+}
+.bsms_media_container .duration,
+#bsmsmoduletable .duration {
+  white-space: nowrap;
+  font-style: italic;
+}
+.bsms_media_container .teacher,
+.bsms_media_container .location_text,
+.bsms_media_container .topic_text,
+.bsms_media_container .message_type,
+.bsms_media_container .jbsmedia,
+.bsms_media_container .store,
+.bsms_media_container .details-text,
+.bsms_media_container .details-pdf,
+.bsms_media_container .details-text-pdf,
+.bsms_media_container .secondary_reference,
+.bsms_media_container .teacher-title-name,
+.bsms_media_container .submitted,
+.bsms_media_container .hits,
+.bsms_media_container .studynumber,
+.bsms_media_container .filesize,
+.bsms_media_container .custom,
+.bsms_media_container .thumbnail,
+#bsmsmoduletable .teacher,
+#bsmsmoduletable .location_text,
+#bsmsmoduletable .topic_text,
+#bsmsmoduletable .message_type,
+#bsmsmoduletable .jbsmedia,
+#bsmsmoduletable .store,
+#bsmsmoduletable .details-text,
+#bsmsmoduletable .details-pdf,
+#bsmsmoduletable .details-text-pdf,
+#bsmsmoduletable .secondary_reference,
+#bsmsmoduletable .teacher-title-name,
+#bsmsmoduletable .submitted,
+#bsmsmoduletable .hits,
+#bsmsmoduletable .studynumber,
+#bsmsmoduletable .filesize,
+#bsmsmoduletable .custom,
+#bsmsmoduletable .thumbnail {
+  white-space: nowrap;
+}
+.bsms_media_container .detailstable td,
+#bsmsmoduletable .detailstable td {
+  border: none;
+  padding: 0 2px 0 0;
+}
+.bsms_media_container .commentshead,
+#bsmsmoduletable .commentshead {
+  font-size: 2em;
+  font-weight: bold;
+}
+.bsms_media_container .mediatable td,
+#bsmsmoduletable .mediatable td {
+  border: none;
+  padding: 0 6px 0 0;
+}
+.bsms_media_container .mediatable span.bsfilesize,
+#bsmsmoduletable .mediatable span.bsfilesize {
+  font-size: 0.6em;
+  position: relative;
+  bottom: 7px;
+}
+
+/* List Table */
+.bslisttable th,
+.bslisttable td,
+#bsmsmoduletable th,
+#bsmsmoduletable td {
+  text-align: left;
+  padding: 0 5px;
+  border: none;
+}
+.bslisttable .row1col1,
+.bslisttable .row2col1,
+.bslisttable .row3col1,
+.bslisttable .row4col1,
+#bsmsmoduletable .row1col1,
+#bsmsmoduletable .row2col1,
+#bsmsmoduletable .row3col1,
+#bsmsmoduletable .row4col1 {
+  border-left: var(--color-gray-border) 2px solid;
+}
+.bslisttable th.row1col1,
+.bslisttable th.row1col2,
+.bslisttable th.row1col3,
+.bslisttable th.row1col4,
+#bsmsmoduletable th.row1col1,
+#bsmsmoduletable th.row1col2,
+#bsmsmoduletable th.row1col3,
+#bsmsmoduletable th.row1col4 {
+  border-top: var(--color-gray-border) 2px solid;
+  padding-top: 3px;
+}
+
+/* Show/Hide */
+#showhide {
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+#showhide .showhideheadingbutton img {
+  vertical-align: bottom;
+}
+
+/* Popup */
+.popupwindow {
+  margin: 5px;
+  text-align: center;
+}
+p.popuptitle {
+  font-weight: bold;
+  color: var(--color-white);
+}
+.popupfooter {
+  margin: 5px;
+  text-align: center;
+}
+p.popupfooter {
+  font-weight: bold;
+  color: var(--color-gray-light);
+}
+
+/* JBSM Layout */
+#jbsmspan-image {
+  padding-right: 20px;
+}
+.jbsmimg {
+  max-width: 200px;
+  height: auto;
+}
+.jbsmimg img {
+  border: none;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center 20%;
+}
+.cwm-no-image {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-gray-200, #e9ecef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.cwm-no-image .icon-image {
+  font-size: 48px;
+  color: var(--color-gray-400, #ced4da);
+}
+div.JBSM .img-rounded {
+  border-radius: 25px;
+}
+.black {
+  color: var(--color-black);
+}
+
+/* Effects */
+.effects {
+  padding-left: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.effects .jbsmimg {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.effects .jbsmimg:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.effects .jbsmimg-wrapper {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  text-decoration: none;
+  background-color: var(--color-gray-200, #e9ecef);
+}
+/* Dark overlay fades in on card hover */
+.effects .jbsmimg-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.2s ease;
+  pointer-events: none;
+}
+.effects .jbsmimg:hover .jbsmimg-wrapper::after {
+  background: rgba(0, 0, 0, 0.28);
+}
+/* Play icon scales in over the overlay */
+.effects .jbsmimg-wrapper::before {
+  content: '▶';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  color: #fff; /* Intentional: play icon renders over dark image overlay */
+  font-size: 1.5rem;
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.effects .jbsmimg:hover .jbsmimg-wrapper::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.effects .jbsmimg-title {
+  display: block;
+  font-size: 13px;
+  color: var(--bs-link-color, var(--color-primary, #0d6efd));
+  text-align: center;
+  text-decoration: none;
+  padding: 8px 4px;
+  max-width: 100%;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.effects .jbsmimg-title:hover {
+  text-decoration: underline;
+}
+.effects .jbsmimg img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  object-fit: cover;
+  object-position: center center;
+}
+.effects .jbsmimg .cwm-no-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.overlay {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  transition: var(--transition-default);
+}
+a.jbsmclose-overlay {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  width: 45px;
+  height: 45px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 45px;
+  text-align: center;
+  background-color: var(--color-black);
+  cursor: pointer;
+}
+a.jbsmclose-overlay.hidden {
+  display: none;
+}
+a.expand {
+  display: block;
+  position: absolute;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border: solid 5px var(--color-white);
+  text-align: center;
+  color: var(--color-white);
+  line-height: 30px;
+  font-weight: 500;
+  font-size: 20px;
+  border-radius: 30px;
+}
+p.expand {
+  display: block;
+  position: absolute;
+  z-index: 100;
+  padding-left: 20px;
+  text-align: center;
+  color: var(--color-white);
+}
+
+/* Effect 1 - Bottom slide */
+#effect-1 .overlay {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 0;
+}
+#effect-1 .overlay a.expand {
+  left: 0;
+  right: 0;
+  bottom: 20%;
+  margin: 0 auto -30px auto;
+}
+#effect-1 .jbsmimg.hover .overlay {
+  height: 100%;
+}
+
+/* Effect 2 - Top slide */
+#effect-2 .overlay {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 0;
+}
+#effect-2 .overlay a.expand {
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin: -30px auto 0 auto;
+}
+#effect-2 .jbsmimg.hover .overlay {
+  height: 100%;
+}
+
+/* Effect 3 - Left slide */
+#effect-3 .overlay {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+}
+#effect-3 .overlay a.expand {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin: auto 0 auto -30px;
+}
+#effect-3 .jbsmimg.hover .overlay {
+  width: 100%;
+}
+
+/* Effect 4 - Right slide */
+#effect-4 .overlay {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+}
+#effect-4 .overlay a.expand {
+  top: 0;
+  bottom: 0;
+  right: 50%;
+  margin: auto -30px auto 0;
+}
+#effect-4 .jbsmimg.hover .overlay {
+  width: 100%;
+}
+
+/* Effect 5 - Fade with grow */
+#effect-5 .overlay {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+#effect-5 .overlay a.expand {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  transition: var(--transition-default);
+}
+#effect-5 .jbsmimg.hover .overlay {
+  opacity: 1;
+}
+#effect-5 .jbsmimg.hover .overlay a.expand {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+
+/* Effect 6 - Fade with drop */
+#effect-6 .overlay {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+#effect-6 .overlay a.expand {
+  left: 0;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
+  opacity: 0;
+  transition: var(--transition-default);
+}
+#effect-6 .jbsmimg.hover .overlay {
+  opacity: 1;
+}
+#effect-6 .jbsmimg.hover .overlay a.expand {
+  top: 50%;
+  margin-top: -30px;
+  opacity: 1;
+}
+
+/* Responsive */
+@media only screen and (max-width: 1100px) {
+  .effects {
+    padding-left: 5px;
+  }
+  .effects .jbsmimg:first-child {
+    margin-left: 0;
+  }
+  .effects .jbsmimg:nth-child(2n),
+  .effects .jbsmimg:last-child {
+    margin-right: 0;
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  .effects {
+    padding-left: 0;
+    gap: 12px;
+  }
+  .effects .jbsmimg {
+    width: calc(50% - 6px);
+  }
+}
+
+/* Page Links & Dropdowns */
+#pagelinks {
+  background-color: var(--color-pagelinks-bg);
+  border: 1px solid var(--color-gray-border);
+  border-radius: 5px;
+  font-size: 105%;
+  margin: 13px 0 0;
+  min-height: 20px;
+  padding: 5px 10px;
+  position: relative;
+}
+#dropdowns {
+  background-color: var(--color-dropdowns-bg);
+  margin: 0 -5px;
+  padding: 8px;
+  border: 1px solid var(--color-gray-border);
+  position: relative;
+  border-radius: 9px;
+}
+
+.com-proclaim table span a,
+.proclaim-listing a {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Teacher Detail — Card Grid Mode
+   ========================================================================== */
+
+.proclaim-teacher-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.proclaim-teacher-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.proclaim-teacher-card-img {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-background-light);
+}
+
+.proclaim-teacher-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.proclaim-teacher-card-img picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.proclaim-teacher-card-img picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.proclaim-teacher-card .card-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.proclaim-teacher-card .card-title a:hover {
+  text-decoration: underline;
+}
+
+.proclaim-teacher-card-scripture {
+  color: var(--color-scripture);
+  font-weight: 600;
+}
+
+.proclaim-teacher-card-intro {
+  font-size: 0.875rem;
+  color: var(--color-gray-dark);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Teacher Detail — Simple List Mode
+   ========================================================================== */
+
+.proclaim-teacher-list-row:last-child {
+  border-bottom: none !important;
+}
+
+.proclaim-teacher-list-row:hover {
+  background-color: var(--color-background-light);
+}
+
+/* ==========================================================================
+   Archive Display Styles
+   ========================================================================== */
+
+.proclaim-archive-badge {
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.proclaim-archive-notice {
+    margin-bottom: 1rem;
+}
+
+/* .proclaim-archived class is added to archived message .proclaim-item divs for custom styling */
+
+/* ==========================================================================
+   Mobile Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Fix white-space: nowrap for text wrapping on mobile */
+  #bsm_teachertable .bsm_teachername,
+  .bsms_media_container .date,
+  .bsms_media_container .scripture1,
+  .bsms_media_container .scripture2,
+  .bsms_media_container .series_text,
+  .bsms_media_container .duration,
+  .bsms_media_container .teacher,
+  .bsms_media_container .location_text,
+  .bsms_media_container .topic_text,
+  .bsms_media_container .message_type,
+  .bsms_media_container .jbsmedia,
+  .bsms_media_container .store,
+  .bsms_media_container .details-text,
+  .bsms_media_container .details-pdf,
+  .bsms_media_container .details-text-pdf,
+  .bsms_media_container .secondary_reference,
+  .bsms_media_container .teacher-title-name,
+  .bsms_media_container .submitted,
+  .bsms_media_container .hits,
+  .bsms_media_container .studynumber,
+  .bsms_media_container .filesize,
+  .bsms_media_container .custom,
+  .bsms_media_container .thumbnail,
+  #bsmsmoduletable .date,
+  #bsmsmoduletable .scripture1,
+  #bsmsmoduletable .scripture2,
+  #bsmsmoduletable .series_text,
+  #bsmsmoduletable .duration,
+  #bsmsmoduletable .teacher,
+  #bsmsmoduletable .location_text,
+  #bsmsmoduletable .topic_text,
+  #bsmsmoduletable .message_type,
+  #bsmsmoduletable .jbsmedia,
+  #bsmsmoduletable .store,
+  #bsmsmoduletable .details-text,
+  #bsmsmoduletable .details-pdf,
+  #bsmsmoduletable .details-text-pdf,
+  #bsmsmoduletable .secondary_reference,
+  #bsmsmoduletable .teacher-title-name,
+  #bsmsmoduletable .submitted,
+  #bsmsmoduletable .hits,
+  #bsmsmoduletable .studynumber,
+  #bsmsmoduletable .filesize,
+  #bsmsmoduletable .custom,
+  #bsmsmoduletable .thumbnail {
+    white-space: normal;
+  }
+
+  /* Landing page table - stack columns on mobile */
+  #landing_td {
+    width: 100%;
+    display: block;
+  }
+
+  /* Teacher table - make responsive */
+  #bsm_teachertable {
+    display: block;
+    width: 100%;
+  }
+
+  #bsm_teachertable thead,
+  #bsm_teachertable tbody,
+  #bsm_teachertable tr,
+  #bsm_teachertable th,
+  #bsm_teachertable td {
+    display: block;
+    width: 100%;
+  }
+
+  #bsm_teachertable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-light);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  #bsm_teachertable td {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Media container - card layout on mobile */
+  .bsms_media_container,
+  #bsmsmoduletable {
+    display: block;
+    width: 100%;
+  }
+
+  .bsms_media_container thead,
+  .bsms_media_container tbody,
+  .bsms_media_container tr,
+  .bsms_media_container th,
+  .bsms_media_container td,
+  #bsmsmoduletable thead,
+  #bsmsmoduletable tbody,
+  #bsmsmoduletable tr,
+  #bsmsmoduletable th,
+  #bsmsmoduletable td {
+    display: block;
+    width: 100%;
+  }
+
+  .bsms_media_container tr,
+  #bsmsmoduletable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .bsms_media_container td,
+  #bsmsmoduletable td {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Hide non-essential columns on mobile */
+  .bsms_media_container .filesize,
+  .bsms_media_container .custom,
+  #bsmsmoduletable .filesize,
+  #bsmsmoduletable .custom {
+    display: none;
+  }
+
+  /* List table - responsive */
+  .bslisttable {
+    display: block;
+    width: 100%;
+  }
+
+  .bslisttable thead,
+  .bslisttable tbody,
+  .bslisttable tr,
+  .bslisttable th,
+  .bslisttable td {
+    display: block;
+    width: 100%;
+  }
+
+  .bslisttable tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-gray-border);
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .bslisttable td,
+  .bslisttable th {
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border: none;
+  }
+
+  /* Landing table - stack cells */
+  .landingtable {
+    display: block;
+    width: 100%;
+  }
+
+  .landingrow {
+    display: block;
+    width: 100%;
+  }
+
+  .landingcell {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  /* Teacher simple list — stack columns on mobile */
+  .proclaim-teacher-list-row .col-md-2,
+  .proclaim-teacher-list-row .col-md-5 {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

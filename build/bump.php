@@ -2,28 +2,31 @@
 
 /**
  * Script used to make a version bump
- * Updates all versions xmls and version.php
  *
- * Usage: php build/bump.php -v <version> -c <codename>
+ * Updates:
+ * - Version in admin/src/Helper/Version.php
+ * - Version and creationDate in all XML manifest files (component, modules, plugins)
+ * - Copyright years to current year in all PHP, JS, SQL, and XML files
+ * - Replaces __DEPLOY_VERSION__ placeholder with release version
+ * - Version in package.json and README files
+ *
+ * Usage: php build/bump.php -v <version> [-c <codename>] [-d <date>]
  *
  * Examples:
- * - php build/bump.php -v 3.6.0-dev
- * - php build/bump.php -v 3.6.0-beta1
- * - php build/bump.php -v 3.6.0-beta1-dev
- * - php build/bump.php -v 3.6.0-beta2
- * - php build/bump.php -v 3.6.0-rc1
- * - php build/bump.php -v 3.6.0
- * - php build/bump.php -v 3.6.0 -d "2015-05-12 16:00"
- * - php build/bump.php -v 3.6.0 -c Unicorn
- * - php build/bump.php -v 3.6.0 -c "Custom Codename"
- * - /usr/bin/php /path/to/joomla-cms/build/bump.php -v 3.7.0
+ * - php build/bump.php -v 10.1.0
+ * - php build/bump.php -v 10.2.0-dev
+ * - php build/bump.php -v 10.2.0-beta1
+ * - php build/bump.php -v 10.2.0-rc1
+ * - php build/bump.php -v 10.1.0 -d "2026-01-15 12:00"
+ * - php build/bump.php -v 10.1.0 -c "YouTube Update"
  *
- * @package        Proclaim.Bump
- * @copyright  (C) 2016 Open Source Matters, Inc. <https://www.joomla.org>
- * @license        GNU General Public License version 2 or later; see LICENSE.txt
- * @since          10.0.0
+ * @package    Proclaim.Bump
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @since      10.1.0
  */
 
+// phpcs:disable PSR1.Files.SideEffects
 // Functions.
 function usage($command): void
 {
@@ -40,10 +43,16 @@ function usage($command): void
 const PHP_TAB = "\t";
 
 // File paths.
-$versionFile = '/libraries/src/Version.php';
+$versionFile = '/admin/src/Helper/Version.php';
 
 $coreXmlFiles = [
     '/proclaim.xml',
+    '/modules/site/mod_proclaim/mod_proclaim.xml',
+    '/modules/site/mod_proclaim_youtube/mod_proclaim_youtube.xml',
+    '/modules/site/mod_proclaim_podcast/mod_proclaim_podcast.xml',
+    '/modules/admin/mod_proclaimicon/mod_proclaimicon.xml',
+    '/plugins/finder/proclaim/proclaim.xml',
+    '/plugins/task/proclaim/proclaim.xml',
 ];
 
 $languageXmlFiles = [
@@ -69,18 +78,21 @@ $readMeFiles = [
 
 /*
  * Change copyright date exclusions.
- * Some systems may try to scan the .git directory, exclude it.
- * Also exclude build resources such as the packaging space or the API documentation build
+ * Some systems may try to scan the .git directory and exclude it.
+ * Also, exclude build resources such as the packaging space or the API documentation build
  * as well as external libraries.
  */
 $directoryLoopExcludeDirectories = [
     '/.git',
+    '/.idea',
     '/build/api/',
     '/build/coverage/',
     '/build/tmp/',
     '/libraries/vendor/',
     '/libraries/php-encryption/',
     '/libraries/phpass/',
+    '/admin/src/Addons/Servers/Youtube/vendor/',
+    '/node_modules/',
 ];
 
 $directoryLoopExcludeFiles = [];
@@ -160,8 +172,9 @@ $version = [
     'build'      => '',
     'reldate'    => $date->format('j-F-Y'),
     'reltime'    => $date->format('H:i'),
-    'reltz'      => 'GMT',
-    'credate'    => $date->format('Y-m'),
+    'reltz'      => 'UTC',
+    'credate'    => $date->format('M j, Y'),
+    'year'       => $date->format('Y'),
 ];
 
 // Version Codename.
@@ -182,6 +195,7 @@ echo '- Release date:' . PHP_TAB . PHP_TAB . $version['reldate'] . PHP_EOL;
 echo '- Release time:' . PHP_TAB . PHP_TAB . $version['reltime'] . PHP_EOL;
 echo '- Release timezone:' . PHP_TAB . $version['reltz'] . PHP_EOL;
 echo '- Creation date:' . PHP_TAB . $version['credate'] . PHP_EOL;
+echo '- Copyright year:' . PHP_TAB . $version['year'] . PHP_EOL;
 
 if (!empty($version['codename'])) {
     echo '- Codename:' . PHP_TAB . PHP_TAB . $version['codename'] . PHP_EOL;
@@ -226,6 +240,13 @@ if (file_exists($rootPath . $versionFile)) {
         );
     }
 
+    // Update the COPYRIGHT constant
+    $fileContents = preg_replace(
+        "#COPYRIGHT\s*=\s*'[^\']*'#",
+        "COPYRIGHT = '(C) " . $version['year'] . " CWM Team All rights reserved<https://www.christianwebministries.org>'",
+        $fileContents
+    );
+
     file_put_contents($rootPath . $versionFile, $fileContents);
 }
 
@@ -265,7 +286,7 @@ foreach ($languageXmlFiles as $languageXmlFile) {
     }
 }
 
-// Updates the version and creation date in language package xml file.
+// Updates the version and creation date in the language package XML file.
 if (file_exists($rootPath . $languagePackXmlFile)) {
     $fileContents = file_get_contents($rootPath . $languagePackXmlFile);
     $fileContents = preg_replace(
@@ -327,6 +348,7 @@ foreach ($readMeFiles as $readMeFile) {
 }
 
 $changedFilesSinceVersion = 0;
+$changedFilesCopyright    = 0;
 $year                     = date('Y');
 $directory                = new RecursiveDirectoryIterator($rootPath);
 $iterator                 = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::SELF_FIRST);
@@ -358,6 +380,7 @@ foreach ($iterator as $file) {
 
         if ($continue) {
             $changeSinceVersion = false;
+            $changeCopyright    = false;
 
             // Load the file.
             $fileContents = file_get_contents($filePath);
@@ -369,8 +392,41 @@ foreach ($iterator as $file) {
                 $changedFilesSinceVersion++;
             }
 
+            // Update copyright years in PHP/JS/SQL files (CWM Team copyrights only).
+            // Matches patterns like: @copyright  (C) 2026 CWM Team, @copyright  (C) 2026 CWM Team, etc.
+            if (preg_match('#\.(php|js|sql)$#', $filePath)) {
+                // Pattern for @copyright with various year formats - update to current year
+                $newContents = preg_replace(
+                    '#(@copyright\s+\(C\)\s*)[0-9]{4}(\s*-\s*[0-9]{4})?\s+(CWM Team)#',
+                    '${1}' . $year . ' ${3}',
+                    $fileContents
+                );
+
+                if ($newContents !== $fileContents) {
+                    $fileContents    = $newContents;
+                    $changeCopyright = true;
+                    $changedFilesCopyright++;
+                }
+            }
+
+            // Update copyright years in XML files.
+            if (preg_match('#\.xml$#', $filePath)) {
+                // Pattern for <copyright>(C) YYYY ... </copyright>
+                $newContents = preg_replace(
+                    '#(<copyright>\(C\)\s*)[0-9]{4}(\s*-\s*[0-9]{4})?\s+#',
+                    '${1}' . $year . ' ',
+                    $fileContents
+                );
+
+                if ($newContents !== $fileContents) {
+                    $fileContents    = $newContents;
+                    $changeCopyright = true;
+                    $changedFilesCopyright++;
+                }
+            }
+
             // Save the file.
-            if ($changeSinceVersion) {
+            if ($changeSinceVersion || $changeCopyright) {
                 file_put_contents($filePath, $fileContents);
             }
         }
@@ -379,7 +435,15 @@ foreach ($iterator as $file) {
 
 if ($changedFilesSinceVersion > 0) {
     echo '- Since Version changed in ' . $changedFilesSinceVersion . ' files.' . PHP_EOL;
+}
+
+if ($changedFilesCopyright > 0) {
+    echo '- Copyright year updated to ' . $year . ' in ' . $changedFilesCopyright . ' files.' . PHP_EOL;
+}
+
+if ($changedFilesSinceVersion > 0 || $changedFilesCopyright > 0) {
     echo PHP_EOL;
 }
 
 echo 'Version bump complete!' . PHP_EOL;
+// phpcs:enable PSR1.Files.SideEffects

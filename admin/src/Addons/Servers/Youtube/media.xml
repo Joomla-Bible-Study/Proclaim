@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <media>
     <fields name="params">
-        <fieldset name="general">
+        <fieldset name="general" addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field">
             <field name="filename"
                    type="text"
                    label="JBS_ADDON_YOUTUBE_URL"
                    description="JBS_ADDON_YOUTUBE_URL_DISC"
                    class="inputbox"
                    required="true"/>
+            <field name="youtube_browse_btn"
+                   type="YoutubeBrowseBtn"
+                   class="youtube-browse-container"
+                   label=""
+                   description=""/>
             <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
                    description="JBS_MED_INTERNAL_POPUP_DESC"
                    class="form-select-color-state"
@@ -55,8 +60,8 @@
                 <option value="btn-warning">JBS_MED_WARNING</option>
                 <option value="btn-danger">JBS_MED_DANGER</option>
             </field>
-            <field name="media_button_color" type="color" description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC"
-                   label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
+            <field name="media_button_color" type="ColorPicker" default="black"
+                   description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC" label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
             <field name="media_icon_type" type="IconType" class="form-select-color-state" size="1"
                    default="fa fa-youtube"
                    label="JBS_ADDON_YOUTUBE_ICON_TYPE"
@@ -64,8 +69,6 @@
             </field>
             <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_YOUTUBE_CUSTOM_ICON"
                    description="JBS_ADDON_YOUTUBE_CUSTOM_ICON_DESC"/>
-            <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_YOUTUBE_FONT_SIZE"
-                   description="JBS_ADDON_YOUTUBE_FONT_SIZE_DESC"/>
             <field name="link_type" type="hidden" extension="com_proclaim"
                    label="JBS_MED_SHOW_DOWNLOAD_ICON" description="JBS_MED_SHOW_DOWNLOAD_ICON_DESC"
                    class="inputbox" readonly="readonly" size="1" default="0">
@@ -93,6 +96,50 @@
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JYES</option>
                 <option value="false">JNO</option>
+            </field>
+        </fieldset>
+        <fieldset name="embed_options" label="JBS_ADDON_YOUTUBE_EMBED_OPTIONS">
+            <field name="yt_mute" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_MUTE" description="JBS_ADDON_YOUTUBE_MUTE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_start" type="text" default=""
+                   label="JBS_ADDON_YOUTUBE_START" description="JBS_ADDON_YOUTUBE_START_DESC"
+                   hint="e.g. 30"/>
+            <field name="yt_end" type="text" default=""
+                   label="JBS_ADDON_YOUTUBE_END" description="JBS_ADDON_YOUTUBE_END_DESC"
+                   hint="e.g. 120"/>
+            <field name="yt_loop" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_LOOP" description="JBS_ADDON_YOUTUBE_LOOP_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_controls" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_CONTROLS" description="JBS_ADDON_YOUTUBE_CONTROLS_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="yt_rel" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_REL" description="JBS_ADDON_YOUTUBE_REL_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_cc" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_CC" description="JBS_ADDON_YOUTUBE_CC_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="yt_playsinline" type="list" default=""
+                   label="JBS_ADDON_YOUTUBE_PLAYSINLINE" description="JBS_ADDON_YOUTUBE_PLAYSINLINE_DESC">
+                <option value="">JBS_ADDON_PLATFORM_DEFAULT</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
         </fieldset>
     </fields>

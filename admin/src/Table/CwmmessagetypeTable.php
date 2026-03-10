@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,8 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -33,61 +34,156 @@ class CwmmessagetypeTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Topic text
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $topic_text = null;
+    public ?string $topic_text = null;
 
     /**
      * Published
      *
-     * @var int
+     * @var ?int
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public ?int $published = 1;
 
     /**
      * Params
      *
-     * @var string
+     * @var string|Registry|null
      *
      * @since 9.0.0
      */
-    public $params = null;
-
-    public $asset_id;
-
-    public $language;
-
-    public $access;
+    public string|Registry|null $params = null;
 
     /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
      * @var ?string
-     * @since version
+     * @since 10.1.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Message type name
+     *
+     * @var ?string
+     * @since 10.1.0
      */
     public ?string $message_type = null;
 
     /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
+
+    /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since 9.0.0
      */
     public function __construct(&$db)
     {
         parent::__construct('#__bsms_message_type', 'id', $db);
+    }
+
+    /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->message_type ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_MESSAGETYPE_REQUIRED'));
+        }
+
+        return parent::check();
     }
 
     /**
@@ -103,22 +199,33 @@ class CwmmessagetypeTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
-        if (is_object($array)) {
+        if (\is_object($array)) {
             return parent::bind($array, $ignore);
         }
 
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'published', 'asset_id', 'access',
+            'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
@@ -131,16 +238,17 @@ class CwmmessagetypeTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -152,16 +260,17 @@ class CwmmessagetypeTable extends Table
     /**
      * Overloaded load function
      *
-     * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
+     * @param   mixed  $keys     An optional primary key value to load the row by, or an array of fields to match.  If not
      *                           set the instance property value is used.
-     * @param   boolean  $reset  True to reset the default values before loading the new row.
+     * @param   bool   $reset    True to reset the default values before loading the new row.
      *
-     * @return  boolean  True if successful. False if row not found.
+     * @return  bool  True if successful. False if row not found.
      *
      * @see   Table:load
      *
      * @since 9.0.0
      */
+    #[\Override]
     public function load($keys = null, $reset = true): bool
     {
         if (parent::load($keys, $reset)) {
@@ -187,6 +296,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -201,6 +311,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'CWM MessageType: ' . $this->message_type;
@@ -219,6 +330,7 @@ class CwmmessagetypeTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

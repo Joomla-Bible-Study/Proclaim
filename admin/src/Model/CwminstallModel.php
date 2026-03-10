@@ -4,9 +4,9 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
- * @link           https://www.christianwebministries.org
+ * @link       https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Model;
@@ -17,6 +17,9 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use Joomla\CMS\Factory;
@@ -39,13 +42,13 @@ class CwminstallModel extends ListModel
      *
      * @since 7.1
      */
-    public $totalSteps = 0;
+    public int $totalSteps = 0;
 
     /** @var int Number of Versions already processed
      *
      * @since 7.1
      */
-    public $doneSteps = 0;
+    public int $doneSteps = 0;
 
     /**
      * @var string
@@ -53,11 +56,11 @@ class CwminstallModel extends ListModel
      */
     public string $step = '';
 
-    /** @var string Running Now
+    /** @var ?string Running Now
      *
      * @since 7.1
      */
-    public $running = null;
+    public ?string $running = null;
 
     /** @var array Call stack for the Visioning System.
      *
@@ -153,9 +156,6 @@ class CwminstallModel extends ListModel
     {
         parent::__construct($config);
 
-        // Joomla 4 drop including db driver.
-        $this->_db = Factory::getContainer()->get(DatabaseInterface::class);
-
         $this->name = 'cwminstall';
     }
 
@@ -239,9 +239,7 @@ class CwminstallModel extends ListModel
      */
     private function microtimeFloat(): float
     {
-        [$usec, $sec] = explode(" ", microtime());
-
-        return ((float)$usec + (float)$sec);
+        return microtime(true);
     }
 
     /**
@@ -256,20 +254,6 @@ class CwminstallModel extends ListModel
     {
         $app = Factory::getApplication();
 
-        // Set Finishing Steps
-        $this->finish     = [
-            'updateversion',
-            'fixassets',
-            'fixmenus',
-            'fixemptyaccess',
-            'fixemptylanguage',
-            'rmoldurl',
-            'setupdateurl',
-            'podcastlinkmissing',
-            'finish',
-        ];
-        $this->totalSteps += count($this->finish);
-
         /**
          * First, we check to see if there is a current version of the database installed. This will have a #__bsms_version
          * table, so we check for its existence.
@@ -283,6 +267,8 @@ class CwminstallModel extends ListModel
 
         $this->callstack['subversiontype_version'] = $version;
 
+        $hasDbChanges = false;
+
         if ($this->callstack['subversiontype_version'] > 000) {
             $files = str_replace('.sql', '', Folder::files(JPATH_ADMINISTRATOR . $this->filePath, '\.sql$'));
 
@@ -292,18 +278,18 @@ class CwminstallModel extends ListModel
                 $php = str_replace('.php', '', Folder::files(JPATH_ADMINISTRATOR . $this->phpPath, '\.php$'));
             }
 
-            if (is_array($files)) {
+            if (\is_array($files)) {
                 usort($files, 'version_compare');
             }
 
             // Find Extension ID of Proclaim
-            $query = $this->_db->getQuery(true);
+            $query = $this->getDatabase()->getQuery(true);
             $query
-                ->select('extension_id')
-                ->from('#__extensions')
-                ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-            $this->_db->setQuery($query);
-            $eid                 = $this->_db->loadResult();
+                ->select($this->getDatabase()->quoteName('extension_id'))
+                ->from($this->getDatabase()->quoteName('#__extensions'))
+                ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+            $this->getDatabase()->setQuery($query);
+            $eid                 = $this->getDatabase()->loadResult();
             $this->biblestudyEid = $eid;
 
             foreach ($files as $i => $value) {
@@ -319,7 +305,7 @@ class CwminstallModel extends ListModel
                 if (version_compare($value, $update) <= 0) {
                     unset($files[$i]);
                 } elseif ($files) {
-                    $this->totalSteps += count($files);
+                    $this->totalSteps += \count($files);
                     $this->versionStack = (array)$files;
                 } else {
                     $app->enqueueMessage(Text::_('JBS_INS_NO_UPDATE_SQL_FILES'), 'warning');
@@ -328,21 +314,70 @@ class CwminstallModel extends ListModel
                 }
             }
 
-            if (is_array($php)) {
+            if (\is_array($php)) {
                 usort($php, 'version_compare');
 
                 foreach ($php as $i => $value) {
                     if (version_compare($value, $this->versionSwitch) <= 0) {
                         unset($php[$i]);
                     } elseif ($php) {
-                        $this->totalSteps += count($files);
+                        $this->totalSteps += \count($files);
                         $this->subFiles   = $php;
                     }
                 }
             }
+
+            $hasDbChanges = !empty($this->versionStack) || !empty($this->subFiles);
         }
 
-        $this->isimport = Factory::getApplication()->input->getInt('cwmalt', 0);
+        // Determine install type for UI labels:
+        // - install:   fresh install (no existing schema)
+        // - migration: major version jump (e.g. 9.x → 10.x) requiring data transformation
+        // - upgrade:   same major version, with or without DB changes
+        if ($this->callstack['subversiontype_version'] <= 000) {
+            $this->callstack['install_type'] = 'install';
+        } else {
+            $installedMajor                  = (int) $this->callstack['subversiontype_version'];
+            $currentMajor                    = (int) BIBLESTUDY_VERSION;
+            $this->callstack['install_type'] = ($installedMajor < $currentMajor) ? 'migration' : 'upgrade';
+        }
+
+        // Set finishing steps based on whether DB changes are needed.
+        // When no SQL/PHP migrations need to run, skip one-time data migrations
+        // that have already been applied — only run essential housekeeping.
+        if ($hasDbChanges || $this->callstack['subversiontype_version'] <= 000) {
+            $this->finish = [
+                'fixassets',
+                'fixmenus',
+                'fixemptyaccess',
+                'fixemptylanguage',
+                'migratedeprecatedplayers',
+                'updatetemplatedefaults',
+                'seedbibletranslations',
+                'populatestudyteachers',
+                'fixteacheraliases',
+                'migrateaccesstolocations',
+                'migratelegacyservers',
+                'registerguidedtours',
+                'rmoldurl',
+                'setupdateurl',
+                'podcastlinkmissing',
+                'finish',
+            ];
+        } else {
+            $this->finish = [
+                'fixassets',
+                'registerguidedtours',
+                'rmoldurl',
+                'setupdateurl',
+                'finish',
+            ];
+            Log::add('No DB changes detected — using minimal finish steps', Log::INFO, 'com_proclaim');
+        }
+
+        $this->totalSteps += \count($this->finish);
+
+        $this->isimport = Factory::getApplication()->getInput()->getInt('cwmalt', 0);
         ++$this->totalSteps;
     }
 
@@ -363,21 +398,21 @@ class CwminstallModel extends ListModel
 
         if ($version && $eid) {
             // Update the database
-            $query = $this->_db->getQuery(true);
+            $query = $this->getDatabase()->getQuery(true);
             $query
                 ->delete()
-                ->from('#__schemas')
-                ->where('extension_id = ' . $eid);
-            $this->_db->setQuery($query);
+                ->from($this->getDatabase()->quoteName('#__schemas'))
+                ->where($this->getDatabase()->quoteName('extension_id') . ' = ' . (int) $eid);
+            $this->getDatabase()->setQuery($query);
 
-            if ($this->_db->execute()) {
+            if ($this->getDatabase()->execute()) {
                 $query->clear();
-                $query->insert($this->_db->quoteName('#__schemas'));
-                $query->columns([$this->_db->quoteName('extension_id'), $this->_db->quoteName('version_id')]);
-                $query->values($eid . ', ' . $this->_db->quote(substr($version, 0, 20)));
-                $this->_db->setQuery($query);
+                $query->insert($this->getDatabase()->quoteName('#__schemas'));
+                $query->columns([$this->getDatabase()->quoteName('extension_id'), $this->getDatabase()->quoteName('version_id')]);
+                $query->values($eid . ', ' . $this->getDatabase()->quote(substr($version, 0, 20)));
+                $this->getDatabase()->setQuery($query);
 
-                if (!$this->_db->execute()) {
+                if (!$this->getDatabase()->execute()) {
                     $app->enqueueMessage('Error inserting ID', 'Error');
 
                     return false;
@@ -403,12 +438,15 @@ class CwminstallModel extends ListModel
      */
     private function postinstallclenup(): void
     {
-        // Post Install Messages Cleanup for Component
-        $query = $this->_db->getQuery(true);
-        $query->delete('#__postinstall_messages')
-            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $this->_db->execute();
+        // Remove only legacy post-install messages that used hardcoded English strings
+        // (from 10.0.0 era). Preserve messages managed by CwmguidedtourHelper which use
+        // proper language keys (COM_PROCLAIM_*) and should retain their enabled/hidden state.
+        $query = $this->getDatabase()->getQuery(true);
+        $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
+            ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'))
+            ->where($this->getDatabase()->quoteName('title_key') . ' NOT LIKE ' . $this->getDatabase()->q('COM_PROCLAIM_%'));
+        $this->getDatabase()->setQuery($query);
+        $this->getDatabase()->execute();
         Log::add('PostInstallCleanup', Log::INFO, 'com_proclaim');
     }
 
@@ -441,13 +479,12 @@ class CwminstallModel extends ListModel
         ];
         $stack = json_encode($stack, JSON_THROW_ON_ERROR);
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
-                $stack = gzdeflate($stack, 9);
-            }
-
-            $stack = base64_encode($stack);
+        // Compress and encode the stack for session storage
+        if (\function_exists('gzdeflate')) {
+            $stack = gzdeflate($stack, 9);
         }
+
+        $stack = base64_encode($stack);
 
         $session = Factory::getApplication()->getSession();
         $session->set('migration_stack', $stack, 'CWM');
@@ -529,12 +566,11 @@ class CwminstallModel extends ListModel
             return;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
-            $stack = base64_decode($stack);
+        // Decode and decompress the stack from session storage
+        $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
-                $stack = gzinflate($stack);
-            }
+        if (\function_exists('gzinflate')) {
+            $stack = gzinflate($stack);
         }
 
         $stack = json_decode($stack, true, 512, JSON_THROW_ON_ERROR);
@@ -579,7 +615,7 @@ class CwminstallModel extends ListModel
         }
 
         if ($this->isimport) {
-            $this->fixImport();
+            CwmmigrationHelper::fixImport();
             $this->running  = 'Fixing Imported Params';
             $this->isimport = 0;
             Log::add('Fixing Imported Params', Log::INFO, 'com_proclaim');
@@ -612,12 +648,12 @@ class CwminstallModel extends ListModel
                 $this->version = key($this->allupdates);
 
                 if (isset($this->allupdates[$this->version]) && @!empty($this->allupdates[$this->version])) {
-                    if (strpos($this->running, $this->version)) {
-                        $this->totalSteps += count((array)$this->allupdates[$this->version]);
+                    if (str_contains($this->running, $this->version)) {
+                        $this->totalSteps += \count((array)$this->allupdates[$this->version]);
                     }
 
                     // Used for Install array.
-                    if (!is_array($this->allupdates[$this->version])) {
+                    if (!\is_array($this->allupdates[$this->version])) {
                         $this->allupdates[$this->version] = [$this->allupdates[$this->version]];
                     }
 
@@ -627,7 +663,7 @@ class CwminstallModel extends ListModel
                     $run           = $this->runUpdates($string);
                     $this->doneSteps++;
                 } elseif (
-                    in_array(
+                    \in_array(
                         $this->version,
                         $this->subFiles,
                         true
@@ -683,7 +719,7 @@ class CwminstallModel extends ListModel
                                 Log::add('UnSet Version in All updates: ' . $this->version, Log::INFO, 'com_proclaim');
                             } else {
                                 $this->running = 'PHP Sub Process: ' . $this->version . ' - ' . $step;
-                                $migration->$step(Factory::getDbo(), $query);
+                                $migration->$step(Factory::getContainer()->get(DatabaseInterface::class), $query);
 
                                 // Pull back the Query form PHP file if any.
                                 if (isset($migration->query) && !empty($migration->query)) {
@@ -692,14 +728,14 @@ class CwminstallModel extends ListModel
 
                                 $queryString = null;
 
-                                if (!empty($query) && is_array($query)) {
+                                if (!empty($query) && \is_array($query)) {
                                     $queryString = (string)$query['id'];
                                     $queryString = str_replace(
                                         ["\r", "\n"],
                                         ['', ' '],
                                         substr($queryString, 0, 80)
                                     );
-                                    $queryString = ' ID:' . $queryString . ' Query count: ' . count(
+                                    $queryString = ' ID:' . $queryString . ' Query count: ' . \count(
                                         $this->subQuery[$this->version][$step]
                                     );
                                 }
@@ -769,7 +805,9 @@ class CwminstallModel extends ListModel
             && empty($this->allupdates)
             && empty($this->subFiles)
         ) {
-            $admin = new CwmadminModel();
+            /** @var CwmadminModel $admin */
+            $admin = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createModel('Cwmadmin', 'Administrator');
             $admin->fix();
 
             // Just finished
@@ -781,49 +819,6 @@ class CwminstallModel extends ListModel
 
         // If we have more Versions or SQL files, continue in the next step
         return true;
-    }
-
-    /**
-     * Fix an Import problem
-     *
-     * @return void True if fix complete, False if failure
-     *
-     * @since 7.1
-     */
-    private function fixImport(): void
-    {
-        $tables = CwmdbHelper::getObjects();
-        $set    = false;
-
-        foreach ($tables as $table) {
-            if (!str_contains($table['name'], '_bsms_timeset')) {
-                $query = $this->_db->getQuery(true);
-                $query->select('*')->from($table);
-                $this->_db->setQuery($query);
-                $data = $this->_db->loadObjectList();
-
-                foreach ($data as $row) {
-                    if (isset($row->params)) {
-                        $row->params = stripslashes($row->params);
-                        $set         = true;
-                    }
-
-                    if (isset($row->metadata)) {
-                        $row->metadata = stripslashes($row->metadata);
-                        $set           = true;
-                    }
-
-                    if (isset($row->stylecode)) {
-                        $row->stylecode = stripslashes($row->stylecode);
-                        $set            = true;
-                    }
-
-                    if ($set) {
-                        $this->_db->updateObject($table['name'], $row, ['id']);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -851,11 +846,11 @@ class CwminstallModel extends ListModel
         // Create an array of queries from the sql file
         $queries = DatabaseDriver::splitSql($buffer);
 
-        if ((int)count($queries) === 0) {
+        if (\count($queries) === 0) {
             return false;
         }
 
-        $this->totalSteps += count($queries);
+        $this->totalSteps += \count($queries);
 
         $this->allupdates = array_merge($this->allupdates, [$value => $queries]);
 
@@ -871,10 +866,10 @@ class CwminstallModel extends ListModel
 
                 if (isset($migration->postinstallMessages)) {
                     $steps            = $migration->steps;
-                    $this->totalSteps += count($steps);
+                    $this->totalSteps += \count($steps);
 
                     // If Steps build is mandatory.
-                    $migration->build($this->_db);
+                    $migration->build($this->getDatabase());
 
                     if (isset($migration->count)) {
                         $this->totalSteps += (int)$migration->count;
@@ -908,11 +903,11 @@ class CwminstallModel extends ListModel
         $string = trim($string);
 
         if ($string !== '' && $string[0] !== '#') {
-            $this->_db->setQuery($this->_db->convertUtf8mb4QueryToUtf8($string));
+            $this->getDatabase()->setQuery($this->getDatabase()->convertUtf8mb4QueryToUtf8($string));
             $this->doneSteps++;
 
             try {
-                $this->_db->execute();
+                $this->getDatabase()->execute();
             } catch (\RuntimeException $e) {
                 Log::add($e->getMessage(), Log::WARNING, 'com_proclaim');
 
@@ -946,83 +941,126 @@ class CwminstallModel extends ListModel
         $app = Factory::getApplication();
 
         switch ($step) {
-            case 'updateversion':
-                $update = $this->getUpdateVersion();
-
-                // Set new Schema Version
-                $this->setSchemaVersion($update, $this->biblestudyEid);
-                $this->running = 'Update Version';
-                break;
             case 'fixassets':
                 // Final step is to fix assets by building what needs to be fixed.
-                $assets             = new Cwmassets();
-                $string             = $assets->build();
+                $string             = Cwmassets::build();
                 $this->installQuery = $string->query;
                 $this->totalSteps += $string->count;
                 break;
             case 'fixmenus':
-                $run           = $this->fixMenus();
+                $run           = CwmmigrationHelper::fixMenus();
                 $this->running = 'Fix Menus';
                 break;
             case 'fixemptyaccess':
-                $run           = $this->fixemptyaccess();
+                $run           = CwmmigrationHelper::fixemptyaccess();
                 $this->running = 'Fix Empty Access';
                 break;
             case 'fixemptylanguage':
-                $run           = $this->fixemptylanguage();
+                $run           = CwmmigrationHelper::fixemptylanguage();
                 $this->running = 'Fix Empty Language';
                 break;
+            case 'migratedeprecatedplayers':
+                $updated       = CwmmigrationHelper::migrateDeprecatedPlayers();
+                $this->running = 'Migrate Deprecated Players (' . $updated . ' records updated)';
+                break;
+            case 'updatetemplatedefaults':
+                $migration     = new CwmtemplatemigrationHelper();
+                $updated       = $migration->migrateFromVersion($this->versionSwitch);
+                $this->running = 'Update Template Defaults (' . $updated . ' templates updated)';
+                Log::add('Updated ' . $updated . ' templates with new default parameters', Log::INFO, 'com_proclaim');
+                break;
+            case 'seedbibletranslations':
+                $seeded        = CwmmigrationHelper::seedBibleTranslations();
+                $this->running = 'Seed Bible Translations (' . $seeded . ' inserted)';
+                Log::add('Seeded ' . $seeded . ' bible translations', Log::INFO, 'com_proclaim');
+                break;
+            case 'fixteacheraliases':
+                $fixed         = CwmmigrationHelper::fixTeacherAliases();
+                $this->running = 'Fix Teacher Aliases (' . $fixed . ' fixed)';
+                Log::add('Fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
+                break;
+            case 'populatestudyteachers':
+                $inserted      = CwmmigrationHelper::populateStudyTeachers();
+                $this->running = 'Populate Study Teachers (' . $inserted . ' records)';
+                Log::add('Populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
+                break;
+            case 'migrateaccesstolocations':
+                $report        = CwmmigrationHelper::migrateAccessToLocations();
+                $this->running = 'Migrate Access → Locations (scenario ' . $report['scenario']
+                    . ', ' . $report['locations_created'] . ' created'
+                    . ', ' . $report['messages_updated'] . ' updated)';
+                Log::add('Location migration: scenario=' . $report['scenario']
+                    . ' locations=' . $report['locations_created']
+                    . ' messages=' . $report['messages_updated'], Log::INFO, 'com_proclaim');
+                break;
+            case 'migratelegacyservers':
+                $report        = CwmmigrationHelper::migrateLegacyServers();
+                $this->running = 'Migrate Legacy Servers (' . $report['migrated'] . ' files'
+                    . ', ' . $report['servers_created'] . ' servers created'
+                    . ', ' . $report['unpublished'] . ' unpublished)';
+                Log::add('Legacy server migration: ' . $report['migrated'] . ' files migrated'
+                    . ', ' . $report['servers_created'] . ' servers created'
+                    . ', ' . $report['unpublished'] . ' legacy servers unpublished'
+                    . ', ' . \count($report['errors']) . ' errors', Log::INFO, 'com_proclaim');
+                break;
+            case 'registerguidedtours':
+                $tourHelper    = new CwmguidedtourHelper();
+                $tours         = $tourHelper->registerGuidedTours();
+                $messages      = $tourHelper->registerPostInstallMessages();
+                $this->running = 'Register Guided Tours (' . $tours . ' tours, ' . $messages . ' messages)';
+                Log::add('Registered ' . $tours . ' guided tours and ' . $messages . ' post-install messages', Log::INFO, 'com_proclaim');
+                break;
             case 'rmoldurl':
-                // Removes all other update urls except package url.
-                $conditions = $this->rmoldurl();
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites'));
+                // Removes all other update URLs except the package URL.
+                $conditions = CwmmigrationHelper::rmoldurl();
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
                 $this->running = 'Remove Old Update URL\'s';
                 break;
             case 'setupdateurl':
                 // Find Extension ID of component
-                $query = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
                 $query
-                    ->select('extension_id')
-                    ->from('#__extensions')
-                    ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-                $this->_db->setQuery($query);
-                $eid = $this->_db->loadResult();
+                    ->select($this->getDatabase()->quoteName('extension_id'))
+                    ->from($this->getDatabase()->quoteName('#__extensions'))
+                    ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+                $this->getDatabase()->setQuery($query);
+                $eid = $this->getDatabase()->loadResult();
 
                 $conditions = [
-                    $this->_db->qn('name') . ' = ' .
-                    $this->_db->q('Proclaim Package'),
+                    $this->getDatabase()->quoteName('name') . ' = ' .
+                    $this->getDatabase()->q('Proclaim Package'),
                 ];
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites'));
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
 
                 $conditions = [
-                    $this->_db->qn('extension_id') . ' = ' .
-                    $this->_db->q($eid),
+                    $this->getDatabase()->quoteName('extension_id') . ' = ' .
+                    $this->getDatabase()->q($eid),
                 ];
-                $query      = $this->_db->getQuery(true);
-                $query->delete($this->_db->qn('#__update_sites_extensions'));
+                $query      = $this->getDatabase()->getQuery(true);
+                $query->delete($this->getDatabase()->quoteName('#__update_sites_extensions'));
                 $query->where($conditions, $glue = 'OR');
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
 
                 $updateurl           = new \stdClass();
                 $updateurl->name     = 'Proclaim Package';
                 $updateurl->type     = 'extension';
                 $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
                 $updateurl->enabled  = '1';
-                $this->_db->insertObject('#__update_sites', $updateurl);
-                $lastid                     = $this->_db->insertid();
+                $this->getDatabase()->insertObject('#__update_sites', $updateurl);
+                $lastid                     = $this->getDatabase()->insertid();
                 $updateurl1                 = new \stdClass();
                 $updateurl1->update_site_id = $lastid;
                 $updateurl1->extension_id   = $eid;
-                $this->_db->insertObject('#__update_sites_extensions', $updateurl1);
+                $this->getDatabase()->insertObject('#__update_sites_extensions', $updateurl1);
                 $this->running = 'Set New Update URL';
                 break;
             case 'podcastlinkmissing':
@@ -1031,20 +1069,20 @@ class CwminstallModel extends ListModel
                 $columnName = 'podcastlink';
 
                 // Get the list of columns for the specified table
-                $tableColumns = $this->_db->getTableColumns($tableName);
+                $tableColumns = $this->getDatabase()->getTableColumns($tableName);
 
                 // Check if the 'podcastlink' column does not exist
                 if (!isset($tableColumns[$columnName])) {
                     // Prepare the ALTER TABLE query to add the new column
                     // You can customize the column definition (e.g., VARCHAR(255) NULL) as needed
-                    $query = $this->_db->getQuery(true)
-                        ->setQuery('ALTER TABLE ' . $this->_db->quoteName($tableName) . ' ADD ' . $this->_db->quoteName($columnName) . ' VARCHAR(255) NULL');
+                    $query = $this->getDatabase()->getQuery(true)
+                        ->setQuery('ALTER TABLE ' . $this->getDatabase()->quoteName($tableName) . ' ADD ' . $this->getDatabase()->quoteName($columnName) . ' VARCHAR(255) NULL');
 
                     // Set the query and execute it
-                    $this->_db->setQuery($query);
+                    $this->getDatabase()->setQuery($query);
 
                     try {
-                        $this->_db->execute();
+                        $this->getDatabase()->execute();
                         log::add('Added podcastlink column to bsms_podcast table', Log::INFO, 'com_proclaim');
                     } catch (\Exception $e) {
                         log::add('Error adding podcastlink column to bsms_podcast table: Could already exist ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
@@ -1053,172 +1091,48 @@ class CwminstallModel extends ListModel
                 // No break
             default:
                 $app->enqueueMessage(
-                    '' . Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
-                    Text::_('SIMPLEMODEMESSAGE_BODY') .
-                    Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
+                    Text::_('JBS_CMN_OPERATION_SUCCESSFUL') .
+                    ' ' . Text::_('JBS_IBM_REVIEW_ADMIN_TEMPLATE')
                 );
                 break;
         }
     }
 
     /**
-     * Returns Update Version form Table
+     * Returns the current schema version from #__schemas
      *
-     * @return string Returns the Last Version in the #_bsms_update table
+     * @return string The schema version for Proclaim, or BIBLESTUDY_VERSION as fallback
      *
-     * @since 7.1
+     * @since 10.1.0
      */
     private function getUpdateVersion(): string
     {
-        // Default Version Pull
-        $return = BIBLESTUDY_VERSION;
+        $eid = $this->biblestudyEid;
 
-        // Find Last updated Version in Update table
-        $query = $this->_db->getQuery(true);
-        $query
-            ->select('version')
-            ->from('#__bsms_update');
-        $this->_db->setQuery($query);
-        $updates = $this->_db->loadObjectList();
-
-        if (isset(end($updates)->version)) {
-            $return  = end($updates)->version;
+        if (!$eid) {
+            $query = $this->getDatabase()->getQuery(true)
+                ->select($this->getDatabase()->quoteName('extension_id'))
+                ->from($this->getDatabase()->quoteName('#__extensions'))
+                ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+            $this->getDatabase()->setQuery($query);
+            $eid                 = (int) $this->getDatabase()->loadResult();
+            $this->biblestudyEid = $eid;
         }
 
-        return $return;
-    }
+        if ($eid) {
+            $query = $this->getDatabase()->getQuery(true)
+                ->select($this->getDatabase()->quoteName('version_id'))
+                ->from($this->getDatabase()->quoteName('#__schemas'))
+                ->where($this->getDatabase()->quoteName('extension_id') . ' = ' . $eid);
+            $this->getDatabase()->setQuery($query);
+            $version = $this->getDatabase()->loadResult();
 
-    /**
-     * Fix Menus
-     *
-     * @return   bool
-     * @since 7.1.0
-     *
-     */
-    public function fixMenus(): bool
-    {
-        $query = $this->_db->getQuery(true);
-        $query->select('*')
-            ->from('#__menu')
-            ->where($this->_db->qn('menutype') . ' != ' . $this->_db->q('main'))
-            ->where($this->_db->qn('link') . ' LIKE ' . $this->_db->q('%com_proclaim%'));
-        $this->_db->setQuery($query);
-        $menus = $this->_db->loadObjectList();
-
-        foreach ($menus as $menu) {
-            $menu->link = str_replace('teacherlist', 'cwmteachers', $menu->link);
-            $menu->link = str_replace('teacherdisplay', 'cwmteacher', $menu->link);
-            $menu->link = str_replace('studydetails', 'cwmsermon', $menu->link);
-            $menu->link = str_replace('serieslist', 'cwmseriesdisplays', $menu->link);
-            $menu->link = str_replace('seriesdetail', 'cwmseriesdisplay', $menu->link);
-            $menu->link = str_replace('studieslist', 'cwmsermons', $menu->link);
-            $query      = $this->_db->getQuery(true);
-            $query->update('#__menu')
-                ->set("link = " . $this->_db->q($menu->link))
-                ->where('id = ' . $this->_db->q($menu->id));
-            $this->_db->setQuery($query);
-            $this->_db->execute();
+            if ($version) {
+                return $version;
+            }
         }
 
-        return true;
-    }
-
-    /**
-     * Function to find empty access in the DB and set them to Public
-     *
-     * @return   bool
-     * @throws \Exception
-     * @since 7.1.0
-     *
-     */
-    public function fixemptyaccess(): bool
-    {
-        // Tables to fix
-        $tables = [
-            ['table' => '#__bsms_admin'],
-            ['table' => '#__bsms_mediafiles'],
-            ['table' => '#__bsms_message_type'],
-            ['table' => '#__bsms_podcast'],
-            ['table' => '#__bsms_series'],
-            ['table' => '#__bsms_servers'],
-            ['table' => '#__bsms_studies'],
-            ['table' => '#__bsms_studytopics'],
-            ['table' => '#__bsms_teachers'],
-            ['table' => '#__bsms_templates'],
-            ['table' => '#__bsms_topics'],
-        ];
-
-        // Get Public ID
-        $id = Factory::getApplication()->getConfig()->get('access', 1);
-
-        // Correct blank or not set records
-        foreach ($tables as $table) {
-            $query = $this->_db->getQuery(true);
-            $query->update($table['table'])
-                ->set('access = ' . $id)
-                ->where("access = " . $this->_db->q('0'), $glue = 'OR')
-                ->where("access = " . $this->_db->q(' '));
-            $this->_db->setQuery($query);
-            $this->_db->execute();
-        }
-
-        return true;
-    }
-
-    /**
-     * Function to find empty language fields and set them to "*"
-     *
-     * @return   bool
-     * @since 7.1.0
-     *
-     */
-    public function fixemptylanguage(): bool
-    {
-        // Tables to fix
-        $tables = [
-            ['table' => '#__bsms_comments'],
-            ['table' => '#__bsms_mediafiles'],
-            ['table' => '#__bsms_series'],
-            ['table' => '#__bsms_studies'],
-            ['table' => '#__bsms_teachers'],
-        ];
-
-        // Correct blank records
-        foreach ($tables as $table) {
-            $query = $this->_db->getQuery(true);
-            $query->update($table['table'])
-                ->set('language = ' . $this->_db->q('*'))
-                ->where('language = ' . $this->_db->q(''));
-            $this->_db->setQuery($query);
-            $this->_db->execute();
-        }
-
-        return true;
-    }
-
-    /**
-     * Old Update URLs
-     *
-     * @return array
-     *
-     * @since 7.1
-     */
-    public function rmoldurl(): array
-    {
-        return [
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Module'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Podcast Module'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Finder Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Backup Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim Podcast Plg'),
-            $this->_db->qn('name') . ' = ' .
-            $this->_db->q('Proclaim'),
-        ];
+        return BIBLESTUDY_VERSION;
     }
 
     /**
@@ -1232,45 +1146,45 @@ class CwminstallModel extends ListModel
     public function uninstall(): bool
     {
         // Check if CWM can be found in the database
-        $table = $this->_db->getPrefix() . 'bsms_admin';
-        $this->_db->setQuery("SHOW TABLES LIKE {$this->_db->quote($table)}");
+        $table = $this->getDatabase()->getPrefix() . 'bsms_admin';
+        $this->getDatabase()->setQuery("SHOW TABLES LIKE {$this->getDatabase()->quote($table)}");
         $drop_result = '';
 
-        if ($this->_db->loadResult()) {
-            $query = $this->_db->getQuery(true);
+        if ($this->getDatabase()->loadResult()) {
+            $query = $this->getDatabase()->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_admin')
-                ->where('id = 1');
-            $this->_db->setQuery($query);
-            $adminsettings = $this->_db->loadObject();
+                ->from($this->getDatabase()->quoteName('#__bsms_admin'))
+                ->where($this->getDatabase()->quoteName('id') . ' = 1');
+            $this->getDatabase()->setQuery($query);
+            $adminsettings = $this->getDatabase()->loadObject();
             $drop_tables   = $adminsettings->drop_tables;
 
             if ($drop_tables > 0) {
                 // We must remove the assets manually each time
-                $query = $this->_db->getQuery(true);
-                $query->select('id')
-                    ->from('#__assets')
-                    ->where('name = ' . $this->_db->q(BIBLESTUDY_COMPONENT_NAME));
-                $this->_db->setQuery($query);
-                $parent_id = $this->_db->loadResult();
-                $query     = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
+                $query->select($this->getDatabase()->quoteName('id'))
+                    ->from($this->getDatabase()->quoteName('#__assets'))
+                    ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME));
+                $this->getDatabase()->setQuery($query);
+                $parent_id = $this->getDatabase()->loadResult();
+                $query     = $this->getDatabase()->getQuery(true);
 
                 if ($parent_id !== '0') {
                     $query->delete()
-                        ->from('#__assets')
-                        ->where('parent_id = ' . $this->_db->q($parent_id))
-                        ->where('name != ' . $this->_db->q('root.1'));
-                    $this->_db->setQuery($query);
-                    $this->_db->execute();
+                        ->from($this->getDatabase()->quoteName('#__assets'))
+                        ->where($this->getDatabase()->quoteName('parent_id') . ' = ' . $this->getDatabase()->q($parent_id))
+                        ->where($this->getDatabase()->quoteName('name') . ' != ' . $this->getDatabase()->q('root.1'));
+                    $this->getDatabase()->setQuery($query);
+                    $this->getDatabase()->execute();
                 }
 
-                $query = $this->_db->getQuery(true);
+                $query = $this->getDatabase()->getQuery(true);
                 $query->delete()
-                    ->from('#__assets')
-                    ->where('name LIKE ' . $this->_db->q(BIBLESTUDY_COMPONENT_NAME))
-                    ->where('name != ' . $this->_db->q('root.1'));
-                $this->_db->setQuery($query);
-                $this->_db->execute();
+                    ->from($this->getDatabase()->quoteName('#__assets'))
+                    ->where($this->getDatabase()->quoteName('name') . ' LIKE ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME))
+                    ->where($this->getDatabase()->quoteName('name') . ' != ' . $this->getDatabase()->q('root.1'));
+                $this->getDatabase()->setQuery($query);
+                $this->getDatabase()->execute();
                 $buffer = file_get_contents(
                     JPATH_ADMINISTRATOR . '/components/com_proclaim/install/sql/uninstall-dbtables.sql'
                 );
@@ -1283,12 +1197,12 @@ class CwminstallModel extends ListModel
 
                 $queries = DatabaseDriver::splitSql($buffer);
 
-                foreach ($queries as $querie) {
-                    $querie = trim($querie);
+                foreach ($queries as $singleQuery) {
+                    $singleQuery = trim($singleQuery);
 
-                    if ($querie !== '' && $querie[0] !== '#' && $querie !== '`') {
-                        $this->_db->setQuery($querie);
-                        $this->_db->execute();
+                    if ($singleQuery !== '' && $singleQuery[0] !== '#' && $singleQuery !== '`') {
+                        $this->getDatabase()->setQuery($singleQuery);
+                        $this->getDatabase()->execute();
                     }
                 }
             }
@@ -1297,54 +1211,56 @@ class CwminstallModel extends ListModel
         }
 
         // Post Install Messages Cleanup for Component
-        $query = $this->_db->getQuery(true);
-        $query->delete('#__postinstall_messages')
-            ->where($this->_db->qn('language_extension') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $this->_db->execute();
+        $query = $this->getDatabase()->getQuery(true);
+        $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
+            ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'));
+        $this->getDatabase()->setQuery($query);
+        $this->getDatabase()->execute();
         Factory::getApplication()->enqueueMessage(
             '<h2>' . Text::_('JBS_INS_UNINSTALLED') . ' ' .
             BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
         );
 
+        // Remove Guided Tours
+        $tourHelper = new CwmguidedtourHelper();
+        $tourHelper->removeAllTours();
+
         return true;
     }
 
     /**
-     * Update messages
+     * Fix Menus
      *
-     * @param   object  $message  Install object
-     *                            $message = new \stdClass();
-     *                            $message->title_key = ''; // Language string
-     *                            $message->description_key = ''; // Language string
-     *                            $message->action_key = ''; // (for action only) Language string
-     *                            $message->type = ''; // message | action
-     *                            $message->action_file = ''; // (for action only) site://path/to/php | admin://path/to/php
-     *                            $message->action = ''; // (for action only) = Function to call
-     *                            $message->condition_file = ''; // (for action only) = site://path/to/php | admin://path/to/php
-     *                            $message->condition_method = ''; // (for action only) = Function to call
-     *                            $message->version_introduced = '10.0.0';
-     *
-     * @return void
+     * @return bool
      *
      * @since 7.1
      */
-    public function postInstallMessages(object $message): void
+    public function fixMenus(): bool
     {
-        // Find Extension ID of a component
-        $query = $this->_db->getQuery(true);
-        $query
-            ->select('extension_id')
-            ->from('#__extensions')
-            ->where($this->_db->qn('name') . ' = ' . $this->_db->q('com_proclaim'));
-        $this->_db->setQuery($query);
-        $this->biblestudyEid         = $this->_db->loadResult();
-        $message->extension_id       = $this->biblestudyEid;
-        $message->language_extension = 'com_proclaim';
-        $message->language_client_id = 1;
+        return CwmmigrationHelper::fixMenus();
+    }
 
-        if ($this->_db->insertObject('#__postinstall_messages', $message) !== true) {
-            log::add('Bad error for PostInstall Message', Log::NOTICE, 'com_proclaim');
-        }
+    /**
+     * Fix Empty Access
+     *
+     * @return bool
+     *
+     * @since 7.1
+     */
+    public function fixemptyaccess(): bool
+    {
+        return CwmmigrationHelper::fixemptyaccess();
+    }
+
+    /**
+     * Fix Empty Language
+     *
+     * @return bool
+     *
+     * @since 7.1
+     */
+    public function fixemptylanguage(): bool
+    {
+        return CwmmigrationHelper::fixemptylanguage();
     }
 }

@@ -4,7 +4,7 @@
  * Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,7 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * StudyTopics table class
@@ -31,40 +31,52 @@ class CwmstudytopicsTable extends Table
     /**
      * ID
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Study ID
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $study_id = null;
+    public ?int $study_id = null;
 
     /**
      * Topic ID
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $topic_id = null;
+    public ?int $topic_id = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
 
     /**
      * Object constructor to set table and key fields.  In most cases this will
      * be overridden by child classes to explicitly set the table and key fields
      * for a particular database table.
      *
-     * @param   DatabaseDriver  $db  JDatabase connector object.
+     * @param   DatabaseInterface  $db  JDatabase connector object.
      *
      * @since   11.1
      */
@@ -80,16 +92,17 @@ class CwmstudytopicsTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -107,7 +120,8 @@ class CwmstudytopicsTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -121,7 +135,8 @@ class CwmstudytopicsTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS StudyTopics: ' . $this->id;
     }
@@ -139,7 +154,8 @@ class CwmstudytopicsTable extends Table
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    #[\Override]
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

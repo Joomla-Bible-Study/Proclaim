@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -44,6 +44,7 @@ class ElementOptionsField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_NONE'));
@@ -54,6 +55,7 @@ class ElementOptionsField extends ListField
         $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_HEADER4'));
         $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_HEADER5'));
         $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_BLOCKQUOTE'));
+        $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_DIV'));
 
         return array_merge(parent::getOptions(), $options);
     }

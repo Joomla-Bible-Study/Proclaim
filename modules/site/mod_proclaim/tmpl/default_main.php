@@ -5,7 +5,7 @@
  *
  * @package         Proclaim
  * @subpackage      mod_proclaim
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  * */
@@ -24,20 +24,20 @@ $show_link = $params->get('show_link', 1);
 
 $Listing = new Cwmlisting();
 ?>
-<div class="container-fluid">
+<div class="com-proclaim container-fluid">
     <?php
     if ($params->get('pageheader')) {
         ?>
-        <div class="row-fluid">
+        <div class="row">
             <div class="col-12">
                 <?php
-                echo HtmlHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
+                echo HTMLHelper::_('content.prepare', $params->get('pageheader'), '', 'com_proclaim.module'); ?>
             </div>
         </div>
         <?php
     }
     ?>
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-12">
             <?php
     /** @var stdClass $list */
@@ -51,7 +51,7 @@ $Listing = new Cwmlisting();
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <div class="col-12">
             <?php
             if ($params->get('show_link') > 0) {
@@ -63,4 +63,3 @@ $Listing = new Cwmlisting();
     </div>
     <!--end of footer div-->
 </div> <!--end container -->
-<div style="clear: both;"></div>

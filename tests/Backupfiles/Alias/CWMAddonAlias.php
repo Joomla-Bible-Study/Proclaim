@@ -4,12 +4,13 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 // phpcs:disable PSR1.Files.SideEffects
+
 namespace CWM\Component\Proclaim\Administrator\Addons\Alias;
 
 \defined('_JEXEC') or die;
@@ -39,13 +40,13 @@ class CWMAlias extends CWMAddon
      *
      * @since 10.0.0
      */
-    protected function __construct($config = array())
+    protected function __construct($config = [])
     {
         $options['key']    = (isset($options['key'])) ? $options['key'] : '';
         $options['secret'] = (isset($options['secret'])) ? $options['secret'] : '';
 
         // Include the S3 class
-        Loader::register('S3', dirname(__FILE__) . '/S3.class.php');
+        Loader::register('S3', \dirname(__FILE__) . '/S3.class.php');
 
         $this->connection = new S3($options['key'], $options['secret']);
     }
@@ -74,7 +75,7 @@ class CWMAlias extends CWMAddon
         return "hello from amazon";
     }
 
-    protected function renderGeneral($media_form, bool $new): string
+    protected function renderGeneral(object $media_form, bool $new): string
     {
         $html   = '';
         $fields = $media_form->getFieldset('general');
@@ -105,7 +106,7 @@ class CWMAlias extends CWMAddon
         return $html;
     }
 
-    protected function render($media_form, bool $new): string
+    protected function render(object $media_form, bool $new): string
     {
         $html = HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('Options'));
 

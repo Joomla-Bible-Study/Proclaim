@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,6 +16,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ItemModel;
+use Joomla\Database\ParameterType;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -47,18 +48,18 @@ class CwmteacherModel extends ItemModel
      * @throws \Exception
      * @since 7.1.0
      */
-    public function &getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         $app = Factory::getApplication();
 
         // Initialise variables.
         if ($pk === null) {
-            $pk = $app->input->getInt('id');
+            $pk = $app->getInput()->getInt('id');
         }
 
         if (!isset($this->_item[$pk])) {
             try {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true);
                 $query->select(
                     $this->getState(
@@ -66,8 +67,9 @@ class CwmteacherModel extends ItemModel
                         't.*,CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(\':\', t.id, t.alias) ELSE t.id END as slug'
                     )
                 );
-                $query->from('#__bsms_teachers AS t');
-                $query->where('t.id = ' . (int)$pk);
+                $query->from($db->quoteName('#__bsms_teachers', 't'));
+                $query->where($db->quoteName('t.id') . ' = :id')
+                    ->bind(':id', $pk, ParameterType::INTEGER);
                 $db->setQuery($query);
                 $data = $db->loadObject();
 
@@ -103,11 +105,10 @@ class CwmteacherModel extends ItemModel
         $app = Factory::getApplication();
 
         // Load state from the request.
-        // $input = new JInput;
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('teacher.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -123,7 +124,7 @@ class CwmteacherModel extends ItemModel
         $t = (int)$params->get('teachertemplateid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -131,7 +132,7 @@ class CwmteacherModel extends ItemModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
         $this->setState('params', $params);
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
@@ -143,5 +144,4 @@ class CwmteacherModel extends ItemModel
             $this->setState('filter.archived', 2);
         }
     }
-    // End class
 }

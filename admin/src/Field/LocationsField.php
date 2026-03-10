@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Location List Form Field class for the Proclaim component
@@ -44,20 +45,21 @@ class LocationsField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('id,location_text');
-        $query->from('#__bsms_locations');
-        $query->order('location_text');
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('location_text'));
+        $query->from($db->quoteName('#__bsms_locations'));
+        $query->order($db->quoteName('location_text'));
         $db->setQuery((string)$query);
         $messages = $db->loadObjectList();
         $options  = [];
 
         if ($messages) {
             foreach ($messages as $message) {
-                $options[] = HtmlHelper::_('select.option', $message->id, $message->location_text);
+                $options[] = HTMLHelper::_('select.option', $message->id, $message->location_text);
             }
         }
 

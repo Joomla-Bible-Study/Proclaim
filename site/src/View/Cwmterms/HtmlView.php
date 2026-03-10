@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,12 @@ namespace CWM\Component\Proclaim\Site\View\Cwmterms;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Document\Document;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
@@ -38,27 +37,36 @@ class HtmlView extends BaseHtmlView
     /**
      * Media
      *
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    public $media;
-    /**
-     * Document
-     *
-     * @var Document
-     *
-     * @since 7.0
-     */
-    public $document;
+    public ?object $media = null;
+
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    protected $params;
+    protected ?Registry $params = null;
+
+    /**
+     * Compatibility mode flag
+     *
+     * @var int
+     * @since 7.0
+     */
+    public int $compat_mode = 0;
+
+    /**
+     * Terms text content
+     *
+     * @var string|null
+     * @since 7.0
+     */
+    public ?string $termstext = null;
 
     /**
      * Execute and display a template script.
@@ -70,49 +78,34 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $input       = Factory::getApplication()->input;
-        $mid         = $input->get('mid', '', 'int');
-        $compat_mode = $input->get('compat_mode', '0', 'int');
+        $input             = Factory::getApplication()->getInput();
+        $mid               = $input->get('mid', '', 'int');
+        $this->compat_mode = $input->get('compat_mode', '0', 'int');
 
-        $template     = Cwmparams::getTemplateparams();
-        $this->params = $template->params;
-        $termstext    = $this->params->get('terms');
-        $db           = Factory::getContainer()->get('DatabaseDriver');
-        $query        = $db->getQuery('true');
+        $template           = Cwmparams::getTemplateparams();
+        $this->params       = $template->params;
+        $this->termstext    = $this->params->get('terms');
+        $db                 = Factory::getContainer()->get(DatabaseInterface::class);
+        $query              = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__bsms_mediafiles');
-        $query->where('id= ' . (int)$mid);
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->where($db->quoteName('id') . ' = ' . (int) $mid);
         $db->setQuery($query);
         $this->media = $db->loadObject();
 
         // Params are the individual params for the media file record
-        $registory = new Registry();
-        $registory->loadString($this->media->params);
-        $this->media->params = $registory;
-        ?>
-        <div class="termstext">
-            <?php
-            echo $termstext;
-            ?>
-        </div>
-        <div class="termslink">
-            <?php
-            if ((int)$compat_mode === 1) {
-                echo '<a href="https://www.christianwebministries.org/router.php?file=' .
-                    Cwmhelper::mediaBuildUrl($this->media->spath, $this->media->filename, $this->params)
-                    . '&size=' . $this->media->size . '">' . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-            } else {
-                echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . $this->media->study_id
-                    . '&mid=' . $this->media->id . '">'
-                    . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
-            }
-            ?>
-        </div>
-        <?php
+        if ($this->media) {
+            $registry = new Registry();
+            $registry->loadString($this->media->params);
+            $this->media->params = $registry;
+        }
 
         $this->prepareDocument();
+
+        parent::display($tpl);
     }
 
     /**
@@ -123,7 +116,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function prepareDocument()
+    protected function prepareDocument(): void
     {
         $app   = Factory::getApplication();
         $menus = $app->getMenu();
@@ -142,7 +135,9 @@ class HtmlView extends BaseHtmlView
         }
 
         $title = $this->params->get('page_title', '');
-        $title .= ' : ' . $this->media->params->get('filename');
+        if ($this->media && $this->media->params instanceof Registry) {
+            $title .= ' : ' . $this->media->params->get('filename');
+        }
 
         if (empty($title)) {
             $title = $app->get('sitename');

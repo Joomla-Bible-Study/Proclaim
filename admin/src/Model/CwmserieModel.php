@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,15 +16,19 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -50,32 +54,45 @@ class CwmserieModel extends AdminModel
      */
     protected $text_prefix = 'com_proclaim';
     /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'language_id'   => 'batchLanguage',
+        'location'      => 'batchLocation',
+    ];
+
+    /**
      * Name of the form
      *
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'serie';
-    protected $teacher;
+    protected string $formName = 'serie';
+    protected mixed $teacher;
     /**
      * Items data
      *
-     * @var  object|boolean
+     * @var  object|bool
      * @since 10.0.0
      */
-    private $data;
+    private mixed $data;
 
     /**
      * Abstract method for getting the form from the model.
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
@@ -88,23 +105,23 @@ class CwmserieModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-        if ($jinput->get('a_id')) {
-            $id = $jinput->get('a_id', 0);
+        if ($input->get('a_id')) {
+            $id = $input->get('a_id', 0);
         } else {
             // The back end uses id so we use that the rest of the time and set it to 0 by default.
-            $id = $jinput->get('id', 0);
+            $id = $input->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
         if (
-            ($id != 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
-            || ($id == 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
+            ($id !== 0 && (!$user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$id)))
+            || ($id === 0 && !$user->authorise('core.edit.state', 'com_proclaim'))
         ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -128,7 +145,7 @@ class CwmserieModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getItem($pk = null)
+    public function getItem($pk = null): mixed
     {
         $item = parent::getItem($pk);
 
@@ -146,12 +163,14 @@ class CwmserieModel extends AdminModel
      *
      * @since 7.0
      */
-    public function getTeacher()
+    public function getTeacher(): mixed
     {
         if (empty($this->teacher)) {
-            $query         = 'SELECT id AS value, teachername AS text'
-                . ' FROM #__bsms_teachers'
-                . ' WHERE published = 1';
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('published') . ' = 1');
             $this->teacher = $this->_getList($query);
         }
 
@@ -163,71 +182,107 @@ class CwmserieModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return    boolean    True on success.
+     * @return    bool    True on success.
      *
+     * @throws \Exception
      * @since    1.6
      */
-    public function save($data)
+    public function save($data): bool
     {
         /** @var Registry $params */
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
-        $path          = 'images/biblestudy/series/' . $data['id'];
-        $prefix        = 'thumb_';
         $image         = HTMLHelper::cleanImageURL($data['image']);
         $data['image'] = $image->url;
+
         // Alter the title for save as copy
-        if ($app->input->get('task') == 'save2copy') {
-            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['title']);
-            $data['title']       = $title;
+        if ($app->getInput()->get('task') === 'save2copy') {
+            list($title, $alias) = $this->generateNewTitle('0', $data['alias'], $data['series_text']);
+            $data['series_text'] = $title;
             $data['alias']       = $alias;
         }
 
-        // If no image uploaded, just save data as usual
-        if (empty($data['image']) || strpos($data['image'], $prefix) !== false) {
-            if (empty($data['image'])) {
-                // Modify model data if no image is set.
-                $data['series_thumbnail'] = "";
-            } elseif (!str_starts_with(basename($data['image']), $prefix)) {
-                // Modify model data
-                $data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
-            } elseif (substr_count(basename($data['image']), $prefix) > 1) {
-                $x = substr_count(basename($data['image']), $prefix);
-
-                while ($x > 1) {
-                    if (substr(basename($data['image']), 0, strlen($prefix)) == $prefix) {
-                        $str                      = substr(basename($data['image']), strlen($prefix));
-                        $data['series_thumbnail'] = $path . '/' . $str;
-                        $data['image']            = $path . '/' . $str;
-                    }
-
-                    $x--;
-                }
-            }
+        // If no image, clear thumbnail and save
+        if (empty($data['image'])) {
+            $data['series_thumbnail'] = '';
 
             return parent::save($data);
         }
 
-        Cwmthumbnail::create($data['image'], $path, $params->get('thumbnail_series_size', 100));
+        // Core component images — save path as-is without thumbnail processing
+        if (CwmImageMigration::isCoreImage($data['image'])) {
+            return parent::save($data);
+        }
 
-        // Modify model data
-        $data['series_thumbnail'] = $path . '/thumb_' . basename($data['image']);
+        // Correct legacy thumb_ paths
+        $imageBasename = basename($data['image']);
+        if (str_starts_with($imageBasename, 'thumb_') && str_contains($data['image'], '/series/')) {
+            $dir          = \dirname(JPATH_ROOT . '/' . $data['image']);
+            $strippedName = pathinfo(substr($imageBasename, 6), PATHINFO_FILENAME);
+
+            foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $ext) {
+                if (is_file($dir . '/' . $strippedName . '.' . $ext)) {
+                    $data['image'] = \dirname($data['image']) . '/' . $strippedName . '.' . $ext;
+                    break;
+                }
+            }
+        }
+
+        // Store the original image path for processing after save
+        $originalImage = $data['image'];
+        $seriesTitle   = $data['series_text'] ?? $data['alias'] ?? null;
+        $isNew         = empty($data['id']);
+
+        // Validate image before processing
+        $absolutePath = JPATH_ROOT . '/' . $originalImage;
+        $validation   = Cwmthumbnail::validate($absolutePath);
+
+        if (!$validation['valid']) {
+            $app->enqueueMessage(
+                Text::sprintf('JBS_STY_IMAGE_VALIDATION_FAILED', $validation['error']),
+                'error'
+            );
+            $data['image']            = '';
+            $data['series_thumbnail'] = '';
+
+            return parent::save($data);
+        }
+
+        // For new records, save first to get the ID
+        if ($isNew) {
+            $data['image']            = '';
+            $data['series_thumbnail'] = '';
+
+            if (!parent::save($data)) {
+                return false;
+            }
+
+            // Get the new ID from the saved record
+            $data['id'] = $this->getState($this->getName() . '.id');
+        }
+
+        // Build path with title-ID format
+        $alias = ApplicationHelper::stringURLSafe($seriesTitle ?: 'series');
+        $path  = 'images/biblestudy/series/' . $alias . '-' . (int)$data['id'];
+
+        $result = Cwmthumbnail::create(
+            $originalImage,
+            $path,
+            $params->get('thumbnail_series_size', 300),
+            $seriesTitle
+        );
+
+        if ($result === false) {
+            $app->enqueueMessage(Text::_('JBS_STY_IMAGE_NOT_FOUND'), 'warning');
+
+            return $isNew || parent::save($data);
+        }
+
+        // Update paths with new locations
+        $data['image']            = $result['image'];
+        $data['series_thumbnail'] = $result['thumbnail'];
 
         return parent::save($data);
-    }
-
-    /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric ID of the primary key.
-     *
-     * @return  bool  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null)
-    {
-        return true;
     }
 
     /**
@@ -242,7 +297,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    11.1
      */
-    protected function batchCopy($value, $pks, $contexts)
+    protected function batchCopy($value, $pks, $contexts): array|bool
     {
         $app = Factory::getApplication();
         /** @type CwmserieTable $table */
@@ -251,8 +306,8 @@ class CwmserieModel extends AdminModel
         $newIds = [];
 
         // Check that the user has create permission for the component
-        $extension = $app->input->get('option', '');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $extension = $app->getInput()->get('option', '');
+        $user      = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
             $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'), 'error');
@@ -269,15 +324,7 @@ class CwmserieModel extends AdminModel
 
             // Check that the row actually exists
             if (!$table->load($pk)) {
-                if ($error = $table->getError()) {
-                    // Fatal error
-                    $app->enqueueMessage($error, 'error');
-
-                    return false;
-                }
-
-                // Not fatal error
-                $app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+                $app->enqueueMessage(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk), 'warning');
                 continue;
             }
 
@@ -291,16 +338,12 @@ class CwmserieModel extends AdminModel
 
             // Check the row.
             if (!$table->check()) {
-                $app->enqueueMessage($table->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Store the row.
             if (!$table->store()) {
-                $app->enqueueMessage($table->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Get the new item ID
@@ -344,7 +387,7 @@ class CwmserieModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -358,16 +401,17 @@ class CwmserieModel extends AdminModel
      *
      * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
+     * @throws \Exception
      * @since   12.2
      */
-    protected function canDelete($record)
+    protected function canDelete($record): bool
     {
         if (!empty($record->id)) {
             if ($record->published != -2) {
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.serie.' . (int)$record->id
             );
@@ -386,11 +430,11 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
-        // Check for existing article.
+        // Check for existing series.
         if (!empty($record->id)) {
             return $user->authorise('core.edit.state', 'com_proclaim.serie.' . (int)$record->id);
         }
@@ -406,11 +450,13 @@ class CwmserieModel extends AdminModel
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
-        jimport('joomla.filter.output');
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
 
         $table->series_text = htmlspecialchars_decode($table->series_text, ENT_QUOTES);
         $table->alias       = ApplicationHelper::stringURLSafe($table->alias);
@@ -419,23 +465,87 @@ class CwmserieModel extends AdminModel
             $table->alias = ApplicationHelper::stringURLSafe($table->series_text);
         }
 
+        // Always ensure the created date is set (handles empty string from form)
+        if (empty($table->created)) {
+            $table->created = $date->toSql();
+        }
+
         if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
-                $query->select('MAX(ordering)')->from('#__bsms_series');
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_series'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
 
                 $table->ordering = $max + 1;
             }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
         }
 
-        if ($table->ordering == 0) {
+        if ($table->ordering === 0) {
             $table->ordering = 1;
-            $table->reorder('id = ' . (int)$table->id);
+            $db              = Factory::getContainer()->get(DatabaseInterface::class);
+            $table->reorder($db->quoteName('id') . ' = ' . (int)$table->id);
         }
+    }
+
+    /**
+     * Batch set location for a list of series.
+     *
+     * @param   string  $value     The location ID (or 0/empty to clear).
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmserieTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**
@@ -446,7 +556,7 @@ class CwmserieModel extends AdminModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         // Check the session for previously entered form data.
         $app  = Factory::getApplication();
@@ -460,6 +570,69 @@ class CwmserieModel extends AdminModel
     }
 
     /**
+     * Get messages belonging to this series.
+     *
+     * @return  array  List of message objects with title, date, teacher, location, published, id.
+     *
+     * @since   10.1.0
+     */
+    public function getMessages(): array
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        $query->select([
+            $db->quoteName('study.id'),
+            $db->quoteName('study.studytitle'),
+            $db->quoteName('study.studydate'),
+            $db->quoteName('study.published'),
+            $db->quoteName('study.access'),
+        ]);
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
+
+        // Join over Teachers (via junction table, primary teacher; falls back to legacy teacher_id)
+        $query->select($db->quoteName('teacher.teachername'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_teachers', 'teacher') . ' ON ' . $db->quoteName('teacher.id')
+            . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')'
+        );
+
+        // Join over Location
+        $query->select($db->quoteName('loc.location_text'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('study.location_id')
+        );
+
+        $query->where($db->quoteName('study.series_id') . ' = ' . (int) $item->id);
+
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $query->order($db->quoteName('study.studydate') . ' DESC');
+
+        $db->setQuery($query);
+
+        return $db->loadObjectList() ?: [];
+    }
+
+    /**
      * A protected method to get a set of ordering conditions.
      *
      * @param   Table  $table  A JTable object.
@@ -468,7 +641,7 @@ class CwmserieModel extends AdminModel
      *
      * @since    1.6
      */
-    protected function getReorderConditions($table)
+    protected function getReorderConditions($table): array
     {
         return [];
     }

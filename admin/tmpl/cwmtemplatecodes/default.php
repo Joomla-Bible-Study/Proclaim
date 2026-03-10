@@ -4,7 +4,7 @@
  * Default
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -21,19 +21,20 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplatecodes\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app        = Factory::getApplication();
-$user       = $user = Factory::getApplication()->getSession()->get('user');
-$userId     = $user->get('id');
+$user       = $app->getIdentity();
+$userId     = $user->id;
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'ordering';
+$archived   = $this->state->get('filter.published') == 2;
+$trashed    = $this->state->get('filter.published') == -2;
+$saveOrder  = $listOrder === 'ordering';
 $sortFields = $this->getSortFields();
 $columns    = 5;
 
@@ -45,7 +46,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -55,8 +56,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                    <?php
-                else : ?>
+                    <?php else : ?>
                     <table class="table itemList" id="templatecodes">
                         <thead>
                         <tr>
@@ -102,10 +102,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                 'index.php?option=com_proclaim&task=cwmtemplatecode.edit&id=' . (int)$item->id
                             );
                             $item->max_ordering = 0; //??
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.templatcode.' . $item->id);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.templatecode.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.templatecode.' . $item->id);
+                            $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canCreate          = $user->authorise('core.create');
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.templatcode.' . $item->id);
+                            $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.templatecode.' . $item->id);
+                            $canChange          = $user->authorise('core.edit.state', 'com_proclaim.templatecode.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
@@ -117,31 +119,34 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                                     <?php
                                     $options = [
                                         'task_prefix' => 'cwmtemplatecodes.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
+                                        'disabled'    => !$canChange,
+                                        'id'          => 'state-' . $item->id,
                                     ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmtemplatecodes.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo $link; ?>"><?php
-                                                echo $item->filename; ?></a>
+                                    echo $link; ?>"><?php
+                                        echo $item->filename; ?></a>
+                                            <?php else : ?>
                                             <?php
-                                        else : ?>
+                                    echo $item->filename; ?>
                                             <?php
-                                            echo $item->filename; ?>
-                                            <?php
-                                        endif; ?>
+                                            endif; ?>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell text-center">
                                     <div class="float-left">
                                         <?php
-                                        echo $item->typetext; ?>
+                                            echo $item->typetext; ?>
                                     </div>
                                 </td>
                                 <td class="d-none d-lg-table-cell">
@@ -154,13 +159,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                         </tbody>
                     </table>
                     <?php
-                endif; ?>
+                    endif; ?>
                 <?php
-                echo $this->pagination->getListFooter(); ?>
+                    echo $this->pagination->getListFooter(); ?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php
-                echo HTMLHelper::_('form.token'); ?>
+                    echo HTMLHelper::_('form.token'); ?>
             </div>
         </div>
     </div>

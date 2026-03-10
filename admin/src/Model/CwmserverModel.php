@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,11 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -46,6 +51,17 @@ class CwmserverModel extends AdminModel
      * @since  1.6
      */
     protected $text_prefix = 'COM_PROCLAIM';
+
+    /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'location'      => 'batchLocation',
+    ];
     /**
      * Data
      *
@@ -59,7 +75,7 @@ class CwmserverModel extends AdminModel
      * @since 9.0.0
      * @todo  need to look into this and see if we need it still.
      */
-    private $event_after_upload;
+    private mixed $event_after_upload;
 
     /**
      * Constructor
@@ -74,7 +90,7 @@ class CwmserverModel extends AdminModel
         parent::__construct($config);
 
         if (isset($config['event_after_upload'])) {
-            $this->event_after_upload = isset($config['event_after_upload']);
+            $this->event_after_upload = $config['event_after_upload'];
         }
     }
 
@@ -103,7 +119,7 @@ class CwmserverModel extends AdminModel
      *
      * @since 9.0.0
      */
-    public function getItem($pk = null, bool $ext = false)
+    public function getItem($pk = null, bool $ext = false): mixed
     {
         if (!empty($this->data)) {
             return $this->data;
@@ -142,7 +158,7 @@ class CwmserverModel extends AdminModel
      *
      * @param   string  $addon  Type of server
      *
-     * @return \SimpleXMLElement
+     * @return \SimpleXMLElement|bool  SimpleXMLElement on success, false on failure
      *
      * @since   9.0.0
      */
@@ -152,7 +168,17 @@ class CwmserverModel extends AdminModel
             $addon
         ) . '/' . strtolower($addon) . '.xml';
 
-        return simplexml_load_string(file_get_contents($path));
+        if (!is_file($path)) {
+            return false;
+        }
+
+        $contents = file_get_contents($path);
+
+        if ($contents === false) {
+            return false;
+        }
+
+        return simplexml_load_string($contents);
     }
 
     /**
@@ -160,34 +186,47 @@ class CwmserverModel extends AdminModel
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
+     * @throws \Exception
      * @since   1.6
      */
     public function save($data): bool
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $text       = '';
 
-        if (strpos($data['server_name'], '"onmouseover="prompt(1)"') !== false) {
-            $this->setError('"Illegal character use in Server Name field"');
+        // Sanitize server_name to prevent XSS attacks
+        if (isset($data['server_name'])) {
+            $filter    = InputFilter::getInstance();
+            $cleanName = $filter->clean($data['server_name'], 'STRING');
 
-            return false;
+            // Check if the name was altered (indicating potentially malicious content)
+            if ($cleanName !== $data['server_name']) {
+                // Use the sanitized version
+                $data['server_name'] = $cleanName;
+            }
+
+            // Additional check for HTML/script injection attempts
+            if (preg_match('/<[^>]*>|javascript:|on\w+\s*=/i', $data['server_name'])) {
+                throw new \RuntimeException(Text::_('JBS_SVR_ILLEGAL_CHARACTERS'));
+            }
         }
 
         if (isset($data['params']['path'])) {
-            if (strpos($data['params']['path'], '//')) {
+            if (str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = substr($data['params']['path'], strpos($data['params']['path'], '//'));
-            } elseif (strpos($data['params']['path'], '//') === false) {
+            } elseif (!str_contains($data['params']['path'], '//')) {
                 $data['params']['path'] = '//' . $data['params']['path'];
             }
         }
 
-        if (!empty($data)) {
+        if (!empty($data) && !empty($data['id'])) {
             $query = $db->getQuery(true);
-            $query->select('id, params')
-                ->from('#__bsms_mediafiles')
-                ->where('server_id = ' . $data['id']);
+            $query->select($db->quoteName(['id', 'params']))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('server_id') . ' = :serverId')
+                ->bind(':serverId', $data['id'], \Joomla\Database\ParameterType::INTEGER);
             $db->setQuery($query);
             $studies = $db->loadObjectList();
 
@@ -215,20 +254,19 @@ class CwmserverModel extends AdminModel
     /**
      * Get the server form
      *
-     * @return \Joomla\CMS\Form\Form|string
+     * @return \Joomla\CMS\Form\Form|null  Form object on success, null if no server type selected
      *
      * @throws \Exception
      *
      * @since   9.0.0
      */
-    public function getAddonServerForm()
+    public function getAddonServerForm(): ?Form
     {
-        // If user hasn't selected a server type yet, just return an empty form
-        $type = $this->data->type;
+        // If user hasn't selected a server type yet, return null
+        $type = $this->data->type ?? null;
 
         if (empty($type)) {
-            // @TODO This may not be optimal, seems like a hack
-            return "no-data-type";
+            return null;
         }
 
         $path = Path::clean(JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($type));
@@ -253,14 +291,14 @@ class CwmserverModel extends AdminModel
      * Abstract method for getting the form from the model.
      *
      * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         if (empty($data)) {
             $this->getItem();
@@ -298,14 +336,14 @@ class CwmserverModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to delete the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since    1.6
      */
     protected function canDelete($record): bool
     {
-        return Factory::getApplication()->getSession()->get('user')->authorise(
+        return Factory::getApplication()->getIdentity()->authorise(
             'core.delete',
             'com_proclaim.cwmserver.' . (int)$record->id
         );
@@ -322,19 +360,69 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
-        $tmp        = (array)$record;
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $user       = Factory::getApplication()->getSession()->get('user');
-        $canDoState = $user->authorise('core.edit.state', $this->option);
+        $user = Factory::getApplication()->getIdentity();
 
-        // Check for existing article.
+        // Check for existing server record
         if (!empty($record->id)) {
             return $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . (int)$record->id);
         }
 
         return parent::canEditState($record);
+    }
+
+    /**
+     * Batch-update the location for a group of servers.
+     *
+     * When the location system is enabled, non-admin users may only assign
+     * locations they have visibility over. Empty string = no change,
+     * 0 = clear (set NULL).
+     *
+     * @param   string  $value     The new location ID, or '' to clear.
+     * @param   array   $pks       An array of primary key IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmserverTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**
@@ -354,16 +442,48 @@ class CwmserverModel extends AdminModel
     }
 
     /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmserverTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
+    }
+
+    /**
      * Custom clean the cache of com_proclaim and proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, int $client_id = 0)
+    protected function cleanCache($group = null, int $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -377,10 +497,10 @@ class CwmserverModel extends AdminModel
      * @throws \Exception
      * @since   9.0.0
      */
-    protected function populateState()
+    protected function populateState(): void
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         $pk = $input->get('id', null, 'INTEGER');
         $this->setState('cwmserver.id', $pk);

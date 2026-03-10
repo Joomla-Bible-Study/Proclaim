@@ -4,7 +4,7 @@
  * @package     Proclaim.Admin
  * @subpackage  mod_proclaimicon
  *
- * @copyright    (C) 2025 CWM Team All rights reserved
+ * @copyright    (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
@@ -12,17 +12,18 @@
 defined('_JEXEC') or die;
 
 use CWM\Module\Proclaimicon\Administrator\Helper\ProclaimIconHelper;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-/** @var \Joomla\CMS\Application\CMSApplication $app */
+/** @var CMSApplication $app */
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 $wa->useScript('core')
     ->useScript('bootstrap.dropdown');
 $wa->registerAndUseScript('mod_quickicon', 'mod_quickicon/quickicon.min.js', ['relative' => true, 'version' => 'auto'], ['type' => 'module']);
 $wa->registerAndUseScript('mod_quickicon-es5', 'mod_quickicon/quickicon-es5.min.js', ['relative' => true, 'version' => 'auto'], ['nomodule' => true, 'defer' => true]);
+$wa->useScript('com_proclaim.quickicon-enhanced');
 
 /** @var ProclaimIconHelper $buttons */
 $html = HTMLHelper::_('icons.buttons', $buttons);

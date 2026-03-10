@@ -5,7 +5,7 @@
  *
  * @package         Proclaim
  * @subpackage      mod_proclaim_podcast
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  */
@@ -14,11 +14,20 @@
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-if (!$list) {
+use Joomla\CMS\Application\SiteApplication;
+
+/** @var SiteApplication $app */
+
+if (empty($list)) {
     return;
 }
 
+$wa = $app->getDocument()->getWebAssetManager();
+$wa->useStyle('com_proclaim.general');
+$wa->useStyle('com_proclaim.podcast');
+
 ?>
 
-<?php
-echo $list; ?>
+<div class="mod_proclaim_podcast">
+    <?php echo $list; ?>
+</div>

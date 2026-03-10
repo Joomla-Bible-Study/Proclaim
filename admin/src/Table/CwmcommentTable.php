@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,8 +17,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Table class for Comment
@@ -31,102 +32,205 @@ class CwmcommentTable extends Table
     /**
      * Primary Key
      *
-     * @var int
-     * @since    7.0.0
+     * @var int|null
+     * @since 7.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Published
      *
-     * @var string
-     * @since    7.0.0
+     * @var int
+     * @since 7.0.0
      */
-    public $published = 1;
+    public ?int $published = 1;
 
     /**
      * Study ID
      *
-     * @var string
-     * @since    7.0.0
+     * @var int|null
+     * @since 7.0.0
      */
-    public $study_id = null;
+    public ?int $study_id = null;
 
     /**
      * User ID
      *
-     * @var string
-     * @since    7.0.0
+     * @var int|null
+     * @since 7.0.0
      */
-    public $user_id = null;
+    public ?int $user_id = null;
 
     /**
      * Full Name
      *
-     * @var string
-     * @since    7.0.0
+     * @var string|null
+     * @since 7.0.0
      */
-    public $full_name = null;
+    public ?string $full_name = null;
 
     /**
      * User Email
      *
-     * @var string
-     * @since    7.0.0
+     * @var string|null
+     * @since 7.0.0
      */
-    public $user_email = null;
+    public ?string $user_email = null;
 
     /**
      * Comment Date
      *
-     * @var string
-     * @since    7.0.0
+     * @var string|null
+     * @since 7.0.0
      */
-    public $comment_date = null;
+    public ?string $comment_date = null;
 
     /**
      * Comment Text
      *
-     * @var string
-     * @since    7.0.0
+     * @var string|null
+     * @since 7.0.0
      */
-    public $comment_text = null;
+    public ?string $comment_text = null;
 
-    public $asset_id;
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 7.0.0
+     */
+    public ?int $asset_id = null;
 
-    public $access;
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 7.0.0
+     */
+    public ?int $access = null;
 
-    public $language;
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 7.0.0
+     */
+    public ?string $language = null;
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since 10.0.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.0.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.0.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.0.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
-     * @since    7.0.0
+     * @since   7.0.0
      */
-    public function __construct(&$db)
+    public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__bsms_comments', 'id', $db);
     }
 
     /**
+     * Bind form data to the table, casting typed properties to prevent PHP 8.3 TypeError.
+     *
+     * @param   array|object  $array   Data to bind
+     * @param   array|string  $ignore  Fields to ignore
+     *
+     * @return  bool
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
+    {
+        if (\is_array($array)) {
+            // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+            foreach ([
+                'id', 'published', 'study_id', 'user_id', 'asset_id', 'access',
+                'created_by', 'modified_by', 'checked_out',
+            ] as $field) {
+                if (isset($array[$field])) {
+                    $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+                }
+            }
+        }
+
+        return parent::bind($array, $ignore);
+    }
+
+    /**
      * Method to store a row in the database from the Table instance properties.
-     * If a primary key value is set the row with that primary key value will be
+     * If a primary key value is set, the row with that primary key value will be
      * updated with the instance property values.  If no primary key value is set
-     * a new row will be inserted into the database with the properties from the
+     * A new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -140,11 +244,12 @@ class CwmcommentTable extends Table
      * The default name is in the form `table_name.id`
      * where id is the value of the primary key of the table.
      *
-     * @return      string
+     * @return  string
      *
-     * @since       1.6
+     * @since   1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -154,15 +259,33 @@ class CwmcommentTable extends Table
     /**
      * Method to return the title to use for the asset table.
      *
-     * @return      string
+     * @return  string
      *
-     * @since       1.6
+     * @since   1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
-        $title = 'JBS Comment - id/date: ' . $this->user_id . ' - ' . $this->comment_date;
+        return 'JBS Comment - id/date: ' . $this->user_id . ' - ' . $this->comment_date;
+    }
 
-        return $title;
+    /**
+     * Overloaded check function
+     *
+     * @return  bool  True on success, false on failure
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        // We check for null specifically to allow 0 (Guest) as a valid user_id
+        if ($this->user_id === null) {
+            $this->user_id = (int) Factory::getApplication()->getIdentity()->id;
+        }
+
+        return parent::check();
     }
 
     /**
@@ -171,13 +294,14 @@ class CwmcommentTable extends Table
      * The extended class can define a table and id to lookup.  If the
      * asset does not exist it will be created.
      *
-     * @param   ?Table  $table  A Table object for the asset parent.
-     * @param   null                          $id     Id to look up
+     * @param   Table|null  $table  A Table object for the asset parent.
+     * @param   int|null    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
-     * @since       1.6
+     * @since   1.6
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,9 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -34,11 +34,11 @@ class CwmtemplateTable extends Table
     /**
      * Id
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
-    public int $id = 0;
+    public ?int $id = 0;
 
     /**
      * Type
@@ -61,11 +61,11 @@ class CwmtemplateTable extends Table
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
-    public int $published = 1;
+    public ?int $published = 1;
 
     /**
      * Params
@@ -86,27 +86,89 @@ class CwmtemplateTable extends Table
     public ?string $title = null;
 
     /**
-     * Text
+     * Asset ID
      *
-     * @var ?string
-     *
+     * @var int|null
      * @since 9.0.0
      */
-    public ?string $text = null;
+    public ?int $asset_id = null;
 
     /**
-     * PDF file
+     * Access Level
      *
-     * @var ?string
-     *
+     * @var int|null
      * @since 9.0.0
      */
-    public ?string $pdf = null;
+    public ?int $access = null;
+
+    /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Contractor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since 9.0.0
      */
@@ -123,23 +185,52 @@ class CwmtemplateTable extends Table
      * @param   mixed  $array  An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
+
+            // For existing records, merge submitted params with existing params
+            // This preserves values from lazy-loaded sections that were never expanded
+            if (!empty($array['id'])) {
+                $db    = $this->getDatabase();
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('params'))
+                    ->from($db->quoteName('#__bsms_templates'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $array['id']);
+                $db->setQuery($query);
+                $existingParams = $db->loadResult();
+
+                if ($existingParams) {
+                    $registry->loadString($existingParams);
+                }
+            }
+
+            // Merge submitted params on top of existing (submitted values take precedence)
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'published', 'asset_id', 'access', 'location_id',
+            'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
@@ -152,31 +243,47 @@ class CwmtemplateTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
-
-        // Attempt to store the user data.
-        $oldrow = new CwmtemplateTable($db);
-
-        if (!$oldrow->load($this->id) && $oldrow->getError()) {
-            $this->setError($oldrow->getError());
-        }
-
-        if (!$this->_rules) {
+        // Set default rules if not already set
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
         }
 
         return parent::store($updateNulls);
+    }
+
+    /**
+     * Method to delete a row from the database table by primary key value.
+     * Prevents deletion of the default template (ID 1).
+     *
+     * @param   mixed  $pk  An optional primary key value to delete.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function delete($pk = null): bool
+    {
+        $k  = $this->_tbl_key;
+        $pk = $pk ?? $this->$k;
+
+        if ((int) $pk === 1) {
+            throw new \RuntimeException(Text::_('JBS_TPL_DEFAULT_ERROR'));
+        }
+
+        return parent::delete($pk);
     }
 
     /**
@@ -188,6 +295,7 @@ class CwmtemplateTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
@@ -202,6 +310,7 @@ class CwmtemplateTable extends Table
      *
      * @since       1.6
      */
+    #[\Override]
     protected function _getAssetTitle(): string
     {
         return 'JBS Template: ' . $this->title;
@@ -216,10 +325,11 @@ class CwmtemplateTable extends Table
      * @param   ?Table  $table  A Table object for the asset parent.
      * @param   null    $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

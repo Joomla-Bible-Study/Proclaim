@@ -3,7 +3,7 @@
 /**
  * @package         Proclaim
  * @subpackage      mod.proclaim
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  */
@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
 
@@ -39,9 +40,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      * @throws \Exception
      * @since   10.0.0
      */
+    #[\Override]
     protected function getLayoutData(): array
     {
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+        if (!\defined('CWM_LOADED')) {
             require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
         }
 
@@ -54,7 +56,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         try {
             $data['cwmtemplate'] = Cwmparams::getTemplateparams($templateID);
         } catch (\Exception $e) {
-            $this->app->enqueueMessage($e, 'error');
+            $this->app->enqueueMessage($e->getMessage(), 'error');
         }
 
         $pageBuilder = new Cwmpagebuilder();
@@ -70,49 +72,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             ->getHelper('ProclaimHelper')
             ->getLatest($data['params'], $this->getApplication());
 
-        if (
-            $data['params']->get('useexpert_module') > 0 || is_string(
-                $data['params']->get('moduletemplate')
-            ) === true
-        ) {
-            foreach ($data['list'] as $item) {
-                try {
-                    $renderedPage = $pageBuilder->buildPage($item, $data['params'], $data['cwmtemplate']);
-                } catch (\Exception $e) {
-                    $this->app->enqueueMessage($e, 'error');
-                }
-
-                $item->scripture1 = $renderedPage->scripture1;
-                $item->scripture2 = $renderedPage->scripture2;
-                $item->media      = $renderedPage->media;
-
-                if (isset($renderedPage->duration)) {
-                    $item->duration = $renderedPage->duration;
-                } else {
-                    $item->duration = null;
-                }
-
-                if (isset($renderedPage->studydate)) {
-                    $item->studydate = $renderedPage->studydate;
-                } else {
-                    $item->studydate = null;
-                }
-
-                $item->topics = $renderedPage->topics;
-
-                if (isset($renderedPage->study_thumbnail)) {
-                    $item->study_thumbnail = $renderedPage->study_thumbnail;
-                } else {
-                    $item->study_thumbnail = null;
-                }
-
-                if (isset($renderedPage->series_thumbnail)) {
-                    $item->series_thumbnail = $renderedPage->series_thumbnail;
-                } else {
-                    $item->series_thumbnail = null;
-                }
-
-                $item->detailslink = $renderedPage->detailslink;
+        if ($data['params']->get('useexpert_module') > 0 || \is_string($data['params']->get('moduletemplate'))) {
+            try {
+                $pageBuilder->enrichStudies($data['list'], $data['params'], $data['cwmtemplate']);
+            } catch (\Exception $e) {
+                $this->app->enqueueMessage($e->getMessage(), 'error');
             }
         }
 
@@ -131,10 +95,28 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $wa->useStyle('com_proclaim.cwmcore');
         $wa->useStyle('com_proclaim.general');
 
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled)
+        $wa->useScript('com_proclaim.scripture-tooltip');
+        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+        $this->app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => Route::_(
+                'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                false
+            ),
+        ]);
+
+        // Register language strings used by scripture-switcher JS
+        Text::script('JBS_CMN_SCRIPTURE_UNAVAILABLE');
+        Text::script('JBS_CMN_SCRIPTURE_RETRY');
+        Text::script('JBS_CMN_SCRIPTURE_FALLBACK');
+        Text::script('JBS_CMN_SCRIPTURE_SERVICE_BUSY');
+
         $url = $data['params']->get('stylesheet');
 
         if ($url) {
-            $wa->load($url);
+            $wa->registerAndUseStyle('mod_proclaim.custom', $url);
         }
 
         if ($data['params']->get('simple_mode') === '1') {

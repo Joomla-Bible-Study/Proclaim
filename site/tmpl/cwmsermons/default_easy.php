@@ -4,7 +4,7 @@
  * Helper for Template Code
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,55 +14,36 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermons\HtmlView $this */
 
-// Do not remove
-// this is here to make sure that security of the site is maintained. It should be placed in every template file
-HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-
-HtmlHelper::_('dropdown.init');
-HtmlHelper::_('behavior.multiselect');
-HtmlHelper::_('formbehavior.chosen', 'select');
-
-$app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'study.ordering';
-$columns   = 12;
-
+// Add template accent color for pagination
+$accentColor = $this->params->get('backcolor', '#287585');
+$wa          = $this->getDocument()->getWebAssetManager();
+$wa->addInlineStyle(":root { --proclaim-accent-color: {$accentColor}; }");
+$wa->addInlineStyle('img { border-radius: 4px; }');
 
 ?>
-<style>img {
-        border-radius: 4px;
-    }</style>
-
-
-<div class="row-fluid col-lg-12">
+<div class="row">
     <h2>
         Teachings
     </h2>
 </div>
 
 
-<div class="row-fluid col-lg-12 dropdowns"
+<div class="row dropdowns"
      style="background-color:#A9A9A9; margin:0 -5px; padding:8px 8px; border:1px solid #C5C1BE; position:relative; -webkit-border-radius:10px;">
 
     <?php
     echo $this->page->books;
-    echo $this->page->teachers;
-    echo $this->page->series;
-    ?>
+echo $this->page->teachers;
+echo $this->page->series;
+?>
 </div>
 <?php
 foreach ($this->items as $study) {
     ?>
     <div style="width:100%;">
-        <div class="col-lg-3">
+        <div class="col-12 col-md-6 col-lg-3">
             <div style="padding:12px 8px;line-height:22px;height:200px;">
                 <?php
                 if ($study->study_thumbnail) {
@@ -87,12 +68,6 @@ foreach ($this->items as $study) {
     </div>
     <?php
 } ?>
-<div class="row-fluid col-lg-12 pagination pagelinks" style="background-color: #A9A9A9;
-    margin: 0 -5px;
-    padding: 8px 8px;
-    border: 1px solid #C5C1BE;
-    position: relative;
-    -webkit-border-radius: 9px;">
-    <?php
-    echo $this->pagination->getPageslinks(); ?>
+<div class="pagination-container pagelinks">
+    <?php echo $this->pagination->getPageslinks(); ?>
 </div>

@@ -1,0 +1,250 @@
+<?php
+
+/**
+ * Layout Editor Script Options — centralized registration
+ *
+ * Registers all JS language strings (auto-scanned from compiled JS) and
+ * dropdown option arrays (extracted dynamically from form fields) needed
+ * by the Layout Editor.  Called from both the template editor (edit.php)
+ * and the LayoutEditorField (module / menu-item contexts).
+ *
+ * Expected $displayData keys:
+ *   form                   — Joomla\CMS\Form\Form  (required for dynamic options)
+ *   templateId             — int|null
+ *   templateParams         — array
+ *   elementDefinitions     — array
+ *   settingsConfig         — array
+ *   landingSectionSettings — array
+ *   prependInherit         — bool  (true = "Use Template Default"; false = "Use Global Setting")
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ */
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+
+/** @var array $displayData */
+$form                   = $displayData['form'] ?? null;
+$templateId             = $displayData['templateId'] ?? null;
+$templateParams         = $displayData['templateParams'] ?? [];
+$elementDefinitions     = $displayData['elementDefinitions'] ?? [];
+$settingsConfig         = $displayData['settingsConfig'] ?? [];
+$landingSectionSettings = $displayData['landingSectionSettings'] ?? [];
+$prependInherit         = !empty($displayData['prependInherit']);
+
+$document = Factory::getApplication()->getDocument();
+
+// ─── 1. Auto-scan language strings from compiled JS ─────────────────────
+$jsFile = JPATH_ROOT . '/media/com_proclaim/js/layout-editor.js';
+
+if (is_file($jsFile)) {
+    $jsContent = file_get_contents($jsFile);
+
+    if ($jsContent && preg_match_all("/trans\(['\"]([A-Z][A-Z0-9_]+)['\"]\)/", $jsContent, $matches)) {
+        foreach (array_unique($matches[1]) as $key) {
+            Text::script($key);
+        }
+    }
+}
+
+// ─── 2. Extract dropdown options dynamically from form fields ───────────
+
+// The "defer" label depends on context:
+//   Template editor → "Use Global Setting" (defers to component-level config)
+//   Module/menu     → "Use Template Default" (defers to the assigned template)
+$deferLabel = $prependInherit
+    ? Text::_('JBS_CMN_USE_TEMPLATE_DEFAULT')
+    : Text::_('JBS_TPL_USE_GLOBAL_SETTING');
+
+$extractFieldOptions = function (string $fieldName, string $group = 'params') use ($form): array {
+    if (!$form) {
+        return [];
+    }
+
+    $field = $form->getField($fieldName, $group);
+
+    if (!$field) {
+        return [];
+    }
+
+    $result = [];
+
+    foreach ($field->options as $option) {
+        $result[] = ['value' => (string) $option->value, 'label' => $option->text];
+    }
+
+    return $result;
+};
+
+// dateFormat: always has a "defer" blank option (template defers to Joomla global via value 8)
+$dateFormatOptions = array_merge(
+    [['value' => '', 'label' => $deferLabel]],
+    $extractFieldOptions('date_format')
+);
+
+// showVerses and separator have global defaults in the VERSES fieldset, so per-element
+// dropdowns get a "defer" option (template: "Use Global Setting"; module: "Use Template Default").
+$showVersesOptions = $extractFieldOptions('show_verses');
+$separatorOptions  = $extractFieldOptions('scripture_separator');
+array_unshift($showVersesOptions, ['value' => '', 'label' => $deferLabel]);
+array_unshift($separatorOptions, ['value' => '', 'label' => $deferLabel]);
+
+// showVersion and showTooltip are per-element only (no global default).
+// No defer option — just direct Yes/No choices (default: No).
+$showVersionOptions = [
+    ['value' => '0', 'label' => Text::_('JNO')],
+    ['value' => '1', 'label' => Text::_('JYES')],
+];
+$showTooltipOptions = [
+    ['value' => '0', 'label' => Text::_('JNO')],
+    ['value' => '1', 'label' => Text::_('JYES')],
+];
+
+// These dropdowns have no "defer" option — just the actual choices
+$elementTypeOptions     = $extractFieldOptions('scripture1element');
+$linkTypeOptions        = $extractFieldOptions('scripture1linktype');
+$teacherLinkTypeOptions = $extractFieldOptions('tsteacherlinktype');
+$seriesLinkTypeOptions  = $extractFieldOptions('sserieslinktype');
+
+// ─── 2b. Extract template override dropdown options per context ──────────
+// Maps each Layout Editor context → its override field name.  Must stay
+// in sync with CONTEXT_OVERRIDE_FIELDS in layout-editor.es6.js.
+$overrideFieldMap = [
+    'messages'       => 'sermonstemplate',
+    'details'        => 'sermontemplate',
+    'teachers'       => 'teacherstemplate',
+    'teacherDetails' => 'teachertemplate',
+    'series'         => 'seriesdisplaystemplate',
+    'seriesDetails'  => 'seriesdisplaytemplate',
+];
+
+$overrideOptions = [];
+
+foreach ($overrideFieldMap as $context => $fieldName) {
+    $opts = $extractFieldOptions($fieldName);
+
+    if (!empty($opts)) {
+        $overrideOptions[$context] = [
+            'field'   => $fieldName,
+            'options' => $opts,
+            'value'   => (string) ($templateParams[$fieldName] ?? '0'),
+        ];
+    }
+}
+
+// ─── 2c. Build settings schema from XML field definitions ───────────────
+// The schema drives the element settings modal in JS: modal HTML, state
+// defaults, populate, save, change detection, loadFromParams, syncToForm.
+$schemaXmlPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/forms/layout-element-settings.xml';
+$settingsSchema = [];
+
+if (is_file($schemaXmlPath)) {
+    $xml = simplexml_load_file($schemaXmlPath);
+
+    if ($xml) {
+        $fieldset = $xml->xpath('//fieldset[@name="element_settings"]/field');
+
+        foreach ($fieldset as $fieldXml) {
+            $fieldType = strtolower((string) ($fieldXml['type'] ?? 'text'));
+            $schemaType = ($fieldType === 'text') ? 'text' : 'select';
+
+            $entry = [
+                'name'        => (string) $fieldXml['name'],
+                'type'        => $schemaType,
+                'label'       => Text::_((string) ($fieldXml['label'] ?? '')),
+                'description' => Text::_((string) ($fieldXml['description'] ?? '')),
+                'default'     => (string) ($fieldXml['default'] ?? ''),
+                'showFor'     => (string) ($fieldXml['showFor'] ?? '*'),
+            ];
+
+            if ($schemaType === 'select') {
+                $optionsFilter = (string) ($fieldXml['optionsFilter'] ?? '');
+                $optionsSource = (string) ($fieldXml['optionsSource'] ?? '');
+
+                if ($optionsFilter !== '') {
+                    // Options rebuilt at modal-open time by JS (element type, link type)
+                    $entry['optionsFilter'] = $optionsFilter;
+                } elseif ($optionsSource !== '') {
+                    // Options loaded from an existing registered script option key
+                    $entry['optionsKey'] = 'com_proclaim.' . $optionsSource . 'Options';
+                } else {
+                    // Inline <option> children in the XML
+                    $entry['options'] = [];
+                    foreach ($fieldXml->option as $opt) {
+                        $entry['options'][] = [
+                            'value' => (string) ($opt['value'] ?? ''),
+                            'label' => Text::_((string) $opt),
+                        ];
+                    }
+                }
+            }
+
+            $settingsSchema[] = $entry;
+        }
+    }
+}
+
+// ─── 3. Register all script options ─────────────────────────────────────
+if ($templateId !== null) {
+    $document->addScriptOptions('com_proclaim.templateId', (int) $templateId);
+}
+
+if (!empty($templateParams)) {
+    $document->addScriptOptions('com_proclaim.templateParams', $templateParams);
+}
+
+if (!empty($elementDefinitions)) {
+    $document->addScriptOptions('com_proclaim.elementDefinitions', $elementDefinitions);
+}
+
+if (!empty($settingsConfig)) {
+    $document->addScriptOptions('com_proclaim.settingsConfig', $settingsConfig);
+}
+
+if (!empty($landingSectionSettings)) {
+    $document->addScriptOptions('com_proclaim.landingSectionSettings', $landingSectionSettings);
+}
+
+if (!empty($settingsSchema)) {
+    $document->addScriptOptions('com_proclaim.settingsSchema', $settingsSchema);
+}
+
+if (!empty($dateFormatOptions)) {
+    $document->addScriptOptions('com_proclaim.dateFormatOptions', $dateFormatOptions);
+}
+
+if (!empty($showVersesOptions)) {
+    $document->addScriptOptions('com_proclaim.showVersesOptions', $showVersesOptions);
+}
+
+$document->addScriptOptions('com_proclaim.showVersionOptions', $showVersionOptions);
+$document->addScriptOptions('com_proclaim.showTooltipOptions', $showTooltipOptions);
+$document->addScriptOptions('com_proclaim.separatorOptions', $separatorOptions);
+
+if (!empty($elementTypeOptions)) {
+    $document->addScriptOptions('com_proclaim.elementTypeOptions', $elementTypeOptions);
+}
+
+if (!empty($linkTypeOptions)) {
+    $document->addScriptOptions('com_proclaim.linkTypeOptions', $linkTypeOptions);
+}
+
+if (!empty($teacherLinkTypeOptions)) {
+    $document->addScriptOptions('com_proclaim.teacherLinkTypeOptions', $teacherLinkTypeOptions);
+}
+
+if (!empty($seriesLinkTypeOptions)) {
+    $document->addScriptOptions('com_proclaim.seriesLinkTypeOptions', $seriesLinkTypeOptions);
+}
+
+if (!empty($overrideOptions)) {
+    $document->addScriptOptions('com_proclaim.overrideOptions', $overrideOptions);
+}

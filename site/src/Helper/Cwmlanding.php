@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,10 +17,14 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\User\User;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
 
 /**
@@ -31,1078 +35,1073 @@ use Joomla\Registry\Registry;
  */
 class Cwmlanding
 {
+    private CMSApplicationInterface $app;
+    private DatabaseInterface $db;
+    private User $user;
+
+    /**
+     * Initialize common dependencies
+     *
+     * @return void
+     * @throws \RuntimeException
+     * @since 10.0.0
+     */
+    private function initDependencies(): void
+    {
+        if (!isset($this->app)) {
+            try {
+                $this->app = Factory::getApplication();
+            } catch (\Exception $e) {
+                throw new \RuntimeException('Unable to load Application: ' . $e->getMessage());
+            }
+            $this->db   = Factory::getContainer()->get(DatabaseInterface::class);
+            $this->user = $this->app->getIdentity();
+        }
+    }
+
+    /**
+     * Determine sort order from menu params
+     *
+     * @param   Registry     $params     Item Params
+     * @param   string       $orderKey   The param key for menu order
+     *
+     * @return string ASC or DESC
+     * @since 10.0.0
+     */
+    private function getSortOrder(Registry $params, string $orderKey): string
+    {
+        $menuOrder = $params->get($orderKey);
+
+        if (!$menuOrder) {
+            return $params->get('landing_default_order', 'ASC');
+        }
+
+        return match ((int) $menuOrder) {
+            1       => 'DESC',
+            2       => 'ASC',
+            default => $params->get('landing_default_order', 'ASC'),
+        };
+    }
+
+    /**
+     * Get language filter for queries
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return string Quoted language values for SQL IN clause
+     * @since 10.0.0
+     */
+    private function getLanguageFilter(Registry $params): string
+    {
+        $menu = $this->app->getMenu();
+        $item = $menu->getActive();
+
+        if ($item && $item->language) {
+            return $this->db->quote($item->language) . ',' . $this->db->quote('*');
+        }
+
+        return $this->db->quote($this->app->getLanguage()->getTag()) . ',' . $this->db->quote('*');
+    }
+
+    /**
+     * Add access level filter to query
+     *
+     * @param   DatabaseQuery  $query       The query to modify
+     * @param   string                          $accessCol   The access column name
+     *
+     * @return void
+     * @since 10.0.0
+     */
+    private function addAccessFilter($query, string $accessCol = 'b.access'): void
+    {
+        $groups = $this->user->getAuthorisedViewLevels();
+        if ($groups) {
+            $query->whereIn($this->db->quoteName($accessCol), $groups);
+        }
+    }
+
+    /**
+     * Build grid items HTML with show/hide support
+     *
+     * @param   array     $items       Array of result objects
+     * @param   int       $limit       Number of items before hide div
+     * @param   callable  $linkBuilder Callback to build each item's HTML
+     * @param   string    $divId       ID for the show/hide div
+     *
+     * @return string
+     * @since 10.0.0
+     */
+    private function buildGridHtml(array $items, int $limit, callable $linkBuilder, string $divId): string
+    {
+        $count = \count($items);
+        if ($count === 0) {
+            return '';
+        }
+
+        $html = '';
+        $t    = 0;
+        $i    = 0;
+
+        foreach ($items as $item) {
+            $itemHtml = $linkBuilder($item);
+
+            if ($t >= $limit) {
+                $hiddenClass = 'landing-hidden-' . $divId;
+
+                // Add class
+                $itemHtml = preg_replace('/^<div class="/', '<div class="' . $hiddenClass . ' ', $itemHtml, 1);
+
+                // Add style
+                if (strpos($itemHtml, 'style="') !== false) {
+                    $itemHtml = str_replace('style="', 'style="display:none; ', $itemHtml);
+                } else {
+                    $itemHtml = preg_replace('/(<div[^>]+)/', '$1 style="display:none"', $itemHtml, 1);
+                }
+            }
+
+            $html .= $itemHtml;
+            $i++;
+            $t++;
+
+            if ($i === 3 && $t !== $count) {
+                $i   = 0;
+                $sep = '<div class="w-100"></div>';
+                if ($t >= $limit) {
+                    $sep = '<div class="w-100 landing-hidden-' . $divId . '" style="display:none"></div>';
+                }
+                $html .= $sep;
+            } elseif ($i === 3 || $t === $count) {
+                // Add empty placeholder columns to complete the last row
+                if ($t === $count && $i > 0 && $i < 3) {
+                    $emptyColsNeeded = 3 - $i;
+                    $placeholder     = '<div class="col" style="margin-right:7px"></div>';
+                    if ($t >= $limit) {
+                        $placeholder = '<div class="col landing-hidden-' . $divId . '" style="display:none; margin-right:7px"></div>';
+                    }
+                    $html .= str_repeat($placeholder, $emptyColsNeeded);
+                }
+                $i = 0;
+            }
+        }
+
+        $html .= '<div class="landing_separator"></div>';
+
+        return $html;
+    }
+
+    /**
+     * Build landing table HTML for use limit = 1 mode
+     *
+     * @param   array     $items       Array of result objects
+     * @param   callable  $linkBuilder Callback to build each item link
+     * @param   string    $divId       ID for the show/hide div
+     *
+     * @return string
+     * @since 10.0.0
+     */
+    private function buildLandingTableHtml(array $items, callable $linkBuilder, string $divId): string
+    {
+        if (\count($items) === 0) {
+            return '';
+        }
+
+        $html = '<div class="landingtable" style="display:inline-block;">';
+
+        foreach ($items as $item) {
+            if ((int) $item->landing_show === 1) {
+                $html .= '<div class="landingrow"><div class="landingcell">';
+                $html .= $linkBuilder($item);
+                $html .= '</div></div>';
+            }
+        }
+
+        $html .= '</div>';
+        $html .= '<div id="' . $divId . '" style="display:none;">';
+
+        foreach ($items as $item) {
+            if ((int) $item->landing_show === 2) {
+                $html .= '<div class="landingrow"><div class="landingcell">';
+                $html .= $linkBuilder($item);
+                $html .= '</div></div>';
+            }
+        }
+
+        $html .= '</div>';
+        $html .= '<div class="landing_separator"></div>';
+        $html .= '<div style="clear:both;"></div>';
+
+        return $html;
+    }
+
+    /**
+     * Build a filter link for sermons view
+     *
+     * @param   string  $filterName   The filter parameter name
+     * @param   mixed   $filterValue  The filter value
+     * @param   int     $template     Template ID
+     * @param   string  $text         Link text
+     * @param   string  $class        Optional CSS class
+     *
+     * @return string
+     * @since 10.0.0
+     */
+    private function buildSermonFilterLink(
+        string $filterName,
+        $filterValue,
+        int $template,
+        string $text,
+        string $class = ''
+    ): string {
+        $classAttr = $class ? ' class="' . $class . '"' : '';
+        $baseUrl   = 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;sendingview=cwmlanding';
+        $filters   = '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0'
+                   . '&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template;
+
+        $url = $baseUrl . '&amp;' . $filterName . '=' . $filterValue . $filters;
+
+        return '<a' . $classAttr . ' href="' . $url . '">' . $text . '</a>';
+    }
+
+    /**
+     * Get the section order for the landing page
+     *
+     * Reads from the new landing_layout JSON field first, falling back to
+     * legacy headingorder_* fields for backward compatibility.
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return array Array of section objects with id and enabled properties
+     * @since 10.3.0
+     */
+    public function getSectionOrder(Registry $params): array
+    {
+        // Try new landing_layout JSON format first
+        $landingLayout = $params->get('landing_layout');
+
+        if (!empty($landingLayout)) {
+            // Parse if string
+            if (\is_string($landingLayout)) {
+                try {
+                    $landingLayout = json_decode($landingLayout, false, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    $landingLayout = null;
+                }
+            }
+
+            if (\is_array($landingLayout) && \count($landingLayout) > 0) {
+                $sections = [];
+                foreach ($landingLayout as $item) {
+                    if (\is_object($item) && isset($item->id)) {
+                        $sections[] = (object) [
+                            'id'      => $item->id,
+                            'enabled' => $item->enabled ?? true,
+                        ];
+                    }
+                }
+
+                if (\count($sections) > 0) {
+                    return $sections;
+                }
+            }
+        }
+
+        // Fall back to legacy headingorder_* fields
+        return $this->getSectionOrderFromLegacy($params);
+    }
+
+    /**
+     * Get section order from legacy headingorder_* fields
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return array Array of section objects
+     * @since 10.3.0
+     */
+    private function getSectionOrderFromLegacy(Registry $params): array
+    {
+        $sections = [];
+        $used     = [];
+
+        // Map of section IDs to their show* param names
+        $showParams = [
+            'teachers'     => 'showteachers',
+            'series'       => 'showseries',
+            'books'        => 'showbooks',
+            'topics'       => 'showtopics',
+            'locations'    => 'showlocations',
+            'messagetypes' => 'showmessagetypes',
+            'years'        => 'showyears',
+        ];
+
+        for ($i = 1; $i <= 7; $i++) {
+            $sectionId = $params->get('headingorder_' . $i);
+
+            if ($sectionId && !\in_array($sectionId, $used, true)) {
+                $showParam = $showParams[$sectionId] ?? ('show' . $sectionId);
+                $enabled   = (int) $params->get($showParam) === 1;
+
+                $sections[] = (object) [
+                    'id'      => $sectionId,
+                    'enabled' => $enabled,
+                ];
+
+                $used[] = $sectionId;
+            }
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Get all landing data in one query
+     *
+     * @param   Registry  $params  Item Params
+     *
+     * @return array
+     * @since 10.1.0
+     */
+    public function getLandingData(Registry $params): array
+    {
+        $this->initDependencies();
+        $language = $this->getLanguageFilter($params);
+
+        $queries = [];
+        $types   = [];
+
+        for ($i = 1; $i <= 7; $i++) {
+            $type = $params->get('headingorder_' . $i);
+            if ($type && (int) $params->get('show' . $type) === 1 && !\in_array($type, $types)) {
+                $types[] = $type;
+                $q       = $this->buildQueryForType($type, $language);
+                if ($q) {
+                    $queries[] = $q;
+                }
+            }
+        }
+
+        if (empty($queries)) {
+            return [];
+        }
+
+        $query = array_shift($queries);
+
+        if (!empty($queries)) {
+            foreach ($queries as $q) {
+                $query->union($q);
+            }
+        }
+
+        $this->db->setQuery($query);
+        $allResults = $this->db->loadObjectList();
+
+        $grouped = [];
+        foreach ($allResults as $row) {
+            $grouped[$row->type][] = $row;
+        }
+
+        foreach ($grouped as $type => &$items) {
+            $orderKey = match ($type) {
+                'teachers'     => 'teachers_order',
+                'series'       => 'series_order',
+                'locations'    => 'locations_order',
+                'messagetypes' => 'messagetypes_order',
+                'topics'       => 'topics_order',
+                'books'        => 'books_order',
+                'years'        => 'years_order',
+                default        => 'landing_default_order',
+            };
+
+            $sortCol = match ($type) {
+                'books', 'years' => 'id',
+                default => 'text',
+            };
+
+            $order = $this->getSortOrder($params, $orderKey);
+
+            usort($items, function ($a, $b) use ($order, $sortCol) {
+                $valA = $a->$sortCol;
+                $valB = $b->$sortCol;
+
+                if ($valA == $valB) {
+                    return 0;
+                }
+                $res = ($valA < $valB) ? -1 : 1;
+                return ($order === 'DESC') ? -$res : $res;
+            });
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * Build subquery for a specific type
+     *
+     * @param   string  $type      The type of item
+     * @param   string  $language  Language filter
+     *
+     * @return DatabaseQuery|null
+     * @since 10.1.0
+     */
+    private function buildQueryForType(string $type, string $language): ?DatabaseQuery
+    {
+        $query = $this->db->getQuery(true);
+        $null  = $this->db->quote('');
+
+        switch ($type) {
+            case 'teachers':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.teachername', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('teachers') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+                    )
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
+                $this->addAccessFilter($query);
+                break;
+
+            case 'series':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.series_text', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('series') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_series', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('a.published') . ' = 1');
+
+                // Cascading series date window for non-admin users
+                if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+                    $nullDate = $this->db->quote($this->db->getNullDate());
+                    $nowDate  = $this->db->quote((new Date())->toSql());
+                    $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                        ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+                }
+
+                $this->addAccessFilter($query);
+                break;
+
+            case 'locations':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.location_text', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('locations') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_locations', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.location_id')
+                    )
+                    ->where($this->db->quoteName('b.location_id') . ' > 0')
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
+                $this->addAccessFilter($query);
+                break;
+
+            case 'messagetypes':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.message_type', 'text') . ', '
+                    . $this->db->quoteName('a.landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('messagetypes') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_message_type', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.messagetype')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('a.landing_show') . ' > 0');
+                $this->addAccessFilter($query);
+                break;
+
+            case 'topics':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.id') . ', '
+                    . $this->db->quoteName('a.topic_text', 'text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $this->db->quoteName('a.params', 'params') . ', '
+                    . $this->db->quote('topics') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                    ->join(
+                        'LEFT',
+                        $this->db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                        . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('st.study_id')
+                    )
+                    ->join(
+                        'LEFT',
+                        $this->db->quoteName('#__bsms_topics', 'a') . ' ON '
+                        . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('st.topic_id')
+                    )
+                    ->where($this->db->quoteName('a.published') . ' = 1')
+                    ->where($this->db->quoteName('b.published') . ' = 1')
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')');
+                $this->addAccessFilter($query, 'b.access');
+                break;
+
+            case 'books':
+                $query->select(
+                    'DISTINCT ' . $this->db->quoteName('a.booknumber', 'id') . ', '
+                    . $this->db->quoteName('a.bookname', 'text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('books') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_books', 'a'))
+                    ->innerJoin(
+                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                        . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
+                    )
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1');
+                $this->addAccessFilter($query);
+                break;
+
+            case 'years':
+                $query->select(
+                    'DISTINCT YEAR(' . $this->db->quoteName('b.studydate') . ') AS ' . $this->db->quoteName('id') . ', '
+                    . 'YEAR(' . $this->db->quoteName('b.studydate') . ') AS ' . $this->db->quoteName('text') . ', '
+                    . '0 AS ' . $this->db->quoteName('landing_show') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('params') . ', '
+                    . $this->db->quote('years') . ' AS ' . $this->db->quoteName('type')
+                )
+                    ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                    ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                    ->where($this->db->quoteName('b.published') . ' = 1');
+                $this->addAccessFilter($query, 'b.access');
+                break;
+
+            default:
+                return null;
+        }
+
+        return $query;
+    }
+
     /**
      * Get Locations for Landing Page
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      Item ID
+     * @param   int       $id      Item ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @throws   \Exception
      * @since    8.0.0
      */
-    public function getLocationsLandingPage(Registry $params, int $id = 0): string
+    public function getLocationsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $mainframe = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $user      = $mainframe->getIdentity();
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $location  = null;
-        $template  = $params->get('studieslisttemplateid', 1);
-        $limit     = $params->get('landinglocationslimit');
-        $order     = 'ASC';
+        $template         = (int) $params->get('studieslisttemplateid', 1);
+        $limit            = (int) $params->get('landinglocationslimit', 10000) ?: 10000;
+        $locationuselimit = (int) $params->get('landinglocationsuselimit', 0);
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'locations_order');
+            $language = $this->getLanguageFilter($params);
 
-        $locationuselimit = $params->get('landinglocationsuselimit', 0);
-        $menu             = $mainframe->getMenu();
-        $item             = $menu->getActive();
-        $registry         = new Registry();
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_locations', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.location_id')
+                )
+                ->where($this->db->quoteName('b.location_id') . ' > 0')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.location_text') . ' ' . $order);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('locations_order');
+            $this->addAccessFilter($query);
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($language === '*' || !$language) {
-            $langlink = '';
-        } elseif (isset($item->language)) {
-            $langlink = '&amp;filter.languages=' . $item->language;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->location_text = $item->text;
             }
         }
 
-        $query = $db->getQuery(true);
-        $query->select('distinct a.*')
-            ->from('#__bsms_locations a')
-            ->select('b.access')
-            ->innerJoin('#__bsms_studies b on a.id = b.location_id')
-            ->where('b.location_id > 0')
-            ->where('a.published = 1')
-            ->where('b.published = 1')
-            ->where('b.language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('b.access'), $groups);
-        }
-        $query->where('a.landing_show > 0')
-            ->group('a.id')
-            ->order('a.location_text ' . $order);
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-
-        if ($count > 0) {
-            switch ($locationuselimit) {
-                case 0:
-                    $t       = 0;
-                    $i       = 0;
-                    $showdiv = 0;
-
-                    foreach ($tresult as $b) {
-                        if (($t >= $limit) && $showdiv < 1) {
-                            $location .= "\n\t" . '<div id="showhidelocations" style="display:none;"> <!-- start show/hide locations div-->';
-
-                            $i       = 0;
-                            $showdiv = 1;
-                        }
-
-                        $location .= '<div class="col" style="margin-right:7px"">';
-                        $location .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_location=' . $b->id . '&amp;sendingview=cwmlanding' .
-                            '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-                            . $template . '">';
-
-                        $location .= $b->location_text;
-
-                        $location .= '</a>';
-                        $location .= '</div>';
-                        $i++;
-                        $t++;
-
-                        if ($i === 3 && $t !== $limit && $t !== $count) {
-                            $i = 0;
-                            $location .= '<div class="w-100"></div>';
-                        } elseif ($i === 3 || $t === $count || $t === $limit) {
-                            $i = 0;
-                        }
-                    }
-
-                    if ($showdiv === 1) {
-                        $location .= "\n\t" . '</div> <!-- close show/hide locations div-->';
-                    }
-
-                    $location .= '<div class="landing_separator"></div>';
-                    break;
-
-                case 1:
-                    $location = '<div class="landingtable" style="display:inline-block;">';
-
-                    foreach ($tresult as $b) {
-                        if ((int) $b->landing_show === 1) {
-                            $location .= '<div class="landingrow">';
-                            $location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=Cwmlanding&amp;view=Cwmsermons&amp;filter_location='
-                                . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-                                . $template . '">';
-                            $location .= $b->location_text;
-                            $location .= '</a></div>';
-                            $location .= '</div>';
-                        }
-                    }
-
-                    $location .= '</div>';
-                    $location .= '<div id="showhidelocations" style="display:none;">';
-
-                    foreach ($tresult as $b) {
-                        if ((int) $b->landing_show === 2) {
-                            $location .= '<div class="landingrow">';
-                            $location .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=Cwmsermons&amp;filter_location='
-                                . $b->id . '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-                                . $template . '">';
-                            $location .= $b->location_text;
-                            $location .= '</a></div>';
-                            $location .= '</div>';
-                        }
-                    }
-
-                    $location .= '</div>';
-                    $location .= '<div class="landing_separator"></div>';
-                    $location .= '<div style="clear:both;"></div>';
-                    break;
-            }
-        } else {
-            $location = '';
+        if (empty($items)) {
+            return '';
         }
 
-        return $location;
+        $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+            . $this->buildSermonFilterLink('filter_location', $item->id, $template, $item->location_text)
+            . '</div>';
+
+        if ($locationuselimit === 0) {
+            return $this->buildGridHtml($items, $limit, $linkBuilder, 'showhidelocations');
+        }
+
+        return $this->buildLandingTableHtml(
+            $items,
+            fn ($item) => $this->buildSermonFilterLink(
+                'filter_location',
+                $item->id,
+                $template,
+                $item->location_text,
+                'landinglink'
+            ),
+            'showhidelocations'
+        );
     }
 
     /**
      * Get a Teacher for the LandingPage
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      Item ID
+     * @param   int       $id      Item ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @since    8.0.0
      */
-    public function getTeacherLandingPage(Registry $params, int $id = 0): string
+    public function getTeacherLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $mainframe   = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $mainframe->getIdentity();
-        $langlink  = Multilanguage::isEnabled();
-        $order     = null;
-        $teacher   = null;
+        $template        = (int) $params->get('teachertemplateid', 1);
+        $limit           = (int) $params->get('landingteacherslimit', 10000) ?: 10000;
+        $teacheruselimit = (int) $params->get('landingteachersuselimit', 0);
+        $linkTo          = (int) $params->get('linkto', 0);
 
-        $template        = $params->get('teachertemplateid', 1);
-        $limit           = $params->get('landingteacherslimit', 10000);
-        $teacheruselimit = $params->get('landingteachersuselimit', 0);
-        $menu            = $mainframe->getMenu();
-        $item            = $menu->getActive();
-        $registry        = new Registry();
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'teachers_order');
+            $language = $this->getLanguageFilter($params);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('teachers_order');
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+                )
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.teachername') . ' ' . $order);
+
+            $this->addAccessFilter($query);
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($language === '*' || !$language) {
-            $langlink = '';
-        } elseif (isset($item->language)) {
-            $langlink = '&amp;filter.languages=' . $item->language;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->teachername = $item->text;
             }
         }
 
-        $query = $db->getQuery(true);
-        $query->select('distinct a.*')
-            ->from('#__bsms_teachers a')
-            ->select('b.access')
-            ->innerJoin('#__bsms_studies b on a.id = b.teacher_id')
-            ->where('b.language in (' . $language . ')')
-            ->where('a.published = 1');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('b.access'), $groups);
+        if (empty($items)) {
+            return '';
         }
-        $query->where('a.landing_show > 0')
-            ->group('a.id')
-            ->order('a.teachername ' . $order);
-        $db->setQuery($query);
 
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-        $t       = 0;
-        $i       = 0;
+        if ($teacheruselimit === 0) {
+            $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+                . $this->buildTeacherLink($item, $template, $linkTo) . '</div>';
+            return $this->buildGridHtml($items, $limit, $linkBuilder, 'showhideteachers');
+        }
 
-        if ($count > 0) {
-            $showdiv = 0;
+        return $this->buildLandingTableHtml(
+            $items,
+            fn ($item) => $this->buildTeacherLink($item, $template, $linkTo, 'landinglink'),
+            'showhideteachers'
+        );
+    }
 
-            switch ($teacheruselimit) {
-                case 0:
-                    foreach ($tresult as $b) {
-                        if (($t >= $limit) && $showdiv < 1) {
-                            $teacher .= "\n\t" . '<div id="showhideteachers" style="display:none;"> <!-- start show/hide teacher div-->';
+    /**
+     * Build a link for a teacher item.
+     *
+     * @param   object  $item      The teacher item object.
+     * @param   int     $template  The template ID.
+     * @param   int     $linkTo    The link type (0 for sermons, 1 for teacher profile).
+     * @param   string  $class     Optional CSS class for the link.
+     *
+     * @return  string  The generated HTML anchor tag.
+     * @since   10.1.0
+     */
+    private function buildTeacherLink(object $item, int $template, int $linkTo, string $class = ''): string
+    {
+        $classAttr = $class ? ' class="' . $class . '"' : '';
 
-                            $i       = 0;
-                            $showdiv = 1;
-                        }
-
-                        $teacher .= '<div class="col" style="margin-right:7px">';
-                        if ((int) $params->get('linkto') === 0) {
-                            $teacher .= '<a href="' . Route::_(
-                                'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template
-                            )
-                                . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
-                                . $langlink . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-                        } else {
-                            $teacher .= '<a href="' . Route::_(
-                                'index.php?option=com_proclaim&amp;view=cwmteacher&id=' . $b->id . $langlink . '&t=' . $template
-                            ) . '">';
-                        }
-
-                        $teacher .= $b->teachername;
-
-                        $teacher .= '</a></div>';
-
-                        $i++;
-                        $t++;
-
-                        if ($i === 3 && $t !== $limit && $t !== $count) {
-                            $i = 0;
-                            $teacher .= '<div class="w-100"></div>';
-                        } elseif ($i === 3 || $t === $count || $t === $limit) {
-                            $i = 0;
-                        }
-                    }
-
-                    if ($showdiv === 1) {
-                        $teacher .= "\n\t" . '</div> <!-- close show/hide teacher div-->';
-                    }
-
-                    $teacher .= '<div class="landing_separator"></div>';
-                    break;
-
-                case 1:
-                    foreach ($tresult as $b) {
-                        if ($b->landing_show === 1) {
-                            if ((int) $params->get('linkto') === 0) {
-                                $teacher .= '<div class="col-4" style="margin-right:7px"> <a '
-                                    . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
-                                    . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
-                                    . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-                            } else {
-                                $teacher .= '<div class="col-4" style="display: inline-block; margin-right:7px"><a href="'
-                                    . Route::_(
-                                        'index.php?option=com_proclaim&amp;view=cwmteacher&amp;id=' . $b->id . '&amp;t=' . $template
-                                    ) . '">';
-                            }
-
-                            $teacher .= $b->teachername;
-                            $teacher .= '</a></div>';
-                        }
-                    }
-
-                    $teacher .= '<div id="showhideteachers" style="display:none;">';
-
-                    foreach ($tresult as $b) {
-                        if ($b->landing_show === 2) {
-                            if ((int) $params->get('linkto') === 0) {
-                                $teacher .= '<div class="col-4"><a href="'
-                                    . Route::_('index.php?option=com_proclaim&amp;view=Cwmsermons&amp;t=' . $template)
-                                    . '&amp;sendingview=landing&amp;filter_teacher=' . $b->id
-                                    . '&amp;filter_book=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0">';
-                            } else {
-                                $teacher .= '<div class="col-4"><a href="'
-                                    . Route::_(
-                                        'index.php?option=com_proclaim&amp;sendingview=landing&amp;view=teacher&amp;id=' .
-                                        $b->id . '&amp;t=' . $template
-                                    ) . '">';
-                            }
-
-                            $teacher .= $b->teachername;
-                            $teacher .= '</a></div>';
-                        }
-                    }
-
-                    $teacher .= '</div>';
-                    $teacher .= '<div class="landing_separator"></div>';
-                    $teacher .= '<div style="clear:both;"></div>';
-                    break;
-            }
+        if ($linkTo === 0) {
+            // Link to a filtered list of sermons
+            $url = 'index.php?option=com_proclaim&view=Cwmsermons&t=' . $template
+                . '&sendingview=landing&filter_teacher=' . $item->id
+                . '&filter_book=0&filter_series=0&filter_topic=0'
+                . '&filter_location=0&filter_year=0&filter_messagetype=0';
         } else {
-            $teacher = '';
+            // Link to the teacher's profile page
+            $url = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $item->id . '&t=' . $template;
         }
 
-        return $teacher;
+        return '<a' . $classAttr . ' href="' . Route::_($url) . '">' . $item->teachername . '</a>';
     }
 
     /**
      * Get Series for LandingPage
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      ID
+     * @param   int       $id      ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @since    8.0.0
      */
-    public function getSeriesLandingPage(Registry $params, int $id = 0): string
+    public function getSeriesLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $mainframe   = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $user      = $mainframe->getIdentity();
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $order     = 'ASC';
-        $series    = null;
-        $numRows   = null;
+        $template       = (int) $params->get('serieslisttemplateid', 1);
+        $limit          = (int) $params->get('landingserieslimit', 10000) ?: 10000;
+        $seriesuselimit = (int) $params->get('landingseriesuselimit', 0);
+        $seriesLinkTo   = (int) $params->get('series_linkto', 0);
 
-        $template = $params->get('serieslisttemplateid', 1);
-        $limit    = $params->get('landingserieslimit');
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'series_order');
+            $language = $this->getLanguageFilter($params);
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_series', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.series_text') . ' ' . $order);
 
-        $seriesuselimit = $params->get('landingseriesuselimit', 0);
-        $menu           = $mainframe->getMenu();
-        $item           = $menu->getActive();
-        $registry       = new Registry();
+            // Cascading series date window for non-admin users
+            if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+                $nullDate = $this->db->quote($this->db->getNullDate());
+                $nowDate  = $this->db->quote((new Date())->toSql());
+                $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                    ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+            }
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('series_order');
+            $this->addAccessFilter($query);
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->series_text = $item->text;
             }
         }
 
-        $query = $db->getQuery(true);
-        $query->select('distinct a.*')
-            ->from('#__bsms_series a')
-            ->select('b.access')
-            ->innerJoin('#__bsms_studies b on a.id = b.series_id')
-            ->where('b.language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('b.access'), $groups);
+        if (empty($items)) {
+            return '';
         }
-        $query->where('b.published = 1')
-            ->group('a.id')
-            ->order('a.series_text ' . $order);
-        $db->setQuery($query);
 
-        $items = $db->loadObjectList();
-        $count = count($items);
-
-        if ($count > 0) {
-            switch ($seriesuselimit) {
-                // Use landing page limit
-                case 0:
-                    $series = '';
-                    $t      = 0;
-                    $i      = 0;
-
-                    $showdiv = 0;
-
-                    foreach ($items as $b) {
-                        if ($t >= $limit) {
-                            if ($showdiv < 1) {
-                                $series .= "\n\t" . '<div id="showhideseries" style="display:none;"> <!-- start show/hide series div-->';
-
-                                $i       = 0;
-                                $showdiv = 1;
-                            }
-                        }
-
-                        if ((int) $params->get('series_linkto') === 0) {
-                            $series .= '<div class="col" style="margin-right:7px">';
-                            $series .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $b->id
-                                . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
-                                . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-                                . $template . '">';
-                        } else {
-                            $series .= '<div class="col" style="margin-right:7px">';
-                            $series .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id=' .
-                                $b->id . '&amp;t=' . $template . '">';
-                        }
-
-                        $series .= $b->series_text;
-
-                        $series .= '</a>';
-                        $series .= '</div>';
-
-                        $i++;
-                        $t++;
-
-                        if ($i === 3 && $t !== $limit && $t !== $count) {
-                            $i = 0;
-                            $series .= '<div class="w-100"></div>';
-                        } elseif ($i === 3 || $t === $count || $t === $limit) {
-                            $i = 0;
-                        }
-                    }
-
-                    if ($showdiv === 1) {
-                        $series .= "\n\t" . '</div> <!-- close show/hide series div-->';
-                    }
-
-                    $series .= '<div class="landing_separator"></div>';
-
-                    break;
-
-                case 1:
-                    // Use limit in each record 0 = do not show, 1 = show above More button, 2 = show below more button
-                    $series = '<div class="landingtable" style="display:inline;">';
-
-                    foreach ($items as $b) {
-                        if ((int) $b->landing_show === 1) {
-                            $series .= '<div class="landingrow">';
-
-                            if ((int) $params->get('series_linkto') === '0') {
-                                $series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series='
-                                    . $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
-                                    . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-                            } else {
-                                $series .= '<div class="landingcell"><a href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=seriesdisplay&amp;id='
-                                    . $b->id . '&amp;t=' . $template . '">';
-                            }
-
-                            $series .= $numRows;
-                            $series .= $b->series_text;
-
-                            $series .= '</a></div></div>';
-                        }
-                    }
-
-                    $series .= '</div>';
-                    $series .= '<div id="showhideseries" style="display:none;">';
-
-                    foreach ($items as $b) {
-                        if ((int) $b->landing_show === 2) {
-                            $series .= '<div class="landingrow">';
-
-                            if ((int) $params->get('series_linkto') === 0) {
-                                $series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series='
-                                    . $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0'
-                                    . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-                            } else {
-                                $series .= '<div class="landingcell">
-									<a href="index.php?option=com_proclaim&amp;sendingview=cwmlanding&amp;view=cwmseriesdisplay&amp;id='
-                                    . $b->id . '&amp;t=' . $template . '">';
-                            }
-
-                            $series .= $numRows;
-                            $series .= $b->series_text;
-
-                            $series .= '</a></div></div>';
-                        }
-                    }
-
-                    $series .= '</div>';
-                    $series .= '<div class="landing_separator"></div>';
-                    $series .= '<div style="clear:both;"></div>';
-                    break;
+        $buildLink = function ($item, $class = '') use ($template, $seriesLinkTo) {
+            if ($seriesLinkTo === 0) {
+                $url = 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $item->id
+                    . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
+                    . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
+                    . $template;
+            } else {
+                $url = 'index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id='
+                    . $item->id . '&amp;t=' . $template;
             }
-        } else {
-            $series = '';
+            return '<a href="' . $url . '">' . $item->series_text . '</a>';
+        };
+
+        if ($seriesuselimit === 0) {
+            $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+                . $buildLink($item) . '</div>';
+            return $this->buildGridHtml($items, $limit, $linkBuilder, 'showhideseries');
         }
 
-        return $series;
+        return $this->buildLandingTableHtml($items, fn ($item) => $buildLink($item), 'showhideseries');
     }
 
     /**
      * Get Years for Landing Page
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      Item ID
+     * @param   int       $id      Item ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @since    8.0.0
      */
-    public function getYearsLandingPage(Registry $params, int $id = 0): string
+    public function getYearsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $mainframe   = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $user      = $mainframe->getIdentity();
-        $order     = 'ASC';
-        $template  = $params->get('studieslisttemplateid');
-        $limit     = $params->get('landingyearslimit');
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingyearslimit', 10000) ?: 10000;
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'years_order');
+            $language = $this->getLanguageFilter($params);
 
-        $menu     = $mainframe->getMenu();
-        $item     = $menu->getActive();
-        $registry = new Registry();
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT YEAR(' . $this->db->quoteName('studydate') . ') AS ' . $this->db->quoteName('theYear'))
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->where($this->db->quoteName('language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('published') . ' = 1')
+                ->group('YEAR(' . $this->db->quoteName('studydate') . ')')
+                ->order('YEAR(' . $this->db->quoteName('studydate') . ') ' . $order);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('years_order');
+            $this->addAccessFilter($query, 'access');
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->theYear = $item->id;
             }
         }
 
-        $query = $db->getQuery(true);
-        $query->select('distinct year(studydate) as theYear')
-            ->from('#__bsms_studies')
-            ->where('language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('access'), $groups);
-        }
-        $query->where('published = 1')
-            ->group('year(studydate)')
-            ->order('year(studydate) ' . $order);
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-        $t       = 0;
-        $i       = 0;
-
-        if ($count > 0) {
-            $year    = '';
-            $showdiv = 0;
-
-            foreach ($tresult as $b) {
-                if (($t >= $limit) && $showdiv < 1) {
-                    $year .= "\n\t" . '<div id="showhideyears" style="display:none;"> <!-- start show/hide years div-->';
-
-                    $i       = 0;
-                    $showdiv = 1;
-                }
-
-                $year .= '<div class="col" style="margin-right:7px">';
-                $year .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_year='
-                    . $b->theYear . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0&amp;'
-                    . 'filter_book=0&amp;filter_messagetype=0&amp;t='
-                    . $template . '">';
-
-                $year .= $b->theYear;
-
-                $year .= '</a>';
-                $year .= '</div>';
-                $i++;
-                $t++;
-
-                if ($i === 3 && $t !== $limit && $t !== $count) {
-                    $i = 0;
-                    $year .= '<div class="w-100"></div>';
-                } elseif ($i === 3 || $t === $count || $t === $limit) {
-                    $i = 0;
-                }
-            }
-
-            if ($showdiv === 1) {
-                $year .= "\n\t" . '</div> <!-- close show/hide years div-->';
-            }
-
-            $year .= '<div class="landing_separator"></div>';
-            $year .= '<div style="clear:both;"></div>';
-        } else {
-            $year = '';
+        if (empty($items)) {
+            return '';
         }
 
-        return $year;
+        $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+            . $this->buildSermonFilterLink('filter_year', $item->theYear, $template, $item->theYear)
+            . '</div>';
+
+        $html = $this->buildGridHtml($items, $limit, $linkBuilder, 'showhideyears');
+        $html .= '<div style="clear:both;"></div>';
+
+        return $html;
     }
 
     /**
      * Get Topics for LandingPage
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      ID
+     * @param   int       $id      ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @since    8.0.0
      */
-    public function getTopicsLandingPage(Registry $params, int $id = 0): string
+    public function getTopicsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $app   = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $user      = $app->getSession()->get('user');
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $order     = 'ASC';
-        $topic     = null;
-        $template  = $params->get('studieslisttemplateid');
-        $limit     = $params->get('landingtopicslimit');
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingtopicslimit', 10000) ?: 10000;
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'topics_order');
+            $language = $this->getLanguageFilter($params);
 
-        $menu     = $app->getMenu();
-        $item     = $menu->getActive();
-        $registry = new Registry();
+            $query = $this->db->getQuery(true);
+            $query->select(
+                'DISTINCT ' . $this->db->quoteName('#__bsms_topics.id') . ', '
+                . $this->db->quoteName('#__bsms_topics.topic_text') . ', '
+                . $this->db->quoteName('#__bsms_topics.params', 'topic_params')
+            )
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_studytopics') . ' ON '
+                    . $this->db->quoteName('#__bsms_studies.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.study_id')
+                )
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_topics') . ' ON '
+                    . $this->db->quoteName('#__bsms_topics.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.topic_id')
+                )
+                ->where($this->db->quoteName('#__bsms_topics.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.language') . ' IN (' . $language . ')')
+                ->group($this->db->quoteName('#__bsms_topics.id'))
+                ->order($this->db->quoteName('#__bsms_topics.topic_text') . ' ' . $order);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('topics_order');
+            $this->addAccessFilter($query, '#__bsms_studies.access');
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
-            }
-        }
-
-        $query = $db->getQuery('true');
-        $query->select(
-            'DISTINCT #__bsms_studies.access as access, #__bsms_topics.id, #__bsms_topics.topic_text, #__bsms_topics.params AS topic_params'
-        )
-            ->from('#__bsms_studies')
-            ->join('LEFT', '#__bsms_studytopics ON #__bsms_studies.id = #__bsms_studytopics.study_id')
-            ->join('LEFT', '#__bsms_topics ON #__bsms_topics.id = #__bsms_studytopics.topic_id')
-            ->where('#__bsms_topics.published = 1')
-            ->where('#__bsms_studies.published = 1')
-            ->order('#__bsms_topics.topic_text ' . $order)
-            ->group('id')
-            ->where('#__bsms_studies.language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('#__bsms_studies.access'), $groups);
-        }
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-        $t       = 0;
-        $i       = 0;
-
-        if ($count > 0) {
-            $showdiv = 0;
-
-            foreach ($tresult as $b) {
-                if (($t >= $limit) && $showdiv < 1) {
-                    $topic .= "\n\t" . '<div id="showhidetopics" style="display:none;"> <!-- start show/hide topics div-->';
-
-                    $i       = 0;
-                    $showdiv = 1;
-                }
-
-                $topic .= '<div class="col" style="margin-right:7px">';
-                $topic .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' .
-                    $b->id . '&amp;sendingview=cwmlanding&amp;filter_teacher=0'
-                    . '&amp;filter_series=0&amp;filter_location=0&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-                $topic .= Cwmtranslated::getTopicItemTranslated($b);
-
-                $topic .= '</a>';
-                $topic .= '</div>';
-                $i++;
-                $t++;
-
-                if ($i === 3 && $t !== $limit && $t !== $count) {
-                    $i = 0;
-                    $topic .= '<div class="w-100"></div>';
-                } elseif ($i === 3 || $t === $count || $t === $limit) {
-                    $i = 0;
+            foreach ($items as $item) {
+                $item->topic_text = $item->text;
+                if (!property_exists($item, 'topic_params') && property_exists($item, 'params')) {
+                    $item->topic_params = $item->params;
                 }
             }
-
-            if ($showdiv === 1) {
-                $topic .= "\n\t" . '</div> <!-- close show/hide topics div-->';
-            }
-
-            $topic .= '<div class="landing_separator"></div>';
-            $topic .= '<div style="clear:both;"></div>';
-        } else {
-            $topic = '';
         }
 
-        return $topic;
+        if (empty($items)) {
+            return '';
+        }
+
+        $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+            . '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' . $item->id
+            . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_location=0'
+            . '&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">'
+            . Cwmtranslated::getTopicItemTranslated($item) . '</a></div>';
+
+        $html = $this->buildGridHtml($items, $limit, $linkBuilder, 'showhidetopics');
+        $html .= '<div style="clear:both;"></div>';
+
+        return $html;
     }
 
     /**
      * Get MessageType for Landing Page
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      ID
+     * @param   int       $id      ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      *
      * @since    8.0.0
      */
-    public function getMessageTypesLandingPage(Registry $params, int $id = 0): string
+    public function getMessageTypesLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $mainframe   = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $db          = Factory::getContainer()->get('DatabaseDriver');
-        $user        = $mainframe->getIdentity();
-        $messagetype = null;
-        $order       = 'ASC';
-        $template    = $params->get('studieslisttemplateid', 1);
-        $limit       = $params->get('landingmessagetypeslimit');
+        $template            = (int) $params->get('studieslisttemplateid', 1);
+        $limit               = (int) $params->get('landingmessagetypeslimit', 10000) ?: 10000;
+        $messagetypeuselimit = (int) $params->get('landingmessagetypeuselimit', 0);
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'messagetypes_order');
+            $language = $this->getLanguageFilter($params);
 
-        $messagetypeuselimit = $params->get('landingmessagetypeuselimit', 0);
-        $menu                = $mainframe->getMenu();
-        $item                = $menu->getActive();
-        $registry            = new Registry();
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_message_type', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.messagetype')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.message_type') . ' ' . $order);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('messagetypes_order');
+            $this->addAccessFilter($query);
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($mainframe->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($language === '*' || !$language) {
-            $langlink = '';
-        } elseif (isset($item->language)) {
-            $langlink = '&amp;filter.languages=' . $item->language;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->message_type = $item->text;
             }
         }
 
-        $query = $db->getQuery(true);
-        $query->select('distinct a.*')
-            ->from('#__bsms_message_type a')
-            ->select('b.access AS study_access')
-            ->innerJoin('#__bsms_studies b on a.id = b.messagetype')
-            ->where('b.language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('b.access'), $groups);
-        }
-        $query->where('b.published = 1')
-            ->where('a.landing_show > 0')
-            ->group('a.id')
-            ->order('a.message_type ' . $order);
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-        $t       = 0;
-        $i       = 0;
-
-        if ($count > 0) {
-            switch ($messagetypeuselimit) {
-                case 0:
-                    $showdiv = 0;
-
-                    foreach ($tresult as $b) {
-                        if (($t >= $limit) && $showdiv < 1) {
-                            $messagetype .= "\n\t" . '<div id="showhidemessagetypes" style="display:none;"> <!-- start show/hide messagetype div-->';
-
-                            $i       = 0;
-                            $showdiv = 1;
-                        }
-
-                        $messagetype .= '<div class="col" style="margin-right:7px">';
-                        $messagetype .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' .
-                            $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
-                            '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
-
-                        $messagetype .= $b->message_type;
-
-                        $messagetype .= '</a>';
-                        $messagetype .= '</div>';
-
-                        $i++;
-                        $t++;
-
-                        if ($i === 3 && $t !== $limit && $t !== $count) {
-                            $i = 0;
-                            $messagetype .= '<div class="w-100"></div>';
-                        } elseif ($i === 3 || $t === $count || $t === $limit) {
-                            $i = 0;
-                        }
-                    }
-
-                    if ($showdiv === 1) {
-                        $messagetype .= "\n\t" . '</div> <!-- close show/hide messagetype div-->';
-                        $showdiv     = 2;
-                    }
-
-                    $messagetype .= '<div class="landing_separator"></div>';
-                    break;
-
-                case 1:
-                    $messagetype = '<div class="landingtable" style="display:inline;">';
-
-                    foreach ($tresult as $b) {
-                        if ((int) $b->landing_show === 1) {
-                            $messagetype .= '<div class="landingrow">';
-                            $messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype='
-                                . $b->id . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0' .
-                                '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
-                            $messagetype .= $b->message_type;
-                            $messagetype .= '</a></div>';
-                            $messagetype .= '</div>';
-                        }
-                    }
-
-                    $messagetype .= '</div>';
-                    $messagetype .= '<div id="showhidemessagetypes" style="display:none;">';
-
-                    foreach ($tresult as $b) {
-                        if ((int) $b->landing_show === 2) {
-                            $messagetype .= '<div class="landingrow">';
-                            $messagetype .= '<div class="landingcell">
-							<a class="landinglink" href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_messagetype=' . $b->id
-                                . '&amp;sendingview=cwmlanding&amp;filter_book=0&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0' .
-                                '&amp;filter_location=0&amp;filter_year=0&amp;t=' . $template . '">';
-                            $messagetype .= $b->message_type;
-                            $messagetype .= '</a></div>';
-                            $messagetype .= '</div>';
-                        }
-                    }
-
-                    $messagetype .= '</div>';
-                    $messagetype .= '<div class="landing_separator"></div>';
-                    $messagetype .= '<div style="clear:both;"></div>';
-                    break;
-            }
-        } else {
-            $messagetype = '';
+        if (empty($items)) {
+            return '';
         }
 
-        return $messagetype;
+        $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+            . $this->buildSermonFilterLink('filter_messagetype', $item->id, $template, $item->message_type)
+            . '</div>';
+
+        if ($messagetypeuselimit === 0) {
+            return $this->buildGridHtml($items, $limit, $linkBuilder, 'showhidemessagetypes');
+        }
+
+        return $this->buildLandingTableHtml(
+            $items,
+            fn ($item) => $this->buildSermonFilterLink(
+                'filter_messagetype',
+                $item->id,
+                $template,
+                $item->message_type,
+                'landinglink'
+            ),
+            'showhidemessagetypes'
+        );
     }
 
     /**
      * Get Books for Landing Page.
      *
      * @param   Registry  $params  Item Params
-     * @param   int       $id      ID
+     * @param   int       $id      ID (unused, kept for BC)
+     * @param   array|null $items  Optional pre-fetched items
      *
      * @return string
      * @since    8.0.0
      */
-    public function getBooksLandingPage(Registry $params, int $id = 0): string
+    public function getBooksLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
-        try {
-            $app      = Factory::getApplication();
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Unable to load Application' . $e->getMessage());
-        }
+        $this->initDependencies();
 
-        $user     = $app->getSession()->get('user');
-        $db       = Factory::getContainer()->get('DatabaseDriver');
-        $order    = 'ASC';
-        $book     = null;
-        $template = $params->get('studieslisttemplateid');
-        $limit    = $params->get('landingbookslimit');
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingbookslimit', 10000) ?: 10000;
 
-        if (!$limit) {
-            $limit = 10000;
-        }
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'books_order');
+            $language = $this->getLanguageFilter($params);
 
-        $menu     = $app->getMenu();
-        $item     = $menu->getActive();
-        $registry = new Registry();
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_books', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->group($this->db->quoteName('a.bookname'))
+                ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
 
-        if (isset($params)) {
-            $registry->loadString($params);
-            $language   = $db->quote($item->language) . ',' . $db->quote('*');
-            $menu_order = $params->get('books_order');
+            $this->addAccessFilter($query);
+            $this->db->setQuery($query);
+            $items = $this->db->loadObjectList();
         } else {
-            $language   = $db->quote($app->getLanguage()->getTag()) . ',' . $db->quote('*');
-            $menu_order = null;
-        }
-
-        if ($language === '*' || !$language) {
-            $langlink = '';
-        } elseif (isset($item->language)) {
-            $langlink = '&amp;filter.languages=' . $item->language;
-        }
-
-        if ($menu_order) {
-            switch ($menu_order) {
-                case 2:
-                    $order = 'ASC';
-                    break;
-                case 1:
-                    $order = 'DESC';
-                    break;
-                case 0:
-                    $order = $params->get('landing_default_order', 'ASC');
+            foreach ($items as $item) {
+                $item->booknumber = $item->id;
+                $item->bookname   = $item->text;
             }
         }
 
-        // Compute view access permissions.
-        $groups = $user->getAuthorisedViewLevels();
-        $groups = array_unique($groups);
-        $groups = implode(',', $groups);
-        $query  = $db->getQuery(true);
-        $query->select('distinct a.*')
-            ->from('#__bsms_books a')
-            ->select('b.access AS access')
-            ->innerJoin('#__bsms_studies b on a.booknumber = b.booknumber')
-            ->where('b.language in (' . $language . ')');
-        if ($groups = $user->getAuthorisedViewLevels()) {
-            $query->whereIn($db->quoteName('b.access'), $groups);
-        }
-        $query->where('b.published = 1')
-            ->order('a.booknumber ' . $order)
-            ->group('a.bookname');
-        $db->setQuery($query);
-
-        $tresult = $db->loadObjectList();
-        $count   = count($tresult);
-        $t       = 0;
-        $i       = 0;
-
-        if ($count > 0) {
-            $showdiv = 0;
-
-            foreach ($tresult as $b) {
-                if (($t >= $limit) && $showdiv < 1) {
-                    $book .= "\n\t" . '<div id="showhidebooks" style="display:none;"> <!-- start show/hide book div-->';
-
-                    $i       = 0;
-                    $showdiv = 1;
-                }
-
-                $book .= '<div class="col" style="margin-right:7px">';
-                $book .= '<a href="index.php?option=com_proclaim&amp;sendingview=landing&amp;view=Cwmsermons&amp;filter_book=' . $b->booknumber
-                    . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0' .
-                    '&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">';
-
-                $book .= Text::_($b->bookname);
-
-                $book .= '</a>';
-                $book .= '</div>';
-                $i++;
-                $t++;
-
-                if ($i === 3 && $t !== $limit && $t !== $count) {
-                    $i = 0;
-                    $book .= '<div class="w-100"></div>';
-                } elseif ($i === 3 || $t === $count || $t === $limit) {
-                    $i = 0;
-                }
-            }
-
-            if ($showdiv === 1) {
-                $book .= "\n\t" . '</div> <!-- close show/hide books div-->';
-            }
-
-            $book .= '<div class="landing_separator"></div>';
-            $book .= '<div style="clear:both;"></div>';
-        } else {
-            $book = '';
+        if (empty($items)) {
+            return '';
         }
 
-        return $book;
+        $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
+            . $this->buildSermonFilterLink('filter_book', $item->booknumber, $template, Text::_($item->bookname))
+            . '</div>';
+
+        $html = $this->buildGridHtml($items, $limit, $linkBuilder, 'showhidebooks');
+        $html .= '<div style="clear:both;"></div>';
+
+        return $html;
     }
 }

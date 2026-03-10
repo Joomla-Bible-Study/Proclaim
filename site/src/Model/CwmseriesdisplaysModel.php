@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -13,12 +13,12 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
-use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 
@@ -41,7 +41,7 @@ class CwmseriesdisplaysModel extends ListModel
      *
      * @throws \Exception
      * @since   11.1
-     * @see     JController
+     * @see     ListModel
      */
     public function __construct($config = [])
     {
@@ -68,97 +68,11 @@ class CwmseriesdisplaysModel extends ListModel
             'language',
             's.language',
             'search',
-
+            'teacher',
             ];
         }
 
-        $this->input = Factory::getApplication();
-
         parent::__construct($config);
-    }
-
-
-
-    /**
-     * Get a list of teachers associated with series
-     *
-     * @return mixed
-     * @since 9.0.0
-     */
-    public function getTeachers(): array
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('t.id AS value, t.teachername AS text');
-        $query->from('#__bsms_teachers AS t');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series AS series ON t.id = series.teacher');
-        $query->group('t.id');
-        $query->order('t.teachername ASC');
-
-        $db->setQuery($query->__toString());
-
-        return $db->loadObjectList();
-    }
-
-    /**
-     * Get a list of teachers associated with series
-     *
-     * @return mixed
-     * @since 9.0.0
-     */
-    public function getYears(): array
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('DISTINCT YEAR(s.studydate) as value, YEAR(s.studydate) as text');
-        $query->from('#__bsms_studies as s');
-        $query->select('series.access');
-        $query->join('INNER', '#__bsms_series as series on s.series_id = series.id');
-        $query->order('value');
-
-        $db->setQuery($query->__toString());
-
-        return $db->loadObjectList();
-    }
-
-    /**
-     * Get a list of all used series
-     *
-     * @return array
-     * @throws \Exception
-     * @since 7.0
-     */
-    public function getSeries(): array
-    {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-
-        $query->select('series.id AS value, series.series_text AS text, series.access');
-        $query->from('#__bsms_series AS series');
-        $query->join('INNER', '#__bsms_studies AS study ON study.series_id = series.id');
-        $query->group('series.id');
-        $query->order('series.series_text');
-
-        $db->setQuery($query->__toString());
-        $items = $db->loadObjectList();
-
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = $user->getAuthorisedViewLevels();
-        $count  = count($items);
-
-        if ($count > 0) {
-            foreach ($items as $i => $iValue) {
-                if ($iValue->access > 1) {
-                    if (!in_array($iValue->access, $groups, true)) {
-                        unset($items[$i]);
-                    }
-                }
-            }
-        }
-
-        return $items;
     }
 
     /**
@@ -180,7 +94,6 @@ class CwmseriesdisplaysModel extends ListModel
      */
     protected function populateState($ordering = 'series_text', $direction = 'DESC'): void
     {
-        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
@@ -265,6 +178,13 @@ class CwmseriesdisplaysModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
+        // Get show_archived parameter from menu, fall back to template default
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('sdefault_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
+
         $this->setState('layout', $input->get('layout', '', 'cmd'));
         parent::populateState($ordering, $direction);
 
@@ -288,13 +208,14 @@ class CwmseriesdisplaysModel extends ListModel
      *
      * @since   1.6
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store id.
         $id .= ':' . serialize($this->getState('filter.published'));
         $id .= ':' . $this->getState('filter.access');
         $id .= ':' . $this->getState('filter.language');
         $id .= ':' . serialize($this->getState('filter.teacher'));
+        $id .= ':' . $this->getState('filter.show_archived');
 
         return parent::getStoreId($id);
     }
@@ -323,14 +244,28 @@ class CwmseriesdisplaysModel extends ListModel
                 'se.*,CASE WHEN CHAR_LENGTH(se.alias) THEN CONCAT_WS(\':\', se.id, se.alias) ELSE se.id END as slug'
             )
         );
-        $query->from('#__bsms_series as se');
+        $query->from($db->quoteName('#__bsms_series', 'se'));
         $query->select(
-            't.id as tid, t.teachername, t.title as teachertitle, t.thumb, t.thumbh, t.thumbw, t.teacher_thumbnail'
+            $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('t.teachername') . ', '
+            . $db->quoteName('t.title', 'teachertitle') . ', '
+            . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb')
         );
-        $query->join('LEFT', '#__bsms_teachers as t on se.teacher = t.id');
-        $query->select('s.id as sid, s.series_id, s.studydate');
-        $query->join('INNER', '#__bsms_studies as s on s.series_id = se.id');
-        $query->group('se.id');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_teachers', 't') . ' ON '
+            . $db->quoteName('se.teacher') . ' = ' . $db->quoteName('t.id')
+        );
+        $query->select(
+            $db->quoteName('s.id', 'sid') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studydate')
+        );
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 's') . ' ON '
+            . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id')
+        );
+        $query->group($db->quoteName('se.id'));
 
         // Filter by access level.
         if ($this->getState('filter.access', true)) {
@@ -341,7 +276,7 @@ class CwmseriesdisplaysModel extends ListModel
         $search = $this->getState('filter.search');
         if (!empty($search)) {
             $like = $db->quote('%' . $search . '%');
-            $query->where('se.description LIKE ' . $like);
+            $query->where($db->quoteName('se.description') . ' LIKE ' . $like);
         }
 
         // Filter by language
@@ -359,6 +294,28 @@ class CwmseriesdisplaysModel extends ListModel
             $type      = $this->getState('filter.teacher.include', true) ? ' = ' : ' <> ';
             $query->where($db->quoteName('se.teacher') . $type . ':teacher')
                 ->bind(':teacher', $teacher, ParameterType::INTEGER);
+        }
+
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $query->where($db->quoteName('se.published') . ' = 2');
+                break;
+            case '2': // Both published and archived
+                $query->where($db->quoteName('se.published') . ' IN (1, 2)');
+                break;
+            default: // Published only (backward compatible)
+                $query->where($db->quoteName('se.published') . ' = 1');
+                break;
+        }
+
+        // Filter by publish dates for non-admin users (like Joomla category date filtering)
+        if (!$user->authorise('core.edit.state', 'com_proclaim') && !$user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $db->quote($db->getNullDate());
+            $nowDate  = $db->quote((new Date())->toSql());
+            $query->where('(' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')');
         }
 
         //Filter by year
@@ -392,18 +349,4 @@ class CwmseriesdisplaysModel extends ListModel
 
         return $query;
     }
-
-    /**
-     * Method to get the starting number of items for the data set.
-     *
-     * @return  int  The starting number of items available in the data set.
-     *
-     * @since   3.0.1
-     */
-    public function getStart(): int
-    {
-        return (int) $this->getState('list.start');
-    }
-
-
 }

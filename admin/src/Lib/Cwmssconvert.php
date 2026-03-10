@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,7 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
-
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Class script to convert SermonSpeaker 5.2 to Proclaim
@@ -29,7 +29,7 @@ use Joomla\CMS\Uri\Uri;
  */
 class Cwmssconvert
 {
-    private $serverid;
+    private int $serverid;
 
     /**
      * function to convert SermonSpeaker
@@ -38,12 +38,12 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function convertSS()
+    public function convertSS(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__sermon_sermons');
+            ->from($db->quoteName('#__sermon_sermons'));
         $db->setQuery($query);
         $sermons = $db->loadObjectList();
 
@@ -51,7 +51,7 @@ class Cwmssconvert
 
         // Get a unique list of teacher ids
         $query = $db->getQuery(true);
-        $query->select('speaker_id, id, series_id')->from('#__sermon_sermons')->group('series_id');
+        $query->select($db->quoteName(['speaker_id', 'id', 'series_id']))->from($db->quoteName('#__sermon_sermons'))->group($db->quoteName('series_id'));
         $db->setQuery($query);
         $seriesspeakers = $db->loadObjectList();
 
@@ -72,9 +72,9 @@ class Cwmssconvert
 
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__bsms_servers')
-            ->where('published = 1')
-            ->order($db->qn('id') . ' desc');
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('id') . ' DESC');
         $db->setQuery($query, 0, 1);
         $server         = $db->loadAssoc();
         $this->serverid = $server['id'];
@@ -82,7 +82,7 @@ class Cwmssconvert
         // Make the teachers
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__sermon_speakers');
+            ->from($db->quoteName('#__sermon_speakers'));
         $db->setQuery($query);
 
         $teachers = $db->loadObjectList();
@@ -113,7 +113,7 @@ class Cwmssconvert
 
             // Get the last teacherid
             $query = $db->getQuery(true);
-            $query->select('id')->from('#__bsms_teachers')->order('id');
+            $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id'));
             $db->setQuery($query, 0, 1);
             $lastteacher = $db->loadResult();
 
@@ -128,7 +128,7 @@ class Cwmssconvert
         // Series Records
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from('#__sermon_series');
+            ->from($db->quoteName('#__sermon_series'));
         $db->setQuery($query);
         $series = $db->loadObjectList();
 
@@ -171,7 +171,7 @@ class Cwmssconvert
                     $result_table .= '<tr><td>' . Text::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
                 } else {
                     $query = $db->getQuery(true);
-                    $query->select('id')->from('#__bsms_studies')->order('id DESC');
+                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $lastseries = $db->loadResult();
 
@@ -192,22 +192,22 @@ class Cwmssconvert
 
         // Count the new numbers and report
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from('#__bsms_studies');
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $newstudies = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from('#__bsms_teachers');
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
         $db->setQuery($query);
         $newteachers = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from('#__bsms_series');
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_series'));
         $db->setQuery($query);
         $newseries = $db->loadResult();
 
         $query = $db->getQuery(true);
-        $query->select('COUNT(*)')->from('#__bsms_mediafiles');
+        $query->select('COUNT(*)')->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
         $newmediafiles = $db->loadResult();
 
@@ -230,9 +230,9 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function newStudies($sermon, $seriesspeakers)
+    public function newStudies($sermon, $seriesspeakers): void
     {
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $data = new \stdClass();
 
         foreach ($seriesspeakers as $speakers) {
@@ -270,7 +270,7 @@ class Cwmssconvert
 
         $db->insertObject('#__bsms_studies', $data);
         $query = $db->getQuery(true);
-        $query->select('id')->from('#__bsms_studies')->order('id DESC');
+        $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
 
         $db->setQuery($query, 0, 1);
         $study              = $db->loadAssoc();
@@ -310,7 +310,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function getVerses($sermon)
+    public function getVerses($sermon): \stdClass
     {
         $sermonscripture             = new \stdClass();
         $sermonscripture->booknumber = '101';

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -14,8 +14,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
-defined('JPATH_BASE') or die;
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
 
 
 /**
@@ -26,37 +29,6 @@ defined('JPATH_BASE') or die;
  */
 class Cwmhtml
 {
-    /**
-     * @var    array  Array containing information for loaded files
-     * @since  9.0.0
-     */
-    protected static array $loaded = [];
-
-    /**
-     * Method to get the field options.
-     *
-     * @return    object    The field option objects.
-     *
-     * @since    1.6
-     */
-    public static function playerList(): object
-    {
-        $options   = [];
-        $options[] = ['value' => '', 'text' => Text::_('JBS_CMN_USE_GLOBAL')];
-        $options[] = ['value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK')];
-        $options[] = ['value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER')];
-        $options[] = ['value' => 3, 'text' => Text::_('JBS_CMN_USE_AV')];
-        $options[] = ['value' => 7, 'text' => Text::_('JBS_CMN_USE_MP3_PLAYER')];
-        $options[] = ['value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE')];
-        $object    = new \stdClass();
-
-        foreach ($options as $key => $value) {
-            $object->$key = $value;
-        }
-
-        return $object;
-    }
-
     /**
      * Display a batch widget for the player selector.
      *
@@ -108,6 +80,22 @@ class Cwmhtml
     }
 
     /**
+     * Method to get the player field options.
+     *
+     * @return  array  The field option objects.
+     *
+     * @since   10.1.0
+     */
+    public static function playerlist(): array
+    {
+        return [
+            (object) ['value' => 0, 'text' => Text::_('JBS_CMN_DIRECT_LINK')],
+            (object) ['value' => 1, 'text' => Text::_('JBS_CMN_USE_INTERNAL_PLAYER')],
+            (object) ['value' => 8, 'text' => Text::_('JBS_CMN_USE_EMBED_CODE')],
+        ];
+    }
+
+    /**
      * Display a batch widget for the popup selector.
      *
      * @return  string  The necessary HTML for the widget.
@@ -124,7 +112,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[popup]" class="form-select" id="batch-popup">',
             '<option value="">' . Text::_('JBS_BAT_POPUP_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::popuplist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::popupList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -194,7 +182,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[teacher]" class="form-select" id="batch-teacher">',
             '<option value="">' . Text::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Teacherlist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::teacherList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -211,12 +199,12 @@ class Cwmhtml
     public static function teacherList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, teachername As text');
-        $query->from('#__bsms_teachers AS a');
-        $query->order('a.teachername ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'));
+        $query->from($db->quoteName('#__bsms_teachers', 'a'));
+        $query->order($db->quoteName('a.teachername') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -251,7 +239,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[messageType]" class="form-select" id="batch-messageType">',
             '<option value="">' . Text::_('JBS_BAT_MESSAGETYPE_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Messagetypelist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::messageTypeList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -268,12 +256,12 @@ class Cwmhtml
     public static function messageTypeList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, message_type As text');
-        $query->from('#__bsms_message_type AS a');
-        $query->order('a.message_type ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'a'));
+        $query->order($db->quoteName('a.message_type') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -308,7 +296,7 @@ class Cwmhtml
             '</label>',
             '<select name="batch[series]" class="form-select" id="batch-series">',
             '<option value="">' . Text::_('JBS_BAT_SERIES_NOCHANGE') . '</option>',
-            HTMLHelper::_('select.options', self::Serieslist(), 'value', 'text'),
+            HTMLHelper::_('select.options', self::seriesList(), 'value', 'text'),
             '</select>',
         ];
 
@@ -325,12 +313,12 @@ class Cwmhtml
     public static function seriesList(): ?array
     {
         $options = null;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
 
-        $query->select('id As value, series_text As text');
-        $query->from('#__bsms_series AS a');
-        $query->order('a.series_text ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('series_text', 'text'));
+        $query->from($db->quoteName('#__bsms_series', 'a'));
+        $query->order($db->quoteName('a.series_text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -346,5 +334,76 @@ class Cwmhtml
         }
 
         return $options;
+    }
+
+    /**
+     * Display a batch widget for the location selector.
+     *
+     * When the location system is enabled, the dropdown is filtered to
+     * locations the current user has visibility over.
+     *
+     * @return  string  The necessary HTML for the widget.
+     *
+     * @since   10.1.0
+     */
+    public static function location(): string
+    {
+        $lines = [
+            '<label id="batch-location-lbl" for="batch-location" class="hasTip" title="' .
+            Text::_('JBS_CMN_LOCATION') . '::' . Text::_('JBS_BAT_LOCATION_DESC') . '">',
+            Text::_('JBS_CMN_LOCATION'),
+            '</label>',
+            '<select name="batch[location]" class="form-select" id="batch-location">',
+            '<option value="">' . Text::_('JBS_BAT_LOCATION_NOCHANGE') . '</option>',
+            '<option value="0">' . Text::_('JBS_BAT_LOCATION_CLEAR') . '</option>',
+            HTMLHelper::_('select.options', self::locationList(), 'value', 'text'),
+            '</select>',
+        ];
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * Return published locations as select options, filtered to accessible ones.
+     *
+     * Super admins and installations without the location system enabled see
+     * all published locations. Other users see only locations returned by
+     * CwmlocationHelper::getUserLocations().
+     *
+     * @return  array  Option objects with ->value and ->text.
+     *
+     * @since   10.1.0
+     */
+    public static function locationList(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'))
+            ->from($db->quoteName('#__bsms_locations', 'a'))
+            ->where($db->quoteName('a.published') . ' = 1')
+            ->order($db->quoteName('a.location_text') . ' ASC');
+
+        // If location filtering is enabled, restrict to accessible locations
+        if (CwmlocationHelper::isEnabled()) {
+            $accessible = CwmlocationHelper::getUserLocations();
+
+            if (!empty($accessible)) {
+                $query->whereIn($db->quoteName('a.id'), $accessible);
+            }
+        }
+
+        $db->setQuery($query);
+
+        try {
+            return $db->loadObjectList() ?: [];
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception $e) {
+                return [];
+            }
+        }
+
+        return [];
     }
 }

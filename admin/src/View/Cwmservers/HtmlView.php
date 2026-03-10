@@ -4,22 +4,26 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMServers;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -33,50 +37,56 @@ class HtmlView extends BaseHtmlView
     /**
      * Items
      *
-     * @var object
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
-     * @var object
+     * @var mixed
      * @since 7.0.0
      */
-    protected $types;
+    protected mixed $types = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
-    /** @var  array Filter Levels
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $f_levels;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
 
-    /** @var  object Side Bar
+    /**
+     * Active Filters
+     *
+     * @var ?array
      * @since    7.0.0
      */
-    protected $sidebar;
+    public ?array $activeFilters = null;
 
     /**
      * Execute and display a template script.
@@ -89,18 +99,23 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmserversModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'server');
-        $this->types         = $this->get('ServerOptions');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->types         = $model->getServerOptions();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -118,36 +133,61 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $user = Factory::getApplication()->getIdentity();
+
+        // Get the toolbar object instance
+        $toolbar = Toolbar::getInstance();
+
         ToolbarHelper::title(Text::_('JBS_CMN_SERVERS'), 'database database');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
-        if ($canDo->get('core.create')) {
-            ToolbarHelper::addNew('cwmserver.add');
+        if ($this->canDo->get('core.create')) {
+            $toolbar->addNew('cwmserver.add');
         }
 
-        if ($canDo->get('core.edit')) {
-            ToolbarHelper::editList('cwmserver.edit');
+        if ($this->canDo->get('core.edit', 'com_proclaim')) {
+            /** @var  DropdownButton $dropdown */
+            $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
+                ->toggleSplit(false)
+                ->icon('icon-ellipsis-h')
+                ->buttonClass('btn btn-action')
+                ->listCheck(true);
+
+            $childBar = $dropdown->getChildToolbar();
+
+            $childBar->publish('cwmservers.publish')->listCheck(true);
+            $childBar->unpublish('cwmservers.unpublish')->listCheck(true);
+            $childBar->archive('cwmservers.archive')->listCheck(true);
+            $childBar->checkin('cwmservers.checkin')->listCheck(true);
+
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash('cwmservers.trash')->listCheck(true);
+            }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
+            }
         }
 
-        if ($canDo->get('core.edit.state')) {
-            ToolbarHelper::divider();
-            ToolbarHelper::publishList('cwmservers.publish');
-            ToolbarHelper::unpublishList('cwmservers.unpublish');
-            ToolbarHelper::divider();
-            ToolbarHelper::archiveList('cwmservers.archive');
-        }
-
-        if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
             ToolbarHelper::deleteList('', 'cwmservers.delete', 'JTOOLBAR_EMPTY_TRASH');
-        } elseif ($canDo->get('core.delete')) {
+        } elseif ($this->canDo->get('core.delete')) {
             ToolbarHelper::trash('cwmservers.trash');
         }
+
+        ToolbarHelper::help('servers', true);
     }
 
     /**
@@ -159,10 +199,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'servers.server_name' => Text::_('JGRID_HEADING_ORDERING'),
             'servers.published'   => Text::_('JSTATUS'),
-            'servers.id'          => Text::_('JGRID_HEADING_ID')
-        );
+            'servers.id'          => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

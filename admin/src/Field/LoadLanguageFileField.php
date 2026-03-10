@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,7 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 // Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+if (!\defined('CWM_LOADED') && file_exists($api)) {
     require_once $api;
 }
 // phpcs:enable PSR1.Files.SideEffects
@@ -44,7 +44,7 @@ class LoadLanguageFileField extends ListField
     /**
      * The hidden state for the form field.
      *
-     * @var    boolean
+     * @var    bool
      * @since 9.0.0
      */
     protected $hidden = true;
@@ -55,6 +55,7 @@ class LoadLanguageFileField extends ListField
      * @return string;
      * @since 9.0.0
      */
+    #[\Override]
     public function getLabel(): string
     {
         // Return an empty string; nothing to display
@@ -65,8 +66,10 @@ class LoadLanguageFileField extends ListField
      * Method to load the language file; nothing to display.
      *
      * @return  string  The field input markup.
+     * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Get language file; english language as fallback

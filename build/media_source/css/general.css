@@ -1,0 +1,1077 @@
+/*
+ * CSS Custom Properties — Admin General Styles (Light Mode Default)
+ *
+ * These variables are used by the admin installer UI, stats tables,
+ * form footers, and legacy FB admin layout.  They invert automatically
+ * in dark mode (see below).  Frontend site styles use Bootstrap
+ * variables (--bs-*) instead — see cwmcore.css for site-side tokens.
+ */
+:root {
+  --color-white: #ffffff;              /* Surface / card backgrounds */
+  --color-black: #000000;              /* Primary text */
+  --color-gray-light: #cccccc;         /* Muted text, secondary labels */
+  --color-gray-medium: #666666;        /* Table headers, subtitles */
+  --color-gray-dark: #536482;          /* Emphasis text, descriptions */
+  --color-border: #ccc;                /* Default borders, dividers */
+  --color-background-light: #fafafa;   /* Subtle backgrounds, panels */
+  --color-background-alt: #eeeeee;     /* Alternating row / hover fills */
+  --color-background-row0: #F7F8F9;    /* Zebra-stripe even rows */
+  --color-accent: #7F9DB9;             /* Headings, feature highlights */
+  --color-link: #08c;                  /* Hyperlinks */
+  --color-install-border: #99CCFF;     /* Installer step borders */
+  --color-install-bg: #D9D9FF;         /* Installer step backgrounds */
+  --color-shadow: rgba(0, 0, 0, 0.15); /* Drop shadows */
+  --color-shadow-light: rgba(0, 0, 0, 0.1); /* Subtle shadows */
+}
+
+/* CSS Custom Properties - Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #1a1a2e;
+    --color-black: #ffffff;
+    --color-gray-light: #404040;
+    --color-gray-medium: #a0a0a0;
+    --color-gray-dark: #c0c0c0;
+    --color-border: #404040;
+    --color-background-light: #2d2d44;
+    --color-background-alt: #252538;
+    --color-background-row0: #1f1f30;
+    --color-accent: #6eb5ff;
+    --color-link: #6eb5ff;
+    --color-install-border: #4080c0;
+    --color-install-bg: #2a2a4a;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-shadow-light: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Joomla Admin Dark Mode Support */
+html[data-color-scheme="dark"],
+body.dark,
+.dark-mode {
+  --color-white: #1a1a2e;
+  --color-black: #ffffff;
+  --color-gray-light: #404040;
+  --color-gray-medium: #a0a0a0;
+  --color-gray-dark: #c0c0c0;
+  --color-border: #404040;
+  --color-background-light: #2d2d44;
+  --color-background-alt: #252538;
+  --color-background-row0: #1f1f30;
+  --color-accent: #6eb5ff;
+  --color-link: #6eb5ff;
+  --color-install-border: #4080c0;
+  --color-install-bg: #2a2a4a;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
+}
+
+/* Inline Fields */
+.inlineFields div {
+  float: left;
+}
+.inlineFields label {
+  min-width: 70px !important;
+}
+
+/* Loading Indicator */
+#loading {
+  border-radius: 7px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 16px;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
+  max-width: 158px;
+  width: 100%;
+  margin: 7px;
+  display: none;
+}
+#loading span {
+  font-weight: bold;
+}
+
+/* Inline Player */
+.inlinePlayer {
+  border: 1px solid var(--color-border);
+  position: absolute;
+  max-width: 290px;
+  width: 100%;
+  height: 24px;
+  display: none;
+  background-color: var(--color-white);
+}
+
+/* Install Steps */
+#checks,
+#download,
+#decompress,
+#install,
+#migration,
+#templates,
+#extensions,
+#done {
+  margin: 7px;
+  border: 2px dotted var(--color-border);
+  background-color: var(--color-background-light);
+  max-width: 450px;
+  width: 100%;
+  padding-bottom: 10px;
+  height: 100px;
+}
+
+/* Progress Bars */
+#pb0-box,
+#pb1-box,
+#pb2-box,
+#pb3-box,
+#pb4-box,
+#pb5-box,
+#pb6-box {
+  background: url('/media/com_proclaim/images/progress-bar-back.gif') no-repeat scroll right center transparent;
+  max-width: 200px;
+  width: 100%;
+  height: 19px;
+}
+#pb0-perc,
+#pb1-perc,
+#pb2-perc,
+#pb3-perc,
+#pb4-perc,
+#pb5-perc,
+#pb6-perc {
+  background: url('/media/com_proclaim/images/progress-bar.gif') no-repeat scroll right center transparent;
+  height: 19px;
+  float: left;
+}
+
+/* Install Footer */
+.jbs_install_footer {
+  border: 1px solid var(--color-install-border);
+  background: var(--color-install-bg);
+  padding: 20px;
+  margin: 20px;
+  clear: both;
+}
+
+/* Finish Button */
+.finishbutton,
+.finishbutton1:hover {
+  height: 150px;
+  max-width: 200px;
+  width: 100%;
+  outline: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-background-light);
+  padding: 10px 10px 40px 10px;
+}
+.finishbutton {
+  color: var(--color-gray-dark);
+  background: var(--color-background-light);
+}
+.finishbutton1:hover {
+  background: var(--color-background-alt);
+}
+
+/* Image Center */
+img.imgcenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* CSS Editor */
+.css-editor {
+  width: 97%;
+  border: none;
+}
+
+/* Blue Link */
+.blue {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+/* FB Admin Layout */
+#fbadmin {
+  text-align: left;
+}
+#fbheader {
+  padding-left: 10px;
+  clear: both;
+}
+.fbmenu {
+  width: 14%;
+}
+#fbmenu {
+  padding-left: 10px;
+}
+#fbmenu a {
+  display: block;
+  font-size: 11px;
+  border-left: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.fbmainmenu,
+.fbactivemenu {
+  padding: 5px;
+}
+.fbactivemenu,
+.fbsubmenu,
+.fbright {
+  background: var(--color-white);
+}
+.fbsubmenu {
+  padding: 5px 5px 5px 15px;
+}
+.fbright {
+  border: 1px solid var(--color-border);
+  padding: 5px;
+}
+.fbfooter {
+  font-size: 10px;
+  text-align: right;
+  padding: 5px;
+  background: var(--color-background-light);
+  border-bottom: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+.fbfunctitle {
+  font-size: 16px;
+  text-align: left;
+  padding: 5px;
+  background: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  font-weight: bold;
+  margin-bottom: 10px;
+  clear: both;
+}
+.fbfuncsubtitle {
+  font-size: 14px;
+  text-align: left;
+  padding: 5px;
+  border-bottom: 3px solid var(--color-accent);
+  font-weight: bold;
+  color: var(--color-accent);
+  margin: 10px 0;
+}
+.fbrow0 td,
+.fbrow1 td {
+  padding: 8px 5px;
+  text-align: left;
+  border-bottom: 1px dotted var(--color-border);
+}
+td.fbtdtitle {
+  font-weight: bold;
+  padding-left: 10px;
+  color: var(--color-gray-medium);
+}
+#fbcongifcover fieldset {
+  border: 1px solid var(--color-border);
+}
+#fbcongifcover fieldset legend {
+  color: var(--color-gray-medium);
+}
+.fbwelcome {
+  clear: both;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--color-gray-dark);
+  line-height: 140%;
+  border: 1px solid var(--color-border);
+}
+.fbwelcome h3 {
+  margin: 0;
+  padding: 0;
+}
+
+/* Form Tables */
+table.thisform {
+  width: 100%;
+  padding: 10px;
+  border-collapse: collapse;
+}
+table.thisform tr.row0 {
+  background-color: var(--color-background-row0);
+}
+table.thisform tr.row1 {
+  background-color: var(--color-background-alt);
+}
+table.thisform th {
+  font-size: 15px;
+  font-weight: normal;
+  font-variant: small-caps;
+  padding: 6px 4px 2px 4px;
+  text-align: left;
+  height: 25px;
+  color: var(--color-gray-medium);
+  background-repeat: repeat;
+}
+table.thisform td {
+  padding: 3px;
+  text-align: left;
+}
+
+/* Stats Tables */
+.fbstatscover {
+  padding: 0;
+}
+table.fbstat {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 1px;
+  width: 100%;
+}
+table.fbstat th {
+  background: var(--color-background-alt);
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-background-alt);
+  color: var(--color-gray-medium);
+  font-size: 11px;
+  padding: 3px 4px;
+  text-align: left;
+}
+table.fbstat td {
+  font-size: 11px;
+  line-height: 140%;
+  padding: 4px;
+  text-align: left;
+}
+table.fbstat caption {
+  clear: both;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0 2px 0;
+  padding: 2px;
+  text-align: left;
+}
+table.fbstat .col1 {
+  background-color: var(--color-background-light);
+}
+table.fbstat .col2 {
+  background-color: var(--color-white);
+}
+
+/* PayPal */
+#jbspaypal {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+/* Hidden Containers */
+#categoryItems,
+#docManItemsContainer,
+#articlesCategoriesContainer,
+#articlesItemsContainer,
+#virtueMartItemsContainer {
+  display: none;
+}
+
+/* Select Container */
+.selectContainer {
+  float: left;
+  margin-left: 5px;
+}
+
+/* ==========================================================================
+   Control Panel Header
+   ========================================================================== */
+
+.cpanel-header-card {
+  background-color: var(--color-background-light);
+  color: var(--color-gray-dark);
+  padding: 15px;
+  border: 1px solid var(--color-border);
+}
+
+.cpanel-logo {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.cpanel-logo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.cpanel-version {
+  padding-left: 10px;
+}
+
+.cpanel-version strong {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-version div {
+  color: var(--color-gray-medium);
+}
+
+.cpanel-intro {
+  color: var(--color-gray-dark);
+}
+
+.cpanel-intro h3 {
+  color: var(--color-gray-dark);
+  margin-bottom: 15px;
+}
+
+.cpanel-intro a {
+  color: var(--color-link);
+}
+
+.cpanel-intro a:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   Control Panel Buttons
+   ========================================================================== */
+
+.cpanel-buttons {
+  margin: 20px 0;
+}
+
+.cpanel-buttons .row {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.cpanel-buttons .col {
+  display: flex;
+}
+
+.cpanel-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 15px;
+  min-height: 120px;
+  border-radius: 8px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  color: var(--color-gray-dark);
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cpanel-btn i {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
+
+.cpanel-btn span {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.cpanel-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px var(--color-shadow);
+  background-color: var(--color-white);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.cpanel-btn:hover i,
+.cpanel-btn:hover span {
+  color: var(--color-accent);
+}
+
+.cpanel-btn:hover i {
+  transform: scale(1.1);
+}
+
+.cpanel-btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--color-shadow-light);
+}
+
+/* ==========================================================================
+   Proclaim Listing Grid
+   ========================================================================== */
+
+.proclaim-listing {
+  width: 100%;
+}
+
+/* --- Classic Style (Default) --- */
+
+.proclaim-item {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.proclaim-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.proclaim-item-row {
+  align-items: baseline;
+  padding: 0.125rem 0;
+}
+
+.proclaim-listing-header {
+  font-weight: bold;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.proclaim-listing-header .row {
+  align-items: baseline;
+}
+
+/* Archived items */
+.proclaim-archived {
+  opacity: 0.7;
+}
+
+/* Classic mobile adjustments */
+@media (max-width: 991.98px) {
+  .proclaim-item img.img-fluid {
+    max-width: 200px;
+    height: auto;
+  }
+
+  .proclaim-item {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* --- Cards Style (opt-in via template setting) --- */
+
+.proclaim-listing--cards .proclaim-item {
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.proclaim-listing--cards .proclaim-item:last-child {
+  border-bottom: 1px solid var(--bs-border-color, #dee2e6);
+  margin-bottom: 0;
+}
+
+.proclaim-listing--cards .proclaim-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.proclaim-listing--cards .proclaim-item-row {
+  align-items: center;
+  padding: 0.25rem 0;
+  row-gap: 0.5rem;
+}
+
+/* Cards-mode header: shared base styling for both accent and subtle variants.
+   Uses Bootstrap's theme-aware variables so it follows the Joomla
+   template's actual theme, not our prefers-color-scheme variables. */
+.proclaim-listing--cards .proclaim-listing-header {
+  border: none !important;
+  border-bottom: 2px solid var(--bs-border-color, #dee2e6) !important;
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Accent variant (Dark header): picks the best available accent color:
+   1. Cassiopeia's primary color (+ gradient to hover)
+   2. Proclaim template's own accent (seriesdisplay_color / backcolor)
+   3. Bootstrap's primary
+   4. Hardcoded fallback */
+.proclaim-listing--cards .proclaim-header--accent {
+  background: var(--cassiopeia-color-primary, var(--proclaim-accent-color, var(--bs-primary, #0d6efd))) !important;
+  background-image: linear-gradient(
+    135deg,
+    var(--cassiopeia-color-primary, var(--proclaim-accent-color, var(--bs-primary, #0d6efd))) 0%,
+    var(--cassiopeia-color-hover, var(--proclaim-accent-color, var(--bs-primary, #0d6efd))) 100%
+  ) !important;
+  color: #fff !important;
+  border-bottom-color: transparent !important;
+}
+
+/* Subtle variant (Light header): neutral gray */
+.proclaim-listing--cards .proclaim-header--subtle {
+  background: var(--bs-secondary-bg, #e2e3e5) !important;
+  color: var(--bs-body-color, #212529) !important;
+}
+
+.proclaim-listing--cards .proclaim-listing-header .row {
+  align-items: center;
+}
+
+/* Constrain thumbnails inside card items to consistent row heights */
+.proclaim-listing--cards .proclaim-item img.img-fluid {
+  border-radius: 0.375rem;
+  object-fit: contain;
+  max-height: 100px;
+  width: auto;
+}
+
+.proclaim-listing--cards .proclaim-archived {
+  border-color: var(--bs-border-color, #dee2e6);
+  opacity: 0.7;
+}
+
+/* Cards mobile adjustments */
+@media (max-width: 991.98px) {
+  .proclaim-listing--cards .proclaim-item img.img-fluid {
+    max-width: 100%;
+    max-height: none;
+    height: auto;
+  }
+
+  .proclaim-listing--cards .proclaim-item {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+
+  .proclaim-listing--cards .proclaim-item:hover {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    transform: none;
+  }
+}
+
+/* --- Grid Style (opt-in via template setting) --- */
+
+.proclaim-listing--grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.proclaim-grid-card {
+  flex: 1 1 280px;
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.proclaim-grid-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.proclaim-grid-card-field {
+  line-height: 1.4;
+}
+
+/* getFluidData() wraps every element in a col-* div designed for
+   Bootstrap row grids.  Inside cards those col widths are wrong —
+   reset them so each field spans the full card width. */
+.proclaim-grid-card-field [class*="col"] {
+  width: 100% !important;
+  max-width: 100%;
+  flex: none;
+  padding: 0;
+}
+
+/* Kill <p> default margins inside grid card fields */
+.proclaim-grid-card-field p,
+.proclaim-grid-card-field div {
+  margin: 0;
+}
+
+/* First field (typically the title) — emphasise it */
+.proclaim-grid-card-field:first-child {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Clamp potentially long text (descriptions) to keep cards compact.
+   Skip the first child (title) so it always shows in full.
+   Target both <p> and <div> since getFluidData may use either wrapper. */
+.proclaim-grid-card-field:not(:first-child) p,
+.proclaim-grid-card-field:not(:first-child) > [class*="col"] > div {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Muted secondary info (dates, teacher names) */
+.proclaim-grid-card-field:nth-child(2),
+.proclaim-grid-card-field:nth-child(3) {
+  font-size: 0.875rem;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.proclaim-grid-card-field img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0.375rem;
+}
+
+/* Constrain thumbnail images inside grid cards */
+.proclaim-grid-card-field img.img-fluid {
+  max-height: 140px;
+  width: auto;
+}
+
+/* Grid size variants (controlled by grid_card_size param) */
+.proclaim-grid--small .proclaim-grid-card {
+  flex-basis: 200px;
+}
+
+.proclaim-grid--medium .proclaim-grid-card {
+  flex-basis: 280px;
+}
+
+.proclaim-grid--large .proclaim-grid-card {
+  flex-basis: 360px;
+}
+
+/* Grid mobile: single column */
+@media (max-width: 576px) {
+  .proclaim-listing--grid {
+    flex-direction: column;
+  }
+
+  .proclaim-grid-card {
+    flex-basis: auto;
+  }
+}
+
+/* Teacher Card Stack — composite image + name element */
+.proclaim-teacher-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.375rem;
+}
+
+.proclaim-teacher-stack img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 0.375rem;
+}
+
+.proclaim-teacher-stack-name {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+
+/* Sermon List Separator (legacy) */
+.sermon-list-separator {
+  border: 0;
+  height: 4px;
+  background-color: var(--color-white);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+}
+
+/* Media Container - Centered Inline Layout */
+.bsms_media_container {
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Proclaim Pagination Bar — counter + links side-by-side, centered */
+.proclaim-pagination-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.proclaim-pagination-bar .pagination {
+  margin-bottom: 0;
+}
+
+.proclaim-page-counter {
+  font-size: 0.875rem;
+  color: var(--bs-secondary-color, #6c757d);
+  white-space: nowrap;
+}
+
+/* Mobile: compact wrapping pagination */
+@media (max-width: 767.98px) {
+  .proclaim-pagination-bar .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .proclaim-pagination-bar .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8125rem;
+    min-width: 2rem;
+    text-align: center;
+  }
+}
+
+/* Dark mode: warning alerts keep amber background, so btn-close stays black (cancel Bootstrap's auto-invert) */
+[data-bs-theme="dark"] .com-proclaim .alert-warning .btn-close {
+  filter: none;
+}
+
+/* ==========================================================================
+   Dark Mode: Bootstrap table-secondary fix
+   ========================================================================== */
+
+/* Bootstrap's table-secondary renders #e2e3e5 background even in dark mode.
+   Override both the custom property AND the resolved background-color so the
+   row is a subtle tint instead of a blinding light gray.
+   Dual selectors handle data-bs-theme on <html> above .com-proclaim, or within. */
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > td,
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary > th,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary > td,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary > th {
+  --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
+  --bs-table-color: var(--bs-body-color);
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: var(--bs-body-color);
+}
+
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > td,
+.com-proclaim [data-bs-theme="dark"] .table > :not(caption) > tr.table-secondary:hover > th,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary:hover > td,
+[data-bs-theme="dark"] .com-proclaim .table > :not(caption) > tr.table-secondary:hover > th {
+  --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Prefers-color-scheme fallback (for templates not using data-bs-theme) */
+@media (prefers-color-scheme: dark) {
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary > td,
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary > th {
+    --bs-table-bg: rgba(255, 255, 255, 0.04) !important;
+    --bs-table-color: var(--bs-body-color);
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    color: var(--bs-body-color);
+  }
+
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary:hover > td,
+  html:not([data-bs-theme="light"]) .com-proclaim .table > :not(caption) > tr.table-secondary:hover > th {
+    --bs-table-bg: rgba(255, 255, 255, 0.07) !important;
+    background-color: rgba(255, 255, 255, 0.07) !important;
+  }
+}
+
+/* ==========================================================================
+   CWM Admin View Styles
+   ========================================================================== */
+
+/* Panel container (replaces inline border: ridge) */
+.cwmadmin-panel {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 15px;
+  background-color: var(--color-background-light);
+}
+
+/* Stats loading placeholder */
+.cwmadmin-stats-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-gray-medium);
+  padding: 10px 0;
+}
+
+.cwmadmin-stats-loading .spinner-border {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Stats container */
+.cwmadmin-stats-container {
+  min-height: 100px;
+}
+
+/* Dashboard action cards grid */
+.cwmadmin-dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  padding: 10px 0;
+}
+
+/* Individual action card */
+.cwmadmin-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 15px;
+  min-height: 100px;
+  border-radius: 8px;
+  background-color: var(--color-background-light);
+  border: 1px solid var(--color-border);
+  color: var(--color-gray-dark);
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cwmadmin-action-card i {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  color: var(--color-gray-medium);
+  transition: all 0.3s ease;
+}
+
+.cwmadmin-action-card span {
+  font-weight: 500;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.cwmadmin-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px var(--color-shadow);
+  background-color: var(--color-white);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.cwmadmin-action-card:hover i,
+.cwmadmin-action-card:hover span {
+  color: var(--color-accent);
+}
+
+.cwmadmin-action-card:hover i {
+  transform: scale(1.1);
+}
+
+.cwmadmin-action-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px var(--color-shadow-light);
+}
+
+/* Disabled action card state */
+.cwmadmin-action-card.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: var(--color-background);
+  border-color: var(--color-border-light);
+}
+
+.cwmadmin-action-card.disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: var(--color-background);
+  border-color: var(--color-border-light);
+}
+
+.cwmadmin-action-card.disabled:hover i,
+.cwmadmin-action-card.disabled:hover span {
+  color: var(--color-gray-medium);
+}
+
+.cwmadmin-action-card.disabled:hover i {
+  transform: none;
+}
+
+/* Button variant of action card */
+button.cwmadmin-action-card {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Orphan list scrollable container */
+.cwmadmin-orphan-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Tool panel description */
+.cwmadmin-panel h3.tab-description {
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-accent);
+  color: var(--color-gray-dark);
+}
+
+/* ==========================================================================
+   Stacked Form Fields (label on top, full-width controls)
+   ========================================================================== */
+
+.scripture-stacked > .control-group {
+  display: block;
+}
+
+.scripture-stacked > .control-group > .control-label {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+/* ==========================================================================
+   Mobile Responsive Styles
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* Stack inline fields vertically on mobile */
+  .inlineFields div {
+    float: none;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Full width install step containers */
+  #checks,
+  #download,
+  #decompress,
+  #install,
+  #migration,
+  #templates,
+  #extensions,
+  #done {
+    max-width: 100%;
+    margin: 7px 0;
+  }
+
+  /* Allow select containers to wrap */
+  .selectContainer {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  /* Full width loading indicator on small screens */
+  #loading {
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    margin: 5px;
+    max-width: 200px;
+  }
+}

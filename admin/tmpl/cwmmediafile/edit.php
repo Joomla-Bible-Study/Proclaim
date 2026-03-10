@@ -4,7 +4,7 @@
  * Edit
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,8 +17,12 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Session\Session;
 
-$input = Factory::getApplication()->input;
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
+
+$input = Factory::getApplication()->getInput();
 
 // Set up defaults
 if ($input->getInt('id')) {
@@ -33,24 +37,32 @@ if ($input->getInt('id')) {
 
 $new = ($this->item->id === '0' || empty($this->item->id));
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+// Determine if we should show the server picker modal
+$showServerPicker = $new && $this->addon === null;
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
-    ->addInlineScript(
-        '
-	Joomla.submitbutton = function (task, server_id) {
-		if (task == "cwmmediafile.setServer") {
-			document.getElementById("adminForm").elements["jform[server_id]"].value = server_id;
-			Joomla.submitform(task, document.getElementById("adminForm"));
-		} else if (task == "cwmmediafile.cancel"|| document.formvalidator.isValid(document.getElementById("adminForm"))) {
-			Joomla.submitform(task, document.getElementById("adminForm"));
-		} else {
-			alert("' . $this->escape(Text::_("JGLOBAL_VALIDATION_FORM_FAILED")) . '");
-		}
-	}
-'
-    );
+    ->useScript('com_proclaim.mediafile-edit');
+
+// Pass config to JavaScript
+$this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
+    'token'            => Session::getFormToken(),
+    'isNew'            => $new,
+    'showServerPicker' => $showServerPicker,
+    'validationFailed' => Text::_('JGLOBAL_VALIDATION_FORM_FAILED'),
+    'switchWarning'    => Text::_('JBS_MED_SERVER_TYPE_CHANGE_WARNING'),
+    'loadingAddon'     => Text::_('JBS_MED_LOADING_ADDON'),
+    'switchLoading'    => Text::_('JBS_MED_SERVER_SWITCH_LOADING'),
+    'selectServerTitle' => Text::_('JBS_MED_SELECT_SERVER_TITLE'),
+    'selectServerDesc'  => Text::_('JBS_MED_SELECT_SERVER_DESC'),
+    'serverTypeLocalDesc'  => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
+    'serverTypeDirectDesc' => Text::_('JBS_MED_SERVER_TYPE_DIRECT_DESC'),
+    'serverTypeYoutubeDesc' => Text::_('JBS_MED_SERVER_TYPE_YOUTUBE_DESC'),
+    'serverTypeLegacyDesc'  => Text::_('JBS_MED_SERVER_TYPE_LEGACY_DESC'),
+    'selectLabel'           => Text::_('JSELECT'),
+    'clearLabel'            => Text::_('JCLEAR'),
+]);
 
 $this->useCoreUI = true;
 ?>
@@ -59,127 +71,68 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
       method="post"
       name="adminForm"
       id="adminForm"
-      class="form-validate">
-    <div class="form-horizontal">
+      class="form-validate"
+      <?php if ($showServerPicker) : ?>data-show-server-picker="true"<?php endif; ?>>
+    <div>
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'general')); ?>
+        echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general']); ?>
 
         <!-- Begin Content -->
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
             <div class="col-lg-7">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('study_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('study_id', null, $study_id); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('createdate'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('createdate', null, $createdate); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('server_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('server_id', null, $this->item->server_id); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('podcast_id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('podcast_id', null, $podcast_id); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('study_id', null, $study_id); ?>
+                <?php echo $this->form->renderField('createdate', null, $createdate); ?>
+                <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
+                <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
 
-                <?php
-                echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                <div id="addon-general-container">
+                    <?php if ($this->addon !== null) : ?>
+                        <?php echo $this->addon->renderGeneral($this->media_form, $new); ?>
+                    <?php elseif (!$showServerPicker) : ?>
+                        <div class="alert alert-info">
+                            <?php echo Text::_('JBS_MED_SELECT_SERVER_FIRST'); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
             </div>
-            <div class="col-lg-5 form-vertical">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('id'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('access'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('access'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('language'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('language'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('comment'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('comment'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-5">
+                <?php echo $this->form->renderField('published'); ?>
+                <?php echo $this->form->renderField('access'); ?>
+                <?php echo $this->form->renderField('language'); ?>
+                <?php echo $this->form->renderField('comment'); ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'options', Text::_('JBS_ADDON_MEDIA_OPTIONS_LABEL')); ?>
+        <div id="addon-options-content">
+            <?php if ($this->addon !== null) : ?>
+                <?php echo $this->addon->renderOptionsFields($this->media_form, $new); ?>
+            <?php endif; ?>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php
+                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
             </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo $this->addon->render($this->media_form, $new); ?>
-
-        <?php
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+            <div class="row">
+                <?php echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
@@ -190,15 +143,15 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         echo HTMLHelper::_('uitab.endTabSet'); ?>
 
         <?php
-        // Load the batch processing form. ?>
+        // Load the batch processing form.?>
         <?php
         echo HTMLHelper::_(
             'bootstrap.renderModal',
             'collapseModal',
-            array(
+            [
                 'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                'footer' => $this->loadTemplate('converter_footer')
-            ),
+                'footer' => $this->loadTemplate('converter_footer'),
+            ],
             $this->loadTemplate('converter_body')
         ); ?>
     </div>

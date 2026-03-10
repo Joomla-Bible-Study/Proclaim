@@ -4,23 +4,23 @@
  * Set Definition for tags
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 // No Direct Access
-defined('_JEXEC') or die();
+\defined('_JEXEC') or die();
 
-$BsmTmplTags = array(
-    '[studyDate]'  => array(
+$BsmTmplTags = [
+    '[studyDate]' => [
         'method' => 'studyDate',
         'type'   => 'data',
-        'db'     => 'studydate'
-    ),
-    '[filterBook]' => array(
+        'db'     => 'studydate',
+    ],
+    '[filterBook]' => [
         'method' => 'filterBook',
         'type'   => 'generic',
-        'db'     => null
-    )
-);
+        'db'     => null,
+    ],
+];

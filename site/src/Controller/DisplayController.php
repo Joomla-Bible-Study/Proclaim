@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Site\Controller;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Input\Input;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\Input\Input;
 
 /**
  * Component Controller
@@ -40,12 +40,12 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      */
     public function __construct($config = [], ?MVCFactoryInterface $factory = null, $app = null, $input = null)
     {
-        // Contact frontpage Editor contacts proxying.
-        $this->input = Factory::getApplication()->input;
+        // Get input early to check view before parent construction.
+        $appInput = $input ?? Factory::getApplication()->getInput();
 
-        if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
+        if ($appInput->get('view') === 'cwmlandingpage' && $appInput->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
-        } elseif ($this->input->get('view') === 'cwmsermons' && $this->input->get('layout') === 'modal') {
+        } elseif ($appInput->get('view') === 'cwmsermons' && $appInput->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
         }
 
@@ -56,39 +56,42 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
      * Method to display a view.
      *
      * @param   bool   $cachable   If true, the view output will be cached
-     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types.
      *
      * @return  static  This object to support chaining.
      *
      * @throws \Exception
-     * @since   1.5
+     * @see    \Joomla\CMS\Filter\InputFilter::clean() for valid values.
+     *
+     * @since   3.0
      */
-    public function display($cachable = true, $urlparams = []): DisplayController
+    public function display($cachable = true, $urlparams = []): static
     {
         /*
         Set the default view name and format from the Request.
-        Note we are using a_id to avoid collisions with the router and the return page.
+        Note, we are using a_id to avoid collisions with the router and the return page.
         Frontend is a bit messier than the backend.
         */
-        $id    = $this->input->getInt('a_id');
-        $vName = $this->input->getCmd('view', 'cwmlandingpage');
-        $this->input->set('view', $vName);
+        $input = $this->input;
+        $id    = $input->getInt('a_id');
+        $vName = $input->getCmd('view', 'cwmlandingpage');
+        $input->set('view', $vName);
 
         $user = $this->app->getIdentity();
 
         if (
-            $user->get('id')
-            || ($this->input->getMethod() === 'POST'
-                && strpos($vName, 'form') !== false)
-            || $vName === 'cwmpopup'
+            $vName === 'cwmpopup'
+            || $user->id
+            || ($input->getMethod() === 'POST'
+                && str_contains($vName, 'form'))
         ) {
             $cachable = false;
         }
 
-        // Attempt to change mysql for error in large select
-        $t = $this->input->get('t', '1', 'int');
+        // Attempt to change MySQL for an error in a large select
+        $t = $input->get('t', '1', 'int');
 
-        $this->input->set('t', $t);
+        $input->set('t', $t);
 
         $safeurlparams = [
             'id'               => 'INT',

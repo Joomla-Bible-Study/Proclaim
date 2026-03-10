@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -12,13 +12,14 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -45,9 +46,9 @@ class Cwmpagebuilder
     /**
      * Build Page
      *
-     * @param   object            $item      Item info
-     * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  Template data
+     * @param   object    $item      Item info
+     * @param   Registry  $params    Item Params
+     * @param   object    $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return object
      *
@@ -64,7 +65,11 @@ class Cwmpagebuilder
         $CWMElements = new Cwmlisting();
 
         if ($mids) {
-            $page->media = $this->mediaBuilder($mids, $params, $template, $item);
+            // Build media files inline (was mediaBuilder)
+            $mediaIDs         = $CWMElements->getFluidMediaids($item);
+            $media            = $CWMElements->getMediaFiles($mediaIDs);
+            $item->mediafiles = $media;
+            $page->media      = $CWMElements->getFluidMediaFiles($item, $params, $template);
         } else {
             $page->media = '';
         }
@@ -110,41 +115,40 @@ class Cwmpagebuilder
             $page->topics = Text::_($item->topics_text);
         }
 
-        if ($item->thumbnailm) {
-            $image                 = Cwmimages::getStudyThumbnail($item->thumbnailm);
-            $page->study_thumbnail = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $item->studytitle . '" />';
+        // Prefer study_image (original path) over deriving from thumbnailm
+        $studyImagePath = $item->study_image ?? '';
+
+        if (!empty($studyImagePath)) {
+            $image                 = Cwmimages::getImagePath($studyImagePath);
+            $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
+        } elseif (!empty($item->thumbnailm)) {
+            $image                 = Cwmimages::getStudyOriginal($item->thumbnailm);
+            $page->study_thumbnail = Cwmimages::renderPicture($image, $item->studytitle);
         } else {
             $page->study_thumbnail = '';
         }
 
         if ($item->series_thumbnail) {
             $image                  = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
-            $page->series_thumbnail = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $item->series_text . '" />';
+            $page->series_thumbnail = Cwmimages::renderPicture($image, $item->series_text);
         } else {
-            $page->series_thumnail = '';
+            $page->series_thumbnail = '';
         }
 
         $page->detailslink = Route::_(
             'index.php?option=com_proclaim&view=cwmsermon&id=' . $item->slug . '&t=' . $params->get('detailstemplateid')
         );
 
-        if (!isset($item->image)) {
-            $item->image = '';
-        }
+        // Teacher image: use teacher_image alias (avoids collision with study.image)
+        $teacherImg = $item->teacher_image ?? $item->image ?? '';
 
         if (!isset($item->thumb)) {
             $item->thumb = '';
         }
 
-        if ($item->image || $item->thumb) {
-            $image              = Cwmimages::getTeacherImage($item->image, $item->thumb);
-            $page->teacherimage = '<img src="' . Uri::base(
-            ) . $image->path . '" width="' . $image->width . '" height="' . $image->height . '" alt="'
-                . $item->teachername . '" />';
+        if ($teacherImg || $item->thumb) {
+            $image              = Cwmimages::getTeacherImage($teacherImg, $item->thumb);
+            $page->teacherimage = Cwmimages::renderPicture($image, $item->teachername);
         } else {
             $page->teacherimage = '';
         }
@@ -207,79 +211,67 @@ class Cwmpagebuilder
     }
 
     /**
-     * Media Builder
+     * Enrich an array of study items with buildPage display properties.
      *
-     * @param   array             $mediaids  ID of Media
-     * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  template date
-     * @param   object            $item      Item Params
+     * Calls buildPage() on each item and merges the computed display
+     * properties (scripture, media, thumbnails, etc.) back onto the item.
      *
-     * @return string
+     * @param   array     $studies   Array of study objects from studyBuilder() or model
+     * @param   Registry  $params    Template parameters
+     * @param   object    $template  Template object
+     *
+     * @return  array  The same array with display properties merged onto each item
      *
      * @throws \Exception
-     * @since 7.0
+     * @since 10.1.0
      */
-    private function mediaBuilder($mediaids, $params, $template, $item): string
+    public function enrichStudies(array $studies, Registry $params, object $template): array
     {
-        $listing          = new Cwmlisting();
-        $mediaIDs         = $listing->getFluidMediaids($item);
-        $media            = $listing->getMediaFiles($mediaIDs);
-        $item->mediafiles = $media;
+        foreach ($studies as $study) {
+            $this->enrichStudy($study, $params, $template);
+        }
 
-        // Var_dump($media); die;
-        return $listing->getFluidMediaFiles($item, $params, $template);
+        return $studies;
     }
 
     /**
-     * Run Content Plugins
+     * Enrich a single study item with buildPage display properties.
      *
-     * @param   object  $item    Item info
-     * @param   object  $params  Item params
+     * @param   object    $study     Study object
+     * @param   Registry  $params    Template parameters
+     * @param   object    $template  Template object
      *
-     * @return object
+     * @return  void
      *
      * @throws \Exception
-     * @since 7.0
+     * @since 10.1.0
      */
-    public function runContentPlugins($item, $params): object
+    public function enrichStudy(object $study, Registry $params, object $template): void
     {
-        // We don't need offset, but it is a required argument for the plugin dispatcher
-        $offset = 0;
-        PluginHelper::importPlugin('content');
+        $page = $this->buildPage($study, $params, $template);
 
-        // Run content plugins
-        $dispatcher = Factory::getApplication();
-        $contentEventArguments = [
-            'context' => 'com_proclaim.sermon',
-            'subject' => &$item,
-            'params'  => &$params,
-            'page'    => $offset,
-        ];
-
-        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
-
-        $item->event = new \stdClass();
-        $results                        = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
-        $item->event->afterDisplayTitle = trim(implode("\n", $results));
-
-        $results                           = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
-        $item->event->beforeDisplayContent = trim(implode("\n", $results));
-
-        $results                          = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
-        $item->event->afterDisplayContent = trim(implode("\n", $results));
-
-        return $item;
+        $study->scripture1          = $page->scripture1;
+        $study->scripture2          = $page->scripture2;
+        $study->media               = $page->media;
+        $study->studydate           = $page->studydate;
+        $study->topics              = $page->topics;
+        $study->study_thumbnail     = $page->study_thumbnail ?? null;
+        $study->series_thumbnail    = $page->series_thumbnail ?? null;
+        $study->detailslink         = $page->detailslink;
+        $study->teacherimage        = $page->teacherimage ?? null;
+        $study->studyintro          = $page->studyintro ?? '';
+        $study->secondary_reference = $page->secondary_reference ?? '';
+        $study->sdescription        = $page->sdescription ?? '';
     }
 
     /**
      * Study Builder
      *
-     * @param   string            $whereitem   ?
-     * @param   string            $wherefield  ?
-     * @param   Registry          $params      Item params
-     * @param   int               $limit       Limit of Records
-     * @param   string            $order       DESC or ASC
-     * @param   CwmtemplateTable  $template    Template Data
+     * @param   string    $whereitem   ?
+     * @param   string    $wherefield  ?
+     * @param   Registry  $params      Item params
+     * @param   int       $limit       Limit of Records
+     * @param   string    $order       DESC or ASC
      *
      * @return array
      *
@@ -292,9 +284,8 @@ class Cwmpagebuilder
         $params = null,
         $limit = 10,
         $order = 'DESC',
-        $template = null
     ): array {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $orderparam = $params->get('order', '1');
 
@@ -303,124 +294,269 @@ class Cwmpagebuilder
         }
 
         // Compute view access permissions.
-        $user   = \Joomla\CMS\Factory::getApplication()->getSession()->get('user');
+        $user   = \Joomla\CMS\Factory::getApplication()->getIdentity();
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
-        $query = $db->getQuery(true);
+        $query          = $db->getQuery(true);
+        $nullDateQuoted = $db->quote($db->getNullDate());
+        $query->select(implode(', ', $db->quoteName([
+            'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+            'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+            'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+            'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+            'study.booknumber2', 'study.bible_version', 'study.bible_version2', 'study.location_id',
+        ])));
+        // Use studydate as fallback for modified
         $query->select(
-            'study.id, study.published, study.studydate, study.studytitle, study.booknumber, study.chapter_begin,
-		                study.verse_begin, study.chapter_end, study.verse_end, study.hits, study.alias, study.studyintro,
-		                study.teacher_id, study.secondary_reference, study.booknumber2, study.location_id, ' .
-            // Use created if modified is 0
-            'CASE WHEN study.modified = ' . $db->quote(
-                $db->getNullDate()
-            ) . ' THEN study.studydate ELSE study.modified END as modified, ' .
-            'study.modified_by, uam.name as modified_by_name,' .
-            // Use created if publish_up is 0
-            'CASE WHEN study.publish_up = ' . $db->quote(
-                $db->getNullDate()
-            ) . ' THEN study.studydate ELSE study.publish_up END as publish_up,' .
-            'study.publish_down,
-		                study.series_id, study.download_id, study.thumbnailm, study.thumbhm, study.thumbwm,
-		                study.access, study.user_name, study.user_id, study.studynumber, study.chapter_begin2, study.chapter_end2,
-		                study.verse_end2, study.verse_begin2, ' . $query->length('study.studytext') . ' AS readmore ,'
-            . ' CASE WHEN CHAR_LENGTH(study.alias) THEN CONCAT_WS(\':\', study.id, study.alias) ELSE study.id END as slug '
+            'CASE WHEN ' . $db->quoteName('study.modified') . ' = ' . $nullDateQuoted
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.modified')
+            . ' END AS ' . $db->quoteName('modified')
         );
-        $query->from('#__bsms_studies AS study');
+        $query->select($db->quoteName('study.modified_by') . ', ' . $db->quoteName('uam.name', 'modified_by_name'));
+        // Use studydate as fallback for publish_up
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.publish_up') . ' = ' . $nullDateQuoted
+            . ' THEN ' . $db->quoteName('study.studydate') . ' ELSE ' . $db->quoteName('study.publish_up')
+            . ' END AS ' . $db->quoteName('publish_up')
+        );
+        $query->select(implode(', ', $db->quoteName([
+            'study.publish_down', 'study.series_id', 'study.download_id',
+            'study.thumbnailm', 'study.thumbhm', 'study.thumbwm',
+            'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
+            'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
+        ])));
+        $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
+        $query->select(
+            'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('
+            . $db->quote(':') . ', ' . $db->quoteName('study.id') . ', ' . $db->quoteName('study.alias')
+            . ') ELSE ' . $db->quoteName('study.id') . ' END AS ' . $db->quoteName('slug')
+        );
+        $query->from($db->quoteName('#__bsms_studies', 'study'));
 
         // Join over Message Types
-        $query->select('messageType.message_type AS message_type');
-        $query->join('LEFT', '#__bsms_message_type AS messageType ON messageType.id = study.messagetype');
+        $query->select($db->quoteName('messageType.message_type', 'message_type'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_message_type', 'messageType') . ' ON '
+            . $db->quoteName('messageType.id') . ' = ' . $db->quoteName('study.messagetype')
+        );
 
         // Join over Teachers
         $query->select(
-            'teacher.teachername AS teachername, teacher.title as teachertitle, teacher.thumb, teacher.thumbh, teacher.thumbw'
+            $db->quoteName('teacher.teachername', 'teachername') . ', '
+            . $db->quoteName('teacher.title', 'teachertitle') . ', '
+            . $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
-        $query->join('LEFT', '#__bsms_teachers AS teacher ON teacher.id = study.teacher_id');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('study.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0'
+        );
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_teachers', 'teacher') . ' ON '
+            . $db->quoteName('teacher.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')'
+        );
 
         // Join over Series
         $query->select(
-            'series.series_text, series.series_thumbnail, series.description as sdescription, series.access'
+            $db->quoteName('series.series_text') . ', ' . $db->quoteName('series.series_thumbnail') . ', '
+            . $db->quoteName('series.description', 'sdescription') . ', ' . $db->quoteName('series.access')
         );
-        $query->join('LEFT', '#__bsms_series AS series ON series.id = study.series_id');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_series', 'series') . ' ON '
+            . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
+        );
 
         // Join over Books
-        $query->select('book.bookname');
-        $query->join('LEFT', '#__bsms_books AS book ON book.booknumber = study.booknumber');
+        $query->select($db->quoteName('book.bookname'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_books', 'book') . ' ON '
+            . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
+        );
 
-        $query->select('book2.bookname as bookname2');
-        $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = study.booknumber2');
+        $query->select($db->quoteName('book2.bookname', 'bookname2'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_books', 'book2') . ' ON '
+            . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2')
+        );
 
         // Join over Plays/Downloads
         $query->select(
-            'GROUP_CONCAT(DISTINCT mediafile.id) as mids, SUM(mediafile.plays) AS totalplays,
-		SUM(mediafile.downloads) as totaldownloads, mediafile.study_id'
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('mediafile.id') . ') AS ' . $db->quoteName('mids') . ', '
+            . 'SUM(' . $db->quoteName('mediafile.plays') . ') AS ' . $db->quoteName('totalplays') . ', '
+            . 'SUM(' . $db->quoteName('mediafile.downloads') . ') AS ' . $db->quoteName('totaldownloads') . ', '
+            . $db->quoteName('mediafile.study_id')
         );
-        $query->join('LEFT', '#__bsms_mediafiles AS mediafile ON mediafile.study_id = study.id');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON '
+            . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id')
+        );
 
         // Join over Locations
-        $query->select('locations.location_text');
-        $query->join('LEFT', '#__bsms_locations AS locations ON study.location_id = locations.id');
+        $query->select($db->quoteName('locations.location_text'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_locations', 'locations') . ' ON '
+            . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id')
+        );
 
         // Join over studytopics
-        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-        $query->join('LEFT', '#__bsms_studytopics AS st ON study.id = st.study_id');
-        $query->select(
-            'GROUP_CONCAT(DISTINCT t.id), GROUP_CONCAT(DISTINCT t.topic_text) as topic_text,' .
-            'GROUP_CONCAT(DISTINCT t.params) as topic_params'
+        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+            . $db->quoteName('study.id') . ' = ' . $db->quoteName('st.study_id')
         );
-        $query->join('LEFT', '#__bsms_topics AS t ON t.id = st.topic_id');
+        $query->select(
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.id') . '), '
+            . 'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.topic_text') . ') AS ' . $db->quoteName('topic_text') . ', '
+            . 'GROUP_CONCAT(DISTINCT ' . $db->quoteName('t.params') . ') AS ' . $db->quoteName('topic_params')
+        );
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_topics', 't') . ' ON '
+            . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id')
+        );
 
         // Join over the users for the author and modified_by names.
-        $query->select("CASE WHEN study.user_name > ' ' THEN study.user_name ELSE users.name END AS submitted")
-            ->select("users.email AS author_email")
-            ->join('LEFT', '#__users AS users ON study.user_id = users.id')
-            ->join('LEFT', '#__users AS uam ON uam.id = study.modified_by');
+        $query->select(
+            'CASE WHEN ' . $db->quoteName('study.user_name') . ' > ' . $db->quote(' ')
+            . ' THEN ' . $db->quoteName('study.user_name') . ' ELSE ' . $db->quoteName('users.name')
+            . ' END AS ' . $db->quoteName('submitted')
+        )
+            ->select($db->quoteName('users.email', 'author_email'))
+            ->join(
+                'LEFT',
+                $db->quoteName('#__users', 'users') . ' ON '
+                . $db->quoteName('study.user_id') . ' = ' . $db->quoteName('users.id')
+            )
+            ->join(
+                'LEFT',
+                $db->quoteName('#__users', 'uam') . ' ON '
+                . $db->quoteName('uam.id') . ' = ' . $db->quoteName('study.modified_by')
+            );
 
-        $query->group('study.id');
+        $query->group($db->quoteName('study.id'));
 
         // Select only published studies
-        $query->where('study.published = 1');
-        $query->where('(series.published = 1 OR study.series_id <= 0)');
+        $query->where($db->quoteName('study.published') . ' = 1');
 
         if ($wherefield && $whereitem) {
-            $query->where($wherefield . ' = ' . $whereitem);
+            if ($wherefield === 'teacher') {
+                // Use junction table EXISTS subquery for multi-teacher support
+                $tSubquery = $db->getQuery(true)
+                    ->select('1')
+                    ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
+                    ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
+                    ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $whereitem);
+                $query->where('EXISTS (' . $tSubquery . ')');
+            } else {
+                $query->where($wherefield . ' = ' . $whereitem);
+            }
         }
 
         // Define null and now dates
         $nullDate = $db->quote($db->getNullDate());
-        $nowDate  = $db->quote(Factory::getDate()->toSql());
+        $nowDate  = $db->quote((new Date())->toSql());
 
-        // Filter by start and end dates.
+        // Filter by start and end dates + cascading series date window
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
                 'core.edit',
                 'com_proclaim'
             ))
         ) {
-            $query->where('(study.publish_up = ' . $nullDate . ' OR study.publish_up <= ' . $nowDate . ')')
-                ->where('(study.publish_down = ' . $nullDate . ' OR study.publish_down >= ' . $nowDate . ')');
+            $query->where('(' . $db->quoteName('study.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $db->quoteName('study.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('study.publish_down') . ' >= ' . $nowDate . ')');
+
+            // Cascading series date window (like Joomla categories)
+            $query->where(
+                '((' . $db->quoteName('series.published') . ' = 1'
+                . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
+                . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+            );
+        } else {
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
         }
 
         // Filter by language
         $language = $params->get('language', '*');
 
         if ($language === '*') {
-            $query->where('study.language in (' . $db->quote($language) . ',' . $db->quote('*') . ')');
+            $query->where($db->quoteName('study.language') . ' IN (' . $db->quote($language) . ',' . $db->quote('*') . ')');
         } elseif ($language !== '*') {
             $query->where(
-                'study.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+                $db->quoteName('study.language') . ' IN (' . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
             );
         }
 
-        $query->order('studydate ' . $order);
+        $query->order($db->quoteName('studydate') . ' ' . $order);
 
         // Filter only for authorized view
-        $query->where('(series.access IN (' . $groups . ') or study.series_id <= 0)');
-        $query->where('study.access IN (' . $groups . ')');
+        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+        $query->where($db->quoteName('study.access') . ' IN (' . $groups . ')');
 
         $db->setQuery($query, 0, $limit);
+        $items = $db->loadObjectList();
 
-        return $db->loadObjectList();
+        // Batch-load all teachers for teachers-list element
+        if (!empty($items)) {
+            $studyIds   = array_map(fn ($item) => (int) $item->id, $items);
+            $teacherMap = CwmstudyteacherHelper::getTeachersForStudies($studyIds);
+
+            foreach ($items as $item) {
+                $item->teachers = $teacherMap[(int) $item->id] ?? [];
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Run content plugins on item text
+     *
+     * @param   object  $item    Item with text property to process
+     * @param   object  $params  Component params
+     *
+     * @return object The item with processed text and event properties
+     *
+     * @throws \Exception
+     * @since 10.0.0
+     */
+    public function runContentPlugins(object $item, object $params): object
+    {
+        // We don't need offset, but it is a required argument for the plugin dispatcher
+        $offset = 0;
+        PluginHelper::importPlugin('content');
+
+        // Run content plugins
+        $dispatcher            = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
+
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+
+        $item->event                        = new \stdClass();
+        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
+        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
+        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
+        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+
+        return $item;
     }
 }

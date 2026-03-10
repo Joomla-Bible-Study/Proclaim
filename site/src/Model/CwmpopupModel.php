@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Registry\Registry;
 
 /**
  * Comment model class
@@ -44,11 +43,9 @@ class CwmpopupModel extends ListModel
      */
     protected function populateState($ordering = null, $direction = null): void
     {
-        /** @type \JApplicationSite $app */
         $app = Factory::getApplication();
 
         // Load the parameters
-        /** @var Registry $params */
         $params = $app->getParams();
         $this->setState('params', $params);
         $template = Cwmparams::getTemplateparams();
@@ -60,7 +57,7 @@ class CwmpopupModel extends ListModel
         $t = (int)$params->get('popupid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -68,6 +65,6 @@ class CwmpopupModel extends ListModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $this->setState('layout', $app->input->get('layout'));
+        $this->setState('layout', $app->getInput()->get('layout'));
     }
 }

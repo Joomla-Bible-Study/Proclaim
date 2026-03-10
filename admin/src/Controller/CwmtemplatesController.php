@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,17 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
-use Joomla\Input\Files;
-use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -40,7 +39,7 @@ class CwmtemplatesController extends AdminController
     /**
      * Import Template
      *
-     * @return CwmtemplatesController|integer
+     * @return CwmtemplatesController|int
      *
      * @throws \Exception
      * @since 8.0
@@ -48,7 +47,11 @@ class CwmtemplatesController extends AdminController
     public function templateImport(): CwmtemplatesController|int
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', Text::_('JINVALID_TOKEN'), 'error');
+
+            return 0;
+        }
 
         // Set Variables.
         $sermonstemplate        = null;
@@ -61,27 +64,26 @@ class CwmtemplatesController extends AdminController
 
         set_time_limit(300);
 
-        $input    = new Files();
-        $userfile = $input->get('template_import');
+        $userfile = $this->input->files->get('template_import');
         $app      = Factory::getApplication();
         $tc       = 0;
 
         // Make sure that file uploads are enabled in php
-        if (!(bool)ini_get('file_uploads')) {
+        if (!(bool)\ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_CMN_UPLOADS_NOT_ENABLED'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!is_array($userfile)) {
+        if (!\is_array($userfile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // Check if there was a problem uploading the file.
         if ($userfile['error'] || $userfile['size'] < 1) {
             $app->enqueueMessage(Text::_('JBS_CMN_WARN_INSTALL_UPLOAD_ERROR'), 'warning');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates');
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates');
         }
 
         // Build the appropriate paths
@@ -92,12 +94,12 @@ class CwmtemplatesController extends AdminController
         // Move uploaded file
         move_uploaded_file($tmp_src, $tmp_dest);
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query   = file_get_contents(JPATH_SITE . '/tmp/' . $userfile['name']);
         $queries = DatabaseDriver::splitSql($query);
 
-        if (count($queries) === 0) {
+        if (\count($queries) === 0) {
             // No queries to process
             return 0;
         }
@@ -114,21 +116,22 @@ class CwmtemplatesController extends AdminController
 
                         // Get new  record insert to change name
                         $query = $db->getQuery(true);
-                        $query->select('filename, id, type')
-                            ->from('#__bsms_templatecode')
-                            ->order($db->q('id') . ' DESC');
+                        $query->select($db->quoteName(['filename', 'id', 'type']))
+                            ->from($db->quoteName('#__bsms_templatecode'))
+                            ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->getQuery(true);
-                        $query->update('#__bsms_styles')
-                            ->set($db->qn('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-                            ->where($db->qn('id') . ' = ' . (int)$data->id);
+                        $query->update($db->quoteName('#__bsms_styles'))
+                            ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
+                            ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
 
                         $tc++;
 
                         // Store new Recorded so it can be seen.
-                        $table = new CwmtemplatecodeTable($db);
+                        $table = Factory::getApplication()->bootComponent('com_proclaim')
+                            ->getMVCFactory()->createTable('Cwmtemplatecode', 'Administrator');
 
                         try {
                             $table->load($data->id);
@@ -142,15 +145,15 @@ class CwmtemplatesController extends AdminController
 
                         // Get new  record insert to change name
                         $query = $db->getQuery(true);
-                        $query->select('id, title, params')
-                            ->from('#__bsms_templates')
-                            ->order($db->q('id') . ' DESC');
+                        $query->select($db->quoteName(['id', 'title', 'params']))
+                            ->from($db->quoteName('#__bsms_templates'))
+                            ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->getQuery(true);
-                        $query->update('#__bsms_templates')
-                            ->set($db->qn('title') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
-                            ->where($db->qn('id') . ' = ' . (int)$data->id);
+                        $query->update($db->quoteName('#__bsms_templates'))
+                            ->set($db->quoteName('title') . ' = ' . $db->q($data->title . '_copy' . $data->id))
+                            ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
                     }
                 }
@@ -159,9 +162,9 @@ class CwmtemplatesController extends AdminController
 
         // Get new  record insert to change name
         $query = $db->getQuery(true);
-        $query->select('id, type, filename')
-            ->from('#__bsms_templatecode')
-            ->order($db->q('id') . ' DESC');
+        $query->select($db->quoteName(['id', 'type', 'filename']))
+            ->from($db->quoteName('#__bsms_templatecode'))
+            ->order($db->quoteName('id') . ' DESC');
         $db->setQuery($query, 0, $tc);
         $data = $db->loadObjectList();
 
@@ -203,14 +206,15 @@ class CwmtemplatesController extends AdminController
 
         // Get new record insert to change name
         $query = $db->getQuery(true);
-        $query->select('id, title, params')
-            ->from('#__bsms_templates')
-            ->order('id');
+        $query->select($db->quoteName(['id', 'title', 'params']))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->order($db->quoteName('id'));
         $db->setQuery($query, 1);
         $data = $db->loadObject();
 
         // Load Table Data.
-        $table = new CwmtemplateTable($db);
+        $table = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
         try {
             $table->load($data->id);
@@ -235,6 +239,11 @@ class CwmtemplatesController extends AdminController
 
         $table->store();
 
+        // Clean up the uploaded tmp file
+        if (is_file($tmp_dest)) {
+            File::delete($tmp_dest);
+        }
+
         $message = Text::_('JBS_TPL_IMPORT_SUCCESS');
 
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
@@ -251,7 +260,7 @@ class CwmtemplatesController extends AdminController
      */
     private function performDB(string $query): void
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $db->setQuery($query);
         $db->execute();
     }
@@ -261,27 +270,30 @@ class CwmtemplatesController extends AdminController
      *
      * @return CwmtemplatesController|false
      *
+     * @throws \Exception
      * @since 8.0
      */
     public function templateExport(): bool|CwmtemplatesController
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
-        $input          = new Input();
+        $input          = $this->input;
         $data           = $input->get('template_export');
         $exporttemplate = $data;
 
         if (!$exporttemplate) {
             $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
-            $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('t.id, t.type, t.params, t.title, t.text');
-        $query->from('#__bsms_templates as t');
-        $query->where('t.id = ' . $exporttemplate);
+        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
+        $query->from($db->quoteName('#__bsms_templates', 't'));
+        $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
         $db->setQuery($query);
         $result       = $db->loadObject();
         $objects[]    = $this->getExportSetting($result);
@@ -298,7 +310,7 @@ class CwmtemplatesController extends AdminController
         File::delete($filepath);
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
-        return $this->setRedirect('index.php?option=com_proclaim&view=templates', $message);
+        return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
     }
 
     /**
@@ -316,7 +328,7 @@ class CwmtemplatesController extends AdminController
         $registry = new Registry();
         $registry->loadString($result->params);
         $params  = $registry;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
         $css     = $params->get('css');
         $css     = substr($css, 0, -4);
@@ -324,9 +336,9 @@ class CwmtemplatesController extends AdminController
         if ($css) {
             $objects = "--\n-- CSS Style Code\n--\n";
             $query2  = $db->getQuery(true);
-            $query2->select('style.*');
-            $query2->from('#__bsms_styles AS style');
-            $query2->where('style.filename = "' . $css . '"');
+            $query2->select($db->quoteName('style') . '.*');
+            $query2->from($db->quoteName('#__bsms_styles', 'style'));
+            $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
             $db->setQuery($query2);
             $db->execute();
             $cssresult = $db->loadObject();
@@ -403,11 +415,11 @@ class CwmtemplatesController extends AdminController
      */
     public function getTemplate($template): bool|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('tc.id, tc.templatecode,tc.type,tc.filename');
-        $query->from('#__bsms_templatecode as tc');
-        $query->where('tc.filename ="' . $template . '"');
+        $query->select($db->quoteName(['tc.id', 'tc.templatecode', 'tc.type', 'tc.filename']));
+        $query->from($db->quoteName('#__bsms_templatecode', 'tc'));
+        $query->where($db->quoteName('tc.filename') . ' = ' . $db->q($template));
         $db->setQuery($query);
 
         if (!$object = $db->loadObject()) {
@@ -415,10 +427,10 @@ class CwmtemplatesController extends AdminController
         }
 
         $templatereturn = '
-                        INSERT INTO `#__bsms_templatecode` SET `type` = "' . $db->escape($object->type) . '",
-                        `templatecode` = "' . $db->escape($object->templatecode) . '",
-                        `filename`="' . $db->escape($template) . '",
-                        `published` = "1";
+                        INSERT INTO `#__bsms_templatecode` SET `type` = ' . $db->q($object->type) . ',
+                        `templatecode` = ' . $db->q($object->templatecode) . ',
+                        `filename` = ' . $db->q($template) . ',
+                        `published` = ' . $db->q('1') . ';
                         ';
 
         return $templatereturn;
@@ -431,12 +443,24 @@ class CwmtemplatesController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmtemplate', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Method to get the JSON-encoded counts for Templates
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getQuickIconTemplates(): void
+    {
+        CwmcountHelper::sendQuickIconResponse('#__bsms_templates', 'COM_PROCLAIM_N_QUICKICON_TEMPLATES');
     }
 }

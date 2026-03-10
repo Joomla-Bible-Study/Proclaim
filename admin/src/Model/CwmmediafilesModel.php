@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -67,7 +68,7 @@ class CwmmediafilesModel extends ListModel
      * @throws \Exception
      * @since 9.0.0
      */
-    public function getItems(): mixed
+    public function getItems(): array
     {
         // Get a storage key.
         $store = $this->getStoreId();
@@ -79,12 +80,14 @@ class CwmmediafilesModel extends ListModel
 
         try {
             // This is to load the server model into the Media Files Variable.
-            $serverModel = new CwmserverModel();
+            /** @var CwmserverModel $serverModel */
+            $serverModel = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
 
             $items = $this->_getList($this->_getListQuery(), $this->getStart(), $this->getState('list.limit'));
 
-            if (!$items) {
-                return false;
+            if (empty($items)) {
+                return [];
             }
 
             foreach ($items as $item) {
@@ -106,9 +109,9 @@ class CwmmediafilesModel extends ListModel
 
             $this->cache[$store] = $items;
         } catch (\RuntimeException $e) {
-            $this->setError($e->getMessage());
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
 
-            return false;
+            return [];
         }
 
         return $this->cache[$store];
@@ -146,9 +149,11 @@ class CwmmediafilesModel extends ListModel
     public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $query         = 'SELECT allow_deletes'
-                . ' FROM #__bsms_admin'
-                . ' WHERE id = 1';
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('allow_deletes'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -177,10 +182,10 @@ class CwmmediafilesModel extends ListModel
         $app = Factory::getApplication();
 
         // Force a language
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -193,32 +198,32 @@ class CwmmediafilesModel extends ListModel
         $params = ComponentHelper::getParams('com_proclaim');
         $this->setState('params', $params);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears');
+        $mediaYears = $this->getUserStateFromRequest($this->context . '.filter.mediaYears', 'filter_mediaYears', '');
         $this->setState('filter.mediaYears', $mediaYears);
 
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $formSubmitted = $app->input->post->get('form_submitted');
+        $formSubmitted = $app->getInput()->post->get('form_submitted');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmitted) {
-            $access = $app->input->post->get('access');
+            $access = $app->getInput()->post->get('access');
             $this->setState('filter.access', $access);
 
-            $authorId = $app->input->post->get('author_id');
+            $authorId = $app->getInput()->post->get('author_id');
             $this->setState('filter.author_id', $authorId);
         }
 
@@ -242,44 +247,63 @@ class CwmmediafilesModel extends ListModel
     {
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getIdentity();
+        $user  = $this->getCurrentUser();
 
         $query->select(
             $this->getState(
                 'list.select',
-                'mediafile.* '
+                $db->quoteName('mediafile') . '.*'
             )
         );
 
-        $query->from('#__bsms_mediafiles AS mediafile');
+        $query->from($db->quoteName('#__bsms_mediafiles', 'mediafile'));
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = mediafile.language');
+        $query->select($db->quoteName('l.title', 'language_title'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('mediafile.language')
+        );
 
         // Join over the studies
-        $query->select('study.studytitle AS studytitle');
-        $query->join('LEFT', '#__bsms_studies AS study ON study.id = mediafile.study_id');
+        $query->select($db->quoteName('study.studytitle', 'studytitle'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('mediafile.study_id')
+        );
 
         // Join over servers
-        $query->select('server.type as serverType');
-        $query->join('LEFT', '#__bsms_servers as server ON server.id = mediafile.server_id');
+        $query->select($db->quoteName('server.type', 'serverType'));
+        $query->select($db->quoteName('server.server_name', 'server_name'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_servers', 'server') . ' ON ' . $db->quoteName('server.id') . ' = ' . $db->quoteName('mediafile.server_id')
+        );
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = mediafile.access');
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('mediafile.access')
+        );
 
         // Join over the users for the checked out user.
-        $query->select('uc.name AS editor')
-            ->join('LEFT', '#__users AS uc ON uc.id=mediafile.checked_out');
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join(
+                'LEFT',
+                $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('mediafile.checked_out')
+            );
 
         // Filter by published state
         $published = (string) $this->getState('filter.published');
 
-        if (($published !== '*') && is_numeric($published)) {
+        if (is_numeric($published)) {
             $state = (int) $published;
             $query->where($db->quoteName('mediafile.published') . ' = :state')
                 ->bind(':state', $state, ParameterType::INTEGER);
+        } elseif ($published === '') {
+            // By default, exclude trashed items (-2), show published (1), unpublished (0), and archived (2)
+            $query->whereIn($db->quoteName('mediafile.published'), [0, 1, 2]);
         }
 
         // Filter by access level.
@@ -294,10 +318,13 @@ class CwmmediafilesModel extends ListModel
             $query->whereIn($db->quoteName('mediafile.access'), $access);
         }
 
-        //        // Implement View Level Access
-        //        if (!$user->authorise('core.cwmadmin')) {
-        //            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
-        //        }
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('mediafile.access'), $user->getAuthorisedViewLevels());
+        }
+
+        // Restrict by parent study's location + access (multi-campus security)
+        CwmlocationHelper::applySecurityFilter($query, 'study');
 
         // Filter by study title
         //        $study = $this->getState('filter.study_id');
@@ -310,7 +337,7 @@ class CwmmediafilesModel extends ListModel
         $mediaYears = $this->getState('filter.mediaYears');
 
         if (!empty($mediaYears)) {
-            $query->where('YEAR(mediafile.createdate) = ' . (int)$mediaYears);
+            $query->where('YEAR(' . $db->quoteName('mediafile.createdate') . ') = ' . (int) $mediaYears);
         }
 
         // Filter by search in title.

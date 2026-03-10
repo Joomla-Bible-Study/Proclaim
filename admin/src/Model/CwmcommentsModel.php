@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Comments model class
@@ -71,14 +73,14 @@ class CwmcommentsModel extends ListModel
      * @throws \Exception
      * @since 7.0
      */
-    protected function populateState($ordering = 'comment.comment_date', $direction = 'desc')
+    protected function populateState($ordering = 'comment.comment_date', $direction = 'desc'): void
     {
         $app = Factory::getApplication();
 
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -87,7 +89,7 @@ class CwmcommentsModel extends ListModel
             $this->context .= '.' . $forcedLanguage;
         }
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
@@ -96,17 +98,20 @@ class CwmcommentsModel extends ListModel
         $language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
         $this->setState('filter.language', $language);
 
-        $formSubmited = $app->input->post->get('form_submited');
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
+        $this->setState('filter.location', $location);
+
+        $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmited) {
-            $access = $app->input->post->get('access');
+            $access = $app->getInput()->post->get('access');
             $this->setState('filter.access', $access);
 
-            $authorId = $app->input->post->get('author_id');
+            $authorId = $app->getInput()->post->get('author_id');
             $this->setState('filter.author_id', $authorId);
         }
 
@@ -135,6 +140,7 @@ class CwmcommentsModel extends ListModel
         $id .= ':' . serialize($this->getState('filter.access'));
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
+        $id .= ':' . $this->getState('filter.location');
 
         return parent::getStoreId($id);
     }
@@ -146,33 +152,51 @@ class CwmcommentsModel extends ListModel
      *
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
         // Create a new query object.
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Select the required fields from the table.
         $query = $db->getQuery(true);
         $query->select(
             $this->getState(
                 'list.select',
-                'comment.id, comment.published, comment.user_id, comment.full_name, comment.user_email, '
-                . 'comment.comment_date, comment.comment_text, comment.access, comment.language, comment.asset_id'
+                implode(', ', $db->quoteName(
+                    [
+                        'comment.id',
+                        'comment.published',
+                        'comment.user_id',
+                        'comment.full_name',
+                        'comment.user_email',
+                        'comment.comment_date',
+                        'comment.comment_text',
+                        'comment.access',
+                        'comment.language',
+                        'comment.asset_id',
+                        'comment.checked_out',
+                        'comment.checked_out_time',
+                    ]
+                ))
             )
         );
-        $query->from('#__bsms_comments AS comment');
+        $query->from($db->quoteName('#__bsms_comments', 'comment'));
 
         // Join over the language
-        $query->select('l.title AS language_title');
-        $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = comment.language');
+        $query->select($db->quoteName('l.title', 'language_title'));
+        $query->select($db->quoteName('l.image', 'language_image'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__languages', 'l') . ' ON ' . $db->quoteName('l.lang_code') . ' = ' . $db->quoteName('comment.language')
+        );
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('comment.published = ' . (int)$published);
+            $query->where($db->quoteName('comment.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(comment.published = 0 OR comment.published = 1)');
+            $query->where('(' . $db->quoteName('comment.published') . ' = 0 OR ' . $db->quoteName('comment.published') . ' = 1)');
         }
 
         // Filter by search in title.
@@ -180,24 +204,84 @@ class CwmcommentsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('comment.id = ' . (int)substr($search, 3));
+                $query->where($db->quoteName('comment.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(study.studytitle LIKE ' . $search . ' OR book.bookname LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('study.studytitle') . ' LIKE ' . $search . ' OR ' . $db->quoteName('book.bookname') . ' LIKE ' . $search . ')');
             }
         }
 
         // Join over Studies
-        $query->select('study.studytitle AS studytitle, study.chapter_begin, study.studydate, study.booknumber');
-        $query->join('LEFT', '#__bsms_studies AS study ON study.id = comment.study_id');
+        $query->select($db->quoteName('study.studytitle', 'studytitle'));
+        $query->select($db->quoteName('study.chapter_begin'));
+        $query->select($db->quoteName('study.studydate'));
+        $query->select($db->quoteName('study.booknumber'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('comment.study_id')
+        );
 
         // Join over books
-        $query->select('book.bookname as bookname');
-        $query->join('LEFT', '#__bsms_books as book ON book.booknumber = study.booknumber');
+        $query->select($db->quoteName('book.bookname', 'bookname'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
+        );
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = comment.access');
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('comment.access')
+        );
+
+        // Filter by access level (dropdown — was defined in XML but never applied to query)
+        $access = $this->getState('filter.access');
+
+        if (is_numeric($access)) {
+            $query->where($db->quoteName('comment.access') . ' = ' . (int) $access);
+        }
+
+        // Restrict non-admin users to their authorised view levels
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('comment.access'), $user->getAuthorisedViewLevels());
+
+            // Location-based filtering via parent study
+            $studyColumns = $db->getTableColumns('#__bsms_studies');
+
+            if (CwmlocationHelper::isEnabled() && isset($studyColumns['location_id'])) {
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->where(
+                        '(' . $db->quoteName('study.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('study.location_id') . ' IN (' . $inClause . '))'
+                    );
+                } else {
+                    $query->where($db->quoteName('study.location_id') . ' IS NULL');
+                }
+            }
+        }
+
+        // Filter by location (dropdown) via parent study
+        $studyColumns = $studyColumns ?? $db->getTableColumns('#__bsms_studies');
+
+        if (isset($studyColumns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('study.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+            }
+        }
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('comment.checked_out'));
 
         // Add the list ordering clause
         $orderCol  = $this->state->get('list.ordering', 'study.studytitle');

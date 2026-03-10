@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -49,6 +48,7 @@ class ServerTypeField extends FormField
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] === 'true');
@@ -79,7 +79,7 @@ class ServerTypeField extends FormField
         if ($allowSelect) {
             static $scriptSelect = null;
 
-            if (is_null($scriptSelect)) {
+            if (\is_null($scriptSelect)) {
                 $scriptSelect = [];
             }
 
@@ -125,7 +125,9 @@ class ServerTypeField extends FormField
         }
 
         // Get a reverse lookup of the endpoint type to endpoint name
-        $model    = new CwmserversModel();
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmserversModel $model */
+        $model    = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmservers', 'Administrator');
         $rlu_type = $model->getTypeReverseLookup();
 
         $text = (string)ArrayHelper::getValue($rlu_type, $this->value);
@@ -274,6 +276,7 @@ class ServerTypeField extends FormField
      *
      * @since   3.4
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());

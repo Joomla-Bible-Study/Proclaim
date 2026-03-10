@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Locations model class
@@ -73,12 +75,14 @@ class CwmlocationsModel extends ListModel
      *
      * @since 7.0
      */
-    public function getDeletes()
+    public function getDeletes(): array
     {
         if (empty($this->deletes)) {
-            $query         = 'SELECT allow_deletes'
-                . ' FROM #__bsms_admin'
-                . ' WHERE id = 1';
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('allow_deletes'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
             $this->deletes = $this->_getList($query);
         }
 
@@ -98,7 +102,7 @@ class CwmlocationsModel extends ListModel
      *
      * @since   7.1.0
      */
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = ''): string
     {
         // Compile the store ID.
         $id .= ':' . $this->getState('filter.published');
@@ -125,14 +129,14 @@ class CwmlocationsModel extends ListModel
      * @throws  \Exception
      * @since   7.0
      */
-    protected function populateState($ordering = 'location.id', $direction = 'desc')
+    protected function populateState($ordering = 'location.id', $direction = 'desc'): void
     {
         $app = Factory::getApplication();
 
-        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
+        $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
@@ -148,23 +152,23 @@ class CwmlocationsModel extends ListModel
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
-        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '', 'int');
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
         $this->setState('filter.access', $access);
 
-        $formSubmited = $app->input->post->get('form_submited');
+        $formSubmited = $app->getInput()->post->get('form_submited');
 
         // Gets the value of a user state variable and sets it in the session
-        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
-        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id', '');
 
         if ($formSubmited) {
-            $access = $app->input->post->get('access');
+            $access = $app->getInput()->post->get('access');
             $this->setState('filter.access', $access);
 
-            $authorId = $app->input->post->get('author_id');
+            $authorId = $app->getInput()->post->get('author_id');
             $this->setState('filter.author_id', $authorId);
         }
 
@@ -185,33 +189,41 @@ class CwmlocationsModel extends ListModel
      * @throws \Exception
      * @since   12.2
      */
-    protected function getListQuery()
+    protected function getListQuery(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
 
         $query->select(
             $this->getState(
                 'list.select',
-                'location.id, location.published, location.access, location.location_text'
+                implode(', ', $db->quoteName(['location.id', 'location.published', 'location.access', 'location.location_text', 'location.checked_out', 'location.checked_out_time']))
             )
         );
-        $query->from('`#__bsms_locations` AS location');
+        $query->from($db->quoteName('#__bsms_locations', 'location'));
 
         // Join over the asset groups.
-        $query->select('ag.title AS access_level');
-        $query->join('LEFT', '#__viewlevels AS ag ON ag.id = location.access');
+        $query->select($db->quoteName('ag.title', 'access_level'));
+        $query->join(
+            'LEFT',
+            $db->quoteName('#__viewlevels', 'ag') . ' ON ' . $db->quoteName('ag.id') . ' = ' . $db->quoteName('location.access')
+        );
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('location.checked_out'));
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $query->where('location.access = ' . (int)$access);
+            $query->where($db->quoteName('location.access') . ' = ' . (int) $access);
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('location.access IN (' . $groups . ')');
+        // Apply location-based visibility filter (multi-campus support).
+        // Super admins get [] from getUserLocations() — no filter added (see all).
+        $visibleLocations = CwmlocationHelper::getUserLocations();
+
+        if (!empty($visibleLocations)) {
+            $query->whereIn($db->quoteName('location.id'), $visibleLocations);
         }
 
         // Filter by search in title.
@@ -219,10 +231,10 @@ class CwmlocationsModel extends ListModel
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('location.id = ' . (int)substr($search, 3));
+                $query->where($db->quoteName('location.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('location.location_text LIKE ' . $search);
+                $query->where($db->quoteName('location.location_text') . ' LIKE ' . $search);
             }
         }
 
@@ -230,9 +242,9 @@ class CwmlocationsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('location.published = ' . (int)$published);
+            $query->where($db->quoteName('location.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(location.published = 0 OR location.published = 1)');
+            $query->where('(' . $db->quoteName('location.published') . ' = 0 OR ' . $db->quoteName('location.published') . ' = 1)');
         }
 
         // Add the list ordering clause

@@ -4,20 +4,21 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMComment;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmcomment;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Exception;
+use CWM\Component\Proclaim\Administrator\Model\CwmcommentModel;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -35,65 +36,68 @@ class HtmlView extends BaseHtmlView
     /**
      * Can Do
      *
-     * @var object
+     * @var   ?object
      *
      * @since 9.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
      * Form Data
      *
-     * @var object
+     * @var ?Form
      *
      * @since 9.0.0
      */
-    protected $form;
+    protected ?Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Display the view
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
      *
-     * @return  void  A string if successful, otherwise a Error object.
+     * @return  void  A string if successful, otherwise an Error object.
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  9.0.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
-        $this->state = $this->get("State");
+        /** @var CwmcommentModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
+        $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'comment', (int)$this->item->id);
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
         // Set the toolbar
         $this->addToolbar();
-
-        $isNew = ($this->item->id == 0);
 
         // Display the template
         parent::display($tpl);
@@ -104,20 +108,20 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  7.0
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-        $isNew = ($this->item->id == 0);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
+        $isNew = ((int) $this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
             Text::_('JBS_CMN_COMMENTS') . ': <small><small>[ ' . $title . ' ]</small></small>',
             'comment comment'
         );
 
-	    if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
+        if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
             ToolbarHelper::apply('cwmcomment.apply');
             ToolbarHelper::save('cwmcomment.save');
             ToolbarHelper::save2new('cwmcomment.save2new');
@@ -132,9 +136,6 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-       
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=31:comment-editing-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        ToolbarHelper::help('comment', true);
     }
 }

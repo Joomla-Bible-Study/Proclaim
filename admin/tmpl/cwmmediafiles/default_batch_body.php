@@ -4,7 +4,7 @@
  * Batch Template
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -15,63 +15,36 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Layout\LayoutHelper;
 
-$params = ComponentHelper::getParams('com_proclaim');
-
-$published = (int)$this->state->get('filter.published');
-
-$user = Factory::getApplication()->getSession()->get('user');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
 ?>
-
 <div class="p-3">
     <div class="row">
-        <?php
-        if (Multilanguage::isEnabled()) : ?>
+        <?php if (Multilanguage::isEnabled()) : ?>
             <div class="form-group col-md-6">
-                <div class="controls">
-                    <?php
-                    echo LayoutHelper::render('joomla.html.batch.language', []); ?>
-                </div>
+                <?php echo LayoutHelper::render('joomla.html.batch.language', []); ?>
             </div>
-        <?php
-        endif; ?>
+        <?php endif; ?>
         <div class="form-group col-md-6">
-            <div class="controls">
-                <?php
-                echo LayoutHelper::render('joomla.html.batch.access', []); ?>
-            </div>
+            <?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-4">
-            <div class="controls">
-                <?php
-                echo LayoutHelper::render('html.batch.players'); ?>
-            </div>
+            <?php echo LayoutHelper::render('html.batch.players'); ?>
         </div>
         <div class="form-group col-md-4">
-            <div class="controls">
-                <?php
-                echo Cwmhtml::popup(); ?>
-            </div>
+            <?php echo Cwmhtml::popup(); ?>
         </div>
         <div class="form-group col-md-4">
-            <div class="controls">
-                <?php
-                echo Cwmhtml::mediaType(); ?>
-            </div>
+            <?php echo Cwmhtml::mediaType(); ?>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-4">
-            <div class="controls">
-                <?php
-                echo Cwmhtml::linkType(); ?>
-            </div>
+            <?php echo Cwmhtml::linkType(); ?>
         </div>
     </div>
 </div>

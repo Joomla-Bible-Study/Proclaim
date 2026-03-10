@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -14,6 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -23,6 +25,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmessages\HtmlView $this */
 
 $app       = Factory::getApplication();
 $user      = $this->getCurrentUser();
@@ -34,10 +38,12 @@ $trashed   = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder = $listOrder === 'study.ordering';
 $columns   = 11;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
-    ->useScript('multiselect');
+    ->useScript('multiselect')
+    ->useScript('com_proclaim.media-analytics-modal');
+
+CwmlangHelper::registerAllForJs();
 
 $workflow_enabled  = ComponentHelper::getParams('com_proclaim')->get('workflow_enabled');
 $workflow_state    = false;
@@ -45,8 +51,7 @@ $workflow_featured = false;
 
 if ($workflow_enabled) :
     $wa->getRegistry()->addExtensionRegistryFile('com_workflow');
-    $wa->useScript('com_workflow.admin-items-workflow-buttons')
-        ->useScript('com_proclaim.messages-status');
+    $wa->useScript('com_workflow.admin-items-workflow-buttons');
 
     $workflow_state    = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.state', 'com_proclaim.message');
     $workflow_featured = Factory::getApplication()->bootComponent('com_proclaim')->isFunctionalityUsed('core.featured', 'com_proclaim.messages');
@@ -73,18 +78,34 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
-                if (empty($this->items)) : ?>
+                if (empty($this->items)) :
+                    // Show location-aware empty state when system is enabled and user has no locations
+                    $locationEnabled  = CwmlocationHelper::isEnabled();
+                    $user             = Factory::getApplication()->getIdentity();
+                    $isAdmin          = $user->authorise('core.admin');
+                    $userLocations    = $locationEnabled && !$isAdmin ? CwmlocationHelper::getUserLocations() : null;
+                    $noAccessState    = $locationEnabled && !$isAdmin && $userLocations !== null && empty($userLocations);
+                ?>
+                    <?php if ($noAccessState): ?>
+                    <div class="alert alert-warning">
+                        <span class="icon-warning-circle" aria-hidden="true"></span>
+                        <strong><?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_TITLE'); ?></strong>
+                        <p class="mb-1"><?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_DESC'); ?></p>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>"
+                           class="alert-link">
+                            <?php echo Text::_('JBS_MSG_EMPTY_NO_LOCATIONS_LINK'); ?>
+                        </a>
+                    </div>
+                    <?php else: ?>
                     <div class="alert alert-info">
                         <span class="icon-info-circle" aria-hidden="true"></span><span
-                                class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
-                        <?php
-                        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                                class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+                        <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                    <?php endif; ?>
+                <?php else : ?>
                     <table class="table" id="messagesList">
                         <caption class="visually-hidden">
                             <?php
@@ -221,14 +242,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         <?php
                         foreach ($this->items as $i => $item) :
                             $item->max_ordering = 0;
-                            $canCheckin = $user->authorise(
+                            $canCheckin         = $user->authorise(
                                 'core.manage',
                                 'com_checkin'
-                            ) || $item->checked_out == $userId || is_null($item->checked_out);
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
+                            ) || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canCreate  = $user->authorise('core.create');
+                            $canEdit    = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
+                            $canChange  = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
@@ -243,7 +264,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             if (!$canChange) {
                                 $iconClass = ' inactive';
                             } elseif (!$saveOrder) {
-                                $iconClass = ' inactive" title="' . HtmlHelper::tooltipText(
+                                $iconClass = ' inactive" title="' . HTMLHelper::tooltipText(
                                     'JORDERINGDISABLED'
                                 );
                             }
@@ -266,7 +287,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                             $options = [
                                 'task_prefix' => 'cwmmessages.',
                                 'disabled'    => $workflow_state || !$canChange,
-                                'id'          => 'state-' . $item->id
+                                'id'          => 'state-' . $item->id,
                             ];
 
                             echo (new PublishedButton())->render(
@@ -287,6 +308,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmmessages.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
@@ -296,52 +321,53 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                                 <?php
                                                 echo $this->escape($item->studytitle); ?>
                                             </a>
-                                        <?php
-                                else : ?>
+                                        <?php else : ?>
                                             <?php
                                     echo $this->escape($item->studytitle); ?>
                                         <?php
-                                endif; ?>
+                                        endif; ?>
                                         <br/>
                                         <span class="small">
                                         <?php
-                                echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+                                        echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                     </span>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->teachername); ?>
+                                            echo $this->escape($item->teachername); ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->messageType); ?>
+                                            echo $this->escape($item->messageType); ?>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
                                     <?php
-                                    echo $this->escape($item->series_text); ?>
+                                            echo $this->escape($item->series_text); ?>
                                 </td>
                                 <td class="d-none d-md-table-cell text-center">
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_HITS', $this->escape($item->hits)); ?></button>
-                                    <br/>
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_PLAYS', $this->escape($item->totalplays)); ?></button>
-                                    <br/>
-                                    <button type="button" class="btn btn-sm btn-info"><?php
-                                echo Text::sprintf('JBS_CMN_DOWNLOADS', $this->escape($item->totaldownloads)); ?></button>
+                                    <button type="button" class="btn btn-sm btn-info px-2"
+                                            data-cwm-analytics-study="<?php echo (int) $item->id; ?>"
+                                            title="<?php echo $this->escape(
+                                                Text::sprintf('JBS_CMN_HITS', $item->hits)
+                                                . ' | ' . Text::sprintf('JBS_CMN_PLAYS', $item->totalplays)
+                                                . ' | ' . Text::sprintf('JBS_CMN_DOWNLOADS', $item->totaldownloads)
+                                            ); ?>">
+                                        <i class="icon-eye fs-5" aria-hidden="true"></i>
+                                        <span class="visually-hidden"><?php echo Text::_('JBS_CPL_STATISTIC'); ?></span>
+                                    </button>
                                 </td>
                                 <?php
-                                if (Multilanguage::isEnabled()) : ?>
+                                        if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
                                         <?php
-                                echo LayoutHelper::render('joomla.content.language', $item); ?>
+                                        echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
                                 <?php
-                                endif; ?>
+                                        endif; ?>
                                 <td class="d-none d-lg-table-cell">
                                     <?php
-                                    echo $item->id; ?>
+                                            echo $item->id; ?>
                                 </td>
                             </tr>
                         <?php
@@ -366,10 +392,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                    'footer' => $this->loadTemplate('batch_footer'),
-                                ),
+                            [
+                                        'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                        'footer' => $this->loadTemplate('batch_footer'),
+                                    ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                     <?php
@@ -379,9 +405,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
 
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
+                <input type="hidden" name="delete_physical_files" value="1"/>
                 <?php
                 echo HTMLHelper::_('form.token'); ?>
             </div>
         </div>
     </div>
 </form>
+<?php echo LayoutHelper::render('analytics.modal', null, JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'); ?>

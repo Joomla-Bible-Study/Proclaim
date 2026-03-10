@@ -4,7 +4,7 @@
  * Proclaim Download Class
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\Input\Input;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,31 +32,35 @@ use Joomla\Registry\Registry;
 class Cwmdownload
 {
     /**
-     * Method to send file to browser
+     * Method to send a file to the browser
      *
      * @param   int  $mid  ID of media
      *
      * @return void
+     * @throws \Exception If the template or media is not found.
      * @since 6.1.2
      */
-    public function download($mid): void
+    public function download(int $mid): void
     {
         // Clears file status cache
         clearstatcache();
 
-        $this->hitDownloads((int)$mid);
-        $input    = new Input();
-        $template = $input->get('t', '1', 'int');
-        $db       = Factory::getContainer()->get('DatabaseDriver');
-        $mid      = $input->get('mid', '1', 'int');
+        $app        = Factory::getApplication();
+        $input      = Factory::getApplication()->getInput();
+        $templateId = $input->get('t', '1', 'int');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the template so we can find a protocol
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_templates')
-            ->where('id = ' . (int)$template);
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->where($db->quoteName('id') . ' = ' . $templateId);
         $db->setQuery($query);
         $template = $db->loadObject();
+
+        if (!$template) {
+            $this->sendError($app, 404, 'Template not found');
+        }
 
         // Convert parameter fields to objects.
         $registry = new Registry();
@@ -63,99 +69,168 @@ class Cwmdownload
 
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*,'
-            . ' #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams'
+            $db->quoteName('#__bsms_mediafiles') . '.*,'
+            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
         )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-            ->where('#__bsms_mediafiles.id = ' . (int)$mid);
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid);
         $db->setQuery($query, 0, 1);
 
         $media = $db->loadObject();
 
-        if ($media) {
-            $reg = new Registry();
-            $reg->loadString($media->sparams);
-            $sparams = $reg->toObject();
-
-            if (isset($sparams->path)) {
-                $media->spath = $sparams->path;
-            } else {
-                $media->spath = '';
-            }
+        if (!$media) {
+            $this->sendError($app, 404, 'Media not found');
         }
+
+        // Increment download count after validation
+        $this->hitDownloads($mid);
+
+        $reg = new Registry();
+        $reg->loadString($media->sparams);
+        $sparams = $reg->toObject();
+
+        $media->spath = $sparams->path ?? '';
 
         $registry = new Registry();
         $registry->loadString($media->params);
         $params->merge($registry);
 
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
+        $isLocal       = false;
 
-        if ((int)$params->get('size', 0) === 0) {
-            $getSize = Cwmhelper::getRemoteFileSize($download_file);
+        // Optimization: Check if a file is local to avoid HTTP loopback and get an accurate size
+        if ($download_file) {
+            $root = Uri::root();
+            if (str_starts_with($download_file, $root)) {
+                $relativePath = substr($download_file, \strlen($root));
+                $localPath    = JPATH_ROOT . '/' . $relativePath;
+                // Clean up path
+                $localPath = str_replace('//', '/', $localPath);
+
+                if (file_exists($localPath)) {
+                    $download_file = $localPath;
+                    $isLocal       = true;
+                }
+            }
+        }
+
+        if ((int) $params->get('size', 0) === 0) {
+            if ($isLocal) {
+                $getSize = filesize($download_file);
+            } else {
+                $getSize = Cwmhelper::getRemoteFileSize($download_file);
+            }
         } else {
             $getSize = $params->get('size', 0);
         }
 
+        // Disable the time limit and close the session to prevent locking
         @set_time_limit(0);
         ignore_user_abort(false);
+        if (session_id()) {
+            session_write_close();
+        }
+
         ini_set('output_buffering', 0);
         ini_set('zlib.output_compression', 0);
 
-        // Bytes per chunk (10 MB)
-        $chunk = 10 * 1024 * 1024;
-
-        $fh = @fopen($download_file, "rb");
-
-        if (!$fh) {
-            if (JBSMDEBUG) {
-                echo "<pre>" . $download_file . "</pre>";
-            }
-
-            jexit("Unable to open file");
-        }
-
         // Clean the output buffer, Added to fix ZIP file corruption
-        @ob_end_clean();
-        @ob_start();
+        while (ob_get_level()) {
+            @ob_end_clean();
+        }
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . basename($params->get('filename')) . '"');
         header('Expires: 0');
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
         header('Pragma: public');
-        header("Content-Transfer-Encoding: binary");
-        header('Content-Length: ' . $getSize);
+        header('Content-Transfer-Encoding: binary');
 
-        // Repeat reading until EOF
-        while (!feof($fh)) {
-            echo fread($fh, $chunk);
-            @ob_flush();
-            @flush();
+        if ($getSize > 0) {
+            header('Content-Length: ' . $getSize);
         }
 
-        fclose($fh);
+        // Flush headers before streaming
+        flush();
+
+        if ($isLocal) {
+            readfile($download_file);
+        } else {
+            // Bytes per chunk (8 KB) - Reduced from 10MB to save memory
+            $chunk = 8 * 1024;
+
+            $fh = @fopen($download_file, 'rb');
+
+            if (!$fh) {
+                if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+                    echo '<pre>' . $download_file . '</pre>';
+                }
+
+                // We cannot send a 500 error cleanly if headers are already sent, but we can try
+                exit;
+            }
+
+            // Repeat reading until EOF
+            while (!feof($fh)) {
+                echo fread($fh, $chunk);
+                flush();
+            }
+
+            fclose($fh);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Send an HTTP error response and terminate
+     *
+     * @param   CMSApplication  $app      The application
+     * @param   int             $code     HTTP status code
+     * @param   string          $message  Error message
+     *
+     * @return  never
+     *
+     * @since   10.0.0
+     */
+    protected function sendError(CMSApplication $app, int $code, string $message): never
+    {
+        $statusText = match ($code) {
+            400     => 'Bad Request',
+            404     => 'Not Found',
+            500     => 'Internal Server Error',
+            default => 'Error',
+        };
+
+        $app->setHeader('status', $code . ' ' . $statusText);
+        $app->sendHeaders();
+        echo $message;
+        $app->close();
         exit;
     }
 
     /**
-     * Method tho track Downloads
+     * Method to track Downloads
      *
      * @param   int  $mid  Media ID
      *
-     * @return  boolean True if hit makes it or False if failed to query
+     * @return  bool True if hit makes it, or False if failed to query
      *
      * @since   7.0.0
      */
     protected function hitDownloads(int $mid): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('downloads = downloads + 1 ')
-            ->where('id = ' . $mid);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('downloads') . ' = ' . $db->quoteName('downloads') . ' + 1')
+            ->where($db->quoteName('id') . ' = ' . $mid);
         $db->setQuery($query);
 
         if (!$db->execute()) {

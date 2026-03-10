@@ -4,18 +4,22 @@
  * Podcasts html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMPodcasts;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmpodcasts;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmpodcastsModel;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Button\DropdownButton;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -33,44 +37,60 @@ class HtmlView extends BaseHtmlView
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
-    /** @var  array Filter Levels
+    /** @var ?array Filter Levels
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
-    /** @var  array Side Bar
+    /** @var string Side Bar
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -83,18 +103,22 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmpodcastsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'podcast');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -109,40 +133,61 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     protected function addToolbar(): void
     {
+        $user  = Factory::getApplication()->getIdentity();
+
+        // Get the toolbar object instance
+        $toolbar = Toolbar::getInstance();
+
         ToolbarHelper::title(Text::_('JBS_CMN_PODCASTS'), 'feed feed');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
-            ToolbarHelper::addNew('cwmpodcast.add');
+            $toolbar->addNew('cwmpodcast.add');
         }
 
-        if ($this->canDo->get('core.edit')) {
-            ToolbarHelper::editList('cwmpodcast.edit');
-        }
+        if ($this->canDo->get('core.edit', 'com_proclaim')) {
+            /** @var  DropdownButton $dropdown */
+            $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
+                ->toggleSplit(false)
+                ->icon('icon-ellipsis-h')
+                ->buttonClass('btn btn-action')
+                ->listCheck(true);
 
-        if ($this->canDo->get('core.edit.state')) {
-            ToolbarHelper::divider();
-            ToolbarHelper::publishList('cwmpodcasts.publish');
-            ToolbarHelper::unpublishList('cwmpodcasts.unpublish');
-            ToolbarHelper::divider();
-            ToolbarHelper::archiveList('cwmpodcasts.archive');
-        }
+            $childBar = $dropdown->getChildToolbar();
 
-        if ($this->state->get('filter.published') == -2 && $this->canDo->get('core.delete')) {
-            ToolbarHelper::deleteList('', 'cwmpodcasts.delete', 'JTOOLBAR_EMPTY_TRASH');
-        } elseif ($this->canDo->get('core.delete')) {
-            ToolbarHelper::trash('cwmpodcasts.trash');
+            $childBar->publish('cwmpodcasts.publish')->listCheck(true);
+            $childBar->unpublish('cwmpodcasts.unpublish')->listCheck(true);
+            $childBar->archive('cwmpodcasts.archive')->listCheck(true);
+            $childBar->checkin('cwmpodcasts.checkin')->listCheck(true);
+
+            if ($this->state->get('filter.published') != -2) {
+                $childBar->trash('cwmpodcasts.trash')->listCheck(true);
+            }
+
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
+            }
         }
 
         if ($this->canDo->get('core.create')) {
             ToolbarHelper::divider();
-            ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'xml.png', '', 'JBS_PDC_WRITE_XML_FILES', false);
+            ToolbarHelper::custom('cwmpodcasts.validate', 'health', '', 'JBS_PDC_VALIDATE_PODCASTS', false);
+            ToolbarHelper::custom('cwmpodcasts.writeXMLFile', 'file', '', 'JBS_PDC_WRITE_XML_FILES', false);
         }
+
+        ToolbarHelper::help('podcasts', true);
     }
 
     /**
@@ -154,11 +199,11 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'podcast.title'     => Text::_('JBS_CMN_PODCAST'),
             'podcast.published' => Text::_('JSTATUS'),
             'podcast.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
-            'podcast.id'        => Text::_('JGRID_HEADING_ID')
-        );
+            'podcast.id'        => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

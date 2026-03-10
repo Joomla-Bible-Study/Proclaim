@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -20,6 +20,7 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -39,7 +40,7 @@ class CWMAdministratorService
      * @throws  \Exception
      * @since 10.0.0
      */
-    public function association($messageid)
+    public function association(int $messageid): string
     {
         // Defaults
         $html = '';
@@ -58,7 +59,7 @@ class CWMAdministratorService
             }
 
             // Get the associated menu items
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select(
                     [
@@ -89,11 +90,11 @@ class CWMAdministratorService
             }
 
             if ($items) {
-                $languages         = LanguageHelper::getContentLanguages(array(0, 1));
+                $languages         = LanguageHelper::getContentLanguages([0, 1]);
                 $content_languages = array_column($languages, 'lang_code');
 
                 foreach ($items as &$item) {
-                    if (in_array($item->lang_code, $content_languages, true)) {
+                    if (\in_array($item->lang_code, $content_languages, true)) {
                         $text    = $item->lang_code;
                         $url     = Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int)$item->id);
                         $tooltip = '<strong>' . htmlspecialchars(
@@ -115,6 +116,7 @@ class CWMAdministratorService
                         );
                     }
                 }
+                unset($item);
             }
 
             $html = LayoutHelper::render('joomla.content.associations', $items);

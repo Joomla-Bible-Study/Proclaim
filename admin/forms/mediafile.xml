@@ -1,66 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+    <fieldset name="details" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
         <field
                 name="id"
                 type="text"
-                class="readonly"
                 default="0"
                 readonly="true"
+                label="JGLOBAL_FIELD_ID_LABEL"
+                description="JGLOBAL_FIELD_ID_DESC"
         />
+
+        <field
+                name="published"
+                type="status"
+                label="JSTATUS"
+                description="JFIELD_PUBLISHED_DESC"
+                default="1"
+                filter="int"/>
+
         <field name="createdate" type="calendar" label="JBS_CMN_CREATE_DATE"
                description="JBS_MED_CREATE_DATE_DESC"
                translateformat="true"
                showtime="true"
                filter="user_utc"/>
+
         <field name="study_id" type="Modal_Study" label="JBS_CMN_STUDY"
-               description="JBS_MED_CHOOSE_STUDY_DESC" class="list" required="true"/>
+               description="JBS_MED_CHOOSE_STUDY_DESC" required="true"/>
+
         <field name="comment" type="textarea" rows="4" label="JBS_CMN_COMMENT"
-               description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP" class="inputbox"/>
-        <field name="server_id" type="Server" label="JBS_CMN_SERVER"
-               description="JBS_MED_SERVER_DESC" required="true"/>
-        <field name="podcast_id" type="sql" label="JBS_MED_CHOOSE_PODCAST"
-               description="JBS_MED_CHOOSE_PODCAST_DESC"
-               query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-               key_field="id" value_field="title" multiple="true" default="">
+               description="JBS_MED_APPEARS_UNDER_FILE_OR_TOOLTIP"/>
+
+        <field name="server_id" type="ServerList" label="JBS_CMN_SERVER"
+               description="JBS_MED_SERVER_DESC" required="true">
+            <option value="">JBS_CMN_SELECT_SERVER</option>
         </field>
-        <field name="published"
-               type="list"
-               id="published"
-               label="JSTATUS"
-               description="JFIELD_PUBLISHED_DESC"
-               class="form-select-color-state"
-               size="1"
-               default="1"
-               filter="intval">
-            <option value="1">
-                JPUBLISHED
-            </option>
-            <option value="0">
-                JUNPUBLISHED
-            </option>
-            <option value="2">
-                JARCHIVED
-            </option>
-            <option value="-2">
-                JTRASHED
-            </option>
+
+        <field name="podcast_id" type="Podcasts" label="JBS_MED_CHOOSE_PODCAST"
+               description="JBS_MED_CHOOSE_PODCAST_DESC" multiple="true" default="">
         </field>
+
+        <field name="content_origin" type="radio" label="JBS_MED_CONTENT_ORIGIN"
+               description="JBS_MED_CONTENT_ORIGIN_DESC" default="0"
+               class="btn-group btn-group-yesno" layout="joomla.form.field.radio.switcher">
+            <option value="0">JBS_MED_ORIGIN_MINISTRY</option>
+            <option value="1">JBS_MED_ORIGIN_EXTERNAL</option>
+        </field>
+
         <field name="language"
                type="contentlanguage"
                label="JFIELD_LANGUAGE_LABEL">
             <option value="*">JALL</option>
         </field>
+
         <field name="metadata" type="hidden" filter="unset"/>
         <field name="asset_id" type="hidden" filter="unset"/>
+
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
-               translate_label="false" class="inputbox" filter="rules" component="com_proclaim"
+               translate_label="false" filter="rules" component="com_proclaim"
                section="mediafile" validate="rules"/>
+
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
                description="JFIELD_ACCESS_DESC"
                filter="UINT"
                validate="options"
         />
+
+        <field
+                name="created"
+                type="calendar"
+                label="JGLOBAL_FIELD_CREATED_LABEL"
+                translateformat="true"
+                showtime="true"
+                filter="user_utc"
+        />
+        <field
+                name="created_by"
+                type="user"
+                label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+                validate="UserId"
+        />
+        <field
+                name="created_by_alias"
+                type="text"
+                label="JGLOBAL_FIELD_CREATED_BY_ALIAS_LABEL"
+        />
+        <field
+                name="modified"
+                type="calendar"
+                label="JGLOBAL_FIELD_MODIFIED_LABEL"
+                class="form-control"
+                translateformat="true"
+                showtime="true"
+                readonly="true"
+                filter="user_utc"
+        />
+
+        <field
+                name="modified_by"
+                type="user"
+                label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
+                class="readonly"
+                readonly="true"
+                filter="unset"
+                validate="UserId"
+        />
+
         <!--Server-media-specific fields-->
         <field name="params"/>
     </fieldset>

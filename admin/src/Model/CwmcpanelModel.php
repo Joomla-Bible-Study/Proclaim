@@ -2,7 +2,7 @@
 
 /**
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\Component\Postinstall\Administrator\Model\MessagesModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -19,7 +20,7 @@ use Joomla\Registry\Registry;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * JModel class for Cpanel
+ * Model class for Cpanel
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -33,15 +34,16 @@ class CwmcpanelModel extends BaseModel
      *
      * @since 7.0
      */
-    public function getData()
+    public function getData(): ?object
     {
         // Get version information
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $return = new \stdClass();
         $query  = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__extensions');
-        $query->where('element = "com_proclaim" and type = "component"');
+        $query->from($db->quoteName('#__extensions'));
+        $query->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
         $db->setQuery($query);
 
         try {
@@ -69,7 +71,7 @@ class CwmcpanelModel extends BaseModel
      * Returns null if the com_postinstall component is broken because the user screwed up his Joomla! site following
      * some idiot's advice. Apparently there's no shortage of idiots giving terribly bad advice to Joomla! users.
      *
-     * @return boolean
+     * @return bool
      *
      * @since 7.0
      */
@@ -82,11 +84,11 @@ class CwmcpanelModel extends BaseModel
 
         // Get the extension ID
         // Get the extension ID for our component
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('extension_id')
-            ->from('#__extensions')
-            ->where($db->qn('element') . ' = ' . $db->q('com_proclaim'));
+        $query->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
 
         try {
@@ -109,7 +111,7 @@ class CwmcpanelModel extends BaseModel
             $pimModel->setState('eid', $extension_id);
 
             $list   = $pimModel->getitems();
-            $result = count($list) >= 1;
+            $result = \count($list) >= 1;
         } catch (\Exception $e) {
             $result = true;
         }

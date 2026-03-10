@@ -5,15 +5,20 @@
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <copyright>(C) 2025 Proclaim All rights reserved.</copyright>
-    <version>10.0.1</version>
-    <creationDate>Sep 10, 2025</creationDate>
+    <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
+    <version>10.1.0</version>
+    <creationDate>Mar 10, 2026</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>JBS_INS_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Component\Proclaim</namespace>
 
     <!-- Installer Hooks -->
     <scriptfile>proclaim.script.php</scriptfile>
+
+    <languages folder="admin">
+        <language tag="en-GB">language/en-GB/en-GB.com_proclaim.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.com_proclaim.sys.ini</language>
+    </languages>
 
     <!-- Installer DB Hooks -->
     <install>
@@ -52,13 +57,10 @@
         <filename>joomla.asset.json</filename>
         <filename>index.html</filename>
         <folder>backup</folder>
-        <folder>carousel</folder>
         <folder>css</folder>
-        <folder>fancybox</folder>
         <folder>images</folder>
         <folder>js</folder>
-        <folder>less</folder>
-        <folder>panzoom</folder>
+        <folder>vendor</folder>
     </media>
 
     <administration>
@@ -70,7 +72,7 @@
                   alt="Proclaim/Controlpanel">
                 JBS_MNU_CONTROL_PANEL
             </menu>
-            <menu link="option=com_proclaim&amp;task=cwmadmin.edit&amp;id=1"
+            <menu link="option=com_proclaim&amp;view=cwmadmin"
                   view="cwmadmin"
                   alt="Proclaim/AdminCenter">
                 JBS_MNU_ADMINISTRATION
@@ -135,7 +137,12 @@
                   alt="Proclaim/TemplateCodes">
                 JBS_MNU_TEMPLATE_CODE_DISPLAY
             </menu>
-            <!-- Instead of link you can specify individual link attributes -->
+            <menu link="option=com_proclaim&amp;view=cwmanalytics"
+                  view="cwmanalytics"
+                  alt="Proclaim/Analytics">
+                JBS_MNU_ANALYTICS_DISPLAY
+            </menu>
+            <!-- Instead of a link, you can specify individual link attributes -->
         </submenu>
 
         <!-- Administration Main File Copy Section -->
@@ -144,7 +151,6 @@
             <filename>api.php</filename>
             <filename>config.xml</filename>
             <folder>forms</folder>
-            <folder>help</folder>
             <folder>helpers</folder>
             <folder>language</folder>
             <folder>layouts</folder>

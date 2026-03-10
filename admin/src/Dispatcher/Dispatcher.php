@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -14,11 +14,11 @@ namespace CWM\Component\Proclaim\Administrator\Dispatcher;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Application\CMSWebApplicationInterface;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 
 /**
- * ComponentDispatcher class for com_users
+ * Component dispatcher for com_proclaim.
  *
  * @since  4.0.0
  */
@@ -31,92 +31,44 @@ class Dispatcher extends ComponentDispatcher
     protected string $defaultController = 'cwmcpanel';
 
     /**
-     * @var string
-     * @since version
-     */
-    private string $redirect;
-
-    /**
      * @return void
      *
      * @throws \Throwable
      * @since 10.0.0
      */
+    #[\Override]
     public function dispatch(): void
     {
         // Always load Proclaim API if it exists.
         $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-            // Check the minimum PHP version
-            if ((!PHP_VERSION_ID) >= 80100) {
+        if (!\defined('CWM_LOADED')) {
+            // Guard against running on unsupported PHP versions (system plugin
+            // normally catches this earlier, but keep as a safety net here).
+            if (PHP_VERSION_ID < 80300) {
                 throw new \RuntimeException(
-                    "You need PHP 8.1.0 or later to run this package",
+                    'Proclaim requires PHP 8.3.0 or later.',
                     502
                 );
             }
+
             require_once $api;
         }
 
+        // Gate: require license acceptance before any admin access.
+        $view = $this->input->getCmd('view', '');
+        $task = $this->input->getCmd('task', '');
+
+        if (
+            $view !== 'cwmlicense'
+            && !str_starts_with($task, 'cwmlicense.')
+            && !ComponentHelper::getParams('com_proclaim')->get('license_accepted', '0')
+        ) {
+            $this->app->redirect('index.php?option=com_proclaim&view=cwmlicense');
+
+            return;
+        }
+
         parent::dispatch();
-    }
-
-    /**
-     * Redirects the browser or returns false if no redirect is set.
-     *
-     * @return  boolean  False if no redirect exists.
-     *
-     * @throws  \Exception
-     * @since   3.0
-     */
-    public function redirect(): bool
-    {
-        if (!($this->app instanceof CMSWebApplicationInterface)) {
-            throw new \Exception(
-                sprintf(
-                    'The %s method requires an instance of %s but instead %s was supplied',
-                    __METHOD__,
-                    CMSWebApplicationInterface::class,
-                    \get_class($this->app)
-                )
-            );
-        }
-
-        if ($this->redirect) {
-            // Enqueue the redirect message
-            // $this->app->enqueueMessage($this->message, $this->messageType);
-
-            // Execute the redirect
-            $this->app->redirect($this->redirect);
-        }
-
-        return false;
-    }
-
-    /**
-     * Override checkAccess to allow users to edit their profiles without having to have "core.manager" permission
-     *
-     * @return  void
-     *
-     * @since  4.0.0
-     */
-    protected function checkAccess(): void
-    {
-        $task         = $this->input->getCmd('task');
-        $view         = $this->input->getCmd('view');
-        $layout       = $this->input->getCmd('layout');
-        $allowedTasks = ['user.edit', 'user.apply', 'user.save', 'user.cancel'];
-
-        // Allow users to edit their own accounts
-        if (($view === 'user' && $layout === 'edit') || in_array($task, $allowedTasks, true)) {
-            $user = $this->app->getIdentity();
-            $id   = $this->input->getInt('id');
-
-            if ((int)$user->id === $id) {
-                return;
-            }
-        }
-
-        parent::checkAccess();
     }
 }

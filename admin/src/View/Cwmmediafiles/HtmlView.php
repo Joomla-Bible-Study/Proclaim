@@ -4,15 +4,15 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFiles;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
-use Exception;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -39,60 +39,68 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * Media Types
-     *
-     * @var string
-     * @since    7.0.0
-     */
-    public $mediatypes;
-
-    /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
-     * Filter Levers
+     * Filter Levels
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $f_levels = null;
+
+    /**
+     * Side Bar
      *
      * @var string
      * @since    7.0.0
      */
-    public $f_levels;
+    public string $sidebar = '';
 
     /**
-     * Side Bare
+     * Filter Form
      *
-     * @var string
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    public $sidebar;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * All transitions, which can be executed of one if the items
@@ -117,28 +125,32 @@ class HtmlView extends BaseHtmlView
      *
      * @return  void  A string if successful, otherwise a JError object.
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items         = $this->get('Items');
-        $this->pagination    = $this->get('Pagination');
-        $this->state         = $this->get('State');
+        /** @var CwmmediafilesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
         $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
-        $this->mediatypes    = $this->get('Mediatypes');
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
             PluginHelper::importPlugin('workflow');
 
-            $this->transitions = $this->get('Transitions');
+            $this->transitions = $model->getTransitions();
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -151,7 +163,7 @@ class HtmlView extends BaseHtmlView
                 unset($this->activeFilters['language']);
                 $this->filterForm->removeField('language', 'filter');
             }
-        } elseif ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD')) {
+        } elseif ($forcedLanguage = Factory::getApplication()->getInput()->get('forcedLanguage', '', 'CMD')) {
             // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
             $languageXml = new \SimpleXMLElement(
                 '<field name="language" type="hidden" default="' . $forcedLanguage . '" />'
@@ -171,7 +183,7 @@ class HtmlView extends BaseHtmlView
      *
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     protected function addToolbar(): void
@@ -202,8 +214,9 @@ class HtmlView extends BaseHtmlView
                 $childBar->publish('cwmmediafiles.publish');
                 $childBar->unpublish('cwmmediafiles.unpublish');
                 $childBar->archive('cwmmediafiles.archive');
+                $childBar->checkin('cwmmediafiles.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmmediafiles.trash')->listCheck(true);
                 }
             }
@@ -223,17 +236,26 @@ class HtmlView extends BaseHtmlView
 
         if (
             !$this->isEmptyState
-            && $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $canDo->get(
-                'core.delete'
-            )
+            && (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmmediafiles.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
+
+            // Delete confirmation dialog for physical files
+            $wa = $this->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.delete-confirm');
+
+            Text::script('JBS_DEL_PHYSICAL_FILES_TITLE');
+            Text::script('JBS_DEL_PHYSICAL_FILES_WARNING');
+            Text::script('JBS_DEL_PHYSICAL_FILES_COUNT');
+            Text::script('JBS_DEL_DELETE_EVERYTHING');
+            Text::script('JBS_DEL_RECORDS_ONLY');
+            Text::script('JCANCEL');
         }
-		$help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-        $toolbar->help('proclaim', false, $url = $help_url, 'com_proclaim');
+        $toolbar->help('mediafiles', true);
     }
 
     /**
@@ -245,12 +267,12 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
             'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
             'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
             'mediafile.published'  => Text::_('JSTATUS'),
-            'mediafile.id'         => Text::_('JGRID_HEADING_ID')
-        );
+            'mediafile.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

@@ -6,6 +6,31 @@
         <media_resource>filename</media_resource>
     </config>
     <fields name="params">
+        <fieldset name="youtube_api" label="JBS_ADDON_YOUTUBE_API_SETTINGS">
+            <field name="api_key" type="ApiKey" label="JBS_ADDON_YOUTUBE_API_KEY"
+                   description="JBS_ADDON_YOUTUBE_API_KEY_DESC" class="inputbox" size="60"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+            <field name="channel_id" type="text" label="JBS_ADDON_YOUTUBE_CHANNEL_ID"
+                   description="JBS_ADDON_YOUTUBE_CHANNEL_ID_DESC" class="inputbox" size="40" />
+            <field name="test_api" type="YoutubeTestApi" label="JBS_ADDON_YOUTUBE_TEST_API"
+                   description="JBS_ADDON_YOUTUBE_TEST_API_DESC"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
+        </fieldset>
+        <fieldset name="youtube_quota" label="JBS_ADDON_YOUTUBE_QUOTA_SETTINGS">
+            <field name="youtube_daily_quota" type="number" default="10000" min="100" max="1000000"
+                   label="JBS_ADDON_YOUTUBE_DAILY_QUOTA"
+                   description="JBS_ADDON_YOUTUBE_DAILY_QUOTA_DESC" filter="int"/>
+            <field name="youtube_quota_reset_hour" type="number" default="7" min="0" max="23"
+                   label="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR"
+                   description="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR_DESC" filter="int"/>
+        </fieldset>
+        <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
+            <field name="yt_description_format" type="textarea" rows="4"
+                   default="{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}"
+                   label="JBS_ADDON_YOUTUBE_DESC_FORMAT"
+                   description="JBS_ADDON_YOUTUBE_DESC_FORMAT_DESC"
+                   filter="raw" />
+        </fieldset>
     </fields>
     <fields name="media">
         <fieldset name="files_settings" label="JBS_ADDON_YOUTUBE_FILE_SETTINGS">
@@ -46,16 +71,14 @@
                 <option value="btn-warning">JBS_MED_WARNING</option>
                 <option value="btn-danger">JBS_MED_DANGER</option>
             </field>
-            <field name="media_button_color" type="color" description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC"
-                   label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
+            <field name="media_button_color" type="ColorPicker" default="black"
+                   description="JBS_ADDON_YOUTUBE_BUTTON_COLOR_DESC" label="JBS_ADDON_YOUTUBE_BUTTON_COLOR"/>
             <field name="media_icon_type" type="IconType" class="inputbox" default="fa fa-youtube"
                    label="JBS_ADDON_YOUTUBE_ICON_TYPE"
                    description="JBS_ADDON_YOUTUBE_ICON_TYPE_DESC">
             </field>
             <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_YOUTUBE_CUSTOM_ICON"
                    description="JBS_ADDON_YOUTUBE_CUSTOM_ICON_DESC"/>
-            <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_YOUTUBE_FONT_SIZE"
-                   description="JBS_ADDON_YOUTUBE_FONT_SIZE_DESC"/>
         </fieldset>
         <fieldset name="parameters" label="JBS_ADDON_YOUTUBE_PARAMETERS">
             <field name="autostart" type="list"

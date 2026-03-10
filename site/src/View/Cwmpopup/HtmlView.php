@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -22,9 +22,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HTMLHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 // This is the popup window for the teachings.  We could put anything in this window.
@@ -43,137 +41,143 @@ class HtmlView extends BaseHtmlView
      */
     public int $player;
 
-    /** @var  string Media
+    /** @var  object|bool Media
      *
      * @since 7.0
      */
-    public $media;
+    public object|bool $media;
 
-    /** @var  array Media info
+    /** @var  Cwmmedia Media info
      *
      * @since 7.0
      */
-    public $getMedia;
+    public Cwmmedia $getMedia;
+
+    /** @var  Cwmlisting Listing info
+     *
+     * @since 7.0
+     */
+    public Cwmlisting $listing;
 
     /** @var  string Scripture Text
      *
      * @since 7.0
      */
-    public string $scripture;
+    public string $scripture = '';
 
     /** @var  string Date
      *
      * @since 7.0
      */
-    public $date;
+    public string $date = '';
 
     /** @var  string Series Thumbnail
      *
      * @since 7.0
      */
-    public $series_thumbnail;
+    public string $series_thumbnail = '';
 
     /** @var  string Teacher Image
      *
      * @since 7.0
      */
-    public $teacherimage;
+    public string $teacherimage = '';
 
     /** @var  string Path 1
      *
      * @since 7.0
      */
-    public $path1;
+    public string $path1 = '';
 
     /** @var  string Width
      *
      * @since 7.0
      */
-    public $playerwidth;
+    public string $playerwidth = '';
 
     /** @var  string Player Height
      *
      * @since 7.0
      */
-    public $playerheight;
+    public string $playerheight = '';
 
     /** @var  string Flash Vars
      *
      * @since 7.0
      */
-    public $flashvars;
+    public string $flashvars = '';
 
     /** @var  string Back Color
      *
      * @since 7.0
      */
-    public $backcolor;
+    public string $backcolor = '';
 
     /** @var  string Front Color
      *
      * @since 7.0
      */
-    public $frontcolor;
+    public string $frontcolor = '';
 
     /** @var  string Light Color
      *
      * @since 7.0
      */
-    public $lightcolor;
+    public string $lightcolor = '';
 
     /** @var  string Screen Color
      *
      * @since 7.0
      */
-    public $screencolor;
+    public string $screencolor = '';
 
     /** @var  string Auto Start
      *
      * @since 7.0
      */
-    public $autostart;
+    public string $autostart = '';
 
     /** @var  string Player Idle Hide
      *
      * @since 7.0
      */
-    public $playeridlehide;
+    public string $playeridlehide = '';
 
     /** @var  string Header Text
      *
      * @since 7.0
      */
-    public $headertext;
+    public string $headertext = '';
 
     /** @var  string Footer Text
      *
      * @since 7.0
      */
-    public $footertext;
+    public string $footertext = '';
 
     /** @var  Registry Params
      *
      * @since 7.0
      */
-    protected $params;
+    protected Registry $params;
 
     /** @var  Registry Params
      *
      * @since 7.0
      */
-    protected $state;
+    protected Registry $state;
 
     /** @var  Registry Extra Params
      *
      * @since 7.0
      */
-    protected $extraparams;
+    protected Registry $extraparams;
 
     /** @var  CwmtemplateTable Template
      *
      * @since 7.0
      */
-    protected $template;
+    protected CwmtemplateTable $template;
 
     /**
      * Execute and display a template script.
@@ -185,9 +189,12 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $input = Factory::getApplication()->input;
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
+
         $input->get('tmpl', 'component', 'string');
         $mediaid      = $input->get('mediaid', '', 'int');
         $close        = $input->get('close', '0', 'int');
@@ -197,34 +204,50 @@ class HtmlView extends BaseHtmlView
          *  If this is a direct new window, then all we need to do is perform hitPlay and close this window
          */
         if ($close === 1) {
-            echo HtmlHelper::_(
-                'content.prepare',
-                '<script language="javascript" type="text/javascript">window.close();</script>'
-            );
+            $app->getDocument()->getWebAssetManager()
+                ->addInlineScript('window.close();');
         }
 
         $this->getMedia = new Cwmmedia();
         $this->media    = $this->getMedia->getMediaRows2($mediaid);
-        $this->state    = $this->get('state');
-        $this->template = $this->state->get('template');
+
+        $model = $this->getModel();
+        $state = $model ? $model->getState() : null;
+
+        if ($state instanceof Registry) {
+            $this->state = $state;
+        } else {
+            $this->state = new Registry();
+        }
+
+        $template = $this->state->get('template');
+        if ($template instanceof CwmtemplateTable) {
+            $this->template = $template;
+        } else {
+            // Handle case where template is not of expected type, maybe create a default or throw error
+            $this->template = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
+        }
+
 
         /*
          *  Convert parameter fields to objects.
          */
         $registry = new Registry();
-        $registry->loadString($this->template->params);
+        $registry->loadString($this->template->params ?? '');
         $this->params = $registry;
 
         $registry = new Registry();
-        $registry->loadString($this->media->sparams);
+        $registry->loadString($this->media->sparams ?? '');
         $this->params->merge($registry);
         $this->media->sparams = $registry;
         $registry             = new Registry();
-        $registry->loadString($this->media->params);
+        $registry->loadString($this->media->params ?? '');
         $this->params->merge($registry);
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
         $JBSMListing     = new Cwmlisting();
+        $this->listing   = $JBSMListing;
         $this->scripture = $JBSMListing->getScripture($this->params, $this->media, 0, 1);
         $this->media->id = $saveid;
         $this->date      = $JBSMListing->getStudyDate($this->params, $this->media->studydate);
@@ -234,15 +257,13 @@ class HtmlView extends BaseHtmlView
          */
         $this->getMedia->hitPlay((int)$mediaid);
 
-        $seriesImage            = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
+        $seriesImage = Cwmimages::getSeriesThumbnail($this->media->series_thumbnail);
         if ($seriesImage->path) {
-            $this->series_thumbnail = '<img src="' . Uri::base() . $seriesImage->path . '" width="' . $seriesImage->width . '" height="'
-                . $seriesImage->height . '" alt="' . $this->media->series_text . '" />';
+            $this->series_thumbnail = Cwmimages::renderPicture($seriesImage, $this->media->series_text ?? '');
         }
-        $image                  = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
+        $image = Cwmimages::getTeacherThumbnail($this->media->teacher_thumbnail, $this->media->thumb);
         if ($image->path) {
-            $this->teacherimage = '<img src="' . Uri::base() . $image->path . '" width="' . $image->width . '" height="' . $image->height
-                . '" alt="' . $this->media->teachername . '" />';
+            $this->teacherimage = Cwmimages::renderPicture($image, $this->media->teachername ?? '');
         }
 
         $this->path1 = Cwmhelper::mediaBuildUrl(
@@ -252,29 +273,34 @@ class HtmlView extends BaseHtmlView
             true
         );
 
-        $this->playerwidth  = $this->params->get('player_width');
-        $this->playerheight = $this->params->get('player_height');
+        $this->playerwidth  = (string) ($this->params->get('player_width') ?? '');
+        $this->playerheight = (string) ($this->params->get('player_height') ?? '');
 
         if ($this->params->get('playerheight') < 55 && $this->params->get('playerheight')) {
-            $this->playerheight = 55;
+            $this->playerheight = '55';
         } elseif ($this->params->get('playerheight')) {
-            $this->playerheight = $this->params->get('playerheight');
+            $this->playerheight = (string) $this->params->get('playerheight');
         }
 
         if ($this->params->get('playerwidth')) {
-            $this->playerwidth = $this->params->get('playerwidth');
+            $this->playerwidth = (string) $this->params->get('playerwidth');
         }
 
         if ($this->params->get('playervars')) {
-            $this->extraparams = $this->params->get('playervars');
+            $playervars = $this->params->get('playervars');
+            if ($playervars instanceof Registry) {
+                $this->extraparams = $playervars;
+            } else {
+                $this->extraparams = new Registry($playervars);
+            }
         }
 
         if ($this->params->get('altflashvars')) {
-            $this->flashvars = $this->params->get('altflashvars');
+            $this->flashvars = (string) $this->params->get('altflashvars');
         }
 
         if ($this->player === 100) {
-            $this->player = (int) $this->template->params->get('player', "0");
+            $this->player = (int) $this->params->get('player', '0');
         }
 
         $this->backcolor   = $this->params->get('backcolor', '0x287585');
@@ -282,7 +308,7 @@ class HtmlView extends BaseHtmlView
         $this->lightcolor  = $this->params->get('lightcolor', '0x000000');
         $this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
 
-        if ($this->params->get('autostart', "1") === "1") {
+        if ($this->params->get('autostart', '1') === '1') {
             $this->autostart = 'true';
         } else {
             $this->autostart = 'false';
@@ -294,14 +320,14 @@ class HtmlView extends BaseHtmlView
             $this->playeridlehide = 'false';
         }
 
-        if ($this->params->get('autostart') === "1") {
+        if ($this->params->get('autostart') === '1') {
             $this->autostart = 'true';
-        } elseif ($this->params->get('autostart') === "2") {
+        } elseif ($this->params->get('autostart') === '2') {
             $this->autostart = 'false';
         }
 
         $this->headertext = $this->titles(
-            $this->params->get('popuptitle'),
+            (string) ($this->params->get('popuptitle') ?? ''),
             $this->media,
             $this->scripture,
             $this->date
@@ -309,7 +335,7 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('itempopuptitle')) {
             $this->headertext = $this->titles(
-                $this->params->get('itempopuptitle'),
+                (string) $this->params->get('itempopuptitle'),
                 $this->media,
                 $this->scripture,
                 $this->date
@@ -317,7 +343,7 @@ class HtmlView extends BaseHtmlView
         }
 
         $this->footertext = $this->titles(
-            $this->params->get('popupfooter'),
+            (string) ($this->params->get('popupfooter') ?? ''),
             $this->media,
             $this->scripture,
             $this->date
@@ -325,7 +351,7 @@ class HtmlView extends BaseHtmlView
 
         if ($this->params->get('itempopupfooter')) {
             $this->footertext = $this->titles(
-                $this->params->get('itempopupfooter'),
+                (string) $this->params->get('itempopupfooter'),
                 $this->media,
                 $this->scripture,
                 $this->date
@@ -369,9 +395,7 @@ class HtmlView extends BaseHtmlView
             $text = str_replace('{{title}}', $media->studytitle, $text);
         }
 
-        if (isset($scripture)) {
-            $text = str_replace('{{scripture}}', $scripture, $text);
-        }
+        $text = str_replace('{{scripture}}', $scripture, $text);
 
         if (isset($this->teacherimage)) {
             $text = str_replace('{{teacherimage}}', $this->teacherimage, $text);

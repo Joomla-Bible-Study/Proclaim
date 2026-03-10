@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -13,7 +13,6 @@ namespace CWM\Component\Proclaim\Site\Service;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-//use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use CWM\Component\Proclaim\Site\Service\ProclaimNomenuRules as NomenuRules;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\CategoryFactoryInterface;
@@ -39,7 +38,7 @@ class Router extends RouterView
      * @var    bool
      * @since  10.0.0
      */
-    protected $noIDs = false;
+    protected bool $noIDs = false;
 
     /**
      * The db
@@ -48,15 +47,9 @@ class Router extends RouterView
      *
      * @since  4.0.0
      */
-    private $db;
+    private DatabaseInterface $db;
 
-    private $cacheiddata = '0';
-
-    /**
-     * @var CategoryFactoryInterface|null
-     * @since version
-     */
-    private ?CategoryFactoryInterface $categoryFactory;
+    private string|int $cacheiddata = 0;
 
     /**
      * Proclaim Component router constructor
@@ -79,89 +72,73 @@ class Router extends RouterView
         $params      = ComponentHelper::getParams('com_proclaim');
         $this->noIDs = (bool)$params->get('sef_ids', true);
 
+        // Landing page view
         $landingPage = new RouterViewConfiguration('cwmlandingpage');
         $this->registerView($landingPage);
 
-        $landingPage = new RouterViewConfiguration('cwmlandingpage');
-        $this->registerView($landingPage);
+        // Sermons list view (parent for single sermon)
+        $sermons = new RouterViewConfiguration('cwmsermons');
+        $this->registerView($sermons);
 
-        $Sermons = new RouterViewConfiguration('cwmsermons');
-        $this->registerView($Sermons);
+        // Single sermon view - child of sermons list
+        // URL: /sermons-menu/sermon-alias (instead of /sermons-menu/cwmsermon/sermon-alias)
+        $sermon = new RouterViewConfiguration('cwmsermon');
+        $sermon->setKey('id')->setParent($sermons);
+        $this->registerView($sermon);
 
-        $Sermons = new RouterViewConfiguration('cwmsermons');
-        $this->registerView($Sermons);
+        // Teachers list view (parent for single teacher)
+        $teachers = new RouterViewConfiguration('cwmteachers');
+        $this->registerView($teachers);
 
-        $Sermon = new RouterViewConfiguration('cwmsermon');
-        $Sermon->setKey('id');
-        $this->registerView($Sermon);
+        // Single teacher view - child of teachers list
+        // URL: /teachers-menu/teacher-alias (instead of /teachers-menu/cwmteacher/teacher-alias)
+        $teacher = new RouterViewConfiguration('cwmteacher');
+        $teacher->setKey('id')->setParent($teachers);
+        $this->registerView($teacher);
 
-        $Sermon = new RouterViewConfiguration('cwmsermon');
-        $Sermon->setKey('id');
-        $this->registerView($Sermon);
+        // Series list view (parent for single series)
+        $seriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
+        $this->registerView($seriesDisplays);
 
-        $Teachers = new RouterViewConfiguration('cwmteachers');
-        $this->registerView($Teachers);
+        // Single series display view - child of series list
+        // URL: /series-menu/series-alias (instead of /series-menu/cwmseriesdisplay/series-alias)
+        $seriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
+        $seriesDisplay->setKey('id')->setParent($seriesDisplays);
+        $this->registerView($seriesDisplay);
 
-        $Teachers = new RouterViewConfiguration('cwmteachers');
-        $this->registerView($Teachers);
+        // Latest sermon view - child of sermons list
+        $latest = new RouterViewConfiguration('cwmlatest');
+        $latest->setKey('id')->setParent($sermons);
+        $this->registerView($latest);
 
-        $Teacher = new RouterViewConfiguration('cwmteacher');
-        $Teacher->setKey('id');
-        $this->registerView($Teacher);
+        // Podcast list view (parent for single podcast)
+        $podcastList = new RouterViewConfiguration('cwmpodcastlist');
+        $this->registerView($podcastList);
 
-        $Teacher = new RouterViewConfiguration('cwmteacher');
-        $Teacher->setKey('id');
-        $this->registerView($Teacher);
+        // Podcast display view - child of podcast list
+        // URL: /podcasts-menu/podcast-alias (instead of /podcasts-menu/cwmpodcastdisplay/podcast-alias)
+        $podcastDisplay = new RouterViewConfiguration('cwmpodcastdisplay');
+        $podcastDisplay->setKey('id')->setParent($podcastList);
+        $this->registerView($podcastDisplay);
 
-        $SeriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
-        $SeriesDisplay->setKey('id');
-        $this->registerView($SeriesDisplay);
+        // Series Podcast list view (parent for single series podcast display)
+        $seriesPodcastList = new RouterViewConfiguration('cwmseriespodcastlist');
+        $this->registerView($seriesPodcastList);
 
-        $SeriesDisplay = new RouterViewConfiguration('cwmseriesdisplay');
-        $SeriesDisplay->setKey('id');
-        $this->registerView($SeriesDisplay);
+        // Series Podcast display view - child of series podcast list
+        // URL: /series-podcasts-menu/series-alias (instead of /series-podcasts-menu/cwmseriespodcastdisplay/series-alias)
+        $seriesPodcastDisplay = new RouterViewConfiguration('cwmseriespodcastdisplay');
+        $seriesPodcastDisplay->setKey('id')->setParent($seriesPodcastList);
+        $this->registerView($seriesPodcastDisplay);
 
-        $SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
-        $this->registerView($SeriesDisplays);
+        // Popup view
+        $popup = new RouterViewConfiguration('cwmpopup');
+        $this->registerView($popup);
 
-        $SeriesDisplays = new RouterViewConfiguration('cwmseriesdisplays');
-        $this->registerView($SeriesDisplays);
-
-        $Latest = new RouterViewConfiguration('cwmlatest');
-        $Latest->setKey('id');
-        $this->registerView($Latest);
-
-        $Latest = new RouterViewConfiguration('cwmlatest');
-        $Latest->setKey('id');
-        $this->registerView($Latest);
-
-        $proclaim = new RouterViewConfiguration('cwmpodcastdisplay');
-        $proclaim->setKey('id');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmpodcastdisplay');
-        $proclaim->setKey('id');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmpopup');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmpopup');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmsqueezebox');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('Cwmsqueezebox');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmterms');
-        $proclaim->setKey('id');
-        $this->registerView($proclaim);
-
-        $proclaim = new RouterViewConfiguration('cwmterms');
-        $proclaim->setKey('id');
-        $this->registerView($proclaim);
+        // Terms view
+        $terms = new RouterViewConfiguration('cwmterms');
+        $terms->setKey('id');
+        $this->registerView($terms);
 
         parent::__construct($app, $menu);
 
@@ -181,7 +158,7 @@ class Router extends RouterView
      */
     public function getCWMSermonSegment(int|string $id, array $query): array
     {
-        if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
+        if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))
@@ -237,15 +214,6 @@ class Router extends RouterView
     {
         return $this->getCWMTeacherSegment($id, $query);
     }
-    /**
-     * Method to get the segment(s) for a sermon
-     *
-     * @param   string  $segment  Segment of the article to retrieve the ID for
-     * @param   array   $query    The request that is parsed right now
-     *
-     * @return  mixed   The id of this item or false
-     * @since   10.0.0
-     */
 
     /**
      * Method to get the segment(s) for a teacher
@@ -258,7 +226,7 @@ class Router extends RouterView
      */
     public function getCWMTeacherSegment(int|string $id, array $query): array
     {
-        if ((int)$this->cacheiddata !== (int)$id && !strpos($id, ':')) {
+        if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))
@@ -294,7 +262,7 @@ class Router extends RouterView
      * @return  mixed   The id of this item or false
      * @since  10.0.0
      */
-    public function getCWMSermonsId(string $segment, array $query)
+    public function getCWMSermonsId(string $segment, array $query): mixed
     {
         return $this->getCWMSermonId($segment, $query);
     }
@@ -401,7 +369,7 @@ class Router extends RouterView
      */
     public function getCWMSeriesDisplaySegment(mixed $id, array $query): array
     {
-        if (!strpos($id, ':')) {
+        if (!str_contains((string)$id, ':')) {
             $id      = (int)$id;
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('alias'))
@@ -461,7 +429,6 @@ class Router extends RouterView
 
             $this->db->setQuery($dbquery);
 
-            // Var_dump(($this->db->loadResult()));
             return (int)$this->db->loadResult();
         }
 
@@ -483,8 +450,8 @@ class Router extends RouterView
             $dbquery = $this->db->getQuery(true);
             $dbquery->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__bsms_studies'))
-                ->where('published = 1')
-                ->order('studydate DESC LIMIT 1')
+                ->where($this->db->quoteName('alias') . ' = :alias')
+                ->where($this->db->quoteName('published') . ' = 1')
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
@@ -493,5 +460,49 @@ class Router extends RouterView
         }
 
         return (int)$segment;
+    }
+
+    /**
+     * Method to get the segment(s) for a series podcast
+     *
+     * @param   mixed   $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   10.0.0
+     */
+    public function getCWMSeriesPodcastDisplaySegment(mixed $id, array $query): array
+    {
+        return $this->getCWMSeriesDisplaySegment($id, $query);
+    }
+
+    /**
+     * @Method to get the segment(s) for a series podcast
+     *
+     * @param   string  $segment  Segment to retrieve the ID for
+     * @param   array   $query    The request that is parsed right now
+     *
+     * @return  mixed   The id of this item or false
+     * @since  10.0.0
+     */
+    public function getCWMSeriesPodcastDisplayId(string $segment, array $query): mixed
+    {
+        return $this->getCWMSeriesDisplayId($segment, $query);
+    }
+
+    /**
+     * Method to get the segment(s) for a series podcast list
+     *
+     * @param   mixed   $id     ID of the article form to retrieve the segments for
+     * @param   array   $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   10.0.0
+     */
+    public function getCWMSeriesPodcastListSegment(mixed $id, array $query): array
+    {
+        return [];
     }
 }

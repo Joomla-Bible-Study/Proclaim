@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 use Joomla\Filesystem\Folder;
 
@@ -116,6 +118,13 @@ class CwmserversModel extends ListModel
                 // Create the reverse lookup for Endpoint type to Endpoint name
                 $this->rlu_type[strtolower($server)] = (string)$xml->name;
 
+                // Legacy addon is kept for existing servers but hidden from the type picker
+                if (strtolower($server) === 'legacy') {
+                    unset($xml);
+
+                    continue;
+                }
+
                 $o              = new \stdClass();
                 $o->id          = $i;
                 $o->type        = (string)$xml['type'];
@@ -156,12 +165,15 @@ class CwmserversModel extends ListModel
         $app = Factory::getApplication();
 
         // Adjust the context to support modal layouts.
-        if ($layout = $app->input->get('layout')) {
+        if ($layout = $app->getInput()->get('layout')) {
             $this->context .= '.' . $layout;
         }
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
+
+        $location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location', '');
+        $this->setState('filter.location', $location);
 
         // List state information.
         parent::populateState($ordering, $direction);
@@ -177,36 +189,89 @@ class CwmserversModel extends ListModel
      */
     protected function getListQuery(): QueryInterface|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = $this->getCurrentUser();
 
-        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type'));
-        $query->from('#__bsms_servers AS server');
+        $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.location_id, server.checked_out, server.checked_out_time'));
+        $query->from($db->quoteName('#__bsms_servers', 'server'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('server.checked_out'));
+
+        // Join location name for display (graceful — column may not exist on older installs)
+        $columns = $db->getTableColumns('#__bsms_servers');
+
+        if (isset($columns['location_id'])) {
+            $query->select($db->quoteName('loc.location_text', 'location_text'))
+                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('server.location_id'));
+        }
 
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (Factory::getApplication()->input->get('layout') === 'modal' && $published === '') {
+        if (Factory::getApplication()->getInput()->get('layout') === 'modal' && $published === '') {
             $published = 1;
         }
 
         if (is_numeric($published)) {
-            $query->where('server.published = ' . (int)$published);
+            $publishedValue = (int) $published;
+            $query->where($db->quoteName('server.published') . ' = :published')
+                ->bind(':published', $publishedValue, \Joomla\Database\ParameterType::INTEGER);
         } elseif ($published === '') {
-            $query->where('(server.published = 0 OR server.published = 1)');
+            $query->where($db->quoteName('server.published') . ' IN (0, 1)');
         }
 
-        // Implement View Level Access
-        if (!$user->authorise('core.cwmadmin')) {
-            $groups = implode(',', $user->getAuthorisedViewLevels());
-            $query->where('server.access IN (' . $groups . ')');
+        // Restrict non-admin users: use hybrid location filter when location system is enabled,
+        // otherwise fall back to standard Joomla access-level filtering
+        if (!$user->authorise('core.admin')) {
+            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+                // Shared server pattern: NULL = visible to all, specific ID = campus-restricted
+                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+                if (!empty($accessible)) {
+                    // Show shared (NULL) servers + servers belonging to user's accessible locations
+                    $inClause = implode(',', array_map('intval', $accessible));
+                    $query->where(
+                        '(' . $db->quoteName('server.location_id') . ' IS NULL'
+                        . ' OR ' . $db->quoteName('server.location_id') . ' IN (' . $inClause . '))'
+                    );
+                } else {
+                    // No campus access — only shared (NULL) servers
+                    $query->where($db->quoteName('server.location_id') . ' IS NULL');
+                }
+            } else {
+                // Location system disabled — standard Joomla access-level filter
+                $query->whereIn($db->quoteName('server.access'), $user->getAuthorisedViewLevels());
+            }
         }
 
-        // Add the list ordering clause
+        // Filter by location
+        if (isset($columns['location_id'])) {
+            $location = $this->getState('filter.location');
+
+            if (is_numeric($location)) {
+                $locationVal = (int) $location;
+                $query->where($db->quoteName('server.location_id') . ' = :locationId')
+                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+            }
+        }
+
+        // Add the list ordering clause with whitelist validation
         $orderCol  = $this->state->get('list.ordering', 'server.server_name');
         $orderDirn = $this->state->get('list.direction', 'DESC');
-        $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+
+        // Validate ordering column against whitelist
+        $allowedColumns = ['server.id', 'server.server_name', 'server.published', 'server.type'];
+        if (!\in_array($orderCol, $allowedColumns, true)) {
+            $orderCol = 'server.server_name';
+        }
+
+        // Validate direction
+        $orderDirn = strtoupper($orderDirn) === 'ASC' ? 'ASC' : 'DESC';
+
+        $query->order($db->quoteName($orderCol) . ' ' . $orderDirn);
 
         return $query;
     }

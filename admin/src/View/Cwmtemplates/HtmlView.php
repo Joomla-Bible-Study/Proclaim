@@ -4,14 +4,15 @@
  * Templates html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTemplates;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplates;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplatesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -34,60 +35,68 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 class HtmlView extends BaseHtmlView
 {
     /**
-     * State
+     * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
     /**
-     * State
+     * Templates
      *
-     * @var object
+     * @var mixed
      * @since    7.0.0
      */
-    public $templates;
+    public mixed $templates = null;
 
     /**
-     * State
+     * Filter Levels
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
     /**
-     * State
+     * Side Bar
      *
-     * @var object
+     * @var string
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -100,21 +109,25 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmtemplatesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
+        $this->items      = $model->getItems();
+        $this->pagination = $model->getPagination();
+        $this->state      = $model->getState();
+        $this->filterForm = $model->getFilterForm();
         $this->canDo      = ContentHelper::getActions('com_proclaim', 'template');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // We don't need toolbar in the modal window.
+        // We don't need a toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
             $this->addToolbar();
         }
@@ -133,18 +146,19 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getIdentity();
+        $user = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TEMPLATES'), 'grid grid');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
             ToolbarHelper::addNew('cwmtemplate.add');
+
+            $toolbar->standardButton('copy', 'JBS_TPL_DUPLICATE', 'cwmtemplate.copy')
+                ->icon('icon-copy')
+                ->listCheck(true);
         }
 
         $dropdown = $toolbar->dropdownButton('status-group')
@@ -158,9 +172,19 @@ class HtmlView extends BaseHtmlView
         if ($this->canDo->get('core.edit.state')) {
             $childBar->publish('cwmtemplates.publish');
             $childBar->unpublish('cwmtemplates.unpublish');
+            $childBar->checkin('cwmtemplates.checkin')->listCheck(true);
+            $childBar->trash('cwmtemplates.trash');
 
-            if ($canDo->get('core.edit.state')) {
-                $childBar->trash('cwmtemplates.trash');
+            // Add a batch button
+            if (
+                $user->authorise('core.create', 'com_proclaim')
+                && $user->authorise('core.edit', 'com_proclaim')
+                && $user->authorise('core.edit.state', 'com_proclaim')
+            ) {
+                $childBar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
             }
         }
 
@@ -171,23 +195,9 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
-        $url = Route::_('index.php?option=com_proclaim&view=templates&layout=default_export');
+        $url = Route::_('index.php?option=com_proclaim&view=cwmtemplates&layout=default_export');
         $toolbar->appendButton('Link', 'export', 'JBS_TPL_IMPORT_EXPORT_TEMPLATE', $url);
-    }
 
-    /**
-     * Returns an array of fields the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields(): array
-    {
-        return array(
-            'template.title'     => Text::_('JBS_TPL_TEMPLATE_ID'),
-            'template.published' => Text::_('JSTATUS'),
-            'template.id'        => Text::_('JGRID_HEADING_ID')
-        );
+        ToolbarHelper::help('templates', true);
     }
 }

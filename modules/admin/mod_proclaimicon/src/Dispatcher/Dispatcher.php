@@ -4,7 +4,7 @@
  * @package     Proclaim.Admin
  * @subpackage  mod_proclaimicon
  *
- * @copyright    (C) 2025 CWM Team All rights reserved
+ * @copyright    (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -34,9 +34,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      *
      * @since   10.0.0
      */
+    #[\Override]
     protected function getLayoutData(): array|false
     {
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+        if (!\defined('CWM_LOADED')) {
             require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
         }
 

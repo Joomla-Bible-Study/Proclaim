@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -15,14 +15,18 @@ namespace CWM\Component\Proclaim\Site\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
+use Joomla\CMS\Application\CMSApplicationInterface;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
-use Joomla\CMS\Image\Image;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -36,6 +40,14 @@ class Cwmlisting
      * @since 7.0
      */
     public Registry $params;
+
+    /**
+     * Context prefix for per-context template settings (e.g., 'd', 'ts', 'sd').
+     *
+     * @var    string
+     * @since  10.1.0
+     */
+    protected string $extra = '';
 
     /**
      * Get Fluid Listing
@@ -52,12 +64,16 @@ class Cwmlisting
      */
     public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
+        // Ensure listing CSS is loaded for all frontend views that use this helper
+        Factory::getApplication()->getDocument()->getWebAssetManager()
+            ->useStyle('com_proclaim.cwmcore');
+
         $list         = null;
         $row          = [];
         $this->params = $params;
         $item         = '';
 
-        if (!is_array($items)) {
+        if (!\is_array($items)) {
             $subarray    = [];
             $subarray[0] = $items;
             $items       = $subarray;
@@ -71,7 +87,7 @@ class Cwmlisting
             }
         }
 
-        if ($type === 'sermon') {
+        if ($type === 'sermon' && !empty($items) && isset($items[0]) && \is_object($items[0])) {
             $medias = $this->getFluidMediaids($items[0]);
             $item   = $items[0];
         }
@@ -109,156 +125,33 @@ class Cwmlisting
                 break;
         }
 
+        $this->extra = $extra;
+
         $listparams = [];
 
-        if ($params->get($extra . 'scripture1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture1');
+        // Standard params that check {name}row > 0
+        $standardParams = [
+            'scripture1', 'scripture2', 'scriptures', 'secondary', 'title', 'date', 'teacher', 'teacher-title',
+            'teachercard',
+            'duration', 'studyintro', 'studytext', 'series', 'description', 'seriesthumbnail', 'submitted',
+            'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
+            'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
+            'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
+            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+        ];
+
+        foreach ($standardParams as $paramName) {
+            if ($params->get($extra . $paramName . 'row') > 0) {
+                $listparams[] = $this->getListParamsArray($extra . $paramName);
+            }
         }
 
-        if ($params->get($extra . 'scripture2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'scripture2');
-        }
-
-        if ($params->get($extra . 'secondaryrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'secondary');
-        }
-
-        if ($params->get($extra . 'titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'title');
-        }
-
-        if ($params->get($extra . 'daterow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'date');
-        }
-
-        if ($params->get($extra . 'teacherrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher');
-        }
-
-        if ($params->get($extra . 'teacher-titlerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacher-title');
-        }
-
-        if ($params->get($extra . 'durationrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'duration');
-        }
-
-        if ($params->get($extra . 'studyintrorow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studyintro');
-        }
-
-        if ($params->get($extra . 'seriesrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'series');
-        }
-
-        if ($params->get($extra . 'descriptionrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'description');
-        }
-
-        if ($params->get($extra . 'seriesthumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'seriesthumbnail');
-        }
-
-        if ($params->get($extra . 'submittedrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'submitted');
-        }
-
-        if ($params->get($extra . 'hitsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'hits');
-        }
-
-        if ($params->get($extra . 'downloadsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'downloads');
-        }
-
-        if ($params->get($extra . 'studynumberrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'studynumber');
-        }
-
-        if ($params->get($extra . 'topicrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'topic');
-        }
-
-        if ($params->get($extra . 'locationsrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'locations');
-        }
-
-        if ($params->get($extra . 'jbsmediarow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'jbsmedia');
-        }
-
-        if ($params->get($extra . 'messagetyperow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'messagetype');
-        }
-
-        if ($params->get($extra . 'thumbnailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'thumbnail');
-        }
-
-        if ($params->get($extra . 'teacherimagerow') > 0 || $params->get($extra . 'teacherimagerrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherimage');
-        }
-
+        // Special case: seriesdescription maps to description
         if ($params->get($extra . 'seriesdescriptionrow') > 0) {
             $listparams[] = $this->getListParamsArray($extra . 'description');
         }
 
-        if ($params->get($extra . 'teacheremailrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheremail');
-        }
-
-        if ($params->get($extra . 'teacherwebrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherweb');
-        }
-
-        if ($params->get($extra . 'teacherphonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherphone');
-        }
-
-        if ($params->get($extra . 'teacherfbrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherfb');
-        }
-
-        if ($params->get($extra . 'teachertwrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachertw');
-        }
-
-        if ($params->get($extra . 'teacherblogrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherblog');
-        }
-
-        if ($params->get($extra . 'teachershortrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teachershort');
-        }
-
-        if ($params->get($extra . 'teacherlongrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlong');
-        }
-
-        if ($params->get($extra . 'teacheraddressrow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacheraddress');
-        }
-
-        if ($params->get($extra . 'teacherlink1row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink1');
-        }
-
-        if ($params->get($extra . 'teacherlink2row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink2');
-        }
-
-        if ($params->get($extra . 'teacherlink3row') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlink3');
-        }
-
-        if ($params->get($extra . 'teacherlargeimagerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherlargeimage');
-        }
-
-        if ($params->get($extra . 'teacherallinonerow') > 0) {
-            $listparams[] = $this->getListParamsArray($extra . 'teacherallinone');
-        }
-
+        // Special case: custom doesn't use > 0 comparison
         if ($params->get($extra . 'customrow')) {
             $listparams[] = $this->getListParamsArray($extra . 'custom');
         }
@@ -303,27 +196,27 @@ class Cwmlisting
             }
         }
 
-        if (count($row1)) {
+        if (\count($row1)) {
             $row1sorted = $this->sortArrayofObjectByProperty($row1, 'col', $order = "ASC");
         }
 
-        if (count($row2)) {
+        if (\count($row2)) {
             $row2sorted = $this->sortArrayofObjectByProperty($row2, 'col', $order = "ASC");
         }
 
-        if (count($row3)) {
+        if (\count($row3)) {
             $row3sorted = $this->sortArrayofObjectByProperty($row3, 'col', $order = "ASC");
         }
 
-        if (count($row4)) {
+        if (\count($row4)) {
             $row4sorted = $this->sortArrayofObjectByProperty($row4, 'col', $order = "ASC");
         }
 
-        if (count($row5)) {
+        if (\count($row5)) {
             $row5sorted = $this->sortArrayofObjectByProperty($row5, 'col', $order = "ASC");
         }
 
-        if (count($row6)) {
+        if (\count($row6)) {
             $row6sorted = $this->sortArrayofObjectByProperty($row6, 'col', $order = "ASC");
         }
 
@@ -338,42 +231,50 @@ class Cwmlisting
 
 
 
-        // Start the table for the entire list
-        $list .= '<div class="table-responsive" about="' . $type . '"><table class="table w-auto table-borderless">';
+        // Determine listing item style (classic, cards, or grid) from per-context param
+        $listingStyle = $params->get($extra . 'listing_item_style', 'classic');
 
-        if (($type === 'sermons') && $params->get('use_headers_list') > 0) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
-            $list .= '</thead>';
+        if ($listingStyle === 'grid') {
+            $gridSize          = $params->get($extra . 'grid_card_size', 'medium');
+            $listingStyleClass = ' proclaim-listing--grid proclaim-grid--' . $gridSize;
+        } elseif ($listingStyle === 'cards') {
+            $listingStyleClass = ' proclaim-listing--cards';
+        } else {
+            $listingStyleClass = '';
         }
 
-        if (($type === 'sermon') && $params->get('use_headers_view') > 0) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 1, $type);
-            $list .= '</thead>';
+        // Start the listing wrapper
+        $list .= '<div class="proclaim-listing' . $listingStyleClass . '" data-context="' . $type . '">' . "\n";
+
+        // Check if we have a valid first item for header rows
+        $hasValidFirstItem = !empty($items) && isset($items[0]) && \is_object($items[0]);
+
+        // In cards mode, map table-dark/table-light to cards-specific header variants
+        // so the header follows the template's accent color (dark) or stays neutral (light).
+        $rawHeaderType = $params->get($extra . 'listheadertype', '');
+
+        if ($listingStyle === 'cards') {
+            $headerClass = $rawHeaderType === 'table-dark' ? 'proclaim-header--accent' : 'proclaim-header--subtle';
+        } else {
+            $headerClass = $rawHeaderType;
         }
 
-        if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '" colspan="12">';
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 1,
-                $type
-            );
-            $list .= '</thead>';
-        }
+        // Grid mode skips column headers — elements are stacked vertically in each card
+        if ($listingStyle !== 'grid') {
+            if (($type === 'sermons') && $params->get('use_headers_list') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
+                $list .= '</div>' . "\n";
+            }
 
-        if ($type === 'seriesdisplay') {
-            if ($params->get('use_header_seriesdisplay') > 0) {
-                // Start the header
-                $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            if (($type === 'sermon') && $params->get('use_headers_view') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                $list .= $this->getFluidRow($listrows, $listsorts, $items[0], $params, $template, $header = 1, $type);
+                $list .= '</div>' . "\n";
+            }
+
+            if (($type === 'seriesdisplays') && $params->get('use_headers_series') == 1 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -383,24 +284,43 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</thead>';
+                $list .= '</div>' . "\n";
             }
 
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 0,
-                $type
-            );
-        }
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                if ($params->get('use_header_seriesdisplay') > 0) {
+                    $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                    $list .= $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $items[0],
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
+                    $list .= '</div>' . "\n";
+                }
+            }
 
-        if ($type === 'teacher') {
-            if ($params->get('use_headers_teacher_details') > 0) {
-                // Start the header
-                $list .= '<thead class="' . $params->get('listheadertype') . '">';
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                if ($params->get('use_headers_teacher_details') > 0) {
+                    $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
+                    $list .= $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $items[0],
+                        $params,
+                        $template,
+                        $header = 1,
+                        $type
+                    );
+                    $list .= '</div>' . "\n";
+                }
+            }
+
+            if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0 && $hasValidFirstItem) {
+                $list .= '<div class="proclaim-listing-header d-none d-md-block ' . $headerClass . '">' . "\n";
                 $list .= $this->getFluidRow(
                     $listrows,
                     $listsorts,
@@ -410,38 +330,53 @@ class Cwmlisting
                     $header = 1,
                     $type
                 );
-                $list .= '</thead>';
+                $list .= '</div>' . "\n";
             }
-
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 0,
-                $type
-            );
         }
 
-        if (($type === 'teachers') && $params->get('use_headers_teacher_list') > 0) {
-            // Start the header
-            $list .= '<thead class="' . $params->get('listheadertype') . '">';
-            $list .= $this->getFluidRow(
-                $listrows,
-                $listsorts,
-                $items[0],
-                $params,
-                $template,
-                $header = 1,
-                $type
-            );
-            $list .= '</thead>';
+        // Render single-item views (seriesdisplay, teacher) — these don't loop
+        if ($listingStyle !== 'grid') {
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                $list .= $this->getFluidRow(
+                    $listrows,
+                    $listsorts,
+                    $items[0],
+                    $params,
+                    $template,
+                    $header = 0,
+                    $type
+                );
+            }
+
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                $list .= $this->getFluidRow(
+                    $listrows,
+                    $listsorts,
+                    $items[0],
+                    $params,
+                    $template,
+                    $header = 0,
+                    $type
+                );
+            }
+        } else {
+            if ($type === 'seriesdisplay' && $hasValidFirstItem) {
+                $row[] = $this->getGridCard($listparams, $items[0], $params, $template, $type);
+            }
+
+            if ($type === 'teacher' && $hasValidFirstItem) {
+                $row[] = $this->getGridCard($listparams, $items[0], $params, $template, $type);
+            }
         }
 
         // Go through and attach the media files as an array to their study
-        if (($type === 'sermons') && is_array($items)) {
+        if (($type === 'sermons') && \is_array($items)) {
             foreach ($items as $item) {
+                // Skip invalid items
+                if (!\is_object($item)) {
+                    continue;
+                }
+
                 $studymedia = [];
 
                 if (isset($mediafiles)) {
@@ -452,20 +387,21 @@ class Cwmlisting
                     }
                 }
 
-                if (isset($studymedia)) {
-                    $item->mediafiles = $studymedia;
-                }
+                $item->mediafiles = $studymedia;
 
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
@@ -484,44 +420,56 @@ class Cwmlisting
                 $item->mediafiles = $studymedia;
             }
 
-            $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 0, $type);
+            if ($listingStyle === 'grid') {
+                $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+            } else {
+                $row[] = $this->getFluidRow($listrows, $listsorts, $item, $params, $template, $header = 0, $type);
+            }
         }
 
         if ($type === 'seriesdisplays') {
             foreach ($items as $item) {
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
         if ($type === 'teachers') {
             foreach ($items as $item) {
-                $row[] = $this->getFluidRow(
-                    $listrows,
-                    $listsorts,
-                    $item,
-                    $params,
-                    $template,
-                    $header = 0,
-                    $type
-                );
-                $row[] = '</td></tr><tr style="border-bottom: 1px solid darkgrey; padding-bottom: 5px;"</tr>';
+                if ($listingStyle === 'grid') {
+                    $row[] = $this->getGridCard($listparams, $item, $params, $template, $type);
+                } else {
+                    $row[] = $this->getFluidRow(
+                        $listrows,
+                        $listsorts,
+                        $item,
+                        $params,
+                        $template,
+                        $header = 0,
+                        $type
+                    );
+                }
             }
         }
 
-        foreach ($row as $value) {
-            $list .= $value;
+        if (!empty($row)) {
+            foreach ($row as $value) {
+                $list .= $value;
+            }
         }
 
-        $list .= '</tbody></table></div>';
+        $list .= '</div>' . "\n";
 
         return $list;
     }
@@ -538,7 +486,7 @@ class Cwmlisting
     public function getFluidMediaids($item): array
     {
         $medias    = [];
-        $mediatemp = explode(',', $item->mids);
+        $mediatemp = explode(',', $item->mids ?? '');
 
         foreach ($mediatemp as $mtemp) {
             $medias[] = $mtemp;
@@ -557,41 +505,78 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getMediaFiles(array $medias)
+    public function getMediaFiles(array $medias): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*, #__bsms_servers.id AS ssid, #__bsms_servers.params AS sparams, #__bsms_servers.media AS smedia,'
-            . ' s.studytitle, s.studydate, s.studyintro, s.teacher_id,'
-            . ' s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin, s.verse_end, t.teachername, t.id as tid, s.id as sid, s.studyintro'
+            $db->quoteName('#__bsms_mediafiles') . '.*, '
+            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', '
+            . $db->quoteName('#__bsms_servers.params', 'sparams') . ', '
+            . $db->quoteName('#__bsms_servers.media', 'smedia') . ','
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.teacher_id') . ','
+            . $db->quoteName('s.booknumber') . ', ' . $db->quoteName('s.chapter_begin') . ', '
+            . $db->quoteName('s.chapter_end') . ', ' . $db->quoteName('s.verse_begin') . ', '
+            . $db->quoteName('s.verse_end') . ', ' . $db->quoteName('t.teachername') . ', '
+            . $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('s.id', 'sid')
         );
-        $query->from('#__bsms_mediafiles');
-        $query->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)');
-        $query->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)');
-        $query->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)');
-        $where2   = [];
-        $subquery = '(';
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->leftJoin(
+            $db->quoteName('#__bsms_servers') . ' ON ('
+            . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+        );
+        $query->leftJoin(
+            $db->quoteName('#__bsms_studies', 's') . ' ON ('
+            . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+        );
+        $query->leftJoin(
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ('
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0)'
+        );
+        $query->leftJoin(
+            $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+            . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+        );
+
+        $ids = [];
 
         foreach ($medias as $media) {
-            if (is_array($media)) {
+            if (\is_array($media)) {
                 foreach ($media as $m) {
-                    $where2[] = '#__bsms_mediafiles.id = ' . (int)$m;
+                    $ids[] = (int) $m;
                 }
             } else {
-                $where2[] = '#__bsms_mediafiles.id = ' . (int)$media;
+                $ids[] = (int) $media;
             }
         }
 
-        $subquery .= implode(' OR ', $where2);
-        $subquery .= ')';
-        $query->where($subquery);
-        $query->where('#__bsms_mediafiles.published = 1');
+        if (empty($ids)) {
+            return [];
+        }
+
+        $query->where($db->quoteName('#__bsms_mediafiles.id') . ' IN (' . implode(',', array_unique($ids)) . ')');
+
+        // Include archived media when showing archived messages
+        $showArchived = '0';
+        if (isset($this->params)) {
+            $showArchived = $this->params->get('show_archived', '');
+            if ($showArchived === '' || $showArchived === null) {
+                $showArchived = $this->params->get($this->extra . 'default_show_archived', '0');
+            }
+        }
+        if ($showArchived === '1' || $showArchived === '2') {
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)');
+        } else {
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
+        }
+
         $query->where(
-            '#__bsms_mediafiles.language in ('
+            $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
             . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
         );
-        $query->order('ordering ASC');
+        $query->order($db->quoteName('ordering') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -610,23 +595,21 @@ class Cwmlisting
     {
         $l = new \stdClass();
 
-        if ($paramtext === 'tdteacherimage') {
-            if ($this->params->get($paramtext . 'rrow')) {
-                $l->row = $this->params->get($paramtext . 'rrow');
-            } else {
-                $l->row = $this->params->get($paramtext . 'row');
-            }
-        } else {
-            $l->row = $this->params->get($paramtext . 'row');
-        }
+        $l->row = $this->params->get($paramtext . 'row');
 
-        $l->col        = $this->params->get($paramtext . 'col');
-        $l->colspan    = $this->params->get($paramtext . 'colspan');
-        $l->element    = $this->params->get($paramtext . 'element');
-        $l->custom     = $this->params->get($paramtext . 'custom');
-        $l->linktype   = $this->params->get($paramtext . 'linktype');
-        $l->name       = $paramtext;
-        $l->customtext = $this->params->get($paramtext . 'text');
+        $l->col          = $this->params->get($paramtext . 'col');
+        $l->colspan      = $this->params->get($paramtext . 'colspan');
+        $l->element      = $this->params->get($paramtext . 'element');
+        $l->custom       = $this->params->get($paramtext . 'custom');
+        $l->linktype     = $this->params->get($paramtext . 'linktype');
+        $l->name         = $paramtext;
+        $l->customtext   = (string) $this->params->get($paramtext . 'text', '');
+        $l->date_format  = $this->params->get($paramtext . 'date_format', '');
+        $l->show_verses  = $this->params->get($paramtext . 'show_verses', '');
+        $l->show_version = $this->params->get($paramtext . 'show_version', '');
+        $l->show_tooltip = $this->params->get($paramtext . 'show_tooltip', '');
+        $l->separator    = $this->params->get($paramtext . 'separator', '');
+        $l->icon_size    = $this->params->get($paramtext . 'icon_size', '');
 
         return $l;
     }
@@ -646,7 +629,7 @@ class Cwmlisting
     {
         $cur           = 1;
         $stack[1]['l'] = 0;
-        $stack[1]['r'] = count($array) - 1;
+        $stack[1]['r'] = \count($array) - 1;
 
         do {
             $l = $stack[$cur]['l'];
@@ -708,7 +691,7 @@ class Cwmlisting
      * @param   array      $listsorts  ?
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
-     * @param   \stdClass  $template   Template info
+     * @param   \stdClass  $template  Template info
      * @param   integer    $header     ?
      * @param   string     $type       ?
      *
@@ -726,13 +709,6 @@ class Cwmlisting
         int $header,
         string $type
     ): string {
-        $span        = '';
-        $headerstyle = '';
-
-        if ($header === 1) {
-            $headerstyle = "style=\"display: none;\"";
-        }
-
         $extra = '';
 
         switch ($type) {
@@ -755,95 +731,6 @@ class Cwmlisting
                 break;
         }
 
-        $pull        = $params->get($extra . 'rowspanitempull');
-        $rowspanitem = $params->get($extra . 'rowspanitem', 0);
-
-        switch ($rowspanitem) {
-            // Teacher Thumbnail
-            case 1:
-                if (!empty($item->thumb)) {
-                    $span = $this->useJImage(
-                        $item->thumb,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                } else {
-                    $span = null;
-                }
-
-                if (!empty($item->teacher_thumbnail) && $span === null) {
-                    $span = $this->useJImage(
-                        $item->teacher_thumbnail,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-
-                // Study Thumbnail
-            case 2:
-                if (isset($item->thumbnailm)) {
-                    $span = $this->useJImage(
-                        $item->thumbnailm,
-                        Text::_('JBS_CMN_THUMBNAIL'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-
-                if ($params->get('studyimage', '-1') !== '-1') {
-                    $span = $this->useJImage(
-                        JPATH_SITE . '/media/com_proclaim/images/stockimages/' . $params->get('studyimage'),
-                        Text::_('JBS_CMN_THUMBNAIL'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-
-                break;
-
-                // Series Thumbnail
-            case 3:
-                if (!empty($item->series_thumbnail)) {
-                    $span = $this->useJImage(
-                        $item->series_thumbnail,
-                        Text::_('JBS_CMN_SERIES'),
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-
-                // Teacher Large image
-            case 4:
-                if (!empty($item->teacher_image)) {
-                    $span = $this->useJImage(
-                        $item->teacher_image,
-                        $item->teachername,
-                        '',
-                        '',
-                        '',
-                        $params->get('rowspanitemimage')
-                    );
-                }
-                break;
-        }
-
-        $rowspanitemspan = $params->get($extra . 'rowspanitemspan');
-        $rowspanbalance  = 12 - (int)$rowspanitemspan;
-
         $frow = '';
 
         $row1count  = 0;
@@ -859,15 +746,8 @@ class Cwmlisting
         $row5count2 = 0;
         $row6count2 = 0;
 
-        if ($span) {
-            $frow .= '<div class="row-fluid" about="' . $type . '">';
-            $frow .= '<div class="span' . $rowspanitemspan . ' ' . $pull
-                . '" id="jbsmspan-image"><div ' . $headerstyle . '>' . $span . '</div></div>';
-            $frow .= '<div class="span' . $rowspanbalance . '" about="' . $type . '">';
-        }
-
         foreach ($listsorts as $sort) {
-            if (count($sort)) {
+            if (\count($sort)) {
                 foreach ($sort as $s) {
                     if ($s->row === '1') {
                         $row1count++;
@@ -902,195 +782,163 @@ class Cwmlisting
             }
         }
 
-        $thadd = '';
+        // Determine which rows have content
+        $rowCounts = [
+            '1' => [$row1count, $row1count2],
+            '2' => [$row2count, $row2count2],
+            '3' => [$row3count, $row3count2],
+            '4' => [$row4count, $row4count2],
+            '5' => [$row5count, $row5count2],
+            '6' => [$row6count, $row6count2],
+        ];
+
+        // Pre-compute the total effective colspan per row so we can calculate
+        // proportional Bootstrap column widths.  In the old <table> layout,
+        // colspan="2" in a row whose cells summed to 3 meant 2/3 of the
+        // table width.  We replicate that by mapping each element's span to
+        // round(span / rowTotal * 12).
+        $rowSpanTotals = [];
+
+        foreach ($listrows as $r) {
+            $span = $r->colspan > 0 ? (int) $r->colspan : 1;
+
+            if (!isset($rowSpanTotals[$r->row])) {
+                $rowSpanTotals[$r->row] = 0;
+            }
+
+            $rowSpanTotals[$r->row] += $span;
+        }
+
+        // For body mode, wrap all rows in a proclaim-item container
+        if ($header === 0) {
+            $archivedClass = '';
+
+            if (isset($item->published) && (int) $item->published === 2) {
+                $archivedClass = ' proclaim-archived';
+            }
+
+            $frow .= '<div class="proclaim-item' . $archivedClass . '">' . "\n";
+        }
 
         foreach ($listrows as $row) {
-            if ($row->row === '1') {
-                if ($row1count === $row1count2 & $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
+            $rowNum = $row->row;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    // If ($extra == 's'){$thadd = 'class="col-12"';}
-                    // $thadd = '';
-                    $frow .= '<th scope="col"' . $thadd . '>' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row1count--;
-
-                if ($row1count === 0 && !$header) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row1count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
+            if (!isset($rowCounts[$rowNum])) {
+                continue;
             }
 
-            if ($row->row === '2') {
-                if ($row2count === $row2count2 && $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
+            [$remaining, $total] = $rowCounts[$rowNum];
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    $frow .= '<tr scope="row"> <th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row2count--;
-
-                if ($row2count === 0 && $header === 0) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row2count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
+            // Open the row div at the first element of this row
+            if ($remaining === $total) {
+                $frow .= '<div class="row proclaim-item-row">' . "\n";
             }
 
-            if ($row->row === '3') {
-                if ($row3count === $row3count2 && $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
+            // Compute proportional Bootstrap column class for this element
+            $elementSpan = $row->colspan > 0 ? (int) $row->colspan : 1;
+            $rowTotal    = $rowSpanTotals[$rowNum] ?? $elementSpan;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row3count--;
-
-                if ($row3count === 0 && $header === 0) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row3count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
+            if ($rowTotal === $elementSpan) {
+                // Single element in row or spans full row → full width
+                $colClass = 'col-12';
+            } else {
+                $bsCols   = (int) round($elementSpan / $rowTotal * 12);
+                $bsCols   = max(1, min(12, $bsCols));
+                $colClass = 'col-12 col-lg-' . $bsCols;
             }
 
-            if ($row->row === '4') {
-                if ($row4count === $row4count2 && $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
-
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">'
-                        . $this->getFluidData($item, $row, $params, $template, $header = 1, $type);
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row4count--;
-
-                if ($row4count === 0 && $header === 0) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row4count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
+            if ($header === 1) {
+                $frow .= '<div class="' . $colClass . ' fw-bold">'
+                    . $this->getFluidData($item, $row, $params, $template, 1, $type)
+                    . '</div>' . "\n";
+            } else {
+                $frow .= $this->getFluidData($item, $row, $params, $template, 0, $type, $colClass);
             }
 
-            if ($row->row === '5') {
-                if ($row5count === $row5count2 && $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
+            $rowCounts[$rowNum][0]--;
 
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    // $thadd = '';
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row5count--;
-
-                if ($row5count === 0 && $header === 0) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row5count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
-            }
-
-            if ($row->row === '6') {
-                if ($row6count === $row6count2 && $header === 0) {
-                    $frow .= '<tr scope="row">';
-                }
-
-                if ($header === 1) {
-                    if ($row->colspan > 0) {
-                        $thadd = 'colspan="' . $row->colspan . '"';
-                    }
-
-                    // $thadd = '';
-                    $frow .= '<tr scope="row"><th ' . $thadd . ' scope="col">' . $this->getFluidData(
-                        $item,
-                        $row,
-                        $params,
-                        $template,
-                        $header = 1,
-                        $type
-                    );
-                } else {
-                    $frow .= $this->getFluidData($item, $row, $params, $template, $header = 0, $type);
-                }
-
-                $row6count--;
-
-                if ($row6count === 0 && $header === 0) {
-                    $frow .= '</tr>';
-                }
-
-                if ($row6count === 0 && $header === 1) {
-                    $frow .= '</th></tr>';
-                }
+            // Close the row div after the last element of this row
+            if ($rowCounts[$rowNum][0] === 0) {
+                $frow .= '</div>' . "\n";
             }
         }
 
+        // Close proclaim-item wrapper for body mode
+        if ($header === 0) {
+            $frow .= '</div>' . "\n";
+        }
+
         return $frow;
+    }
+
+    /**
+     * Render a single item as a grid card with all configured elements stacked vertically.
+     *
+     * In grid mode, row/column/colspan settings are ignored — every element with row > 0
+     * is rendered sequentially inside a card div.
+     *
+     * @param   array      $listparams  Sorted list parameters (element configs)
+     * @param   object     $item        The data item
+     * @param   Registry   $params      Template params
+     * @param   \stdClass  $template    Template object
+     * @param   string     $type        View type (sermons, seriesdisplays, teachers, etc.)
+     *
+     * @return  string  HTML for one grid card
+     *
+     * @since  10.1.0
+     */
+    private function getGridCard(
+        array $listparams,
+        object $item,
+        Registry $params,
+        \stdClass $template,
+        string $type
+    ): string {
+        // Build a dummy row object for getFluidData calls
+        $dummyRow = new \stdClass();
+
+        $card = '<div class="proclaim-grid-card">' . "\n";
+
+        foreach ($listparams as $listparam) {
+            // Build a row-like object with the element metadata
+            $dummyRow->name         = $listparam->name;
+            $dummyRow->col          = $listparam->col ?? '1';
+            $dummyRow->colspan      = $listparam->colspan ?? '1';
+            $dummyRow->custom       = $listparam->custom ?? '';
+            $dummyRow->element      = $listparam->element ?? 1;
+            $dummyRow->linktype     = $listparam->linktype ?? 0;
+            $dummyRow->customtext   = $listparam->customtext ?? '';
+            $dummyRow->date_format  = $listparam->date_format ?? '';
+            $dummyRow->show_verses  = $listparam->show_verses ?? '';
+            $dummyRow->show_version = $listparam->show_version ?? '';
+            $dummyRow->show_tooltip = $listparam->show_tooltip ?? '';
+            $dummyRow->separator    = $listparam->separator ?? '';
+
+            $data = $this->getFluidData(
+                $item,
+                $dummyRow,
+                $params,
+                $template,
+                0,
+                $type
+            );
+
+            // Skip fields with no visible content (getFluidData may return
+            // empty wrapper divs like <div class="col-2"></div>).
+            // Use a regex that checks for any text or self-closing tags (img, span, etc.)
+            // inside the wrapper, preserving media icon fields that have no plain text.
+            if ($data !== '' && $data !== null && preg_match('/<(?:a|span|img|button)\b|[^<>\s]/i', $data)) {
+                $customClass = $listparam->custom ?? '';
+                $card .= '<div class="proclaim-grid-card-field'
+                    . ($customClass ? ' ' . htmlspecialchars($customClass, ENT_QUOTES, 'UTF-8') : '') . '">';
+                $card .= $data;
+                $card .= '</div>' . "\n";
+            }
+        }
+
+        $card .= '</div>' . "\n";
+
+        return $card;
     }
 
     /**
@@ -1103,7 +951,7 @@ class Cwmlisting
      * @param   ?string  $height  Height
      * @param   ?string  $class   CSS Class
      *
-     * @return boolean|string
+     * @return bool|string
      *
      * @since 9.0.0
      */
@@ -1115,36 +963,13 @@ class Cwmlisting
         ?string $height = null,
         ?string $class = null
     ): bool|string {
-        $path = HTMLHelper::_('cleanImageURL', $path);
+        $image = Cwmimages::getImagePath($path);
 
-        try {
-            $image = Image::getImageFileProperties(JPATH_ROOT . DIRECTORY_SEPARATOR . $path->url);
-        } catch (\Exception $e) {
+        if (empty($image->path)) {
             return false;
         }
 
-        if ($id) {
-            $id = ' id="' . $id . '" ';
-        }
-
-        if ($width) {
-            $width = ' width="' . $width . '" ';
-        } else {
-            $width = ' width="' . $image->width . '" ';
-        }
-
-        if ($height) {
-            $height = ' height="' . $height . '" ';
-        } else {
-            $height = ' height="' . $image->height . '" ';
-        }
-
-        if ($class) {
-            $class = ' class="' . $class . '" ';
-        }
-
-        return '<img src="' . Uri::base() . $path->url . '"' . $id . $width . $height
-            . 'alt="' . $alt . '" ' . $class . ' />';
+        return Cwmimages::renderPicture($image, $alt ?? '', $class ?? '');
     }
 
     /**
@@ -1168,15 +993,15 @@ class Cwmlisting
         Registry $params,
         \stdClass $template,
         int $header,
-        string $type
+        string $type,
+        string $computedColClass = ''
     ): string {
-        $registry = new Registry();
-
-        if (isset($item->params)) {
-            $registry->loadString($item->params);
-        }
-
         $data = '';
+
+        // Build image CSS class: always include img-fluid for responsive images, plus any custom class
+        $customImgClass    = isset($row->custom) && !str_contains($row->custom, 'style=') ? $row->custom : '';
+        $imgClass          = trim('img-fluid' . ($customImgClass !== '' ? ' ' . $customImgClass : ''));
+        $classAppliedToImg = false;
 
         // Match the data in $item to a row/col in $row->name
         $extra = '';
@@ -1204,7 +1029,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = '';
                 } else {
-                    $data = $this->getFluidCustom($row->customtext, $item, $params, $template, $type);
+                    $data = $this->getFluidCustom((string) $row->customtext, $item, $params, $template, $type);
                 }
                 break;
 
@@ -1217,92 +1042,35 @@ class Cwmlisting
 				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
-                            if (
-                                substr_count($item->website, 'https://', 0) || substr_count(
-                                    $item->website,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->website . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
 						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->website . '" target="_blank">
-						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                            }
                         }
 
                         if ($item->facebooklink) {
-                            if (
-                                substr_count($item->facebooklink, 'https://', 0) || substr_count(
-                                    $item->facebooklink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->facebooklink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->facebooklink . '" target="_blank">
-						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                            }
                         }
 
                         if ($item->twitterlink) {
-                            if (
-                                substr_count($item->twitterlink, 'https://', 0) || substr_count(
-                                    $item->twitterlink,
-                                    'http://',
-                                    0
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->twitterlink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->twitterlink . '" target="_blank">
-						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                            }
                         }
 
                         if ($item->bloglink) {
-                            if (
-                                substr_count($item->bloglink, 'https://', 0, 7) || substr_count(
-                                    $item->bloglink,
-                                    'http://',
-                                    0,
-                                    7
-                                )
-                            ) {
-                                $data .= '<a href="' . $item->bloglink . '" target="_blank">
+                            $data .= '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->bloglink . '" target="_blank">
-						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                            }
                         }
 
                         if ($item->link1) {
-                            if (substr_count($item->link1, 'https://', 0) || substr_count($item->link1, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->linklabel1 . '</span></a>';
                         }
 
                         if ($item->link2) {
-                            if (substr_count($item->link2, 'https://', 0) || substr_count($item->link2, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            } else {
-                                $data .= '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->linklabel2 . '</span></a>';
                         }
 
                         if ($item->link3) {
-                            if (substr_count($item->link3, 'https://', 0) || substr_count($item->link3, 'http://', 0)) {
-                                $data .= '<a href="' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            } else {
-                                $data .= '<a href="https://' . $item->link3 . '" target="_blank">' . $item->link3label . '</a>';
-                            }
+                            $data .= '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank"><span style="padding-left: 4px; padding-right: 4px;">' . $item->link3label . '</span></a>';
                         }
                     }
                 }
@@ -1312,7 +1080,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_INFORMATION');
                 } else {
-                    ($item->information ? $data = HtmlHelper::_(
+                    ($item->information ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->information,
                         '',
@@ -1333,11 +1101,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK1');
                 } elseif ($item->link1) {
-                    if (substr_count($item->link1, 'http://', 0)) {
-                        $data = '<a href="' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link1 . '" target="_blank">' . $item->linklabel1 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link1) . '" target="_blank"><span style="padding-left: 5px; padding-right: 5px;">' . $item->linklabel1 . '</span></a>';
                 }
                 break;
 
@@ -1345,11 +1109,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK2');
                 } elseif ($item->link2) {
-                    if (substr_count($item->link2, 'http://', 0)) {
-                        $data = '<a href="' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link2 . '" target="_blank">' . $item->linklabel2 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link2, 'http://') . '" target="_blank"><span style="padding-left: 5px; padding-right: 5px;">' . $item->linklabel2 . '</span></a>';
                 }
                 break;
 
@@ -1357,11 +1117,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_LINK3');
                 } elseif ($item->link3) {
-                    if (substr_count($item->link3, 'http://', 0)) {
-                        $data = '<a href="' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    } else {
-                        $data = '<a href="http://' . $item->link3 . '" target="_blank">' . $item->linklabel3 . '</a>';
-                    }
+                    $data = '<a href="' . $this->ensureScheme($item->link3) . '" target="_blank">' . $item->linklabel3 . '</a>';
                 }
                 break;
             case $extra . 'teacheremail':
@@ -1377,13 +1133,8 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_WEBSITE');
                 } elseif ($item->website) {
-                    if (substr_count($item->website, 'http://', 0)) {
-                        $data = '<a href="' . $item->website . '" target="_blank">
+                    $data = '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
                         <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    } else {
-                        $data = '<a href="http://' . $item->website . '" target="_blank">
-                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
-                    }
                 }
                 break;
 
@@ -1391,65 +1142,42 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_PHONE');
                 } else {
-                    (isset($item->phone) ? $data = $item->phone : $data = '');
+                    (isset($item->phone) ? $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">' . $item->phone . '</a>' : $data);
                 }
                 break;
 
             case $extra . 'teacherfb':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_FACEBOOK');
-                } else {
-                    if ($item->facebooklink) {
-                        if (substr_count($item->facebooklink, 'http://', 0)) {
-                            $data = '<a href="' . $item->facebooklink . '" target="_blank">
+                } elseif ($item->facebooklink) {
+                    $data = '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
 							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->facebooklink . '" target="_blank">
-							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
-                        }
-                    }
                 }
                 break;
 
             case $extra . 'teachertw':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TWITTER');
-                } else {
-                    if ($item->twitterlink) {
-                        if (substr_count($item->twitterlink, 'http://', 0)) {
-                            $data = '<a href="' . $item->twitterlink . '" target="_blank">
+                } elseif ($item->twitterlink) {
+                    $data = '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
 							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->twitterlink . '" target="_blank">
-							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teacherblog':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_BLOG');
-                } else {
-                    if ($item->bloglink) {
-                        if (substr_count($item->bloglink, 'http://', 0, 7)) {
-                            $data = '<a href="' . $item->bloglink . '" target="_blank">
+                } elseif ($item->bloglink) {
+                    $data = '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
 							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        } else {
-                            $data = '<a href="http://' . $item->bloglink . '" target="_blank">
-							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
-                        }
-                    }
                 }
-
                 break;
 
             case $extra . 'teachershort':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_SHORT_LIST');
                 } else {
-                    (isset($item->short) ? $data = HtmlHelper::_(
+                    (isset($item->short) ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->short,
                         '',
@@ -1469,7 +1197,8 @@ class Cwmlisting
                         $params,
                         $item,
                         $esv,
-                        $scripturerow
+                        $scripturerow,
+                        $row
                     ) : $data);
                 }
                 break;
@@ -1484,8 +1213,16 @@ class Cwmlisting
                         $params,
                         $item,
                         $esv,
-                        $scripturerow
+                        $scripturerow,
+                        $row
                     ) : $data);
+                }
+                break;
+            case $extra . 'scriptures':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_ALL_SCRIPTURES');
+                } else {
+                    $data = $this->getAllScriptures($params, $item, $row);
                 }
                 break;
             case $extra . 'secondary':
@@ -1500,20 +1237,32 @@ class Cwmlisting
                     $data = Text::_('JBS_CMN_TITLE');
                 } else {
                     isset($item->studytitle) ? $data = stripslashes($item->studytitle) : $data;
+                    // Add archive badge if item is archived and badge is enabled
+                    $showBadge = $params->get('show_archive_badge', '');
+                    if ($showBadge === '' || $showBadge === null) {
+                        $showBadge = $params->get($extra . 'default_show_archive_badge', '1');
+                    }
+                    if (
+                        isset($item->published) && (int)$item->published === 2
+                        && (int)$showBadge === 1
+                    ) {
+                        $data .= ' <span class="badge bg-secondary proclaim-archive-badge">'
+                            . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
+                    }
                 }
                 break;
             case $extra . 'date':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_STUDY_DATE');
                 } else {
-                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate) : $data;
+                    isset($item->studydate) ? $data = $this->getStudyDate($params, $item->studydate, $row) : $data;
                 }
                 break;
             case $extra . 'teacher':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_TEACHER');
                 } else {
-                    (isset($item->teachername) ? $data = $item->teachername : $data);
+                    (isset($item->teachername) ? $data = trim($item->teachername) : $data);
                 }
 
                 break;
@@ -1521,18 +1270,107 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_TEACHER');
                 } elseif (isset($item->title, $item->teachername)) {
-                    $data = $item->title . ' ' . $item->teachername;
+                    $titlePrefix = trim($item->title);
+                    $name        = trim($item->teachername);
+
+                    // Avoid duplication when teachername already includes the title
+                    if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {
+                        $data = $titlePrefix . ' ' . $name;
+                    } else {
+                        $data = $name;
+                    }
                 } else {
-                    $data = $item->teachername;
+                    $data = trim($item->teachername ?? '');
+                }
+                break;
+            case $extra . 'teachercard':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_TEACHER');
+                } else {
+                    $cardHtml = '<div class="proclaim-teacher-stack">';
+
+                    // Teacher image (series/teacher contexts use teacher_thumbnail, messages use thumb)
+                    if ($type === 'seriesdisplays' || $type === 'seriesdisplay'
+                        || $type === 'teachers' || $type === 'teacher') {
+                        if (!empty($item->teacher_thumbnail)) {
+                            $cardHtml .= $this->useJImage(
+                                $item->teacher_thumbnail,
+                                $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                                null,
+                                null,
+                                null,
+                                $imgClass
+                            );
+                        }
+                    } elseif (!empty($item->thumb)) {
+                        $cardHtml .= $this->useJImage(
+                            $item->thumb,
+                            $item->teachername ?? Text::_('JBS_CMN_THUMBNAIL'),
+                            null,
+                            null,
+                            null,
+                            $imgClass
+                        );
+                    }
+
+                    // Teacher name (with title prefix if not already included)
+                    if (!empty($item->teachername)) {
+                        $name        = trim($item->teachername);
+                        $titlePrefix = isset($item->title) ? trim($item->title) : '';
+
+                        if ($titlePrefix !== '' && !str_starts_with($name, $titlePrefix)) {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $titlePrefix . ' ' . $name . '</div>';
+                        } else {
+                            $cardHtml .= '<div class="proclaim-teacher-stack-name">'
+                                . $name . '</div>';
+                        }
+                    }
+
+                    $cardHtml .= '</div>';
+                    $data      = $cardHtml;
+
+                    $classAppliedToImg = true;
+                }
+                break;
+            case $extra . 'teachers-list':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_TEACHERS');
+                } elseif (!empty($item->teachers) && \is_array($item->teachers)) {
+                    $names = [];
+
+                    foreach ($item->teachers as $t) {
+                        $name = trim($t->teachername ?? '');
+
+                        if ($name !== '') {
+                            $names[] = $name;
+                        }
+                    }
+
+                    $data = implode(', ', $names);
+                } elseif (isset($item->teachername)) {
+                    $data = trim($item->teachername);
                 }
                 break;
             case $extra . 'studyintro':
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_STUDY_INTRO');
                 } else {
-                    isset($item->studyintro) ? $data = HtmlHelper::_(
+                    isset($item->studyintro) ? $data = HTMLHelper::_(
                         'content.prepare',
                         $item->studyintro,
+                        '',
+                        'com_proclaim.' . $type
+                    ) : $data;
+                }
+                break;
+            case $extra . 'studytext':
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_STUDY_TEXT');
+                } else {
+                    isset($item->studytext) ? $data = HTMLHelper::_(
+                        'content.prepare',
+                        $item->studytext,
                         '',
                         'com_proclaim.' . $type
                     ) : $data;
@@ -1546,64 +1384,70 @@ class Cwmlisting
                 }
                 break;
             case $extra . 'seriesthumbnail':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_THUMBNAIL');
                 } elseif ($item->series_thumbnail) {
-                    $data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->series_thumbnail, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'teacherlargeimage':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TEACHER_IMAGE');
                 } elseif (isset($item->teacher_image) && !empty($item->teacher_image)) {
-                    $data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->teacher_image, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'description':
-                if ($type === 'seriesdisplays' || ($type === 'seriesdisplay' && $header !== 1)) {
-                    (isset($item->description) ? $data = HTMLHelper::_(
-                        'content.prepare',
-                        $item->description,
-                        '',
-                        'com_proclaim.' . $type
-                    ) : $data);
-
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
-                    }
-
-                    if ($data) {
-                        $data .= '.';
-                    }
+                if ($header === 1) {
+                    $data = Text::_('JBS_CMN_SERIES_DESCRIPTION');
                 } else {
-                    (isset($item->sdescription) ? $data = HtmlHelper::_(
-                        'content.prepare',
-                        $item->sdescription,
-                        '',
-                        'com_proclaim.' . $type
-                    ) : $data);
+                    if ($type === 'seriesdisplays' || $type === 'seriesdisplay') {
+                        (isset($item->description) ? $data = HTMLHelper::_(
+                            'content.prepare',
+                            $item->description,
+                            '',
+                            'com_proclaim.' . $type
+                        ) : $data);
 
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
+
+                        if ($data) {
+                            $data .= '.';
+                        }
+                    } else {
+                        (isset($item->sdescription) ? $data = HTMLHelper::_(
+                            'content.prepare',
+                            $item->sdescription,
+                            '',
+                            'com_proclaim.' . $type
+                        ) : $data);
+
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
+
+                        if ($data) {
+                            $data .= '.';
+                        }
                     }
 
-                    if ($data) {
-                        $data .= '.';
-                    }
-                }
+                    if ($type === 'seriesdisplays') {
+                        (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
 
-                if ($type === 'seriesdisplays' && !$header) {
-                    (isset($item->description) ? $data = stripslashes($item->description) : $data = '');
+                        if ($params->get('series_characters')) {
+                            $d    = substr($data, 0, $params->get('series_characters'));
+                            $data = substr($d, 0, strrpos($d, '. '));
+                        }
 
-                    if ($params->get('series_characters')) {
-                        $d    = substr($data, 0, $params->get('series_characters'));
-                        $data = substr($d, 0, strrpos($d, '. '));
-                    }
-
-                    if ($data) {
-                        $data .= '.';
+                        if ($data) {
+                            $data .= '.';
+                        }
                     }
                 }
                 break;
@@ -1674,29 +1518,23 @@ class Cwmlisting
                 }
                 break;
             case $extra . 'thumbnail':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_THUMBNAIL');
-                } elseif ($item->thumbnailm || $params->get('studyimage', '-1') !== '-1') {
-                    $data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'));
-
-                    if ($params->get('studyimage', '-1') !== '-1') {
-                        $data = $this->useJImage(
-                            'media/com_proclaim/images/stockimages/'
-                            . $registry->get('studyimage'),
-                            Text::_('JBS_CMN_THUMBNAIL')
-                        );
-                    }
+                } elseif ($item->thumbnailm) {
+                    $data = $this->useJImage($item->thumbnailm, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
             case $extra . 'teacherimage':
+                $classAppliedToImg = true;
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_TEACHER_IMAGE');
                 } elseif ($type === 'seriesdisplays' || $type === 'seriesdisplay' || $type === 'teachers' || $type === 'teacher') {
                     if (!empty($item->teacher_thumbnail)) {
-                        $data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'));
+                        $data = $this->useJImage($item->teacher_thumbnail, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                     }
                 } elseif ($item->thumb) {
-                    $data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'));
+                    $data = $this->useJImage($item->thumb, Text::_('JBS_CMN_THUMBNAIL'), null, null, null, $imgClass);
                 }
                 break;
         }
@@ -1705,7 +1543,7 @@ class Cwmlisting
         $customclass = '';
 
         if (isset($row->custom)) {
-            if (strpos($row->custom, 'style=') !== false) {
+            if (str_contains($row->custom, 'style=')) {
                 $style = $row->custom;
             } else {
                 $customclass = $row->custom;
@@ -1713,6 +1551,11 @@ class Cwmlisting
         }
 
         $classelement = $this->createelement($row->element);
+
+        // Auto-upgrade <p> to <div> when content contains block-level elements
+        if ($classelement === 'p' && $data && preg_match('/<(?:div|table|ul|ol|section|article|nav|aside|header|footer|figure|blockquote|form|fieldset|pre|dl|hr)\b/i', (string) $data)) {
+            $classelement = 'div';
+        }
 
         if ($classelement) {
             if (isset($style)) {
@@ -1729,7 +1572,7 @@ class Cwmlisting
         // See whether the element is a link to something and get the link from the function
         $link = 0;
 
-        if ($type === 'sermons' || $type === 'seriesdisplays' || $type === 'teachers') {
+        if ($type === 'sermons' || $type === 'sermon' || $type === 'seriesdisplays' || $type === 'teachers') {
             if ($row->linktype > 0 && $header === 0) {
                 if ($type === 'seriesdisplays') {
                     $item->teacher_id = $item->teacher;
@@ -1743,48 +1586,44 @@ class Cwmlisting
             }
         }
 
-        $tdadd = '';
-        $frow  = '';
+        $frow = '';
 
-        if ($row->colspan > 0) {
-            $tdadd = 'colspan="' . $row->colspan . '"';
+        // Use the proportional column class computed by getFluidRow(), or fall back
+        $colClass = $computedColClass !== '' ? $computedColClass : ($row->colspan > 0 ? 'col-' . $row->colspan : 'col');
+
+        if ($customclass && !$classAppliedToImg) {
+            $colClass .= ' ' . $customclass;
         }
 
-        if ($customclass) {
-            $tdadd .= ' class="' . $customclass . '"';
+        // Apply icon size CSS class from Layout Editor (for media icon elements)
+        if (!empty($row->icon_size)) {
+            $colClass .= ' ' . htmlspecialchars($row->icon_size, ENT_QUOTES, 'UTF-8');
         }
 
         if ($header === 0) {
-            $frow = '<td scope="col"' . $tdadd . '>';
-        }
+            // Build grid cell: <div class="col-{span}"><wrapper><link>data</link></wrapper></div>
+            $frow = '<div class="' . $colClass . '">';
 
-        if ($header === 1) {
-            $frow = '';
-        }
+            if ($data) {
+                $frow .= $classopen;
 
-        if ($link) {
-            $frow .= $link;
-        }
+                if ($link) {
+                    $frow .= $link;
+                }
 
-        if ($data && $header === 0) {
-            $frow .= $classopen . $data;
-        }
+                $frow .= $data;
 
-        if ($data && $header === 1) {
-            $frow .= $data;
-        }
+                if ($link) {
+                    $frow .= '</a>';
+                }
 
-        if ($link) {
-            $frow .= '</a>';
-        }
+                $frow .= $classclose;
+            }
 
-        // If ($header === 0){ $frow .= $classclose . '</td>';}
-        if ($header === 0) {
-            $frow .= '</' . $classclose . '</td>';
-        }
-
-        if ($header === 1) {
-            $frow .= '</th>';
+            $frow .= '</div>';
+        } else {
+            // Header mode - return just the data text; caller wraps in col div
+            $frow = $data;
         }
 
         return $frow;
@@ -1804,7 +1643,7 @@ class Cwmlisting
      * @throws \Exception
      * @since 7.0
      */
-    public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type)
+    public function getFluidCustom(string $custom, object $item, Registry $params, $template, string $type): string
     {
         $countbraces = substr_count($custom, '{');
 
@@ -1855,17 +1694,36 @@ class Cwmlisting
                 break;
             case 'title':
                 $element = $row->studytitle ?? '';
+                // Add archive badge if item is archived and badge is enabled
+                $showBadge = $params->get('show_archive_badge', '');
+                if ($showBadge === '' || $showBadge === null) {
+                    $showBadge = $params->get($this->extra . 'default_show_archive_badge', '1');
+                }
+                if (
+                    isset($row->published) && (int)$row->published === 2
+                    && (int)$showBadge === 1
+                ) {
+                    $element .= ' <span class="badge bg-secondary proclaim-archive-badge">'
+                        . Text::_('JBS_CMN_ARCHIVE_BADGE') . '</span>';
+                }
                 break;
             case 'studyintro':
                 if (isset($row->studyintro)) {
-                    $element = HtmlHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
+                    $element = HTMLHelper::_('content.prepare', $row->studyintro, '', 'com_proclaim.' . $type);
+                } else {
+                    $element = '';
+                }
+                break;
+            case 'studytext':
+                if (isset($row->studytext)) {
+                    $element = HTMLHelper::_('content.prepare', $row->studytext, '', 'com_proclaim.' . $type);
                 } else {
                     $element = '';
                 }
                 break;
             case 'teacher':
                 // Teacher name and title
-                if (isset($row->teachertitle) && isset($row->teachername)) {
+                if (isset($row->teachertitle, $row->teachername)) {
                     $element = $row->teachertitle . ' ' . $row->teachername;
                 } else {
                     $element = $row->teachername;
@@ -1922,7 +1780,7 @@ class Cwmlisting
 
                 if ($params->get('studyimage', '-1') !== '-1') {
                     // Clean up extra data in the image
-                    $hash = str_contains($params->get('studyimage'), '#');
+                    $hash = str_contains((string) $params->get('studyimage'), '#');
 
                     if ($hash) {
                         $imageparam   = $params->get('studyimage');
@@ -1983,9 +1841,9 @@ class Cwmlisting
             case 'series_description':
                 if (isset($row->sdescription)) {
                     if ($type === 'seriesdisplays' || $type === 'seriesdisplay') {
-                        $element = HtmlHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
+                        $element = HTMLHelper::_('content.prepare', $row->description, '', 'com_proclaim.' . $type);
                     } else {
-                        $element = HtmlHelper::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
+                        $element = HTMLHelper::_('content.prepare', $row->sdescription, '', 'com_proclaim.' . $type);
                     }
                 } else {
                     $element = '';
@@ -2004,6 +1862,14 @@ class Cwmlisting
     }
 
     /**
+     * Cache for book name lookups
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    private static array $bookNameCache = [];
+
+    /**
      * Get Scripture
      *
      * @param   Registry  $params        Item Params
@@ -2015,143 +1881,394 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function getScripture(Registry $params, object $row, int $esv, int $scripturerow): string
-    {
-        $scripture  = '';
-        $book       = '';
-        $booknumber = '';
-        $ch_b       = 0;
-        $ch_e       = 0;
-        $v_b        = 0;
-        $v_e        = 0;
-
-        if (!isset($row->booknumber2)) {
-            $row->booknumber2 = 0;
-        }
-
-        if (!isset($row->id) || ((int)$row->booknumber <= 0 && $row->booknumber2 !== 0)) {
+    public function getScripture(
+        Registry $params,
+        object $row,
+        int $esv,
+        int $scripturerow,
+        ?object $elementConfig = null
+    ): string {
+        if (!isset($row->id)) {
             return '';
         }
 
-        if (empty($row->booknumber)) {
-            $row->booknumber = 0;
+        $booknumber  = (int) ($row->booknumber ?? 0);
+        $booknumber2 = (int) ($row->booknumber2 ?? 0);
+
+        if ($booknumber <= 0 && $booknumber2 !== 0) {
+            return '';
         }
 
-        if ($scripturerow === 2 && $row->booknumber2 > 1) {
-            $booknumber = $row->booknumber2;
-            $ch_b       = (int)$row->chapter_begin2;
-            $ch_e       = (int)$row->chapter_end2;
-            $v_b        = (int)$row->verse_begin2;
-            $v_e        = (int)$row->verse_end2;
-            $book       = Text::_($row->bookname2);
-        } elseif ($scripturerow === 1 && $row->booknumber > 1) {
-            $booknumber = $row->booknumber;
-            $ch_b       = (int)$row->chapter_begin;
-            $ch_e       = (int)$row->chapter_end;
-            $v_b        = (int)$row->verse_begin;
-            $v_e        = (int)$row->verse_end;
-
-            if (isset($row->bookname)) {
-                $book = Text::_($row->bookname);
-            }
+        // Extract scripture data based on which row we're processing
+        if ($scripturerow === 2 && $booknumber2 > 1) {
+            $bookNum      = $booknumber2;
+            $ch_b         = (int) ($row->chapter_begin2 ?? 0);
+            $ch_e         = (int) ($row->chapter_end2 ?? 0);
+            $v_b          = (int) ($row->verse_begin2 ?? 0);
+            $v_e          = (int) ($row->verse_end2 ?? 0);
+            $book         = Text::_($row->bookname2 ?? '');
+            $bibleVersion = $row->bible_version2 ?? '';
+        } elseif ($scripturerow === 1 && $booknumber > 1) {
+            $bookNum      = $booknumber;
+            $ch_b         = (int) ($row->chapter_begin ?? 0);
+            $ch_e         = (int) ($row->chapter_end ?? 0);
+            $v_b          = (int) ($row->verse_begin ?? 0);
+            $v_e          = (int) ($row->verse_end ?? 0);
+            $book         = isset($row->bookname) ? Text::_($row->bookname) : $this->getBookNameFromDb($booknumber);
+            $bibleVersion = $row->bible_version ?? '';
+        } else {
+            return '';
         }
 
-        if (!isset($row->bookname) || $booknumber === "-1") {
-            return $scripture;
+        if (empty($book) || $bookNum === 0) {
+            return '';
         }
 
-        $show_verses = (int)$params->get('show_verses');
-
-        $b1  = ' ';
-        $b2  = ':';
-        $b2a = ':';
-        $b3  = '-';
-
-        if ($show_verses === 1) {
-            if ($ch_e === $ch_b) {
-                $ch_e = '';
-                $b2a  = '';
-            }
-
-            if ($ch_e === $ch_b && $v_b === $v_e) {
-                $b3   = '';
-                $ch_e = '';
-                $b2a  = '';
-                $v_e  = '';
-            }
-
-            if (empty($v_b)) {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
-
-            if (empty($v_e)) {
-                $v_e = '';
-                $b2a = '';
-            }
-
-            if (empty($ch_e)) {
-                $b2a  = '';
-                $ch_e = '';
-
-                if (empty($v_e)) {
-                    $b3 = '';
-                }
-            }
-
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+        // Check for element-specific show_verses (empty string means use global)
+        // Default to 0 (chapters only) if not found in params
+        $show_verses = (int) $params->get('show_verses', 0);
+        if ($elementConfig !== null && isset($elementConfig->show_verses) && $elementConfig->show_verses !== '') {
+            $show_verses = (int) $elementConfig->show_verses;
         }
 
-        // Else
+        // Per-element show_version (no global default — off unless element enables it)
+        $showVersion = 0;
+
+        if ($elementConfig !== null && isset($elementConfig->show_version) && $elementConfig->show_version !== '') {
+            $showVersion = (int) $elementConfig->show_version;
+        }
+
+        $versionSuffix = '';
+
+        if ($showVersion === 1 && !empty($bibleVersion)) {
+            $versionSuffix = ' ' . strtoupper($bibleVersion);
+        }
+
+        // Build full API reference for tooltips (always includes verses when available)
+        $apiRef = $this->buildApiReference($book, $ch_b, $ch_e, $v_b, $v_e);
+
+        if ($bookNum > 166 || $show_verses === 2) {
+            return $this->wrapScriptureTooltip($book . $versionSuffix, $apiRef, $bibleVersion, $params, $elementConfig);
+        }
+
+        // Chapters only mode (show_verses === 0)
         if ($show_verses === 0) {
-            if ($ch_e > $ch_b) {
-                $scripture = $book . $b1 . $ch_b . $b3 . $ch_e;
-            } else {
-                $scripture = $book . $b1 . $ch_b;
-            }
+            $ref = $ch_e > $ch_b
+                ? $book . ' ' . $ch_b . '-' . $ch_e
+                : $book . ' ' . $ch_b;
+
+            return $this->wrapScriptureTooltip($ref . $versionSuffix, $apiRef, $bibleVersion, $params, $elementConfig);
         }
 
-        if ($esv === 1) {
-            if ($ch_e === $ch_b) {
-                $ch_e = '';
-                $b2a  = '';
-            }
+        // Full reference with verses (show_verses === 1 or esv mode)
+        return $this->wrapScriptureTooltip(
+            $this->formatScriptureReference($book, $ch_b, $ch_e, $v_b, $v_e) . $versionSuffix,
+            $apiRef,
+            $bibleVersion,
+            $params,
+            $elementConfig
+        );
+    }
 
-            if (empty($v_b)) {
-                $v_b = '';
-                $v_e = '';
-                $b2a = '';
-                $b2  = '';
-            }
+    /**
+     * Get all scripture references for a message, rendered as a semicolon-separated string.
+     *
+     * Uses the junction table scriptures if available, falls back to legacy scripture1/scripture2.
+     *
+     * @param   Registry  $params         Template parameters
+     * @param   object    $row            Message row
+     * @param   ?object   $elementConfig  Element configuration from Layout Editor
+     *
+     * @return  string  Rendered scripture references separated by "; "
+     *
+     * @since  10.1.0
+     */
+    public function getAllScriptures(
+        Registry $params,
+        object $row,
+        ?object $elementConfig = null
+    ): string {
+        // Use junction table scriptures if available
+        if (!empty($row->scriptures) && \is_array($row->scriptures)) {
+            $parts = [];
 
-            if (empty($v_e)) {
-                $v_e = '';
-                $b2a = '';
-            }
+            foreach ($row->scriptures as $ref) {
+                if (!($ref instanceof ScriptureReference)) {
+                    continue;
+                }
 
-            if (empty($ch_e)) {
-                $b2a  = '';
-                $ch_e = '';
+                if ($ref->booknumber <= 0) {
+                    // Unparsed raw text
+                    if ($ref->referenceText !== '') {
+                        $parts[] = $ref->referenceText;
+                    }
 
-                if (empty($v_e)) {
-                    $b3 = '';
+                    continue;
+                }
+
+                // Build a virtual row to reuse getScripture()
+                $virtualRow = (object) [
+                    'id'            => $row->id ?? 0,
+                    'booknumber'    => $ref->booknumber,
+                    'chapter_begin' => $ref->chapterBegin,
+                    'verse_begin'   => $ref->verseBegin,
+                    'chapter_end'   => $ref->chapterEnd,
+                    'verse_end'     => $ref->verseEnd,
+                    'bookname'      => CwmscriptureHelper::getBookName($ref->booknumber)
+                        ? array_search($ref->booknumber, array_column(CwmscriptureHelper::getAllBooks(), 'booknumber'))
+                        : '',
+                    'bible_version' => $ref->bibleVersion,
+                    'booknumber2'   => 0,
+                ];
+
+                // Get the translated book name key for the virtual row
+                $bookKey = '';
+
+                foreach (CwmscriptureHelper::getAllBooks() as $book) {
+                    if ($book['booknumber'] === $ref->booknumber) {
+                        $bookKey = $book['key'];
+
+                        break;
+                    }
+                }
+
+                $virtualRow->bookname = $bookKey;
+
+                $rendered = $this->getScripture($params, $virtualRow, 0, 1, $elementConfig);
+
+                if ($rendered !== '') {
+                    $parts[] = $rendered;
                 }
             }
 
-            $scripture = $book . $b1 . $ch_b . $b2 . $v_b . $b3 . $ch_e . $b2a . $v_e;
+            if (!empty($parts)) {
+                return $this->joinScriptureParts($parts, $params, $elementConfig);
+            }
         }
 
-        if ($row->booknumber > 166) {
-            $scripture = $book;
+        // Fallback to legacy scripture1/scripture2
+        $parts = [];
+        $s1    = $this->getScripture($params, $row, 0, 1, $elementConfig);
+        $s2    = $this->getScripture($params, $row, 0, 2, $elementConfig);
+
+        if ($s1 !== '') {
+            $parts[] = $s1;
         }
 
-        if ($show_verses === 2) {
-            $scripture = $book;
+        if ($s2 !== '') {
+            $parts[] = $s2;
         }
 
-        return $scripture;
+        return $this->joinScriptureParts($parts, $params, $elementConfig);
+    }
+
+    /**
+     * Join rendered scripture parts using the configured separator.
+     *
+     * Checks per-element config first, then falls back to global template param.
+     *
+     * @param   array    $parts          Rendered scripture strings
+     * @param   Registry $params         Template parameters
+     * @param   ?object  $elementConfig  Element configuration from Layout Editor
+     *
+     * @return  string
+     *
+     * @since   10.1.0
+     */
+    private function joinScriptureParts(array $parts, Registry $params, ?object $elementConfig = null): string
+    {
+        if (empty($parts)) {
+            return '';
+        }
+
+        if (\count($parts) === 1) {
+            return $parts[0];
+        }
+
+        // Per-element separator overrides global (empty string = use global)
+        $separator = $params->get('scripture_separator', 'middot');
+
+        if ($elementConfig !== null && isset($elementConfig->separator) && $elementConfig->separator !== '') {
+            $separator = $elementConfig->separator;
+        }
+
+        return LayoutHelper::render(
+            'scripture.list',
+            [
+                'parts'     => $parts,
+                'separator' => $separator,
+            ],
+            JPATH_SITE . '/components/com_proclaim/layouts'
+        );
+    }
+
+    /**
+     * Get book name from database with caching
+     *
+     * @param   int  $booknumber  The book number to look up
+     *
+     * @return string The translated book name or empty string
+     *
+     * @since 10.0.0
+     */
+    private function getBookNameFromDb(int $booknumber): string
+    {
+        if ($booknumber <= 0) {
+            return '';
+        }
+
+        if (isset(self::$bookNameCache[$booknumber])) {
+            return self::$bookNameCache[$booknumber];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('bookname'))
+            ->from($db->quoteName('#__bsms_books'))
+            ->where($db->quoteName('booknumber') . ' = ' . $booknumber);
+        $db->setQuery($query);
+        $bookname = $db->loadResult();
+
+        $result                           = $bookname ? Text::_($bookname) : '';
+        self::$bookNameCache[$booknumber] = $result;
+
+        return $result;
+    }
+
+    /**
+     * Format a scripture reference string
+     *
+     * @param   string  $book  Book name
+     * @param   int     $ch_b  Chapter begin
+     * @param   int     $ch_e  Chapter end
+     * @param   int     $v_b   Verse begin
+     * @param   int     $v_e   Verse end
+     *
+     * @return string Formatted scripture reference
+     *
+     * @since 10.0.0
+     */
+    private function formatScriptureReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
+    {
+        // No verses - just book and chapter(s)
+        if ($v_b === 0) {
+            return $ch_e > $ch_b
+                ? $book . ' ' . $ch_b . '-' . $ch_e
+                : $book . ' ' . $ch_b;
+        }
+
+        // Same chapter
+        if ($ch_e === $ch_b || $ch_e === 0) {
+            if ($v_e === 0 || $v_e === $v_b) {
+                // Single verse: "Book 1:5"
+                return $book . ' ' . $ch_b . ':' . $v_b;
+            }
+
+            // Verse range in same chapter: "Book 1:5-10"
+            return $book . ' ' . $ch_b . ':' . $v_b . '-' . $v_e;
+        }
+
+        // Different chapters with verses: "Book 1:5-2:10"
+        if ($v_e === 0) {
+            return $book . ' ' . $ch_b . ':' . $v_b . '-' . $ch_e;
+        }
+
+        return $book . ' ' . $ch_b . ':' . $v_b . '-' . $ch_e . ':' . $v_e;
+    }
+
+    /**
+     * Build the full API reference string for tooltip AJAX lookups.
+     *
+     * Always includes verse numbers when available, regardless of display mode.
+     * Format: "Book+Ch:Vs-Vs" or "Book+Ch:Vs-EndCh:Vs"
+     *
+     * @param   string  $book  Translated book name
+     * @param   int     $ch_b  Chapter begin
+     * @param   int     $ch_e  Chapter end
+     * @param   int     $v_b   Verse begin
+     * @param   int     $v_e   Verse end
+     *
+     * @return  string  API-compatible reference (e.g. "Luke+7:36-38")
+     *
+     * @since   10.1.0
+     */
+    private function buildApiReference(string $book, int $ch_b, int $ch_e, int $v_b, int $v_e): string
+    {
+        if ($ch_b === 0) {
+            return '';
+        }
+
+        $ref = $book . '+' . $ch_b;
+
+        if ($v_b > 0) {
+            $ref .= ':' . $v_b;
+
+            if ($ch_e > $ch_b) {
+                $ref .= '-' . $ch_e;
+
+                if ($v_e > 0) {
+                    $ref .= ':' . $v_e;
+                }
+            } elseif ($v_e > 0 && $v_e !== $v_b) {
+                $ref .= '-' . $v_e;
+            }
+        } elseif ($ch_e > $ch_b) {
+            // Chapters only range
+            $ref .= '-' . $ch_e;
+        }
+
+        return $ref;
+    }
+
+    /**
+     * Wrap scripture text with tooltip markup for verse preview on hover.
+     *
+     * Uses a <span> (not <a>) to avoid conflicts with content plugins that
+     * process links, and to prevent nested <a> tags when plugins wrap
+     * scripture references in their own links.
+     *
+     * When tooltips are disabled or no API reference is available,
+     * returns the plain text unchanged.
+     *
+     * @param   string    $text          Rendered scripture display text
+     * @param   string    $apiRef        API reference string (e.g. "Luke+7:36-38")
+     * @param   string    $bibleVersion  Bible version abbreviation
+     * @param   Registry  $params        Template parameters
+     * @param   ?object   $elementConfig Element configuration from Layout Editor
+     *
+     * @return  string  HTML with tooltip data attributes, or plain text
+     *
+     * @since   10.1.0
+     */
+    private function wrapScriptureTooltip(
+        string $text,
+        string $apiRef,
+        string $bibleVersion,
+        Registry $params,
+        ?object $elementConfig = null
+    ): string {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Per-element show_tooltip (no global default — off unless element enables it)
+        $showTooltip = 0;
+
+        if ($elementConfig !== null && isset($elementConfig->show_tooltip) && $elementConfig->show_tooltip !== '') {
+            $showTooltip = (int) $elementConfig->show_tooltip;
+        }
+
+        if ($showTooltip !== 1 || empty($apiRef)) {
+            return $text;
+        }
+
+        $escapedRef     = htmlspecialchars($apiRef, ENT_QUOTES, 'UTF-8');
+        $escapedVersion = htmlspecialchars($bibleVersion ?: 'kjv', ENT_QUOTES, 'UTF-8');
+
+        return '<span class="proclaim-scripture-ref" role="button" tabindex="0"'
+            . ' data-scripture-ref="' . $escapedRef . '"'
+            . ' data-bible-version="' . $escapedVersion . '">'
+            . $text . '</span>';
     }
 
     /**
@@ -2166,14 +2283,11 @@ class Cwmlisting
      * @throws \Exception
      * @since 9.0.0
      */
-    public function getFluidMediaFiles(object $item, Registry $params, $template): string
+    public function getFluidMediaFiles(object $item, Registry $params, \stdClass $template): string
     {
         $med = new Cwmmedia();
 
-        $mediarow = '<div class="bsms_media_container row" style="float: left;
-                      position: relative;
-                      left: 50%;
-                      transform: translateX(-50%);"  >';
+        $mediarow = '<div class="bsms_media_container row">';
 
         foreach ($item->mediafiles as $media) {
             $mediarow .= '<div id="bsms_media_file' . $media->id . '" class="col bsms_media_file" >' .
@@ -2181,7 +2295,6 @@ class Cwmlisting
         }
 
         $mediarow .= '</div>';
-        $mediarow .= '<div style="clear:both;"></div>';
 
         return $mediarow;
     }
@@ -2189,49 +2302,57 @@ class Cwmlisting
     /**
      * Get StudyDate
      *
-     * @param   Registry  $params     Item Params
-     * @param   string    $studydate  Study Date
+     * @param   Registry     $params     Item Params
+     * @param   string       $studydate  Study Date
+     * @param   object|null  $row        Element row settings (optional, for element-specific date format)
      *
      * @return string
      *
      * @since 7.0
      */
-    public function getStudyDate(Registry $params, string $studydate): string
+    public function getStudyDate(Registry $params, string $studydate, ?object $row = null): string
     {
         $customDate = $params->get('custom_date_format');
 
+        // Check for element-specific date format (empty string means use global)
+        // Default to 0 (Sep 1, 2012 format) if not found in params
+        $dateFormat = $params->get('date_format', 0);
+        if ($row !== null && isset($row->date_format) && $row->date_format !== '') {
+            $dateFormat = $row->date_format;
+        }
+
         if (empty($customDate)) {
             try {
-                switch ($params->get('date_format')) {
+                switch ($dateFormat) {
                     case 0:
-                        $date = HtmlHelper::_('date', $studydate, "M j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "M j, Y", null);
                         break;
                     case 1:
-                        $date = HtmlHelper::_('date', $studydate, "M J", null);
+                        $date = HTMLHelper::_('date', $studydate, "M J", null);
                         break;
                     case 2:
-                        $date = HtmlHelper::_('date', $studydate, "n/j/Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "n/j/Y", null);
                         break;
                     case 4:
-                        $date = HtmlHelper::_('date', $studydate, "l, F j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "l, F j, Y", null);
                         break;
                     case 5:
-                        $date = HtmlHelper::_('date', $studydate, "F j, Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "F j, Y", null);
                         break;
                     case 6:
-                        $date = HtmlHelper::_('date', $studydate, "j F Y", null);
+                        $date = HTMLHelper::_('date', $studydate, "j F Y", null);
                         break;
                     case 7:
                         $date = date("j/n/Y", strtotime($studydate));
                         break;
                     case 8:
-                        $date = HtmlHelper::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
+                        $date = HTMLHelper::_('date', $studydate, Text::_('DATE_FORMAT_LC'), null);
                         break;
                     case 9:
-                        $date = HtmlHelper::_('date', $studydate, "Y/M/D", null);
+                        $date = HTMLHelper::_('date', $studydate, "Y/M/D", null);
                         break;
                     default:
-                        $date = HtmlHelper::_('date', $studydate, "n/j", null);
+                        $date = HTMLHelper::_('date', $studydate, "n/j", null);
                         break;
                 }
             } catch (\Exception $e) {
@@ -2239,7 +2360,7 @@ class Cwmlisting
             }
         } else {
             try {
-                $date = HtmlHelper::_('date', $studydate, $customDate);
+                $date = HTMLHelper::_('date', $studydate, $customDate);
             } catch (\Exception $e) {
                 return $studydate;
             }
@@ -2257,7 +2378,7 @@ class Cwmlisting
      *
      * @since 7.0
      */
-    public function createelement($element)
+    public function createelement($element): string
     {
         switch ($element) {
             case 1:
@@ -2280,6 +2401,9 @@ class Cwmlisting
                 break;
             case 7:
                 $classelement = 'blockquote';
+                break;
+            case 8:
+                $classelement = 'div';
                 break;
             default:
                 $classelement = 'span';
@@ -2337,19 +2461,18 @@ class Cwmlisting
                 break;
 
             case 4:
-                // Case 4 is a details link with tooltip
-
+                // Legacy "Link to Details with ToolTip" — downgrade to plain details link.
+                // The old hasTip tooltip was removed; scripture verse popovers replace it.
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
                 );
 
-                $column = Cwmhelper::getTooltip($row, $params, $template);
-                $column .= '<a href="' . $link . '">';
-
+                $column = '<a href="' . $link . '">';
                 break;
 
             case 5:
-                $column = Cwmhelper::getTooltip($row, $params, $template);
+                // Legacy "Link to Media with ToolTip" — downgrade to plain media link.
+                $column .= '<a href="' . $this->getOtherlinks($id3, 2, $params) . '">';
                 break;
 
             case 6:
@@ -2358,19 +2481,41 @@ class Cwmlisting
                 break;
 
             case 7:
-                // Case 7 is for Virtuemart
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 7 is for Virtuemart - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_virtuemart', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 8:
-                // Case 8 is for Docman
-                $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                // Case 8 is for Docman - only if integration is enabled
+                $componentParams = ComponentHelper::getParams('com_proclaim');
+                if ((int) $componentParams->get('enable_docman', 0)) {
+                    $column .= '<a href="' . $this->getOtherlinks($id3, $islink, $params) . '">';
+                }
+                // If integration disabled, no link is created (fallback to plain text)
                 break;
 
             case 9:
                 // Case 9 is a link to download
                 $column .= '<a href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;mid=' .
                     $row->download_id . '&amp;task=download">';
+                break;
+
+            case 10:
+                // Case 10 is a link to the series page
+                $seriesId = $row->sid ?? $row->series_id ?? 0;
+
+                if ($seriesId) {
+                    $link = Route::_(
+                        Cwmhelperroute::getSeriesRoute($seriesId) . '&t=' . $params->get('seriesdetailtemplateid')
+                    );
+                    $column = '<a href="' . $link . '">';
+                }
+
+                break;
         }
 
         return $column;
@@ -2390,12 +2535,23 @@ class Cwmlisting
     public function getOtherlinks($id3, $islink, $params): string
     {
         $link  = '';
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('#__bsms_mediafiles.*')
-            ->from('#__bsms_mediafiles')
-            ->where('study_id = ' . $db->q($id3))
-            ->where('#__bsms_mediafiles.published = 1');
+        $query->select($db->quoteName('#__bsms_mediafiles') . '.*')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('study_id') . ' = ' . $db->quote($id3));
+
+        // Include archived media when showing archived messages
+        $showArchived = $params->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get($this->extra . 'default_show_archived', '0');
+        }
+        if ($showArchived === '1' || $showArchived === '2') {
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)');
+        } else {
+            $query->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
+        }
+
         $db->setQuery($query);
         $db->execute();
         $num_rows = $db->getNumRows();
@@ -2412,14 +2568,18 @@ class Cwmlisting
                         break;
 
                     case 7:
-                        if ($media->virtueMart_id > 0) {
+                        // VirtueMart - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_virtuemart', 0) && $media->virtueMart_id > 0) {
                             $link = 'index.php?option=com_virtuemart&page=shop.product_details&flypage='
                                 . $params->get('store_page', 'flypage.tpl') . '&product_id=' . $media->virtueMart_id;
                         }
                         break;
 
                     case 8:
-                        if ($media->docMan_id > 0) {
+                        // DOCman - only if integration is enabled
+                        $componentParams = ComponentHelper::getParams('com_proclaim');
+                        if ((int) $componentParams->get('enable_docman', 0) && $media->docMan_id > 0) {
                             $link = 'index.php?option=com_docman&task=doc_download&gid=' . $media->docMan_id;
                         }
                         break;
@@ -2435,101 +2595,65 @@ class Cwmlisting
      *
      * @param   object            $row       Item Info
      * @param   Registry          $params    Item Params
-     * @param   CwmtemplateTable  $template  Template
+     * @param   object  $template  Template object from Cwmparams::getTemplateparams()
      *
-     * @return object
+     * @return string
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getListingExp($row, $params, $template)
+    public function getListingExp($row, $params, $template): string
     {
-        $Media  = new Cwmmedia();
-        $images = new Cwmimages();
-        $image  = Cwmimages::getStudyThumbnail($row->thumbnailm);
-        $label  = $params->get('templatecode');
-        $label  = str_replace('{{teacher}}', $row->teachername, $label);
-        $label  = str_replace('{{title}}', $row->studytitle, $label);
-        $label  = str_replace('{{date}}', $this->$params, $row->studydate, $label);
-        $label  = str_replace('{{studyintro}}', $row->studyintro, $label);
-        $label  = str_replace('{{scripture}}', $this->getScripture($params, $row, 0, 1), $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace(
-            '{{url}}',
-            Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            $label
-        );
-        $label  = str_replace(
-            '{{thumbnail}}',
-            $this->useJImage($image->path, "", "bsms_studyThumbnail" . $row->id, $image->width, $image->height),
-            $label
-        );
-        $label  = str_replace('{{seriestext}}', $row->series_text, $label);
-        $label  = str_replace('{{messagetype}}', $row->message_type, $label);
-        $label  = str_replace('{{bookname}}', $row->bookname, $label);
-        $label  = str_replace('{{topics}}', $row->topic_text, $label);
-        $label  = str_replace('{{hits}}', $row->hits, $label);
-        $label  = str_replace('{{location}}', $row->location_text, $label);
-        $label  = str_replace('{{plays}}', $row->totalplays, $label);
-        $label  = str_replace('{{downloads}}', $row->totaldownloads, $label);
+        $label = $params->get('templatecode');
 
-        // For now we need to use the existing mediatable function to get all the media
-        $mediaTable = $Media->getFluidMedia($row, $params, $template);
-        $label      = str_replace('{{media}}', $mediaTable, $label);
+        if (empty($label)) {
+            return '';
+        }
 
-        // Need to add template items for media...
+        $image     = Cwmimages::getStudyThumbnail($row->thumbnailm ?? '');
+        $thumbnail = $image ? $this->useJImage(
+            $image->path,
+            "",
+            "bsms_studyThumbnail" . $row->id,
+            $image->width,
+            $image->height
+        ) : '';
+
+        // Build replacements array for single str_replace call
+        $replacements = [
+            '{{teacher}}'     => $row->teachername ?? '',
+            '{{title}}'       => $row->studytitle ?? '',
+            '{{date}}'        => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
+            '{{studyintro}}'  => $row->studyintro ?? '',
+            '{{scripture}}'   => $this->getScripture($params, $row, 0, 1),
+            '{{topics}}'      => $row->topic_text ?? '',
+            '{{url}}'         => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
+            '{{thumbnail}}'   => $thumbnail,
+            '{{seriestext}}'  => $row->series_text ?? '',
+            '{{messagetype}}' => $row->message_type ?? '',
+            '{{bookname}}'    => $row->bookname ?? '',
+            '{{hits}}'        => $row->hits ?? '',
+            '{{location}}'    => $row->location_text ?? '',
+            '{{plays}}'       => $row->totalplays ?? '',
+            '{{downloads}}'   => $row->totaldownloads ?? '',
+        ];
+
+        $label = str_replace(array_keys($replacements), array_values($replacements), $label);
+
+        // Only process media if the placeholder exists in the template
+        if (str_contains($label, '{{media}}')) {
+            $media      = new Cwmmedia();
+            $mediaTable = $media->getFluidMedia($row, $params, $template);
+            $label      = str_replace('{{media}}', $mediaTable, $label);
+        }
 
         return $label;
     }
 
     /**
-     * Get Passage
+     * Share Helper — dispatches to local privacy-safe or AddToAny renderer.
      *
-     * @param   Registry  $params  Item Params
-     * @param   object    $row     Item Info
-     *
-     * @return string
-     *
-     * @since 7.0
-     */
-    public function getPassage($params, $row)
-    {
-        $esv          = 1;
-        $scripturerow = 1;
-        $scripture    = $this->getScripture($params, $row, $esv, $scripturerow);
-
-        if ($scripture) {
-            $key      = "IP";
-            $response = "" . $scripture . " (ESV)";
-            $passage  = urlencode($scripture);
-            $options  = "include-passage-references=false";
-            $url      = "http://www.esvapi.org/v2/rest/passageQuery?key=$key&passage=$passage&$options";
-
-            // This tests to see if the curl functions are there. It will return false if curl not installed
-            $p = (get_extension_funcs("curl"));
-
-            if ($p) {
-                // If curl is installed then we go on
-
-                // This will return false if curl is not enabled
-                $ch = curl_init($url);
-
-                if ($ch) {
-                    // This will return false if curl is not enabled
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    $response .= curl_exec($ch);
-                    curl_close($ch);
-                }
-            }
-        } else {
-            $response = Text::_('JBS_STY_NO_PASSAGE_INCLUDED');
-        }
-
-        return $response;
-    }
-
-    /**
-     * Share Helper file
+     * Modes: 0 = hide, 1 = local/privacy (no external requests), 2 = AddToAny.
      *
      * @param   string    $link    Link
      * @param   object    $row     Item Info
@@ -2537,67 +2661,305 @@ class Cwmlisting
      *
      * @return null|string
      *
+     * @throws \Exception
      * @since 7.0
      */
-    public function getShare($link, $row, $params): ?string
+    public function getShare(string $link, object $row, Registry $params): ?string
     {
-        $shareit = '<div class="row float-right">';
+        $mode = $this->resolveShareMode($params);
 
-        $shareit .= '<!-- AddThis Button BEGIN -->
-						<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-                            <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                        </div>
-						<script type="text/javascript" src="https://static.addtoany.com/menu/page.js"></script>
-						<!-- AddThis Button END -->
-						';
-        $doc     = Factory::getApplication()->getDocument();
-        $doc->addScriptDeclaration(
-            'a2a_config.thanks = {
-                                    postShare: true,
-                                    ad: false,
-                                };'
-        );
+        if ($mode === 0) {
+            return null;
+        }
 
-        $shareit .= '</div>';
+        $data = $this->prepareShareData($link, $row);
 
-
-        return $shareit;
+        return match ($mode) {
+            1       => $this->renderAddToAnyShare($data),
+            2       => $this->renderLocalShare($data),
+            default => null,
+        };
     }
 
     /**
-     * make a URL small
+     * Determine which sharing mode to use from template/module params.
      *
-     * @param   string  $url      Url
-     * @param   string  $login    Login
-     * @param   string  $appkey   AppKey
-     * @param   string  $format   Format
-     * @param   string  $version  Version
+     * Priority: socialnetworking (template-level setting visible to admins)
+     * then embedshare (module-only override / legacy backward compat).
      *
-     * @return string
+     * Handles backward compatibility:
+     * - socialnetworking: int 0/1/2 (old 1 = "Show" maps to 1 = AddToAny)
+     * - embedshare: string "TRUE"/"FALSE" or int 0/1/2
      *
-     * @throws \JsonException
-     * @since 7.0
+     * @param   Registry  $params  Template or module params
+     *
+     * @return int  0 = hide, 1 = AddToAny, 2 = local/privacy
+     *
+     * @since 10.1.0
      */
-    private function makeBitlyUrl($url, $login, $appkey, string $format = 'xml', string $version = '2.0.1')
+    private function resolveShareMode(Registry $params): int
     {
-        // Create the URL
-        $bitly = 'http://api.bit.ly/shorten?version=' . $version . '&longUrl=' . urlencode($url) . '&login='
-            . $login . '&apiKey=' . $appkey . '&format=' . $format;
+        // socialnetworking is the primary setting (template detail/popup views)
+        $social = $params->get('socialnetworking');
 
-        // Get the url
-        // Could also use cURL here
-        $response = file_get_contents($bitly);
-
-        // Parse depending on desired format
-        if (strtolower($format) === 'json') {
-            $json  = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-            $short = $json['results'][$url]['shortUrl'];
+        if ($social !== null && $social !== '') {
+            $mode = (int) $social;
         } else {
-            // Xml
-            $xml   = simplexml_load_string($response);
-            $short = 'http://bit.ly/' . $xml->results->nodeKeyVal->hash;
+            // Fall back to embedshare (module context or legacy data)
+            $embed = $params->get('embedshare');
+
+            if ($embed !== null && $embed !== '') {
+                // Legacy string values from old radio field
+                if ($embed === 'TRUE') {
+                    $mode = 1;
+                } elseif ($embed === 'FALSE') {
+                    $mode = 0;
+                } else {
+                    $mode = (int) $embed;
+                }
+            } else {
+                // Default to AddToAny (1) to preserve existing behavior
+                $mode = 1;
+            }
         }
 
-        return $short;
+        // GDPR enforcement: override AddToAny → Local when GDPR mode is active
+        if ($mode === 1) {
+            $gdprMode = (int) ComponentHelper::getParams('com_proclaim')->get('gdpr_mode', 0);
+
+            if ($gdprMode === 1) {
+                return 2;
+            }
+        }
+
+        return $mode;
+    }
+
+    /**
+     * Extract common share data from the sermon row.
+     *
+     * @param   string  $link  Page link
+     * @param   object  $row   Item data
+     *
+     * @return array{title: string, description: string, imageUrl: string, link: string}
+     *
+     * @since 10.1.0
+     */
+    private function prepareShareData(string $link, object $row): array
+    {
+        $title = htmlspecialchars(strip_tags($row->studytitle ?? ''), ENT_QUOTES, 'UTF-8');
+
+        $description = '';
+
+        if (!empty($row->studyintro)) {
+            $description = strip_tags($row->studyintro);
+        } elseif (!empty($row->studytext)) {
+            $description = strip_tags($row->studytext);
+        }
+
+        $description = mb_substr($description, 0, 200);
+
+        $imageUrl = '';
+
+        if (!empty($row->thumbnailm)) {
+            $imageUrl = Uri::root() . $row->thumbnailm;
+        } elseif (!empty($row->image)) {
+            $imageUrl = Uri::root() . $row->image;
+        }
+
+        if (!str_starts_with($link, 'http')) {
+            $link = Uri::root() . ltrim($link, '/');
+        }
+
+        return [
+            'title'       => $title,
+            'description' => $description,
+            'imageUrl'    => $imageUrl,
+            'link'        => $link,
+        ];
+    }
+
+    /**
+     * Render local/privacy share buttons — no external HTTP requests.
+     *
+     * Uses direct platform share URLs and a JS clipboard handler.
+     *
+     * @param   array  $data  Share data from prepareShareData()
+     *
+     * @return string  HTML for local share buttons
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    private function renderLocalShare(array $data): string
+    {
+        $url   = rawurlencode($data['link']);
+        $title = rawurlencode(html_entity_decode($data['title'], ENT_QUOTES, 'UTF-8'));
+        $desc  = rawurlencode($data['description'] ?: 'Check out this message');
+
+        $html = '<div class="proclaim-share proclaim-share-local float-end">';
+
+        // Facebook
+        $html .= '<a class="proclaim-share-btn proclaim-share-facebook"'
+            . ' href="https://www.facebook.com/sharer/sharer.php?u=' . $url . '"'
+            . ' target="_blank" rel="noopener noreferrer"'
+            . ' aria-label="Share on Facebook">'
+            . '<i class="fa-brands fa-facebook-f"></i></a>';
+
+        // X / Twitter
+        $html .= '<a class="proclaim-share-btn proclaim-share-x"'
+            . ' href="https://x.com/intent/post?url=' . $url . '&text=' . $title . '"'
+            . ' target="_blank" rel="noopener noreferrer"'
+            . ' aria-label="Share on X">'
+            . '<i class="fa-brands fa-x-twitter"></i></a>';
+
+        // Email
+        $html .= '<a class="proclaim-share-btn proclaim-share-email"'
+            . ' href="mailto:?subject=' . $title . '&body=' . $desc . '%0A%0A' . $url . '"'
+            . ' aria-label="Share via email">'
+            . '<i class="fa-solid fa-envelope"></i></a>';
+
+        // Copy Link
+        $html .= '<button type="button" class="proclaim-share-btn proclaim-share-copy"'
+            . ' data-share-url="' . htmlspecialchars($data['link'], ENT_QUOTES, 'UTF-8') . '"'
+            . ' aria-label="Copy link">'
+            . '<i class="fa-solid fa-link"></i></button>';
+
+        $html .= '</div>';
+
+        // Register clipboard handler JS via WAM
+        $app = Factory::getApplication();
+
+        if ($app instanceof CMSApplicationInterface) {
+            $wa = $app->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.share');
+            $wa->useStyle('com_proclaim.share-css');
+        }
+
+        return $html;
+    }
+
+    /**
+     * Render AddToAny share buttons — loads remote third-party script.
+     *
+     * @param   array  $data  Share data from prepareShareData()
+     *
+     * @return string  HTML for AddToAny share buttons
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    private function renderAddToAnyShare(array $data): string
+    {
+        $safeLink  = htmlspecialchars($data['link'], ENT_QUOTES, 'UTF-8');
+        $safeTitle = $data['title'];
+
+        $html = '<div class="proclaim-share float-end">'
+            . '<!-- AddToAny Share Buttons -->'
+            . '<div class="a2a_kit a2a_kit_size_32 a2a_default_style"'
+            . ' data-a2a-url="' . $safeLink . '"'
+            . ' data-a2a-title="' . $safeTitle . '">'
+            . '<a class="a2a_button_facebook"></a>'
+            . '<a class="a2a_button_x"></a>'
+            . '<a class="a2a_button_email"></a>'
+            . '<a class="a2a_button_copy_link"></a>'
+            . '<a class="a2a_dd" href="https://www.addtoany.com/share"></a>'
+            . '</div></div>';
+
+        $app = Factory::getApplication();
+
+        if (!$app instanceof CMSApplicationInterface) {
+            return $html;
+        }
+
+        $doc = $app->getDocument();
+
+        // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
+        $escapedDesc = addslashes($data['description'] ?: 'Check out this message');
+        $config      = "var a2a_config = a2a_config || {};
+a2a_config.onclick = 1;
+a2a_config.num_services = 8;
+a2a_config.thanks = { postShare: true, ad: false };
+a2a_config.templates = a2a_config.templates || {};
+a2a_config.templates.email = {
+    subject: '\${title}',
+    body: '" . $escapedDesc . "\\n\\n\${link}'
+};";
+
+        if ($data['imageUrl']) {
+            $config .= "\na2a_config.linkurl_default = '" . addslashes($data['link']) . "';";
+        }
+
+        $wa = $doc->getWebAssetManager();
+        $wa->addInlineScript($config);
+
+        $wa->registerAndUseScript(
+            'com_proclaim.addtoany',
+            'https://static.addtoany.com/menu/page.js',
+            ['version' => false],
+            ['defer'   => true, 'async' => true]
+        );
+
+        return $html;
+    }
+
+    /**
+     * Ensure URL has a scheme (http:// or https://)
+     *
+     * @param   string  $url     URL to check
+     * @param   string  $scheme  Default scheme to add if missing
+     *
+     * @return string URL with scheme
+     *
+     * @since 10.0.0
+     */
+    private function ensureScheme(string $url, string $scheme = 'https://'): string
+    {
+        if (parse_url($url, PHP_URL_SCHEME) !== null) {
+            return $url;
+        }
+
+        return $scheme . $url;
+    }
+
+    /**
+     * Run Content Plugins on item text
+     *
+     * @param   object  $item    Item info with text property
+     * @param   object  $params  Item params
+     *
+     * @return object Item with processed text and event data
+     *
+     * @throws \Exception
+     * @since 10.0.0
+     */
+    public function runContentPlugins(object $item, object $params): object
+    {
+        // We don't need offset, but it is a required argument for the plugin dispatcher
+        $offset = 0;
+        PluginHelper::importPlugin('content');
+
+        // Run content plugins
+        $dispatcher            = Factory::getApplication();
+        $contentEventArguments = [
+            'context' => 'com_proclaim.sermon',
+            'subject' => &$item,
+            'params'  => &$params,
+            'page'    => $offset,
+        ];
+
+        $dispatcher->triggerEvent('onContentPrepare', $contentEventArguments);
+
+        $item->event                        = new \stdClass();
+        $results                            = $dispatcher->triggerEvent('onContentAfterTitle', $contentEventArguments);
+        $item->event->afterDisplayTitle     = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentBeforeDisplay', $contentEventArguments);
+        $item->event->beforeDisplayContent  = trim(implode("\n", $results));
+
+        $results                            = $dispatcher->triggerEvent('onContentAfterDisplay', $contentEventArguments);
+        $item->event->afterDisplayContent   = trim(implode("\n", $results));
+
+        return $item;
     }
 }

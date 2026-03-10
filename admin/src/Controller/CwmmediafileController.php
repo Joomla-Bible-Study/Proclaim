@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -25,6 +24,8 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Controller For MediaFile
@@ -35,7 +36,7 @@ use Joomla\CMS\Session\Session;
 class CwmmediafileController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var string
      * @since 7.0
@@ -46,7 +47,7 @@ class CwmmediafileController extends FormController
      * The URL option for the component.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected $option = 'com_proclaim';
 
@@ -56,7 +57,7 @@ class CwmmediafileController extends FormController
      * @return  bool  True, if the record can be added, a error object if not.
      *
      * @throws  \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function add(): bool
     {
@@ -79,7 +80,7 @@ class CwmmediafileController extends FormController
      * @param   int     $key     ?
      * @param   string  $urlVar  ?
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws  \Exception
      * @since   9.0.0
@@ -99,6 +100,41 @@ class CwmmediafileController extends FormController
     }
 
     /**
+     * Method override to check if you can edit an existing record.
+     *
+     * @param   array   $data  An array of input data.
+     * @param   string  $key   The name of the key for the primary key.
+     *
+     * @return  bool
+     *
+     * @throws \Exception
+     * @since   10.1.0
+     */
+    protected function allowEdit($data = [], $key = 'id'): bool
+    {
+        $recordId = (int) ($data[$key] ?? 0);
+        $user     = Factory::getApplication()->getIdentity();
+
+        // Non-admin users must have access to the item's view level
+        if (!$user->authorise('core.admin') && $recordId > 0) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('access'))
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':rid', $recordId, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $access = (int) $db->loadResult();
+
+            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
+                return false;
+            }
+        }
+
+        return parent::allowEdit($data, $key);
+    }
+
+    /**
      * Handles XHR requests (i.e. File uploads)
      *
      * @return void
@@ -108,8 +144,12 @@ class CwmmediafileController extends FormController
      */
     public function xhr(): void
     {
-        Session::checkToken('get') or die('Invalid Token');
-        $input = Factory::getApplication()->input;
+        if (!Session::checkToken('get')) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
+        $input = Factory::getApplication()->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
         $handler   = $input->get('handler');
@@ -132,8 +172,9 @@ class CwmmediafileController extends FormController
      *
      * @param   CwmmediafileModel  $model  The model.
      *
-     * @return  bool     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise, and an internal error is set.
      *
+     * @throws \Exception
      * @since   1.6
      */
     public function batch($model = null): bool
@@ -141,7 +182,8 @@ class CwmmediafileController extends FormController
         $this->checkToken();
 
         if (!$model) {
-            $model = new CwmmediafileModel();
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel $model */
+            $model = $this->getModel('Cwmmediafile', 'Administrator', []);
         }
 
         // Preset the redirect
@@ -157,14 +199,19 @@ class CwmmediafileController extends FormController
      *
      * @param   string  $key  The name of the primary key of the URL variable.
      *
-     * @return  boolean  True if access level checks pass, false otherwise.
+     * @return  bool  True if access level checks pass, false otherwise.
      *
      * @throws \Exception
-     * @since   12.2
+     * @since   7.0.0
      */
     public function cancel($key = null): bool
     {
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        // Check for request forgeries.
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return false;
+        }
 
         $app   = Factory::getApplication();
         $model = $this->getModel();
@@ -176,15 +223,14 @@ class CwmmediafileController extends FormController
             $key = (string)$table->getKeyName();
         }
 
-        $recordId = $app->input->getInt($key);
+        $recordId = $app->getInput()->getInt($key);
 
         // Attempt to check in the current record.
         if ($recordId) {
             if ($checkin) {
                 if ($model->checkin($recordId) === false) {
                     // Check-in failed, go back to the record and display a notice.
-                    $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
-                    $this->setMessage($this->getError(), 'error');
+                    $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', ''), 'error');
 
                     $this->setRedirect(
                         Route::_(
@@ -213,12 +259,12 @@ class CwmmediafileController extends FormController
     /**
      * Gets the URL arguments to append to an item redirect.
      *
-     * @param   integer  $recordId  The primary key id for the item.
-     * @param   string   $urlVar    The name of the URL variable for the id.
+     * @param   int     $recordId  The primary key ID for the item.
+     * @param   string  $urlVar    The name of the URL variable for the ID.
      *
      * @return  string  The arguments to append to the redirect URL.
      *
-     * @since   12.2
+     * @since   7.0.0
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id'): string
     {
@@ -253,6 +299,88 @@ class CwmmediafileController extends FormController
     }
 
     /**
+     * Return addon HTML fragments via AJAX for a given server_id.
+     *
+     * Called via GET with token validation. Returns JSON with generalHtml
+     * and optionsHtml for the selected server's addon.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function getAddonHtml(): void
+    {
+        CWMAddon::prepareAjaxEnvironment();
+
+        try {
+            if (!Session::checkToken('get')) {
+                CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            }
+
+            $app      = Factory::getApplication();
+            $serverId = $app->getInput()->getInt('server_id', 0);
+
+            if (empty($serverId)) {
+                CWMAddon::outputJson(['success' => false, 'error' => 'No server_id provided']);
+            }
+
+            // Set server_id in user state so the model picks it up via populateState()
+            $app->setUserState('com_proclaim.edit.mediafile.server_id', $serverId);
+
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel $model */
+            $model = $this->getModel('Cwmmediafile', 'Administrator', []);
+
+            // getItem() populates model->data including server_id from state
+            $model->getItem();
+
+            // getMediaForm() loads form paths, language, and returns the Joomla Form
+            $mediaForm = $model->getMediaForm();
+
+            if (empty($mediaForm)) {
+                CWMAddon::outputJson(['success' => false, 'error' => 'Could not load media form']);
+            }
+
+            $serverType = $model->getState('type');
+            $sParams    = $model->getState('s_params', []);
+
+            // Wrap form with server params (same pattern as HtmlView::display)
+            $wrappedForm = new class ($mediaForm, $sParams) {
+                private $form;
+                public array $s_params;
+
+                public function __construct($form, array $s_params)
+                {
+                    $this->form     = $form;
+                    $this->s_params = $s_params;
+                }
+
+                public function __call(string $name, array $args): mixed
+                {
+                    return $this->form->$name(...$args);
+                }
+            };
+
+            // Bind server defaults for new items
+            $mediaForm->bind(['params' => $sParams]);
+
+            // Instantiate addon and render HTML
+            $addon       = CWMAddon::getInstance($serverType);
+            $generalHtml = $addon->renderGeneral($wrappedForm, true);
+            $optionsHtml = $addon->renderOptionsFields($wrappedForm, true);
+
+            CWMAddon::outputJson([
+                'success'     => true,
+                'generalHtml' => $generalHtml,
+                'optionsHtml' => $optionsHtml,
+                'serverType'  => $serverType,
+            ]);
+        } catch (\Exception $e) {
+            CWMAddon::outputJson(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * Sets the server for this media record
      *
      * @return  void
@@ -263,10 +391,14 @@ class CwmmediafileController extends FormController
     public function setServer(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmmediafiles', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         $data      = $input->get('jform', [], 'post', 'array');
         $cdate     = $data['createdate'];

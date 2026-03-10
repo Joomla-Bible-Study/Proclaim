@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<media>
+    <fields name="params">
+        <fieldset name="general"
+                  addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+            <field name="filename"
+                   type="text"
+                   label="JBS_MED_FILENAME"
+                   description="JBS_MED_USE_FILENAME_AS_PATH"
+                   required="true"/>
+            <field name="popup" type="list" label="JBS_MED_INTERNAL_POPUP"
+                   description="JBS_MED_INTERNAL_POPUP_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default="2"
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JBS_CMN_POPUP</option>
+                <option value="2">JBS_CMN_INLINE</option>
+            </field>
+        </fieldset>
+        <fieldset name="parameters1">
+            <field name="special" type="list" label="JBS_MED_LINK_TARGET"
+                   description="JBS_MED_LINK_TARGET_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default="_blank"
+                   validate="options">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="_blank">JBS_MED_LINK_TARGET_BLANK</option>
+                <option value="_self">JBS_MED_LINK_TARGET_SELF</option>
+                <option value="_parent">JBS_MED_LINK_TARGET_PARENT</option>
+                <option value="_top">JBS_MED_LINK_TARGET_TOP</option>
+            </field>
+            <field name="link_type" type="hidden" default="0"/>
+            <field name="player" type="hidden" default="0"/>
+            <field name="mime_type" type="MimeType" extension="com_proclaim"
+                   label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
+                   default="">
+            </field>
+        </fieldset>
+        <fieldset name="parameters2" label="JBS_ADDON_DIRECT_MEDIA_TYPE">
+            <field name="media_image" type="media" directory="biblestudy"
+                   label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
+                   class="col-6">
+            </field>
+            <field name="media_use_button_icon" type="list" label="JBS_ADDON_DIRECT_MEDIA_USE_BUTTON"
+                   description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options">
+                <option value="-1">JBS_MED_SERVER_OPTIONS</option>
+                <option value="">JBS_MED_NONE</option>
+                <option value="1">JBS_MED_BUTTON_ONLY</option>
+                <option value="2">JBS_MED_BUTTON_AND_ICON</option>
+                <option value="3">JBS_MED_ICON_ONLY</option>
+            </field>
+            <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_DIRECT_BUTTON_TEXT"
+                   description="JBS_ADDON_DIRECT_BUTTON_TEXT_DESC"/>
+            <field name="media_button_type" type="list"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options"
+                   label="JBS_ADDON_DIRECT_BUTTON_TYPE"
+                   description="JBS_ADDON_DIRECT_BUTTON_TYPE_DESC">
+                <option value="btn-link">JBS_MED_NO_COLOR</option>
+                <option value="btn-primary">JBS_MED_PRIMARY</option>
+                <option value="btn-success">JBS_MED_SUCCESS</option>
+                <option value="btn-info">JBS_MED_INFO</option>
+                <option value="btn-warning">JBS_MED_WARNING</option>
+                <option value="btn-danger">JBS_MED_DANGER</option>
+            </field>
+            <field name="media_button_color" type="ColorPicker" default="black"
+                   description="JBS_ADDON_DIRECT_BUTTON_COLOR_DESC" label="JBS_ADDON_DIRECT_BUTTON_COLOR"/>
+            <field name="media_icon_type" type="IconType"
+                   class="form-select-color-state"
+                   size="1"
+                   default=""
+                   validate="options"
+                   label="JBS_ADDON_DIRECT_ICON_TYPE"
+                   description="JBS_ADDON_DIRECT_ICON_TYPE_DESC">
+            </field>
+            <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_DIRECT_CUSTOM_ICON"
+                   description="JBS_ADDON_DIRECT_CUSTOM_ICON_DESC"/>
+        </fieldset>
+    </fields>
+</media>

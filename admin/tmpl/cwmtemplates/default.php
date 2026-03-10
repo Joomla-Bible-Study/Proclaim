@@ -3,7 +3,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,19 +20,19 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplates\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app        = Factory::getApplication();
 $user       = $app->getIdentity();
-$userId     = $user->get('id');
+$userId     = $user->id;
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$sortFields = $this->getSortFields();
+$archived   = $this->state->get('filter.published') == 2;
+$trashed    = $this->state->get('filter.published') == -2;
 $columns    = 4;
 
 ?>
@@ -44,7 +44,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -54,8 +54,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                <?php
-                else : ?>
+                <?php else : ?>
                     <table class="table itemList" id="templatelist">
                         <thead>
                         <tr>
@@ -109,10 +108,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                                 'index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int)$item->id
                             );
                             $item->max_ordering = 0;
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.template.' . $item->id);
-                            $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.template.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.template.' . $item->id);
+                            $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canCreate          = $user->authorise('core.create');
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.template.' . $item->id);
+                            $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.template.' . $item->id);
+                            $canChange          = $user->authorise('core.edit.state', 'com_proclaim.template.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>">
@@ -124,31 +125,33 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                                     <?php
                                     $options = [
                                         'task_prefix' => 'cwmtemplates.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
+                                        'disabled'    => !$canChange,
+                                        'id'          => 'state-' . $item->id,
                                     ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                            ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">
-
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmtemplates.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
-                                        if ($canEdit || $canEditOwn) : ?>
+                                if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
-                                            echo Route::_(
-                                                'index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int)$item->id
-                                            ); ?>">
+                                    echo Route::_(
+                                        'index.php?option=com_proclaim&task=cwmtemplate.edit&id=' . (int)$item->id
+                                    ); ?>">
                                                 <?php
-                                                echo $this->escape($item->title); ?>
+                                        echo $this->escape($item->title); ?>
                                             </a>
 
-                                        <?php
-                                        else : ?>
+                                        <?php else : ?>
                                             <span
                                                     title="<?php
-                                                    echo $this->escape($item->title); ?>"><?php
-                                                echo $this->escape($item->title); ?></span>
+                                            echo $this->escape($item->title); ?>"><?php
+                                        echo $this->escape($item->title); ?></span>
                                         <?php
                                         endif; ?>
                                     </div>
@@ -165,11 +168,26 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplates'); ?>" method="po
                 <?php
                 endif; ?>
                 <?php
+                // Load the batch processing form.?>
+                <?php
+                if ($user->authorise('core.create', 'com_proclaim')
+                    && $user->authorise('core.edit', 'com_proclaim')
+                    && $user->authorise('core.edit.state', 'com_proclaim')
+                ) : ?>
+                    <?php
+                    echo HTMLHelper::_(
+                        'bootstrap.renderModal',
+                        'collapseModal',
+                        [
+                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                'footer' => $this->loadTemplate('batch_footer'),
+                            ],
+                        $this->loadTemplate('batch_body')
+                    ); ?>
+                <?php
+                endif; ?>
+                <?php
                 echo $this->pagination->getListFooter(); ?>
-                <?php
-                // Load the batch processing form. ?>
-                <?php
-                // echo $this->loadTemplate('batch'); ?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php

@@ -4,12 +4,12 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMSerie;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmserie;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMSerie;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Model\CwmserieModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -26,7 +27,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 /**
- * JView class for Serie
+ * HtmlView class for Serie
  *
  * @package  Proclaim.Admin
  * @since    7.0.0
@@ -39,7 +40,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    public $canDo;
+    public object $canDo;
 
     /**
      * Form
@@ -47,7 +48,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    protected $form;
+    protected object $form;
 
     /**
      * Item
@@ -55,7 +56,7 @@ class HtmlView extends BaseHtmlView
      * @var object
      * @since    7.0.0
      */
-    protected $item;
+    protected object $item;
 
     /**
      * Admin
@@ -63,7 +64,15 @@ class HtmlView extends BaseHtmlView
      * @var Registry
      * @since    7.0.0
      */
-    protected $admin_params;
+    protected Registry $admin_params;
+
+    /**
+     * Messages belonging to this series
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $messages = [];
 
     /**
      * Execute and display a template script.
@@ -75,25 +84,54 @@ class HtmlView extends BaseHtmlView
      * @throws  \Exception
      * @since   7.0.0
      */
-    public function display($tpl = null)
+    #[\Override]
+    public function display($tpl = null): void
     {
-        $this->form = $this->get("Form");
-        $this->item = $this->get("Item");
+        /** @var CwmserieModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form  = $model->getForm();
+        $this->item  = $model->getItem();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'serie', (int)$this->item->id);
-        $admin = Cwmparams::getAdmin();
-        $registry = new Registry();
+
+        // For modalreturn layout, just load item data and render (no toolbar, no extras)
+        if ($this->getLayout() === 'modalreturn') {
+            parent::display($tpl);
+
+            return;
+        }
+
+        $admin       = Cwmparams::getAdmin();
+        $registry    = new Registry();
         $registry->loadString($admin->params);
         $this->admin_params = $registry;
 
+        // Load messages belonging to this series (only for existing records)
+        if (!empty($this->item->id) && $this->item->id > 0) {
+            $this->messages = $model->getMessages();
+        }
+
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        // Set the toolbar
-        $this->addToolbar();
+        $input          = Factory::getApplication()->getInput();
+        $forcedLanguage = $input->get('forcedLanguage', '', 'cmd');
 
-        $isNew = ($this->item->id < 1);
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage) {
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+        }
+
+        // Set the toolbar
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+        } else {
+            $this->addModalToolbar();
+        }
 
         // Display the template
         parent::display($tpl);
@@ -107,10 +145,10 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since  7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-        $isNew = ($this->item->id == 0);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
+        $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
             Text::_('JBS_CMN_SERIES') . ': <small><small>[' . $title . ']</small></small>',
@@ -131,8 +169,34 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=37:series-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('serie', true);
+    }
 
+    /**
+     * Add toolbar for modal layout (Apply/Save/Cancel only).
+     *
+     * @return void
+     *
+     * @since  10.1.0
+     */
+    protected function addModalToolbar(): void
+    {
+        $isNew   = ($this->item->id === 0);
+        $toolbar = $this->getDocument()->getToolbar();
+
+        ToolbarHelper::title(
+            Text::_('JBS_CMN_SERIES') . ': <small><small>[' . ($isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT')) . ']</small></small>',
+            'tree tree'
+        );
+
+        $canCreate = $isNew && $this->canDo->get('core.create', 'com_proclaim');
+        $canEdit   = $this->canDo->get('core.edit', 'com_proclaim');
+
+        if ($canCreate || $canEdit) {
+            $toolbar->apply('cwmserie.apply');
+            $toolbar->save('cwmserie.save');
+        }
+
+        $toolbar->cancel('cwmserie.cancel');
     }
 }

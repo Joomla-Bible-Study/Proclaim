@@ -2,14 +2,14 @@
 
 /**
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  */
 
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -27,15 +27,15 @@ class CWMFancyBox
      * @var    array  Array containing information for loaded files
      * @since  9.0.0
      */
-    protected static array $loaded = array();
+    protected static array $loaded = [];
 
     /**
      * Method to load the fancybox JavaScript framework into the document head
      *
-     * If debugging mode is on an uncompressed version of jQuery is included for easier debugging.
+     * If debugging mode is on, an uncompressed version of jQuery is included for easier debugging.
      *
      * @param   bool  $option     Optional looks [optional]
-     * @param   bool  $mouseweel  To add mouse Well to display [optional]
+     * @param   bool  $mouseweel  To add mouse Wheel to display [optional]
      *
      * @return  void
      *
@@ -48,11 +48,14 @@ class CWMFancyBox
             return;
         }
 
-        HTMLHelper::script('media/com_proclaim/fancybox/fancybox.umd.js');
-        HTMLHelper::script('media/com_proclaim/js/fancybox.js');
+        try {
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-        if ($mouseweel) {
-//            HTMLHelper::script('media/com_proclaim/js/jquery.mousewheel.pack.min.js');
+            // Loads vendor UMD + custom handler via dependency chain in joomla.asset.json
+            $wa->useScript('com_proclaim.fancybox');
+        } catch (\Exception $e) {
+            return;
         }
 
         self::loadCss($option);
@@ -63,7 +66,7 @@ class CWMFancyBox
     /**
      * Loads CSS files needed by fancybox
      *
-     * @param   bool  $option  Optional add helpers - button, thumbnail and/or media
+     * @param   bool  $option  Optional add helpers - button, thumbnail, and/or media
      *
      * @return  void
      *
@@ -71,7 +74,14 @@ class CWMFancyBox
      */
     public static function loadCss(bool $option = false): void
     {
-        HTMLHelper::stylesheet('media/com_proclaim/fancybox/fancybox.min.css');
-        HTMLHelper::stylesheet('media/com_proclaim/css/bsms.fancybox.min.css');
+        try {
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+
+            // Loads vendor CSS + custom overrides via dependency chain in joomla.asset.json
+            $wa->useStyle('com_proclaim.cwm-fancybox');
+        } catch (\Exception $e) {
+            return;
+        }
     }
 }

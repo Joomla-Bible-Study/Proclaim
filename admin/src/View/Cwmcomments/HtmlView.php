@@ -4,18 +4,19 @@
  * View html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMComments;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmcomments;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmcommentsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -24,6 +25,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * View class for Comments
@@ -33,40 +35,40 @@ use Joomla\Component\Content\Administrator\Extension\ContentComponent;
  */
 class HtmlView extends BaseHtmlView
 {
-    public $filterForm;
-    public $activeFilters;
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+    public ?array $activeFilters              = null;
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      *
      * @since 9.0.0
      */
-    protected $items;
+    protected ?array $items = null;
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
     /**
      * State
      *
-     * @var object
+     * @var ?object
      *
      * @since 9.0.0
      */
-    protected $state;
+    protected ?object $state = null;
     /**
      * Filter Levels
      *
-     * @var string
+     * @var ?array
      *
      * @since 9.0.0
      */
-    protected $f_levels;
+    protected ?array $f_levels = null;
 
     /**
      * Execute and display a template script.
@@ -79,17 +81,21 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmcommentsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm    = $this->get('FilterForm');
-        $this->activeFilters = $this->get('ActiveFilters');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -113,17 +119,29 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         $canDo = ContentHelper::getActions('com_proclaim');
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance
         $toolbar = Toolbar::getInstance('toolbar');
 
-        ToolbarHelper::title(Text::_('JBS_CMN_COMMENTS'), 'comments-2');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        // Get pending comments count and add to title if any
+        $pendingCount = $this->getPendingCount();
+        $title        = Text::_('JBS_CMN_COMMENTS');
+        if ($pendingCount > 0) {
+            $title .= ' <span class="badge bg-warning text-dark">' . Text::sprintf('JBS_CMT_PENDING_COUNT', $pendingCount) . '</span>';
+        }
+
+        ToolbarHelper::title($title, 'comments-2');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmcomment.add');
+        }
+
+        // Add Approve button for comment moderation workflow
+        if ($canDo->get('core.edit.state')) {
+            $toolbar->standardButton('approve', 'JBS_CMT_APPROVE', 'cwmcomments.publish')
+                ->icon('icon-checkmark')
+                ->listCheck(true);
         }
 
         $dropdown = $toolbar->dropdownButton('status-group')
@@ -137,8 +155,9 @@ class HtmlView extends BaseHtmlView
         if ($canDo->get('core.edit.state')) {
             $childBar->publish('cwmcomments.publish');
             $childBar->unpublish('cwmcomments.unpublish');
+            $childBar->checkin('cwmcomments.checkin')->listCheck(true);
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmcomments.trash');
             }
 
@@ -161,6 +180,8 @@ class HtmlView extends BaseHtmlView
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
+
+        ToolbarHelper::help('comments', true);
     }
 
     /**
@@ -172,13 +193,32 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'comment.full_name' => Text::_('JBS_CMT_FULL_NAME'),
             'comment.published' => Text::_('JSTATUS'),
             'study.studytitle'  => Text::_('JBS_CMN_TITLE'),
             'comment.language'  => Text::_('JGRID_HEADING_LANGUAGE'),
             'access_level'      => Text::_('JGRID_HEADING_ACCESS'),
-            'comment.id'        => Text::_('JGRID_HEADING_ID')
-        );
+            'comment.id'        => Text::_('JGRID_HEADING_ID'),
+        ];
+    }
+
+    /**
+     * Get the count of comments pending approval (unpublished)
+     *
+     * @return  int  Number of pending comments
+     *
+     * @since 10.1.0
+     */
+    protected function getPendingCount(): int
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_comments'))
+            ->where($db->quoteName('published') . ' = 0');
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 }

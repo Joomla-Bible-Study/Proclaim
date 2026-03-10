@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,6 +20,7 @@ use http\Exception\RuntimeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -93,7 +94,7 @@ class Cwmtranslated
             // First choice: string in current language
             if ($currentLanguage) {
                 if ($itemparams->get($currentLanguage)) {
-                    return ($itemparams->get($currentLanguage));
+                    return $itemparams->get($currentLanguage);
                 }
             }
 
@@ -108,12 +109,12 @@ class Cwmtranslated
                 $defaultLanguage = ComponentHelper::getParams('com_languages')->get('site');
 
                 if ($defaultLanguage && $itemparams->get($defaultLanguage)) {
-                    return ($itemparams->get($defaultLanguage));
+                    return $itemparams->get($defaultLanguage);
                 }
             }
 
             // Fallback: second choice
-            return ($jtextString);
+            return $jtextString;
         }
 
         return null;
@@ -132,13 +133,16 @@ class Cwmtranslated
     {
         // Check if there should be topics at all to save time
         if ($topicItem && $topicItem->tp_id) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
-            $query->select('#__bsms_topics.topic_text, #__bsms_topics.params AS topic_params')
-                ->from('#__bsms_topics')
-                ->leftJoin('#__bsms_studytopics ON (#__bsms_studytopics.study_id = ' . $db->q($topicItem->id) . ') ')
-                ->where('published = ' . 1)
-                ->where('#__bsms_topics.id = #__bsms_studytopics.topic_id');
+            $query->select($db->quoteName('#__bsms_topics.topic_text') . ', ' . $db->quoteName('#__bsms_topics.params', 'topic_params'))
+                ->from($db->quoteName('#__bsms_topics'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_studytopics') . ' ON (' . $db->quoteName('#__bsms_studytopics.study_id')
+                    . ' = ' . $db->q($topicItem->id) . ')'
+                )
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('#__bsms_topics.id') . ' = ' . $db->quoteName('#__bsms_studytopics.topic_id'));
             $db->setQuery($query);
             $results = $db->loadObjectList();
             $output  = '';

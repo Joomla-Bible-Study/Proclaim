@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Controller\DisplayController;
-use http\Exception\RuntimeException;
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Session\Session;
+use Joomla\CMS\Log\Log;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
+use Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\Path;
@@ -46,33 +49,33 @@ class Cwmrestore
     {
         $backuptables = self::getObjects();
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information BLOB';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' BLOB';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -80,6 +83,23 @@ class Cwmrestore
 
         return true;
     }
+
+    /**
+     * Tables to preserve during restore.
+     *
+     * These tables contain downloaded/cached data that is expensive to
+     * regenerate and is NOT part of the user's content backup.  They are
+     * excluded from the DROP phase so locally downloaded Bibles survive
+     * a restore cycle.  If the backup SQL file happens to contain its own
+     * version of these tables, `CREATE TABLE IF NOT EXISTS` is a no-op and
+     * the existing data wins.
+     *
+     * @var string[]
+     * @since 10.1.0
+     */
+    private static array $preserveTables = [
+        '#__bsms_bible_verses',
+    ];
 
     /**
      * Get Objects for tables
@@ -90,16 +110,22 @@ class Cwmrestore
      */
     protected static function getObjects(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
-        $prelength = strlen($prefix);
+        $prelength = \strlen($prefix);
         $bsms      = 'bsms_';
         $objects   = [];
 
         foreach ($tables as $table) {
             if (substr_count($table, $bsms)) {
                 $table     = substr_replace($table, '#__', 0, $prelength);
+
+                // Skip tables that should survive a restore
+                if (\in_array($table, self::$preserveTables, true)) {
+                    continue;
+                }
+
                 $objects[] = ['name' => $table];
             }
         }
@@ -118,33 +144,33 @@ class Cwmrestore
     {
         $backuptables = self::getObjects();
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($backuptables as $backuptable) {
             if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
 
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY studytext2 TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY description TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
 
             if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $backuptable['name'] . ' MODIFY information TEXT';
+                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' TEXT';
                 $db->setQuery($query);
                 $db->execute();
             }
@@ -166,14 +192,13 @@ class Cwmrestore
     public function importdb($parent): bool|array
     {
         $input         = Factory::getApplication()->getInput();
-        $installtype   = $input->getPath('install_directory');
-        $backuprestore = $input->getWord('backuprestore', '');
-        $controlser    = new DisplayController();
-        $this->dbo     = Factory::getContainer()->get('DatabaseDriver');
+        $installType   = $input->getPath('install_directory');
+        $backupRestore = $input->getWord('backuprestore', '');
+        $dBo           = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Restore form prior backup files located on the server.
-        if (substr_count($backuprestore, '.sql')) {
-            $restored      = self::restoreDB($backuprestore);
+        if (substr_count($backupRestore, '.sql')) {
+            $restored      = self::restoreDB($backupRestore);
 
             if ($restored) {
                 return true;
@@ -183,7 +208,7 @@ class Cwmrestore
 
         // Start finding how to restore files.
         if (
-            !empty($installtype) && $installtype !== '/' && $installtype !== Factory::getApplication()->getConfig()->get(
+            !empty($installType) && $installType !== '/' && $installType !== Factory::getApplication()->getConfig()->get(
                 'tmp_path'
             ) . '/'
         ) {
@@ -208,25 +233,45 @@ class Cwmrestore
 
             $result = self::installdb($tmp_src, $parent);
 
-            // Get Proclaim extension ID
-            $query      = $this->dbo->getQuery(true);
-            $query->select('extension_id');
-            $query->from('#__extensions');
-            $query->where($this->dbo->quoteName('element') . ' = ' . $this->dbo->q('com_proclaim'));
-            $this->dbo->setQuery($query);
-            $cid           = (int) $this->dbo->loadResult();
+            if ($result) {
+                // Get Proclaim extension ID
+                $query = $dBo->getQuery(true);
+                $query->select($dBo->quoteName('extension_id'));
+                $query->from($dBo->quoteName('#__extensions'));
+                $query->where($dBo->quoteName('element') . ' = ' . $dBo->q('com_proclaim'));
+                $dBo->setQuery($query);
+                $cid = (int) $dBo->loadResult();
 
-            // Fix the Proclaim Database after restore
-            $DatabaseModel = new DatabaseModel();
-            $DatabaseModel->fix([$cid]);
+                // Reset #__schemas so DatabaseModel::fix() re-runs all migrations.
+                // The restore replaced all bsms_* tables with backup data, but
+                // #__schemas (a Joomla core table) still claims the latest version.
+                // Without this reset, fix() thinks everything is up-to-date and
+                // skips creating tables that were added after the backup was made.
+                if ($cid) {
+                    self::resetSchemaVersion($cid);
+                }
 
-            /** @var \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel $updateModel */
-            $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
-                ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
-            $updateModel->purge();
+                // Fix the Proclaim Database schema after restore
+                $DatabaseModel = new DatabaseModel();
+                $DatabaseModel->fix([$cid]);
 
-            // Refresh versionable assets cache
-            Factory::getApplication()->flushAssets();
+                // Run PHP data migration steps that ChangeSet cannot handle
+                self::runPostRestoreDataFixes();
+
+                // Fix Proclaim assets (ACL permissions)
+                self::fixAssetsAfterRestore();
+
+                // Fix object ownership for migrated data
+                self::fixOwnershipAfterRestore();
+
+                /** @var UpdateModel $updateModel */
+                $updateModel = Factory::getApplication()->bootComponent('com_joomlaupdate')
+                    ->getMVCFactory()->createModel('Update', 'Administrator', ['ignore_request' => true]);
+                $updateModel->purge();
+
+                // Refresh versionable assets cache
+                Factory::getApplication()->flushAssets();
+            }
 
             // Clean up the installation files.
             if (!is_file($uploadresults['packagefile'])) {
@@ -235,11 +280,6 @@ class Cwmrestore
             }
 
             InstallerHelper::cleanupInstall($uploadresults['packagefile'], $uploadresults['extractdir']);
-
-            // Redirect to the fixassets after restore
-            $controlser->setRedirect('index.php?option=com_proclaim&task=cwmassets.browse&' . Session::getFormToken(
-            ) . '=1');
-            $controlser->redirect();
         }
 
         return $result;
@@ -258,7 +298,7 @@ class Cwmrestore
     public static function restoreDB($backuprestore): bool
     {
         $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
         /**
          * Attempt to increase the maximum execution time for PHP scripts with a check for safe_mode.
          */
@@ -267,25 +307,17 @@ class Cwmrestore
         $query = file_get_contents(JPATH_SITE . '/media/com_proclaim/backup/' . $backuprestore);
 
         // Check to see if this is a backup from an old DB and not a migration
-        $isold   = substr_count($query, '#__bsms_admin_genesis');
-        $isnot   = substr_count($query, '#__bsms_studies');
-        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+        $sold    = substr_count($query, '#__bsms_admin_genesis');
+        $isNot   = substr_count($query, '#__bsms_studies');
 
-        if ($isold !== 0 && $isnot === 0) {
+        if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
 
             return false;
         }
 
-        if ($isnot === 0) {
+        if ($isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
-
-            return false;
-        }
-
-        if (!$iscernt) {
-            $app->enqueueMessage(basename($backuprestore), 'warning');
-            $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
         }
@@ -301,6 +333,48 @@ class Cwmrestore
             }
         }
 
+        // After restoring, reset the schema version and run DatabaseModel::fix()
+        // so that any tables/columns added after the backup was created get applied.
+        try {
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
+            $db->setQuery($query);
+            $cid = (int) $db->loadResult();
+
+            if ($cid) {
+                self::resetSchemaVersion($cid);
+
+                $databaseModel = new DatabaseModel();
+                $databaseModel->fix([$cid]);
+            }
+        } catch (\Exception $e) {
+            $app->enqueueMessage('Schema repair notice: ' . $e->getMessage(), 'warning');
+        }
+
+        // Run PHP data migration steps that ChangeSet cannot handle
+        self::runPostRestoreDataFixes();
+
+        // Fix Proclaim assets (ACL permissions)
+        self::fixAssetsAfterRestore();
+
+        // Fix object ownership for migrated data
+        self::fixOwnershipAfterRestore();
+
+        // Verify restore integrity
+        $integrity = self::verifyRestoreIntegrity();
+        Log::add(
+            \sprintf(
+                'Restore verification: %d tables, %d tasks, config %s',
+                $integrity['tables'],
+                $integrity['tasks'],
+                $integrity['config'] ? 'OK' : 'missing'
+            ),
+            Log::INFO,
+            'com_proclaim'
+        );
+
         return true;
     }
 
@@ -314,7 +388,7 @@ class Cwmrestore
      */
     private static function getPackageFromFolder(): bool|array
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         // Get the path to the package to install.
         $p_dir = $input->getString('install_directory');
@@ -322,7 +396,7 @@ class Cwmrestore
 
         // Did you give us a valid directory?
         if (!is_dir($p_dir)) {
-            throw new RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), '502');
+            throw new \RuntimeException(Text::_('COM_INSTALLER_MSG_INSTALL_PLEASE_ENTER_A_PACKAGE_DIRECTORY'), 502);
         }
 
         $package['packagefile'] = null;
@@ -344,34 +418,34 @@ class Cwmrestore
     public function getPackageFromUpload(): bool|array
     {
         $app   = Factory::getApplication();
-        $input = $app->input;
+        $input = $app->getInput();
 
         // Get the uploaded file information
-        $userfile = $input->files->get('importdb', null, 'raw');
+        $userFile = $input->files->get('importdb', null, 'raw');
 
         // Make sure that file uploads are enabled in PHP
-        if (!(bool)ini_get('file_uploads')) {
+        if (!(bool)\ini_get('file_uploads')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_PHP_UPLOAD_NOT_ENABLED'), 'warning');
 
             return false;
         }
 
         // Ensure that zlib is loaded so that the package can be unpacked.
-        if (!extension_loaded('zlib')) {
+        if (!\extension_loaded('zlib')) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_ZLIB'), 'error');
 
             return false;
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!is_array($userfile)) {
+        if (!\is_array($userFile)) {
             $app->enqueueMessage(Text::_('JBS_CMN_NO_FILE_SELECTED'), 'warning');
 
             return false;
         }
 
         // Is the PHP tmp directory missing?
-        if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
+        if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
             $app->enqueueMessage(
                 Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
                     'JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET',
@@ -383,7 +457,7 @@ class Cwmrestore
         }
 
         // Is the max upload size too small in php.ini?
-        if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE)) {
+        if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_INI_SIZE)) {
             $app->enqueueMessage(
                 Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
                     'JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE',
@@ -395,7 +469,7 @@ class Cwmrestore
         }
 
         // Check if there was a problem uploading the file.
-        if ($userfile['error'] || $userfile['size'] < 1) {
+        if ($userFile['error'] || $userFile['size'] < 1) {
             $app->enqueueMessage(Text::_('JBS_IBM_ERROR_UPLOAD_FAILED'), 'warning');
 
             return false;
@@ -403,8 +477,8 @@ class Cwmrestore
 
         // Build the appropriate paths
         $config   = Factory::getApplication()->getConfig();
-        $tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
-        $tmp_src  = $userfile['tmp_name'];
+        $tmp_dest = $config->get('tmp_path') . '/' . $userFile['name'];
+        $tmp_src  = $userFile['tmp_name'];
 
         // Move an uploaded file.
         File::upload($tmp_src, $tmp_dest, false, true);
@@ -413,7 +487,7 @@ class Cwmrestore
             // Unpack the downloaded package file.
             $package         = InstallerHelper::unpack($tmp_dest, true);
             if (!isset($package['dir'])) {
-                throw new RuntimeException('Compressed file did not extract.', 'error');
+                throw new \RuntimeException('Compressed file did not extract.', 500);
             }
             $package['type'] = 'dir';
         } else {
@@ -440,7 +514,7 @@ class Cwmrestore
     protected static function installdb(string $tmp_src, bool $parent = true): bool
     {
         $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = file_get_contents($tmp_src);
 
@@ -451,26 +525,18 @@ class Cwmrestore
             return false;
         }
         // Check if sql file is for Joomla! Bible Studies
-        $isold   = substr_count($query, '#__bsms_admin_genesis');
-        $isnot   = substr_count($query, '#__bsms_studies');
-        $iscernt = substr_count($query, BIBLESTUDY_VERSION_UPDATEFILE);
+        $sold    = substr_count($query, '#__bsms_admin_genesis');
+        $isNot   = substr_count($query, '#__bsms_studies');
 
-        if ($isold !== 0 && $isnot === 0) {
+        if ($sold !== 0 && $isNot === 0) {
             $app->enqueueMessage(Text::_('JBS_IBM_OLD_DB'), 'warning');
 
             return false;
         }
 
-        if ($isnot === 0) {
+        if ($isNot === 0) {
             $app->enqueueMessage('Extracted file: ' . basename($tmp_src), 'warning');
             $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'warning');
-
-            return false;
-        }
-
-        if (($iscernt === 0) && ($parent !== true)) {
-            // Way to check if a file came from a restore and is current.
-            $app->enqueueMessage(Text::_('JBS_IBM_NOT_CURENT_DB'), 'warning');
 
             return false;
         }
@@ -479,7 +545,7 @@ class Cwmrestore
         $objects = self::getObjects();
 
         foreach ($objects as $object) {
-            $dropper = 'DROP TABLE IF EXISTS ' . $object['name'] . ';';
+            $dropper = 'DROP TABLE IF EXISTS ' . $db->quoteName($object['name']);
             $db->setQuery($dropper);
             $db->execute();
         }
@@ -487,7 +553,7 @@ class Cwmrestore
         // Create an array of queries from the SQL file
         $queries = $db->splitSql($query);
 
-        if (count($queries) === 0) {
+        if (\count($queries) === 0) {
             // No queries to process
             return false;
         }
@@ -508,5 +574,353 @@ class Cwmrestore
         }
 
         return true;
+    }
+
+    /**
+     * Reset the #__schemas version for Proclaim so that DatabaseModel::fix()
+     * re-runs all SQL update files.
+     *
+     * After a restore, the bsms_* tables come from the backup but #__schemas
+     * (a Joomla core table) still holds the version from before the restore.
+     * This mismatch causes DatabaseModel::fix() to skip migrations, leaving
+     * tables that were added after the backup was created are missing entirely.
+     *
+     * @param   int  $extensionId  The Proclaim extension ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function resetSchemaVersion(int $extensionId): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Delete the current schema entry
+        $query = $db->getQuery(true);
+        $query->delete($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $extensionId);
+        $db->setQuery($query);
+        $db->execute();
+
+        // Insert a baseline version before all update files so fix() runs everything
+        $query = $db->getQuery(true);
+        $query->insert($db->quoteName('#__schemas'))
+            ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
+            ->values($extensionId . ', ' . $db->quote('0.0.0'));
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    /**
+     * Run PHP data migration steps after a database restore.
+     *
+     * DatabaseModel::fix() only runs SQL DDL via Joomla's ChangeSet — it skips
+     * UPDATE/DELETE/INSERT statements. This method runs the PHP finish steps
+     * that handles data migration, the ChangeSet cannot.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    protected static function runPostRestoreDataFixes(): void
+    {
+        try {
+            $fixed = CwmmigrationHelper::fixTeacherAliases();
+            Log::add('Post-restore: fixed ' . $fixed . ' teacher alias/duplicate issues', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore teacher alias fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            $inserted = CwmmigrationHelper::populateStudyTeachers();
+            Log::add('Post-restore: populated ' . $inserted . ' study-teacher junction records', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore study-teacher population failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Populate scripture junction table from legacy flat columns
+        try {
+            $migrated = CwmscriptureMigration::migrate();
+            Log::add('Post-restore: migrated ' . $migrated . ' scripture junction records', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore scripture migration failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Seed bible translations catalogue (INSERT IGNORE preserves existing data)
+        try {
+            $seeded = CwmmigrationHelper::seedBibleTranslations();
+            Log::add('Post-restore: seeded ' . $seeded . ' bible translations', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore bible translation seed failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
+        try {
+            $fixed = CwmmigrationHelper::fixMediafileLegacyPaths();
+            Log::add('Post-restore: fixed legacy paths in ' . $fixed . ' mediafile rows', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore mediafile path fix failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        // Merge form XML defaults into template params
+        try {
+            $migration = new CwmtemplatemigrationHelper();
+            $updated   = $migration->migrateAll();
+            Log::add('Post-restore: updated ' . $updated . ' templates with default params', Log::INFO, 'com_proclaim');
+        } catch (\Exception $e) {
+            Log::add('Post-restore template defaults merge failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    /**
+     * Fix Proclaim assets after database restore
+     *
+     * This method rebuilds the asset relationships for all Proclaim tables
+     * to ensure ACL permissions work correctly after a restore.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    protected static function fixAssetsAfterRestore(): void
+    {
+        $app = Factory::getApplication();
+
+        try {
+            Cwmassets::fixAllAssets();
+            $app->enqueueMessage(Text::_('JBS_IBM_ASSETS_FIXED'), 'info');
+        } catch (\Exception $e) {
+            $app->enqueueMessage(
+                Text::_('JBS_IBM_ASSETS_FIX_MANUAL') . ' ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Public wrapper for ownership fix (used by AJAX controller)
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public static function fixOwnershipPublic(): void
+    {
+        self::fixOwnershipAfterRestore();
+    }
+
+    /**
+     * Fix object ownership after database restore
+     *
+     * When restoring a database from another site, created_by and modified_by
+     * fields may reference user IDs that don't exist. This method updates
+     * those fields to use the current user's ID.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    protected static function fixOwnershipAfterRestore(): void
+    {
+        $app = Factory::getApplication();
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Get the current user ID (the person doing the restore)
+        $currentUserId = $app->getIdentity()->id;
+
+        if (!$currentUserId) {
+            return;
+        }
+
+        // Tables with ownership fields
+        $tablesWithOwnership = [
+            '#__bsms_studies',
+            '#__bsms_teachers',
+            '#__bsms_series',
+            '#__bsms_mediafiles',
+            '#__bsms_servers',
+            '#__bsms_podcast',
+        ];
+
+        $totalFixed = 0;
+
+        foreach ($tablesWithOwnership as $table) {
+            try {
+                // Fix created_by where user doesn't exist
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($table))
+                    ->set($db->quoteName('created_by') . ' = ' . (int) $currentUserId)
+                    ->where($db->quoteName('created_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
+                    ->where($db->quoteName('created_by') . ' != 0');
+                $db->setQuery($query);
+                $db->execute();
+                $totalFixed += $db->getAffectedRows();
+
+                // Fix modified_by where user doesn't exist
+                $query = $db->getQuery(true);
+                $query->update($db->quoteName($table))
+                    ->set($db->quoteName('modified_by') . ' = ' . (int) $currentUserId)
+                    ->where($db->quoteName('modified_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
+                    ->where($db->quoteName('modified_by') . ' != 0');
+                $db->setQuery($query);
+                $db->execute();
+                $totalFixed += $db->getAffectedRows();
+            } catch (\Exception $e) {
+                // Table might not have the column, skip it
+                continue;
+            }
+        }
+
+        if ($totalFixed > 0) {
+            $app->enqueueMessage(Text::sprintf('JBS_IBM_OWNERSHIP_FIXED', $totalFixed), 'info');
+        }
+    }
+
+    /**
+     * Correct AUTO_INCREMENT counters on all Proclaim tables.
+     *
+     * After a database restore the AUTO_INCREMENT value embedded in the
+     * backup's CREATE TABLE may be lower than the actual MAX(id) — especially
+     * for preserved tables like bible_verses that survive the DROP phase.
+     * This causes duplicate-key errors on the next INSERT.
+     *
+     * @return int Number of tables whose AUTO_INCREMENT was corrected
+     *
+     * @since 10.1.0
+     */
+    public static function correctAutoIncrements(): int
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $tables  = CwmdbHelper::getObjects();
+        $prefix  = $db->getPrefix();
+        $fixed   = 0;
+
+        foreach ($tables as $tableInfo) {
+            $abstractName = $tableInfo['name'];                       // e.g. #__bsms_studies
+            $realName     = str_replace('#__', $prefix, $abstractName);
+
+            try {
+                // Check whether the table has an `id` column
+                $db->setQuery('SHOW COLUMNS FROM ' . $db->quoteName($abstractName) . ' LIKE ' . $db->quote('id'));
+                $column = $db->loadObject();
+
+                if (!$column) {
+                    continue;
+                }
+
+                // Delete id=0 rows — these are restore artifacts, not real content.
+                // Joomla uses id=0 as the "new record" sentinel in forms, so a
+                // persisted row with id=0 causes conflicts and silent overwrites.
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName($abstractName))
+                    ->where($db->quoteName('id') . ' = 0');
+                $db->setQuery($query);
+                $db->execute();
+                $deletedZero = $db->getAffectedRows();
+
+                if ($deletedZero > 0) {
+                    Log::add(
+                        \sprintf('Deleted %d id=0 row(s) from %s', $deletedZero, $abstractName),
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                    $fixed++;
+                }
+
+                // Get current AUTO_INCREMENT from table status
+                $db->setQuery(
+                    'SHOW TABLE STATUS WHERE ' . $db->quoteName('Name') . ' = ' . $db->quote($realName)
+                );
+                $status = $db->loadObject();
+
+                if (!$status || $status->Auto_increment === null) {
+                    continue;
+                }
+
+                $currentAuto = (int) $status->Auto_increment;
+
+                // Get actual maximum ID in the table
+                $query = $db->getQuery(true);
+                $query->select('MAX(' . $db->quoteName('id') . ')')
+                    ->from($db->quoteName($abstractName));
+                $db->setQuery($query);
+                $maxId = (int) $db->loadResult();
+
+                // Fix if the counter is stale (max ID >= current auto_increment)
+                if ($maxId >= $currentAuto) {
+                    $newAuto = $maxId + 1;
+                    $db->setQuery(
+                        'ALTER TABLE ' . $db->quoteName($abstractName) . ' AUTO_INCREMENT = ' . $newAuto
+                    );
+                    $db->execute();
+                    $fixed++;
+
+                    Log::add(
+                        \sprintf(
+                            'Corrected AUTO_INCREMENT on %s: was %d, MAX(id)=%d, set to %d',
+                            $abstractName,
+                            $currentAuto,
+                            $maxId,
+                            $newAuto
+                        ),
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::add(
+                    'AUTO_INCREMENT check failed for ' . $abstractName . ': ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+        }
+
+        return $fixed;
+    }
+
+    /**
+     * Verify that component config and tasks were restored successfully
+     *
+     * @return array ['config' => bool, 'tasks' => int, 'tables' => int]
+     *
+     * @since 10.1.0
+     */
+    public static function verifyRestoreIntegrity(): array
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check component config (params should be substantial JSON)
+        $query = $db->getQuery(true);
+        $query->select('LENGTH(' . $db->quoteName('params') . ')')
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
+        $db->setQuery($query);
+        $configSize = (int) $db->loadResult();
+
+        // Check scheduled tasks count
+        $tasksCount     = 0;
+        $tables         = $db->getTableList();
+        $prefix         = $db->getPrefix();
+        $schedulerTable = $prefix . 'scheduler_tasks';
+
+        if (\in_array($schedulerTable, $tables, true)) {
+            $query = $db->getQuery(true);
+            $query->select('COUNT(*)')
+                ->from($db->quoteName('#__scheduler_tasks'))
+                ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));
+            $db->setQuery($query);
+            $tasksCount = (int) $db->loadResult();
+        }
+
+        // Check Proclaim tables count
+        $proclaimTables = CwmdbHelper::getObjects();
+
+        return [
+            'config' => $configSize > 10, // Params should be substantial JSON
+            'tasks'  => $tasksCount,
+            'tables' => \count($proclaimTables),
+        ];
     }
 }

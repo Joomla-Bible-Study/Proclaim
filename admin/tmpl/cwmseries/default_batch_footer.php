@@ -4,7 +4,7 @@
  * Batch Template
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,18 +16,19 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmseries\HtmlView $this */
+
 $published = $this->state->get('filter.published');
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-series-batch');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php
     echo Text::_('JCANCEL'); ?>
 </button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='serie.batch'>
+<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='cwmserie.batch'>
     <?php
     echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
 </button>

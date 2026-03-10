@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,10 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use http\Exception\RuntimeException;
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
-use PHPUnit\Runner\Exception;
 
 /**
  * This is for Retrieving Admin and Template db
@@ -73,11 +72,11 @@ class Cwmparams
             } catch (\Exception $e) {
                 echo $e->getMessage();
             }
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_admin')
-                ->where($db->qn('id') . ' = ' . 1);
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = ' . 1);
             $db->setQuery($query);
             $admin = $db->loadObject();
 
@@ -117,30 +116,30 @@ class Cwmparams
      */
     public static function getTemplateparams(?int $pk = null): object
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (!$pk) {
-            $pk = Factory::getApplication()->input->getInt('t', '1');
+            $pk = Factory::getApplication()->getInput()->getInt('t', '1');
         }
 
         if (self::$templateId !== $pk || !isset(self::$templateTable)) {
             self::$templateId = $pk;
             $query            = $db->getQuery(true);
             $query->select('*')
-                ->from('#__bsms_templates')
-                ->where('published = ' . (int)1)
-                ->where('id = ' . (int)self::$templateId);
+                ->from($db->quoteName('#__bsms_templates'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('id') . ' = ' . (int) self::$templateId);
             $db->setQuery($query);
             $template = $db->loadObject();
 
-            // This is a fall back to default template if specified template has been deleted.
+            // This is a fallback to the default template if the specified template has been deleted.
             if (!$template) {
                 self::$templateId = 1;
                 $query            = $db->getQuery(true);
                 $query->select('*')
-                    ->from('#__bsms_templates')
-                    ->where('published = ' . (int)1)
-                    ->where('id = ' . (int)self::$templateId);
+                    ->from($db->quoteName('#__bsms_templates'))
+                    ->where($db->quoteName('published') . ' = 1')
+                    ->where($db->quoteName('id') . ' = ' . (int) self::$templateId);
                 $db->setQuery($query);
                 $template = $db->loadObject();
             }
@@ -172,13 +171,13 @@ class Cwmparams
      */
     public static function setCompParams(array $paramArray): void
     {
-        if (count($paramArray) > 0) {
+        if (\count($paramArray) > 0) {
             // Read the existing component value(s)
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
-            $query->select('params')
-                ->from('#__extensions')
-                ->where('name = ' . $db->q('com_proclaim'));
+            $query->select($db->quoteName('params'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -190,9 +189,9 @@ class Cwmparams
             // Store the combined new and existing values back as a JSON string
             $paramsString = json_encode($params, JSON_THROW_ON_ERROR);
             $query->clear();
-            $query->update('#__extensions')
-                ->set('params = ' . $db->q($paramsString))
-                ->where('name = ' . $db->q('com_proclaim'));
+            $query->update($db->quoteName('#__extensions'))
+                ->set($db->quoteName('params') . ' = ' . $db->q($paramsString))
+                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
             $db->setQuery($query);
             $db->execute();
         }

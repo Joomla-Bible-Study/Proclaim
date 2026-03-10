@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -152,25 +152,5 @@ abstract class CwmrouteHelper
     public static function getFormRoute(int $id): string
     {
         return 'index.php?option=com_proclaim&task=cwmmessageform.edit&a_id=' . (int)$id;
-    }
-
-    /**
-     * Get the Teacher route.
-     *
-     * @param   string      $type      Type of server offered
-     * @param   int|string  $language  The language code.
-     * @param   ?string     $layout    The layout value.
-     *
-     * @return  string  The article route.
-     *
-     * @since   1.5
-     */
-    public static function getTypeRoute(string $type, int|string $language = '*', ?string $layout = null): string
-    {
-        if (!empty($type)) {
-            return '';
-        }
-
-        return $type;
     }
 }

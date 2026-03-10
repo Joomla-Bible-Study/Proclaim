@@ -4,28 +4,29 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMessage;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmessage;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\BibleStructure;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwmmessageModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -39,58 +40,66 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var mixed
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * Admin
      *
-     * @var array
+     * @var ?object
      * @since    7.0.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Media Files
      *
-     * @var string
+     * @var array
      * @since    7.0.0
      */
-    protected $mediafiles;
+    protected array $mediafiles = [];
 
     /**
      * Admin Params
      *
-     * @var Registry
+     * @var ?Registry
      * @since    7.0.0
      */
-    protected $admin_params;
+    protected ?Registry $admin_params = null;
 
     /**
      * Simple mode object
      *
-     * @var   object
+     * @var   ?object
      * @since 9.2.3
      */
-    protected $simple;
+    protected ?object $simple = null;
+
+    /**
+     * State
+     *
+     * @var ?object
+     * @since    7.0.0
+     */
+    protected ?object $state = null;
 
     /**
      * Execute and display a template script.
@@ -103,18 +112,23 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
-    public function display($tpl = null)
+    #[\Override]
+    public function display($tpl = null): void
     {
-        $this->form       = $this->get("Form");
-        $this->item       = $this->get("Item");
+        /** @var CwmmessageModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form       = $model->getForm();
+        $this->item       = $model->getItem();
         $this->canDo      = ContentHelper::getActions('com_proclaim', 'message', (int)$this->item->id);
-        $input            = new Input();
+        $input            = Factory::getApplication()->getInput();
         $option           = $input->get('option', '', 'cmd');
-        $this->mediafiles = $this->get('MediaFiles');
-        $this->state      = $this->get('State');
+        $this->mediafiles = $model->getMediaFiles();
+        $this->state      = $model->getState();
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -130,28 +144,19 @@ class HtmlView extends BaseHtmlView
 
         $this->simple = Cwmhelper::getSimpleView();
 
-        HTMLHelper::stylesheet('media/com_proclaim/css/token-input-jbs.min.css');
+        // Load scripture autocomplete assets
+        $document = Factory::getApplication()->getDocument();
+        $wa       = $document->getWebAssetManager();
+        $wa->useScript('com_proclaim.scripture-autocomplete');
+        $document->addScriptOptions('com_proclaim.books', CwmscriptureHelper::getAllBooks());
+        $document->addScriptOptions('com_proclaim.bibleStructure', BibleStructure::getStructureForJs());
+        $document->addScriptOptions(
+            'com_proclaim.defaultBibleVersion',
+            $this->admin_params->get('default_bible_version', 'kjv')
+        );
 
-        $script = "
-            jQuery(document).ready(function() {
-                jQuery('#topics').tokenInput(" . $this->get('alltopics') . ",
-                {
-                    theme: 'jbs',
-                    hintText: '" . Text::_('JBS_CMN_TOPIC_TAG') . "',
-                    noResultsText: '" . Text::_('JBS_CMN_NOT_FOUND') . "',
-                    searchingText: '" . Text::_('JBS_CMN_SEARCHING') . "',
-                    animateDropdown: false,
-                    preventDuplicates: true,
-                    allowFreeTagging: true,
-                    prePopulate: " . $this->get('topics') . "
-                });
-            });
-             ";
-
-        $wa = $this->document->getWebAssetManager();
-        $wa->addInlineScript($script);
-
-        HTMLHelper::script('media/com_proclaim/js/plugins/jquery.tokeninput.min.js');
+        // Push translatable strings to JS
+        Text::script('JBS_STY_SEARCH_VERSIONS');
 
         // Set the toolbar
         $this->addToolbar();
@@ -168,9 +173,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -203,12 +208,14 @@ class HtmlView extends BaseHtmlView
 
             if ($this->canDo->get('core.edit', 'com_proclaim')) {
                 ToolbarHelper::divider();
-                ToolbarHelper::custom('resetHits', 'reset.png', 'Reset Hits', 'JBS_STY_RESET_HITS', false);
+                $toolbar = $this->getDocument()->getToolbar();
+                $toolbar->confirmButton('undo', 'JBS_STY_RESET_HITS', 'resetHits')
+                    ->message('JBS_STY_RESET_HITS_CONFIRM')
+                    ->listCheck(false);
             }
         }
 
         ToolbarHelper::divider();
-		$help_url='https://www.christianwebministries.org/index.php?option=com_content&view=article&id=29:message-edit-help-screen&catid=20&Itemid=315&tmpl=component';
-        ToolbarHelper::help('Message', false, $help_url);
+        ToolbarHelper::help('message', true);
     }
 }

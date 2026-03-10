@@ -4,7 +4,7 @@
  * Study field modal
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,6 +21,7 @@ use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -41,6 +42,19 @@ class StudyField extends FormField
     protected $type = 'Modal_Study';
 
     /**
+     * Method to get the field label markup.
+     *
+     * @return  string  The field label markup.
+     *
+     * @since   9.0.0
+     */
+    #[\Override]
+    protected function getLabel(): string
+    {
+        return str_replace($this->id, $this->id . '_name', parent::getLabel());
+    }
+
+    /**
      * Method to get the field input markup.
      *
      * @return  string  The field input markup.
@@ -48,6 +62,7 @@ class StudyField extends FormField
      * @throws \Exception
      * @since 9.0.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');
@@ -57,7 +72,7 @@ class StudyField extends FormField
         $allowPropagate = ((string)$this->element['propagate'] == 'true');
 
         // Load language
-        Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         // The active article ID field.
         $value = (int)$this->value ?: '';
@@ -75,15 +90,15 @@ class StudyField extends FormField
         if ($allowSelect) {
             static $scriptSelect = null;
 
-            if (is_null($scriptSelect)) {
+            if (\is_null($scriptSelect)) {
                 $scriptSelect = [];
             }
 
             if (!isset($scriptSelect[$this->id])) {
                 $wa->addInlineScript(
-                    "
-				window.jSelectMessages_" . $this->id . " = function (id, title, catid, object, url, language) {
-					window.processModalSelect('Messagess', '" . $this->id . "', id, title, catid, object, url, language);
+                    '
+				window.jSelectMessages_' . $this->id . " = function (id, title, catid, object, url, language) {
+					window.processModalSelect('Messages', '" . $this->id . "', id, title, catid, object, url, language);
 				}",
                     [],
                     ['type' => 'module']
@@ -114,7 +129,7 @@ class StudyField extends FormField
         $urlNew    = $linkSerie . '&amp;task=cwmmessage.add';
 
         if ($value) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('studytitle') . 'AS name')
                 ->from($db->quoteName('#__bsms_studies'))

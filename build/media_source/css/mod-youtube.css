@@ -1,0 +1,115 @@
+/**
+ * YouTube module styles
+ *
+ * @package    Proclaim.Module
+ * @subpackage mod_proclaim_youtube
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+.mod-proclaim-youtube__player--responsive {
+    width: 100%;
+}
+
+.mod-proclaim-youtube__player--responsive .mod-proclaim-youtube__player-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+}
+
+.mod-proclaim-youtube__player iframe {
+    border: 0;
+}
+
+.mod-proclaim-youtube__player--responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mod-proclaim-youtube__status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mod-proclaim-youtube__badge .badge {
+    font-size: 0.9em;
+}
+
+.mod-proclaim-youtube__countdown {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9em;
+}
+
+.mod-proclaim-youtube__countdown-timer {
+    font-weight: 600;
+}
+
+.mod-proclaim-youtube__notify {
+    margin-left: auto;
+}
+
+.mod-proclaim-youtube__notify-btn {
+    cursor: pointer;
+}
+
+.mod-proclaim-youtube__notify-btn:hover {
+    text-decoration: underline;
+}
+
+/* Mini-player (PiP) */
+.mod-proclaim-youtube__miniplayer {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    width: 320px;
+    z-index: 1050;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* intentional: overlay shadow needs fixed opacity */
+}
+
+.mod-proclaim-youtube__miniplayer-controls {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    z-index: 1;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.mod-proclaim-youtube__miniplayer-controls .btn {
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.75rem;
+}
+
+.mod-proclaim-youtube__miniplayer:hover .mod-proclaim-youtube__miniplayer-controls .btn {
+    opacity: 0.9;
+}
+
+.mod-proclaim-youtube__miniplayer-frame iframe {
+    width: 320px;
+    height: 180px;
+    border: 0;
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .mod-proclaim-youtube__miniplayer {
+        width: 240px;
+    }
+
+    .mod-proclaim-youtube__miniplayer-frame iframe {
+        width: 240px;
+        height: 135px;
+    }
+}

@@ -1,0 +1,128 @@
+/**
+ * Sermon list - Simple 2 grid layout
+ *
+ * @package    Proclaim.Site
+ * @subpackage cwmsermons
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+.cwm-simple2 .title {
+    text-transform: uppercase;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 16px;
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    padding: 0;
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cwm-simple2 .authordate {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cwm-simple2 .media__item__wrapper {
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+.cwm-simple2 .media__item__info {
+    overflow: hidden;
+}
+
+.cwm-simple2 .media__item__details {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cwm-simple2 .media__container {
+    display: flex;
+    margin-top: 1em;
+}
+
+.cwm-simple2 .media__view {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .cwm-simple2 .media__view {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 575px) {
+    .cwm-simple2 .media__view {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.cwm-simple2 .sf_hidden {
+    display: none !important;
+}
+
+.cwm-simple2 img,
+.cwm-simple2 svg {
+    vertical-align: middle;
+}
+
+.cwm-simple2 .thumbnail {
+    position: relative;
+}
+
+.cwm-simple2 .caption {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.cwm-simple2 .overlay-div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: #000; /* intentional: dark overlay for contrast on image thumbnails */
+    opacity: 0.7;
+}
+
+/* Clamp overlay text on image to 3 lines max */
+.cwm-simple2 .media__item__wrapper .card-img-overlay .overlay-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: clamp(0.75rem, 1.5vw, 1.1rem);
+    padding: 0 0.25rem;
+}
+
+/* Constrain card images to uniform 16:9 aspect ratio */
+.cwm-simple2 .media__item__wrapper .card {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.cwm-simple2 .media__item__wrapper .card .card-img,
+.cwm-simple2 .media__item__wrapper .card picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+.cwm-simple2 .media__item__wrapper .card picture {
+    display: contents;
+}

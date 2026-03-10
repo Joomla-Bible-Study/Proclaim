@@ -4,7 +4,7 @@
  * @package         Proclaim.Site
  * @subpackage      com_proclaim
  *
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -17,7 +17,7 @@ use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
 
 /* @var $displayData mixed Default is array */
 // Check if we have all the data
-if (!array_key_exists('item', $displayData) || !array_key_exists('context', $displayData)) {
+if (!\array_key_exists('item', $displayData) || !\array_key_exists('context', $displayData)) {
     return;
 }
 
@@ -38,7 +38,7 @@ $parts     = explode('.', $context);
 $component = $parts[0];
 $fields    = null;
 
-if (array_key_exists('fields', $displayData)) {
+if (\array_key_exists('fields', $displayData)) {
     $fields = $displayData['fields'];
 } else {
     try {
@@ -62,12 +62,12 @@ if (!$isMail) {
 // Loop through the fields and print them
 foreach ($fields as $field) {
     // If the value is empty do nothing
-    if (!strlen($field->value) && !$isMail) {
+    if (!\strlen($field->value) && !$isMail) {
         continue;
     }
 
     $layout = $field->params->get('layout', 'render');
-    echo FieldsHelper::render($context, 'field.' . $layout, array('field' => $field));
+    echo FieldsHelper::render($context, 'field.' . $layout, ['field' => $field]);
 }
 
 if (!$isMail) {

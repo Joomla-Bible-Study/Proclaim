@@ -1,94 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <field name="id" type="text" readonly="readonly" class="inputbox hidden"/>
-    <fields name="params">
-        <field name="simple_mode" type="radio" class="form-select-color" default="1" label="JBS_ADM_SIMPLE_MODE"
-               description="JBS_ADM_SIMPLE_MODE_DESC" labelclass="control-label"
+    <field name="id" type="text" readonly="readonly" class="hidden"/>
+    <fields name="params" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <field name="simple_mode" type="radio" class="form-select-color" default="0" label="JBS_ADM_SIMPLE_MODE"
+               description="JBS_ADM_SIMPLE_MODE_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="simple_mode_template" type="list" default="simple_mode1" label="CWM_SIMPLE_MODE_TEMP_CHOICE"
-               description="CWM_SIMPLE_MODE_TEMP_CHOICE_DESC" labelclass="control-label">
+               description="CWM_SIMPLE_MODE_TEMP_CHOICE_DESC">
             <option value="simple_mode1">CWM_SIMPLE_TEMPLATE1</option>
             <option value="simple_mode2">CWM_SIMPLE_TEMPLATE2</option>
         </field>
         <field name="simplegridtextoverlay" type="radio" default="1" label="CWM_SIMPLE_MODE_TEXT_OVERLAY"
-               description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC" labelclass="control-label">
+               description="CWM_SIMPLE_MODE_TEXT_OVERLAY_DESC">
             <option value="1">CWM_SIMPLE_TEXTOVERLAY</option>
             <option value="0">CWM_SIMPLE_NOTEXTOVERLAY</option>
         </field>
-        <field name="simple_mode_display" type="radio" class="btn-group" default="0" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
-               description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC" labelclass="control-label"
+        <field name="simple_mode_display" type="radio" default="0" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
+               description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="metakey" type="text" class="inputbox" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
-               description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" labelclass="control-label"/>
-        <field name="metadesc" type="textarea" class="inputbox" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
-               description="JBS_STY_METADESCRIPTION_DESC" labelclass="control-label"/>
-        <field name="compat_mode" type="radio" class="btn-group" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
-               description="JBS_ADM_MEDIA_COMPAT_MODE_DESC" labelclass="control-label"
+        <field name="metakey" type="text" size="30" rows="3" label="JBS_STY_METAKEYWORDS"
+               description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
+        <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
+               description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
+        <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
+               description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="jbsmigrationshow" type="radio" class="btn-group" default="0"
+        <field name="jbsmigrationshow" type="radio" default="0"
                label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC"
-               labelclass="control-label" layout="joomla.form.field.radio.switcher">
+               layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="studylistlimit" type="int" size="3" label="JBS_ADM_STUDYLISTLIMIT"
-               description="JBS_ADM_STUDYLISTLIMIT_DESC" default="" labelclass="control-label"/>
+               description="JBS_ADM_STUDYLISTLIMIT_DESC" default=""/>
         <field name="show_location_media"
                type="radio"
-               class="btn-group" default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA"
-               description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC" labelclass="control-label"
+               default="0" label="JBS_ADM_SHOW_LOCATION_MEDIA"
+               description="JBS_ADM_SHOW_LOCATION_MEDIA_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JBS_CMN_HIDE</option>
             <option value="1">JBS_CMN_SHOW</option>
         </field>
         <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
-               description="JBS_ADM_POPULAR_LIMIT_DESC" labelclass="control-label"/>
+               description="JBS_ADM_POPULAR_LIMIT_DESC"/>
         <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER"
-               description="JBS_ADM_CHARACTER_FILTER_DESC" labelclass="control-label">
+               description="JBS_ADM_CHARACTER_FILTER_DESC">
             <option value="0">JBS_ADM_NO_FILTER</option>
             <option value="1">JBS_ADM_FILTER</option>
         </field>
         <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
-               description="JBS_ADM_FORMAT_POPULAR_DESC" labelclass="control-label">
+               description="JBS_ADM_FORMAT_POPULAR_DESC">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
+            <option value="2">JBS_ADM_POPULAR_LOCAL_PLATFORM</option>
+            <option value="3">JBS_ADM_POPULAR_ALL_INCLUSIVE</option>
         </field>
         <field name="main_image_icon_or_image" type="list" default="0" label="JBS_ADM_MAIN_IMAGE_OR_ICON"
-               description="JBS_ADM_MAIN_IMAGE_OR_ICON_DESC" labelclass="control-label">
+               description="JBS_ADM_MAIN_IMAGE_OR_ICON_DESC">
             <option value="0">JBS_ADM_MAIN_IMAGE_USE_ICON</option>
             <option value="1">JBS_ADM_MAIN_IMAGE_USE_IMAGE</option>
         </field>
         <field name="default_main_image" type="media" directory="biblestudy" size="50"
                label="JBS_ADM_DEFAULT_MAIN_IMAGE"
-               description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC" labelclass="control-label"/>
+               description="JBS_ADM_DEFAULT_MAIN_IMAGE_DESC"
+               showon="main_image_icon_or_image:1"/>
         <field name="default_series_image" type="media" directory="biblestudy" size="50"
                label="JBS_ADM_DEFAULT_SERIES_IMAGE"
-               description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC" labelclass="control-label"/>
+               description="JBS_ADM_DEFAULT_SERIES_IMAGE_DESC"/>
         <field name="default_teacher_image" type="media" directory="biblestudy" size="50"
                label="JBS_ADM_DEFAULT_TEACHER_IMAGE"
-               description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC" labelclass="control-label"/>
+               description="JBS_ADM_DEFAULT_TEACHER_IMAGE_DESC"/>
 
         <!-- Download image/button/icon-->
 
         <field name="download_show" label="JBS_SHOW_DOWNLOAD_BUTTON"
-               description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" class="inputbox" type="radio" size="15" default=""
-               labelclass="control-label" layout="joomla.form.field.radio.switcher">
+               description="JBS_SHOW_DOWNLOAD_BUTTON_DESC" type="radio" size="15" default=""
+               layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="download_use_button_icon" label="JBS_ADDON_DOWNLOAD_USE_BUTTON"
                description="JBS_ADDON_DOWNLOAD_USE_BUTTON_DESC" type="list"
-               default=""
-               labelclass="control-label">
+               default="">
             <option value="">JBS_CMN_DEFAULT_DOWNLOAD</option>
             <option value="1">JBS_MED_NONE</option>
             <option value="2">JBS_MED_BUTTON_ONLY</option>
@@ -97,211 +99,12 @@
         </field>
 
         <field name="download_button_text" type="text" default="Audio" label="JBS_ADDON_BUTTON_TEXT"
-               description="JBS_ADDON_BUTTON_TEXT_DESC" labelclass="control-label"/>
+               description="JBS_ADDON_BUTTON_TEXT_DESC"/>
         <field name="download_button_type"
                type="list"
                useglobal="true"
                validate="options"
                default=""
-               label="JBS_ADDON_BUTTON_TYPE"
-               description="JBS_ADDON_BUTTON_TYPE_DESC"
-               labelclass="control-label">
-            <option value="btn-link">JBS_MED_NO_COLOR</option>
-            <option value="btn-primary">JBS_MED_PRIMARY</option>
-            <option value="btn-success">JBS_MED_SUCCESS</option>
-            <option value="btn-info">JBS_MED_INFO</option>
-            <option value="btn-warning">JBS_MED_WARNING</option>
-            <option value="btn-danger">JBS_MED_DANGER</option>
-        </field>
-        <field name="download_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
-               label="JBS_ADDON_BUTTON_COLOR" labelclass="control-label"/>
-        <field name="download_icon_type" type="list" class="inputbox" default=""
-               label="JBS_ADDON_ICON_TYPE"
-               description="JBS_ADDON_ICON_TYPE_DESC" labelclass="control-label">
-            <option value="fas fa-download">JBS_DOWNLOAD_1</option>
-            <option value="fas fa-arrow-down">JBS_DOWNLOAD_2</option>
-            <option value="fas fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
-            <option value="fas fa-long-arrow-down">JBS_DOWNLOAD_4</option>
-            <option value="1">JBS_MED_CUSTOM</option>
-        </field>
-        <field name="download_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
-               description="JBS_ADDON_CUSTOM_ICON_DESC" labelclass="control-label"/>
-        <field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
-               description="JBS_ADDON_FONT_SIZE_DESC" labelclass="control-label"/>
-        <field name="default_download_image" type="media" directory="biblestudy" label="JBS_ADM_DOWNLOAD_IMAGE"
-               description="JBS_ADM_DOWNLOAD_IMAGE_DESC" labelclass="control-label"/>
-
-        <!--Show Hide on Landing Page-->
-        <field name="default_showHide_image" type="media" directory="biblestudy"
-               label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE"
-               description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC" labelclass="control-label">
-            <option>JBS_CMN_DEFAULT_IMAGE</option>
-        </field>
-        <!--Users for simple_view-->
-        <field name="users" type="sql" extension="com_proclaim" label="JBS_USERS"
-               description="JBS_USERS_DESC" class="list" multiple="multiple"
-               query="SELECT id, username FROM #__users ORDER BY id ASC"
-               key_field="id"
-               value_field="username" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_USER</option>
-        </field>
-        <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
-               description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" labelclass="control-label" class="col-2"/>
-        <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
-               description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" labelclass="control-label" class="col-2"/>
-        <field name="thumbnail_study_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
-               description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" labelclass="control-label" class="col-2"/>
-
-        <field name="location_id" type="sql" extension="com_proclaim" label="JBS_CMN_LOCATION"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
-               query="SELECT id, location_text FROM #__bsms_locations WHERE published = 1 ORDER BY location_text ASC"
-               key_field="id"
-               value_field="location_text" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_LOCATION</option>
-        </field>
-        <field name="teacher_id" type="sql" class="inputbox" default="-1" label="JBS_CMN_TEACHER_NAME"
-               description="JBS_ADM_FILLIN_STUDY_DESC"
-               query="SELECT id, teachername FROM #__bsms_teachers WHERE published = 1 ORDER BY teachername ASC"
-               key_field="id"
-               value_field="teachername" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_TEACHER</option>
-        </field>
-        <field name="series_id" type="sql" default="-1" label="JBS_CMN_SERIES"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="intputbox"
-               query="SELECT id, series_text FROM #__bsms_series WHERE published = 1"
-               key_field="id"
-               value_field="series_text" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_SERIES</option>
-        </field>
-        <field name="booknumber" type="sql" default="-1" label="JBS_CMN_BOOK" translate="true"
-               description="JBS_ADM_FILLIN_STUDY_DESC" class="inputbox"
-               query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-               key_field="booknumber"
-               value_field="bookname" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_BOOK</option>
-        </field>
-        <field name="messagetype" type="sql"
-               query="SELECT * FROM #__bsms_message_type WHERE published = 1"
-               class="inputbox"
-               key_field="id" value_field="message_type" default="-1" labelclass="control-label"
-               label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
-            <option value="-1">JBS_CMN_SHOW_ALL</option>
-        </field>
-        <field name="default_study_image" type="media" size="50" directory="biblestudy"
-               label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC" labelclass="control-label"/>
-
-        <field name="download" type="radio" default="0"
-               label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC"
-               class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
-        <field name="target" type="list" default="0"
-               label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC"
-               class="inputbox" labelclass="control-label">
-            <option value=" ">JBS_ADM_NO_DEFAULT</option>
-            <option value="_blank">JBS_ADM_NEW_WINDOW</option>
-            <option value="_self">JBS_ADM_SAME_WINDOW</option>
-            <option value="_parent">JBS_ADM_PARENT_WINDOW</option>
-            <option value="_top">JBS_ADM_FULL_WINDOW</option>
-        </field>
-        <field name="server" type="sql" class="inputbox" label="JBS_CMN_SERVER"
-               description="JBS_ADM_FILLIN_MEDIAFILE_DESC" default="-1"
-               query="SELECT id, server_name FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
-               key_field="id"
-               value_field="server_name" labelclass="control-label">
-            <option value="-1">JBS_CMN_SELECT_SERVER</option>
-        </field>
-        <field name="podcast" type="sql" class="inputbox" multiple="true" label="JBS_CMN_PODCAST"
-               description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC" default="-1"
-               query="SELECT id, title FROM #__bsms_podcast WHERE published = 1 ORDER BY title ASC"
-               key_field="id"
-               value_field="title" labelclass="control-label">
-            <option value="-1">JBS_ADM_NO_PODCAST</option>
-        </field>
-        <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS" labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
-            <option value="0">JBS_CMN_DIRECT_LINK</option>
-            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
-            <option value="3">JBS_CMN_AVPLUGIN</option>
-            <option value="7">JBS_CMN_LEGACY_PLAYER</option>
-            <option value="8">JBS_CMN_EMBED_CODE</option>
-            <option value="100">JBS_CMN_USE_GLOBAL</option>
-        </field>
-        <field name="to" type="list" label="" labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
-            <option value="0">JBS_CMN_DIRECT_LINK</option>
-            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
-            <option value="8">JBS_CMN_EMBED_CODE</option>
-            <option value="100">JBS_CMN_USE_GLOBAL</option>
-        </field>
-        <field name="pFrom" type="list" label="JBS_ADM_CHANGE_POPUP" labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_EXISTING_OPTION</option>
-            <option value="1">JBS_CMN_POPUP</option>
-            <option value="2">JBS_CMN_INLINE</option>
-            <option value="3">JBS_CMN_SQUEEZEBOX</option>
-            <option value="100">JBS_ADM_NO_OPTION_LISTED</option>
-        </field>
-        <field name="pTo" type="list" label="" labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
-            <option value="1">JBS_CMN_POPUP</option>
-            <option value="2">JBS_CMN_INLINE</option>
-            <option value="3">JBS_CMN_SQUEEZEBOX</option>
-            <option value="100">JBS_CMN_USE_GLOBAL</option>
-        </field>
-        <field name="mtFrom" type="MimeType" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC"
-               labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
-            <option value="http">URL</option>
-            <option value="mediacode">MediaCode</option>
-        </field>
-        <field name="mtTo" type="list" label="" labelclass="control-label">
-            <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
-            <option value="0">JBS_CMN_DIRECT_LINK</option>
-            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
-            <option value="8">JBS_CMN_EMBED_CODE</option>
-            <option value="100">JBS_CMN_USE_GLOBAL</option>
-        </field>
-        <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
-               description="JBS_ADM_UPLOAD_PATH_DESC" labelclass="control-label"/>
-    </fields>
-    <fieldset>
-        <field name="drop_tables" type="radio" default="0"
-               label="JBS_ADM_DROP_TABLES"
-               description="JBS_ADM_DROP_TABLES_DESC" class="btn-group" labelclass="control-label"
-               layout="joomla.form.field.radio.switcher">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
-        <field name="filestokeep" type="text" default="5" rows="1" class="btn-group" labelclass="control-label"
-               label="PLG_SYSTEM_PROCLAIMBACKUP_FILES" description="PLG_SYSTEM_PROCLAIMBACKUP_FILES_DESC"/>
-        <field name="debug" type="radio" default="0"
-               label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
-               class="btn-group" labelclass="control-label" layout="joomla.form.field.radio.switcher">
-            <option value="0">JBS_CMN_NO</option>
-            <option value="1">JBS_CMN_YES</option>
-        </field>
-    </fieldset>
-    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
-              addrulepath="/administrator/components/com_proclaim/models/rules">
-        <field name="mediaimage" type="MediaFileImages" class="list" labelclass="control-label"
-               label="JBS_ADM_MEDIA_IMAGES">
-            <option value="-1">JBS_SELECT_IMAGE</option>
-        </field>
-        <field name="media_use_button_icon" label="JBS_ADDON_MEDIA_USE_BUTTON"
-               description="JBS_ADDON_MEDIA_USE_BUTTON_DESC" class="list" labelclass="control-label"
-               type="list" required="false" default="x"
-               message="You must choose image, icon, button or button and icon">
-            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
-            <option value="">JBS_MED_NONE</option>
-            <option value="1">JBS_MED_BUTTON_ONLY</option>
-            <option value="2">JBS_MED_BUTTON_AND_ICON</option>
-            <option value="3">JBS_MED_ICON_ONLY</option>
-        </field>
-        <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_BUTTON_TEXT"
-               description="JBS_ADDON_BUTTON_TEXT_DESC" class="inputbox" labelclass="control-label"/>
-        <field name="media_button_type" type="list" class="list" labelclass="control-label" default=""
                label="JBS_ADDON_BUTTON_TYPE"
                description="JBS_ADDON_BUTTON_TYPE_DESC">
             <option value="btn-link">JBS_MED_NO_COLOR</option>
@@ -311,19 +114,322 @@
             <option value="btn-warning">JBS_MED_WARNING</option>
             <option value="btn-danger">JBS_MED_DANGER</option>
         </field>
-        <field name="media_button_color" type="color" description="JBS_ADDON_BUTTON_COLOR_DESC"
-               label="JBS_ADDON_BUTTON_COLOR" class="inputbox" labelclass="control-label"/>
-        <field name="media_icon_type" type="IconType" class="list" labelclass="control-label" default=""
+        <field name="download_button_color" type="ColorPicker" default="black"
+               description="JBS_ADDON_BUTTON_COLOR_DESC" label="JBS_ADDON_BUTTON_COLOR"/>
+        <field name="download_icon_type" type="list" default=""
+               label="JBS_ADDON_ICON_TYPE"
+               description="JBS_ADDON_ICON_TYPE_DESC">
+            <option value="fas fa-download">JBS_DOWNLOAD_1</option>
+            <option value="fas fa-arrow-down">JBS_DOWNLOAD_2</option>
+            <option value="fas fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
+            <option value="fas fa-long-arrow-down">JBS_DOWNLOAD_4</option>
+            <option value="1">JBS_MED_CUSTOM</option>
+        </field>
+        <field name="download_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
+               description="JBS_ADDON_CUSTOM_ICON_DESC"/>
+        <field name="download_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
+               description="JBS_ADDON_FONT_SIZE_DESC" filter="int"/>
+        <field name="default_download_image" type="media" directory="biblestudy" label="JBS_ADM_DOWNLOAD_IMAGE"
+               description="JBS_ADM_DOWNLOAD_IMAGE_DESC"/>
+
+        <!--Show Hide on Landing Page-->
+        <field name="default_showHide_image" type="media" directory="biblestudy"
+               label="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE"
+               description="JBS_ADM_DEFAULT_SHOWHIDE_IMAGE_LANDING_PAGE_DESC">
+            <option>JBS_CMN_DEFAULT_IMAGE</option>
+        </field>
+        <!--Users for simple_view-->
+        <field name="users" type="sql" extension="com_proclaim" label="JBS_USERS"
+               description="JBS_USERS_DESC" multiple="multiple"
+               query="SELECT id, username FROM #__users ORDER BY id ASC"
+               key_field="id"
+               value_field="username">
+            <option value="-1">JBS_CMN_SELECT_USER</option>
+        </field>
+        <!--Thumbnail sizes-->
+        <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+               description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
+        <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+               description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
+        <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
+               description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>
+
+        <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
+               description="JBS_ADM_FILLIN_STUDY_DESC">
+            <option value="-1">JBS_CMN_SELECT_LOCATION</option>
+        </field>
+        <field name="teacher_id" type="TeacherList" default="-1"
+               label="JBS_CMN_TEACHER_NAME" description="JBS_ADM_FILLIN_STUDY_DESC">
+            <option value="-1">JBS_CMN_SELECT_TEACHER</option>
+        </field>
+        <field name="series_id" type="Series" default="-1" label="JBS_CMN_SERIES"
+               description="JBS_ADM_FILLIN_STUDY_DESC">
+            <option value="-1">JBS_CMN_SELECT_SERIES</option>
+        </field>
+        <field name="booknumber" type="BookList" default="-1" label="JBS_CMN_BOOK"
+               description="JBS_ADM_FILLIN_STUDY_DESC">
+            <option value="-1">JBS_CMN_SELECT_BOOK</option>
+        </field>
+        <field name="messagetype" type="MessageTypeList" default="-1"
+               label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
+            <option value="-1">JBS_CMN_SHOW_ALL</option>
+        </field>
+        <field name="default_study_image" type="media" size="50" directory="biblestudy"
+               label="JBS_ADM_FILLIN_STUDY_IMAGE" description="JBS_ADM_FILLIN_STUDY_DESC"/>
+
+        <field name="download" type="radio" default="0"
+               label="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD" description="JBS_ADM_FILLIN_MEDIAFILE_DOWNLOAD_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
+        <field name="target" type="list" default="0"
+               label="JBS_ADM_FILLIN_MEDIAFILE_TARGET" description="JBS_ADM_FILLIN_MEDIAFILE_TARGET_DESC">
+            <option value=" ">JBS_ADM_NO_DEFAULT</option>
+            <option value="_blank">JBS_ADM_NEW_WINDOW</option>
+            <option value="_self">JBS_ADM_SAME_WINDOW</option>
+            <option value="_parent">JBS_ADM_PARENT_WINDOW</option>
+            <option value="_top">JBS_ADM_FULL_WINDOW</option>
+        </field>
+        <field name="server" type="ServerList" default="-1"
+               label="JBS_CMN_SERVER" description="JBS_ADM_FILLIN_MEDIAFILE_DESC">
+            <option value="-1">JBS_CMN_SELECT_SERVER</option>
+        </field>
+        <field name="podcast" type="Podcasts" multiple="true" default="-1"
+               label="JBS_CMN_PODCAST" description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC">
+            <option value="-1">JBS_ADM_NO_PODCAST</option>
+        </field>
+        <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS">
+            <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
+            <option value="0">JBS_CMN_DIRECT_LINK</option>
+            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
+            <option value="3">JBS_CMN_AVPLUGIN</option>
+            <option value="7">JBS_CMN_LEGACY_PLAYER</option>
+            <option value="8">JBS_CMN_EMBED_CODE</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
+        </field>
+        <field name="to" type="list" label="">
+            <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
+            <option value="0">JBS_CMN_DIRECT_LINK</option>
+            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
+            <option value="8">JBS_CMN_EMBED_CODE</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
+        </field>
+        <field name="pFrom" type="list" label="JBS_ADM_CHANGE_POPUP">
+            <option value="x">JBS_ADM_SELECT_EXISTING_OPTION</option>
+            <option value="1">JBS_CMN_POPUP</option>
+            <option value="2">JBS_CMN_INLINE</option>
+            <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            <option value="100">JBS_ADM_NO_OPTION_LISTED</option>
+        </field>
+        <field name="pTo" type="list" label="">
+            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
+            <option value="1">JBS_CMN_POPUP</option>
+            <option value="2">JBS_CMN_INLINE</option>
+            <option value="3">JBS_CMN_SQUEEZEBOX</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
+        </field>
+        <field name="mtFrom" type="MimeType" label="JBS_ADM_CHANGE_PLAYERS" description="JBS_ADM_MEDIATYPES_DESC">
+            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
+            <option value="http">URL</option>
+            <option value="mediacode">MediaCode</option>
+        </field>
+        <field name="mtTo" type="list" label="">
+            <option value="x">JBS_ADM_SELECT_NEW_PLAYER</option>
+            <option value="0">JBS_CMN_DIRECT_LINK</option>
+            <option value="1">JBS_CMN_INTERNAL_PLAYER</option>
+            <option value="8">JBS_CMN_EMBED_CODE</option>
+            <option value="100">JBS_CMN_USE_GLOBAL</option>
+        </field>
+        <field name="uploadpath" type="text" default="/images/biblestudy/media/" label="JBS_ADM_UPLOAD_PATH"
+               description="JBS_ADM_UPLOAD_PATH_DESC"/>
+        <field name="rate_limit_max" type="number" default="10" min="0" max="100"
+               label="JBS_ADM_RATE_LIMIT_MAX"
+               description="JBS_ADM_RATE_LIMIT_MAX_DESC" filter="int"/>
+        <field name="rate_limit_window" type="number" default="60" min="10" max="600"
+               label="JBS_ADM_RATE_LIMIT_WINDOW"
+               description="JBS_ADM_RATE_LIMIT_WINDOW_DESC" filter="int"/>
+        <field name="enable_csp" type="radio" default="0"
+               label="JBS_ADM_ENABLE_CSP"
+               description="JBS_ADM_ENABLE_CSP_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="csp_extra_sources" type="textarea" default=""
+               label="JBS_ADM_CSP_EXTRA_SOURCES"
+               description="JBS_ADM_CSP_EXTRA_SOURCES_DESC"
+               rows="3" cols="60" filter="string"/>
+        <!-- Scripture Provider Settings (Local is always enabled as the primary built-in provider) -->
+        <field name="provider_getbible" type="radio" default="1"
+               label="JBS_ADM_PROVIDER_GETBIBLE" description="JBS_ADM_PROVIDER_GETBIBLE_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="gdpr_mode" type="radio" default="0"
+               label="JBS_ADM_GDPR_MODE" description="JBS_ADM_GDPR_MODE_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="provider_api_bible" type="radio" default="0"
+               label="JBS_ADM_PROVIDER_API_BIBLE"
+               description="JBS_ADM_PROVIDER_API_BIBLE_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="api_bible_api_key" type="ApiKey" default=""
+               label="JBS_ADM_API_BIBLE_KEY"
+               description="JBS_ADM_API_BIBLE_KEY_DESC"
+               filter="string"
+               showon="provider_api_bible:1"/>
+        <field name="scripture_cache_days" type="number" default="30" min="1" max="365"
+               label="JBS_ADM_SCRIPTURE_CACHE_DAYS" description="JBS_ADM_SCRIPTURE_CACHE_DAYS_DESC"
+               filter="int"/>
+        <field name="default_bible_version" type="BibleTranslation" default="kjv"
+               servable_only="true"
+               label="JBS_ADM_DEFAULT_BIBLE_VERSION"
+               description="JBS_ADM_DEFAULT_BIBLE_VERSION_DESC"/>
+
+        <!-- Analytics settings -->
+        <field name="analytics_enabled" type="radio" default="1"
+               label="JBS_ANA_ENABLED_LABEL" description="JBS_ANA_ENABLED_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="analytics_gdpr_optout" type="radio" default="1"
+               label="JBS_ANA_GDPR_OPTOUT_LABEL" description="JBS_ANA_GDPR_OPTOUT_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="analytics_referrer_mode" type="list" default="type"
+               label="JBS_ANA_REFERRER_MODE_LABEL" description="JBS_ANA_REFERRER_MODE_DESC">
+            <option value="type">JBS_ANA_REFERRER_TYPE_ONLY</option>
+            <option value="domain">JBS_ANA_REFERRER_DOMAIN</option>
+            <option value="full">JBS_ANA_REFERRER_FULL_URL</option>
+        </field>
+        <field name="analytics_retention_days" type="number" default="90" min="7" max="3650" step="1"
+               label="JBS_ANA_RETENTION_LABEL" description="JBS_ANA_RETENTION_DESC"
+               filter="int"/>
+
+        <!-- AI Assistant Settings -->
+        <field name="ai_provider" type="list" default="claude"
+               label="JBS_ADM_AI_PROVIDER" description="JBS_ADM_AI_PROVIDER_DESC">
+            <option value="claude">Claude (Anthropic)</option>
+            <option value="openai">ChatGPT (OpenAI)</option>
+            <option value="gemini">Gemini (Google)</option>
+        </field>
+        <field name="ai_api_key" type="ApiKey" default=""
+               label="JBS_ADM_AI_API_KEY"
+               description="JBS_ADM_AI_API_KEY_DESC"
+               filter="string"/>
+        <field name="ai_model" type="list" default=""
+               label="JBS_ADM_AI_MODEL"
+               description="JBS_ADM_AI_MODEL_DESC">
+            <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
+        </field>
+        <field name="yt_auto_import_topics" type="radio" default="0"
+               label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"
+               description="JBS_ADM_YT_AUTO_IMPORT_TOPICS_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <!-- Podcast Index API Integration -->
+        <field name="podcastindex_api_key" type="text" default=""
+               label="JBS_PDC_PODCASTINDEX_API_KEY"
+               description="JBS_PDC_PODCASTINDEX_API_KEY_DESC" />
+        <field name="podcastindex_api_secret" type="password" default=""
+               label="JBS_PDC_PODCASTINDEX_API_SECRET"
+               description="JBS_PDC_PODCASTINDEX_API_SECRET_DESC" />
+    </fields>
+    <fieldset>
+        <field name="drop_tables" type="radio" default="0"
+               label="JBS_ADM_DROP_TABLES"
+               description="JBS_ADM_DROP_TABLES_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
+        <field name="filestokeep" type="text" default="5" rows="1"
+               label="PLG_SYSTEM_PROCLAIMBACKUP_FILES" description="PLG_SYSTEM_PROCLAIMBACKUP_FILES_DESC"
+               filter="int"/>
+        <field name="debug" type="radio" default="0"
+               label="JBS_ADM_DEBUG_LABEL" description="JBS_ADM_DEBUG_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JBS_CMN_NO</option>
+            <option value="1">JBS_CMN_YES</option>
+        </field>
+        <!-- Auto Archive Settings -->
+        <field name="archive_auto" type="radio" default="0"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_AUTO_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_AUTO_DESC"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="archive_timeframe" type="number" default="1" min="1"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_TIMEFRAME_DESC"
+               showon="archive_auto:1"/>
+        <field name="archive_interval" type="list" default="year"
+               label="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_LABEL"
+               description="PLG_TASK_PROCLAIM_ARCHIVE_INTERVAL_DESC"
+               showon="archive_auto:1">
+            <option value="day">JBS_CMN_DAYS</option>
+            <option value="week">PLG_TASK_PROCLAIM_WEEKS</option>
+            <option value="month">JBS_CMN_MONTHS</option>
+            <option value="year">JBS_CMN_YEARS</option>
+        </field>
+        <field name="archive_warning" type="note"
+               label=""
+               description="PLG_TASK_PROCLAIM_ARCHIVE_WARNING"
+               class="alert alert-warning"
+               showon="archive_auto:1"/>
+    </fieldset>
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
+              addrulepath="/administrator/components/com_proclaim/models/rules">
+        <field name="mediaimage" type="MediaFileImages"
+               label="JBS_ADM_MEDIA_IMAGES">
+            <option value="-1">JBS_SELECT_IMAGE</option>
+        </field>
+        <field name="media_use_button_icon" label="JBS_ADDON_MEDIA_USE_BUTTON"
+               description="JBS_ADDON_MEDIA_USE_BUTTON_DESC"
+               type="list" required="false" default="x"
+               message="You must choose image, icon, button or button and icon">
+            <option value="x">JBS_ADM_SELECT_NEW_OPTION</option>
+            <option value="">JBS_MED_NONE</option>
+            <option value="1">JBS_MED_BUTTON_ONLY</option>
+            <option value="2">JBS_MED_BUTTON_AND_ICON</option>
+            <option value="3">JBS_MED_ICON_ONLY</option>
+        </field>
+        <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_BUTTON_TEXT"
+               description="JBS_ADDON_BUTTON_TEXT_DESC"/>
+        <field name="media_button_type" type="list" default=""
+               label="JBS_ADDON_BUTTON_TYPE"
+               description="JBS_ADDON_BUTTON_TYPE_DESC">
+            <option value="btn-link">JBS_MED_NO_COLOR</option>
+            <option value="btn-primary">JBS_MED_PRIMARY</option>
+            <option value="btn-success">JBS_MED_SUCCESS</option>
+            <option value="btn-info">JBS_MED_INFO</option>
+            <option value="btn-warning">JBS_MED_WARNING</option>
+            <option value="btn-danger">JBS_MED_DANGER</option>
+        </field>
+        <field name="media_button_color" type="ColorPicker" default="black"
+               description="JBS_ADDON_BUTTON_COLOR_DESC" label="JBS_ADDON_BUTTON_COLOR"/>
+        <field name="media_icon_type" type="IconType" default=""
                label="JBS_ADDON_ICON_TYPE"
                description="JBS_ADDON_ICON_TYPE_DESC">
         </field>
         <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
-               description="JBS_ADDON_CUSTOM_ICON_DESC" class="inputbox" labelclass="control-label"/>
-        <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_FONT_SIZE"
-               description="JBS_ADDON_FONT_SIZE_DESC" class="inputbox" labelclass="control-label"/>
+               description="JBS_ADDON_CUSTOM_ICON_DESC"/>
         <field name="media_image" type="media" directory="biblestudy"
                label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
-               class="inputbox col-6" labelclass="control-label">
+               class="col-6">
         </field>
     </fieldset>
 </form>

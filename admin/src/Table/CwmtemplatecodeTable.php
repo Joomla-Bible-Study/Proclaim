@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,7 +19,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rule;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 
 /**
@@ -31,36 +33,109 @@ use Joomla\Filesystem\File;
 class CwmtemplatecodeTable extends Table
 {
     /**
-     * File Name
+     * ID of the record
      *
-     * @var string
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public string $filename;
+    public ?int $id = null;
+
+    /**
+     * File Name
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $filename = null;
+
+    /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
 
     /**
      * Type
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public string $type;
+    public ?string $type = null;
 
     /**
      * Template Code
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public string $templatecode;
+    public ?string $templatecode = null;
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
      *
-     * @param     $db  \JDatabaseDriver connector object
+     * @param     $db  DatabaseInterface connector object
      *
      * @since 9.0.0
      */
@@ -70,27 +145,72 @@ class CwmtemplatecodeTable extends Table
     }
 
     /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->filename ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_FILENAME_REQUIRED'));
+        }
+
+        if (
+            $this->filename === 'main' ||
+            $this->filename === 'simple' ||
+            $this->filename === 'custom' ||
+            $this->filename === 'formheader' ||
+            $this->filename === 'formfooter'
+        ) {
+            throw new \UnexpectedValueException(Text::_('JBS_STYLE_RESTRICTED_FILE_NAME'));
+        }
+
+        $type = (int) $this->type;
+
+        if ($type < 1 || $type > 7) {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_INVALID_TEMPLATE_TYPE'));
+        }
+
+        return parent::check();
+    }
+
+    /**
      * Method to bind an associative array or object to the Table instance.This
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
-     * @param   mixed  $array   An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   array|object  $src     An associative array or object to bind to the Table instance.
+     * @param   array|string  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
      * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = ''): bool
+    #[\Override]
+    public function bind($src, $ignore = ''): bool
     {
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $rules = new Rule($array['rules']);
+        if (isset($src['rules']) && \is_array($src['rules'])) {
+            $rules = new Rule($src['rules']);
             $this->setRules($rules);
         }
 
-        return parent::bind($array, $ignore);
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'location_id', 'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($src[$field])) {
+                $src[$field] = $src[$field] !== '' ? (int) $src[$field] : null;
+            }
+        }
+
+        return parent::bind($src, $ignore);
     }
 
     /**
@@ -103,20 +223,9 @@ class CwmtemplatecodeTable extends Table
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (
-            $this->filename === 'main'
-            || $this->filename === 'simple'
-            || $this->filename === 'custom'
-            || $this->filename === 'formheader'
-            || $this->filename === 'formfooter'
-        ) {
-            Factory::getApplication()->enqueueMessage('JBS_STYLE_RESTRICED_FILE_NAME', 'error');
-
-            return false;
-        }
-
         // Write the file
         $templateType = $this->type;
         $filename     = 'default_' . $this->filename . '.php';
@@ -155,23 +264,23 @@ class CwmtemplatecodeTable extends Table
                 break;
         }
 
-        $filecontent = $this->templatecode;
+        $templateCodeContent = $this->templatecode;
 
         // Check to see if there is the required code in the file
-        $requiredtext = "defined('_JEXEC') or die;";
-        $required     = substr_count($filecontent, $requiredtext);
+        $templateCheckString = "defined('_JEXEC') or die;";
+        $required            = substr_count($templateCodeContent, $templateCheckString);
 
         if (!$required) {
-            $filecontent = $requiredtext . $filecontent;
+            $templateCodeContent = $templateCheckString . $templateCodeContent;
         }
 
-        if (!File::write($file, $filecontent)) {
+        if (!File::write($file, $templateCodeContent)) {
             Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_UNIQUE', 'error');
 
             return false;
         }
 
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -191,6 +300,7 @@ class CwmtemplatecodeTable extends Table
      * @since   11.1
      * @link    http://docs.joomla.org/Table/delete
      */
+    #[\Override]
     public function delete($pk = null): bool
     {
         $filename     = 'default_' . $this->filename . '.php';
@@ -248,7 +358,8 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -262,7 +373,8 @@ class CwmtemplatecodeTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Templatecode ' . $this->filename;
     }
@@ -280,6 +392,7 @@ class CwmtemplatecodeTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get to Proclaim Root ID

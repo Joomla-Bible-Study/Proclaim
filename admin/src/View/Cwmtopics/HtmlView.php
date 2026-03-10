@@ -4,18 +4,19 @@
  * Topics html
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTopics;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtopics;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwmtopicsModel;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -35,10 +36,10 @@ class HtmlView extends BaseHtmlView
     /**
      * Filter Levels
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    public $f_levels;
+    public ?array $f_levels = null;
 
     /**
      * Side Bar
@@ -46,39 +47,55 @@ class HtmlView extends BaseHtmlView
      * @var string
      * @since    7.0.0
      */
-    public $sidebar;
+    public string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -91,22 +108,26 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $items            = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmtopicsModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
-        $this->canDo      = ContentHelper::getActions('com_proclaim');
+        $items               = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
+        $this->canDo         = ContentHelper::getActions('com_proclaim');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        $modelView   = $this->getModel();
-        $this->items = $modelView->getTranslated($items);
+        $this->items = $model->getTranslated($items);
 
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal') {
@@ -130,8 +151,6 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TOPICS'), 'tags');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($this->canDo->get('core.create')) {
             $toolbar->addNew('cwmtopic.add');
@@ -149,22 +168,24 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmtopics.publish');
             $childBar->unpublish('cwmtopics.unpublish');
             $childBar->archive('cwmtopics.archive', 'JTOOLBAR_ARCHIVE');
+            $childBar->checkin('cwmtopics.checkin')->listCheck(true);
 
-            if ($this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ContentComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmtopics.trash')->listCheck(true);
             }
         }
 
         if (
-            $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED && $this->canDo->get(
-                'core.delete'
-            )
+            (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $this->canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmtopics.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
+
+        ToolbarHelper::help('topics', true);
     }
 
     /**
@@ -176,10 +197,10 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'topic.topic_text' => Text::_('JBS_CMN_TOPICS'),
             'topic.published'  => Text::_('JSTATUS'),
-            'topic.id'         => Text::_('JGRID_HEADING_ID')
-        );
+            'topic.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

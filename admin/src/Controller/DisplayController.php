@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -42,7 +42,7 @@ class DisplayController extends BaseController
      * @var    string
      * @since  1.6
      */
-    protected $extension;
+    protected mixed $extension;
 
     /**
      * Constructor.
@@ -55,7 +55,7 @@ class DisplayController extends BaseController
      * @param   ?CMSApplicationInterface  $app       The Application for the dispatcher
      * @param   ?Input                    $input     Input
      *
-     * @since   3.0
+     * @since   7.0.0
      */
     public function __construct($config = [], ?MVCFactoryInterface $factory = null, ?CMSApplicationInterface $app = null, ?Input $input = null)
     {
@@ -70,35 +70,31 @@ class DisplayController extends BaseController
     /**
      * Method to display a view.
      *
-     * @param   boolean  $cachable   If true, the view output will be cached
-     * @param   array    $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+     * @param   bool   $cachable   If true, the view output will be cached
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link FilterInput::clean()}.
      *
-     * @return  BaseController|boolean  This object to support chaining.
+     * @return  static  This object to support chaining.
      *
      * @throws \Exception
      * @since   1.5
      */
-    public function display($cachable = false, $urlparams = []): BaseController|bool
+    public function display($cachable = false, $urlparams = []): static
     {
-        // Get the document object.
-        $document = $this->app->getDocument();
-
         // Set the default view name and format from the Request.
         $vName   = $this->input->get('view', 'cwmcpanel');
-        $vFormat = $document->getType();
         $lName   = $this->input->get('layout', 'default', 'string');
         $id      = $this->input->getInt('id');
 
-        // Check for edit form.
+        // Check for an edit form.
         if ($vName === 'cwmmessage' && $lName === 'edit' && !$this->checkEditId('com_proclaim.edit.cwmmessage', $id)) {
             // Somehow the person just went to the form - we don't allow that.
             if (!\count($this->app->getMessageQueue())) {
                 $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
             }
 
-            $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmsermons', false));
+            $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages', false));
 
-            return false;
+            return $this;
         }
 
         $safeurlparams = [
@@ -118,16 +114,6 @@ class DisplayController extends BaseController
             'print'            => 'BOOLEAN',
             'lang'             => 'CMD',
         ];
-        //
-        //      // Get and render the view.
-        //      if ($view = $this->getView($vName, $vFormat))
-        //      {
-        //          // Get the model for the view.
-        //          $model = $this->getModel($vName, 'Administrator', ['name' => $vName . '.' . substr($this->extension, 4)]);
-        //
-        //          // Push the model into the view (as default).
-        //          $view->setModel($model, true);
-        //      }
 
         return parent::display($cachable, $safeurlparams);
     }

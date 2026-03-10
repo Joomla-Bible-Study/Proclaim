@@ -4,16 +4,17 @@
  * TemplateCode html
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2007 - 2012 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * @since          7.1.0
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTemplateCodes;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplatecodes;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplatecodesModel;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -37,34 +38,50 @@ class HtmlView extends BaseHtmlView
     /**
      * Items
      *
-     * @var array
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Is this view an Empty State
      *
-     * @var   boolean
+     * @var   bool
      * @since 4.0.0
      */
-    private $isEmptyState = false;
+    private bool $isEmptyState = false;
 
     /**
      * Execute and display a template script.
@@ -77,16 +94,21 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmtemplatecodesModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -141,8 +163,6 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_TPLCODE_TPLCODES'), 'stack stack');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmtemplatecode.add');
@@ -162,17 +182,18 @@ class HtmlView extends BaseHtmlView
                 $childBar->publish('cwmtemplatecodes.publish');
                 $childBar->unpublish('cwmtemplatecodes.unpublish');
                 $childBar->archive('cwmtemplatecodes.archive');
+                $childBar->checkin('cwmtemplatecodes.checkin')->listCheck(true);
 
-                if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+                if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                     $childBar->trash('cwmtemplatecodes.trash')->listCheck(true);
                 }
             }
         }
 
         if (
-            !$this->isEmptyState && $this->state->get(
-                'filter.published'
-            ) == ContentComponent::CONDITION_TRASHED && $canDo->get('core.delete')
+            !$this->isEmptyState
+            && (int) $this->state->get('filter.published') === ContentComponent::CONDITION_TRASHED
+            && $canDo->get('core.delete')
         ) {
             $toolbar->delete('cwmtemplatecodes.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')
@@ -184,25 +205,25 @@ class HtmlView extends BaseHtmlView
             $toolbar->preferences('com_proclaim');
         }
 
-        $toolbar->help('Messages', true);
+        ToolbarHelper::help('templatecodes', true);
     }
 
     /**
-     * Returns an array of fields the table can be sorted by
+     * Returns an array of fields that the table can be sorted by
      *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
+     * @return  array  Array containing the field name to sort by as the key and display text as the value
      *
      * @since   3.0
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'study.studytitle'     => Text::_('JBS_CMN_STUDY_TITLE'),
             'mediatype.media_text' => Text::_('JBS_MED_MEDIA_TYPE'),
             'mediafile.filename'   => Text::_('JBS_MED_FILENAME'),
             'mediafile.ordering'   => Text::_('JGRID_HEADING_ORDERING'),
             'mediafile.published'  => Text::_('JSTATUS'),
-            'mediafile.id'         => Text::_('JGRID_HEADING_ID')
-        );
+            'mediafile.id'         => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

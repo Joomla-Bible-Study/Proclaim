@@ -1,0 +1,65 @@
+/**
+ * Scripture text display styles for Proclaim Bible provider system.
+ *
+ * @package    Proclaim.Site
+ * @since      10.1.0
+ */
+
+.scripture-container {
+    margin: 1em 0;
+}
+
+.scripture-text {
+    padding: 1em;
+    background: var(--bs-tertiary-bg, #fafaf8);
+    border: 1px solid var(--bs-border-color, #e0ddd5);
+    border-radius: 4px;
+    line-height: 1.8;
+    font-size: 1em;
+}
+
+.scripture-body {
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.scripture-body sup {
+    font-size: 0.65em;
+    font-weight: 700;
+    color: var(--bs-emphasis-color, #8b4513);
+    margin-right: 2px;
+    vertical-align: super;
+    line-height: 0;
+}
+
+.scripture-copyright {
+    margin-top: 0.75em;
+    padding-top: 0.5em;
+    border-top: 1px solid var(--bs-border-color, #e0ddd5);
+    font-size: 0.8em;
+    color: var(--bs-secondary-color, #888);
+    font-style: italic;
+}
+
+.scripture-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.scripture-toggle:hover {
+    text-decoration: underline;
+}
+
+/* Popup trigger link (opens scripture in new window) */
+
+.scripture-popup-trigger {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.scripture-popup-trigger:hover {
+    text-decoration: underline;
+}

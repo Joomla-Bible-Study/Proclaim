@@ -4,7 +4,7 @@
  * Study field modal
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -22,6 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -46,6 +47,7 @@ class ServerField extends FormField
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');
@@ -72,7 +74,7 @@ class ServerField extends FormField
         if ($allowSelect) {
             static $scriptSelect = null;
 
-            if (is_null($scriptSelect)) {
+            if (\is_null($scriptSelect)) {
                 $scriptSelect = [];
             }
 
@@ -112,10 +114,10 @@ class ServerField extends FormField
 
         if ($value) {
             // Get a reverse lookup of the server ID to server name
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $query = $db->getQuery('true');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
             $query->select($db->quoteName('server_name'))
-                ->from('#__bsms_servers')
+                ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = :value')
                 ->bind(':value', $value, ParameterType::INTEGER);
             $db->setQuery($query);
@@ -194,9 +196,9 @@ class ServerField extends FormField
         }
 
         // Propagate server button
-        if ($allowPropagate && count($languages) > 2) {
+        if ($allowPropagate && \count($languages) > 2) {
             // Strip off language tag at the end
-            $tagLength            = (int)strlen($this->element['language']);
+            $tagLength            = (int)\strlen($this->element['language']);
             $callbackFunctionStem = substr("jSelectServer_" . $this->id, 0, -$tagLength);
 
             $html .= '<button'
@@ -309,6 +311,7 @@ class ServerField extends FormField
      *
      * @since   3.4
      */
+    #[\Override]
     protected function getLabel(): string
     {
         return str_replace($this->id, $this->id . '_name', parent::getLabel());

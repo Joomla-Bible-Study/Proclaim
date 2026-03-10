@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,12 +16,13 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Input\Input;
 
 /**
  * HelloWorld Model
@@ -51,7 +52,7 @@ class CwmtemplatecodeModel extends AdminModel
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'templatecode';
+    protected string $formName = 'templatecode';
 
     /**
      * Method to get the record form.
@@ -78,20 +79,6 @@ class CwmtemplatecodeModel extends AdminModel
         }
 
         return $form;
-    }
-
-    /**
-     * Method to check-out a row for editing.
-     *
-     * @param   null  $pk  The numeric id of the primary key.
-     *
-     * @return bool|int|null False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool|int|null
-    {
-        return $pk;
     }
 
     /**
@@ -175,7 +162,7 @@ class CwmtemplatecodeModel extends AdminModel
         $key   = $table->getKeyName();
 
         // Get the pk of the record from the request.
-        $input = new Input();
+        $input = Factory::getApplication()->getInput();
         $pk    = $input->get($key, '', 'int');
         $this->setState($this->getName() . '.id', $pk);
 
@@ -219,5 +206,37 @@ class CwmtemplatecodeModel extends AdminModel
         }
 
         return $data;
+    }
+
+    /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmtemplatecodeTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
     }
 }

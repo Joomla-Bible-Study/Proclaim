@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,7 +19,8 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Input\Input;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Topics model class
@@ -83,17 +84,17 @@ class CwmtopicsModel extends ListModel
      *
      * @since   7.0
      */
-    protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC')
+    protected function populateState($ordering = 'topic.topic_text', $direction = 'ASC'): void
     {
         // Adjust the context to support modal layouts.
-        $input  = new Input();
+        $input  = Factory::getApplication()->getInput();
         $layout = $input->get('layout');
 
         if ($layout) {
             $this->context .= '.' . $layout;
         }
 
-        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search', '');
         $this->setState('filter.search', $search);
 
         $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
@@ -124,28 +125,36 @@ class CwmtopicsModel extends ListModel
     /**
      * Get List Query
      *
-     * @return \Joomla\Database\QueryInterface
+     * @return QueryInterface|string
      * @since   7.0
      */
-    protected function getListQuery()
+    protected function getListQuery(): QueryInterface|string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
+        $user  = $this->getCurrentUser();
 
         $query->select(
-            $this->getState('list.select', 'topic.id, topic.topic_text, topic.published, topic.params AS topic_params')
+            $this->getState(
+                'list.select',
+                implode(', ', $db->quoteName(['topic.id', 'topic.topic_text', 'topic.published', 'topic.checked_out', 'topic.checked_out_time'])) . ', ' . $db->quoteName('topic.params', 'topic_params')
+            )
         );
-        $query->from('#__bsms_topics AS topic');
+        $query->from($db->quoteName('#__bsms_topics', 'topic'));
+
+        // Join over the users for the checked out user.
+        $query->select($db->quoteName('uc.name', 'editor'))
+            ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('topic.checked_out'));
 
         // Filter by search in title.
         $search = $this->getState('filter.search');
 
         if (!empty($search)) {
             if (stripos($search, 'id:') === 0) {
-                $query->where('topic.id = ' . (int)substr($search, 3));
+                $query->where($db->quoteName('topic.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(topic.topic_text LIKE ' . $search . ')');
+                $query->where('(' . $db->quoteName('topic.topic_text') . ' LIKE ' . $search . ')');
             }
         }
 
@@ -153,9 +162,14 @@ class CwmtopicsModel extends ListModel
         $published = $this->getState('filter.published');
 
         if (is_numeric($published)) {
-            $query->where('topic.published = ' . (int)$published);
+            $query->where($db->quoteName('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
-            $query->where('(topic.published = 0 OR topic.published = 1)');
+            $query->where('(' . $db->quoteName('topic.published') . ' = 0 OR ' . $db->quoteName('topic.published') . ' = 1)');
+        }
+
+        // Restrict non-admin users to their authorised view levels
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('topic.access'), $user->getAuthorisedViewLevels());
         }
 
         // Add the list ordering clause

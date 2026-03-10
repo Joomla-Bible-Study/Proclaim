@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,12 +17,15 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\User\User;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -40,14 +43,13 @@ class CwmsermonModel extends FormModel
      *
      * @since 7.0
      */
-    protected string $context = 'com_proclaim.sermon';
+    protected $context = 'com_proclaim.sermon';
 
     /**
      * Method to increment the hit counter for the study
      *
      * @param   ?int  $pk  ID
      *
-     * @access    public
      * @return    bool    True on success
      *
      * @todo      this looks like it could be moved to a helper.
@@ -55,10 +57,13 @@ class CwmsermonModel extends FormModel
      */
     public function hit(?int $pk = null): bool
     {
-        $pk    = $pk ?? (int)$this->getState('study.id');
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $pk    = $pk ?? (int) $this->getState('study.id');
+        $db    = $this->getDatabase();
         $query = $db->getQuery(true);
-        $query->update('#__bsms_studies')->set('hits = hits  + 1')->where('id = ' . (int)$pk);
+        $query->update($db->quoteName('#__bsms_studies'))
+            ->set($db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1')
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $pk, ParameterType::INTEGER);
         $db->setQuery($query);
         $db->execute();
 
@@ -81,80 +86,132 @@ class CwmsermonModel extends FormModel
         $user = Factory::getApplication()->getIdentity();
 
         // Initialise variables.
-        $pk = $pk ?? (int)$this->getState('study.id');
+        $pk = $pk ?? (int) $this->getState('study.id');
 
         if (!isset($this->_item[$pk])) {
             try {
-                $db    = Factory::getContainer()->get('DatabaseDriver');
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true);
                 $query->select(
                     $this->getState(
                         'item.select',
-                        's.*,CASE WHEN CHAR_LENGTH(s.alias) THEN CONCAT_WS(\':\', s.id, s.alias) ELSE s.id END as slug'
+                        $db->quoteName('s') . '.*,'
+                        . 'CASE WHEN CHAR_LENGTH(' . $db->quoteName('s.alias') . ') THEN CONCAT_WS('
+                        . $db->quote(':') . ', ' . $db->quoteName('s.id') . ', ' . $db->quoteName('s.alias')
+                        . ') ELSE ' . $db->quoteName('s.id') . ' END AS ' . $db->quoteName('slug')
                     )
                 );
-                $query->from('#__bsms_studies AS s');
+                $query->from($db->quoteName('#__bsms_studies', 's'));
 
                 // Join over teachers
                 $query->select(
-                    't.id AS tid, t.teachername AS teachername, t.title AS teachertitle, t.image, t.imagew, t.imageh,' .
-                    't.teacher_thumbnail as thumb, t.thumbw, t.thumbh'
+                    $db->quoteName('t.id', 'tid') . ', '
+                    . $db->quoteName('t.teachername', 'teachername') . ', '
+                    . $db->quoteName('t.title', 'teachertitle') . ', '
+                    . $db->quoteName('t.image', 'teacher_image') . ', '
+                    . $db->quoteName('t.teacher_thumbnail', 'thumb')
                 );
 
-                $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+                    . ' AND ' . $db->quoteName('st.ordering') . ' = 0'
+                );
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                    . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('st.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')'
+                );
 
                 // Join over series
-                $query->select('se.id AS sid, se.series_text, se.series_thumbnail, se.description as sdescription');
-                $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
+                $query->select(
+                    $db->quoteName('se.id', 'sid') . ', ' . $db->quoteName('se.series_text') . ', '
+                    . $db->quoteName('se.series_thumbnail') . ', ' . $db->quoteName('se.description', 'sdescription')
+                );
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_series', 'se') . ' ON '
+                    . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id')
+                );
 
                 // Join over message type
-                $query->select('mt.id as mid, mt.message_type');
-                $query->join('LEFT', '#__bsms_message_type as mt on s.messagetype = mt.id');
+                $query->select($db->quoteName('mt.id', 'mid') . ', ' . $db->quoteName('mt.message_type'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_message_type', 'mt') . ' ON '
+                    . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('mt.id')
+                );
 
                 // Join over books
-                $query->select('b.bookname as bookname');
-                $query->join('LEFT', '#__bsms_books as b on s.booknumber = b.booknumber');
+                $query->select($db->quoteName('b.bookname', 'bookname'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_books', 'b') . ' ON '
+                    . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('b.booknumber')
+                );
 
-                $query->select('book2.bookname as bookname2');
-                $query->join('LEFT', '#__bsms_books AS book2 ON book2.booknumber = s.booknumber2');
+                $query->select($db->quoteName('book2.bookname', 'bookname2'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_books', 'book2') . ' ON '
+                    . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('s.booknumber2')
+                );
 
                 // Join over locations
-                $query->select('l.id as lid, l.location_text');
-                $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
+                $query->select($db->quoteName('l.id', 'lid') . ', ' . $db->quoteName('l.location_text'));
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_locations', 'l') . ' ON '
+                    . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id')
+                );
 
                 // Join over topics
                 $query->select(
-                    'group_concat(stp.id separator ", ") AS tp_id, group_concat(stp.topic_text separator ", ")
-					 as topic_text, group_concat(stp.params separator ", ") as topic_params'
+                    'GROUP_CONCAT(' . $db->quoteName('stp.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id') . ', '
+                    . 'GROUP_CONCAT(' . $db->quoteName('stp.topic_text') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_text') . ', '
+                    . 'GROUP_CONCAT(' . $db->quoteName('stp.params') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_params')
                 );
-                $query->join('LEFT', '#__bsms_studytopics as tp on s.id = tp.study_id');
-                $query->join('LEFT', '#__bsms_topics as stp on stp.id = tp.topic_id');
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_studytopics', 'tp') . ' ON '
+                    . $db->quoteName('s.id') . ' = ' . $db->quoteName('tp.study_id')
+                );
+                $query->join(
+                    'LEFT',
+                    $db->quoteName('#__bsms_topics', 'stp') . ' ON '
+                    . $db->quoteName('stp.id') . ' = ' . $db->quoteName('tp.topic_id')
+                );
 
-                // Join over media files
-                $query->select('sum(m.plays) AS totalplays, sum(m.downloads) AS totaldownloads, m.id');
-                $query->select('GROUP_CONCAT(DISTINCT m.id) as mids');
-                $query->join('LEFT', '#__bsms_mediafiles AS m on s.id = m.study_id');
+                // NOTE: Mediafile aggregation (mids, totalplays, totaldownloads) is
+                // loaded in a separate query below to avoid a Cartesian product with
+                // topics that inflates SUM(plays) and SUM(downloads).
 
-                if (
-                    (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(
-                        'core.edit',
-                        'com_proclaim'
-                    ))
-                ) {
-                    // Filter by start and end dates.
+                $canEditState = $user->authorise('core.edit.state', 'com_proclaim');
+                $canEdit      = $user->authorise('core.edit', 'com_proclaim');
+
+                if (!$canEditState && !$canEdit) {
+                    // Filter by start and end dates for the message itself.
                     $nullDate = $db->quote($db->getNullDate());
-                    $date     = Factory::getDate();
+                    $nowDate  = $db->quote((new Date())->toSql());
 
-                    $nowDate = $db->quote($date->toSql());
+                    $query->where('(' . $db->quoteName('s.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_up') . ' <= ' . $nowDate . ')')
+                        ->where('(' . $db->quoteName('s.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('s.publish_down') . ' >= ' . $nowDate . ')');
 
-                    $query->where('(s.publish_up = ' . $nullDate . ' OR s.publish_up <= ' . $nowDate . ')')
-                        ->where('(s.publish_down = ' . $nullDate . ' OR s.publish_down >= ' . $nowDate . ')');
+                    // Cascading series date window: hide message if its series is outside publish window.
+                    $query->where(
+                        '(('
+                        . $db->quoteName('se.published') . ' = 1'
+                        . ' AND (' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')'
+                        . ' AND (' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')'
+                        . ') OR ' . $db->quoteName('s.series_id') . ' <= 0)'
+                    );
                 }
 
                 // Implement View Level Access
-                if (!$user->authorise('core.cwmadmin')) {
+                if (!$user->authorise('core.admin')) {
                     $groups = implode(',', $user->getAuthorisedViewLevels());
-                    $query->where('s.access IN (' . $groups . ')');
+                    $query->where($db->quoteName('s.access') . ' IN (' . $groups . ')');
                 }
 
                 // Filter by published state.
@@ -162,19 +219,42 @@ class CwmsermonModel extends FormModel
                 $archived  = $this->getState('filter.archived');
 
                 if (is_numeric($published)) {
-                    $query->where('(s.published = ' . (int)$published . ' OR s.published =' . (int)$archived . ')');
+                    $query->where('(' . $db->quoteName('s.published') . ' = ' . (int) $published . ' OR ' . $db->quoteName('s.published') . ' = ' . (int) $archived . ')');
                 }
 
-                $query->group('s.id');
-                $query->where('s.id = ' . (int)$pk);
+                $query->group($db->quoteName('s.id'));
+                $query->where($db->quoteName('s.id') . ' = ' . (int) $pk);
                 $db->setQuery($query);
                 $data = $db->loadObject();
 
                 if (empty($data)) {
-                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND', 'error'));
+                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND'), 'error');
 
                     return $data;
                 }
+
+                // Load media stats in a separate query to avoid Cartesian product with topics
+                $mediaQuery = $db->getQuery(true)
+                    ->select([
+                        'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
+                        'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
+                        'SUM(' . $db->quoteName('downloads') . ') AS ' . $db->quoteName('totaldownloads'),
+                    ])
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+                    ->where($db->quoteName('study_id') . ' = ' . (int) $pk);
+
+                // Include archived media when viewing archived messages
+                if (is_numeric($archived) && (int) $archived === 2) {
+                    $mediaQuery->where($db->quoteName('published') . ' IN (1, 2)');
+                } else {
+                    $mediaQuery->where($db->quoteName('published') . ' = 1');
+                }
+                $db->setQuery($mediaQuery);
+                $mediaStats = $db->loadObject();
+
+                $data->mids           = $mediaStats->mids ?? null;
+                $data->totalplays     = (int) ($mediaStats->totalplays ?? 0);
+                $data->totaldownloads = (int) ($mediaStats->totaldownloads ?? 0);
 
                 // Check for published state if filter set.
                 if (
@@ -197,24 +277,21 @@ class CwmsermonModel extends FormModel
                 $template     = Cwmparams::getTemplateparams();
 
                 $data->params->merge($template->params);
-                $mparams = clone $this->getState('params');
-                $mj      = new Registry();
-                $mj->loadString($mparams);
-                $data->params->merge($mj);
+                $data->params->merge($this->getState('params'));
 
                 $data->admin_params = Cwmparams::getAdmin()->params;
 
                 // Technically guest could edit an article, but lets not check that to improve performance a little.
-                if (!$user->get('guest')) {
-                    $userId = $user->get('id');
+                if (!$user->guest) {
+                    $userId = $user->id;
                     $asset  = 'com_proclaim.message.' . $data->id;
 
                     // Check general edit permission first.
                     if ($user->authorise('core.edit', $asset)) {
                         $data->params->set('access-edit', true);
-                    } elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
+                    } elseif ($user->authorise('core.edit.own', $asset)) {
                         // Check for a valid user and that they are the owner.
-                        if ($userId == $data->created_by) {
+                        if ($userId === (int) $data->created_by) {
                             $data->params->set('access-edit', true);
                         }
                     }
@@ -228,21 +305,17 @@ class CwmsermonModel extends FormModel
                     $data->params->set('access-view', true);
                 } else {
                     // If no access filter is set, the layout takes some responsibility for display of limited information.
-                    $user   = Factory::getApplication()->getIdentity();
                     $groups = $user->getAuthorisedViewLevels();
-
-                    $data->params->set('access-view', in_array($data->access, $groups, true));
+                    $data->params->set('access-view', \in_array($data->access, $groups, true));
                 }
+
+                // Load all scripture references from junction table
+                $data->scriptures = CwmscriptureHelper::getScripturesForStudy((int) $pk);
 
                 $this->_item[$pk] = $data;
             } catch (\Exception $e) {
-                if ((int) $e->getCode() === 404) {
-                    // Need to go through the error handler to allow Redirect to work.
-                    Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-                } else {
-                    Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
-                    $this->_item[$pk] = false;
-                }
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+                $this->_item[$pk] = false;
             }
         }
 
@@ -252,7 +325,6 @@ class CwmsermonModel extends FormModel
     /**
      * Method to retrieve comments for a study
      *
-     * @access  public
      * @return  mixed  data object on success, false on failure.
      *
      * @throws \Exception
@@ -261,17 +333,22 @@ class CwmsermonModel extends FormModel
     public function getComments(): array
     {
         $app = Factory::getApplication();
-        $id  = $app->input->get('id', '', 'int');
+        $id  = $app->getInput()->get('id', 0, 'int');
 
         if (empty($id)) {
-            return false;
+            return [];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('c.*')->from('#__bsms_comments AS c')->where('c.published = 1')->where(
-            'c.study_id = ' . $id
-        )->order('c.comment_date asc');
+        $db        = $this->getDatabase();
+        $query     = $db->getQuery(true);
+        $published = 1;
+        $query->select($db->quoteName('c') . '.*')
+            ->from($db->quoteName('#__bsms_comments', 'c'))
+            ->where($db->quoteName('c.published') . ' = :published')
+            ->where($db->quoteName('c.study_id') . ' = :studyId')
+            ->bind(':published', $published, ParameterType::INTEGER)
+            ->bind(':studyId', $id, ParameterType::INTEGER)
+            ->order($db->quoteName('c.comment_date') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -280,7 +357,6 @@ class CwmsermonModel extends FormModel
     /**
      * Method to store a record
      *
-     * @access    public
      * @return    bool    True on success
      *
      * @throws \Exception
@@ -288,12 +364,24 @@ class CwmsermonModel extends FormModel
      */
     public function storecomment(): bool
     {
-        $row                  = $this->getTable('comment');
-        $data                 = $_POST;
-        $data['comment_text'] = Factory::getApplication()->input->get('comment_text', '', 'string');
+        $row   = $this->getTable('Cwmcomment');
+        $input = Factory::getApplication()->getInput();
+
+        // Build data array from input (not raw $_POST)
+        $data = [
+            'study_id'     => $input->getInt('study_id', 0),
+            'full_name'    => $input->getString('full_name', ''),
+            'user_email'   => $input->getString('user_email', ''),
+            'comment_text' => $input->get('comment_text', '', 'raw'),
+            'comment_date' => $input->getString('comment_date', (new Date())->toSql()),
+            'published'    => $input->getInt('published', 1),
+            'language'     => $input->getString('language', '*'),
+        ];
 
         // Bind the form fields to the table
-        $row->bind($data);
+        if (!$row->bind($data)) {
+            return false;
+        }
 
         // Make sure the record is valid
         if (!$row->check()) {
@@ -314,22 +402,14 @@ class CwmsermonModel extends FormModel
      * @param   array  $data      Data for the form.
      * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return  bool|Form  Will load form if found or return false
+     * @return  Form
      *
      * @throws \Exception
      * @since   4.0.0
-     *
      */
-    public function getForm($data = [], $loadData = true): bool|Form
+    public function getForm($data = [], $loadData = true): Form
     {
-        // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
-
-        if (empty($form)) {
-            return false;
-        }
-
-        return $form;
+        return $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
     }
 
     /**
@@ -344,13 +424,13 @@ class CwmsermonModel extends FormModel
      */
     protected function populateState(): void
     {
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
 
         // Load state from the request.
-        $pk = $app->input->get('id', '', 'int');
+        $pk = $app->getInput()->get('id', '', 'int');
         $this->setState('study.id', $pk);
 
-        $offset = $app->input->get('limitstart', '', 'int');
+        $offset = $app->getInput()->get('limitstart', '', 'int');
         $this->setState('list.offset', $offset);
 
         // Load the parameters.
@@ -366,7 +446,7 @@ class CwmsermonModel extends FormModel
         $t = (int)$params->get('sermonid');
 
         if (!$t) {
-            $t = $app->input->get('t', 1, 'int');
+            $t = $app->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
@@ -374,7 +454,7 @@ class CwmsermonModel extends FormModel
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
 
-        $user = $app->getSession()->get('user');
+        $user = $app->getIdentity();
 
         if (
             (!$user->authorise('core.edit.state', 'com_proclaim')) && (!$user->authorise(

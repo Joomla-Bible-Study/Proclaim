@@ -119,8 +119,8 @@
                 <option value="btn-warning">JBS_MED_WARNING</option>
                 <option value="btn-danger">JBS_MED_DANGER</option>
             </field>
-            <field name="media_button_color" type="color" description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC"
-                   label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
+            <field name="media_button_color" type="ColorPicker" default="black"
+                   description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
             <field name="media_icon_type" type="IconType" extension="com_proclaim" class="inputbox"
                    default=""
                    label="JBS_ADDON_LEGACY_ICON_TYPE"
@@ -128,8 +128,6 @@
             </field>
             <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
                    description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
-            <field name="media_icon_text_size" type="text" default="24" label="JBS_ADDON_LEGACY_FONT_SIZE"
-                   description="JBS_ADDON_LEGACY_FONT_SIZE_DESC"/>
             <field name="mime_type" type="MimeType" extension="com_proclaim"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"
                    class="inputbox" default="">

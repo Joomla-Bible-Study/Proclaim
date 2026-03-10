@@ -4,12 +4,12 @@
  * HtmlView
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmteachers;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMTeachers;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Model\CwmteachersModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -37,44 +38,60 @@ class HtmlView extends BaseHtmlView
     /**
      * Items
      *
-     * @var object
+     * @var ?array
      * @since    7.0.0
      */
-    protected $items;
+    protected ?array $items = null;
 
     /**
      * Pagination
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $pagination;
+    protected ?object $pagination = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
-    /** @var  array Filter Levels
+    /** @var ?array Filter Levels
      * @since    7.0.0
      */
-    protected $f_levels;
+    protected ?array $f_levels = null;
 
-    /** @var  object Side Bar
+    /** @var string Side Bar
      * @since    7.0.0
      */
-    protected $sidebar;
+    protected string $sidebar = '';
+
+    /**
+     * Filter Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
+     * @since    7.0.0
+     */
+    public ?\Joomla\CMS\Form\Form $filterForm = null;
+
+    /**
+     * Active Filters
+     *
+     * @var ?array
+     * @since    7.0.0
+     */
+    public ?array $activeFilters = null;
 
     /**
      * Execute and display a template script.
@@ -87,17 +104,22 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->items      = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->state      = $this->get('State');
+        /** @var CwmteachersModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
 
-        $this->filterForm = $this->get('FilterForm');
-        $this->canDo      = ContentHelper::getActions('com_proclaim', 'teacher');
+        $this->items         = $model->getItems();
+        $this->pagination    = $model->getPagination();
+        $this->state         = $model->getState();
+        $this->filterForm    = $model->getFilterForm();
+        $this->activeFilters = $model->getActiveFilters();
+        $this->canDo         = ContentHelper::getActions('com_proclaim', 'teacher');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -107,6 +129,7 @@ class HtmlView extends BaseHtmlView
 
             // We do not need to filter by language when multilingual is disabled
             if (!Multilanguage::isEnabled()) {
+                unset($this->activeFilters['language']);
                 $this->filterForm->removeField('language', 'filter');
             }
         }
@@ -132,8 +155,6 @@ class HtmlView extends BaseHtmlView
         $toolbar = Toolbar::getInstance('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_TEACHERS'), 'users users');
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=28:admin-messages-list-help-screen&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmteacher.add');
@@ -151,8 +172,9 @@ class HtmlView extends BaseHtmlView
             $childBar->publish('cwmteachers.publish');
             $childBar->unpublish('cwmteachers.unpublish');
             $childBar->archive('cwmteachers.archive');
+            $childBar->checkin('cwmteachers.checkin')->listCheck(true);
 
-            if ($this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
+            if ((int) $this->state->get('filter.published') !== ProclaimComponent::CONDITION_TRASHED) {
                 $childBar->trash('cwmteachers.trash')->listCheck(true);
             }
 
@@ -175,6 +197,8 @@ class HtmlView extends BaseHtmlView
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }
+
+        ToolbarHelper::help('teachers', true);
     }
 
     /**
@@ -186,13 +210,13 @@ class HtmlView extends BaseHtmlView
      */
     protected function getSortFields(): array
     {
-        return array(
+        return [
             'teacher.teachername' => Text::_('JBS_CMN_STUDY_TITLE'),
             'teacher.language'    => Text::_('JGRID_HEADING_LANGUAGE'),
             'teacher.ordering'    => Text::_('JGRID_HEADING_ORDERING'),
             'teacher.published'   => Text::_('JSTATUS'),
             'access_level'        => Text::_('JGRID_HEADING_ACCESS'),
-            'teacher.id'          => Text::_('JGRID_HEADING_ID')
-        );
+            'teacher.id'          => Text::_('JGRID_HEADING_ID'),
+        ];
     }
 }

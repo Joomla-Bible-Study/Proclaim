@@ -4,22 +4,24 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMInstall;
+namespace CWM\Component\Proclaim\Administrator\View\Cwminstall;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * View class for Install
@@ -58,14 +60,22 @@ class HtmlView extends BaseHtmlView
     public string $version = '0.0.0';
 
     public array $query = [];
-    /** @var string Start of installation
+    /** @var ?object Start of installation
      * @since    7.0.0
      */
-    public $state;
-    /** @var object Status
+    public ?object $state = null;
+    /** @var ?object Status
      * @since    7.0.0
      */
-    public $status;
+    public ?object $status = null;
+    /** @var array Array of Install Task
+     * @since    7.0.0
+     */
+    public array $start = [];
+    /** @var bool|string Scan state
+     * @since    7.0.0
+     */
+    public mixed $scanstate = false;
     /** @var array The pre-versions sub sql array to process
      * @since    7.0.0
      */
@@ -78,14 +88,16 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     protected bool $more;
-    /** @var  string Percentage
+    /** @var int|float Percentage
      * @since    7.0.0
      */
-    protected $percentage;
+    protected int|float $percentage = 0;
     /** @var string Type of process
      * @since    7.0.0
      */
     protected string $type;
+    /** @var string Install type: 'install', 'migration', or 'upgrade' @since 10.1.0 */
+    public string $installType = 'migration';
     /** @var array The pre-versions to process
      * @since    7.0.0
      */
@@ -113,15 +125,20 @@ class HtmlView extends BaseHtmlView
      * @throws  \Exception
      * @since   7.0.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
+        /** @var CwminstallModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $app             = Factory::getApplication();
-        $this->scanstate = $app->input->get('scanstate', false);
+        $this->scanstate = $app->getInput()->get('scanstate', false);
 
         // Get data from the model
-        $this->state = $this->get("State");
-        $layout      = $app->input->get('layout', 'default');
-        $task        = $app->input->get('task', 'execute');
+        $this->state = $model->getState();
+        $layout      = $app->getInput()->get('layout', 'default');
+        $task        = $app->getInput()->get('task', 'execute');
 
         $load    = $this->loadStack();
         $more    = true;
@@ -141,16 +158,12 @@ class HtmlView extends BaseHtmlView
 
         $this->percentage = $percent;
 
-        if ($this->more) {
-            $doc = $this->getDocument();
-            $wa  = $doc->getWebAssetManager();
-            $wa->useScript('form.validate')
-                ->addInlineScript(
-                    "setTimeout(function(){
-                                    jQuery('#adminForm').submit()
-								}, 3000);"
-                );
+        // Set install type from callstack (determined in model's getSteps)
+        if (!empty($this->callstack['install_type'])) {
+            $this->installType = $this->callstack['install_type'];
         }
+
+        // Note: Auto-submit is now handled in the template for better control
 
         if ($this->more === false) {
             $this->setLayout('install_finished');
@@ -158,7 +171,7 @@ class HtmlView extends BaseHtmlView
 
         // Install systems setup files
         // @todo need to move to a helper as this is call do many times.
-        $this->installsetup();
+        $this->installSetup();
 
         $this->addToolbar();
 
@@ -169,7 +182,7 @@ class HtmlView extends BaseHtmlView
     /**
      * Loads the Versions/SQL/After stack from the session
      *
-     * @return boolean
+     * @return bool
      *
      * @throws \Exception
      * @since    7.0.0
@@ -183,10 +196,10 @@ class HtmlView extends BaseHtmlView
             return false;
         }
 
-        if (function_exists('base64_encode') && function_exists('base64_decode')) {
+        if (\function_exists('base64_encode') && \function_exists('base64_decode')) {
             $stack = base64_decode($stack);
 
-            if (function_exists('gzdeflate') && function_exists('gzinflate')) {
+            if (\function_exists('gzdeflate') && \function_exists('gzinflate')) {
                 $stack = gzinflate($stack);
             }
         }
@@ -224,49 +237,49 @@ class HtmlView extends BaseHtmlView
     {
         $language = Factory::getApplication()->getLanguage();
 
-        $installation_queue = array(
+        $installation_queue = [
             // Example: modules => { (folder) => { (module) => { (position), (published) } }* }*
-            'modules' => array(
-                'administrator' => array(),
-                'site'          => array(
+            'modules' => [
+                'administrator' => [],
+                'site'          => [
                     'proclaim'         => 0,
                     'proclaim_podcast' => 0,
-                )
-            ),
+                ],
+            ],
             // Example: plugins => { (folder) => { (element) => (published) }* }*
-            'plugins' => array(
-                'finder' => array(
+            'plugins' => [
+                'finder' => [
                     'proclaim' => 1,
-                ),
-                'task'   => array(
+                ],
+                'task' => [
                     'proclaim' => 1,
-                )
-            )
-        );
+                ],
+            ],
+        ];
 
         // -- General settings
-        $db                       = Factory::getContainer()->get('DatabaseDriver');
+        $db                       = Factory::getContainer()->get(DatabaseInterface::class);
         $this->status             = new \stdClass();
-        $this->status->cwmmodules = array();
-        $this->status->cwmplugins = array();
+        $this->status->cwmmodules = [];
+        $this->status->cwmplugins = [];
 
         // Modules installation
-        if (count($installation_queue['modules'])) {
+        if (\count($installation_queue['modules'])) {
             foreach ($installation_queue['modules'] as $folder => $modules) {
-                if (count($modules)) {
+                if (\count($modules)) {
                     foreach ($modules as $module => $modulePreferences) {
                         // Was the module already installed?
                         $sql = $db->getQuery(true);
-                        $sql->select('COUNT(*)')->from('#__extensions')->where('name=' . $db->q('mod_' . $module));
+                        $sql->select('COUNT(*)')->from($db->quoteName('#__extensions'))->where($db->quoteName('name') . ' = ' . $db->q('mod_' . $module));
                         $db->setQuery($sql);
                         $result                     = $db->loadResult();
                         $this->status->cwmmodules[] = array_merge(
                             $this->status->cwmmodules,
-                            array(
+                            [
                                 'name'   => 'mod_' . $module,
                                 'client' => $folder,
-                                'result' => $result
-                            )
+                                'result' => $result,
+                            ]
                         );
 
                         if (is_dir(JPATH_ROOT . '/modules/mod_' . $module . '/')) {
@@ -289,24 +302,24 @@ class HtmlView extends BaseHtmlView
         }
 
         // Plugins installation
-        if (count($installation_queue['plugins'])) {
+        if (\count($installation_queue['plugins'])) {
             foreach ($installation_queue['plugins'] as $folder => $plugins) {
-                if (count($plugins)) {
+                if (\count($plugins)) {
                     foreach ($plugins as $plugin => $published) {
                         $query = $db->getQuery(true);
                         $query->select('COUNT(*)')
-                            ->from('#__extensions')
-                            ->where('folder=' . $db->q($folder))
-                            ->where('name=' . $db->q('plg_' . $folder . '_' . $plugin));
+                            ->from($db->quoteName('#__extensions'))
+                            ->where($db->quoteName('folder') . ' = ' . $db->q($folder))
+                            ->where($db->quoteName('name') . ' = ' . $db->q('plg_' . $folder . '_' . $plugin));
                         $db->setQuery($query);
                         $result                     = $db->loadResult();
                         $this->status->cwmplugins[] = array_merge(
                             $this->status->cwmplugins,
-                            array(
+                            [
                                 'name'   => 'plg_' . $folder . '_' . $plugin,
                                 'group'  => $folder,
-                                'result' => $result
-                            )
+                                'result' => $result,
+                            ]
                         );
 
                         if (is_dir(JPATH_ROOT . '/plugins/' . $folder . '/' . $plugin . '/')) {
@@ -341,7 +354,7 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(): void
     {
         if ($this->more) {
-            Factory::getApplication()->input->set('hidemainmenu', true);
+            Factory::getApplication()->getInput()->set('hidemainmenu', true);
         }
 
         ToolbarHelper::help('proclaim', true);

@@ -4,7 +4,7 @@
  * Batch Template
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,11 +16,12 @@
 
 use Joomla\CMS\Language\Text;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmlocations\HtmlView $this */
+
 $published = $this->state->get('filter.published');
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-locations-batch');
+$wa = $this->getDocument()->getWebAssetManager();
+$wa->useScript('com_proclaim.cwmadmin-batch-footer');
 ?>
 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
     <?php

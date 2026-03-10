@@ -4,7 +4,7 @@
  * Form
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,23 +14,274 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Registry\Registry;
+
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmtemplate\HtmlView $this */
 
 // Create shortcut to parameters.
-/** @type \Joomla\Registry\Registry $params */
+/** @type Registry $params */
 $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
-$input  = $app->input;
+$input  = $app->getInput();
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
+
+// Add lazy loading script and pass CSRF token for AJAX calls
+$wa->useScript('com_proclaim.template-lazyload');
+$this->getDocument()->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session::getFormToken());
+
+// Add layout editor assets
+$wa->useScript('bootstrap.modal')
+    ->useScript('com_proclaim.sortable')
+    ->useScript('com_proclaim.layout-editor')
+    ->useStyle('com_proclaim.layout-editor');
+
+// =====================================================================
+// Layout Editor: ALL script options and language strings are registered
+// HERE because the layout tab is lazy-loaded via AJAX (format=raw).
+// addScriptOptions() and Text::script() in AJAX context don't reach
+// the main page — they must be on the parent page before AJAX loads.
+// =====================================================================
+
+// Auto-register all component language strings (JBS_TPL_*, JBS_ADM_*, etc.)
+// so Joomla.Text._('KEY') works throughout the Layout Editor JS.
+CwmlangHelper::registerAllForJs();
+
+// Template params for initial loading
+$tplParams = $this->item->params;
+
+if (\is_string($tplParams)) {
+    $paramsArray = json_decode($tplParams, true, 512, JSON_THROW_ON_ERROR) ?: [];
+} elseif (\is_object($tplParams)) {
+    $paramsArray = $tplParams->toArray();
+} else {
+    $paramsArray = (array) $tplParams;
+}
+
+// Element definitions extracted from template.xml (single source of truth)
+$form = $this->form;
+
+$getFieldsetLabel = function (string $fieldsetName) use ($form): ?string {
+    $fieldsets = $form->getFieldsets();
+
+    if (isset($fieldsets[$fieldsetName]) && !empty($fieldsets[$fieldsetName]->label)) {
+        return Text::_($fieldsets[$fieldsetName]->label);
+    }
+
+    return null;
+};
+
+$deprecatedElements = ['scripture1', 'scripture2'];
+
+$elementSectionMap = [
+    'scripture1'        => 'JBS_TPL_SECTION_SCRIPTURE', 'scripture2' => 'JBS_TPL_SECTION_SCRIPTURE',
+    'scriptures'        => 'JBS_TPL_SECTION_SCRIPTURE',
+    'secondary'         => 'JBS_TPL_SECTION_SCRIPTURE',
+    'title'             => 'JBS_TPL_SECTION_MESSAGE', 'date' => 'JBS_TPL_SECTION_MESSAGE',
+    'studyintro'        => 'JBS_TPL_SECTION_MESSAGE', 'studynumber' => 'JBS_TPL_SECTION_MESSAGE',
+    'duration'          => 'JBS_TPL_SECTION_MESSAGE',
+    'teacher'           => 'JBS_TPL_SECTION_TEACHER', 'teacherimage' => 'JBS_TPL_SECTION_TEACHER',
+    'teacher-title'     => 'JBS_TPL_SECTION_TEACHER', 'teachershort' => 'JBS_TPL_SECTION_TEACHER',
+    'teacherlong'       => 'JBS_TPL_SECTION_TEACHER', 'teacherlargeimage' => 'JBS_TPL_SECTION_TEACHER',
+    'teacherallinone'   => 'JBS_TPL_SECTION_TEACHER',
+    'teacheremail'      => 'JBS_TPL_SECTION_CONTACT', 'teacherweb' => 'JBS_TPL_SECTION_CONTACT',
+    'teacherphone'      => 'JBS_TPL_SECTION_CONTACT',
+    'teacherfb'         => 'JBS_TPL_SECTION_SOCIAL', 'teachertw' => 'JBS_TPL_SECTION_SOCIAL',
+    'teacherblog'       => 'JBS_TPL_SECTION_SOCIAL',
+    'series'            => 'JBS_TPL_SECTION_SERIES', 'seriesthumbnail' => 'JBS_TPL_SECTION_SERIES',
+    'seriesdescription' => 'JBS_TPL_SECTION_SERIES', 'description' => 'JBS_TPL_SECTION_SERIES',
+    'jbsmedia'          => 'JBS_TPL_SECTION_MEDIA', 'thumbnail' => 'JBS_TPL_SECTION_MEDIA',
+    'downloads'         => 'JBS_TPL_SECTION_MEDIA',
+    'topic'             => 'JBS_TPL_SECTION_METADATA', 'locations' => 'JBS_TPL_SECTION_METADATA',
+    'messagetype'       => 'JBS_TPL_SECTION_METADATA', 'hits' => 'JBS_TPL_SECTION_METADATA',
+    'custom'            => 'JBS_TPL_SECTION_CUSTOM', 'dcustom' => 'JBS_TPL_SECTION_CUSTOM',
+];
+
+// Tags control conditional field visibility in the Layout Editor settings modal.
+// Each tag corresponds to a showFor value in layout-element-settings.xml.
+$elementTagMap = [
+    'date'              => ['date'],
+    'scripture1'        => ['scripture'],
+    'scripture2'        => ['scripture'],
+    'scriptures'        => ['scripture', 'allScriptures'],
+    'secondary'         => ['scripture'],
+    'jbsmedia'          => ['image', 'mediaIcon'],
+    'downloads'         => ['image'],
+    'thumbnail'         => ['image'],
+    'teacherimage'      => ['image'],
+    'seriesthumbnail'   => ['image'],
+    'teachercard'       => ['image'],
+    'studyintro'        => ['blockContent'],
+    'studytext'         => ['blockContent'],
+    'description'       => ['blockContent'],
+    'seriesdescription' => ['blockContent'],
+];
+
+$extractElements = function (array $fieldsetNames, string $prefix) use ($form, $elementSectionMap, $deprecatedElements, $elementTagMap): array {
+    $elements = [];
+    $seen     = [];
+
+    foreach ($fieldsetNames as $fieldsetName) {
+        foreach ($form->getFieldset($fieldsetName) as $field) {
+            $name = $field->fieldname;
+
+            if (!str_ends_with($name, 'row')) {
+                continue;
+            }
+
+            $elementId = substr($name, \strlen($prefix), -3);
+
+            if (isset($seen[$elementId])) {
+                continue;
+            }
+            $seen[$elementId] = true;
+
+            $entry = [
+                'id'      => $elementId,
+                'label'   => Text::_($field->getAttribute('label')),
+                'section' => Text::_($elementSectionMap[$elementId] ?? 'JBS_TPL_SECTION_OTHER'),
+                'tags'    => $elementTagMap[$elementId] ?? [],
+            ];
+
+            if (\in_array($elementId, $deprecatedElements, true)) {
+                $entry['deprecated'] = true;
+            }
+
+            $elements[] = $entry;
+        }
+    }
+
+    usort($elements, function ($a, $b) {
+        $cmp = strcmp($a['section'], $b['section']);
+
+        return $cmp !== 0 ? $cmp : strcmp($a['label'], $b['label']);
+    });
+
+    return $elements;
+};
+
+$elementDefinitions = [
+    'messages' => [
+        'label'    => $getFieldsetLabel('DISPLAYELEMENTS1') ?? Text::_('JBS_TPL_MESSAGES_LIST'),
+        'prefix'   => '',
+        'elements' => $extractElements(
+            ['DISPLAYELEMENTS1', 'DISPLAYELEMENTS2', 'DISPLAYELEMENTS3',
+             'DISPLAYELEMENTS4', 'DISPLAYELEMENTS5', 'DISPLAYELEMENTS6'],
+            ''
+        ),
+    ],
+    'details' => [
+        'label'    => $getFieldsetLabel('DDISPLAYELEMENTS1') ?? Text::_('JBS_TPL_STUDY_DETAILS'),
+        'prefix'   => 'd',
+        'elements' => $extractElements(
+            ['DDISPLAYELEMENTS1', 'DDISPLAYELEMENTS2', 'DDISPLAYELEMENTS3',
+             'DDISPLAYELEMENTS4', 'DDISPLAYELEMENTS5', 'DDISPLAYELEMENTS6'],
+            'd'
+        ),
+    ],
+    'teachers' => [
+        'label'    => $getFieldsetLabel('TEACHERDISPLAY') ?? Text::_('JBS_TPL_TEACHERS_LIST'),
+        'prefix'   => 'ts',
+        'elements' => $extractElements(['TEACHERDISPLAY'], 'ts'),
+    ],
+    'teacherDetails' => [
+        'label'    => $getFieldsetLabel('TEACHERDETAILSDISPLAY') ?? Text::_('JBS_TPL_TEACHER_DETAILS'),
+        'prefix'   => 'td',
+        'elements' => $extractElements(['TEACHERDETAILSDISPLAY'], 'td'),
+    ],
+    'series' => [
+        'label'    => $getFieldsetLabel('SERIESDISPLAY') ?? Text::_('JBS_TPL_SERIES_LIST'),
+        'prefix'   => 's',
+        'elements' => $extractElements(['SERIESDISPLAY'], 's'),
+    ],
+    'seriesDetails' => [
+        'label'    => $getFieldsetLabel('SERIESDETAILDISPLAY') ?? Text::_('JBS_TPL_SERIES_DETAILS'),
+        'prefix'   => 'sd',
+        'elements' => $extractElements(['SERIESDETAILDISPLAY'], 'sd'),
+    ],
+    'landingPage' => [
+        'label'       => $getFieldsetLabel('LANDINGPAGE') ?? Text::_('JBS_TPL_LANDING_PAGE'),
+        'prefix'      => '',
+        'isOrderOnly' => true,
+        'elements'    => (function () use ($form): array {
+            $field    = $form->getField('headingorder_1', 'params');
+            $sections = [];
+
+            if ($field && ($element = $field->element ?? null)) {
+                foreach ($element->option as $option) {
+                    $sections[] = [
+                        'id'         => (string) $option['value'],
+                        'label'      => Text::_((string) $option),
+                        'showParam'  => 'show' . (string) $option['value'],
+                        'labelParam' => (string) $option['value'] . 'label',
+                    ];
+                }
+            }
+
+            if (empty($sections)) {
+                $sections = [
+                    ['id' => 'teachers', 'label' => Text::_('JBS_CMN_TEACHERS'), 'showParam' => 'showteachers', 'labelParam' => 'teacherslabel'],
+                    ['id' => 'series', 'label' => Text::_('JBS_CMN_SERIES'), 'showParam' => 'showseries', 'labelParam' => 'serieslabel'],
+                    ['id' => 'books', 'label' => Text::_('JBS_CMN_BOOKS'), 'showParam' => 'showbooks', 'labelParam' => 'bookslabel'],
+                    ['id' => 'topics', 'label' => Text::_('JBS_CMN_TOPICS'), 'showParam' => 'showtopics', 'labelParam' => 'topicslabel'],
+                    ['id' => 'locations', 'label' => Text::_('JBS_CMN_LOCATIONS'), 'showParam' => 'showlocations', 'labelParam' => 'locationslabel'],
+                    ['id' => 'messagetypes', 'label' => Text::_('JBS_CMN_MESSAGETYPES'), 'showParam' => 'showmessagetypes', 'labelParam' => 'messagetypeslabel'],
+                    ['id' => 'years', 'label' => Text::_('JBS_CMN_YEARS'), 'showParam' => 'showyears', 'labelParam' => 'yearslabel'],
+                ];
+            }
+
+            return $sections;
+        })(),
+    ],
+];
+// Settings panel and landing section config from form fieldsets
+$fieldsets              = $form->getFieldsets();
+$settingsConfig         = [];
+$landingSectionSettings = [];
+
+foreach ($fieldsets as $fieldsetName => $fieldset) {
+    if (!empty($fieldset->layoutContext)) {
+        $contexts = array_map('trim', explode(',', $fieldset->layoutContext));
+        $label    = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+
+        foreach ($contexts as $context) {
+            if (!isset($settingsConfig[$context])) {
+                $settingsConfig[$context] = [];
+            }
+            $settingsConfig[$context][] = [
+                'fieldset' => $fieldsetName,
+                'label'    => $label,
+            ];
+        }
+    }
+
+    if (!empty($fieldset->landingSection)) {
+        $label                                             = !empty($fieldset->label) ? Text::_($fieldset->label) : $fieldsetName;
+        $landingSectionSettings[$fieldset->landingSection] = [
+            'fieldset' => $fieldsetName,
+            'label'    => $label,
+        ];
+    }
+}
+
+// Register all Layout Editor script options via centralized layout
+\Joomla\CMS\Layout\LayoutHelper::render('layouteditor.scriptoptions', [
+    'form'                   => $this->form,
+    'templateId'             => (int) $this->item->id,
+    'templateParams'         => $paramsArray,
+    'elementDefinitions'     => $elementDefinitions,
+    'settingsConfig'         => $settingsConfig,
+    'landingSectionSettings' => $landingSectionSettings,
+    'prependInherit'         => false,
+], JPATH_COMPONENT_ADMINISTRATOR . '/layouts');
 ?>
 
 <form action="<?php
@@ -43,107 +294,86 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_GENERAL')); ?>
         <div class="row">
-            <div class="col-lg-9 form-horizontal">
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('title'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('title'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('text'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('text'); ?>
-                    </div>
-                </div>
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('title'); ?>
+                <?php echo $this->form->renderField('text'); ?>
+                <hr />
+                <h4><?php echo Text::_('JBS_TPL_CONTENT_SCOPE'); ?></h4>
+                <?php foreach ($this->form->getFieldset('CONTENT_SCOPE') as $field) :
+                    echo $this->form->renderField($field->fieldname, 'params');
+                endforeach; ?>
             </div>
-            <div class="col-lg-2 form-vertical">
-                <h4><?php
-                    echo Text::_('JDETAILS'); ?></h4>
-                <hr/>
-                <div class="control-group">
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getValue('title'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('id'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('id'); ?>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $this->form->getLabel('published'); ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $this->form->getInput('published'); ?>
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><?php echo Text::_('JDETAILS'); ?></h5>
+                        <?php echo $this->form->renderField('published'); ?>
+                        <?php echo $this->form->renderField('id'); ?>
                     </div>
                 </div>
             </div>
         </div>
-        <hr/>
+
+        <hr />
         <div class="row">
-            <?php
-            $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('TEMPLATES'));
-            foreach ($this->form->getFieldset('TEMPLATES') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-6">';
-                } elseif ($c === (int)$count->half) {
-                    echo '</div><div class="col-12 col-lg-6">';
-                }
-                ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_CMN_TERMS_SETTINGS'); ?></h4>
+            </div>
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <label for="jform_params_terms" class="form-label mb-0 fw-bold">
+                        <?php echo Text::_('JBS_CMN_TERMS'); ?>
+                    </label>
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="jform_params_useterms" class="form-label mb-0 small text-muted">
+                            <?php echo Text::_('JBS_CMN_USE_TERMS'); ?>
+                        </label>
+                        <?php echo $this->form->getInput('useterms', 'params'); ?>
                     </div>
                 </div>
-                <?php
-                $c++;
-                if ($c === (int)$count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
+                <?php echo $this->form->getInput('terms', 'params'); ?>
+                <div class="form-text small text-muted"><?php echo Text::_('JBS_CMN_TERMS_DESC'); ?></div>
+            </div>
         </div>
-        <hr/>
-        <div class="col-12 col-lg-12">
+
+        <hr />
+        <div class="row">
+            <div class="col-12">
+                <h4><?php echo Text::_('JBS_TPL_FILTERS'); ?></h4>
+            </div>
             <?php
-            foreach ($this->form->getFieldset('TERMS') as $field) : ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
+            $filterArray = array_values($this->form->getFieldset('FILTERS'));
+            $split       = 3;
+            ?>
+            <div class="col-lg-6">
+                <?php for ($i = 0; $i < $split; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
+            </div>
+            <div class="col-lg-6">
+                <?php for ($i = $split, $count = count($filterArray); $i < $count; $i++) :
+                    echo $this->form->renderField($filterArray[$i]->fieldname, 'params');
+                endfor; ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab'); ?>
+
+        <?php
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'layout', Text::_('JBS_TPL_LAYOUT_EDITOR')); ?>
+        <div class="row">
+            <div class="col-12">
+                <!-- Layout Editor loads via AJAX when tab is shown for faster initial page load -->
+                <div id="layout-editor-ajax-container"
+                     data-load-url="<?php echo Route::_('index.php?option=com_proclaim&task=cwmtemplate.loadLayoutEditor&format=raw&id=' . (int) $this->item->id); ?>">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JLIB_HTML_BEHAVIOR_LOADING'); ?></span>
+                        </div>
+                        <p class="mt-3 text-muted"><?php echo Text::_('JBS_TPL_LAYOUT_LOADING'); ?></p>
                     </div>
                 </div>
-                <?php
-            endforeach; ?>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
@@ -151,859 +381,46 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'media', Text::_('JBS_CMN_MEDIA')); ?>
         <div class="row">
-            <?php
-            $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('MEDIA'));
-            foreach ($this->form->getFieldset('MEDIA') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-6">';
-                } elseif ($c === (int)$count->half) {
-                    echo '</div><div class="col-12 col-lg-6">';
-                }
-                ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
-                    </div>
-                </div>
+            <div class="col-lg-6">
                 <?php
-                (int)$c++;
-                if ($c === (int)$count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
+$fields     = $this->form->getFieldset('MEDIA');
+$fieldArray = iterator_to_array($fields);
+$half       = (int) ceil(\count($fieldArray) / 2);
+$i          = 0;
+foreach ($fieldArray as $field) :
+    if ($i === $half) {
+        echo '</div><div class="col-lg-6">';
+    }
+    echo $this->form->renderField($field->fieldname, 'params');
+    $i++;
+endforeach;
+?>
+            </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'landing', Text::_('JBS_TPL_LANDING_PAGE')); ?>
+        echo HTMLHelper::_('uitab.addTab', 'myTab', 'display-defaults', Text::_('JBS_TPL_DISPLAY_DEFAULTS')); ?>
         <div class="row">
-            <?php
-            $c     = 0;
-            $count = CwmproclaimHelper::halfarray($this->form->getFieldset('LANDINGPAGE'));
-            foreach ($this->form->getFieldset('LANDINGPAGE') as $field) :
-                if ($c === 0) {
-                    echo '<div class="col-12 col-lg-7">';
-                } elseif ($c === $count->half) {
-                    echo '</div><div class="col-12 col-lg-5">';
-                }
-                ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php
-                        echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php
-                        echo $field->input; ?>
-                        <br /> <?php echo Text::_($field->description); ?>
-                    </div>
-                </div>
+            <div class="col-lg-6">
                 <?php
-                $c++;
-                if ($c === $count->count) {
-                    echo '</div>';
-                }
-            endforeach; ?>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_MESSAGES_LIST_VIEW')); ?>
-        <div class="row">
-            <div class="accordion" id="accordionlist">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading1">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                            <?php
-                            echo Text::_('JBS_TPL_VERSES_DATES_CSS'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('VERSES') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading2">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                            <?php
-                            echo Text::_('JBS_TPL_LIST_ITEMS'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('LISTITEMS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading3">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                            <?php
-                            echo Text::_('JBS_TPL_FILTERS'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('FILTERS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading4">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                            <?php
-                            echo Text::_('JBS_TPL_TOOLTIP'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TOOLTIP') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading5">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS1') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading6">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS2') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading7">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS3') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading8">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse8" class="accordion-collapse collapse" aria-labelledby="heading8"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS4') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading9">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS5') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading10">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DISPLAYELEMENTS6') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
+foreach ($this->form->getFieldset('VERSES') as $field) :
+    echo $this->form->renderField($field->fieldname, 'params');
+endforeach;
+?>
             </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_STUDY_DETAILS_VIEW')); ?>
-        <div class="row">
-            <div class="accordion" id="accordionlist">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading11">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
-                            <?php
-                            echo Text::_('JBS_TPL_STUDY_DETAILS_VIEW'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse11" class="accordion-collapse collapse show" aria-labelledby="heading11"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DETAILS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading12">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse12" aria-expanded="false" aria-controls="collapse12">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS1'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse12" class="accordion-collapse collapse" aria-labelledby="heading12"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS1') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading13">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse13" aria-expanded="false" aria-controls="collapse13">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS2'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse13" class="accordion-collapse collapse" aria-labelledby="heading13"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS2') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading14">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse14" aria-expanded="false" aria-controls="collapse14">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS3'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse14" class="accordion-collapse collapse" aria-labelledby="heading14"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS3') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading15">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse15" aria-expanded="false" aria-controls="collapse15">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS4'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse15" class="accordion-collapse collapse" aria-labelledby="heading15"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS4') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading16">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse16" aria-expanded="false" aria-controls="collapse16">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS5'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse16" class="accordion-collapse collapse" aria-labelledby="heading16"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS5') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading17">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse17" aria-expanded="false" aria-controls="collapse17">
-                            <?php
-                            echo Text::_('JBS_TPL_DISPLAY_ITEMS6'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse17" class="accordion-collapse collapse" aria-labelledby="heading17"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('DDISPLAYELEMENTS6') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_TPL_TEACHER_VIEW')); ?>
-        <div class="row">
-            <div class="accordion" id="accordionlist">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading18">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse18" aria-expanded="false" aria-controls="collapse18">
-                            <?php
-                            echo Text::_('JBS_TPL_TEACHERDETAILS'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse18" class="accordion-collapse collapse" aria-labelledby="heading18"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILS') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading318">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse318" aria-expanded="false" aria-controls="collapse318">
-                            <?php
-                            echo Text::_('JBS_TPL_TEACHER'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse318" class="accordion-collapse collapse" aria-labelledby="heading318"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHER') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading219">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse219" aria-expanded="false" aria-controls="collapse219">
-                            <?php
-                            echo Text::_('JBS_TPL_TEACHERDISPLAY'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse219" class="accordion-collapse collapse" aria-labelledby="heading219"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHERDISPLAY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading119">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse119" aria-expanded="false" aria-controls="collapse119">
-                            <?php
-                            echo Text::_('JBS_TPL_TEACHERDETAILSDISPLAY'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse119" class="accordion-collapse collapse" aria-labelledby="heading119"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('TEACHERDETAILSDISPLAY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'list', Text::_('JBS_CMN_SERIES')); ?>
-        <div class="row">
-            <div class="accordion" id="accordionlist">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading20">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse20" aria-expanded="false" aria-controls="collapse20">
-                            <?php
-                            echo Text::_('JBS_TPL_SERIESLIST'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse20" class="accordion-collapse collapse show" aria-labelledby="heading20"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIES') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading21">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse21" aria-expanded="false" aria-controls="collapse21">
-                            <?php
-                            echo Text::_('JBS_TPL_SERIESLISTDISPLAY'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse21" class="accordion-collapse collapse" aria-labelledby="heading21"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDISPALY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading22">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse22" aria-expanded="false" aria-controls="collapse22">
-                            <?php
-                            echo Text::_('JBS_TPL_SERIESDETAILS'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDETAIL') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading23">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse23" aria-expanded="false" aria-controls="collapse23">
-                            <?php
-                            echo Text::_('JBS_TPL_SERIESDETAILSDISPLAY'); ?>
-                        </button>
-                    </h2>
-                    <div id="collapse23" class="accordion-collapse collapse" aria-labelledby="heading23"
-                         data-bs-parent="#accordionlist">
-                        <div class="accordion-body">
-                            <?php
-                            foreach ($this->form->getFieldset('SERIESDETAILDISPALY') as $field) : ?>
-                                <div class="control-group">
-                                    <div class="control-label">
-                                        <?php
-                                        echo $field->label; ?>
-                                    </div>
-                                    <div class="controls">
-                                        <?php
-                                        echo $field->input; ?>
-                                        <br /> <?php echo Text::_($field->description); ?>
-                                    </div>
-                                </div>
-                                <?php
-                            endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
         <?php
         if ($this->canDo->get('core.admin')) : ?>
             <?php
             echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row-fluid">
+            <div class="row">
                 <?php
-                echo $this->form->getInput('rules'); ?>
+echo $this->form->getInput('rules'); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab'); ?>
@@ -1011,7 +428,13 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         endif; ?>
 
         <input type="hidden" name="task" value=""/>
-        <?php
-        echo HTMLHelper::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
+
+        <?php // Render template override fields as hidden inputs so the toolbar dropdown can sync values ?>
+        <?php foreach ($form->getFieldset('TEMPLATE_OVERRIDES') as $field): ?>
+            <input type="hidden"
+                   name="jform[params][<?php echo $field->fieldname; ?>]"
+                   value="<?php echo htmlspecialchars($paramsArray[$field->fieldname] ?? '0', ENT_COMPAT, 'UTF-8'); ?>" />
+        <?php endforeach; ?>
     </div>
 </form>

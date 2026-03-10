@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -26,8 +26,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Schema\ChangeSet;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Table\Extension as ExtensionTable;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Versioning\VersionableModelTrait;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -66,13 +68,13 @@ class CwmadminModel extends AdminModel
      * @var string
      * @since  4.0.0
      */
-    protected $formName = 'cwmcpanel';
+    protected string $formName = 'cwmcpanel';
 
     /**
      * @var null
      * @since 7.0
      */
-    protected $changeSet = null;
+    protected mixed $changeSet = null;
 
     /**
      * Gets the form from the XML file.
@@ -87,10 +89,7 @@ class CwmadminModel extends AdminModel
      */
     public function getForm($data = [], $loadData = true): mixed
     {
-        if (empty($data)) {
-            $this->getItem();
-        }
-
+        // No eager getItem() — loadFormData() handles it and AdminModel caches the result.
         // Get the form.
         $form = $this->loadForm('com_proclaim.admin', 'admin', ['control' => 'jform', 'load_data' => $loadData]);
 
@@ -159,20 +158,6 @@ class CwmadminModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
-     *
-     * @param   null  $pk  The numeric id of the primary key.
-     *
-     * @return bool|int|null False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): bool|int|null
-    {
-        return $pk;
-    }
-
-    /**
      * Get Media Files
      *
      * @return mixed
@@ -183,11 +168,11 @@ class CwmadminModel extends AdminModel
      */
     public function getMediaFiles(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__bsms_mediafiles');
-        $db->setQuery($query->__toString());
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $db->setQuery($query);
         $mediafiles = $db->loadObjectList();
 
         foreach ($mediafiles as $i => $mediafile) {
@@ -216,7 +201,9 @@ class CwmadminModel extends AdminModel
         $changeSet->fix();
         $this->fixSchemaVersion($changeSet);
         $this->fixUpdateVersion();
-        $installer = new CwminstallModel();
+        /** @var CwminstallModel $installer */
+        $installer = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwminstall', 'Administrator');
         $installer->fixMenus();
         $installer->fixemptyaccess();
         $installer->fixemptylanguage();
@@ -242,7 +229,7 @@ class CwmadminModel extends AdminModel
         }
 
         try {
-            $this->changeSet = ChangeSet::getInstance(Factory::getDbo(), $folder);
+            $this->changeSet = ChangeSet::getInstance(Factory::getContainer()->get(DatabaseInterface::class), $folder);
         } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
 
@@ -273,16 +260,16 @@ class CwmadminModel extends AdminModel
         }
 
         // Delete old row
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
-            ->delete($db->qn('#__schemas'))
-            ->where($db->qn('extension_id') . ' = ' . $db->q($extensionresult));
+            ->delete($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
         $db->execute();
 
         // Add new row
         $query->clear()
-            ->insert($db->qn('#__schemas'))
+            ->insert($db->quoteName('#__schemas'))
             ->columns($db->quoteName('extension_id') . ',' . $db->quoteName('version_id'))
             ->values($db->quote($extensionresult) . ', ' . $db->quote($schema));
         $db->setQuery($query);
@@ -306,10 +293,10 @@ class CwmadminModel extends AdminModel
      */
     public function getExtentionId(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('extension_id')->from($db->qn('#__extensions'))
-            ->where('element = ' . $db->q('com_proclaim'));
+        $query->select($db->quoteName('extension_id'))->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
         $result = $db->loadResult();
 
@@ -330,11 +317,11 @@ class CwmadminModel extends AdminModel
      */
     public function getSchemaVersion(): mixed
     {
-        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $db              = Factory::getContainer()->get(DatabaseInterface::class);
         $query           = $db->getQuery(true);
         $extensionresult = $this->getExtentionId();
-        $query->select('version_id')->from($db->qn('#__schemas'))
-            ->where('extension_id = ' . $db->q($extensionresult));
+        $query->select($db->quoteName('version_id'))->from($db->quoteName('#__schemas'))
+            ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
 
         return $db->loadResult();
@@ -350,7 +337,8 @@ class CwmadminModel extends AdminModel
      */
     public function fixUpdateVersion(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
         $cache         = new Registry($table->manifest_cache);
         $updateVersion = $cache->get('version');
@@ -378,27 +366,28 @@ class CwmadminModel extends AdminModel
      */
     public function getCompVersion(): string
     {
-        $jversion = '';
+        $version  = '';
         $file     = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
         $xml      = simplexml_load_string(file_get_contents($file));
 
         if ($xml) {
-            $jversion = (string)$xml->version;
+            $version = (string)$xml->version;
         }
 
-        return $jversion;
+        return $version;
     }
 
     /**
      * Check if com_proclaim parameters are blank. If so, populate with com_content text filters.
      *
-     * @return  mixed  boolean true if params are updated, null otherwise
+     * @return  mixed  bool true if params are updated, null otherwise
      *
      * @since 7.0
      */
     public function fixDefaultTextFilters(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $table = new ExtensionTable($db);
         $table->load($table->find(['name' => 'com_proclaim']));
 
         // Check for empty $config and non-empty content filters
@@ -441,7 +430,8 @@ class CwmadminModel extends AdminModel
      */
     public function getUpdateVersion(): mixed
     {
-        $table = Table::getInstance('Extension');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $table = new ExtensionTable($db);
         $table->load($this->getExtentionId());
 
         return (new Registry($table->manifest_cache))->get('version');
@@ -469,9 +459,11 @@ class CwmadminModel extends AdminModel
      */
     public function getSSorPI(): mixed
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query->select('extension_id, name, element')->from('#__extensions');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['extension_id', 'name', 'element']))
+            ->from($db->quoteName('#__extensions'))
+            ->whereIn($db->quoteName('element'), ['com_sermonspeaker', 'com_preachit']);
         $db->setQuery($query);
 
         return $db->loadObjectList();
@@ -482,16 +474,19 @@ class CwmadminModel extends AdminModel
      *
      * @return string
      *
+     * @throws \Exception
      * @since 9.0.12
      */
     public function playerByMediaType(): string
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $_POST['jform'];
+        $post = Factory::getApplication()->getInput()->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from    = $reg->get('mtFrom', 'x');
@@ -509,45 +504,45 @@ class CwmadminModel extends AdminModel
         }
 
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . $db->q('1'));
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('published') . ' = ' . $db->q('1'));
         $db->setQuery($query);
 
         foreach ($db->loadObjectList() as $media) {
             $count++;
             $search = false;
-            $isfrom = '';
+            $from   = '';
             $reg    = new Registry();
             $reg->loadString($media->params);
             $filename  = $reg->get('filename', '');
-            $mediacode = $reg->get('mediacode');
+            $mediaCode = $reg->get('mediacode');
 
             $extension = substr($filename, strrpos($filename, '.') + 1);
 
-            if ($from === 'http' && strpos($filename, 'http') !== false) {
+            if ($from === 'http' && str_contains($filename, 'http')) {
                 $reg->set('mime_type', ' ');
-                $isfrom = 'http';
+                $from   = 'http';
                 $search = true;
             }
 
-            if (!empty($mediacode) && $from === 'mediacode') {
+            if (!empty($mediaCode) && $from === 'mediacode') {
                 $reg->set('mime_type', ' ');
-                $isfrom = 'mediacode';
+                $from   = 'mediacode';
                 $search = true;
             }
 
-            if (strpos($key, $extension) !== false || $reg->get('mime_type', 0) == $from) {
+            if (str_contains($key, $extension) || $reg->get('mime_type', 0) == $from) {
                 $reg->set('mime_type', $from);
-                $isfrom = 'Extenstion';
+                $from   = 'Extenstion';
                 $search = true;
             }
 
-            if ($search && !empty($isfrom)) {
+            if ($search && !empty($from)) {
                 $account++;
 
                 if (JBSMDEBUG) {
-                    $msg .= ' From: ' . $isfrom . '<br />';
+                    $msg .= ' From: ' . $from . '<br />';
 
                     if ($reg->get('mime_type', 0) == $from) {
                         $msg .= ' MimeType: ' . $reg->get('mime_type') . '<br />';
@@ -559,9 +554,9 @@ class CwmadminModel extends AdminModel
                 $reg->set('player', $to);
 
                 $query = $db->getQuery(true);
-                $query->update('#__bsms_mediafiles')
-                    ->set('params = ' . $db->q($reg->toString()))
-                    ->where('id = ' . (int)$media->id);
+                $query->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                 $db->setQuery($query);
 
                 if (!$db->execute()) {
@@ -597,7 +592,7 @@ class CwmadminModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission set in the component.
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission set in the component.
      *
      * @throws \Exception
      * @since   1.6
@@ -634,6 +629,12 @@ class CwmadminModel extends AdminModel
         $app->setUserState('com_proclaim.message', '');
         $app->setUserState('com_proclaim.extension_message', '');
         parent::populateState();
+
+        // Singleton settings page — always use id=1.
+        // Use $this->state directly to avoid getState() re-triggering populateState().
+        if (!$this->state->get($this->getName() . '.id')) {
+            $this->setState($this->getName() . '.id', 1);
+        }
     }
 
     /**

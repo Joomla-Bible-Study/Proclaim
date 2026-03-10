@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -13,22 +13,35 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
+use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
-use CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
@@ -40,7 +53,7 @@ use Joomla\Registry\Registry;
 class CwmadminController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanism from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var  string
      *
@@ -49,7 +62,36 @@ class CwmadminController extends FormController
     protected $view_list = 'cwmcpanel';
 
     /**
-     * Tools to change player or pop-up
+     * Gate ALL admin center actions behind core.admin.
+     *
+     * Campus editors/viewers only have core.manage — they must not reach
+     * any admin center task (tools, backup, restore, conversions, etc.).
+     *
+     * @param   string  $task  The task to execute.
+     *
+     * @return  mixed
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function execute($task): mixed
+    {
+        if (!Factory::getApplication()->getIdentity()->authorise('core.admin')) {
+            $this->setRedirect(
+                Route::_('index.php?option=com_proclaim&view=cwmcpanel', false),
+                Text::_('JERROR_ALERTNOAUTHOR'),
+                'warning'
+            );
+
+            return null;
+        }
+
+        return parent::execute($task);
+    }
+
+    /**
+     * Tools to change the player or pop-up
      *
      * @return void
      *
@@ -58,7 +100,14 @@ class CwmadminController extends FormController
      */
     public function tools(): void
     {
-        $tool = Factory::getApplication()->input->get('tooltype', '', 'post');
+        // Check for request forgeries.
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
+
+        $tool = Factory::getApplication()->getInput()->get('tooltype', '', 'post');
 
         $model = $this->getModel();
 
@@ -73,7 +122,7 @@ class CwmadminController extends FormController
 
             case 'playerbymediatype':
                 $msg = $model->playerByMediaType();
-                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 break;
         }
     }
@@ -83,16 +132,21 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function changePlayers(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
+            return;
+        }
+
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $post = $_POST['jform'];
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from = $reg->get('from', 'x');
@@ -100,8 +154,8 @@ class CwmadminController extends FormController
 
         if ($from !== 'x' && $to !== 'x') {
             $query = $db->getQuery(true);
-            $query->select('id, params')
-                ->from('#__bsms_mediafiles');
+            $query->select($db->quoteName(['id', 'params']))
+                ->from($db->quoteName('#__bsms_mediafiles'));
             $db->setQuery($query);
 
             foreach ($db->loadObjectList() as $media) {
@@ -112,14 +166,14 @@ class CwmadminController extends FormController
                     $reg->set('player', $to);
 
                     $query = $db->getQuery(true);
-                    $query->update('#__bsms_mediafiles')
-                        ->set('params = ' . $db->q($reg->toString()))
-                        ->where('id = ' . (int)$media->id);
+                    $query->update($db->quoteName('#__bsms_mediafiles'))
+                        ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                        ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                     $db->setQuery($query);
 
                     if (!$db->execute()) {
                         $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                     }
                 }
             }
@@ -127,7 +181,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To';
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -135,15 +189,20 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function changePopup(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
 
-        $db   = Factory::getContainer()->get('DatabaseDriver');
-        $post = $_POST['jform'];
+            return;
+        }
+
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from  = $reg->get('pFrom', 'x');
@@ -151,8 +210,8 @@ class CwmadminController extends FormController
         $to    = $reg->get('pTo', 'x');
         $msg   = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $query = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles');
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
 
         foreach ($db->loadObjectList() as $media) {
@@ -170,23 +229,23 @@ class CwmadminController extends FormController
                 $reg->set('popup', $to);
 
                 $query = $db->getQuery(true);
-                $query->update('#__bsms_mediafiles')
-                    ->set('params = ' . $db->q($reg->toString()))
-                    ->where('id = ' . (int)$media->id);
+                $query->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                 $db->setQuery($query);
 
                 if (!$db->execute()) {
                     $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
                 }
             }
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
-     * Change media images from a digital file to css
+     * Change media images from a digital file to CSS
      *
      * @return void
      *
@@ -195,12 +254,19 @@ class CwmadminController extends FormController
      */
     public function mediaimages(): void
     {
-        $post    = $_POST['jform'];
+        // Check for request forgeries.
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
+
+        $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->getQuery(true);
-        $query->select('id, params')
-            ->from('#__bsms_mediafiles');
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
         $images    = $db->loadObjectList();
         $error     = 0;
@@ -232,20 +298,15 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->quoteName('#__bsms_mediafiles'))
+                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -275,20 +336,15 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
                         $db->setQuery($query);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
 
                         try {
-                            $db->setQuery($query);
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->quoteName('#__bsms_mediafiles'))
+                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -322,20 +378,15 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $query->update('#__bsms_mediafiles')
-                            ->set('params = ' . $db->q($reg->toString()))
-                            ->where('id = ' . (int)$media->id);
                         $db->setQuery($query);
 
                         try {
-                            $db->setQuery($query);
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->quoteName('#__bsms_mediafiles'))
+                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added = $added + $rows;
@@ -373,16 +424,15 @@ class CwmadminController extends FormController
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
                         $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_text_size', $post['media_icon_text_size']);
                         $reg->set('media_icon_type', $post['media_icon_type']);
                         $reg->set('media_image', $post['media_image']);
                         $reg->set('media_use_button_icon', $post['media_use_button_icon']);
 
                         try {
                             $db->setQuery($query);
-                            $query->update('#__bsms_mediafiles')
-                                ->set('params = ' . $db->q($reg->toString()))
-                                ->where('id = ' . (int)$media->id);
+                            $query->update($db->quoteName('#__bsms_mediafiles'))
+                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
+                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
                             $db->execute();
                             $rows  = $db->getAffectedRows();
                             $added += $rows;
@@ -403,7 +453,7 @@ class CwmadminController extends FormController
                 break;
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -411,19 +461,24 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetHits(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $msg   = null;
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('hits = ' . 0)
-            ->where('hits != 0');
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('hits') . ' = 0')
+            ->where($db->quoteName('hits') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -432,7 +487,7 @@ class CwmadminController extends FormController
             $msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -440,19 +495,24 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetDownloads(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $msg   = null;
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('downloads = ' . 0)
-            ->where('downloads != 0');
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('downloads') . ' = 0')
+            ->where($db->quoteName('downloads') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -462,7 +522,7 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
     }
 
     /**
@@ -470,19 +530,24 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function resetPlays(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $msg   = null;
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('plays = ' . 0)
-            ->where('plays != 0');
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('plays') . ' = 0')
+            ->where($db->quoteName('plays') . ' != 0');
         $db->setQuery($query);
 
         if (!$db->execute()) {
@@ -492,7 +557,221 @@ class CwmadminController extends FormController
             $msg     = Text::_('JBS_CMN_RESET_SUCCESSFUL') . ' ' . $updated . ' ' . Text::_('JBS_CMN_ROWS_RESET');
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $msg);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
+    }
+
+    /**
+     * Reset All Hits — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetHitsXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('hits') . ' = 0')
+            ->where($db->quoteName('hits') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_HITS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Reset All Downloads — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetDownloadsXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('downloads') . ' = 0')
+            ->where($db->quoteName('downloads') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_DOWNLOADS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Reset All Plays — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetPlaysXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('plays') . ' = 0')
+            ->where($db->quoteName('plays') . ' != 0');
+        $db->setQuery($query);
+
+        if ($db->execute()) {
+            echo json_encode(['success' => true, 'updated' => $db->getAffectedRows()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_ERROR_RESETTING_PLAYS')]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Get formatted video description for a study — AJAX endpoint.
+     *
+     * Returns the description text for preview/copy operations.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function getVideoDescriptionXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        // Release session lock for concurrent requests
+        $this->app->getSession()->close();
+
+        $studyId = $this->input->getInt('study_id', 0);
+
+        if (!$studyId) {
+            echo json_encode(['success' => false, 'error' => 'No study ID provided']);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $description = CwmdescriptionHelper::buildVideoDescription($studyId);
+
+            echo json_encode(['success' => true, 'description' => $description]);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Push description to a video platform — AJAX endpoint.
+     *
+     * Accepts study_id and media_id, builds the description, and pushes via addon API.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function syncVideoDescriptionXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        // Release session lock for concurrent requests
+        $this->app->getSession()->close();
+
+        $studyId = $this->input->getInt('study_id', 0);
+        $mediaId = $this->input->getInt('media_id', 0);
+
+        if (!$studyId || !$mediaId) {
+            echo json_encode(['success' => false, 'error' => 'Missing study_id or media_id']);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $description = $this->input->getString('description', '');
+
+            if (empty($description)) {
+                $description = CwmdescriptionHelper::buildVideoDescription($studyId);
+            }
+
+            // Look up the server type for this media file
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('sv.type'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_servers', 'sv') .
+                    ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('m.server_id')
+                )
+                ->where($db->quoteName('m.id') . ' = ' . (int) $mediaId);
+            $db->setQuery($query);
+            $serverType = $db->loadResult();
+
+            if (empty($serverType)) {
+                echo json_encode(['success' => false, 'error' => 'Could not determine server type']);
+                $this->app->close();
+
+                return;
+            }
+
+            $addon = CWMAddon::getInstance($serverType);
+
+            if (!$addon->supportsDescriptionSync()) {
+                echo json_encode(['success' => false, 'error' => 'This platform does not support description sync']);
+                $this->app->close();
+
+                return;
+            }
+
+            $result = $addon->syncDescription($mediaId, $description);
+
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        $this->app->close();
     }
 
     /**
@@ -504,7 +783,7 @@ class CwmadminController extends FormController
      */
     public function back(): void
     {
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin');
     }
 
     /**
@@ -512,16 +791,21 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function convertSermonSpeaker(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $convert      = new Cwmssconvert();
         $ssconversion = $convert->convertSS();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $ssconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $ssconversion);
     }
 
     /**
@@ -529,16 +813,21 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.0.0
      */
     public function convertPreachIt(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $convert      = new CwmpIconvert();
         $piconversion = $convert->convertPI();
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', $piconversion);
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $piconversion);
     }
 
     /**
@@ -551,9 +840,9 @@ class CwmadminController extends FormController
      */
     public function dbReset(): void
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
-        if (array_key_exists(8, $user->groups)) {
+        if ($user->authorise('core.admin')) {
             CwmdbHelper::resetdb();
             $this->setRedirect(
                 Route::_(
@@ -563,7 +852,7 @@ class CwmadminController extends FormController
                 )
             );
         } else {
-            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'eroor');
+            Factory::getApplication()->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
             $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmcpanel', false));
         }
     }
@@ -573,16 +862,21 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 7.1.0
      */
     public function aliasUpdate(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get')) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $update = Cwmalias::updateAlias();
         $this->setMessage(Text::_('JBS_ADM_ALIAS_ROWS') . $update);
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit&id=1', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
     }
 
     /**
@@ -598,9 +892,11 @@ class CwmadminController extends FormController
     public function doimport(bool $parent = true): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
 
-        $alt         = '';
+            return;
+        }
 
         // This should be where the form administrator/form_migrate comes to with either the file select box or the tmp folder input field
         $app   = Factory::getApplication();
@@ -612,14 +908,27 @@ class CwmadminController extends FormController
 
         if ($oldprefix) {
             if (!($this->copyTables($oldprefix))) {
-                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'worning');
+                $app->enqueueMessage(Text::_('JBS_CMN_DATABASE_NOT_COPIED'), 'warning');
+                $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
+
+                return;
             }
+
+            $app->enqueueMessage(Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), 'success');
         } else {
             $import = new Cwmrestore();
-            $import->importdb($parent);
+            $result = $import->importdb($parent);
+
+            if ($result === true) {
+                $app->enqueueMessage(Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), 'success');
+            } elseif ($result === false) {
+                // Error messages already enqueued by importdb()
+            } else {
+                $app->enqueueMessage((string) $result, 'warning');
+            }
         }
 
-        $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel');
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmbackup');
     }
 
     /**
@@ -635,11 +944,15 @@ class CwmadminController extends FormController
     public function copyTables(string $oldprefix): bool
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return false;
+        }
 
         // Create table tablename_new like tablename; -> this will copy the structure...
         // Insert into tablename_new select * from tablename; -> this would copy all the data
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
 
@@ -647,22 +960,22 @@ class CwmadminController extends FormController
             $isjbs = substr_count($table, $oldprefix . 'bsms');
 
             if ($isjbs) {
-                $oldlength       = strlen($oldprefix);
+                $oldlength       = \strlen($oldprefix);
                 $newsubtablename = substr($table, $oldlength);
                 $newtablename    = $prefix . $newsubtablename;
-                $query           = 'DROP TABLE IF EXISTS ' . $newtablename;
+                $query           = 'DROP TABLE IF EXISTS ' . $db->quoteName($newtablename);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'CREATE TABLE ' . $newtablename . ' LIKE ' . $table;
+                $query = 'CREATE TABLE ' . $db->quoteName($newtablename) . ' LIKE ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
                 }
 
-                $query = 'INSERT INTO ' . $newtablename . ' SELECT * FROM ' . $table;
+                $query = 'INSERT INTO ' . $db->quoteName($newtablename) . ' SELECT * FROM ' . $db->quoteName($table);
 
                 if (!CwmdbHelper::performDB($query)) {
                     return false;
@@ -684,7 +997,11 @@ class CwmadminController extends FormController
     public function import(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $application = Factory::getApplication();
         $import      = new Cwmrestore();
@@ -712,7 +1029,11 @@ class CwmadminController extends FormController
     public function export(): void
     {
         // Check for request forgeries.
-        Session::checkToken('get') || Session::checkToken() || jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $input  = Factory::getApplication()->getInput();
         $run    = (int)$input->get('run', '', 'int');
@@ -744,11 +1065,17 @@ class CwmadminController extends FormController
     public function getThumbnailListXHR(): void
     {
         $app          = Factory::getApplication();
-        $document     = $app->getDocument();
         $input        = $app->getInput();
         $images_paths = [];
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $image_types = $input->get('images', null, 'array');
         $count       = 0;
@@ -757,7 +1084,7 @@ class CwmadminController extends FormController
             $images = Folder::files(JPATH_ROOT . '/images/biblestudy/' . $image_type, 'original_', true, true);
 
             if ($images) {
-                $count += count($images);
+                $count += \count($images);
             }
 
             $images_paths[] = [['type' => $image_type, 'images' => $images]];
@@ -780,10 +1107,16 @@ class CwmadminController extends FormController
     public function createThumbnailXHR(): void
     {
         $app      = Factory::getApplication();
-        $document = $app->getDocument();
         $input    = $app->getInput();
 
-        $document->setMimeEncoding('application/json');
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         $image_path = $input->get('image_path', null, 'string');
         $new_size   = $input->get('new_size', null, 'integer');
@@ -798,19 +1131,21 @@ class CwmadminController extends FormController
      *
      * @return void
      *
+     * @throws \Exception
      * @since 9.0.1
      */
     public function doArchive(): void
     {
         // Check for request forgeries.
-        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', Text::_('JINVALID_TOKEN'), 'error');
 
-        $model = new CwmarchiveModel();
-        try {
-            $msg = $model->doArchive();
-        } catch (\Exception $e) {
-            throw new \RuntimeException($e);
+            return;
         }
+
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel $model */
+        $model = $this->getModel('Cwmarchive');
+        $msg   = $model->doArchive();
         $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel', $msg);
     }
 
@@ -823,7 +1158,7 @@ class CwmadminController extends FormController
      * @return bool
      *
      * @throws \Exception
-     * @since version
+     * @since 9.0.0
      */
     public function submit(?int $key = null, ?string $urlVar = null): bool
     {
@@ -834,7 +1169,7 @@ class CwmadminController extends FormController
         $form  = $model->getForm('', false);
 
         if (!$form) {
-            $app->enqueueMessage($model->getError(), 'error');
+            $app->enqueueMessage(Text::_('JLIB_APPLICATION_ERROR_FORM_LOAD'), 'error');
 
             return false;
         }
@@ -847,13 +1182,15 @@ class CwmadminController extends FormController
         $validData = $model->validate($form, $data);
 
         if ($validData === false) {
-            $errors = $model->getErrors();
+            // Get validation errors from the form directly (Joomla 6 compatible)
+            $form   = $model->getForm();
+            $errors = $form ? $form->getErrors() : [];
 
             foreach ($errors as $error) {
                 if ($error instanceof \Exception) {
                     $app->enqueueMessage($error->getMessage(), 'warning');
                 } else {
-                    $app->enqueueMessage($error, 'warning');
+                    $app->enqueueMessage((string) $error, 'warning');
                 }
             }
 
@@ -867,8 +1204,2520 @@ class CwmadminController extends FormController
         }
 
         // Redirect back to the form in all cases
-        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin&layout=edit', false));
+        $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmadmin', false));
 
         return true;
+    }
+
+    /**
+     * Get migration counts XHR - returns count of records needing migration
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getMigrationCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get migration batch XHR - returns batch of records to migrate
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getMigrationBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type    = $input->get('type', 'studies', 'string');
+        $limit   = $input->get('limit', 10, 'int');
+        $exclude = $input->get('exclude', '', 'string');
+
+        // Parse comma-separated exclude IDs (records that already failed)
+        $excludeIds = !empty($exclude) ? array_map('intval', explode(',', $exclude)) : [];
+
+        try {
+            $batch = CwmImageMigration::getBatch($type, $limit, $excludeIds);
+            echo json_encode($batch, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'records' => [], 'remaining' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Migrate single record XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function migrateRecordXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type = $input->get('type', '', 'string');
+        $id   = $input->get('id', 0, 'int');
+
+        if (empty($type) || empty($id)) {
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Missing required parameters (type and id)',
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Look up the record from the DB — avoids URL encoding issues with image paths
+        try {
+            $result = CwmImageMigration::migrateRecordById($type, $id);
+        } catch (\Throwable $e) {
+            $result = ['success' => false, 'newPath' => null, 'error' => $e->getMessage()];
+        }
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get orphaned folders XHR - scans for orphaned image folders
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $orphans = CwmImageCleanup::findOrphanedFolders();
+            $totals  = CwmImageCleanup::getTotals($orphans);
+            echo json_encode(['orphans' => $orphans, 'totals' => $totals], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'orphans' => [], 'totals' => ['folders' => 0, 'size' => 0, 'size_formatted' => '0 B'],
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Delete orphaned folders XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function deleteOrphanedFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $result = CwmImageCleanup::deleteOrphans($paths);
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get legacy folder report XHR - scans old image folders for leftover files
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function getLegacyFolderReportXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        // Buffer output to prevent stray PHP notices from corrupting JSON
+        ob_start();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            ob_end_clean();
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $report = CwmImageMigration::getLegacyFolderReport();
+            ob_end_clean();
+            echo json_encode($report, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            ob_end_clean();
+            echo json_encode([
+                'folders' => [], 'total_files' => 0, 'total_size' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Download the cleared images log CSV
+     *
+     * Sends the proclaim_cleared_images.csv file as a download so admins
+     * can review which image values were cleared during migration.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function downloadClearedLogXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get')) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        $logFile = CwmImageMigration::getClearedLogPath();
+
+        if (!is_file($logFile)) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => 'No cleared images log found.'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $app->setHeader('Content-Type', 'text/csv');
+        $app->setHeader('Content-Disposition', 'attachment; filename="proclaim_cleared_images.csv"');
+        $app->setHeader('Content-Length', (string) filesize($logFile));
+        $app->sendHeaders();
+
+        readfile($logFile);
+
+        $app->close();
+    }
+
+    /**
+     * Get count of unresolvable image records XHR
+     *
+     * Returns a preview of how many records have image paths pointing to
+     * files that cannot be found on disk.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function getUnresolvableCountXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::getUnresolvableRecords();
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['records' => [], 'count' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Clear all unresolvable image fields XHR
+     *
+     * Clears DB image fields for records whose source files cannot be found
+     * and logs the cleared values to a CSV file for manual recovery.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function clearUnresolvableXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::clearUnresolvableImages();
+            echo json_encode(['success' => true, 'cleared' => $result['cleared']], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['success' => false, 'cleared' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get WebP migration counts XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getWebPCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getWebPMigrationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Run a batch of WebP conversions XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function migrateToWebPXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->get('type', 'studies', 'string');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::migrateToWebP($type, $limit);
+        } catch (\Throwable $e) {
+            $result = ['converted' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
+        }
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get thumbnail regeneration count XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getThumbRegenCountXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getThumbRegenerationCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode(['total' => 0, 'error' => $e->getMessage()], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Regenerate thumbnails batch XHR
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function regenerateThumbsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['error' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type         = $input->getCmd('type', 'studies');
+        $limit        = $input->getInt('limit', 10);
+        $offset       = $input->getInt('offset', 0);
+        $sizeOverride = $input->getInt('size', 0);
+
+        try {
+            $result = CwmImageMigration::regenerateThumbnails($type, $limit, $offset, $sizeOverride);
+        } catch (\Throwable $e) {
+            $result = ['processed' => 0, 'errors' => 0, 'remaining' => 0, 'error' => $e->getMessage()];
+        }
+
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+
+        $app->close();
+    }
+
+    /**
+     * Get count of recoverable bare-ID image folders XHR
+     *
+     * Returns per-type count of numeric-only folders in images/biblestudy/{type}/
+     * that contain image files but whose DB records have empty image fields.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getRecoveryCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getRecoveryCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Recover bare-ID image folders XHR - processes a batch per type
+     *
+     * Migrates images from numeric-only folders to proper alias-ID folders,
+     * updates DB columns, and cleans up the old folders.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function recoverBareIdFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->getCmd('type', 'studies');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::recoverBareIdFolders($type, $limit);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'recovered'    => 0,
+                'skipped'      => 0,
+                'errors'       => 0,
+                'remaining'    => 0,
+                'errorDetails' => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get count of records with broken or empty image references that can be relinked XHR
+     *
+     * Returns per-type count of records where the DB image columns are empty or
+     * point to missing files, but whose alias-ID folder has files on disk.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getRelinkCountsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $counts = CwmImageMigration::getRelinkCounts();
+            echo json_encode($counts, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'studies' => 0, 'teachers' => 0, 'series' => 0, 'total' => 0,
+                'error'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Relink a batch of records to their existing image files XHR
+     *
+     * Updates DB columns for records with broken or empty image references
+     * where the expected alias-ID folder already contains image files.
+     * No files are moved or copied — only DB references are updated.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function relinkBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $type  = $input->getCmd('type', 'studies');
+        $limit = $input->getInt('limit', 10);
+
+        try {
+            $result = CwmImageMigration::relinkBatch($type, $limit);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'relinked'     => 0,
+                'skipped'      => 0,
+                'errors'       => 0,
+                'remaining'    => 0,
+                'errorDetails' => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Delete legacy image folders/files XHR
+     *
+     * Accepts an array of relative folder paths and deletes the image
+     * files within them (not entire directory trees).
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function deleteLegacyFoldersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken() && !Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $paths = $input->get('paths', [], 'array');
+
+        if (empty($paths)) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => ['No paths provided'],
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmImageMigration::deleteLegacyFiles($paths);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'deleted' => 0,
+                'errors'  => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get player statistics XHR - returns player stats HTML as JSON for lazy loading
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getPlayerStatsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $html = Cwmstats::getPlayers();
+
+            echo json_encode([
+                'success' => true,
+                'data'    => ['html' => $html],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get popup statistics XHR - returns popup stats HTML as JSON for lazy loading
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getPopupStatsXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            $html = Cwmstats::getPopups();
+
+            echo json_encode([
+                'success' => true,
+                'data'    => ['html' => $html],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Archive Old Messages and Media XHR - AJAX version with JSON response
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function doArchiveXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmarchiveModel $model */
+            $model = $this->getModel('Cwmarchive');
+            $msg   = $model->doArchive();
+
+            echo json_encode([
+                'success' => true,
+                'message' => $msg,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Alias Update XHR - AJAX version with JSON response
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function aliasUpdateXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = Cwmalias::updateAlias();
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::_('JBS_ADM_ALIAS_ROWS') . $count,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Players XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePlayersXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $from = $input->getCmd('from', 'x');
+        $to   = $input->getCmd('to', 'x');
+
+        if ($from === 'x' || $to === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Use optimized batch update with JSON functions
+            // This replaces the N+1 query pattern with a single UPDATE
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"player":"' . $from . '"') . ', '
+                    . $db->quote('"player":"' . $to . '"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"player":"' . $from . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $count = $db->getAffectedRows();
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PLAYER_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Popup XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePopupXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $from = $input->getCmd('from', 'x');
+        $to   = $input->getCmd('to', 'x');
+
+        if ($from === 'x' || $to === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_FROM_TO'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Handle legacy value mapping (100 = 0, etc.)
+            $searchFrom  = $from;
+            $searchFrom2 = null;
+
+            if ($from === '100') {
+                $searchFrom  = '0';
+                $searchFrom2 = '100';
+            }
+
+            $replaceTo = $to === '100' ? '' : $to;
+
+            // Use optimized batch update
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"popup":"' . $searchFrom . '"') . ', '
+                    . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $count = $db->getAffectedRows();
+
+            // If there's a secondary search pattern (for legacy 100 value)
+            if ($searchFrom2 !== null) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                        . $db->quote('"popup":"' . $searchFrom2 . '"') . ', '
+                        . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+                    ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom2 . '"%'));
+
+                $db->setQuery($query);
+                $db->execute();
+                $count += $db->getAffectedRows();
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_POPUP_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Change Player by Media Type XHR - AJAX version with optimized batch update
+     *
+     * @return void
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function changePlayerByMediaTypeXHR(): void
+    {
+        $app      = Factory::getApplication();
+        $input    = $app->getInput();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Check for request forgeries
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $mediaType = $input->getInt('mediatype', 0);
+        $player    = $input->getCmd('player', 'x');
+
+        if ($mediaType === 0 || $player === 'x') {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_MEDIATYPE_PLAYER'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Get all media files with matching media type
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('id'), $db->quoteName('params')])
+                ->from($db->quoteName('#__bsms_mediafiles'))
+                ->where($db->quoteName('media_image') . ' = ' . $mediaType);
+
+            $db->setQuery($query);
+            $mediaFiles = $db->loadObjectList();
+
+            $count = 0;
+
+            foreach ($mediaFiles as $media) {
+                $reg = new Registry();
+                $reg->loadString($media->params);
+                $reg->set('player', $player);
+
+                $updateQuery = $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int) $media->id);
+
+                $db->setQuery($updateQuery);
+                $db->execute();
+                $count++;
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PLAYER_BY_MEDIATYPE_CHANGED', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Get scripture provider status XHR - returns count of locally installed translations
+     *
+     * @return void
+     *
+     * @throws \Exception
+     *
+     * @since 10.1.0
+     */
+    public function getScriptureStatusXHR(): void
+    {
+        $app      = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls (e.g. getTranslationsXHR
+        // firing at the same time) don't serialise behind each other.
+        session_write_close();
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('installed') . ' = 1');
+            $db->setQuery($query);
+            $localCount = (int) $db->loadResult();
+
+            echo json_encode([
+                'success'     => true,
+                'local_count' => $localCount,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success'     => true,
+                'local_count' => 0,
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Get list of available translations with install status.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function getTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Release session lock so concurrent AJAX calls don't serialise.
+        session_write_close();
+
+        try {
+            // Auto-seed GetBible catalog if provider is enabled but catalog is depleted
+            try {
+                $admin       = Cwmparams::getAdmin();
+                $adminParams = $admin->params ?? new Registry();
+            } catch (\Exception $e) {
+                $adminParams = new Registry();
+            }
+
+            $getbibleEnabled = (int) $adminParams->get('provider_getbible', 1) === 1
+                && (int) $adminParams->get('gdpr_mode', 0) !== 1;
+
+            if ($getbibleEnabled) {
+                BibleImporter::seedGetBibleCatalog();
+            }
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // data_size and downloaded_at are columns added in 10.1.0 — may not
+            // exist yet if the migrations haven't run.  Detect and fall back.
+            $colCheck = $db->setQuery(
+                'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_bible_translations')
+                . ' WHERE ' . $db->quoteName('Field') . ' IN ('
+                . $db->quote('data_size') . ', ' . $db->quote('downloaded_at') . ')'
+            )->loadObjectList('Field');
+
+            $hasDataSize    = isset($colCheck['data_size']);
+            $hasDownloaded  = isset($colCheck['downloaded_at']);
+
+            $cols = ['t.abbreviation', 't.name', 't.language', 't.installed', 't.verse_count', 't.source', 't.bundled', 't.estimated_size'];
+
+            if ($hasDataSize) {
+                $cols[] = 't.data_size';
+            }
+
+            if ($hasDownloaded) {
+                $cols[] = 't.downloaded_at';
+            }
+
+            $query = $db->getQuery(true)
+                ->select($db->quoteName($cols))
+                ->from($db->quoteName('#__bsms_bible_translations', 't'))
+                ->order($db->quoteName('t.name') . ' ASC');
+            $db->setQuery($query);
+            $translations = $db->loadObjectList();
+
+            // Build usage counts from studies table (separate query, fail-safe)
+            $usageCounts = [];
+
+            try {
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = (int) $row->cnt;
+                }
+
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName('bible_version2') . ' AS ' . $db->quoteName('abbr'))
+                    ->select('COUNT(*) AS ' . $db->quoteName('cnt'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('bible_version2') . ' IS NOT NULL')
+                    ->where($db->quoteName('bible_version2') . ' != ' . $db->quote(''))
+                    ->group($db->quoteName('bible_version2'));
+                $db->setQuery($query);
+
+                foreach ($db->loadObjectList() as $row) {
+                    $usageCounts[$row->abbr] = ($usageCounts[$row->abbr] ?? 0) + (int) $row->cnt;
+                }
+            } catch (\Exception) {
+                // bible_version columns may not exist yet — usage counts stay empty
+            }
+
+            // Quick reconciliation: if a bundled translation shows installed=0
+            // but already has verses in the DB, update the flag to prevent
+            // unnecessary auto-downloads from the client.
+            foreach ($translations as $t) {
+                if ((int) ($t->bundled ?? 0) === 1 && (int) ($t->installed ?? 0) === 0) {
+                    $countQ = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName('#__bsms_bible_verses'))
+                        ->where($db->quoteName('translation') . ' = ' . $db->quote($t->abbreviation));
+                    $db->setQuery($countQ);
+                    $vcnt = (int) $db->loadResult();
+
+                    if ($vcnt > 0) {
+                        $upQ = $db->getQuery(true)
+                            ->update($db->quoteName('#__bsms_bible_translations'))
+                            ->set($db->quoteName('installed') . ' = 1')
+                            ->set($db->quoteName('verse_count') . ' = ' . $vcnt)
+                            ->where($db->quoteName('abbreviation') . ' = ' . $db->quote($t->abbreviation));
+                        $db->setQuery($upQ);
+                        $db->execute();
+
+                        $t->installed   = 1;
+                        $t->verse_count = $vcnt;
+                    }
+                }
+            }
+
+            // Sum total installed size from the cached column; attach usage counts
+            $totalSize = 0;
+
+            foreach ($translations as $t) {
+                $totalSize += (int) ($t->data_size ?? 0);
+                $t->usage_count  = $usageCounts[$t->abbreviation] ?? 0;
+            }
+
+            echo json_encode([
+                'success'      => true,
+                'translations' => $translations,
+                'total_size'   => $totalSize,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Download and install a Bible translation locally.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function downloadTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+        $force        = (bool) $app->getInput()->getInt('force', 0);
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            // Downloading 66 books can take a while
+            @set_time_limit(600);
+
+            $count = BibleImporter::downloadAndImport($abbreviation, $force);
+
+            if ($count < 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_FAILED', strtoupper($abbreviation)),
+                ], JSON_THROW_ON_ERROR);
+            } else {
+                echo json_encode([
+                    'success'     => true,
+                    'verse_count' => $count,
+                    'message'     => Text::sprintf('JBS_ADM_BIBLE_DOWNLOAD_SUCCESS', strtoupper($abbreviation), $count),
+                ], JSON_THROW_ON_ERROR);
+            }
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove a locally installed Bible translation.
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    public function removeTranslationXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        $abbreviation = $app->getInput()->getCmd('abbreviation', '');
+
+        if (empty($abbreviation)) {
+            echo json_encode(['success' => false, 'message' => 'No abbreviation provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            BibleImporter::removeTranslation($abbreviation);
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED', strtoupper($abbreviation)),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove all installed translations and their verses.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function removeAllTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        try {
+            $count = BibleImporter::removeAllTranslations();
+
+            echo json_encode([
+                'success' => true,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_REMOVED_ALL', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Re-download all installed getbible translations from the API.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function updateAllTranslationsXHR(): void
+    {
+        $app = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        try {
+            @set_time_limit(0);
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('abbreviation'))
+                ->from($db->quoteName('#__bsms_bible_translations'))
+                ->where($db->quoteName('installed') . ' = 1')
+                ->where($db->quoteName('source') . ' = ' . $db->quote('getbible'));
+            $db->setQuery($query);
+            $rows = $db->loadColumn();
+
+            $updated = 0;
+            $failed  = 0;
+            $total   = \count($rows);
+
+            foreach ($rows as $abbr) {
+                $count = BibleImporter::downloadAndImport($abbr, true);
+
+                if ($count > 0) {
+                    $updated++;
+                } else {
+                    $failed++;
+                }
+            }
+
+            echo json_encode([
+                'success' => true,
+                'updated' => $updated,
+                'failed'  => $failed,
+                'total'   => $total,
+                'message' => Text::sprintf('JBS_ADM_BIBLE_UPDATE_ALL_COMPLETE', $updated, $failed),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Sync translations from API.Bible using the configured API key.
+     *
+     * Fetches available Bibles from the API.Bible endpoint and upserts them
+     * into the bible_translations table with source='api_bible'.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function syncApiBibleTranslationsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        session_write_close();
+
+        try {
+            // Prefer the live key from the form (user may not have saved yet)
+            $liveKey = $app->getInput()->getString('api_key', '');
+            $admin   = Cwmparams::getAdmin();
+            $params  = $admin->params;
+            $apiKey  = !empty($liveKey) ? $liveKey : (string) $params->get('api_bible_api_key', '');
+
+            if (empty($apiKey)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::_('JBS_ADM_API_BIBLE_KEY_DESC'),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            // Fetch available Bibles from API.Bible
+            $http     = HttpFactory::getHttp();
+            $response = $http->get(
+                'https://rest.api.bible/v1/bibles',
+                ['api-key' => $apiKey],
+                30
+            );
+
+            $httpCode = $response->getStatusCode();
+            $httpBody = (string) $response->getBody();
+
+            if ($httpCode !== 200) {
+                // Parse API error message if available
+                $apiError = '';
+                try {
+                    $decoded = json_decode($httpBody, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    $decoded = null;
+                }
+
+                if (\is_array($decoded) && isset($decoded['message'])) {
+                    $apiError = $decoded['message'];
+                } elseif (\is_array($decoded) && isset($decoded['error'])) {
+                    $apiError = $decoded['error'];
+                }
+
+                $detail = $apiError
+                    ? Text::sprintf('JBS_ADM_SYNC_FAILED_DETAIL', $httpCode, $apiError)
+                    : Text::sprintf('JBS_ADM_SYNC_FAILED_CODE', $httpCode);
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => $detail,
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            try {
+                $data = json_decode($httpBody, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $data = null;
+            }
+
+            if (!\is_array($data) || !isset($data['data'])) {
+                // Log the actual response for debugging
+                $snippet = substr($httpBody, 0, 200);
+
+                echo json_encode([
+                    'success' => false,
+                    'message' => Text::sprintf(
+                        'JBS_ADM_SYNC_FAILED_DETAIL',
+                        $httpCode,
+                        'Unexpected response format: ' . $snippet
+                    ),
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $count = 0;
+
+            foreach ($data['data'] as $bible) {
+                $bibleId     = $bible['id'] ?? '';
+                $name        = $bible['name'] ?? ($bible['nameLocal'] ?? '');
+                $abbr        = strtolower($bible['abbreviation'] ?? $bible['abbreviationLocal'] ?? '');
+                $language    = $bible['language']['id'] ?? 'en';
+
+                if (empty($bibleId) || empty($abbr) || empty($name)) {
+                    continue;
+                }
+
+                // Truncate abbreviation to fit VARCHAR(20) column
+                $abbr = substr($abbr, 0, 20);
+
+                // Check if this abbreviation already exists with a different source
+                $query = $db->getQuery(true)
+                    ->select($db->quoteName(['id', 'source']))
+                    ->from($db->quoteName('#__bsms_bible_translations'))
+                    ->where($db->quoteName('abbreviation') . ' = :abbr')
+                    ->bind(':abbr', $abbr);
+                $db->setQuery($query);
+                $existing = $db->loadObject();
+
+                if ($existing && $existing->source !== 'api_bible') {
+                    // Don't overwrite local/getbible entries
+                    continue;
+                }
+
+                if ($existing) {
+                    // Update existing api_bible entry
+                    $query = $db->getQuery(true)
+                        ->update($db->quoteName('#__bsms_bible_translations'))
+                        ->set($db->quoteName('name') . ' = :name')
+                        ->set($db->quoteName('language') . ' = :lang')
+                        ->set($db->quoteName('provider_id') . ' = :pid')
+                        ->where($db->quoteName('id') . ' = ' . (int) $existing->id)
+                        ->bind(':name', $name)
+                        ->bind(':lang', $language)
+                        ->bind(':pid', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                } else {
+                    // Insert new entry
+                    $source = 'api_bible';
+                    $query  = $db->getQuery(true)
+                        ->insert($db->quoteName('#__bsms_bible_translations'))
+                        ->columns($db->quoteName(['abbreviation', 'name', 'language', 'source', 'provider_id']))
+                        ->values(':abbr2, :name2, :lang2, :source2, :pid2')
+                        ->bind(':abbr2', $abbr)
+                        ->bind(':name2', $name)
+                        ->bind(':lang2', $language)
+                        ->bind(':source2', $source)
+                        ->bind(':pid2', $bibleId);
+                    $db->setQuery($query);
+                    $db->execute();
+                }
+
+                $count++;
+            }
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_SYNC_COMPLETE', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::sprintf(
+                    'JBS_ADM_SYNC_FAILED_DETAIL',
+                    0,
+                    $e->getMessage()
+                ),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Remove non-installed translation records from a provider.
+     *
+     * Called when a provider is disabled to clean up synced entries that
+     * were never downloaded locally.
+     *
+     * @return  void
+     *
+     * @since  10.1.0
+     */
+    public function cleanupProviderXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $source = $app->getInput()->getCmd('source', '');
+
+        if (empty($source)) {
+            echo json_encode(['success' => false, 'message' => 'No source provided'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $count = BibleImporter::removeProviderEntries($source);
+
+            echo json_encode([
+                'success' => true,
+                'count'   => $count,
+                'message' => Text::sprintf('JBS_ADM_PROVIDER_CLEANUP_DONE', $count),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Process a batch of CSV rows for import.
+     *
+     * Expects POST JSON with 'rows' (array of arrays), 'mappings' (column index => field),
+     * and 'settings' (auto_create, default_published, duplicate_handling).
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function csvImportBatchXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => Text::_('JINVALID_TOKEN')]]], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        // Read raw POST body (JSON)
+        $rawInput = file_get_contents('php://input');
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
+
+        if (!\is_array($data) || empty($data['rows'])) {
+            echo json_encode(['imported' => 0, 'skipped' => 0, 'errors' => [['row' => 0, 'field' => '', 'message' => 'No rows provided']]], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rows     = $data['rows'];
+        $mappings = $data['mappings'] ?? [];
+        $settings = $data['settings'] ?? [];
+
+        try {
+            $result = CwmcsvimportHelper::processBatch($rows, $mappings, $settings);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'imported'     => 0,
+                'skipped'      => 0,
+                'errors'       => [['row' => 0, 'field' => '', 'message' => $e->getMessage()]],
+                'auto_created' => [],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Stream a CSV import template for download.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since  10.1.0
+     */
+    public function csvTemplateXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        if (!Session::checkToken('get')) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $csv = CwmcsvimportHelper::generateTemplate();
+
+        $app->setHeader('Content-Type', 'text/csv; charset=utf-8');
+        $app->setHeader('Content-Disposition', 'attachment; filename="proclaim-import-template.csv"');
+        $app->setHeader('Content-Length', (string) \strlen($csv));
+        $app->sendHeaders();
+
+        echo $csv;
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Scan legacy servers and classify media files by detected platform.
+     *
+     * Returns scan results + existing core servers for the configuration step.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationScanXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $servers  = CwmserverMigrationHelper::scanLegacyServers();
+            $existing = CwmserverMigrationHelper::getExistingServersByType();
+
+            echo json_encode([
+                'success'  => true,
+                'servers'  => $servers,
+                'existing' => $existing,
+                'labels'   => CwmserverMigrationHelper::getTypeLabels(),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Migrate a batch of media files from a legacy server to a target server.
+     *
+     * Expects POST JSON with: legacyServerId, detectedType, targetServerId,
+     * targetType, offset, limit, legacyServerParams.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationBatchXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rawInput = file_get_contents('php://input');
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
+
+        if (!\is_array($data)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid request body'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $legacyServerId     = (int) ($data['legacyServerId'] ?? 0);
+        $detectedType       = $data['detectedType'] ?? '';
+        $targetServerId     = (int) ($data['targetServerId'] ?? 0);
+        $targetType         = $data['targetType'] ?? '';
+        $offset             = (int) ($data['offset'] ?? 0);
+        $limit              = (int) ($data['limit'] ?? 25);
+        $legacyServerParams = $data['legacyServerParams'] ?? [];
+
+        try {
+            $ids    = CwmserverMigrationHelper::getLegacyMediaFileIds($legacyServerId, $detectedType, $offset, $limit);
+            $result = CwmserverMigrationHelper::migrateMediaBatch($ids, $targetServerId, $targetType, $legacyServerParams);
+
+            echo json_encode([
+                'success'  => true,
+                'migrated' => $result['migrated'],
+                'errors'   => $result['errors'],
+                'fetched'  => \count($ids),
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Create a new core server of a given type.
+     *
+     * Expects POST JSON with: type, name, locationId (optional).
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationCreateServerXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $rawInput = file_get_contents('php://input');
+
+        try {
+            $data = json_decode($rawInput, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $data = null;
+        }
+
+        if (!\is_array($data) || empty($data['type']) || empty($data['name'])) {
+            echo json_encode(['success' => false, 'message' => 'Missing type or name'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $serverId = CwmserverMigrationHelper::createServerForType(
+                $data['type'],
+                $data['name'],
+                isset($data['locationId']) ? (int) $data['locationId'] : null
+            );
+
+            echo json_encode([
+                'success'  => true,
+                'serverId' => $serverId,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Get media file details for a legacy server + detected type (drill-down).
+     *
+     * Expects GET params: serverId, type.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationDetailXHR(): void
+    {
+        session_write_close();
+        $app = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        $serverId = $app->getInput()->getInt('serverId', 0);
+        $type     = $app->getInput()->getCmd('type', '');
+
+        if ($serverId < 1 || $type === '') {
+            echo json_encode(['success' => false, 'message' => 'Missing serverId or type'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $details = CwmserverMigrationHelper::getMediaFileDetails($serverId, $type);
+
+            echo json_encode([
+                'success' => true,
+                'details' => $details,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Unpublish empty legacy servers after migration.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function serverMigrationCleanupXHR(): void
+    {
+        session_write_close();
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmserverMigrationHelper::unpublishEmptyLegacyServers();
+
+            echo json_encode([
+                'success'     => true,
+                'unpublished' => $result['unpublished'],
+                'skipped'     => $result['skipped'],
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Detect whether a 9.x schema exists and return version + record counts.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function detectUpgradeXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $detection = CwmupgradeHelper::detect9xSchema();
+
+            if ($detection['detected']) {
+                $detection['meets_minimum'] = CwmupgradeHelper::meetsMinimumVersion($detection['version']);
+                $detection['record_counts'] = CwmupgradeHelper::get9xInfo();
+            }
+
+            echo json_encode($detection, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'detected' => false,
+                'error'    => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Create a safety backup before the upgrade.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeBackupXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $backup = new Cwmbackup();
+            $result = $backup->exportdb(2);
+
+            echo json_encode([
+                'success'  => (bool) $result,
+                'filename' => $result ? 'backup created' : '',
+                'message'  => $result ? 'Backup completed' : 'Backup failed',
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Convert INI parameters to JSON format.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeParamsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result            = CwmupgradeHelper::convertIniToJson();
+            $result['success'] = true;
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success'   => false,
+                'converted' => 0,
+                'message'   => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Reset schema version and run SQL migrations.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeSchemaXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $resetResult = CwmupgradeHelper::resetSchemaVersion();
+
+            if (!$resetResult) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Could not reset schema version',
+                ], JSON_THROW_ON_ERROR);
+                $app->close();
+
+                return;
+            }
+
+            $migrationResult = CwmupgradeHelper::runSchemaMigration();
+            echo json_encode($migrationResult, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Run all data migration fixes.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeDataXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result            = CwmupgradeHelper::runDataFixes();
+            $result['success'] = empty($result['errors']);
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'steps'   => [],
+                'errors'  => [$e->getMessage()],
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Rebuild ACL assets.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeAssetsXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $result = CwmupgradeHelper::rebuildAssets();
+            echo json_encode($result, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * AJAX: Verify upgrade and clean up 9.x artifacts.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     *
+     * @since   10.1.0
+     */
+    public function upgradeVerifyXHR(): void
+    {
+        $app      = Factory::getApplication();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => Text::_('JINVALID_TOKEN')], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $verifyResult = CwmupgradeHelper::verify();
+            $dropped      = CwmupgradeHelper::cleanup9xArtifacts();
+
+            $verifyResult['artifacts_dropped'] = $dropped;
+            echo json_encode($verifyResult, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Fetch available AI models for the selected provider — AJAX endpoint
+     *
+     * Reads the provider and API key from POST data, queries the provider's
+     * models API, and returns a filtered list of text-generation models.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    public function fetchAiModelsXHR(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken('post')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $input    = $this->input;
+        $provider = $input->getString('provider', 'claude');
+        $apiKey   = $input->getString('api_key', '');
+
+        if (empty($apiKey)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_CMN_AI_NO_API_KEY')]);
+            $this->app->close();
+
+            return;
+        }
+
+        try {
+            $models = CwmaiHelper::fetchAvailableModels($provider, $apiKey);
+            echo json_encode(['success' => true, 'models' => $models]);
+        } catch (\Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+
+        $this->app->close();
+    }
+
+    /**
+     * Clear the YouTube event log file.
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    public function clearYoutubeLog(): void
+    {
+        $this->checkToken();
+
+        CwmyoutubeLogHelper::clear();
+
+        $this->setRedirect(
+            Route::_('index.php?option=com_proclaim&view=cwmadmin', false),
+            Text::_('JBS_ADM_YOUTUBE_LOG_CLEARED')
+        );
+    }
+
+    /**
+     * Reset YouTube Quota Counter — AJAX endpoint
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function resetYoutubeQuotaXHR(): void
+    {
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            $this->app->close();
+
+            return;
+        }
+
+        $serverId = $this->input->getInt('server_id', 0);
+
+        if ($serverId <= 0) {
+            echo json_encode(['success' => false, 'error' => 'Invalid server ID']);
+            $this->app->close();
+
+            return;
+        }
+
+        CwmyoutubeQuota::resetQuota($serverId);
+
+        CwmyoutubeLogHelper::log(
+            'info',
+            'Quota counter reset by administrator',
+            ['server_id' => $serverId]
+        );
+
+        echo json_encode(['success' => true]);
+        $this->app->close();
     }
 }

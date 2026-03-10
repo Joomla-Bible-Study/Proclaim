@@ -4,12 +4,12 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFile;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\CWMMediaFile;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Helper\ContentHelper;
@@ -35,46 +36,49 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object
+    /** @var ?object
      * @since    7.0.0
      */
-    public $canDo;
+    public ?object $canDo = null;
 
-    /** @var Registry
+    /** @var ?Registry
      * @since    7.0.0
      */
-    public $admin_params;
+    public ?Registry $admin_params = null;
 
-    /** @var object
+    /** @var mixed
      * @since    7.0.0
      */
-    //public mixed $form;
+    public mixed $media_form = null;
 
-    /** @var object
+    /** @var ?object
      * @since    7.0.0
      */
-    public $media_form;
-
-    /** @var object
-     * @since    7.0.0
-     */
-    public $item;
-    /** @var object
+    public ?object $item = null;
+    /** @var mixed
      * @since    9.1.3
      */
-    public $addon;
-    /** @var Registry
+    public mixed $addon = null;
+
+    /**
+     * Form
+     *
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $state;
-    /** @var object
+    public ?\Joomla\CMS\Form\Form $form = null;
+    /** @var ?Registry
      * @since    7.0.0
      */
-    protected $admin;
-    /** @var object
+    protected ?Registry $state = null;
+    /** @var ?object
      * @since    7.0.0
      */
-    protected $options;
+    protected ?object $admin = null;
+    /** @var ?object
+     * @since    7.0.0
+     */
+    protected ?object $options = null;
 
     /**
      * Execute and display a template script.
@@ -87,27 +91,66 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
+        /** @var CwmmediafileModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
         $app                = Factory::getApplication();
-        $this->form         = $this->get("Form");
-        $this->media_form   = $this->get("MediaForm");
-        $this->item         = $this->get("Item");
-        $this->state        = $this->get("State");
+        $this->form         = $model->getForm();
+        $media_form         = $model->getMediaForm();
+        $this->item         = $model->getItem();
+        $this->state        = $model->getState();
         $this->canDo        = ContentHelper::getActions('com_proclaim', 'mediafile', (int)$this->item->id);
         $this->admin_params = $this->state->get('administrator');
 
-        // Load the addon
-        $this->addon = CWMAddon::getInstance($this->state->type);
+        // Get server params for default values
+        $s_params = $this->state->get('s_params', []);
 
-        $options       = $app->input->get('options');
+        if ($media_form !== null) {
+            // For new items, bind server defaults to the media form before rendering
+            $isNew = empty($this->item->id);
+
+            if ($isNew && !empty($s_params)) {
+                // Bind server defaults to form - this sets field values before rendering
+                $media_form->bind(['params' => $s_params]);
+            }
+
+            // Wrap the media form with server params for addon default value handling (PHP 8.2+ compatible)
+            $this->media_form = new class ($media_form, $s_params) {
+                private $form;
+                public array $s_params;
+
+                public function __construct($form, array $s_params)
+                {
+                    $this->form     = $form;
+                    $this->s_params = $s_params;
+                }
+
+                public function __call(string $name, array $args): mixed
+                {
+                    return $this->form->$name(...$args);
+                }
+            };
+
+            // Load the addon
+            $serverType  = $this->state->get('type');
+            $this->addon = $serverType ? CWMAddon::getInstance($serverType) : null;
+        } else {
+            $this->media_form = null;
+            $this->addon      = null;
+        }
+
+        $options       = $app->getInput()->get('options');
         $this->options = new \stdClass();
 
         $this->options->study_id   = null;
         $this->options->createdate = null;
 
         if ($options) {
-            $options = explode('&', base64_decode($app->input->get('options')));
+            $options = explode('&', base64_decode($app->getInput()->get('options')));
 
             foreach ($options as $option_st) {
                 $option_st = explode('=', $option_st);
@@ -125,8 +168,11 @@ class HtmlView extends BaseHtmlView
         // Needed to load the article field type for the article selector
         FormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
 
+        // Load the cwmcore script for file size converter
+        $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.cwmcorejs');
+
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -149,7 +195,7 @@ class HtmlView extends BaseHtmlView
     {
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
-        $user       = $user = Factory::getApplication()->getSession()->get('user');
+        $user       = Factory::getApplication()->getIdentity();
         $userId     = $user->id;
         $isNew      = ($this->item->id === 0);
         $checkedOut = !($this->item->checked_out === null || $this->item->checked_out == $userId);
@@ -213,8 +259,6 @@ class HtmlView extends BaseHtmlView
         $toolbar->cancel('cwmmediafile.cancel');
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=33:media-file-entry-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
-
+        ToolbarHelper::help('mediafile', true);
     }
 }

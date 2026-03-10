@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -47,12 +48,13 @@ class MediaFileImagesField extends ListField
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select('*');
-        $query->from('#__bsms_mediafiles');
+        $query->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery((string)$query);
         $mediafiles = $db->loadObjectList();
         $options    = [];
@@ -81,7 +83,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -102,7 +103,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -120,7 +120,6 @@ class MediaFileImagesField extends ListField
                                 $media->params->get(
                                     'media_button_text'
                                 ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_icon_text_size":"' . $media->params->get('media_icon_text_size') .
                                 '","media_image":""}',
                                 $media->media_image
                             );
@@ -128,7 +127,7 @@ class MediaFileImagesField extends ListField
                     }
                 } else {
                     $image              = $media->params->get('media_image');
-                    $totalcount         = strlen($image);
+                    $totalcount         = \strlen($image);
                     $slash              = strrpos($image, '/');
                     $imagecount         = $totalcount - $slash;
                     $media->media_image = Text::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
@@ -141,9 +140,7 @@ class MediaFileImagesField extends ListField
                         $media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get(
                             'media_icon_type'
                         ) .
-                        '","media_icon_text_size":"' . $media->params->get(
-                            'media_icon_text_size'
-                        ) . '","media_image":"' .
+                        '","media_image":"' .
                         $media->params->get('media_image') . '"}',
                         $media->media_image
                     );
@@ -164,7 +161,7 @@ class MediaFileImagesField extends ListField
 
         // Remove the duplicates from original array
         foreach ($options as $k => $v) {
-            if (!array_key_exists($k, $tmp)) {
+            if (!\array_key_exists($k, $tmp)) {
                 unset($options[$k]);
             }
         }

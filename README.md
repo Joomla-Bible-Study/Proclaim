@@ -1,58 +1,148 @@
-CWM Proclaim
-==================
+# CWM Proclaim
 
-Status
------------
-| Branch      | Version | Release Date | Joomla Version | PHP Minimum                                                                    |
-|-------------|---------|--------------|----------------|--------------------------------------------------------------------------------|
-| Development | 10.0.x  |              | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.1.0-green)](https://www.php.net/)  |
-| Main        | 10.0.1  | Sep 10, 2025 | 4+             | [![PHP](https://img.shields.io/badge/PHP-V8.1.0-green)](https://www.php.net/)  |
+A Joomla 5+ component for managing and displaying Bible studies and sermons, developed by a team of web servants to further the teaching of God's Word.
 
-*NOTE:* The main branch will always reflect the current, released stable version. Only bug fixes and minor updates should be applied to the main branch. New features are to be introduced into the development branch only.
+## Build Status
 
-Overview
---------
-Proclaim is a Joomla!® component written by a team of web servants to further the teaching of God's Word. The component displays information about your church's Bible Studies or sermons in a wide variety of ways. Proclaim is flexible, customizable, and powerful. Easy-to-configure templates give you the maximum amount of choices. Show only what you want in whatever way you want.
+| CI                                                                                                                                                                  | CodeQL                                                                                                                                                                                 | PHP                                                                            | Node                                                                                  | npm                                                                               |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| [![CI](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/ci.yml) | [![CodeQL](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml/badge.svg?branch=development)](https://github.com/Joomla-Bible-Study/Proclaim/actions/workflows/codeql.yml) | [![PHP](https://img.shields.io/badge/PHP-V8.3.0-green)](https://www.php.net/) | [![Node](https://img.shields.io/badge/Node-V20.0-green)](https://nodejs.org/en/) | [![npm](https://img.shields.io/badge/npm-V10.1.0-green)](https://nodejs.org/en/) |
 
-Embed YouTube videos, play audio, show study notes—even create your own HTML display pages. You can have multiple locations, series, podcasting, and sharing with social media sites. Please see the example pages to discover just some of what Bible Study can do for your church - and the best part is that the component is completely free. Support is top-notch and also free. Bottom line: we want to help you spread the gospel.
+| Latest Release                                                                                                                                                    | License                                                                                                                          | Joomla                                                                                    |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| [![Latest Release](https://img.shields.io/github/v/release/Joomla-Bible-Study/Proclaim)](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest) | [![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](LICENSE.txt) | [![Joomla](https://img.shields.io/badge/Joomla-5.1.0+-blue)](https://www.joomla.org/) |
 
-Contributing
-------------
-We appreciate contributions in various capacities. Below are some ways that you can contribute to this project.
+| Branch      | Description                                           |
+|-------------|-------------------------------------------------------|
+| Development | Next minor release (10.1.x) -- new features and fixes |
+| Main        | Current stable release -- bug fixes only              |
 
-### Setup
-1. [Fork this repository.][fork]
-2. Load dev dependencies with [Composer][composer]: `php composer.phar install --dev`
-3. [Set up your dev environment][setup]
+## Looking for an Installable Package?
 
-### Development
-1. [Create a topic branch.][branch]
-2. Implement your feature or bug fix.
-3. If you implemented a new feature or added extra functionality, create/update unit tests for that feature
-4. Run `bin/phing build`
-5. If not building successfully, go back to step **1**
-6. Add your files to the repository: `git add .`
-7. Commit your files: `git commit -m "Implemented feature [x]"`
-8. Push your changes: `git push`
-9. [Submit a pull request][pr]
+This repository is the source code for development. For a ready-to-install package:
+- **Latest stable release:** [GitHub Releases](https://github.com/Joomla-Bible-Study/Proclaim/releases/latest)
+- **Detailed changes:** [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/What's-New-v10.1)
+- **Full changelog:** [Commit History](https://github.com/Joomla-Bible-Study/Proclaim/commits/development)
 
-Please **make sure to make specific contributions** when submitting pull requests. For example, if fixing bugs across multiple features of the component, create a branch for each fix, and submit a separate pull request for each fix separately, instead of fixing everything in `main`, and then just trying to pull your `main` branch into `Joomla-Bible-Study:main`.
+## Features
 
+- **Content Organization** -- Manage studies by series, teachers, locations, and topics
+- **Media Support** -- Audio playback, YouTube, Vimeo, Wistia, Resi.io, Dailymotion, Rumble, SoundCloud, and Facebook integration
+- **Podcasting** -- Built-in podcast feed generation with per-series RSS
+- **Multi-Campus** -- Location-based content isolation with per-campus access levels
+- **Analytics** -- Play/download tracking, Chart.js dashboard, CSV export, printable reports
+- **Customizable Templates** -- Visual layout editor with drag-and-drop element arrangement
+- **Scripture Integration** -- Multi-provider Bible API with verse popups and translation switching
+- **Social Sharing** -- Share content on social media platforms
+
+## Documentation
+
+Full documentation is maintained in the [Proclaim Wiki](https://github.com/Joomla-Bible-Study/Proclaim/wiki).
+
+- [Wiki Home](https://github.com/Joomla-Bible-Study/Proclaim/wiki) -- Main documentation
+- [What's New in 10.1](https://github.com/Joomla-Bible-Study/Proclaim/wiki/What's-New-v10.1) -- Release notes
+- [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) -- Configure your environment
+- [Standards and Conventions](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Standards-and-Conventions) -- Coding standards
+- [Database Schema](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Database-Schema) -- Entity relationships
+- [Tasks](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Tasks) -- Improvement tasks with progress tracking
+
+## Quick Start
+
+### Prerequisites
+
+- PHP 8.3.0+
+- Composer
+- Node.js 20.0.0+ and npm 10.1.0+
+- Joomla 5.1.0+ installation
+- Git
+
+### Installation for Development
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR-USERNAME/Proclaim.git
+cd Proclaim
+
+# Install dependencies
+composer install --dev
+npm install
+
+# Build frontend assets (JS/CSS/images)
+npm run build
+
+# Run interactive setup wizard (configures paths and optionally installs Joomla)
+composer setup
+
+# Or manually configure build.properties and set up symbolic links
+composer symlink
+```
+
+### Common Commands
+
+| Command | Description |
+|---------|-------------|
+| `composer setup` | Interactive setup wizard |
+| `composer joomla-install` | Download and install Joomla |
+| `composer symlink` | Create symbolic links to Joomla |
+| `composer clean` | Remove symbolic links (clean dev state) |
+| `npm run build` | Build all frontend assets (JS + CSS + images) |
+| `composer test` | Run PHPUnit tests |
+| `npm test` | Run Jest tests |
+| `composer check:all` | Run all checks + all tests (PHP + JS) |
+| `composer lint:fix` | Fix PHP code style issues |
+| `npm run lint:js` | Lint JavaScript with ESLint |
+| `composer build` | Build component package (zip) |
+
+## Contributing
+
+We appreciate contributions in various capacities.
+
+### Development Workflow
+
+1. [Fork this repository](http://help.github.com/fork-a-repo/)
+2. Install dependencies: `composer install --dev && npm install && npm run build`
+3. Run setup wizard: `composer setup`
+4. [Create a topic branch](http://learn.github.com/p/branching.html)
+5. Implement your feature or bug fix
+6. Add/update unit tests for new functionality
+7. Run `composer check:all` to verify all checks pass
+8. Commit and push your changes
+9. [Submit a pull request](http://help.github.com/send-pull-requests/)
+
+See [Development Setup](https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment) for full details.
+
+**Important:** Submit separate pull requests for each fix or feature. Avoid combining multiple changes in a single PR.
+
+### Which Branch Should My Pull Request Target?
+
+| Type of change | Target branch |
+|----------------|---------------|
+| **Bug fix** -- The software crashes, produces the wrong result, or behaves contrary to its specification | **[main](https://github.com/Joomla-Bible-Study/Proclaim/tree/main)** |
+| **Feature / Enhancement** -- New behavior, refactoring, performance improvements, UI tweaks | **[development](https://github.com/Joomla-Bible-Study/Proclaim/tree/development)** |
 
 ### Translation
-The language files periodically need to be updated as the component matures. To submit changes ot add new languages, follow the same procedures as above to submit a [pull][pr] request.
 
-### Testing
-For every major release, we prefer to have an approximate 2-week testing window. If you would like to help in testing and giving us feedback on the most recent versions of the component, let us know
+Language files need periodic updates. Follow the same workflow above to submit translation changes or add new languages.
 
-[fork]: http://help.github.com/fork-a-repo/
-[branch]: http://learn.github.com/p/branching.html
-[pr]: http://help.github.com/send-pull-requests/
-[phing]: http://www.phing.info/
-[setup]: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Setting-up-your-development-environment
-<!-- @IGNORE PREVIOUS: link -->
-[composer]: https://getcomposer.org/download/
+## Reporting Issues
 
-Reporting Issues and Requesting Features
-----------------------------------------
-Use the **Issues** section for reporting bugs or requesting features. Please make sure that when bugs are reported, you include steps to reproduce them.
+Use the [Issues](https://github.com/Joomla-Bible-Study/Proclaim/issues) section for bug reports or feature requests. When reporting bugs, include steps to reproduce.
+
+## Contact
+
+- **Email:** info@christianwebministries.org
+- **Issues:** [GitHub Issues](https://github.com/Joomla-Bible-Study/Proclaim/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/Joomla-Bible-Study/Proclaim/discussions)
+
+## License
+
+CWM Proclaim is distributed under the GNU General Public License version 2 or later.
+See [LICENSE.txt](LICENSE.txt) for details.
+
+This software includes third-party components with their own license terms.
+See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for details, including
+important information about Fancybox licensing for commercial use.
+
+## Copyright
+
+(C) 2014 CWM Team. Distributed under the GNU General Public License version 2 or later.

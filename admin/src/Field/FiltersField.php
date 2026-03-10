@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -39,38 +39,57 @@ class FiltersField extends FormField
      *
      * @return  string   The field input markup.
      *
+     * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Add translation string for notification
         Text::script('COM_CONFIG_TEXT_FILTERS_NOTE');
 
         // Add Javascript
-        Factory::getDocument()->getWebAssetManager()->useScript('com_config.filters');
+        Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('com_config.filters');
 
         // Get the available user groups.
         $groups = $this->getUserGroups();
 
         // Build the form control.
-        $html = array();
+        $html = [];
+
+        // Expandable notes — matches the joomla.content.text_filters layout style.
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_TYPE_DESC') . '</div>';
+        $html[] = '</details>';
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_TAGS_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_TAGS_DESC') . '</div>';
+        $html[] = '</details>';
+        $html[] = '<details>';
+        $html[] = '    <summary class="filter-notes">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</summary>';
+        $html[] = '    <div class="filter-notes">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_DESC') . '</div>';
+        $html[] = '</details>';
+
+        $html[] = '<div class="table-responsive">';
 
         // Open the table.
         $html[] = '<table id="filter-config" class="table">';
+        $html[] = '<caption class="visually-hidden">' . Text::_('COM_CONFIG_TEXT_FILTERS') . '</caption>';
 
         // The table heading.
         $html[] = '	<thead>';
         $html[] = '	<tr>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_GROUPS_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_TAGS_LABEL') . '</span>';
         $html[] = '		</th>';
-        $html[] = '		<th>';
+        $html[] = '		<th scope="col">';
         $html[] = '			<span class="acl-action">' . Text::_('JGLOBAL_FILTER_ATTRIBUTES_LABEL') . '</span>';
         $html[] = '		</th>';
         $html[] = '	</tr>';
@@ -81,12 +100,7 @@ class FiltersField extends FormField
 
         foreach ($groups as $group) {
             if (!isset($this->value[$group->value])) {
-                $this->value                = [];
-                $this->value[$group->value] = array(
-                    'filter_type'       => 'BL',
-                    'filter_tags'       => '',
-                    'filter_attributes' => ''
-                );
+                $this->value[$group->value] = ['filter_type' => 'BL', 'filter_tags' => '', 'filter_attributes' => ''];
             }
 
             $group_filter = $this->value[$group->value];
@@ -95,12 +109,12 @@ class FiltersField extends FormField
             $group_filter['filter_attributes'] = !empty($group_filter['filter_attributes']) ? $group_filter['filter_attributes'] : '';
 
             $html[] = '	<tr>';
-            $html[] = '		<td class="acl-groups left">';
+            $html[] = '		<th class="acl-groups left" scope="row">';
             $html[] = '			' . LayoutHelper::render(
                 'joomla.html.treeprefix',
-                array('level' => $group->level + 1)
+                ['level' => $group->level + 1]
             ) . $group->text;
-            $html[] = '		</td>';
+            $html[] = '		</th>';
             $html[] = '		<td>';
             $html[] = '			<label for="' . $this->id . $group->value . '_filter_type" class="visually-hidden">'
                 . Text::_('JGLOBAL_FILTER_TYPE_LABEL') . '</label>';
@@ -148,8 +162,9 @@ class FiltersField extends FormField
 
         $html[] = '	</tbody>';
 
-        // Close the table.
+        // Close the table and table-responsive wrapper.
         $html[] = '</table>';
+        $html[] = '</div>';
 
         return implode("\n", $html);
     }
@@ -163,16 +178,13 @@ class FiltersField extends FormField
      */
     protected function getUserGroups(): array
     {
-        // Get a database object.
-        $db = Factory::getContainer()->get('DatabaseDriver');
-
-        // Get the user groups from the database.
-        $query = $db->getQuery(true);
-        $query->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level, a.parent_id as parent');
-        $query->from('#__usergroups AS a');
-        $query->join('LEFT', '#__usergroups AS b on a.lft > b.lft AND a.rgt < b.rgt');
-        $query->group('a.id, a.title, a.lft');
-        $query->order('a.lft ASC');
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('a.id', 'value') . ', ' . $db->quoteName('a.title', 'text') . ', COUNT(DISTINCT ' . $db->quoteName('b.id') . ') AS ' . $db->quoteName('level') . ', ' . $db->quoteName('a.parent_id', 'parent'))
+            ->from($db->quoteName('#__usergroups', 'a'))
+            ->join('LEFT', $db->quoteName('#__usergroups', 'b') . ' ON ' . $db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' . $db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt'))
+            ->group($db->quoteName(['a.id', 'a.title', 'a.lft']))
+            ->order($db->quoteName('a.lft') . ' ASC');
         $db->setQuery($query);
 
         return $db->loadObjectList();

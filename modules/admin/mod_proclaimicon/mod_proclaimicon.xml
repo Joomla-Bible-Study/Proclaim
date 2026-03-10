@@ -2,12 +2,12 @@
 <extension type="module" client="administrator" method="upgrade">
     <name>mod_proclaimicon</name>
     <author>CWM Team</author>
-    <creationDate>July 29, 2025</creationDate>
-    <copyright>(C) 2007 Proclaim All rights reserved.</copyright>
+    <creationDate>Mar 10, 2026</creationDate>
+    <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <version>10.0.1</version>
+    <version>10.1.0</version>
     <description>MOD_PROCLAIMICON_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Module\Proclaimicon</namespace>
     <files>
@@ -39,6 +39,7 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_HOME_LABEL"
                         default="1"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -49,6 +50,7 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MESSAGES_LABEL"
                         default="1"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -60,6 +62,7 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MEDIAFILES_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -71,16 +74,19 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEACHERS_LABEL"
                         default="1"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_series"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_SERIES_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
@@ -92,86 +98,103 @@
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_MESSAGETYPES_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_locations"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_LOCATIONS_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_topics"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TOPICS_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_comments"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_COMMENTS_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_servers"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_SERVERS_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_podcasts"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_PODCASTS_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_templates"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEMPLATES_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_templatecode"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_TEMPLATECODE_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                    <option value="2">MOD_PROCLAIMICON_WITH_COUNT</option>
                 </field>
                 <field
                         name="show_admin"
                         type="list"
                         label="MOD_PROCLAIMICON_SHOW_ADMIN_LABEL"
                         default="0"
+                        class="form-select"
                         validate="options"
                 >
                     <option value="0">JHIDE</option>

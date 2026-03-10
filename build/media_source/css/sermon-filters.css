@@ -1,0 +1,99 @@
+/**
+ * AJAX Sermon Filters — loading overlay and spinner
+ *
+ * @package  Proclaim.Site
+ * @since    10.1.0
+ */
+
+/* ─── Loading overlay ─────────────────────────────────────── */
+
+#proclaim-sermon-list {
+    position: relative;
+    min-height: 60px;
+    transition: opacity 0.2s ease;
+}
+
+#proclaim-sermon-list.proclaim-ajax-loading {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.proclaim-ajax-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.proclaim-ajax-spinner .spinner-border {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+/* ─── Pagination transitions ──────────────────────────────── */
+
+.proclaim-pagination {
+    transition: opacity 0.2s ease;
+}
+
+/* ─── Load More button ───────────────────────────────────── */
+
+.proclaim-load-more {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.proclaim-load-more button {
+    min-width: 160px;
+}
+
+/* ─── Infinite scroll sentinel ───────────────────────────── */
+
+.proclaim-scroll-sentinel {
+    height: 1px;
+}
+
+/* ─── Mobile search tools ────────────────────────────────── */
+
+@media (max-width: 767.98px) {
+    /* Filter Options + Clear: stretch to full width */
+    .filter-search-actions.btn-group {
+        width: 100%;
+        display: flex;
+    }
+
+    .filter-search-actions .filter-search-actions__button {
+        flex: 1;
+    }
+
+    /* Sort + limit selects: full width, side by side */
+    .ordering-select {
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .ordering-select .js-stools-field-list {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* Limit dropdown (e.g. "20") needs far less space than sort dropdown */
+    .ordering-select .js-stools-field-list:last-child {
+        flex: 0 0 5.5rem;
+    }
+
+    .ordering-select .js-stools-field-list select {
+        width: 100%;
+    }
+}
+
+/* ─── Item counter ───────────────────────────────────────── */
+
+.proclaim-item-counter {
+    text-align: center;
+    color: var(--bs-secondary);
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+}

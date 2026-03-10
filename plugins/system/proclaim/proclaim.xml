@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="system" method="upgrade">
+    <name>plg_system_proclaim</name>
+    <author>CWM Team</author>
+    <creationDate>Feb 5, 2026</creationDate>
+    <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.1.0</version>
+    <description>PLG_SYSTEM_PROCLAIM_DESCRIPTION</description>
+    <namespace path="src">CWM\Plugin\System\Proclaim</namespace>
+    <files>
+        <folder plugin="proclaim">services</folder>
+        <folder>language</folder>
+        <folder>src</folder>
+    </files>
+</extension>

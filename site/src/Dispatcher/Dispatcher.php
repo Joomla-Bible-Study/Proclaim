@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -15,7 +15,7 @@ namespace CWM\Component\Proclaim\Site\Dispatcher;
 // Always load Proclaim API if it exists.
 $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
 
-if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+if (!\defined('CWM_LOADED')) {
     require_once $api;
 }
 // phpcs:enable PSR1.Files.SideEffects
@@ -45,6 +45,7 @@ class Dispatcher extends ComponentDispatcher
      * @throws \Exception
      * @since   4.0.0
      */
+    #[\Override]
     public function dispatch(): void
     {
         CwmproclaimHelper::applyViewAndController($this->defaultController);

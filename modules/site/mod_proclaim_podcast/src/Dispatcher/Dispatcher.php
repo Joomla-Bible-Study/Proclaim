@@ -3,7 +3,7 @@
 /**
  * @package         Proclaim
  * @subpackage      mod_proclaim_podcast
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  */
@@ -31,26 +31,39 @@ class Dispatcher extends AbstractModuleDispatcher
      * @return  array
      *
      * @throws \Exception
-     * @since   4.2.0
+     * @since   10.0.0
      */
+    #[\Override]
     protected function getLayoutData(): array
     {
         $data = parent::getLayoutData();
 
 
         // Always load Proclaim API if it exists.
-        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
-            require_once JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+        if (!\defined('CWM_LOADED')) {
+            $apiPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+            if (file_exists($apiPath)) {
+                require_once $apiPath;
+            }
         }
 
         if (!ComponentHelper::isEnabled('com_proclaim')) {
-            throw new \RuntimeException("Extension Proclaim not present or enabled");
+            $this->app->enqueueMessage("Extension Proclaim not present or enabled", 'error');
+
+            return $data;
         }
 
-        $podcast   = new Cwmpodcastsubscribe();
-        if ($data) {
+        $podcast = new Cwmpodcastsubscribe();
+
+        try {
             $data['list'] = $podcast->buildSubscribeTable($data['params']->get('subscribeintro', 'Our Podcasts'));
+        } catch (\Exception $e) {
+            $this->app->enqueueMessage($e->getMessage(), 'error');
+            $data['list'] = '';
         }
+
+        $data['app'] = $this->getApplication();
 
         // Display the module
         return $data;

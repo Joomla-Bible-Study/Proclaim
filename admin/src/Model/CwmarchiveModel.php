@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -22,6 +22,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\User\CurrentUserInterface;
 use Joomla\CMS\Versioning\VersionableModelTrait;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Controller for Archive
@@ -49,10 +50,10 @@ class CwmarchiveModel extends AdminModel
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true): bool|CurrentUserInterface|Form
+    public function getForm($data = [], $loadData = true): bool|CurrentUserInterface|Form
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.archive', 'archive', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.archive', 'archive', ['control' => 'jform', 'load_data' => $loadData]);
 
         if ($form === null) {
             return false;
@@ -71,28 +72,35 @@ class CwmarchiveModel extends AdminModel
      */
     public function doArchive(): string
     {
-        $db         = Factory::getContainer()->get('DatabaseDriver');
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db->getQuery(true);
         $studies    = 0;
         $mediafiles = 0;
 
-        $data = Factory::getApplication()->input->get('jform', array(), 'array');
+        $input = Factory::getApplication()->getInput();
 
-        // Used this field to show how long back to archive.
-        $timeframe = (int)$data['timeframe'];
+        // Support both form POST (jform array) and AJAX GET (direct params)
+        $data = $input->get('jform', [], 'array');
 
-        // Use this to field (year, month, day)
-        $switch = $data['switch'];
+        if (!empty($data['timeframe'])) {
+            // Form POST mode
+            $timeframe = (int) $data['timeframe'];
+            $switch    = $data['switch'];
+        } else {
+            // AJAX GET mode
+            $timeframe = $input->getInt('timeframe', 0);
+            $switch    = $input->getCmd('switch', 'year');
+        }
 
         // Fields to update.
-        $fields = array(
-            $db->qn('published') . ' = ' . $db->q('2')
-        );
+        $fields = [
+            $db->quoteName('published') . ' = ' . $db->q('2'),
+        ];
 
         // Conditions for which records should be updated.
-        $conditions = array(
-            $db->qn('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
-        );
+        $conditions = [
+            $db->quoteName('studydate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch),
+        ];
 
         $query->update($db->quoteName('#__bsms_studies'))->set($fields)->where($conditions);
 
@@ -105,9 +113,9 @@ class CwmarchiveModel extends AdminModel
         $query = $db->getQuery(true);
 
         // Conditions for which records should be updated.
-        $conditions = array(
-            $db->qn('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch)
-        );
+        $conditions = [
+            $db->quoteName('createdate') . ' <= NOW() - INTERVAL ' . $timeframe . ' ' . strtoupper($switch),
+        ];
 
         $query->update($db->quoteName('#__bsms_mediafiles'))->set($fields)->where($conditions);
 

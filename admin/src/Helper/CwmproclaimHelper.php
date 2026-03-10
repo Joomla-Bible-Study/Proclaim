@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -21,6 +21,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Proclaim Helper class
@@ -59,7 +60,7 @@ class CwmproclaimHelper
      */
     public static function applyViewAndController(string $defaultController): void
     {
-        $input      = Factory::getApplication()->input;
+        $input      = Factory::getApplication()->getInput();
         $controller = $input->getCmd('controller');
         $view       = $input->getCmd('view');
         $task       = $input->getCmd('task', 'display');
@@ -82,117 +83,8 @@ class CwmproclaimHelper
     }
 
     /**
-     * Configure the Link bar.
-     *
-     * @param   string  $vName  The name of the active view.
-     *
-     * @return void
-     *
-     * @throws \Exception
-     * @since    1.6
-     */
-    public static function addSubmenu(string $vName): void
-    {
-        $simple_view = Cwmhelper::getSimpleView();
-
-        self::rendermenu(
-            Text::_('JBS_CMN_CONTROL_PANEL'),
-            'index.php?option=com_proclaim&view=cwmcpanel',
-            $vName == 'cpanel'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_ADMINISTRATION'),
-            'index.php?option=com_proclaim&task=cwmadmin.edit&id=1',
-            $vName == 'administrator'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_STUDIES'),
-            'index.php?option=com_proclaim&view=cwmmessages',
-            $vName == 'messages'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_MEDIA_FILES'),
-            'index.php?option=com_proclaim&view=cwmmediafiles',
-            $vName == 'mediafiles'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_TEACHERS'),
-            'index.php?option=com_proclaim&view=cwmteachers',
-            $vName == 'teachers'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_SERIES'),
-            'index.php?option=com_proclaim&view=cwmseries',
-            $vName == 'series'
-        );
-
-        if (!$simple_view->mode) {
-            self::rendermenu(
-                Text::_('JBS_CMN_MESSAGETYPES'),
-                'index.php?option=com_proclaim&view=cwmmessagetypes',
-                $vName == 'messagetypes'
-            );
-            self::rendermenu(
-                Text::_('JBS_CMN_LOCATIONS'),
-                'index.php?option=com_proclaim&view=cwmlocations',
-                $vName == 'locations'
-            );
-            self::rendermenu(
-                Text::_('JBS_CMN_TOPICS'),
-                'index.php?option=com_proclaim&view=cwmtopics',
-                $vName == 'topics'
-            );
-            self::rendermenu(
-                Text::_('JBS_CMN_COMMENTS'),
-                'index.php?option=com_proclaim&view=cwmcomments',
-                $vName == 'comments'
-            );
-        }
-
-        self::rendermenu(
-            Text::_('JBS_CMN_SERVERS'),
-            'index.php?option=com_proclaim&view=cwmservers',
-            $vName == 'servers'
-        );
-        self::rendermenu(
-            Text::_('JBS_CMN_PODCASTS'),
-            'index.php?option=com_proclaim&view=cwmpodcasts',
-            $vName == 'podcasts'
-        );
-
-        if (!$simple_view->mode) {
-            self::rendermenu(
-                Text::_('JBS_CMN_TEMPLATES'),
-                'index.php?option=com_proclaim&view=cwmtemplates',
-                $vName == 'templates'
-            );
-            self::rendermenu(
-                Text::_('JBS_CMN_TEMPLATECODE'),
-                'index.php?option=com_proclaim&view=cwmtemplatecodes',
-                $vName == 'templatecodes'
-            );
-        }
-    }
-
-    /**
-     *  Rendering Menu based on Joomla! Version.
-     *
-     * @param   string  $text   Label
-     * @param   string  $url    Url of link
-     * @param   string  $vName  Name of view
-     *
-     * @return void
-     *
-     * @since 1.5
-     */
-    public static function rendermenu(string $text, string $url, string $vName): void
-    {
-        // JHtmlSidebar::addEntry($text, $url, $vName);
-    }
-
-    /**
-     * Applies the content tag filters to arbitrary text as per settings for the current user group
-     * This may not be used, but is in the XML files.
+     * Applies the content tag filters to arbitrary text as per settings for the current user group.
+     * If no Proclaim-specific filters are configured, it falls back to Joomla's global text filtering.
      *
      * @param   string  $text  The string to filter
      *
@@ -203,12 +95,17 @@ class CwmproclaimHelper
      */
     public static function filterText(string $text): string
     {
-        // Filter settings
+        // Filter settings from com_proclaim
         $config     = ComponentHelper::getParams('com_proclaim');
         $user       = Factory::getApplication()->getIdentity();
         $userGroups = Access::getGroupsByUser($user->id);
 
         $filters = $config->get('filters');
+
+        // If no Proclaim-specific filters are configured, use Joomla's global text filtering
+        if (empty($filters)) {
+            return ComponentHelper::filterText($text);
+        }
 
         $blackListTags       = [];
         $blackListAttributes = [];
@@ -220,13 +117,18 @@ class CwmproclaimHelper
         $blackList  = false;
         $unfiltered = false;
 
-        // Cycle through each of the user groups the user is in.
-        // Remember, they are included in the Public group as well.
+        // Track if any filter was found for the user's groups
+        $hasFilterForUser = false;
+
+        // Cycle through each user group the user is in.
+        // Remember, they are also included in the Public group.
         foreach ($userGroups as $groupId) {
             // May have added a group by not saving the filters.
             if (!isset($filters->$groupId)) {
                 continue;
             }
+
+            $hasFilterForUser = true;
 
             // Each group the user is in could have different filtering properties.
             $filterData = $filters->$groupId;
@@ -260,7 +162,7 @@ class CwmproclaimHelper
                         }
                     }
 
-                    // Collect the black or white list tags and attributes.
+                    // Collect the black- or whitelisted tags and attributes.
                     // Each list is cumulative.
                     if ($filterType == 'BL') {
                         $blackList           = true;
@@ -275,7 +177,12 @@ class CwmproclaimHelper
             }
         }
 
-        // Remove duplicates before processing (because the black list uses both sets of arrays).
+        // If no filter settings are found for the user's groups, fall back to Joomla's global filtering
+        if (!$hasFilterForUser) {
+            return ComponentHelper::filterText($text);
+        }
+
+        // Remove duplicates before processing (since the blacklist uses both sets of arrays).
         $blackListTags       = array_unique($blackListTags);
         $blackListAttributes = array_unique($blackListAttributes);
         $whiteListTags       = array_unique($whiteListTags);
@@ -285,7 +192,7 @@ class CwmproclaimHelper
         if ($unfiltered) {
             $filter = InputFilter::getInstance([], [], 1, 1, 0);
         } elseif ($blackList) {
-            // Remove the white-listed attributes from the black-list.
+            // Remove the whitelisted attributes from the blacklist.
             $filter = InputFilter::getInstance(
                 // Blacklisted tags
                 array_diff($blackListTags, $whiteListTags),
@@ -300,8 +207,8 @@ class CwmproclaimHelper
             // Turn off XSS auto clean
             $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);
         } else {
-            // No HTML takes last place.
-            $filter = InputFilter::getInstance();
+            // Fall back to Joomla's global text filtering
+            return ComponentHelper::filterText($text);
         }
 
         return $filter->clean($text, 'html');
@@ -345,14 +252,14 @@ class CwmproclaimHelper
     public static function getMediaYears(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
 
         // $db      = $driver->getDriver();
         $query = $db->getQuery(true);
 
-        $query->select('DISTINCT YEAR(createdate) as value, YEAR(createdate) as text');
-        $query->from('#__bsms_mediafiles');
-        $query->order('value');
+        $query->select('DISTINCT YEAR(' . $db->quoteName('createdate') . ') as value, YEAR(' . $db->quoteName('createdate') . ') as text');
+        $query->from($db->quoteName('#__bsms_mediafiles'));
+        $query->order($db->quoteName('value'));
 
         // Get the options.
         $db->setQuery($query);
@@ -377,16 +284,17 @@ class CwmproclaimHelper
     public static function getMessageTypes(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query   = $db->getQuery(true);
 
-        // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
-
-        $query->select('messageType.id AS value, messageType.message_type AS text');
-        $query->from('#__bsms_message_type AS messageType');
-        $query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-        $query->group('messageType.id');
-        $query->order('messageType.message_type');
+        $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.messagetype') . ' = ' . $db->quoteName('messageType.id')
+        );
+        $query->group($db->quoteName('messageType.id'));
+        $query->order($db->quoteName('messageType.message_type'));
 
         // Get the options.
         $db->setQuery($query);
@@ -411,14 +319,12 @@ class CwmproclaimHelper
     public static function getStudyYears(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query   = $db->getQuery(true);
 
-        // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
-
-        $query->select('DISTINCT YEAR(studydate) as value, YEAR(studydate) as text');
-        $query->from('#__bsms_studies');
-        $query->order('value DESC');
+        $query->select('DISTINCT YEAR(' . $db->quoteName('studydate') . ') as value, YEAR(' . $db->quoteName('studydate') . ') as text');
+        $query->from($db->quoteName('#__bsms_studies'));
+        $query->order($db->quoteName('value') . ' DESC');
 
         // Get the options.
         $db->setQuery($query);
@@ -443,15 +349,22 @@ class CwmproclaimHelper
     public static function getTeachers(): array
     {
         $options = [];
-        $driver  = Factory::getContainer()->get('DatabaseDriver');
+        $driver  = Factory::getContainer()->get(DatabaseInterface::class);
         $db      = $driver->getDriver();
         $query   = $db->getQuery(true);
 
-        $query->select('teacher.id AS value, teacher.teachername AS text');
-        $query->from('#__bsms_teachers AS teacher');
-        $query->join('INNER', '#__bsms_studies AS study ON study.teacher_id = teacher.id');
-        $query->group('teacher.id');
-        $query->order('value ASC');
+        $query->select($db->quoteName('teacher.id', 'value') . ', ' . $db->quoteName('teacher.teachername', 'text'));
+        $query->from($db->quoteName('#__bsms_teachers', 'teacher'));
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ' . $db->quoteName('stj.teacher_id') . ' = ' . $db->quoteName('teacher.id')
+        );
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('stj.study_id')
+        );
+        $query->group($db->quoteName('teacher.id'));
+        $query->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -476,16 +389,19 @@ class CwmproclaimHelper
     public static function getStudyBooks(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query   = $db->getQuery(true);
 
-        // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
-
-        $query->select('book.booknumber AS value, book.bookname AS text, book.id');
-        $query->from('#__bsms_books AS book');
-        $query->join('INNER', '#__bsms_studies AS study ON study.booknumber = book.booknumber');
-        $query->group('book.id');
-        $query->order('value ASC');
+        $query->select(
+            $db->quoteName('book.booknumber', 'value') . ', ' . $db->quoteName('book.bookname', 'text') . ', ' . $db->quoteName('book.id')
+        );
+        $query->from($db->quoteName('#__bsms_books', 'book'));
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.booknumber') . ' = ' . $db->quoteName('book.booknumber')
+        );
+        $query->group($db->quoteName('book.id'));
+        $query->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -514,16 +430,17 @@ class CwmproclaimHelper
     public static function getStudyMediaTypes(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query   = $db->getQuery(true);
 
-        // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
-
-        $query->select('messageType.id AS value, messageType.message_type AS text');
-        $query->from('#__bsms_message_type AS messageType');
-        $query->join('INNER', '#__bsms_studies AS study ON study.messagetype = messageType.id');
-        $query->group('messageType.id');
-        $query->order('text ASC');
+        $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
+        $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
+        $query->join(
+            'INNER',
+            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.messagetype') . ' = ' . $db->quoteName('messageType.id')
+        );
+        $query->group($db->quoteName('messageType.id'));
+        $query->order($db->quoteName('text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -548,14 +465,12 @@ class CwmproclaimHelper
     public static function getStudyLocations(): array
     {
         $options = [];
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $query   = $db->getQuery(true);
 
-        // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
-
-        $query->select('id AS value, location_text AS text');
-        $query->from('#__bsms_locations');
-        $query->order('location_text ASC');
+        $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'));
+        $query->from($db->quoteName('#__bsms_locations'));
+        $query->order($db->quoteName('location_text') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -609,55 +524,17 @@ class CwmproclaimHelper
     }
 
     /**
-     * String Starts With
+     * Get half of the array count
      *
-     * @param   string  $haystack  String to search.
-     * @param   string  $needle    What to search for.
+     * @param   object|array  $array  Array or Object to count
      *
-     * @return bool
-     *
-     * @since      1.5
-     * @deprecated 10.0.0 "PHP 8+ has this native function"
-     */
-    public static function startsWith(string $haystack, string $needle): bool
-    {
-        // Search backwards starting from haystack length characters from the end
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
-    }
-
-    /**
-     * String Ends with.
-     *
-     * @param   string  $haystack  String to search.
-     * @param   string  $needle    What to search for.
-     *
-     * @return bool
-     *
-     * @since      1.5
-     * @deprecated 10.0.0 "PHP 8+ has this native function"
-     */
-    public static function endsWith(string $haystack, string $needle): bool
-    {
-        // Search forward starting from end minus needle length characters
-        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos(
-            $haystack,
-            $needle,
-            $temp
-        ) !== false);
-    }
-
-    /**
-     * Get haf of array count
-     *
-     * @param   array|object  $array  Array or Object to count
-     *
-     * @return object
+     * @return \stdClass
      *
      * @since 9.1.7
      */
-    public static function halfarray($array)
+    public static function halfarray(object|array $array): \stdClass
     {
-        $count = count($array);
+        $count = \count($array);
 
         $return        = new \stdClass();
         $return->half  = floor($count / 2);

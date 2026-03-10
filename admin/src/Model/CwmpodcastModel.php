@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,11 +16,15 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Table\CwmpodcastTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * Podcast model class
@@ -33,16 +37,29 @@ class CwmpodcastModel extends AdminModel
     /**
      * Protect prefix
      *
-     * @var        string    The prefix to use with controller messages.
+     * @var      string    The prefix to use with controller messages.
      * @since    1.6
      */
     protected $text_prefix = 'com_proclaim';
 
     /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'language_id'   => 'batchLanguage',
+        'linkType'      => 'batchLinkType',
+        'location'      => 'batchLocation',
+    ];
+
+    /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  Form  A JForm object on success, false on failure
      *
@@ -53,20 +70,6 @@ class CwmpodcastModel extends AdminModel
     {
         // Get the form.
         return $this->loadForm('com_proclaim.podcast', 'podcast', ['control' => 'jform', 'load_data' => $loadData]);
-    }
-
-    /**
-     * Method to check out a row for editing.
-     *
-     * @param   null  $pk  The numeric ID of the primary key.
-     *
-     * @return int|null False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): ?int
-    {
-        return (int)$pk;
     }
 
     /**
@@ -89,20 +92,145 @@ class CwmpodcastModel extends AdminModel
     /**
      * Method to get the data that should be injected into the form.
      *
-     * @return  CMSObject|array   The default data is an empty array.
+     * @return  object|array   The default data is an empty array.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function loadFormData()
+    protected function loadFormData(): mixed
     {
         $data = Factory::getApplication()->getUserState('com_proclaim.edit.podcast.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
+
+            // Auto-populate website with site URL for new podcasts
+            if ((int) ($data->id ?? 0) === 0 && empty($data->website)) {
+                $data->website = rtrim(Uri::root(), '/');
+            }
         }
 
         return $data;
+    }
+
+    /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmpodcastTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
+    }
+
+    /**
+     * Batch link type changes for a group of podcasts.
+     *
+     * @param   string  $value     The new value matching a link type.
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function batchLinkType($value, $pks, $contexts): bool
+    {
+        // Set the variables
+        $user = Factory::getApplication()->getIdentity();
+        /** @var CwmpodcastTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->linktype = (int)$value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        // Clean the cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch set location for a list of podcasts.
+     *
+     * @param   string  $value     The location ID (or 0/empty to clear).
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        /** @var CwmpodcastTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**

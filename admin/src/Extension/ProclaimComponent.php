@@ -2,7 +2,7 @@
 
 /**
  * @@package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -48,7 +48,7 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_NAMES = [
+    public const array CONDITION_NAMES = [
         self::CONDITION_PUBLISHED   => 'JPUBLISHED',
         self::CONDITION_UNPUBLISHED => 'JUNPUBLISHED',
         self::CONDITION_ARCHIVED    => 'JARCHIVED',
@@ -59,25 +59,25 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public const CONDITION_ARCHIVED = 2;
+    public const int CONDITION_ARCHIVED = 2;
     /**
      * The published condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_PUBLISHED = 1;
+    public const int CONDITION_PUBLISHED = 1;
     /**
      * The unpublished condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_UNPUBLISHED = 0;
+    public const int CONDITION_UNPUBLISHED = 0;
     /**
      * The trashed condition
      *
      * @since   4.0.0
      */
-    public const CONDITION_TRASHED = -2;
+    public const int CONDITION_TRASHED = -2;
 
     /**
      * @var array Supported functionality
@@ -102,8 +102,41 @@ class ProclaimComponent extends MVCComponent implements
      *
      * @since   4.0.0
      */
-    public function boot(ContainerInterface $container)
+    /**
+     * Minimum PHP version ID required for Proclaim (8.3.0 = 80300).
+     *
+     * @since 10.1.0
+     */
+    public const int MIN_PHP_VERSION_ID = 80300;
+
+    /**
+     * Minimum PHP version as a display string for error messages.
+     *
+     * @since 10.1.0
+     */
+    public const string MIN_PHP_VERSION = '8.3.0';
+
+    public function boot(ContainerInterface $container): void
     {
+        // Check PHP version requirement
+        if (PHP_VERSION_ID < self::MIN_PHP_VERSION_ID) {
+            // Always load Proclaim API if it exists.
+            $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+
+            if (!\defined('CWM_LOADED')) {
+                require_once $api;
+            }
+
+            Factory::getApplication()->enqueueMessage(
+                Text::sprintf(
+                    'COM_PROCLAIM_ERROR_PHP_VERSION',
+                    self::MIN_PHP_VERSION,
+                    PHP_VERSION
+                ),
+                'error'
+            );
+        }
+
         $this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService());
     }
 

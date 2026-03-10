@@ -4,7 +4,7 @@
  * Controller for a Comment
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,6 +20,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Controller for a Comment
@@ -30,7 +32,7 @@ use Joomla\CMS\Router\Route;
 class CwmcommentController extends FormController
 {
     /**
-     * NOTE: This is needed to prevent Joomla 1.6's pluralization mechanisim from kicking in
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var   string
      * @since 7.0
@@ -42,11 +44,11 @@ class CwmcommentController extends FormController
      *
      * @param   BaseDatabaseModel  $model  The model.
      *
-     * @return  boolean     True if successful, false otherwise and internal error is set.
+     * @return  bool     True if successful, false otherwise and internal error is set.
      *
      * @since   1.6
      */
-    public function batch($model = null)
+    public function batch($model = null): bool
     {
         // Set the model
         if ($model === null) {
@@ -66,11 +68,11 @@ class CwmcommentController extends FormController
      *
      * @param   array  $data  An array of input data.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   1.6
      */
-    protected function allowAdd($data = [])
+    protected function allowAdd($data = []): bool
     {
         // In the absence of better information, revert to the component permissions.
         return parent::allowAdd();
@@ -82,14 +84,31 @@ class CwmcommentController extends FormController
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
-     * @return  boolean
+     * @return  bool
      *
+     * @throws \Exception
      * @since   1.6
      */
-    protected function allowEdit($data = [], $key = 'id')
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int)isset($data[$key]) ? $data[$key] : 0;
+        $recordId = (int) ($data[$key] ?? 0);
         $user     = Factory::getApplication()->getIdentity();
+
+        // Non-admin users must have access to the item's view level
+        if (!$user->authorise('core.admin') && $recordId > 0) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('access'))
+                ->from($db->quoteName('#__bsms_comments'))
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':rid', $recordId, ParameterType::INTEGER);
+            $db->setQuery($query);
+            $access = (int) $db->loadResult();
+
+            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
+                return false;
+            }
+        }
 
         // Check general edit permission first.
         if ($user->authorise('core.edit', 'com_proclaim.comment.' . $recordId)) {

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -19,11 +19,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Path;
 use Joomla\CMS\Helper\MediaHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Session\Session;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Input\Input;
 
 /**
@@ -34,8 +34,8 @@ use Joomla\Input\Input;
  */
 class Cwmuploadscript
 {
-    public $runtimeScript;
-    public $runtime;
+    public mixed $runtimeScript;
+    public mixed $runtime;
 
     /**
      * @var string
@@ -69,10 +69,10 @@ class Cwmuploadscript
         $mediaHelper = new MediaHelper();
 
         // Maximum allowed size of post back data in MB.
-        $postMaxSize = $mediaHelper->toBytes(ini_get('post_max_size'));
+        $postMaxSize = $mediaHelper->toBytes(\ini_get('post_max_size'));
 
         // Maximum allowed size of script execution in MB.
-        $memoryLimit = $mediaHelper->toBytes(ini_get('memory_limit'));
+        $memoryLimit = $mediaHelper->toBytes(\ini_get('memory_limit'));
 
         // Check for the total size of post-back data.
         if (
@@ -83,7 +83,7 @@ class Cwmuploadscript
         }
 
         $uploadMaxSize     = $params->get('upload_maxsize', 0) * 1024 * 1024;
-        $uploadMaxFileSize = $mediaHelper->toBytes(ini_get('upload_max_filesize'));
+        $uploadMaxFileSize = $mediaHelper->toBytes(\ini_get('upload_max_filesize'));
 
         $file['name']     = File::makeSafe($file['name']);
         $file['name']     = str_replace(' ', '-', $file['name']);
@@ -117,7 +117,7 @@ class Cwmuploadscript
         $object_file = (object)$file;
         $result      = $app->triggerEvent('onContentBeforeSave', ['com_proclaim.file', &$object_file, true]);
 
-        if (in_array(false, $result, true)) {
+        if (\in_array(false, $result, true)) {
             // There are some errors in the plugins
             return ['data' => '', 'error' => 'Plugin errors on upload'];
         }

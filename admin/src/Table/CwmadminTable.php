@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,7 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -35,7 +35,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $id = 0;
+    public ?int $id = 0;
 
     /**
      * Drop Tables
@@ -43,7 +43,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public int $drop_tables = 0;
+    public ?int $drop_tables = 0;
 
     /**
      * Params
@@ -56,10 +56,10 @@ class CwmadminTable extends Table
     /**
      * Asset ID
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $asset_id = 0;
+    public ?int $asset_id = null;
 
     /**
      * Access Level
@@ -67,7 +67,7 @@ class CwmadminTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public $access = 0;
+    public ?int $access = 0;
 
     /**
      * Install State
@@ -88,7 +88,7 @@ class CwmadminTable extends Table
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since    7.0.0
      */
@@ -110,74 +110,29 @@ class CwmadminTable extends Table
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
+    #[\Override]
     public function bind($array, $ignore = ''): bool
     {
-        $params = [];
-
         // For Saving the page.
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
-        // For loading the administrator page
-        if (isset($array['params']) && is_string($array['params'])) {
-            // Convert the params field to a string.
-            $parameter = new Registry();
-            $parameter->loadString($array['params']);
-            $params = $parameter->toArray();
-        }
-
-        // If simple mode, check and rename some files to hide menus
-        $views   = [];
-        $views[] = 'landingpage';
-        $views[] = 'podcastdisplay';
-        $views[] = 'podcastlist';
-        $views[] = 'seriesdisplay';
-        $views[] = 'seriesdisplays';
-        $views[] = 'sermon';
-        $views[] = 'teacher';
-        $views[] = 'teachers';
-
-        if ($params['simple_mode'] === 1) {
-            // Go through each folder and change content of default.xml to add the hidden value to the layout tag
-            foreach ($views as $view) {
-                $filecontents = file_get_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR .
-                    'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
-                );
-
-                if (!substr_count($filecontents, '<layout hidden=\"true\" ')) {
-                    $filecontents = str_replace('<layout ', '<layout hidden=\"true\" ', $filecontents);
-                    file_put_contents(
-                        JPATH_ROOT . DIRECTORY_SEPARATOR .
-                        'components/com_proclaim/views/' . $view . '/tmpl/default.xml',
-                        $filecontents
-                    );
-                }
-            }
-        }
-
-        // Remove the hidden value from the layout tag
-        if ($params['simple_mode'] === 0) {
-            foreach ($views as $view) {
-                $filecontents = file_get_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR .
-                    'components/com_proclaim/views/' . $view . '/tmpl/default.xml'
-                );
-                $filecontents = str_replace('hidden=\"true \" ', '', $filecontents);
-                file_put_contents(
-                    JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/views/' . $view . '/tmpl/default.xml',
-                    $filecontents
-                );
-            }
-        }
-
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new \JAccessRules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'drop_tables', 'asset_id', 'access', 'debug',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
@@ -197,9 +152,10 @@ class CwmadminTable extends Table
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
+    #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -217,7 +173,8 @@ class CwmadminTable extends Table
      *
      * @since   1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -231,7 +188,8 @@ class CwmadminTable extends Table
      *
      * @since   1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Admin: ' . $this->id;
     }
@@ -249,6 +207,7 @@ class CwmadminTable extends Table
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

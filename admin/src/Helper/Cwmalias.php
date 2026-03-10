@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Class for updating the alias in certain tables
@@ -42,12 +43,12 @@ class Cwmalias
      * @return string
      * @since 7.1.0
      */
-    public static function updateAlias()
+    public static function updateAlias(): int
     {
         $done    = 0;
-        $db      = Factory::getContainer()->get('DatabaseDriver');
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = self::getObjects();
-        $results = array();
+        $results = [];
 
         foreach ($objects as $object) {
             $results[] = self::getTableQuery($table = $object['name'], $title = $object['titlefield']);
@@ -60,9 +61,9 @@ class Cwmalias
                 } else {
                     $alias = OutputFilter::stringURLSafe($r['title']);
                     $query = $db->getQuery(true);
-                    $query->update($db->qn($r['table']))
-                        ->set('alias=' . $db->q($alias))
-                        ->where('id=' . $db->q($r['id']));
+                    $query->update($db->quoteName($r['table']))
+                        ->set($db->quoteName('alias') . ' = ' . $db->q($alias))
+                        ->where($db->quoteName('id') . ' = ' . (int) $r['id']);
                     $db->setQuery($query);
                     $db->execute();
                     $done++;
@@ -80,14 +81,14 @@ class Cwmalias
      *
      * @since 1.5
      */
-    private static function getObjects()
+    private static function getObjects(): array
     {
-        $objects = array(
-            array('name' => '#__bsms_series', 'titlefield' => 'series_text'),
-            array('name' => '#__bsms_studies', 'titlefield' => 'studytitle'),
-            array('name' => '#__bsms_message_type', 'titlefield' => 'message_type'),
-            array('name' => '#__bsms_teachers', 'titlefield' => 'teachername'),
-        );
+        $objects = [
+            ['name' => '#__bsms_series', 'titlefield' => 'series_text'],
+            ['name' => '#__bsms_studies', 'titlefield' => 'studytitle'],
+            ['name' => '#__bsms_message_type', 'titlefield' => 'message_type'],
+            ['name' => '#__bsms_teachers', 'titlefield' => 'teachername'],
+        ];
 
         return $objects;
     }
@@ -98,33 +99,33 @@ class Cwmalias
      * @param   string  $table  Table
      * @param   string  $title  Title
      *
-     * @return boolean|array
+     * @return bool|array
      *
      * @since 1.5
      */
-    private static function getTableQuery($table, $title)
+    private static function getTableQuery($table, $title): bool|array
     {
-        $data = array();
+        $data = [];
 
         if (!$table) {
             return false;
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('id, alias, ' . $title)
-            ->from($table);
+        $query->select($db->quoteName('id') . ', ' . $db->quoteName('alias') . ', ' . $db->quoteName($title))
+            ->from($db->quoteName($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         foreach ($results as $result) {
             if (!$result->alias) {
-                $temp   = array(
+                $temp   = [
                     'id'    => $result->id,
                     'title' => $result->$title,
                     'alias' => $result->alias,
-                    'table' => $table
-                );
+                    'table' => $table,
+                ];
                 $data[] = $temp;
             }
         }

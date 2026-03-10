@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -39,51 +39,69 @@ class SermonsTemplateFileField extends ListField
     protected $type = 'SermonsTemplateFile';
 
     /**
+     * Cached template file options
+     *
+     * @var array|null
+     * @since 9.0.0
+     */
+    private static ?array $cachedOptions = null;
+
+    /**
+     * Files to exclude from the template list
+     *
+     * @var array
+     * @since 9.0.0
+     */
+    private const EXCLUDED_FILES = [
+        'default.php',
+        'default_easy.php',
+        'default_main.php',
+        'default_formfooter.php',
+        'default_formheader.php',
+        'default.xml',
+    ];
+
+    /**
      * Method to get a list of options for a list input.
      *
      * @return  array   An array of JHtml options.
      *
      * @since 7.0
      */
+    #[\Override]
     protected function getOptions(): array
     {
-        $folder = Folder::files(JPATH_SITE . '/components/com_proclaim/tmpl/cwmsermons');
-
-        foreach ($folder as $key => $value) {
-            if ($value == 'default.php') {
-                unset($folder[$key]);
-            }
-
-            if ($value == 'default_easy.php') {
-                unset($folder[$key]);
-            }
-
-            if ($value == 'default_main.php') {
-                unset($folder[$key]);
-            }
-
-            if ($value == 'default_formfooter.php') {
-                unset($folder[$key]);
-            }
-
-            if ($value == 'default_formheader.php') {
-                unset($folder[$key]);
-            }
-
-            if ($value == 'default.xml') {
-                unset($folder[$key]);
-            }
+        // Return cached options if available
+        if (self::$cachedOptions !== null) {
+            return array_merge(parent::getOptions(), self::$cachedOptions);
         }
 
-        $folder    = str_replace(['.php', 'default_'], '', $folder);
-        $options   = [];
-        $options[] = HtmlHelper::_('select.option', '0', Text::_('JBS_CMN_USE_DEFAULT'));
-        if ($folder) {
-            foreach ($folder as $file) {
-                $options[] = HtmlHelper::_('select.option', $file, $file);
-            }
+        self::$cachedOptions   = [];
+        self::$cachedOptions[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_USE_DEFAULT'));
+
+        $path = JPATH_SITE . '/components/com_proclaim/tmpl/cwmsermons';
+
+        if (!is_dir($path)) {
+            return array_merge(parent::getOptions(), self::$cachedOptions);
         }
 
-        return array_merge(parent::getOptions(), $options);
+        $files = Folder::files($path, '\.php$');
+
+        if (!$files) {
+            return array_merge(parent::getOptions(), self::$cachedOptions);
+        }
+
+        // Filter and process files in a single pass
+        foreach ($files as $file) {
+            if (\in_array($file, self::EXCLUDED_FILES, true)) {
+                continue;
+            }
+
+            // Extract template name (remove .php and default_ prefix)
+            $name                  = str_replace(['.php', 'default_'], '', $file);
+            self::$cachedOptions[] = HTMLHelper::_('select.option', $name, $name);
+        }
+
+        return array_merge(parent::getOptions(), self::$cachedOptions);
     }
 }

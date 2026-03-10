@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -13,6 +13,8 @@
 \defined('_JEXEC') or die;
 
 // phpcs:enable PSR1.Files.SideEffects
+
+/** @var CWM\Component\Proclaim\Site\View\Cwmsermon\HtmlView $this */
 
 use Joomla\CMS\Language\Text;
 
@@ -34,7 +36,7 @@ use Joomla\CMS\Language\Text;
         <i class="fas fa-bible" aria-hidden="true"></i>
         <?php
         echo Text::_('JBS_CMN_SCRIPTURE'); ?>: <?php
-        echo $this->item->scripture1; ?>    </dd>
+        echo !empty($this->item->allScriptures) ? $this->item->allScriptures : $this->item->scripture1; ?>    </dd>
 
     <dd class="published">
         <i class="icon-calendar icon-fw" aria-hidden="true"></i>

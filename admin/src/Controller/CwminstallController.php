@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Administrator\Model\CwminstallModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -32,16 +31,10 @@ use Joomla\CMS\Session\Session;
 class CwminstallController extends BaseController
 {
     /**
-     * @var string
-     * @since 7.0.0
-     */
-    public string $modelName;
-
-    /**
-     * The URL view list variable.
+     * Prevents Joomla's pluralization mechanism from altering the view name.
      *
      * @var    string
-     * @since  12.2
+     * @since  7.0.0
      */
     protected string $view_list = 'cwminstall';
 
@@ -49,27 +42,27 @@ class CwminstallController extends BaseController
      * The default view for the display method.
      *
      * @var    string
-     * @since  3.0
+     * @since  7.0.0
      */
     protected $default_view = 'cwminstall';
 
     /**
-     * Constructor.
+     * Route tasks to allowed methods or fall back to browse.
      *
-     * @param   string  $task  An optional associative array of configuration settings.
+     * @param   string  $task  The task to execute.
      *
-     * @return void
+     * @return mixed
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function execute($task): void
+    public function execute($task): mixed
     {
         if ($task !== 'run' && $task !== 'clear' && $task !== 'browse') {
             $task = 'browse';
         }
 
-        parent::execute($task);
+        return parent::execute($task);
     }
 
     /**
@@ -83,21 +76,25 @@ class CwminstallController extends BaseController
     public function browse(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
+
+            return;
+        }
 
         $app     = Factory::getApplication();
         $session = $app->getSession();
         $stack   = $session->get('migration_stack', '', 'CWM');
 
-        if (empty($stack) || !is_array($stack)) {
-            Cwmhelper::clearCache('site');
-            Cwmhelper::clearCache('administrator');
+        if (empty($stack) || !\is_array($stack)) {
+            Cwmhelper::clearCache();
             $session->set('migration_stack', '', 'CWM');
 
-            $model = new CwminstallModel();
+            /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
+            $model = $this->getModel('Cwminstall');
             $state = $model->startScanning();
-            $app->input->set('scanstate', $state);
-            $app->input->set('view', 'cwminstall');
+            $app->getInput()->set('scanstate', $state);
+            $app->getInput()->set('view', 'cwminstall');
 
             $this->display(false);
         } else {
@@ -116,13 +113,19 @@ class CwminstallController extends BaseController
     public function run(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
 
-        $app   = Factory::getApplication();
-        $model = new CwminstallModel();
+            return;
+        }
+
+        $app = Factory::getApplication();
+
+        /** @var \CWM\Component\Proclaim\Administrator\Model\CwminstallModel $model */
+        $model = $this->getModel('Cwminstall');
         $state = $model->run();
-        $app->input->set('scanstate', $state);
-        $app->input->set('view', 'cwminstall');
+        $app->getInput()->set('scanstate', $state);
+        $app->getInput()->set('view', 'cwminstall');
 
         $this->display(false);
     }
@@ -138,14 +141,17 @@ class CwminstallController extends BaseController
     public function clear(): void
     {
         // Check for request forgeries.
-        (Session::checkToken('get') || Session::checkToken()) or jexit(Text::_('JINVALID_TOKEN'));
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->setRedirect('index.php?option=com_proclaim&view=cwminstall', Text::_('JINVALID_TOKEN'), 'error');
 
-        Cwmhelper::clearCache('site');
-        Cwmhelper::clearCache('administrator');
-        $session = Factory::getApplication()->getSession();
+            return;
+        }
+
+        Cwmhelper::clearCache();
+        $app     = Factory::getApplication();
+        $session = $app->getSession();
         $session->set('migration_stack', '', 'CWM');
-        $app = Factory::getApplication();
-        $app->input->set('view', 'cwminstall');
+        $app->getInput()->set('view', 'cwminstall');
 
         $this->display(false);
     }

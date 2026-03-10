@@ -5,15 +5,17 @@
             <field
                     name="search"
                     type="text"
+                    inputmode="search"
                     label="JBS_CMN_FILTER_SEARCH_DESC"
+                    description="JBS_CMN_FILTER_SEARCH_DESC"
                     hint="JSEARCH_FILTER"
             />
             <field
                     name="published"
                     type="status"
-                    label="COM_CONTENT_FILTER_PUBLISHED"
-                    description="COM_CONTENT_FILTER_PUBLISHED_DESC"
-                    onchange="this.form.submit();"
+                    label="JSTATUS"
+                    class="js-select-submit-on-change"
+                    extension="com_proclaim"
             >
                 <option value="">JOPTION_SELECT_PUBLISHED</option>
             </field>
@@ -21,17 +23,17 @@
                     name="access"
                     type="accesslevel"
                     label="JOPTION_FILTER_ACCESS"
+                    multiple="true"
+                    layout="joomla.form.field.list-fancy-select"
                     description="JOPTION_FILTER_ACCESS_DESC"
-                    onchange="this.form.submit();"
-            >
-                <option value="">JOPTION_SELECT_ACCESS</option>
-            </field>
+                    hint="JOPTION_SELECT_ACCESS"
+                    class="js-select-submit-on-change"
+            />
             <field
                     name="language"
                     type="contentlanguage"
                     label="JOPTION_FILTER_LANGUAGE"
-                    description="JOPTION_FILTER_LANGUAGE_DESC"
-                    onchange="this.form.submit();"
+                    class="js-select-submit-on-change"
             >
                 <option value="">JOPTION_SELECT_LANGUAGE</option>
                 <option value="*">JALL</option>
@@ -42,11 +44,9 @@
         <field
                 name="limit"
                 type="limitbox"
-                class="input-mini"
+                label="JGLOBAL_LIST_LIMIT"
                 default="25"
-                label="COM_CONTENT_LIST_LIMIT"
-                description="COM_CONTENT_LIST_LIMIT_DESC"
-                onchange="this.form.submit();"
+                class="js-select-submit-on-change"
         />
     </fields>
 </form>

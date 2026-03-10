@@ -5,7 +5,7 @@
  *
  * @package         Proclaim
  * @subpackage      mod_proclaim
- * @copyright   (C) 2025 CWM Team All rights reserved
+ * @copyright   (C) 2026 CWM Team All rights reserved
  * @license         GNU General Public License version 2 or later; see LICENSE.txt
  * @link            https://www.christianwebministries.org
  * */
@@ -24,7 +24,7 @@ $show_link = $params->get('show_link', 1);
 
 $Listing = new Cwmlisting(); ?>
 
-<div class="row-fluid col-12">
+<div class="row col-12">
     <h5>
         <?php
         echo Text::_('JBS_CMN_TEACHINGS'); ?>
@@ -54,7 +54,7 @@ foreach ($list as $study) {
 
         <dd class="published">
             <span class="icon-calendar icon-fw" aria-hidden="true"></span>
-            <time datetime="2022-07-14T12:19:37-07:00" itemprop="datePublished">
+            <time datetime="<?php echo $study->studydate; ?>" itemprop="datePublished">
                 <?php
                 echo $study->studydate; ?>    </time>
         </dd>
@@ -68,17 +68,15 @@ foreach ($list as $study) {
     <?php
 } ?>
 
-<div class="row-fluid">
+<div class="row">
     <div class="col-12">
         <?php
         if ($params->get('show_link') > 0) {
             /** @var string $link */
             echo $link;
         }
-        ?>
+?>
     </div>
 </div>
 <!--end of footer div-->
 <!--end container -->
-<div style="clear: both;"></div>
-

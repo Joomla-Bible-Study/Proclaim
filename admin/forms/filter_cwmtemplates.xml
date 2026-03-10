@@ -5,17 +5,27 @@
             <field
                     name="search"
                     type="text"
+                    inputmode="search"
                     label="JBS_CMN_FILTER_SEARCH_DESC"
+                    description="JBS_CMN_FILTER_SEARCH_DESC"
                     hint="JSEARCH_FILTER"
             />
             <field
                     name="published"
                     type="status"
-                    label="COM_CONTENT_FILTER_PUBLISHED"
-                    description="COM_CONTENT_FILTER_PUBLISHED_DESC"
-                    onchange="this.form.submit();"
+                    label="JSTATUS"
+                    class="js-select-submit-on-change"
+                    extension="com_proclaim"
             >
                 <option value="">JOPTION_SELECT_PUBLISHED</option>
+            </field>
+            <field
+                    name="location"
+                    type="LocationList"
+                    label="JBS_CMN_SELECT_LOCATION"
+                    class="js-select-submit-on-change"
+            >
+                <option value="">JBS_CMN_SELECT_LOCATION</option>
             </field>
         </fields>
     </fieldset>
@@ -23,11 +33,9 @@
         <field
                 name="limit"
                 type="limitbox"
-                class="input-mini"
+                label="JGLOBAL_LIST_LIMIT"
                 default="25"
-                label="COM_CONTENT_LIST_LIMIT"
-                description="COM_CONTENT_LIST_LIMIT_DESC"
-                onchange="this.form.submit();"
+                class="js-select-submit-on-change"
         />
     </fields>
 </form>

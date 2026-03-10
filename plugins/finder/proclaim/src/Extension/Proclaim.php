@@ -5,7 +5,7 @@
  *
  * @package        Proclaim.Finder
  * @subpackage     plg_finder_proclaim
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -17,9 +17,11 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\Finder as FinderEvent;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
 use Joomla\Component\Finder\Administrator\Indexer\Helper;
@@ -71,7 +73,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      * @var    string
      * @since  7.1.0
      */
-    protected $type_title = 'Studies';
+    protected $type_title = 'Messages';
 
     /**
      * The table name.
@@ -82,6 +84,14 @@ final class Proclaim extends Adapter implements SubscriberInterface
     protected $table = '#__bsms_studies';
 
     /**
+     * The field name for the published state.
+     *
+     * @var    string
+     * @since  7.1.0
+     */
+    protected $state_field = 'published';
+
+    /**
      * Load the language file on instantiation.
      *
      * @var    bool
@@ -89,7 +99,13 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected $autoloadLanguage = true;
 
-    protected int $old_seriesAccess;
+    /**
+     * The old series access level before saving.
+     *
+     * @var    int
+     * @since  7.1.0
+     */
+    protected int $old_seriesAccess = 0;
 
     /**
      * Returns an array of events this subscriber will listen to.
@@ -101,11 +117,10 @@ final class Proclaim extends Adapter implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return array_merge(parent::getSubscribedEvents(), [
-            'onFinderSeriesChangeState' => 'onFinderSeriesChangeState',
-            'onFinderChangeState'       => 'onFinderChangeState',
-            'onFinderAfterDelete'       => 'onFinderAfterDelete',
-            'onFinderBeforeSave'        => 'onFinderBeforeSave',
-            'onFinderAfterSave'         => 'onFinderAfterSave',
+            'onFinderChangeState' => 'onFinderChangeState',
+            'onFinderAfterDelete' => 'onFinderAfterDelete',
+            'onFinderBeforeSave'  => 'onFinderBeforeSave',
+            'onFinderAfterSave'   => 'onFinderAfterSave',
         ]);
     }
 
@@ -118,27 +133,15 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function setup(): bool
     {
-        return true;
-    }
-
-    /**
-     * Method to update the item link information when the item category is
-     * changed. This is fired when the item category is published or unpublished
-     * from the list view.
-     *
-     * @param   FinderEvent\AfterSeriesChangeStateEvent  $event  The event instance.
-     *
-     * @return  void
-     *
-     * @throws \Exception
-     * @since   2.5
-     */
-    public function onFinderSeriesChangeState(FinderEvent\AfterSeriesChangeStateEvent $event): void
-    {
-        // Make sure we're handling com_proclaim series.
-        if ($event->getExtension() === 'com_proclaim') {
-            $this->seriesStateChange($event->getPks(), $event->getValue());
+        // Load the API if not already loaded
+        if (!\defined('CWM_LOADED')) {
+            $apiFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
+            if (file_exists($apiFile)) {
+                require_once $apiFile;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -156,7 +159,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $context = $event->getContext();
         $table   = $event->getItem();
 
-        if ($context === 'com_proclaim.message') {
+        if ($context === 'com_proclaim.cwmmessage' || $context === 'com_proclaim.message') {
             $id = $table->id;
         } elseif ($context === 'com_finder.index') {
             $id = $table->link_id;
@@ -188,7 +191,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $isNew   = $event->getIsNew();
 
         // We only want to handle messages here.
-        if ($context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
+        if ($context === 'com_proclaim.cwmmessage' || $context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
             // Check if the access levels are different
             if (!$isNew && $this->old_access !== $row->access) {
                 // Process the change.
@@ -200,10 +203,10 @@ final class Proclaim extends Adapter implements SubscriberInterface
         }
 
         // Check for access changes in the Series.
-        if ($context === 'com_proclaim.series') {
+        if ($context === 'com_proclaim.cwmserie' || $context === 'com_proclaim.series') {
             // Check if the access levels are different.
-            if (!$isNew && $this->old_seriesAccess !== $row->access) {
-                $this->SeriesAccessChange($row);
+            if (!$isNew && $this->old_seriesAccess !== (int) $row->access) {
+                $this->seriesAccessChange($row);
             }
         }
     }
@@ -225,8 +228,8 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $row     = $event->getItem();
         $isNew   = $event->getIsNew();
 
-        // We only want to handle contacts here
-        if ($context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
+        // We only want to handle messages here
+        if ($context === 'com_proclaim.cwmmessage' || $context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
             // Query the database for the old access level if the item isn't new
             if (!$isNew) {
                 $this->checkItemAccess($row);
@@ -234,7 +237,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         }
 
         // Check for access levels from the Series.
-        if ($context === 'com_proclaim.series') {
+        if ($context === 'com_proclaim.cwmserie' || $context === 'com_proclaim.series') {
             // Query the database for the old access level if the item isn't new.
             if (!$isNew) {
                 $this->checkSeriesAccess($row);
@@ -247,10 +250,11 @@ final class Proclaim extends Adapter implements SubscriberInterface
      * from outside the edit screen. This is fired when the item is published,
      * unpublished, archived, or unarchived from the list view.
      *
-     * @param   FinderEvent\AfterChangeStateEvent   $event  The event instance.
+     * @param   FinderEvent\AfterChangeStateEvent  $event  The event instance.
      *
      * @return  void
      *
+     * @throws \Exception
      * @since   2.5
      */
     public function onFinderChangeState(FinderEvent\AfterChangeStateEvent $event): void
@@ -260,8 +264,10 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $value   = $event->getValue();
 
         // We only want to handle sermons here
-        if ($context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
+        if ($context === 'com_proclaim.cwmmessage' || $context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
             $this->itemStateChange($pks, $value);
+        } elseif ($context === 'com_proclaim.cwmserie' || $context === 'com_proclaim.series') {
+            $this->seriesStateChange($pks, $value);
         }
 
         // Handle when the plugin is disabled
@@ -288,7 +294,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $this->db->setQuery($query);
 
         // Store the access level to determine if it changes
-        $this->old_cataccess = $this->db->loadResult();
+        $this->old_seriesAccess = (int) $this->db->loadResult();
     }
 
     /**
@@ -304,7 +310,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
     protected function seriesAccessChange(Table $row): void
     {
         $query = clone $this->getStateQuery();
-        $query->where('s.id = ' . (int) $row->id);
+        $query->where($this->db->quoteName('s.id') . ' = ' . (int) $row->id);
 
         // Get the access level.
         $this->db->setQuery($query);
@@ -340,7 +346,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
          */
         foreach ($pks as $pk) {
             $query = clone $this->getStateQuery();
-            $query->where('s.id = ' . (int) $pk);
+            $query->where($this->db->quoteName('s.id') . ' = ' . (int) $pk);
 
             // Get the published states.
             $this->db->setQuery($query);
@@ -359,7 +365,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
     /**
      * Method to get an SQL query to load the published and access states for
-     * a message and series.
+     * a message and a series.
      *
      * @return  QueryInterface  A database object.
      *
@@ -369,16 +375,18 @@ final class Proclaim extends Adapter implements SubscriberInterface
     {
         $query = $this->db->getQuery(true);
 
+        $db = $this->db;
+
         // Item ID
-        $query->select('a.id');
+        $query->select($db->quoteName('a.id'));
 
         // Item and category published state
-        $query->select('a.' . $this->state_field . ' AS state, s.published AS series_state');
+        $query->select($db->quoteName('a.' . $this->state_field, 'state') . ', ' . $db->quoteName('s.published', 'series_state'));
 
-        // Item and category access levels
-        $query->select('a.access, c.access AS cat_access')
-            ->from($this->table . ' AS a')
-            ->join('LEFT', '#__bsms_series AS s ON s.id = a.series_id');
+        // Item and series access levels
+        $query->select($db->quoteName('a.access') . ', ' . $db->quoteName('s.access', 'series_access'))
+            ->from($db->quoteName($this->table, 'a'))
+            ->join('LEFT', $db->quoteName('#__bsms_series', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('a.series_id'));
 
         return $query;
     }
@@ -386,7 +394,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
     /**
      * Method to index an item. The item must be a FinderIndexerResult object.
      *
-     * @param   Result  $item  The item to index as an FinderIndexerResult object.
+     * @param   Result  $item  The item to index as a FinderIndexerResult object.
      *
      * @return  void
      *
@@ -404,21 +412,19 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         $item->context = 'com_proclaim.message';
 
-        // Initialise the item parameters.
+        // Initialize the item parameters.
         $registry     = new Registry($item->params);
         $item->params = clone ComponentHelper::getParams('com_proclaim', true);
         $item->params->merge($registry);
 
-        $item->metadata = new Registry($item->metadata);
-
-        // Get the menu title if it exists.
-        $title = $this->getItemMenuTitle($item->url);
+        // Initialise metadata (empty as table doesn't have it)
+        $item->metadata = new Registry();
 
         // Trigger the onContentPrepare event.
         $item->summary = Helper::prepareContent($item->summary, $item->params, $item);
         $item->body    = Helper::prepareContent($item->body, $item->params, $item);
 
-        // Create a URL as identifier to recognize items again.
+        // Create a URL as an identifier to recognize items again.
         $item->url   = $this->getUrl($item->id, $this->extension, $this->layout);
 
         // Build the necessary route and path information.
@@ -432,7 +438,22 @@ final class Proclaim extends Adapter implements SubscriberInterface
             $item->title = $title;
         }
 
-        $images = $item->thumbnailm ? json_decode($item->thumbnailm) : false;
+        $images = null;
+        if (!empty($item->thumbnailm)) {
+            // Try to decode as JSON
+            try {
+                $decoded = json_decode($item->thumbnailm, false, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $decoded = null;
+            }
+
+            if (\is_object($decoded)) {
+                $images = $decoded;
+            } else {
+                // Treat as direct path
+                $images = (object) ['image_intro' => $item->thumbnailm];
+            }
+        }
 
         // Add the image.
         if ($images && !empty($images->image_intro)) {
@@ -452,7 +473,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $item->state = $this->translateState($item->state, $item->series_state);
 
         // Get taxonomies to display
-        $taxonomies = $this->params->get('taxonomies', ['type', 'author', 'series', 'language']);
+        $taxonomies = $this->params->get('taxonomies', ['type', 'author', 'series', 'language', 'topic', 'scripter', 'location']);
 
         // Add the type taxonomy data.
         if (\in_array('type', $taxonomies, true)) {
@@ -469,9 +490,88 @@ final class Proclaim extends Adapter implements SubscriberInterface
             $item->addTaxonomy('Author', !empty($item->created_by_alias) ? $item->created_by_alias : $item->author, $item->state);
         }
 
-        // Add the language taxonomy data.
-        if (\in_array('language', $taxonomies, true)) {
-            $item->addTaxonomy('Language', $item->language);
+        // Add the series taxonomy data.
+        if (!empty($item->series) && \in_array('series', $taxonomies, true)) {
+            $item->addTaxonomy('Series', $item->series, $item->series_state, $item->series_access);
+        }
+
+        // Add the location taxonomy data (campus/location for multi-campus installations).
+        if (!empty($item->location_id) && $item->location_id > 0 && \in_array('location', $taxonomies, true)) {
+            $locationText = $item->location_text ?? '';
+
+            if ($locationText !== '') {
+                $item->addTaxonomy('Location', $locationText);
+                $item->body .= ' ' . $locationText;
+            }
+        }
+
+        // Add Topics
+        $db    = $this->getDatabase();
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('t.topic_text'))
+            ->from($db->quoteName('#__bsms_topics', 't'))
+            ->join('INNER', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id'))
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $item->id)
+            ->where($db->quoteName('t.published') . ' = 1');
+        $db->setQuery($query);
+        $topics = $db->loadColumn();
+
+        if (!empty($topics)) {
+            foreach ($topics as $topic) {
+                // Translate topic if it's a language key
+                $topic = Text::_($topic);
+
+                if (\in_array('topic', $taxonomies, true)) {
+                    $item->addTaxonomy('Topic', $topic);
+                }
+                // Add to the body for searchability
+                $item->body .= ' ' . $topic;
+            }
+        }
+
+        // Add Scripture/Book
+        if (!empty($item->booknumber)) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('bookname'))
+                ->from($db->quoteName('#__bsms_books'))
+                ->where($db->quoteName('booknumber') . ' = ' . (int) $item->booknumber);
+            $db->setQuery($query);
+            $bookname = $db->loadResult();
+
+            if ($bookname) {
+                // Translate bookname if it's a language key
+                $bookname = Text::_($bookname);
+
+                // Construct reference string
+                $reference = $bookname . ' ' . $item->chapter_begin;
+                if ($item->verse_begin !== '0') {
+                    $reference .= ':' . $item->verse_begin;
+                }
+
+                if ($item->verse_end !== '0') {
+                    $reference .= '-' . $item->verse_end;
+                }
+
+                if (\in_array('scripter', $taxonomies, true)) {
+                    $item->addTaxonomy('Scripter', $reference);
+                }
+
+                // Add to body
+                $item->body .= ' ' . $reference;
+            }
+        }
+
+        // Also index all references from the junction table
+        try {
+            $scriptures = CwmscriptureHelper::getScripturesForStudy((int) $item->id);
+
+            foreach ($scriptures as $ref) {
+                if ($ref->referenceText !== '') {
+                    $item->body .= ' ' . $ref->referenceText;
+                }
+            }
+        } catch (\Exception $e) {
+            // Junction table may not exist yet during migration
         }
 
         // Get content extras.
@@ -483,7 +583,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
     }
 
     /**
-     * Method to get the SQL query used to retrieve the list of messages items.
+     * Method to get the SQL query used to retrieve the list of message items.
      *
      * @param   mixed  $query  A JDatabaseQuery object or null.
      *
@@ -497,19 +597,20 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Check if we can use the supplied SQL query.
         $query = $query instanceof QueryInterface ? $query : $db->getQuery(true)
-            ->select('a.id, a.studytitle AS title, a.alias, a.studyintro AS summary, a.studytext as body')
-            ->select('a.thumbnailm')
-            ->select('a.published AS state, a.studydate AS start_date, a.user_id')
-            ->select('a.language')
-            ->select('a.access, a.ordering, a.params')
-            ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-            ->select('s.series_text AS series, s.published AS s_state, s.access');
+            ->select($db->quoteName('a.id') . ', ' . $db->quoteName('a.studytitle', 'title') . ', ' . $db->quoteName('a.alias') . ', ' . $db->quoteName('a.studyintro', 'summary') . ', ' . $db->quoteName('a.studytext', 'body'))
+            ->select($db->quoteName('a.thumbnailm') . ', ' . $db->quoteName('a.series_id'))
+            ->select($db->quoteName('a.published', 'state') . ', ' . $db->quoteName('a.studydate', 'start_date') . ', ' . $db->quoteName('a.user_id'))
+            ->select($db->quoteName('a.language'))
+            ->select($db->quoteName('a.access') . ', ' . $db->quoteName('a.ordering') . ', ' . $db->quoteName('a.params'))
+            ->select($db->quoteName('a.publish_up', 'publish_start_date') . ', ' . $db->quoteName('a.publish_down', 'publish_end_date'))
+            ->select($db->quoteName(['a.booknumber', 'a.chapter_begin', 'a.verse_begin', 'a.chapter_end', 'a.verse_end']))
+            ->select($db->quoteName('s.series_text', 'series') . ', ' . $db->quoteName('s.published', 'series_state') . ', ' . $db->quoteName('s.access', 'series_access'));
 
         // Handle the alias CASE WHEN portion of the query
         $case_when_item_alias = ' CASE WHEN ';
         $case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
         $case_when_item_alias .= ' THEN ';
-        $a_id                 = $query->castAsChar('a.id');
+        $a_id                 = $query->castAs('CHAR', 'a.id');
         $case_when_item_alias .= $query->concatenate([$a_id, 'a.alias'], ':');
         $case_when_item_alias .= ' ELSE ';
         $case_when_item_alias .= $a_id . ' END as slug';
@@ -518,16 +619,22 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $case_when_series_alias = ' CASE WHEN ';
         $case_when_series_alias .= $query->charLength('s.alias', '!=', '0');
         $case_when_series_alias .= ' THEN ';
-        $s_id                     = $query->castAsChar('s.id');
+        $s_id                     = $query->castAs('CHAR', 's.id');
         $case_when_series_alias .= $query->concatenate([$s_id, 's.alias'], ':');
         $case_when_series_alias .= ' ELSE ';
         $case_when_series_alias .= $s_id . ' END as seriesslug';
         $query->select($case_when_series_alias);
 
-        $query->select('t.teachername AS author')
-            ->from('#__bsms_studies AS a')
-            ->join('LEFT', '#__bsms_teachers AS t ON t.id = a.teacher_id')
-            ->join('LEFT', '#__bsms_series AS s ON s.id = a.series_id');
+        $query->select($db->quoteName('a.location_id') . ', ' . $db->quoteName('loc.location_text'))
+            ->select($db->quoteName('t.teachername', 'author'))
+            ->from($db->quoteName('#__bsms_studies', 'a'))
+            ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('a.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+            ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('a.teacher_id') . ')')
+            ->join('LEFT', $db->quoteName('#__bsms_series', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('a.series_id'))
+            ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('a.location_id'));
 
         return $query;
     }

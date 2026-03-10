@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Virtuemart Category List Form Field class for the Proclaim component
@@ -53,24 +54,22 @@ class VirtuemartField extends ListField
         // Use default Joomla
         $siteLang = $params->get('site', 'en-GB');
         $lang     = strtolower(str_replace('-', '_', $siteLang));
-        define('VMLANG', $lang);
+        \define('VMLANG', $lang);
 
         // Check to see if component installed
-        jimport('joomla.filesystem.folder');
-
         if (
             !is_dir(JPATH_ADMINISTRATOR . '/components/com_virtuemart')
         ) {
             return [Text::_('JBS_CMN_VIRTUEMART_NOT_INSTALLED')];
         }
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('v.virtuemart_product_id, v.product_name');
-        $query->from('#__virtuemart_products_' . VMLANG . ' AS v');
-        $query->select('p.product_sku');
-        $query->join('LEFT', '#__virtuemart_products as p ON v.virtuemart_product_id = p.virtuemart_product_id');
-        $query->order('v.virtuemart_product_id DESC');
+        $query->select($db->quoteName('v.virtuemart_product_id') . ', ' . $db->quoteName('v.product_name'));
+        $query->from($db->quoteName('#__virtuemart_products_' . VMLANG, 'v'));
+        $query->select($db->quoteName('p.product_sku'));
+        $query->join('LEFT', $db->quoteName('#__virtuemart_products', 'p') . ' ON ' . $db->quoteName('v.virtuemart_product_id') . ' = ' . $db->quoteName('p.virtuemart_product_id'));
+        $query->order($db->quoteName('v.virtuemart_product_id') . ' DESC');
         $db->setQuery((string)$query);
         $products = $db->loadObjectList();
         $options  = [];

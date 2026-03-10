@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="file" version="3.0" method="upgrade">
+    <name>Proclaim Migration Bridge</name>
+    <version>1.0.0</version>
+    <creationDate>2026-02</creationDate>
+    <author>CWM Team</author>
+    <authorUrl>https://www.christianwebministries.org</authorUrl>
+    <copyright>(C) 2026 CWM Team</copyright>
+    <license>GPL-2.0-or-later</license>
+    <description>Disables all Proclaim/BibleStudy 9.x plugins and modules so you can safely migrate from Joomla 3 to Joomla 4/5. After migration, install Proclaim 10.x to register the new extensions.</description>
+    <scriptfile>script.php</scriptfile>
+    <fileset>
+        <files target="tmp/proclaim_bridge">
+            <filename>index.html</filename>
+        </files>
+    </fileset>
+</extension>

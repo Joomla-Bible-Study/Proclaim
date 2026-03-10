@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,8 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -33,10 +34,10 @@ class CwmlocationTable extends Table
     /**
      * Primary Key
      *
-     * @var int
+     * @var int|null
      * @since    7.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Published
@@ -44,26 +45,133 @@ class CwmlocationTable extends Table
      * @var int
      * @since    7.0.0
      */
-    public $published = 1;
+    public ?int $published = 1;
 
     /**
      * Location Text
      *
-     * @var string
+     * @var string|null
      * @since    7.0.0
      */
-    public $location_text = null;
+    public ?string $location_text = null;
+
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
+     * Language
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $language = null;
+
+    /**
+     * Params
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $params = null;
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since    10.0.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since    10.0.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since    10.0.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since    10.0.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since    10.0.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since    7.0.0
      */
     public function __construct(&$db)
     {
         parent::__construct('#__bsms_locations', 'id', $db);
+    }
+
+    /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->location_text ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_LOCATION_NAME_REQUIRED'));
+        }
+
+        return parent::check();
     }
 
     /**
@@ -74,23 +182,34 @@ class CwmlocationTable extends Table
      * @param   mixed  $array  An associative array or object to bind to the Table instance.
      * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'published', 'asset_id', 'access',
+            'created_by', 'modified_by', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
@@ -103,16 +222,17 @@ class CwmlocationTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -130,7 +250,8 @@ class CwmlocationTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -144,7 +265,8 @@ class CwmlocationTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Location: ' . $this->location_text;
     }
@@ -158,10 +280,11 @@ class CwmlocationTable extends Table
      * @param   ?Table $table  A Table object for the asset parent.
      * @param   null                          $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */
+    #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID

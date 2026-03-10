@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,20 +16,22 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastPlatformHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Html\HtmlHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
-
+use Joomla\Database\DatabaseInterface;
 
 /**
  * A helper to return buttons for podcast subscriptions
  *
  * @package  Proclaim.Site
  * @since    7.1.0
- *
  */
 class Cwmpodcastsubscribe
 {
+    private string $baseUri;
+
     /**
      * Build Subscribe Table
      *
@@ -44,58 +46,50 @@ class Cwmpodcastsubscribe
     {
         $podcasts = $this->getPodcasts();
 
-        $subscribe = '';
-
-        if ($podcasts) {
-            $subscribe .= '<div class="podcastheader" ><h4>' . $introtext . '</h4></div>';
-            $subscribe .= '<div class="prow row-fluid">';
-
-            foreach ($podcasts as $podcast) {
-                $podcastshow = $podcast->podcast_subscribe_show;
-
-                if (!$podcastshow) {
-                    $podcastshow = 2;
-                }
-
-                switch ($podcastshow) {
-                    case 1:
-                        break;
-
-                    case 2:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
-                        $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '<hr /></div>';
-                        break;
-
-                    case 3:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title . '</h5>';
-                        $subscribe .= $this->buildAlternatePodcast($podcast);
-                        $subscribe .= '<hr /></div>';
-                        break;
-
-                    case 4:
-                        $subscribe .= '<div class="pcell col-6"><h5><i class="fa fa-podcast"></i> ' . $podcast->title
-                            . '</h5><div class="col-2">';
-                        $subscribe .= $this->buildStandardPodcast($podcast);
-                        $subscribe .= '</div><div class="col-2">';
-                        $subscribe .= $this->buildAlternatePodcast($podcast);
-                        $subscribe .= '<hr /></div></div>';
-                        break;
-                }
-            }
-
-            // End of the row
-            $subscribe .= '</div>';
-
-            // Add a div around it all
-            $subscribe = '<div class="podcastsubscribe">' . $subscribe . '</div>';
+        if (empty($podcasts)) {
+            return '';
         }
 
-        return $subscribe;
+        $this->baseUri = Uri::base();
+        $cards         = '';
+
+        foreach ($podcasts as $podcast) {
+            $podcastshow = (int) ($podcast->podcast_subscribe_show ?: 2);
+
+            $links = match ($podcastshow) {
+                3 => $this->buildPlatformLinks($podcast),
+                4 => $this->buildStandardPodcast($podcast)
+                    . $this->buildPlatformLinks($podcast),
+                default => $this->buildStandardPodcast($podcast),
+            };
+
+            // Fallback to legacy alternate link if no platform_links
+            if (
+                ($podcastshow === 3 || $podcastshow === 4)
+                && empty($podcast->platform_links)
+                && !empty($podcast->alternatelink)
+            ) {
+                $links .= $this->buildAlternatePodcast($podcast);
+            }
+
+            $title = htmlspecialchars($podcast->title, ENT_QUOTES, 'UTF-8');
+
+            $cards .= '<div class="pcell">'
+                . '<h5><i class="fa-solid fa-podcast" aria-hidden="true"></i> ' . $title . '</h5>'
+                . '<div class="podcast-subscribe-links">' . $links . '</div>'
+                . '</div>';
+        }
+
+        $heading = htmlspecialchars($introtext ?? 'Our Podcasts', ENT_QUOTES, 'UTF-8');
+
+        return '<div class="podcastsubscribe">'
+            . '<div class="podcastheader"><h4>' . $heading . '</h4></div>'
+            . '<div class="prow">' . $cards . '</div>'
+            . '</div>';
     }
 
     /**
-     * Get Podcasts
+     * Get Podcasts (excludes hidden podcasts with podcast_subscribe_show = 1)
      *
      * @return array Object List of Podcasts
      *
@@ -104,21 +98,27 @@ class Cwmpodcastsubscribe
      */
     public function getPodcasts(): array
     {
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = implode(',', $user->getAuthorisedViewLevels());
-        $db     = Factory::getContainer()->get('DatabaseDriver');
-        $query  = $db->getQuery('true');
+        $user  = Factory::getApplication()->getIdentity();
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
         $query->select('*')
-            ->from('#__bsms_podcast as p')
-            ->where('p.published = 1')
-            ->where('p.access IN (' . $groups . ')');
+            ->from($db->quoteName('#__bsms_podcast', 'p'))
+            ->where($db->quoteName('p.published') . ' = 1')
+            ->where('(' . $db->quoteName('p.podcast_subscribe_show') . ' IS NULL OR '
+                . $db->quoteName('p.podcast_subscribe_show') . ' != 1)')
+            ->whereIn($db->quoteName('p.access'), $user->getAuthorisedViewLevels());
+
         $db->setQuery($query);
 
         return $db->loadObjectList();
     }
 
     /**
-     * Build Standard Podcast
+     * Build Standard Podcast (RSS feed link)
+     *
+     * Uses a custom image badge when configured; otherwise renders a
+     * FontAwesome RSS icon button.
      *
      * @param   object  $podcast  Podcast Info
      *
@@ -128,75 +128,154 @@ class Cwmpodcastsubscribe
      */
     public function buildStandardPodcast(object $podcast): string
     {
-        $subscribe = '';
+        $link = htmlspecialchars($this->baseUri . $podcast->filename, ENT_QUOTES, 'UTF-8');
+        $name = htmlspecialchars(
+            $podcast->podcast_subscribe_desc ?: $podcast->title,
+            ENT_QUOTES,
+            'UTF-8'
+        );
 
         if (!empty($podcast->podcast_image_subscribe)) {
-            $image     = $this->buildPodcastImage($podcast->podcast_image_subscribe, $podcast->podcast_subscribe_desc);
-            $link      = '<div class="image"><a href="' . Uri::base(
-            ) . $podcast->filename . '">' . $image . '</a></div><div class="clr"></div>';
-            $subscribe .= $link;
+            $image = $this->buildPodcastImage($podcast->podcast_image_subscribe, $name);
+
+            if ($image) {
+                return '<a href="' . $link . '" class="podcast-badge">' . $image . '</a>';
+            }
         }
 
-        if (empty($podcast->podcast_subscribe_desc)) {
-            $name = $podcast->title;
-        } else {
-            $name = $podcast->podcast_subscribe_desc;
-        }
-
-        $subscribe .= '<div class="text"><a href="' . Uri::base() . $podcast->filename . '">' . $name . '</a></div>';
-
-        return $subscribe;
+        return '<a href="' . $link . '">'
+            . '<i class="fa-solid fa-rss" aria-hidden="true"></i> ' . $name
+            . '</a>';
     }
 
     /**
      * Build Podcast Image
      *
+     * Renders with CSS-controlled sizing (no inline width/height constraints)
+     * so the badge scales to match the podcast-badge img max-height rule.
+     *
      * @param   ?string  $podcastimagefromdb  Podcast image
      * @param   ?string  $words               Alt podcast image text
      *
-     * @return string
-     *
+     * @return string|null
      *
      * @since    7.1
      */
     public function buildPodcastImage(?string $podcastimagefromdb = null, ?string $words = null): ?string
     {
-        $image        = Cwmimages::getMediaImage($podcastimagefromdb);
-        $podcastimage = null;
+        $image = Cwmimages::getMediaImage($podcastimagefromdb);
 
-        if ($image->path) {
-            $podcastimage = HtmlHelper::image(
-                Uri::base() . $image->path,
-                $words,
-                'width = "' . $image->width
-                . '" height = "' . $image->height . '" title = "' . $words . '"'
-            );
+        if (!$image->path) {
+            return null;
         }
 
-        return $podcastimage;
+        return HTMLHelper::image(
+            $this->baseUri . $image->path,
+            $words,
+            [
+                'title'   => $words,
+                'loading' => 'lazy',
+                'class'   => 'podcast-badge-img',
+            ]
+        );
     }
 
     /**
-     * Build Alternate Podcast
+     * Build platform links from the JSON platform_links column.
+     *
+     * Reads the platform_links JSON data and renders each link with
+     * the appropriate icon and label from podcast-platforms.xml.
+     *
+     * @param   object  $podcast  Podcast data with platform_links column
+     *
+     * @return  string  HTML for all platform links (empty string if none)
+     *
+     * @since   10.1.0
+     */
+    public function buildPlatformLinks(object $podcast): string
+    {
+        if (empty($podcast->platform_links)) {
+            return '';
+        }
+
+        try {
+            $links = json_decode($podcast->platform_links, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return '';
+        }
+
+        if (empty($links)) {
+            return '';
+        }
+
+        $platforms = CwmpodcastPlatformHelper::getPlatformDefinitions();
+        $html      = '';
+
+        foreach ($links as $link) {
+            $url      = htmlspecialchars($link['url'] ?? '', ENT_QUOTES, 'UTF-8');
+            $label    = htmlspecialchars($link['label'] ?? '', ENT_QUOTES, 'UTF-8');
+            $platform = $link['platform'] ?? 'custom';
+
+            if (empty($url)) {
+                continue;
+            }
+
+            // Badge image override
+            if (!empty($link['badge_image'])) {
+                $image = $this->buildPodcastImage($link['badge_image'], $label);
+
+                if ($image) {
+                    $html .= '<a href="' . $url . '" class="podcast-badge">' . $image . '</a>';
+
+                    continue;
+                }
+            }
+
+            // Platform icon from XML definitions
+            $pDef   = $platforms[$platform] ?? null;
+            $icon   = $pDef ? $pDef['icon'] : 'fa-solid fa-headphones';
+            $pLabel = $pDef ? $pDef['label'] : 'Subscribe';
+
+            $html .= '<a href="' . $url . '">'
+                . '<i class="' . $icon . '" aria-hidden="true"></i> '
+                . ($label ?: $pLabel) . '</a>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Build Alternate Podcast link (legacy fallback)
+     *
+     * Uses a custom image badge when configured; otherwise detects the
+     * service from the URL and renders the appropriate FontAwesome icon.
      *
      * @param   object  $podcast  Podcast info
      *
      * @return string
      *
      * @since    7.1
+     *
+     * @deprecated 10.1.0  Use buildPlatformLinks() instead. Will be removed in 11.0.
      */
     public function buildAlternatePodcast(object $podcast): string
     {
-        $subscribe = '';
+        $link  = htmlspecialchars($podcast->alternatelink ?? '', ENT_QUOTES, 'UTF-8');
+        $words = htmlspecialchars($podcast->alternatewords ?? '', ENT_QUOTES, 'UTF-8');
 
         if (!empty($podcast->alternateimage)) {
-            $image     = $this->buildPodcastImage($podcast->alternateimage, $podcast->alternatewords);
-            $link      = '<div class="image"><a href="' . $podcast->alternatelink . '">' . $image . '</a></div><div class="clearfix"></div>';
-            $subscribe .= $link;
+            $image = $this->buildPodcastImage($podcast->alternateimage, $words);
+
+            if ($image) {
+                return '<a href="' . $link . '" class="podcast-badge">' . $image . '</a>';
+            }
         }
 
-        $subscribe .= '<div class="text"><a href="' . $podcast->alternatelink . '">' . $podcast->alternatewords . '</a></div>';
+        $iconInfo = CwmpodcastPlatformHelper::detectPlatformByUrl($podcast->alternatelink ?? '');
 
-        return $subscribe;
+        return '<a href="' . $link . '">'
+            . '<i class="' . $iconInfo['icon'] . '" aria-hidden="true"></i> '
+            . ($words ?: $iconInfo['label'])
+            . '</a>';
     }
 }

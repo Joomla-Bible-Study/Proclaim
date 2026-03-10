@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,8 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -57,6 +58,148 @@ class Cwmbackup
     protected string $saveAsName = '';
 
     /**
+     * Generate a standardized backup filename
+     *
+     * Format: proclaim-backup_SiteName_YYYY-MM-DD_vX.X.X.sql
+     *
+     * @return string The generated filename
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public static function generateBackupFilename(): string
+    {
+        $app    = Factory::getApplication();
+        $config = $app->getConfig();
+
+        // Get site name and sanitize it
+        $siteName = $config->get('sitename', 'site');
+        $siteName = strtolower(trim(preg_replace('#[^a-zA-Z0-9]+#', '-', $siteName), '-'));
+
+        // Limit site name length
+        if (\strlen($siteName) > 30) {
+            $siteName = substr($siteName, 0, 30);
+        }
+
+        // Get current date in ISO format
+        $date = date('Y-m-d');
+
+        // Get Proclaim version
+        $versionHelper = new Version();
+        $version       = $versionHelper->getShortVersion();
+
+        return \sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
+    }
+
+    /**
+     * Export component configuration from #__extensions table.
+     *
+     * Returns SQL UPDATE statement to restore component params.
+     *
+     * @return string SQL statement
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getComponentConfigExport(): string
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Get com_proclaim row from extensions
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName(['extension_id', 'params']))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
+        $db->setQuery($query);
+        $result = $db->loadObject();
+
+        if (!$result || empty($result->params)) {
+            return "\n-- No component configuration found\n";
+        }
+
+        // Build UPDATE statement (not INSERT - we update existing row)
+        $export = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Component Configuration (com_proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+        $export .= "UPDATE " . $db->quoteName('#__extensions') . " SET ";
+        $export .= $db->quoteName('params') . " = " . $db->q($result->params);
+        $export .= " WHERE " . $db->quoteName('element') . " = " . $db->q('com_proclaim');
+        $export .= " AND " . $db->quoteName('type') . " = " . $db->q('component') . ";\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Export Proclaim scheduled tasks from #__scheduler_tasks table.
+     *
+     * Returns SQL DELETE + INSERT statements to restore tasks.
+     *
+     * @return string SQL statements
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getScheduledTasksExport(): string
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check if scheduler_tasks table exists (Joomla 4+)
+        $tables         = $db->getTableList();
+        $prefix         = $db->getPrefix();
+        $schedulerTable = $prefix . 'scheduler_tasks';
+
+        if (!\in_array($schedulerTable, $tables, true)) {
+            return "\n-- Scheduler tasks table not found (Joomla 4+ required)\n";
+        }
+
+        // Get all Proclaim tasks
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from($db->quoteName('#__scheduler_tasks'))
+            ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+
+        if (empty($results)) {
+            return "\n-- No scheduled tasks found\n";
+        }
+
+        $export = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Scheduled Tasks (proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
+        // DELETE existing Proclaim tasks (clean slate on restore)
+        $export .= "DELETE FROM " . $db->quoteName('#__scheduler_tasks');
+        $export .= " WHERE " . $db->quoteName('type') . " LIKE " . $db->q('proclaim.%') . ";\n\n";
+
+        // INSERT each task
+        foreach ($results as $task) {
+            $data = [];
+            $export .= 'INSERT INTO ' . $db->quoteName('#__scheduler_tasks') . ' SET ';
+
+            foreach ($task as $key => $value) {
+                // Skip auto-increment id (will be regenerated on restore)
+                if ($key === 'id') {
+                    continue;
+                }
+
+                if ($value === null) {
+                    $data[] = $db->quoteName($key) . " = NULL";
+                } else {
+                    $data[] = $db->quoteName($key) . " = " . $db->q($value);
+                }
+            }
+
+            $export .= implode(', ', $data) . ";\n";
+        }
+
+        $export .= "\n";
+
+        return $export;
+    }
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -68,11 +211,7 @@ class Cwmbackup
      */
     public function exportdb(int $run): bool
     {
-        $date             = date('Y_F_j');
-        $site             = Uri::root();
-        $this->saveAsName = strtolower(
-            trim(preg_replace('#\W+#', '_', $site), '_')
-        ) . '_jbs-db-backup_' . $date . '_' . time() . '.sql';
+        $this->saveAsName = self::generateBackupFilename();
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
@@ -81,6 +220,10 @@ class Cwmbackup
         foreach ($objects as $object) {
             $this->getExportTable($object['name']);
         }
+
+        // Append component configuration and scheduled tasks
+        $this->data_cache .= $this->getComponentConfigExport();
+        $this->data_cache .= $this->getScheduledTasksExport();
 
         switch ($run) {
             case 1:
@@ -92,7 +235,7 @@ class Cwmbackup
 
                 $mime_type = 'text/x-sql';
 
-                if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
+                if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $mime_type = 'application/zip';
                     $path      = $this->compress();
                 }
@@ -107,7 +250,7 @@ class Cwmbackup
                     return false;
                 }
 
-                if (Factory::getApplication()->input->getInt('jbs_compress', 1)) {
+                if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $path = $this->compress();
                 }
 
@@ -136,7 +279,7 @@ class Cwmbackup
 
         //create the file and throw the error if unsuccessful
         if ($zip->open($path1, \ZipArchive::CREATE) !== true) {
-            throw new \RuntimeException("cannot open <$path1>\n", 'error');
+            throw new \RuntimeException("cannot open <$path1>");
         }
 
         foreach ($files as $file) {
@@ -147,6 +290,91 @@ class Cwmbackup
         File::delete($this->dumpFile);
 
         return $path1;
+    }
+
+    /**
+     * Get Export Table Data as string (for AJAX export)
+     *
+     * @param   string  $table  Table name (or virtual table name like '_component_config')
+     *
+     * @return string The SQL export data for the table
+     *
+     * @since 10.1.0
+     */
+    public function getExportTableData(string $table): string
+    {
+        if (!$table) {
+            return '';
+        }
+
+        // Handle virtual "tables" for component config and scheduled tasks
+        if ($table === '_component_config') {
+            return $this->getComponentConfigExport();
+        }
+
+        if ($table === '_scheduled_tasks') {
+            return $this->getScheduledTasksExport();
+        }
+
+        // Reset the execution time limit for long-running exports
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(\ini_get('max_execution_time'));
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Get the prefix
+        $prefix = $db->getPrefix();
+        $export = '';
+
+        // Start of Tables
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
+
+        // Drop the existing table
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
+
+        // Create a new table definition based on the incoming database
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
+        $db->setQuery($query);
+        $table_def = $db->loadObject();
+
+        foreach ($table_def as $value) {
+            if (substr_count($value, 'CREATE')) {
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export = str_replace('TYPE=', 'ENGINE=', $export);
+            }
+        }
+
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
+
+        // Get the table rows and create insert statements from them
+        $query = $db->getQuery(true);
+        $query->select('*')
+            ->from($db->quoteName($table));
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+
+        if ($results) {
+            foreach ($results as $result) {
+                $data   = [];
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
+
+                foreach ($result as $key => $value) {
+                    if ($value === null) {
+                        $data[] = $db->quoteName($key) . "=NULL";
+                    } else {
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                    }
+                }
+
+                $export .= implode(',', $data);
+                $export .= ";\n";
+            }
+        }
+
+        $export .= "\n-- --------------------------------------------------------\n\n";
+
+        return $export;
     }
 
     /**
@@ -164,27 +392,25 @@ class Cwmbackup
             return false;
         }
 
-        /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-         */
+        // Reset the execution time limit for long-running exports
         if (\function_exists('set_time_limit')) {
-            set_time_limit(ini_get('max_execution_time'));
+            set_time_limit(\ini_get('max_execution_time'));
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the prefix
         $prefix = $db->getPrefix();
         $export = '';
 
         // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->qn($table) . ";\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
 
         // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->qn($table);
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
         $db->setQuery($query);
         $table_def = $db->loadObject();
 
@@ -195,25 +421,25 @@ class Cwmbackup
             }
         }
 
-        $export .= "\n\n--\n-- Dumping data for table " . $db->qn($table) . "\n--\n\n";
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Get the table rows and create insert statements from them
         $query = $db->getQuery(true);
         $query->select('*')
-            ->from($db->qn($table));
+            ->from($db->quoteName($table));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         if ($results) {
             foreach ($results as $result) {
                 $data   = [];
-                $export .= 'INSERT INTO ' . $db->qn($table) . ' SET ';
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
                     if ($value === null) {
-                        $data[] = $db->qn($key) . "=NULL";
+                        $data[] = $db->quoteName($key) . "=NULL";
                     } else {
-                        $data[] = $db->qn($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
                     }
                 }
 
@@ -275,29 +501,25 @@ class Cwmbackup
         // Verify MimeType or Extract the MimeType
         $mime_type = $this->verifyMimeType($mime_type, $file);
 
-        /**
-         * Attempt to increase the maximum execution time for php scripts with check for safe_mode.
-         */
+        // Reset the execution time limit for file output
         if (\function_exists('set_time_limit')) {
-            set_time_limit(ini_get('max_execution_time'));
+            set_time_limit(\ini_get('max_execution_time'));
         }
+
         // Decode URL-encoded strings
         $name = rawurldecode($name);
 
-        header("Cache-Control: public, must-revalidate");
-        header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         header('Pragma: no-cache');
-        header("Expires: 0");
-        header('Content-Transfer-Encoding: none');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-        header("Accept-Ranges:  bytes");
+        header('Expires: 0');
+        header("Accept-Ranges: bytes");
 
         // Set File Size Header
         $this->fileSizeHeader($file);
 
         header('Content-Type: ' . $mime_type);
         header('Content-Disposition: attachment; filename="' . $name . '"');
-        header('Content-Transfer-Encoding: binary\n');
+        header('Content-Transfer-Encoding: binary');
 
         ob_end_flush();
         $fp = fopen($file, 'rb');
@@ -308,7 +530,7 @@ class Cwmbackup
         if ($fp !== false) {
             while (!feof($fp)) {
                 $buffer = fread($fp, $chunkSize);
-                // Now will push to the browser the church of data using the buffer.
+                // Now will push to the browser the chunk of data using the buffer.
                 echo $buffer;
                 ob_flush();
                 flush();
@@ -357,7 +579,7 @@ class Cwmbackup
         if ($mime_type === '') {
             $file_extension = strtolower(substr(strrchr($file, "."), 1));
 
-            if (array_key_exists($file_extension, $known_mime_types)) {
+            if (\array_key_exists($file_extension, $known_mime_types)) {
                 return $known_mime_types[$file_extension];
             }
 
@@ -389,7 +611,7 @@ class Cwmbackup
 
         // Workaround for int overflow
         if ($size < 0) {
-            $size = exec('ls -al "' . $file . '" | awk \'BEGIN {FS=" "}{print $5}\'');
+            $size = exec('ls -al ' . escapeshellarg($file) . ' | awk \'BEGIN {FS=" "}{print $5}\'');
         }
 
         /* We support requests for a single range only.
@@ -399,7 +621,7 @@ class Cwmbackup
                  * */
         if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE'])) {
             // Let's take the right side
-            [$a, $httpRange] = explode('=', $_SERVER['HTTP_RANGE']);
+            [, $httpRange] = explode('=', $_SERVER['HTTP_RANGE']);
 
             // And get the two values (as strings!)
             $httpRange = explode('-', $httpRange);
@@ -452,8 +674,8 @@ class Cwmbackup
         $files         = Folder::files($path, '.', 'false', 'true', $exclude, $excludefilter);
         arsort($files, SORT_STRING);
         $parts       = [];
-        $numfiles    = count($files);
-        $totalnumber = $params->get('filestokeep', '5');
+        $numfiles    = \count($files);
+        $totalnumber = $params?->get('filestokeep', 5) ?? 5;
 
         for ($counter = $numfiles; $counter > $totalnumber; $counter--) {
             $parts[] = array_pop($files);

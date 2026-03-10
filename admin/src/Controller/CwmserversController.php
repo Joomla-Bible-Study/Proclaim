@@ -4,16 +4,16 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
-use Joomla\CMS\Language\Text;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\MVC\Controller\AdminController;
-use Joomla\CMS\Response\JsonResponse;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -28,27 +28,15 @@ use Joomla\CMS\Response\JsonResponse;
 class CwmserversController extends AdminController
 {
     /**
-     * Method to get the JSON-encoded amount of published articles
+     * Method to get the JSON-encoded counts for Servers
      *
      * @return  void
      *
-     * @since   4.0.0
+     * @since   10.0.0
      */
-    public function getQuickiconContent()
+    public function getQuickIconServers(): void
     {
-        $model = $this->getModel('cwmservers');
-
-        $model->setState('filter.published', 1);
-
-        $amount = (int)$model->getTotal();
-
-        $result = [];
-
-        $result['amount'] = $amount;
-        $result['sronly'] = Text::plural('COM_CONTENT_N_QUICKICON_SRONLY', $amount);
-        $result['name']   = Text::plural('COM_CONTENT_N_QUICKICON', $amount);
-
-        echo new JsonResponse($result);
+        CwmcountHelper::sendQuickIconResponse('#__bsms_servers', 'COM_PROCLAIM_N_QUICKICON_SERVERS', 'location');
     }
 
     /**
@@ -58,11 +46,11 @@ class CwmserversController extends AdminController
      * @param   string  $prefix  The class prefix. Optional.
      * @param   array   $config  The array of possible config values. Optional.
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @return  BaseDatabaseModel
      *
      * @since   1.6
      */
-    public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = ['ignore_request' => true]): \Joomla\CMS\MVC\Model\BaseDatabaseModel
+    public function getModel($name = 'Cwmserver', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
     }

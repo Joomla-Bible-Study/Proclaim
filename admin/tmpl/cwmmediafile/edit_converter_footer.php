@@ -4,7 +4,7 @@
  * Converter Template
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,13 +16,12 @@
 
 use Joomla\CMS\Language\Text;
 
-$published = $this->state->get('filter.published');
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafile\HtmlView $this */
+
 ?>
-<a class="btn" type="button" data-dismiss="modal">
-    <?php
-    echo Text::_('JCANCEL'); ?>
-</a>
-<button class="btn btn-success" type="button" onclick="transferFileSize()" data-dismiss="modal">
-    <?php
-    echo Text::_('JBS_MED_CONVERTER'); ?>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+    <?php echo Text::_('JCANCEL'); ?>
+</button>
+<button type="button" class="btn btn-success" id="btn-transfer-filesize" data-bs-dismiss="modal">
+    <?php echo Text::_('JBS_MED_CONVERTER'); ?>
 </button>

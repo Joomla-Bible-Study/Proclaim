@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -44,6 +44,7 @@ class SeriesLinkOptionsField extends ListField
      *
      * @since    7.0.4
      */
+    #[\Override]
     protected function getOptions(): array
     {
         $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));

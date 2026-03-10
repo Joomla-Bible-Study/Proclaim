@@ -1,32 +1,73 @@
-# Created by .ignore support plugin (hsz.mobi)
-# IntelliJ project files
-.idea
-.github
-*.icloud
-out
-gen
-bin/
-build/reports/pmd.html
-com_proclaim/media/css/site/
-composer.phar
+# IDE & System Related Files
+.buildpath
+.project
+.settings
 .DS_Store
+.idea
+.vscode
+.docker
+/docker-compose.yml
+/nbproject
+/.devcontainer
+/.github
+/.vscode
+
+# AI tooling
+.ai/
+
+# Dependencies
+/libraries/vendor/
 node_modules/
-/admin/proclaim.xml
-build/reports/cpd-code.xml
-build/reports/jdepend-dependencies.svg
-build/reports/jdepend-pyramid.svg
-build/reports/jdepend.xml
-build/reports/phpcs-checkstyle.xml
-build/reports/project-size.txt
-/libraries/vendor/*
-!/package-lock.json
-/.composer.phar.icloud
-/media/css/site/cwmcore.css
-/admin/proclaim.script.php
-!/.php_cs.cache
-/build.properties
-/build/reports/phpcs.log
-/build/reports/phpcs-error.log
-/media/css/site/biblestudy.css
+composer.phar
+
+# Build outputs
 *.zip
-!/build.properties
+bin/
+out/
+gen/
+
+# Build reports
+build/reports/
+
+# Generated files
+/admin/proclaim.xml
+/admin/proclaim.script.php
+com_proclaim/media/css/site/
+
+# Generated media (built from build/media_source/ — run `npm run build` after clone)
+/media/js/
+/media/css/
+/media/images/
+/media/vendor/
+/media/fancybox/
+
+# Local configuration
+/build.properties
+
+# Test cache
+!/tests/.tmp/
+.phpunit.cache/
+
+# Playwright E2E
+tests/e2e/.auth/
+playwright-report/
+test-results/
+
+# Language sync caches
+/build/.translation_cache.json
+/build/.source_cache.json
+media/backup/*.sql
+
+# OSX
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Never ignore
+# Only apply this rule to the main repository's gitignore files
+!/.gitignore
+!/build/.gitignore

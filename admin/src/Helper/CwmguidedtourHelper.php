@@ -1,0 +1,863 @@
+<?php
+
+/**
+ * Part of Proclaim Package
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ * */
+
+namespace CWM\Component\Proclaim\Administrator\Helper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Date\Date;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
+
+/**
+ * Helper class for creating and managing guided tours and announcements.
+ *
+ * This class provides a future-proof way to register guided tours
+ * and post-install messages for new features.
+ *
+ * @package  Proclaim.Admin
+ * @since 10.1.0
+ */
+class CwmguidedtourHelper
+{
+    /**
+     * Database driver
+     *
+     * @var DatabaseInterface
+     * @since 10.1.0
+     */
+    protected DatabaseInterface $db;
+
+    /**
+     * Proclaim extension ID
+     *
+     * @var int
+     * @since 10.1.0
+     */
+    protected int $extensionId;
+
+    /**
+     * Array of tour definitions.
+     * Each tour has steps that guide users through the feature.
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $tours = [
+        'whats_new_10_1' => [
+            'title'       => 'COM_PROCLAIM_TOUR_WHATS_NEW_TITLE',
+            'description' => 'COM_PROCLAIM_TOUR_WHATS_NEW_DESC',
+            'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+            'extensions'  => ['com_proclaim'],
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'note'        => '',
+            'uid'         => 'com_proclaim_whats_new_10_1',
+            'autostart'   => false,
+            'steps'       => [
+                // Welcome step
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_WELCOME_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_WELCOME_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Archived Messages Feature - Step 1
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP1_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Archived Messages Feature - Step 2
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP2_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmmessages"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Archived Messages Feature - Step 3
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP3_DESC',
+                    'position'    => 'bottom',
+                    'target'      => '.js-stools-container-bar',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Archived Messages Feature - Step 4
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP4_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmtemplates"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Archived Messages Feature - Step 5
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_ARCHIVED_STEP5_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Layout Editor - Step 1
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_LAYOUT_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_LAYOUT_STEP1_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Layout Editor - Step 2
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_LAYOUT_STEP2_DESC',
+                    'position'    => 'bottom',
+                    'target'      => '#myTabTabs',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplate&layout=edit&id=1',
+                ],
+                // CPanel Improvements - Step 1
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_CPANEL_STEP1_DESC',
+                    'position'    => 'top',
+                    'target'      => '.cpanel-buttons',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // CPanel Improvements - Step 2 (Dark Mode)
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_CPANEL_STEP2_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_CPANEL_STEP2_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Accessibility Improvements
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_A11Y_STEP1_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_A11Y_STEP1_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Closing step
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_COMPLETE_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_COMPLETE_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+            ],
+        ],
+        'getting_started' => [
+            'title'       => 'COM_PROCLAIM_TOUR_GETTING_STARTED_TITLE',
+            'description' => 'COM_PROCLAIM_TOUR_GETTING_STARTED_DESC',
+            'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+            'extensions'  => ['com_proclaim'],
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'note'        => '',
+            'uid'         => 'com_proclaim_getting_started',
+            'autostart'   => false,
+            'steps'       => [
+                // Step 1: Welcome
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_WELCOME_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_WELCOME_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 2: Control Panel overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_CPANEL_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_CPANEL_DESC',
+                    'position'    => 'top',
+                    'target'      => '.cpanel-buttons',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 3: Navigate to Teachers
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEACHERS_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEACHERS_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmteachers"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+                // Step 4: Teachers list
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEACHERS_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEACHERS_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmteachers',
+                ],
+                // Step 5: Navigate to Series
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_SERIES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_SERIES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmseries"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmteachers',
+                ],
+                // Step 6: Series list
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_SERIES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_SERIES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmseries',
+                ],
+                // Step 7: Navigate to Messages
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MESSAGES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MESSAGES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmmessages"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmseries',
+                ],
+                // Step 8: Messages overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MESSAGES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MESSAGES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Step 9: Navigate to Templates
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_NAV_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_NAV_DESC',
+                    'position'    => 'right',
+                    'target'      => 'a[href*="view=cwmtemplates"]',
+                    'type'        => 1,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmmessages',
+                ],
+                // Step 10: Templates overview
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_TEMPLATES_DESC',
+                    'position'    => 'top',
+                    'target'      => '#adminForm',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Step 11: Menu Item tip
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_MENU_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_MENU_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmtemplates',
+                ],
+                // Step 12: Tour Complete
+                [
+                    'title'       => 'COM_PROCLAIM_TOUR_GS_COMPLETE_TITLE',
+                    'description' => 'COM_PROCLAIM_TOUR_GS_COMPLETE_DESC',
+                    'position'    => 'center',
+                    'target'      => '',
+                    'type'        => 0,
+                    'url'         => 'administrator/index.php?option=com_proclaim&view=cwmcpanel',
+                ],
+            ],
+        ],
+    ];
+
+    /**
+     * Array of post-install messages to register.
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    protected array $postInstallMessages = [
+        'archived_messages' => [
+            'title_key'          => 'COM_PROCLAIM_POSTINSTALL_ARCHIVED_TITLE',
+            'description_key'    => 'COM_PROCLAIM_POSTINSTALL_ARCHIVED_DESC',
+            'action_key'         => 'COM_PROCLAIM_POSTINSTALL_ARCHIVED_ACTION',
+            'type'               => 'action',
+            'action_file'        => 'admin://components/com_proclaim/postinstall/archivedmessages.php',
+            'action'             => 'admin_postinstall_archivedmessages_action',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/archivedmessages.php',
+            'condition_method'   => 'admin_postinstall_archivedmessages_condition',
+            'version_introduced' => '10.1.0',
+        ],
+        'simple_mode' => [
+            'title_key'          => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_TITLE',
+            'description_key'    => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_DESC',
+            'action_key'         => 'COM_PROCLAIM_POSTINSTALL_SIMPLEMODE_ACTION',
+            'type'               => 'action',
+            'action_file'        => 'admin://components/com_proclaim/postinstall/simplemode.php',
+            'action'             => 'admin_postinstall_simplemode_action',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/simplemode.php',
+            'condition_method'   => 'admin_postinstall_simplemode_condition',
+            'version_introduced' => '10.1.0',
+        ],
+        'whats_new_tour' => [
+            'title_key'          => 'COM_PROCLAIM_TOUR_WHATS_NEW_TITLE',
+            'description_key'    => 'COM_PROCLAIM_TOUR_WHATS_NEW_DESC',
+            'action_key'         => 'COM_PROCLAIM_TOUR_START_BUTTON',
+            'type'               => 'link',
+            'action'             => 'index.php?option=com_proclaim&view=cwmcpanel&startTour=1',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/whatsnewtour.php',
+            'condition_method'   => 'admin_postinstall_whatsnewtour_condition',
+            'version_introduced' => '10.1.0',
+        ],
+        'getting_started_tour' => [
+            'title_key'          => 'COM_PROCLAIM_TOUR_GETTING_STARTED_TITLE',
+            'description_key'    => 'COM_PROCLAIM_TOUR_GETTING_STARTED_DESC',
+            'action_key'         => 'COM_PROCLAIM_TOUR_START_BUTTON',
+            'type'               => 'link',
+            'action'             => 'index.php?option=com_proclaim&view=cwmcpanel&startTour=getting_started',
+            'condition_file'     => 'admin://components/com_proclaim/postinstall/gettingstarted.php',
+            'condition_method'   => 'admin_postinstall_gettingstarted_condition',
+            'version_introduced' => '10.1.0',
+        ],
+    ];
+
+    /**
+     * Constructor
+     *
+     * @since 10.1.0
+     */
+    public function __construct()
+    {
+        $this->db          = Factory::getContainer()->get(DatabaseInterface::class);
+        $this->extensionId = $this->getExtensionId();
+    }
+
+    /**
+     * Get the Proclaim extension ID.
+     *
+     * @return int Extension ID
+     *
+     * @since 10.1.0
+     */
+    protected function getExtensionId(): int
+    {
+        $query = $this->db->getQuery(true)
+            ->select($this->db->quoteName('extension_id'))
+            ->from($this->db->quoteName('#__extensions'))
+            ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
+            ->where($this->db->quoteName('type') . ' = ' . $this->db->quote('component'));
+        $this->db->setQuery($query);
+
+        return (int) $this->db->loadResult();
+    }
+
+    /**
+     * Register all guided tours and post-install messages.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public function registerAll(): void
+    {
+        $this->registerPostInstallMessages();
+        $this->registerGuidedTours();
+    }
+
+    /**
+     * Register a specific tour by key.
+     *
+     * @param   string  $key  Tour key
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.1.0
+     */
+    public function registerTour(string $key): bool
+    {
+        if (!isset($this->tours[$key])) {
+            Log::add('Tour not found: ' . $key, Log::WARNING, 'com_proclaim');
+            return false;
+        }
+
+        if (!$this->supportsGuidedTours()) {
+            Log::add('Guided tours not supported on this Joomla version', Log::INFO, 'com_proclaim');
+            return false;
+        }
+
+        return $this->insertTour($key, $this->tours[$key]);
+    }
+
+    /**
+     * Register a specific post-install message by key.
+     * Skips if the message already exists to preserve its current state.
+     *
+     * @param   string  $key  Message key
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.1.0
+     */
+    public function registerPostInstallMessage(string $key): bool
+    {
+        if (!isset($this->postInstallMessages[$key])) {
+            Log::add('Post-install message not found: ' . $key, Log::WARNING, 'com_proclaim');
+            return false;
+        }
+
+        $message = $this->postInstallMessages[$key];
+
+        if ($this->postInstallMessageExists($message['title_key'])) {
+            return false;
+        }
+
+        return $this->insertPostInstallMessage($message);
+    }
+
+    /**
+     * Register all post-install messages.
+     *
+     * @return  int  Number of messages registered
+     *
+     * @since 10.1.0
+     */
+    public function registerPostInstallMessages(): int
+    {
+        $count = 0;
+
+        foreach ($this->postInstallMessages as $key => $message) {
+            if (!$this->postInstallMessageExists($message['title_key'])) {
+                if ($this->insertPostInstallMessage($message)) {
+                    $count++;
+                    Log::add('Registered post-install message: ' . $key, Log::INFO, 'com_proclaim');
+                }
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Register all guided tours.
+     *
+     * @return  int  Number of tours registered
+     *
+     * @since 10.1.0
+     */
+    public function registerGuidedTours(): int
+    {
+        if (!$this->supportsGuidedTours()) {
+            Log::add('Guided tours not supported on this Joomla version', Log::INFO, 'com_proclaim');
+            return 0;
+        }
+
+        $count = 0;
+
+        foreach ($this->tours as $key => $tour) {
+            if ($this->tourExists($tour['uid'])) {
+                if ($this->updateTour($key, $tour)) {
+                    $count++;
+                    Log::add('Updated guided tour: ' . $key, Log::INFO, 'com_proclaim');
+                }
+            } elseif ($this->insertTour($key, $tour)) {
+                $count++;
+                Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
+            }
+        }
+
+        return $count;
+    }
+
+
+
+    /**
+     * Check if the current Joomla version supports guided tours.
+     *
+     * @return  bool  True if supported
+     *
+     * @since 10.1.0
+     */
+    public function supportsGuidedTours(): bool
+    {
+        // Check if the guided tours table exists
+        $tables = $this->db->getTableList();
+        $prefix = $this->db->getPrefix();
+
+        return \in_array($prefix . 'guidedtours', $tables, true);
+    }
+
+    /**
+     * Get tour ID by UID.
+     *
+     * @param   string  $uid  Tour UID
+     *
+     * @return  int  Tour ID or 0 if not found
+     *
+     * @since 10.1.0
+     */
+    public function getTourId(string $uid): int
+    {
+        if (!$this->supportsGuidedTours()) {
+            return 0;
+        }
+
+        $query = $this->db->getQuery(true)
+            ->select($this->db->quoteName('id'))
+            ->from($this->db->quoteName('#__guidedtours'))
+            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
+        $this->db->setQuery($query);
+
+        return (int) $this->db->loadResult();
+    }
+
+    /**
+     * Check if a tour already exists.
+     *
+     * @param   string  $uid  Tour UID
+     *
+     * @return  bool  True if exists
+     *
+     * @since 10.1.0
+     */
+    protected function tourExists(string $uid): bool
+    {
+        if (!$this->supportsGuidedTours()) {
+            return false;
+        }
+
+        $query = $this->db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($this->db->quoteName('#__guidedtours'))
+            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
+        $this->db->setQuery($query);
+
+        return (int) $this->db->loadResult() > 0;
+    }
+
+    /**
+     * Check if a post-install message already exists.
+     * Checks by title_key only (not extension_id) to prevent re-creating
+     * messages that the user has already hidden, even if the extension_id changes.
+     *
+     * @param   string  $titleKey  Message title key
+     *
+     * @return  bool  True if exists
+     *
+     * @since 10.1.0
+     */
+    protected function postInstallMessageExists(string $titleKey): bool
+    {
+        $query = $this->db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($this->db->quoteName('#__postinstall_messages'))
+            ->where($this->db->quoteName('title_key') . ' = ' . $this->db->quote($titleKey));
+        $this->db->setQuery($query);
+
+        return (int) $this->db->loadResult() > 0;
+    }
+
+    /**
+     * Insert a guided tour and its steps.
+     *
+     * @param   string  $key   Tour key
+     * @param   array   $tour  Tour definition
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.1.0
+     */
+    protected function insertTour(string $key, array $tour): bool
+    {
+        try {
+            $user   = Factory::getApplication()->getIdentity();
+            $userId = $user ? $user->id : 0;
+
+            // Insert the tour
+            $tourObj = (object) [
+                'title'       => $tour['title'],
+                'description' => $tour['description'],
+                'extensions'  => json_encode($tour['extensions'], JSON_THROW_ON_ERROR),
+                'url'         => $tour['url'],
+                'published'   => $tour['published'],
+                'access'      => $tour['access'],
+                'language'    => $tour['language'],
+                'note'        => $tour['note'],
+                'uid'         => $tour['uid'],
+                'autostart'   => (int) ($tour['autostart'] ?? 0),
+                'created'     => (new Date())->toSql(),
+                'created_by'  => $userId,
+                'modified'    => (new Date())->toSql(),
+                'modified_by' => $userId,
+            ];
+
+            $this->db->insertObject('#__guidedtours', $tourObj, 'id');
+            $tourId = $this->db->insertid();
+
+            // Insert the steps
+            $ordering = 1;
+
+            foreach ($tour['steps'] as $step) {
+                // Ensure URL is correct for admin side
+                $url = $step['url'];
+                if (!empty($url) && strpos($url, 'administrator/') !== 0 && strpos($url, 'http') !== 0) {
+                    $url = 'administrator/' . $url;
+                }
+
+                $stepObj = (object) [
+                    'tour_id'     => $tourId,
+                    'title'       => $step['title'],
+                    'description' => $step['description'],
+                    'position'    => $step['position'],
+                    'target'      => $step['target'],
+                    'type'        => $step['type'],
+                    'url'         => $url,
+                    'published'   => 1,
+                    'language'    => '*',
+                    'ordering'    => $ordering++,
+                    'note'        => '',
+                    'created'     => (new Date())->toSql(),
+                    'created_by'  => $userId,
+                    'modified'    => (new Date())->toSql(),
+                    'modified_by' => $userId,
+                ];
+
+                $this->db->insertObject('#__guidedtour_steps', $stepObj);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::add('Error inserting tour: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+            return false;
+        }
+    }
+
+    /**
+     * Update an existing guided tour and its steps.
+     *
+     * @param   string  $key   Tour key
+     * @param   array   $tour  Tour definition
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.1.0
+     */
+    protected function updateTour(string $key, array $tour): bool
+    {
+        try {
+            $tourId = $this->getTourId($tour['uid']);
+            if (!$tourId) {
+                return false;
+            }
+
+            $user   = Factory::getApplication()->getIdentity();
+            $userId = $user ? $user->id : 0;
+
+            // Update the tour
+            $tourObj = (object) [
+                'id'          => $tourId,
+                'title'       => $tour['title'],
+                'description' => $tour['description'],
+                'extensions'  => json_encode($tour['extensions'], JSON_THROW_ON_ERROR),
+                'url'         => $tour['url'],
+                'published'   => $tour['published'],
+                'access'      => $tour['access'],
+                'language'    => $tour['language'],
+                'note'        => $tour['note'],
+                'autostart'   => (int) ($tour['autostart'] ?? 0),
+                'modified'    => (new Date())->toSql(),
+                'modified_by' => $userId,
+            ];
+
+            $this->db->updateObject('#__guidedtours', $tourObj, 'id');
+
+            // Delete existing steps
+            $query = $this->db->getQuery(true)
+                ->delete($this->db->quoteName('#__guidedtour_steps'))
+                ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
+            $this->db->setQuery($query);
+            $this->db->execute();
+
+            // Insert the steps
+            $ordering = 1;
+
+            foreach ($tour['steps'] as $step) {
+                // Ensure URL is correct for admin side
+                $url = $step['url'];
+                if (!empty($url) && strpos($url, 'administrator/') !== 0 && strpos($url, 'http') !== 0) {
+                    $url = 'administrator/' . $url;
+                }
+
+                $stepObj = (object) [
+                    'tour_id'     => $tourId,
+                    'title'       => $step['title'],
+                    'description' => $step['description'],
+                    'position'    => $step['position'],
+                    'target'      => $step['target'],
+                    'type'        => $step['type'],
+                    'url'         => $url,
+                    'published'   => 1,
+                    'language'    => '*',
+                    'ordering'    => $ordering++,
+                    'note'        => '',
+                    'created'     => (new Date())->toSql(),
+                    'created_by'  => $userId,
+                    'modified'    => (new Date())->toSql(),
+                    'modified_by' => $userId,
+                ];
+
+                $this->db->insertObject('#__guidedtour_steps', $stepObj);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::add('Error updating tour: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+            return false;
+        }
+    }
+
+    /**
+     * Insert a post-install message.
+     *
+     * @param   array  $message  Message definition
+     *
+     * @return  bool  True on success
+     *
+     * @since 10.1.0
+     */
+    protected function insertPostInstallMessage(array $message): bool
+    {
+        try {
+            $msgObj = (object) [
+                'extension_id'       => $this->extensionId,
+                'title_key'          => $message['title_key'],
+                'description_key'    => $message['description_key'],
+                'action_key'         => $message['action_key'] ?? '',
+                'language_extension' => 'com_proclaim',
+                'language_client_id' => 1,
+                'type'               => $message['type'],
+                'action_file'        => $message['action_file'] ?? '',
+                'action'             => $message['action'] ?? '',
+                'condition_file'     => $message['condition_file'] ?? '',
+                'condition_method'   => $message['condition_method'] ?? '',
+                'version_introduced' => $message['version_introduced'],
+                'enabled'            => 1,
+            ];
+
+            $this->db->insertObject('#__postinstall_messages', $msgObj);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::add('Error inserting post-install message: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
+            return false;
+        }
+    }
+
+    /**
+     * Remove all Proclaim guided tours.
+     *
+     * @return  int  Number of tours removed
+     *
+     * @since 10.1.0
+     */
+    public function removeAllTours(): int
+    {
+        if (!$this->supportsGuidedTours()) {
+            return 0;
+        }
+
+        $count = 0;
+
+        foreach ($this->tours as $tour) {
+            $query = $this->db->getQuery(true)
+                ->select($this->db->quoteName('id'))
+                ->from($this->db->quoteName('#__guidedtours'))
+                ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($tour['uid']));
+            $this->db->setQuery($query);
+            $tourId = $this->db->loadResult();
+
+            if ($tourId) {
+                // Delete steps first
+                $query = $this->db->getQuery(true)
+                    ->delete($this->db->quoteName('#__guidedtour_steps'))
+                    ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
+                $this->db->setQuery($query);
+                $this->db->execute();
+
+                // Delete tour
+                $query = $this->db->getQuery(true)
+                    ->delete($this->db->quoteName('#__guidedtours'))
+                    ->where($this->db->quoteName('id') . ' = ' . (int) $tourId);
+                $this->db->setQuery($query);
+                $this->db->execute();
+
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * Add a new tour definition at runtime.
+     *
+     * @param   string  $key   Tour key
+     * @param   array   $tour  Tour definition
+     *
+     * @return  self
+     *
+     * @since 10.1.0
+     */
+    public function addTour(string $key, array $tour): self
+    {
+        $this->tours[$key] = $tour;
+        return $this;
+    }
+
+    /**
+     * Add a new post-installation message definition at runtime.
+     *
+     * @param   string  $key      Message key
+     * @param   array   $message  Message definition
+     *
+     * @return  self
+     *
+     * @since 10.1.0
+     */
+    public function addPostInstallMessage(string $key, array $message): self
+    {
+        $this->postInstallMessages[$key] = $message;
+        return $this;
+    }
+}

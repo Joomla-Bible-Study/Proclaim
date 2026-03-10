@@ -1,0 +1,558 @@
+/**
+ * @package    Proclaim.Media
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ *
+ * Print stylesheet for Proclaim sermon detail view and analytics report.
+ *
+ * Works with the tmpl=component popup window approach:
+ * the Joomla template chrome (header, footer, sidebar, modules)
+ * is already stripped by tmpl=component, so this stylesheet only
+ * needs to handle Proclaim-specific elements and print optimization.
+ *
+ * Add the CSS class "proclaim-no-print" to any custom element
+ * to hide it in print output.
+ */
+
+/* ==========================================================
+   POPUP WINDOW STYLES (screen)
+   When the sermon is opened in the print popup (tmpl=component
+   with print=1), these rules hide interactive elements that
+   don't belong in a print-oriented view, even before the user
+   clicks Print.
+   ========================================================== */
+
+.proclaim-print-mode iframe,
+.proclaim-print-mode video,
+.proclaim-print-mode audio,
+.proclaim-print-mode .proclaim-media-player,
+.proclaim-print-mode .cwm-fancybox,
+.proclaim-print-mode .media-download-btn,
+.proclaim-print-mode .btn-group .dropdown-toggle,
+.proclaim-print-mode .fa-youtube,
+.proclaim-print-mode a[href*="youtube"] img,
+.proclaim-print-mode a[href*="youtu.be"] img {
+    display: none !important;
+}
+
+/* ==========================================================
+   PRINT STYLES (@media print)
+   ========================================================== */
+
+@media print {
+
+    /* ==========================================================
+       1. HIDE PROCLAIM NON-PRINT ELEMENTS
+       ========================================================== */
+
+    /* Print button (in popup window) */
+    .proclaim-print-btn,
+    .proclaim-no-print {
+        display: none !important;
+    }
+
+    /* Social sharing - CSS fallback for custom templates */
+    .proclaim-share,
+    .proclaim-share-local,
+    .a2a_kit,
+    .a2a_default_style,
+    [class*="a2a_button_"],
+    .a2a_dd {
+        display: none !important;
+    }
+
+    /* Comments section */
+    .proclaim-comments-toggle,
+    #JBScomments,
+    #commentstable,
+    #commentForm {
+        display: none !important;
+    }
+
+    /* Podcast subscribe */
+    .podcast_subscribe,
+    .proclaim-podcast-subscribe {
+        display: none !important;
+    }
+
+    /* Navigation elements */
+    .proclaim-skip-link,
+    .listingfooter,
+    .proclaim-footer-link {
+        display: none !important;
+    }
+
+    /* Media players and interactive elements */
+    .com-proclaim iframe,
+    .com-proclaim video,
+    .com-proclaim audio,
+    .proclaim-media-player,
+    .cwm-fancybox,
+    .fancybox-container,
+    .media-download-btn,
+    .btn-group .dropdown-toggle {
+        display: none !important;
+    }
+
+    /* YouTube thumbnails and icons */
+    a[href*="youtube"] img,
+    a[href*="youtu.be"] img,
+    .fa-youtube {
+        display: none !important;
+    }
+
+    /* ==========================================================
+       2. SCRIPTURE PASSAGE
+       The PHP template renders a text-only version of the
+       passage in print mode (.passage-print), so the interactive
+       toggle + iframe version is not output. These rules style
+       the print-friendly passage block.
+       ========================================================== */
+
+    /* Hide the original interactive passage elements (fallback) */
+    .fluid-row > .col-12 > a.heading,
+    a.heading > .fas.fa-bible,
+    a.heading > i.fas.fa-bible {
+        display: none !important;
+    }
+
+    .passage,
+    .passage iframe {
+        display: none !important;
+    }
+
+    /* Style the print-friendly passage block */
+    .passage-print {
+        margin: 12pt 0;
+        padding: 8pt 0;
+        border-top: 1pt solid #ccc;
+        border-bottom: 1pt solid #ccc;
+    }
+
+    .passage-print h3 {
+        font-size: 14pt;
+        margin-bottom: 4pt;
+    }
+
+    /* Scripture passage headings (per-reference) */
+    .passage-print .scripture-passage-heading {
+        font-size: 12pt;
+        margin: 8pt 0 4pt;
+    }
+
+    /* Force scripture text visible (toggle/popup modes hide it with inline style) */
+    .passage-print .scripture-text {
+        display: block !important;
+    }
+
+    /* Hide interactive elements inside print passage */
+    .passage-print .scripture-toggle,
+    .passage-print .scripture-popup-trigger,
+    .passage-print .scripture-version-switcher {
+        display: none !important;
+    }
+
+    /* Scripture body styling for print */
+    .passage-print .scripture-body {
+        font-size: 11pt;
+        line-height: 1.6;
+        margin: 4pt 0;
+    }
+
+    .passage-print .scripture-copyright {
+        font-size: 8pt;
+        color: #666;
+        margin-top: 4pt;
+    }
+
+    /* Study text heading for print */
+    .studytext-print-heading {
+        font-size: 14pt;
+        margin-top: 8pt;
+        margin-bottom: 4pt;
+    }
+
+    /* ==========================================================
+       3. PRINT-OPTIMIZED TYPOGRAPHY
+       ========================================================== */
+
+    .com-proclaim {
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+        color: #000 !important;
+        background: #fff !important;
+    }
+
+    .proclaim-main-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .com-proclaim h1, .com-proclaim .page-header h1 {
+        font-size: 18pt !important;
+        color: #000 !important;
+        border-bottom: 1pt solid #ccc;
+        padding-bottom: 6pt;
+        margin-bottom: 12pt;
+    }
+
+    .com-proclaim h2, .com-proclaim h3, .com-proclaim h4 {
+        color: #000 !important;
+        page-break-after: avoid;
+    }
+
+    /* Scripture references */
+    .article-info,
+    .article-info dd {
+        color: #333 !important;
+    }
+
+    /* Archive badge - plain text in print */
+    .proclaim-archive-badge {
+        border: 1pt solid #999;
+        color: #666 !important;
+        background: none !important;
+        padding: 1pt 4pt;
+        font-size: 9pt;
+    }
+
+    /* Study text / main content */
+    .com-content-article__body,
+    [itemprop="articleBody"] {
+        font-size: 12pt;
+        line-height: 1.6;
+    }
+
+    /* ==========================================================
+       4. PAGE BREAK CONTROL
+       ========================================================== */
+
+    .page-header {
+        page-break-after: avoid;
+    }
+
+    .com-proclaim p, .com-proclaim li, .com-proclaim dd {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* ==========================================================
+       5. LINKS - show URL in print for external links
+       ========================================================== */
+
+    .proclaim-main-content a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+        word-break: break-all;
+    }
+
+    /* Don't show URL for anchors, javascript, or heading links */
+    a[href^="#"]::after,
+    a[href^="javascript:"]::after,
+    .page-header a::after {
+        content: "" !important;
+    }
+
+    /* ==========================================================
+       6. IMAGES AND TABLES
+       ========================================================== */
+
+    .com-proclaim img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    .com-proclaim table {
+        border-collapse: collapse;
+    }
+
+    .com-proclaim table,
+    .com-proclaim th,
+    .com-proclaim td {
+        border: 1pt solid #ccc;
+    }
+
+    .com-proclaim th,
+    .com-proclaim td {
+        padding: 4pt 8pt;
+    }
+
+    /* ==========================================================
+       7. FLUID LISTING (layout editor output)
+       ========================================================== */
+
+    .proclaim-item {
+        page-break-inside: avoid;
+    }
+
+    .proclaim-listing-header {
+        display: block !important;
+    }
+
+    /* Fluid listing rows - hide YouTube media content */
+    .fluid-row img[src*="youtube"],
+    .fluid-row .fa-youtube {
+        display: none !important;
+    }
+
+    /* ==========================================================
+       8. ANALYTICS REPORT (print overrides)
+       ========================================================== */
+
+    .proclaim-analytics-report {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .proclaim-analytics-report .report-header {
+        border-bottom: 2pt solid #000;
+        margin-bottom: 12pt;
+        padding-bottom: 8pt;
+    }
+
+    .proclaim-analytics-report .report-logo {
+        max-height: 48pt;
+        max-width: 90pt;
+    }
+
+    .proclaim-analytics-report .report-header h1 {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 4pt;
+    }
+
+    .proclaim-analytics-report .kpi-row {
+        page-break-inside: avoid;
+    }
+
+    .proclaim-analytics-report .kpi-box {
+        border: 1pt solid #ccc;
+    }
+
+    .proclaim-analytics-report .report-table {
+        page-break-inside: auto;
+    }
+
+    .proclaim-analytics-report .report-table thead {
+        display: table-header-group;
+    }
+
+    .proclaim-analytics-report .report-table tr {
+        page-break-inside: avoid;
+    }
+
+    .proclaim-analytics-report .report-footer {
+        border-top: 1pt solid #ccc;
+        margin-top: 16pt;
+        padding-top: 8pt;
+    }
+}
+
+/* ==========================================================
+   ANALYTICS REPORT — SCREEN STYLES
+   These styles apply in the popup window (screen) before
+   the user clicks Print. They also serve as the base for
+   the print output since the @media print rules above
+   only add overrides.
+   ========================================================== */
+
+.proclaim-analytics-report {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #222;
+    background: #fff;
+}
+
+.proclaim-analytics-report .report-header {
+    border-bottom: 2px solid #333;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+}
+
+.proclaim-analytics-report .report-header-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.proclaim-analytics-report .report-logo {
+    max-height: 64px;
+    max-width: 120px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.proclaim-analytics-report .report-header-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.proclaim-analytics-report .report-site-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.proclaim-analytics-report .report-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: #111;
+    border: none;
+}
+
+.proclaim-analytics-report .report-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* KPI summary boxes */
+.proclaim-analytics-report .kpi-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.proclaim-analytics-report .kpi-box {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    padding: 16px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+
+.proclaim-analytics-report .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+}
+
+.proclaim-analytics-report .kpi-label {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+/* Section headings */
+.proclaim-analytics-report h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.proclaim-analytics-report h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+    margin: 20px 0 10px;
+}
+
+/* Report tables */
+.proclaim-analytics-report .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.proclaim-analytics-report .report-table th {
+    background: #f3f3f3;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid #ddd;
+    color: #444;
+    white-space: nowrap;
+}
+
+.proclaim-analytics-report .report-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.proclaim-analytics-report .report-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.proclaim-analytics-report .report-table .col-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.proclaim-analytics-report .report-table .col-rank {
+    text-align: center;
+    width: 50px;
+    color: #888;
+}
+
+/* Side-by-side column layout (browser + OS) */
+.proclaim-analytics-report .report-columns {
+    display: flex;
+    gap: 24px;
+}
+
+.proclaim-analytics-report .report-col {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Meta text */
+.proclaim-analytics-report .report-meta {
+    font-size: 13px;
+    color: #666;
+    margin: -8px 0 16px;
+}
+
+/* Empty state */
+.proclaim-analytics-report .report-empty {
+    font-size: 14px;
+    color: #999;
+    font-style: italic;
+    padding: 16px 0;
+}
+
+/* Report footer */
+.proclaim-analytics-report .report-footer {
+    border-top: 1px solid #ddd;
+    margin-top: 32px;
+    padding-top: 12px;
+}
+
+.proclaim-analytics-report .report-footer p {
+    font-size: 11px;
+    color: #999;
+    margin: 0;
+}
+
+/* Landscape orientation for analytics report only.
+   Named pages scope @page to elements with page: proclaim-report. */
+@page proclaim-report {
+    size: landscape;
+    margin: 0.5in;
+}
+
+.proclaim-analytics-report {
+    page: proclaim-report;
+}

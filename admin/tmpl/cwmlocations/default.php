@@ -3,7 +3,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -20,19 +20,20 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-/** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmlocations\HtmlView $this */
+
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $user = Factory::getApplication()->getSession()->get('user');
-$userId    = $user->get('id');
+$user      = $app->getIdentity();
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering', 'location.id'));
 $listDirn  = $this->escape($this->state->get('list.direction', 'desc'));
-$archived  = $this->state->get('filter.published') == 2 ? true : false;
-$trashed   = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder = $listOrder == 'location.ordering';
+$archived  = $this->state->get('filter.published') == 2;
+$trashed   = $this->state->get('filter.published') == -2;
+$saveOrder = $listOrder === 'location.ordering';
 $columns   = 5;
 
 if ($saveOrder) {
@@ -53,69 +54,67 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
         <hr/>
     </div>
     <div id="j-main-container" class="col-10">
-        <?php
-        else : ?>
+        <?php else : ?>
         <div id="j-main-container">
             <?php
-            endif; ?>
+        endif; ?>
             <?php
-            // Search tools bar
-            echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-            ?>
+        // Search tools bar
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+?>
             <?php
-            if (empty($this->items)) : ?>
+if (empty($this->items)) : ?>
                 <div class="alert alert-no-items">
                     <?php
-                    echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php
-            else : ?>
+            <?php else : ?>
                 <table class="table table-striped adminlist" id="locationsList">
                     <thead>
                     <tr>
                         <th class="w-1 d-none d-md-table-cell">
                             <?php
-                            echo HTMLHelper::_('grid.checkall'); ?>
+                echo HTMLHelper::_('grid.checkall'); ?>
                         </th>
                         <th style="min-width:55px;" class="w-1 nowrap center d-none d-md-table-cell">
                             <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'JPUBLISHED',
-                                'location.published',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
+                echo HTMLHelper::_(
+                    'searchtools.sort',
+                    'JPUBLISHED',
+                    'location.published',
+                    $listDirn,
+                    $listOrder
+                ); ?>
                         </th>
                         <th>
                             <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'JBS_CMN_LOCATIONS',
-                                'location.locations_text',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
+                echo HTMLHelper::_(
+                    'searchtools.sort',
+                    'JBS_CMN_LOCATIONS',
+                    'location.locations_text',
+                    $listDirn,
+                    $listOrder
+                ); ?>
                         </th>
                         <th width="10%" class="w-10 nowrap d-none d-md-table-cell">
                             <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'JGRID_HEADING_ACCESS',
-                                'access_level',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
+                echo HTMLHelper::_(
+                    'searchtools.sort',
+                    'JGRID_HEADING_ACCESS',
+                    'access_level',
+                    $listDirn,
+                    $listOrder
+                ); ?>
                         </th>
                         <th class="w-1 nowrap center d-none d-md-table-cell">
                             <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'JGRID_HEADING_ID',
-                                'location.id',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
+                echo HTMLHelper::_(
+                    'searchtools.sort',
+                    'JGRID_HEADING_ID',
+                    'location.id',
+                    $listDirn,
+                    $listOrder
+                ); ?>
                         </th>
                     </tr>
                     </thead>
@@ -130,11 +129,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                     <?php
                     foreach ($this->items as $i => $item) :
                         $item->max_ordering = 0;
-                        $ordering = ($listOrder == 'location.ordering');
-                        $canCreate = $user->authorise('core.create');
-                        $canEdit = $user->authorise('core.edit', 'com_proclaim.location.' . $item->id);
-                        $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.location.' . $item->id);
-                        $canChange = $user->authorise('core.edit.state', 'com_proclaim.location.' . $item->id);
+                        $ordering           = ($listOrder === 'location.ordering');
+                        $canCheckin          = $user->authorise('core.manage', 'com_checkin')
+                            || $item->checked_out == $userId || \is_null($item->checked_out);
+                        $canCreate          = $user->authorise('core.create');
+                        $canEdit            = $user->authorise('core.edit', 'com_proclaim.location.' . $item->id);
+                        $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.location.' . $item->id);
+                        $canChange          = $user->authorise('core.edit.state', 'com_proclaim.location.' . $item->id);
                         ?>
                         <tr class="row<?php
                         echo $i % 2; ?>" data-draggable-group="<?php
@@ -147,32 +148,35 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                                 <?php
                                 $options = [
                                     'task_prefix' => 'cwmlocations.',
-                                    'disabled' => !$canChange,
-                                    'id' => 'state-' . $item->id
+                                    'disabled'    => !$canChange,
+                                    'id'          => 'state-' . $item->id,
                                 ];
-                                echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                ?>
+                        echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                        ?>
                             </td>
                             <td class="nowrap has-context">
                                 <div class="float-left">
+                                    <?php if ($item->checked_out) : ?>
+                                        <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                            $item->checked_out_time, 'cwmlocations.', $canCheckin); ?>
+                                    <?php endif; ?>
                                     <?php
-                                    if ($canEdit || $canEditOwn) : ?>
+                            if ($canEdit || $canEditOwn) : ?>
                                         <a href="<?php
-                                        echo Route::_(
-                                            'index.php?option=com_proclaim&task=cwmlocation.edit&id=' . (int)$item->id
-                                        ); ?>"
+                                echo Route::_(
+                                    'index.php?option=com_proclaim&task=cwmlocation.edit&id=' . (int)$item->id
+                                ); ?>"
                                            title="<?php
-                                           echo Text::_('JACTION_EDIT'); ?>">
+                                   echo Text::_('JACTION_EDIT'); ?>">
                                             <?php
-                                            echo $this->escape($item->location_text); ?></a>
-                                    <?php
-                                    else : ?>
+                                    echo $this->escape($item->location_text); ?></a>
+                                    <?php else : ?>
                                         <span
                                                 title="<?php
-                                                echo Text::sprintf(
-                                                    'JFIELD_ALIAS_LABEL',
-                                                    $this->escape($item->location_text)
-                                                ); ?>"><?php
+                                        echo Text::sprintf(
+                                            'JFIELD_ALIAS_LABEL',
+                                            $this->escape($item->location_text)
+                                        ); ?>"><?php
                                             echo $this->escape($item->location_text); ?></span>
                                     <?php
                                     endif; ?>
@@ -192,7 +196,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                     </tbody>
                 </table>
                 <?php
-                // Load the batch processing form. ?>
+                // Load the batch processing form.?>
                 <?php
                 if ($user->authorise('core.create', 'com_proclaim')
                     && $user->authorise('core.edit', 'com_proclaim')
@@ -202,10 +206,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>" method="po
                     echo HTMLHelper::_(
                         'bootstrap.renderModal',
                         'collapseModal',
-                        array(
-                            'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                            'footer' => $this->loadTemplate('batch_footer')
-                        ),
+                        [
+                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                'footer' => $this->loadTemplate('batch_footer'),
+                            ],
                         $this->loadTemplate('batch_body')
                     ); ?>
                 <?php

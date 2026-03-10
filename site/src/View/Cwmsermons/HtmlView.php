@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,14 +16,20 @@ namespace CWM\Component\Proclaim\Site\View\Cwmsermons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcastsubscribe;
+use CWM\Component\Proclaim\Site\Helper\Cwmteacher;
+use CWM\Component\Proclaim\Site\Helper\UpdateFiltersTrait;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -35,126 +41,118 @@ use Joomla\Registry\Registry;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var object
-     *
-     * @since 7.0
-     */
-    public $document;
+    use UpdateFiltersTrait;
+
     /**
      * Form object for search filters
      *
-     * @var  Form
+     * @var  Form|null
      * @since 9.1.4
      */
-    public $filterForm;
+    public ?Form $filterForm = null;
+
     /**
      * The active search filters
      *
-     * @var  array
+     * @var  array|null
      * @since 9.1.4
      */
-    public $activeFilters;
-    /** @var object
+    public ?array $activeFilters = null;
+
+    /** @var array|null
      *
      * @since 7.0
      */
-    protected $items = null;
-    /** @var object
+    protected ?array $items = null;
+
+    /** @var object|null
      *
      * @since 7.0
      */
-    protected $pagination = null;
-    /** @var Registry
+    protected ?object $pagination = null;
+
+    /** @var Registry|null
      *
      * @since 7.0
      */
-    protected $state = null;
+    protected ?Registry $state = null;
+
     /**
-     * @var object
+     * @var object|null
      *
      * @since 7.0
      */
-    protected $admin;
-    /** @var Registry
+    protected ?object $admin = null;
+
+    /** @var Registry|null
      *
      * @since 7.0
      */
-    protected $params;
-    /** @var object
+    protected ?Registry $params = null;
+
+    /** @var string|null
      *
      * @since 7.0
      */
-    protected $study;
-    /** @var string
+    protected ?string $subscribe = null;
+
+    /** @var object|null
      *
      * @since 7.0
      */
-    protected $subscribe;
-    /** @var string
+    protected ?object $template = null;
+
+    /** @var object|null
      *
      * @since 7.0
      */
-    protected $series;
-    /** @var string
+    protected ?object $main = null;
+
+    /** @var object|null
      *
      * @since 7.0
      */
-    protected $teachers;
-    /** @var string
+    protected ?object $page = null;
+
+    /**
+     * Main image HTML string
      *
-     * @since 7.0
+     * @var string
+     * @since 10.0.0
      */
-    protected $messageTypes;
-    /** @var string
+    public string $mainimage = '';
+
+    /**
+     * Listing helper instance for template use
      *
-     * @since 7.0
+     * @var Cwmlisting|null
+     * @since 10.0.0
      */
-    protected $years;
-    /** @var string
+    public ?Cwmlisting $listing = null;
+
+    /**
+     * Studies element CSS class
      *
-     * @since 7.0
+     * @var string
+     * @since 10.0.0
      */
-    protected $locations;
-    /** @var string
+    public string $classelement = '';
+
+    /**
+     * Pre-calculated teacher data for fluid display
      *
-     * @since 7.0
+     * @var array
+     * @since 10.0.0
      */
-    protected $topics;
-    /** @var string
+    public array $teachersFluid = [];
+
+    /**
+     * Current menu item ID
      *
-     * @since 7.0
+     * @var int
+     * @since 10.0.0
      */
-    protected $orders;
-    /** @var string
-     *
-     * @since 7.0
-     */
-    protected $books;
-    /** @var object
-     *
-     * @since 7.0
-     */
-    protected $template;
-    /** @var array
-     *
-     * @since 7.0
-     */
-    protected $topic;
-    /** @var object
-     *
-     * @since 7.0
-     */
-    protected $main;
-    /** @var object
-     *
-     * @since 7.0
-     */
-    protected $page;
-    /** @var string
-     *
-     * @since 7.0
-     */
-    protected $request_url;
+    public int $itemid = 0;
 
     /**
      * Execute and display a template script.
@@ -167,93 +165,55 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        /** @var CwmsermonsModel $module */
-        $module      = $this->getModel();
-        $this->state = $module->getState();
+        /** @var CwmsermonsModel $model */
+        $model       = $this->getModel();
+        $this->state = $model->getState();
 
         $this->template = $this->state->get('template');
 
-        $items                       = $module->getItems();
-        $pagination                  = $module->getPagination();
-        $this->page                  = new \stdClass();
-        $this->page->pagelinks       = $pagination->getPagesLinks();
-        $this->page->counter         = $pagination->getPagesCounter();
-        $this->activeFilters         = $module->getActiveFilters();
+        $items                 = $model->getItems();
+        $pagination            = $model->getPagination();
+        $this->page            = new \stdClass();
+        $this->page->pagelinks = $pagination->getPagesLinks();
+        $this->page->counter   = $pagination->getPagesCounter();
+        $this->activeFilters   = $model->getActiveFilters();
 
-        // Get a filter form.
-        $this->filterForm = $module->getFilterForm();
+        $this->filterForm = $model->getFilterForm();
         $mainframe        = Factory::getApplication();
         $this->admin      = $this->state->get('administrator');
 
         $params = $this->state->params;
 
-        // Check permissions for this view by running through the records and removing those that the user doesn't have permission to see
         $user            = $mainframe->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $this->main      = Cwmimages::mainStudyImage($params);
-        $this->mainimage = '<img src="' . $this->main->path . '" width="' . $this->main->width . '" height="' . $this->main->height . '">';
-
-        // Build go button
-        $this->page->gobutton = '<input class="btn btn-primary" type="submit" value="' . Text::_(
-            'JBS_STY_GO_BUTTON'
-        ) . '">';
+        $this->mainimage = Cwmimages::renderPicture(
+            $this->main,
+            Text::_('JBS_CMN_MESSAGES_LIST'),
+            'proclaim-page-header-img',
+            false
+        );
 
         // Only load PageBuilder if the default template is NOT being used
         if (
             $params->get('useexpert_list') > 0
             || ($params->get('simple_mode') === '1')
-            || (is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')
+            || (\is_string($params->get('sermonstemplate')) === true && $params->get('sermonstemplate') !== '0')
         ) {
             $page_builder = new Cwmpagebuilder();
 
-            foreach ($items as $iValue) {
-                $item = &$iValue;
-
-                if ($item->access > 1 && !in_array($item->access, $groups, true)) {
-                    unset($item);
-                } else {
-                    $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
-
-                    $pelements        = $page_builder->buildPage($item, $params, $this->template);
-                    $item->scripture1 = $pelements->scripture1;
-                    $item->scripture2 = $pelements->scripture2;
-                    $item->media      = $pelements->media;
-                    $item->studydate  = $pelements->studydate;
-                    $item->topics     = $pelements->topics;
-
-                    if (isset($pelements->study_thumbnail)) {
-                        $item->study_thumbnail = $pelements->study_thumbnail;
-                    } else {
-                        $item->study_thumbnail = null;
-                    }
-
-                    if (isset($pelements->series_thumbnail)) {
-                        $item->series_thumbnail = $pelements->series_thumbnail;
-                    } else {
-                        $item->series_thumbnail = null;
-                    }
-
-                    $item->detailslink = $pelements->detailslink;
-
-                    if (!isset($item->studyintro)) {
-                        $item->studyintro = '';
-                    }
-
-                    if (isset($pelements->secondary_reference)) {
-                        $item->secondary_reference = $pelements->secondary_reference;
-                    } else {
-                        $item->secondary_reference = '';
-                    }
-
-                    if (isset($pelements->sdescription)) {
-                        $item->sdescription = $pelements->sdescription;
-                    } else {
-                        $item->sdescription = '';
-                    }
+            foreach ($items as $item) {
+                if ($item->access > 1 && !\in_array($item->access, $groups, true)) {
+                    continue;
                 }
+
+                $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
             }
+
+            $page_builder->enrichStudies($items, $params, $this->template);
         }
 
         // Get the podcast subscription
@@ -262,69 +222,77 @@ class HtmlView extends BaseHtmlView
         $podcast         = new Cwmpodcastsubscribe();
         $this->subscribe = $podcast->buildSubscribeTable($params->get('subscribeintro', 'Our Podcasts'));
 
-        $uri = new Uri();
+        $this->pagination = $pagination;
+        $this->items      = $items;
+        $this->params     = $params;
 
-        $this->pagination  = &$pagination;
-        $this->limitbox    = $this->pagination->getLimitBox();
-        $this->items       = &$items;
-        $stringuri         = $uri->toString();
-        $this->request_url = $stringuri;
-        $this->params      = &$params;
+        // Pre-calculate values for templates to avoid helper instantiation in templates
+        $this->listing      = new Cwmlisting();
+        $this->classelement = $this->listing->createelement($params->get('studies_element'));
+        $this->itemid       = (int) $mainframe->input->get('Itemid', 0);
+
+        // Pre-calculate teacher data for default_main template
+        $cwmTeacher          = new Cwmteacher();
+        $this->teachersFluid = $cwmTeacher->getTeachersFluid($params);
+
+        // AJAX filtering — only for the default_main template (not custom/simple)
+        $isDefaultTemplate = !(
+            $params->get('useexpert_list') > 0
+            || $params->get('simple_mode') === '1'
+            || (\is_string($params->get('sermonstemplate')) && $params->get('sermonstemplate') !== '0')
+        );
+
+        if ($isDefaultTemplate) {
+            $t      = $this->template->id ?? $mainframe->input->getInt('t', 1);
+            $itemId = $this->itemid;
+
+            $ajaxUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
+                . '&t=' . (int) $t
+                . '&Itemid=' . (int) $itemId;
+
+            $mainframe->getDocument()->addScriptOptions('com_proclaim.sermonFilters', [
+                'ajaxUrl'         => $ajaxUrl,
+                'enabled'         => true,
+                'csrfToken'       => Session::getFormToken(),
+                'paginationStyle' => $params->get('pagination_style', 'pagination'),
+                'limit'           => (int) $this->state->get('list.limit', 20),
+                'totalItems'      => (int) $pagination->total,
+                'scrollThreshold' => (int) $params->get('infinite_scroll_threshold', 3),
+            ]);
+
+            $wa->useScript('com_proclaim.sermon-filters');
+            $wa->useStyle('com_proclaim.sermon-filters-css');
+        }
+
+        // Load scripture tooltip assets (per-element controlled; JS is a no-op
+        // if no elements have show_tooltip enabled)
+        $wa->useScript('com_proclaim.scripture-tooltip');
+        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+
+        $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
+            'ajaxUrl' => Route::_(
+                'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
+                false
+            ),
+        ]);
+
+        // Register language strings used by infinite scroll / load more JS
+        Text::script('JBS_CMN_LOAD_MORE');
+        Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_SHOWING_X_OF_Y');
+        Text::script('JBS_CMN_ALL_ITEMS_LOADED');
+
+        // Register language strings used by scripture-switcher JS
+        Text::script('JBS_CMN_SCRIPTURE_UNAVAILABLE');
+        Text::script('JBS_CMN_SCRIPTURE_RETRY');
+        Text::script('JBS_CMN_SCRIPTURE_FALLBACK');
+        Text::script('JBS_CMN_SCRIPTURE_SERVICE_BUSY');
 
         $this->updateFilters();
 
         $this->prepareDocument();
 
         parent::display($tpl);
-    }
-
-    /**
-     * Update Filters per landing page call and hide filters per the template settings.
-     *
-     * @return  void
-     *
-     * @throws \Exception
-     * @since 9.1.6
-     */
-    private function updateFilters(): void
-    {
-        $input   = Factory::getApplication()->getInput();
-        $filters = ['search', 'book', 'teacher', 'series', 'messagetype', 'year', 'topic', 'location', 'language'];
-        $lists   = ['fullordering', 'limit'];
-
-        // Fix language filter
-        $lang = $this->params->get('listlanguage', 'NO');
-
-        if ($lang !== 'NO') {
-            $this->params->set('show_language_search', (int)$lang);
-        }
-
-        foreach ($filters as $filter) {
-            $set  = $input->getInt('filter_' . $filter);
-            $from = $this->filterForm->getValue($filter, 'filter');
-
-            // Update value from landing page call.
-            if ($set !== 0 && $set !== null) {
-                $this->filterForm->setValue($filter, 'filter', $set);
-            }
-
-            // Catch active filters and update them.
-            if ($from !== null || $set !== null) {
-                $this->activeFilters[] = $filter;
-            }
-
-            // Remove from view if set to hide in template.
-            if ((int)$this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language') {
-                $this->filterForm->removeField($filter, 'filter');
-            }
-        }
-
-        foreach ($lists as $list) {
-            // Remove from view if set to hide in template.
-            if ((int)$this->params->get('show_' . $list . '_search', 1) === 0) {
-                $this->filterForm->removeField($list, 'list');
-            }
-        }
     }
 
     /**
@@ -367,7 +335,7 @@ class HtmlView extends BaseHtmlView
 
         // Prepare meta information (under development)
         if ($this->params->get('metakey')) {
-            $this->document->setMetadata('keywords', $this->params->get('metakey'));
+            $this->document->setMetaData('keywords', $this->params->get('metakey'));
         }
 
         if ($this->params->get('metadesc')) {
@@ -379,11 +347,20 @@ class HtmlView extends BaseHtmlView
         }
 
         if ($this->params->get('menu-meta_keywords')) {
-            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+            $this->document->setMetaData('keywords', $this->params->get('menu-meta_keywords'));
         }
 
         if ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
+            $this->document->setMetaData('robots', $this->params->get('robots'));
         }
+
+        // Schema.org structured data
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildSermonList(
+                $this->items ?? [],
+                Uri::getInstance()->toString(),
+                $app->get('sitename')
+            )
+        );
     }
 }

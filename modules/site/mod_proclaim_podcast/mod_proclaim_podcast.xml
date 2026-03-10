@@ -2,12 +2,12 @@
 <extension type="module" client="site" method="upgrade">
     <name>mod_proclaim_podcast</name>
     <author>CWM Team</author>
-    <creationDate>Sep 10, 2025</creationDate>
-    <copyright>(C) 2007 Christian Web Ministries All rights reserved.</copyright>
+    <creationDate>Mar 10, 2026</creationDate>
+    <copyright>(C) 2026 Christian Web Ministries All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
-    <version>10.0.1</version>
+    <version>10.1.0</version>
     <description>MOD_PROCLAIM_PODCAST_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Module\ProclaimPodcast</namespace>
     <files>
@@ -24,7 +24,8 @@
                 <field name="dummy" type="LoadLanguageFile" default=""/>   <!-- load common language file -->
                 <field name="t" type="sql" default="1"
                        label="JBS_MDL_SELECT_TEMPLATE" description="JBS_MDL_SELECT_TEMPLATE_DESC"
-                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY text ASC"
+                       class="form-select"
+                       query="SELECT id, title FROM #__bsms_templates WHERE published = 1 ORDER BY title ASC"
                        key_field="id" value_field="title" required="true"/>
 
                 <field name="subscribeintro" type="text" default="Our Podcasts" size="50"
@@ -33,11 +34,14 @@
             <fieldset name="advanced">
                 <field name="layout"
                        type="modulelayout"
+                       extension="mod_proclaim_podcast"
+                       class="form-select"
                        label="JFIELD_ALT_LAYOUT_LABEL"
                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
                 <field name="cache"
                        type="list"
                        default="1"
+                       class="form-select"
                        label="COM_MODULES_FIELD_CACHING_LABEL"
                        description="COM_MODULES_FIELD_CACHING_LABEL">
                     <option

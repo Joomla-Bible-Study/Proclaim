@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,7 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -32,6 +33,17 @@ use Joomla\CMS\Table\Table;
 class CwmtemplateModel extends AdminModel
 {
     /**
+     * Allowed batch commands
+     *
+     * @var array
+     * @since 10.0.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'location'      => 'batchLocation',
+    ];
+
+    /**
      * Method to save the form data.
      *
      * @param   array  $data  The form data.
@@ -41,7 +53,7 @@ class CwmtemplateModel extends AdminModel
      * @throws \Exception
      * @since   12.2
      */
-    public function save($data)
+    public function save($data): bool
     {
         // Make sure we cannot unpublished default template.
         if ($data['id'] == '1' && $data['published'] != '1') {
@@ -50,8 +62,6 @@ class CwmtemplateModel extends AdminModel
             return false;
         }
 
-        $image                          = HTMLHelper::cleanImageURL($data['text']);
-        $data['text']                   = $image->url;
         $image                          = HTMLHelper::cleanImageURL($data['show_page_image_series']);
         $data['show_page_image_series'] = $image->url;
         $image                          = HTMLHelper::cleanImageURL($data['popupimage']);
@@ -72,18 +82,40 @@ class CwmtemplateModel extends AdminModel
      */
     public function copy(array $cid): bool
     {
+        $user   = Factory::getApplication()->getIdentity();
+        $userId = (int) $user->id;
+
+        // Non-admin users get their first accessible location assigned to copies
+        $copyLocationId = null;
+
+        if (!$user->authorise('core.admin') && CwmlocationHelper::isEnabled()) {
+            $userLocations  = CwmlocationHelper::getUserLocations($userId);
+            $copyLocationId = !empty($userLocations) ? (int) $userLocations[0] : null;
+        }
+
         foreach ($cid as $id) {
-            $db       = Factory::getContainer()->get('DatabaseDriver');
-            $tmplCurr = new CwmtemplateTable($db);
+            $tmplCurr = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
 
             $tmplCurr->load($id);
-            $tmplCurr->id    = '';
-            $tmplCurr->title .= " - copy";
+            $tmplCurr->id               = 0;
+            $tmplCurr->title .= ' - copy';
+            $tmplCurr->created_by        = $userId;
+            $tmplCurr->created_by_alias  = '';
+            $tmplCurr->created           = null;
+            $tmplCurr->modified          = null;
+            $tmplCurr->modified_by       = null;
+            $tmplCurr->checked_out       = null;
+            $tmplCurr->checked_out_time  = null;
+            $tmplCurr->asset_id          = null;
+
+            // Assign the cloner's campus location so they own the copy
+            if ($copyLocationId !== null) {
+                $tmplCurr->location_id = $copyLocationId;
+            }
 
             if (!$tmplCurr->store()) {
-                Factory::getApplication()->enqueueMessage($tmplCurr->getError(), 'error');
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
         }
 
@@ -137,20 +169,6 @@ class CwmtemplateModel extends AdminModel
     }
 
     /**
-     * Method to check out a row for editing.
-     *
-     * @param   int  $pk  The numeric id of the primary key.
-     *
-     * @return  ?int  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null): ?int
-    {
-        return $pk;
-    }
-
-    /**
      * Method to get a table object, load it if necessary.
      *
      * @param   string  $name     The table name. Optional.
@@ -184,6 +202,86 @@ class CwmtemplateModel extends AdminModel
         }
 
         return $data;
+    }
+
+    /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmtemplateTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
+    }
+
+    /**
+     * Batch set location for a list of templates.
+     *
+     * @param   string  $value     The location ID (or 0/empty to clear).
+     * @param   array   $pks       An array of row IDs.
+     * @param   array   $contexts  An array of item contexts.
+     *
+     * @return  bool  True if successful.
+     *
+     * @throws  \RuntimeException  When the user lacks edit or location access.
+     * @throws  \Exception
+     * @since   10.1.0
+     */
+    protected function batchLocation(string $value, array $pks, array $contexts): bool
+    {
+        $user       = Factory::getApplication()->getIdentity();
+        $locationId = (int) $value;
+
+        // Validate location access when the system is enabled
+        if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
+
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+                throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+            }
+        }
+
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->location_id = $locationId > 0 ? $locationId : null;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
     }
 
     /**

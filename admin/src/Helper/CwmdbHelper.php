@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,13 +17,11 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Model\CwmadminModel;
-use Exception;
 use Joomla\CMS\Factory;
-use JoomlaFilesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Filesystem\Folder;
 
 /**
  * Database Helper class for version 7.1.0
@@ -62,7 +60,7 @@ class CwmdbHelper
      */
     public static function checkIfTable($cktable): bool
     {
-        $db     = Factory::getContainer()->get('DatabaseDriver');
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $tables = $db->getTableList();
         $prefix = $db->getPrefix();
 
@@ -86,12 +84,12 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     public static function alterDB(array $tables, ?string $from = null): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($tables as $t) {
             $type    = strtolower($t['type']);
@@ -107,7 +105,7 @@ class CwmdbHelper
 
                     // Check the field to see if it exists first
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' DROP ' . $db->qn($field);
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' DROP ' . $db->quoteName($field);
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -120,7 +118,7 @@ class CwmdbHelper
                         break;
                     }
 
-                    $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD INDEX ' . $db->qn($field) . ' ' . $command;
+                    $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD INDEX ' . $db->quoteName($field) . ' ' . $command;
 
                     if (!self::performDB($query, $from)) {
                         return false;
@@ -134,7 +132,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) !== true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -148,7 +146,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) !== true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' ADD COLUMN' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' ADD COLUMN' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -162,7 +160,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' MODIFY ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' MODIFY ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -176,7 +174,7 @@ class CwmdbHelper
                     }
 
                     if (self::checkTables($table, $field) === true) {
-                        $query = 'ALTER TABLE ' . $db->qn($table) . ' CHANGE ' . $db->qn($field) . ' ' . $command;
+                        $query = 'ALTER TABLE ' . $db->quoteName($table) . ' CHANGE ' . $db->quoteName($field) . ' ' . $command;
 
                         if (!self::performDB($query, $from)) {
                             return false;
@@ -200,12 +198,12 @@ class CwmdbHelper
      */
     public static function checkTables($table, $field): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $fields = $db->getTableColumns($table, 'false');
 
         if ($fields) {
-            if (array_key_exists($field, $fields) === true) {
+            if (\array_key_exists($field, $fields) === true) {
                 return true;
             }
         }
@@ -222,7 +220,7 @@ class CwmdbHelper
      *
      * @return bool true if success, or error string if failed
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.0
      */
     public static function performDB($query, ?string $from = null, ?int $limit = null): bool
@@ -231,7 +229,7 @@ class CwmdbHelper
             return false;
         }
 
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $db->setQuery($query, 0, $limit);
 
         if (!$db->execute()) {
@@ -256,7 +254,7 @@ class CwmdbHelper
      *
      * @return boolean
      *
-     * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public static function checkDB($table, $field): bool
@@ -265,7 +263,10 @@ class CwmdbHelper
 
         if (!$done) {
             /** @var CwmadminModel $admin */
-            $admin = BaseDatabaseModel::getInstance('Cwmadmin', 'Model');
+            $admin = Factory::getApplication()
+                ->bootComponent('com_proclaim')
+                ->getMVCFactory()
+                ->createModel('Cwmadmin', 'Administrator');
             $admin->fix();
 
             return true;
@@ -283,17 +284,23 @@ class CwmdbHelper
      */
     public static function getObjects(): array
     {
-        $db        = Factory::getContainer()->get('DatabaseDriver');
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $tables    = $db->getTableList();
         $prefix    = $db->getPrefix();
-        $prelength = strlen($prefix);
+        $prelength = \strlen($prefix);
         $bsms      = 'bsms_';
-        $objects   = array();
+        $objects   = [];
 
         foreach ($tables as $table) {
             if (str_contains($table, $prefix) && str_contains($table, $bsms)) {
-                $table     = substr_replace($table, '#__', 0, $prelength);
-                $objects[] = array('name' => $table);
+                $table = substr_replace($table, '#__', 0, $prelength);
+
+                // Skip legacy version tracking table (replaced by #__schemas)
+                if ($table === '#__bsms_update') {
+                    continue;
+                }
+
+                $objects[] = ['name' => $table];
             }
         }
 
@@ -309,8 +316,8 @@ class CwmdbHelper
      */
     public static function getInstallState(): bool
     {
-        if (!is_bool(self::$install_state)) {
-            $db = Factory::getContainer()->get('DatabaseDriver');
+        if (!\is_bool(self::$install_state)) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Check if JBSM can be found from the database
             $table = $db->getPrefix() . 'bsms_admin';
@@ -334,22 +341,22 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   7.1.0
      */
-    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null)
+    public static function fixupcss(string $filename, bool $parent, string $newcss, ?int $id = null): bool
     {
         $app = Factory::getApplication();
 
         // Start by getting existing Style
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('*')->from('#__bsms_styles');
+        $query->select('*')->from($db->quoteName('#__bsms_styles'));
 
         if ($filename) {
-            $query->where($db->qn('filename') . ' = ' . $db->q($filename));
+            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
         } else {
-            $query->where($db->qn('id') . ' = ' . (int)$id);
+            $query->where($db->quoteName('id') . ' = ' . (int)$id);
         }
 
         $db->setQuery($query);
@@ -358,7 +365,7 @@ class CwmdbHelper
 
         // Now the arrays of changes that need to be done.
 
-        $oldlines = array(
+        $oldlines = [
             ".bsm_teachertable_list",
             "#bslisttable",
             "#bslisttable",
@@ -366,9 +373,9 @@ class CwmdbHelper
             "#landing_separator",
             "#landing_item",
             "#landing_title",
-            "#landinglist"
-        );
-        $newlines = array(
+            "#landinglist",
+        ];
+        $newlines = [
             "#bsm_teachertable_list",
             ".bslisttable",
             ".bslisttable",
@@ -376,8 +383,8 @@ class CwmdbHelper
             ".landing_separator",
             ".landing_item",
             ".landing_title",
-            ".landinglist"
-        );
+            ".landinglist",
+        ];
         $oldcss   = (string)str_replace($oldlines, $newlines, $oldcss);
 
         // Now see if we are adding new css to the db css
@@ -391,12 +398,12 @@ class CwmdbHelper
         // No apply the new css back to the table
 
         $query = $db->getQuery(true);
-        $query->update('#__bsms_styles')->set('stylecode="' . $newcss . '"');
+        $query->update($db->quoteName('#__bsms_styles'))->set($db->quoteName('stylecode') . ' = ' . $db->q($newcss));
 
         if ($filename) {
-            $query->where($db->qn('filename') . ' = ' . $db->q($filename));
+            $query->where($db->quoteName('filename') . ' = ' . $db->q($filename));
         } else {
-            $query->where($db->qn('id') . ' = ' . (int)$id);
+            $query->where($db->quoteName('id') . ' = ' . (int)$id);
         }
 
         $db->setQuery($query);
@@ -425,13 +432,13 @@ class CwmdbHelper
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @since 7.0
      */
-    public static function reloadtable(object $result, string $table = 'Style')
+    public static function reloadtable(object $result, string $table = 'Style'): bool
     {
-        $db = Factory::getContainer()->get('DatabaseDriver');
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Store new Recorder so it can be seen.
         $table = Factory::getApplication()
@@ -444,7 +451,7 @@ class CwmdbHelper
 
             // This is a Joomla bug for currentAssetId being missing in table.php. When fixed in Joomla should be removed
             @$table->store();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException('Caught exception: ' . $e->getMessage(), 500);
         }
 
@@ -458,15 +465,13 @@ class CwmdbHelper
      *
      * @return bool|int
      *
-     * @throws Exception
+     * @throws \Exception
      * @since  7.0
      */
-    public static function resetdb($install = false): bool|int
+    public static function resetdb(bool $install = false): bool|int
     {
-        $app = Factory::getApplication();
-        $db  = Factory::getContainer()->get('DatabaseDriver');
-        jimport('joomla.filesystem.folder');
-        jimport('joomla.filesystem.file');
+        $app  = Factory::getApplication();
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $path = JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'components/com_proclaim/sql';
 
         $files = str_replace('.sql', '', Folder::files($path, '\.sql$'));
@@ -474,7 +479,7 @@ class CwmdbHelper
 
         if ($install === true) {
             foreach ($files as $a => $file) {
-                if (strpos($file, 'uninstall') !== false) {
+                if (str_contains($file, 'uninstall')) {
                     unset($files[$a]);
                 }
             }
@@ -494,7 +499,7 @@ class CwmdbHelper
             // Create an array of queries from the sql file
             $queries = $db->splitSql($buffer);
 
-            if (count($queries) === 0) {
+            if (\count($queries) === 0) {
                 // No queries to process
                 return 0;
             }
@@ -517,8 +522,8 @@ class CwmdbHelper
 
         // Remove old assets.
         $query = $db->getQuery(true);
-        $query->delete('#__assets')
-            ->where('name LIKE ' . $db->q('com_proclaim.%'));
+        $query->delete($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' LIKE ' . $db->q('com_proclaim.%'));
         $db->setQuery($query);
         $db->execute();
 
@@ -534,46 +539,48 @@ class CwmdbHelper
      *
      * @return  void
      *
-     * @throws  Exception
+     * @throws  \Exception
      * @since   8.0.0
      *
      */
     public static function cleanStudyTopics(): void
     {
         $app   = Factory::getApplication();
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('id')->from('#__bsms_studies');
+        $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         foreach ($results as $result) {
             $query = $db->getQuery(true);
-            $query->select('id, topic_id')->from('#__bsms_studytopics')->where('study_id = ' . $result->id);
+            $query->select($db->quoteName(['id', 'topic_id']))
+                ->from($db->quoteName('#__bsms_studytopics'))
+                ->where($db->quoteName('study_id') . ' = ' . (int) $result->id);
             $db->setQuery($query);
             $resulta = $db->loadObjectList();
-            $c       = count($resulta);
+            $c       = \count($resulta);
 
             if ($resulta && $c > 1) {
                 $t = 1;
 
                 foreach ($resulta as $study_topics) {
                     $query = $db->getQuery(true);
-                    $query->select('id')
-                        ->from('#__bsms_studytopics')
-                        ->where('study_id = ' . $result->id)
-                        ->where('topic_id = ' . $study_topics->topic_id)
-                        ->order('id desc');
+                    $query->select($db->quoteName('id'))
+                        ->from($db->quoteName('#__bsms_studytopics'))
+                        ->where($db->quoteName('study_id') . ' = ' . (int) $result->id)
+                        ->where($db->quoteName('topic_id') . ' = ' . (int) $study_topics->topic_id)
+                        ->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query);
                     $results = $db->loadObjectList();
-                    $records = count($results);
+                    $records = \count($results);
 
                     if ($records > 1) {
                         foreach ($results as $id) {
                             if ($t < $records) {
                                 $query = $db->getQuery(true);
-                                $query->delete('#__bsms_studytopics')
-                                    ->where('id = ' . $id->id);
+                                $query->delete($db->quoteName('#__bsms_studytopics'))
+                                    ->where($db->quoteName('id') . ' = ' . (int) $id->id);
                                 $db->setQuery($query);
 
                                 if (!$db->execute()) {

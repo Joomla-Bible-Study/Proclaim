@@ -2,7 +2,7 @@
 
 /**
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  */
@@ -10,7 +10,6 @@
 namespace CWM\Component\Proclaim\Administrator\Service\HTML;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
@@ -45,7 +44,7 @@ class CWMHtml5Inline
         $params,
         object $player,
         bool $popup = false,
-        int $t = null
+        ?int $t = null
     ): string {
         $popupMarg = 0;
 
@@ -82,9 +81,9 @@ class CWMHtml5Inline
         $acceptedFormats = array_merge($videoFormats, $audioFormats);
 
         if (
-            !strpos($media->path1, 'youtube.com')
-            && !strpos($media->path1, 'youtu.be')
-            && !strpos($media->path1, 'rtmp://')
+            !str_contains($media->path1, 'youtube.com')
+            && !str_contains($media->path1, 'youtu.be')
+            && !str_contains($media->path1, 'rtmp://')
             && !self::isMimeTypeAllowed($media->params->get('mime_type'), $acceptedFormats)
         ) {
             return '<a href="' . $media->path1 . '"><img src="' . Uri::root() . $params->get(
@@ -100,7 +99,7 @@ class CWMHtml5Inline
 
         if ($params->get('playerwidth') && !isset($player->mp3)) {
             $media->playerwidth = $params->get('playerwidth');
-        } elseif (isset($player->mp3) && isset($player->playerwidth)) {
+        } elseif (isset($player->mp3, $player->playerwidth)) {
             $media->playerwidth = $player->playerwidth;
         } else {
             $media->playerwidth = $params->get('player_width');
@@ -145,7 +144,7 @@ class CWMHtml5Inline
         $ratio  = $media->playerwidth / $rat1;
         $height = $ratio * $rat2;
 
-        if ($popup) {
+        if ($popup || $params->get('pcplaylist')) {
             if ($params->get('playerresponsive') !== 0) {
                 $media->playerwidth = '100%';
                 $render .= "<div class='playeralign' style=\"margin-left: auto; margin-right: auto; width:100%;\">";
@@ -157,23 +156,8 @@ class CWMHtml5Inline
             $popupMarg = $params->get('popupmargin', '50');
         }
 
-        if ($params->get('media_popout_yes', true)) {
-            $popoutText = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
-        } else {
-            $popoutText = '';
-        }
-
         if ($popup || $params->get('pcplaylist')) {
             $render .= "</div>";
-        } elseif ($popoutText) {
-            // Add space for a popup window
-            $player->playerwidth += 20;
-            $player->playerheight += $popupMarg;
-            $render .= "<a href=\"#\" onclick=\"window.open('index.php?option=com_proclaim&amp;player="
-                . $player->player . "&amp;view=cwmpopup&amp;t=" . $t . "&amp;mediaid=" . $media->id
-                . "&amp;tmpl=component', 'newwindow', 'width="
-                . $player->playerwidth . ",height=" .
-                $player->playerheight . "'); return false\">" . $popoutText . "</a>";
         }
 
         if (isset($media->headertext)) {
@@ -185,7 +169,7 @@ class CWMHtml5Inline
             $header = str_replace('{{title}}', $media->studytitle, $header);
         }
 
-        $render .= "<div class=\"media\">";
+        $render .= '<div class="media playhit" data-id="' . (int) $media->id . '">';
 
         # If MP3 media
         if (self::isMimeTypeAllowed($media->params->get('mime_type'), $audioFormats)) {
@@ -219,6 +203,6 @@ class CWMHtml5Inline
      */
     private static function isMimeTypeAllowed(string $mimeType, array $mimeArray): bool
     {
-        return in_array($mimeType, $mimeArray, true);
+        return \in_array($mimeType, $mimeArray, true);
     }
 }

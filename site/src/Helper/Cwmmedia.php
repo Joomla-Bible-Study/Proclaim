@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,18 +16,17 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMFancyBox;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMHtml5Inline;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Input\Input;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -45,6 +44,7 @@ class Cwmmedia
     private int $fsize = 0;
 
     /**
+     *
      * @param   string  $url  url to process
      *
      * @return bool
@@ -53,8 +53,19 @@ class Cwmmedia
      */
     public static function isExternal(string $url): bool
     {
-        // Check if the url has a website string as some time it's just a path to a local file.
-        if (strpos($url, "http") || strpos($url, "https") || strpos($url, "//")) {
+        // Check for URLs stored without protocol (e.g., www.example.org/path or example.org/path)
+        if (preg_match('/^(www\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z]{2,})+\//i', $url)) {
+            // Looks like a domain - check if it's not the local site
+            $root     = parse_url(Uri::root());
+            $urlHost  = preg_replace('/^(www\.)?/', '', explode('/', $url)[0]);
+            $rootHost = preg_replace('/^(www\.)?/', '', $root['host'] ?? '');
+
+            // If it's a different host, it's external
+            return strcasecmp($urlHost, $rootHost) !== 0;
+        }
+
+        // Check if the URL contains a website string, since it may just be a path to a local file.
+        if (str_contains($url, "http") || str_contains($url, "https") || str_contains($url, "//")) {
             $components = parse_url($url);
             $root       = parse_url(Uri::root());
 
@@ -68,8 +79,8 @@ class Cwmmedia
                 return false;
             }
 
-            // Check if the url host is a subdomain
-            return strripos($components['host'], $root['host']) !== strlen($components['host']) - strlen($root['host']);
+            // Check if the URL host is a subdomain
+            return strripos($components['host'], $root['host']) !== \strlen($components['host']) - \strlen($root['host']);
         }
 
         return false;
@@ -80,9 +91,9 @@ class Cwmmedia
      *
      * @param   Object                   $media     Media info
      * @param   Registry                 $params    Params
-     * @param   CwmtemplateTable|Object  $template  Template Table
+     * @param   object                   $template  Template object from Cwmparams::getTemplateparams()
      *
-     * @return string
+     * @return string|null
      *
      * @throws \Exception
      * @since 9.0.0
@@ -125,7 +136,7 @@ class Cwmmedia
             $mediaImage = (string)$imageparams->get('media_image');
             $image      = $this->useJImage(
                 $mediaImage,
-                $media->params->get('media_button_text', $params->get('download_button_text', 'Audio'))
+                $imageparams->get('media_button_text', $params->get('download_button_text', 'Audio'))
             );
         }
 
@@ -133,6 +144,37 @@ class Cwmmedia
         $player       = $this->getPlayerAttributes($params, $media);
         $playerCode   = $this->getPlayerCode($params, $player, $image, $media);
         $downloadLink = $this->getFluidDownloadLink($media, $params, $template);
+
+        // Generate a popout link for inline HTML5 audio/video players.
+        // Moved out of CWMHtml5Inline::render() so it can be placed alongside
+        // the download link in a row below the player (instead of inline with it).
+        $popoutLink      = '';
+        $filename        = (string) ($media->params->get('filename') ?? '');
+        $isVideoPlatform = substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be')
+            || substr_count($filename, 'vimeo.com')
+            || substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net')
+            || substr_count($filename, 'resi.io');
+        $isHtml5Inline = ((int) $player->player === 7 || (int) $player->player === 1)
+            && (int) $player->type === 2;
+
+        if ($isHtml5Inline && !$isVideoPlatform && $params->get('media_popout_yes', true)) {
+            $popoutText = $params->get('media_popout_text', Text::_('JBS_CMN_POPOUT'));
+
+            if ($popoutText) {
+                $tId          = Factory::getApplication()->getInput()->getInt('t', 1);
+                $popoutWidth  = (int) $player->playerwidth + 20;
+                $popoutHeight = (int) $player->playerheight + (int) $params->get('popupmargin', 50);
+                $popoutLink   = '<a href="#"'
+                    . ' title="' . htmlspecialchars($popoutText, ENT_QUOTES, 'UTF-8') . '"'
+                    . " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+                    . (int) $player->player . '&amp;view=cwmpopup&amp;t=' . $tId
+                    . '&amp;mediaid=' . (int) $media->id
+                    . "&amp;tmpl=component', 'newwindow', 'width="
+                    . $popoutWidth . ',height=' . $popoutHeight . "'); return false\">"
+                    . '<span class="fas fa-external-link-alt" aria-hidden="true"></span>'
+                    . '</a>';
+            }
+        }
 
         $link_type = 0;
 
@@ -146,10 +188,12 @@ class Cwmmedia
             $link_type = 3;
         }
 
-        // Used to override everything if used for use of the Podcast playlist system..
+        // Used to override everything if used for the use of the Podcast playlist system.
         if ($params->get('pcplaylist')) {
             $link_type = 0;
         }
+
+        $filesize = '';
 
         if ($link_type < 2 && $params->get('show_filesize') > 0) {
             $file_size = (int)$media->params->get('size', 0);
@@ -168,7 +212,7 @@ class Cwmmedia
 
             if ($file_size > 1) {
                 $file_size = $this->convertFileSize($file_size, $params, $media);
-                $filesize  = '<span class="JBSMFilesize" style="display:inline;padding-left: 5px;">' .
+                $filesize  = '<span class="JBSMFilesize text-body-secondary small ms-1" style="white-space:nowrap;">' .
                 $file_size . '</span>';
             }
         }
@@ -179,12 +223,10 @@ class Cwmmedia
                 break;
 
             case 1:
-                if ($downloadLink) {
-                    if ($filesize > 0) {
-                        $mediafile = $playerCode . '<div class="col">' . $downloadLink . $filesize . '</div>';
-                    } else {
-                        $mediafile = $playerCode . '<div class="col">' . $downloadLink .  '</div>';
-                    }
+                if ($downloadLink || $popoutLink) {
+                    $actions   = '<div class="d-flex align-items-center gap-2">'
+                        . $popoutLink . $downloadLink . $filesize . '</div>';
+                    $mediafile = '<div class="d-flex flex-column gap-1">' . $playerCode . $actions . '</div>';
                 } else {
                     $mediafile = $playerCode;
                 }
@@ -195,7 +237,12 @@ class Cwmmedia
                 break;
 
             case 3:
-                $mediafile = $playerCode . $downloadLink;
+                if ($popoutLink) {
+                    $actions   = '<div class="d-flex align-items-center gap-2">' . $popoutLink . $downloadLink . '</div>';
+                    $mediafile = '<div class="d-flex flex-column gap-1">' . $playerCode . $actions . '</div>';
+                } else {
+                    $mediafile = $playerCode . $downloadLink;
+                }
                 break;
         }
 
@@ -218,32 +265,31 @@ class Cwmmedia
         $mediaimage = null;
         $button     = $imageparams->get('media_button_type', 'btn-link');
         $buttontext = $imageparams->get('media_button_text', 'Audio');
-        $textsize   = $imageparams->get('media_icon_text_size', '24');
 
         if ($imageparams->get('media_button_color')) {
             $color = 'style="background-color:' . $imageparams->get('media_button_color') . ';"';
         } else {
-            $color = '#1e3e48';
+            $color = '';
         }
 
         switch ($imageparams->get('media_use_button_icon')) {
             case 1:
                 // Button only
-                $mediaimage = '<div  class="btn ' . $button . ' title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' . $buttontext . '</span>';
                 break;
             case 2:
-                // Button and icon
+                // Button and icon (text before icon)
                 if ($imageparams->get('media_icon_type') === '1') {
                     $icon = $imageparams->get('media_custom_icon');
                 } else {
                     $icon = $imageparams->get('media_icon_type', 'fas fa-play');
 
-                    // Check for fa youtube tag, change to fab
+                    // Check for far YouTube tag, change to fab
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
-                $mediaimage = '<div  type="button" class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '><span class="' .
-                    $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span></div>';
+                $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' .
+                    $buttontext . ' <span class="' . $icon . '"></span></span>';
                 break;
             case 3:
                 // Icon only
@@ -256,7 +302,7 @@ class Cwmmedia
                     $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
                 }
 
-                $mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '" style="font-size:' . $textsize . 'px;"></span>';
+                $mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '"></span>';
                 break;
         }
 
@@ -264,31 +310,43 @@ class Cwmmedia
             $filename = $media->get('filename');
 
             switch ($filename) {
-                case preg_match('(youtube.com|youtu.be)', $filename) === 1:
-                    $mediaimage = '<span class="fab fa-youtube" title="YouTube" style="font-size:24px;"></span>';
+                case preg_match('/(youtube.com|youtu.be)/', $filename) === 1:
+                    $mediaimage = '<span class="fab fa-youtube" title="YouTube"></span>';
                     break;
 
-                case preg_match('(pdf|PDF)', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-pdf" title="PDF" style="font-size:24px;"></span>';
+                case preg_match('/(vimeo.com)/', $filename) === 1:
+                    $mediaimage = '<span class="fab fa-vimeo" title="Vimeo"></span>';
                     break;
 
-                case preg_match('(mp3|MP3)', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-play" title="Audio" style="font-size:24px;"></span>';
+                case preg_match('/(wistia.com|wistia.net)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-play-circle" title="Wistia"></span>';
                     break;
 
-                case preg_match('(mp4|MP4)', $filename) === 1:
-                case preg_match('(m4v|M4V)', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-television" title="Video" style="font-size:24px;"></span>';
+                case preg_match('/(resi.io)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-video" title="Resi"></span>';
                     break;
 
-                case preg_match('(pptx|ppt|PPTX|PPT)', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint" style="font-size:24px;"></span>';
+                case preg_match('/(pdf|PDF)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-file-pdf" title="PDF"></span>';
                     break;
-                case preg_match('(docx|DOCX)', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-word" title="Word" style="font-size:24px;"></span>';
+
+                case preg_match('/(mp3|MP3)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-play" title="Audio"></span>';
+                    break;
+
+                case preg_match('/(mp4|MP4)/', $filename) === 1:
+                case preg_match('/(m4v|M4V)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-television" title="Video"></span>';
+                    break;
+
+                case preg_match('/(pptx|ppt|PPTX|PPT)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint"></span>';
+                    break;
+                case preg_match('/(docx|DOCX)/', $filename) === 1:
+                    $mediaimage = '<span class="fas fa-word" title="Word"></span>';
                     break;
                 default:
-                    $mediaimage = '<span class="fas fa-file" title="' . $filename . '" style="font-size:24px;"></span>';
+                    $mediaimage = '<span class="fas fa-file" title="' . $filename . '"></span>';
                     break;
             }
         }
@@ -312,13 +370,13 @@ class Cwmmedia
             return $alt;
         }
 
-        try {
-            $return = Image::getImageFileProperties($path);
-        } catch (\Exception $e) {
+        $image = Cwmimages::getImagePath($path);
+
+        if (empty($image->path)) {
             return $alt;
         }
 
-        return '<img src="' . Uri::base() . $path . '" alt="' . $alt . '" ' . $return->attributes . ' >';
+        return Cwmimages::renderPicture($image, $alt);
     }
 
     /**
@@ -347,15 +405,16 @@ class Cwmmedia
 
         /**
          * @desc Players - from Template:
-         * First, we check to see if in the template the user has set to use the internal player for all media. This can be overridden by itemparams
-         * popuptype = whether AVR should be window or lightbox (handled in avr code)
-         * internal_popup = whether direct or internal player should be popup/new window or inline
+         * First, we check to see if in the template the user has set to use the HTML5 player for all media. This can be overridden by itemparams
+         * popuptype = whether AVR should be a window or a lightbox (handled in AVR code)
+         * internal_popup = whether direct or HTML5 player should be a popup/new window or inline
          * From media file:
-         * player 0 = direct, 1 = internal, 2 = AVR, 3 = AV 7 = legacy internal player (from JBS 6.2.2)
+         * player 0 = direct link (browser handles), 1 = HTML5 player, 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code, 100 = use global
          * internal_popup 0 = inline, 1 = popup, 2 = global settings
          *
-         * Get the $player->player: 0 = direct, 1 = internal, 2 = AVR (no longer supported),
-         * 3 = All Videos or JPlayer, 4 = Docman, 5 = article, 6 = Virtuemart, 7 = legacy player, 8 = embed code
+         * Deprecated players (migrated to 1 on install): 3 = AV plugin, 7 = legacy
+         * Get the $player->player: 0 = direct link, 1 = HTML5 player, 2 = AVR (no longer supported),
+         * 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code
          * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
          * In 6.2.3 we changed inline = 2
          */
@@ -374,10 +433,14 @@ class Cwmmedia
             $player->player = (int)$params->get('player', 0);
         }
 
+        // @deprecated 10.1.0 Player type 3 mapped to 2 (AllVideos). Will be removed in 11.0.0.
         if ($player->player === 3) {
             $player->player = 2;
         }
 
+        // @deprecated 10.1.0 Legacy docMan_id/article_id/virtueMart_id player overrides.
+        //             Use core server addons (DOCman, Article, VirtueMart) instead.
+        //             Will be removed in 11.0.0.
         if ((int)$params->get('docMan_id') !== 0) {
             $player->player = 4;
         }
@@ -427,7 +490,7 @@ class Cwmmedia
     /**
      * Setup Player Code.
      *
-     * @param   Registry  $params  Params are the merged of system and items.
+     * @param   Registry  $params  Params are the merged system and items.
      * @param   object    $player  Player code
      * @param   String    $image   Image info
      * @param   object    $media   Media
@@ -443,9 +506,9 @@ class Cwmmedia
         $params = clone $params;
         $params->merge($media->params);
 
-        $input    = new Input();
-        $template = $input->getInt('t', '1');
-        $youtube  = new CWMAddonYoutube();
+        $input      = Factory::getApplication()->getInput();
+        $template   = $input->getInt('t', '1');
+        $colorStyle = ($media->params->get("media_button_color")) ? ' style="color:' . $media->params->get("media_button_color") . '"' : '';
 
         // Here we get more information about the particular media file
         $filesize = $this->getFluidFilesize($media, $params);
@@ -470,11 +533,13 @@ class Cwmmedia
                         return $this->renderSB($media, $params, $player, $image, $path, true);
 
                     case 1: // Popup window
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        CWMFancyBox::framework();
+                        $playercode = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
                             "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-                            $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">"
+                            $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"" .
+                            "  class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">"
                             . $image . "</a>";
                         break;
                 }
@@ -502,59 +567,61 @@ class Cwmmedia
                             }
                         }
 
-                        if (preg_match('(youtube.com|youtu.be)', $path) === 1) {
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" width="' . $player->playerwidth . '" height="' .
-                                $player->playerheight . '" src="' . $youtube->convertYoutube($path) .
-                                '" allow="autoplay; encrypted-media" allowfullscreen style="border: none"></iframe>';
-                        } elseif (preg_match('(vimeo.com)', $path) === 1) {
-                            $playercode = '<iframe class="playhit" data-id="' . $media->id . '" src="' . $this->convertVimeo(
-                                $path
-                            ) .
-                                '" width="' . $player->playerwidth . '" height="' . $player->playerheight .
-                                '" webkitallowfullscreen mozallowfullscreen allowfullscreen style="border: none"></iframe>';
-                        } else {
+                        // Addon-owned rendering: resolve URL to addon, let it build embed + HTML
+                        $addon = CWMAddon::resolveForUrl($path);
+
+                        if ($addon) {
+                            $playercode = $addon->renderInlinePlayer($path, $params, $media->id);
+                        }
+
+                        if (empty($playercode)) {
                             $playercode = CWMHtml5Inline::render($media, $params, $player, false, $template);
                         }
 
                         break;
 
                     case 1: // Popup
-                        // Add space for a popup window
-
+                        CWMFancyBox::framework();
+                        // Add space for a pop-up window
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
-                        $playercode           = "<a style='color: #5F5A58;' href=\"javascript:;\"" .
+                        $playercode           = "<a $colorStyle href=\"javascript:;\"" .
                             " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
                             . $player->player
                             . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
                             . $player->playerwidth . ", height=" .
-                            $player->playerheight . "'); return false\" class=\"jbsmplayerlink\">" . $image . "</a>";
+                            $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
                 }
 
                 return $playercode;
 
+                // @deprecated 10.1.0 AllVideos player types. Use the Embed server addon instead.
+                //             Will be removed in 11.0.0.
             case 2: // All Videos Reloaded
             case 3:
                 $playercode = '';
 
                 switch ($player->type) {
                     case 1: // This goes to the popup view
-                        $playercode = "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                        CWMFancyBox::framework();
+                        $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
                             "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                            . $player->playerheight . "'); return false\"  class=\"jbsmplayerlink\">" . $image . "</a>";
+                            . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
 
                     case 2: // This plays the video inline
                         $mediacode  = $this->getAVmediacode($media->mediacode, $media);
-                        $playercode = HtmlHelper::_('content.prepare', $mediacode);
+                        $playercode = HTMLHelper::_('content.prepare', $mediacode);
                         break;
                 }
 
                 return $playercode;
 
+                // @deprecated 10.1.0 Legacy player types 4/5/6. Use DOCman, Article, VirtueMart
+                //             server addons instead. Will be removed in 11.0.0.
             case 4: // Docman
                 return $this->getDocman($media, $image);
 
@@ -565,10 +632,12 @@ class Cwmmedia
                 return $this->getVirtuemart($media, $image);
 
             case 8: // Embed code
-                return "<a style='color: #5F5A58;' href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                CWMFancyBox::framework();
+
+                return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
                     "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                    . $player->playerheight . "'); return false\">" . $image . "</a>";
+                    . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
         }
 
         return false;
@@ -588,7 +657,7 @@ class Cwmmedia
     {
         $filesize = 0;
 
-        // Check to see if we need to look up file size or not. By looking at if download like is set.
+        // Check whether we need to look up the file size. By looking at whether the download is set.
         if ($media->params->get('link_type') === '0') {
             $this->fsize = $filesize;
 
@@ -633,7 +702,7 @@ class Cwmmedia
 
         $file_size = max($file_size, 0);
         $pow       = $file_size > 0 ? floor(log($file_size, 1024)) : 0;
-        $pow       = min($pow, count($units) - 1);
+        $pow       = min($pow, \count($units) - 1);
 
         $file_size /= 1024 ** $pow;
 
@@ -664,6 +733,7 @@ class Cwmmedia
      * @param   bool      $direct  If coming from Direct
      *
      * @return string
+     * @deprecated 10.0.0 - jwplayer_image, jwplayer_mute, jwplayer_logo, jwplayer_logolink
      *
      * @since 9.1.2
      */
@@ -687,33 +757,43 @@ class Cwmmedia
             $popout = '';
         }
 
-        if (preg_match('(youtube.com|youtu.be|vimeo.com)', $path) === 1) {
-            $path = (new CWMAddonYoutube())->convertYoutube($path);
-            $data = '<a data-fancybox="video-gallery" class="fancybox_player playhit" data-id="' . $media->id . '" aria-hidden="false" data-src="' . $path . '" data-options=\'{"autoplay" : "' .
-                (int)$params->get('autostart', false) . '", "controls" : "' . (int)$params->get('controls') .
-                '", "caption" : "' . $media->studytitle . ' - ' .
-                $media->teachername . '"}\'  href="javascript:;">' . $image . '</a>';
-            return $data;
+        // Get popup header and footer text
+        $headerText = htmlspecialchars($this->getPopupHeader($media, $params), ENT_QUOTES, 'UTF-8');
+        $footerText = htmlspecialchars($this->getPopupFooter($media, $params), ENT_QUOTES, 'UTF-8');
+
+        // Addon-owned rendering: resolve URL to addon for fancybox link
+        $addon = CWMAddon::resolveForUrl($path);
+
+        if ($addon) {
+            return $addon->renderFancyboxLink($path, $params, $media->id, $image, $headerText, $footerText);
         }
 
-        return '<a data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id . '" title="' . $params->get(
-            'filename'
-        ) .
-            '" data-fancybox class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
+        // Player attributes - jwplayer_* params are deprecated, kept for backward compatibility
+        // These are now handled by the Fancybox player (see media/js/fancybox.js)
+        $posterImage = $params->get('jwplayer_image', $params->get('player_image', ''));
+        $muteOnStart = $params->get('jwplayer_mute', $params->get('player_mute', 'false'));
+        $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
+        $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
+
+        return '<a href="javascript:;" data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
+            '" class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
-            $params->get('controls') . '"" data-image="' . $params->get('jwplayer_image') . '" data-mute="' .
-            $params->get('jwplayer_mute') . '" data-logo="' . $params->get('jwplayer_logo') . '" data-logolink="' .
-            $params->get('jwplayer_logolink', Uri::base()) . '">' .
+            $params->get('controls') . '" data-header="' . $headerText . '" data-footer="' . $footerText .
+            '" data-image="' . $posterImage . '" data-mute="' .
+            $muteOnStart . '" data-logo="' . $logoImage . '" data-logolink="' .
+            $logoLink . '">' .
             $image . '</a>';
     }
 
     /**
-     * Vimeo url to embed.
+     * Vimeo URL to embed.
      *
-     * @param   string  $string  Vimeo url to transform.
+     * @param   string  $string  Vimeo URL to transform.
      *
      * @return string
+     *
+     * @deprecated  10.1.0  Use CWMAddonVimeo::convertVimeo() instead. Will be removed in 11.0.0.
      *
      * @since 9.1.3
      */
@@ -721,7 +801,7 @@ class Cwmmedia
     {
         return (string) preg_replace(
             "/\s*[a-zA-Z\/\/:\.]*viemo.com\/([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i",
-            "//player.vimeo.com/video/$2",
+            "https://player.vimeo.com/video/$2",
             $string
         );
     }
@@ -733,6 +813,10 @@ class Cwmmedia
      * @param   object  $media      Media info
      *
      * @return string
+     *
+     * @deprecated  10.1.0  AllVideos support is no longer maintained.
+     *              Use the Embed server addon for custom embed codes.
+     *              Will be removed in 11.0.0.
      *
      * @since 9.0.0
      */
@@ -770,6 +854,9 @@ class Cwmmedia
      *
      * @return string
      *
+     * @deprecated  10.1.0  Use the DOCman server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
+     *
      * @throws \Exception
      * @since 9.0.0
      */
@@ -788,6 +875,9 @@ class Cwmmedia
      *
      * @return string
      *
+     * @deprecated  10.1.0  Use the Article server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
+     *
      * @since 9.0.0
      */
     public function getArticle(object $media, string $image): string
@@ -797,12 +887,15 @@ class Cwmmedia
     }
 
     /**
-     * Set up Virtumart if Vertumart is installed.
+     * Set up Virtumart if Virtumart is installed.
      *
      * @param   object  $media  Media
      * @param   string  $image  Image
      *
      * @return string
+     *
+     * @deprecated  10.1.0  Use the VirtueMart server addon instead.
+     *              Legacy servers will be removed in 11.0.0.
      *
      * @since 9.0.0
      */
@@ -819,7 +912,7 @@ class Cwmmedia
      *
      * @param   Object                   $media     Media
      * @param   Registry                 $params    Params
-     * @param   CwmtemplateTable|Object  $template  Template ID
+     * @param   object                   $template  Template object from Cwmparams::getTemplateparams()
      *
      * @return string
      *
@@ -828,11 +921,14 @@ class Cwmmedia
      */
     public function getFluidDownloadLink(object $media, Registry $params, $template): string
     {
-        // Remove download form Youtube links.
-        $filename  = $media->params->get('filename');
+        // Remove the download option from video platform URLs (YouTube, Vimeo, Wistia, Resi)
+        $filename  = $media->params->get('filename') ?? '';
         $link_type = 0;
 
-        if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be')) {
+        if (substr_count($filename, 'youtube') || substr_count($filename, 'youtu.be') ||
+            substr_count($filename, 'vimeo.com') ||
+            substr_count($filename, 'wistia.com') || substr_count($filename, 'wistia.net') ||
+            substr_count($filename, 'resi.io')) {
             return '';
         }
 
@@ -891,7 +987,7 @@ class Cwmmedia
 
             // Check to see if they want to use a popup
             $app   = Factory::getApplication();
-            $input = $app->input;
+            $input = $app->getInput();
             $opt   = $input->get('option');
 
             if (($opt === 'com_proclaim') && $params->get('useterms') > 0) {
@@ -906,7 +1002,7 @@ class Cwmmedia
                     'keyboard'    => true,
                     'modalWidth'  => 30,
                     'bodyHeight'  => 30,
-                    'footer'      => '<div class="alert alert-info">' . Text::_('JBS_TERMS_FOOTER') . '</div>',
+                    'footer'      => '<div class="alert alert-secondary">' . Text::_('JBS_TERMS_FOOTER') . '</div>',
                 ];
 
                 $modalBody = '<div class="alert alert-success">' . $params->get('terms') .
@@ -926,7 +1022,7 @@ class Cwmmedia
      *
      * @param   Registry  $download  ?
      *
-     * @return ?string
+     * @return string|null
      *
      * @since 9.0.0
      */
@@ -990,11 +1086,11 @@ class Cwmmedia
      */
     public function hitPlay(int $id): bool
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->update('#__bsms_mediafiles')
-            ->set('plays = plays + 1')
-            ->where('id = ' . $db->q($id));
+        $query->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('plays') . ' = ' . $db->quoteName('plays') . ' + 1')
+            ->where($db->quoteName('id') . ' = ' . (int) $id);
         $db->setQuery($query);
 
         if ($db->execute()) {
@@ -1005,38 +1101,154 @@ class Cwmmedia
     }
 
     /**
+     * Get multiple media rows in a single query (batch version of getMediaRows2).
+     *
+     * Uses WHERE IN(...) to load all requested media files at once,
+     * avoiding the N+1 query pattern.
+     *
+     * @param   int[]  $ids  Array of media file IDs
+     *
+     * @return array  Associative array keyed by media file ID
+     *
+     * @throws \Exception
+     * @since 10.1.0
+     */
+    public function getMediaRowsBatch(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Deduplicate and sanitise
+        $ids = array_unique(array_map('intval', $ids));
+        $ids = array_filter($ids, static fn ($id) => $id > 0);
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select(
+            $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.teacher_id') . ', ' . $db->quoteName('s.booknumber') . ', '
+            . $db->quoteName('s.chapter_begin') . ', ' . $db->quoteName('s.chapter_end') . ', '
+            . $db->quoteName('s.verse_begin') . ', ' . $db->quoteName('s.verse_end') . ', '
+            . $db->quoteName('t.teachername') . ', ' . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_image') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb') . ', '
+            . $db->quoteName('t.image') . ', ' . $db->quoteName('t.id', 'tid') . ', '
+            . $db->quoteName('s.id', 'sid') . ', '
+            . $db->quoteName('se.id', 'seriesid') . ', ' . $db->quoteName('se.series_text') . ', '
+            . $db->quoteName('se.series_thumbnail')
+        )
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 's') . ' ON ('
+                . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ('
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0)'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se') . ' ON ('
+                . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
+            )
+            ->whereIn($db->quoteName('#__bsms_mediafiles.id'), $ids)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)')
+            ->where(
+                $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
+                . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+            )
+            ->order($db->quoteName('ordering') . ' ASC');
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        $result = [];
+
+        foreach ($rows as $media) {
+            $reg = new Registry();
+            $reg->loadString($media->sparams);
+            $sparams      = $reg->toObject();
+            $media->spath = $sparams->path ?? '';
+
+            $result[$media->id] = $media;
+        }
+
+        return $result;
+    }
+
+    /**
      * Get Media info Row2
      *
      * @param   int  $id  ID of Row
      *
      * @return object|bool
      *
+     * @throws \Exception
      * @since 9.0.0
      */
     public function getMediaRows2(int $id): object|bool
     {
         // We use this for the popup view because it relies on the media file's id rather than the study_id field above
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query->select(
-            '#__bsms_mediafiles.*, #__bsms_servers.params AS sparams,'
-            . ' s.studyintro, s.series_id, s.studytitle, s.studydate, s.teacher_id, s.booknumber, s.chapter_begin, s.chapter_end, s.verse_begin,'
-            . ' s.verse_end, t.teachername, t.teacher_thumbnail, t.teacher_image, t.thumb, t.image, t.id as tid, s.id as sid, s.studyintro,'
-            . ' se.id as seriesid, se.series_text, se.series_thumbnail'
+            $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
+            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '
+            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
+            . $db->quoteName('s.teacher_id') . ', ' . $db->quoteName('s.booknumber') . ', '
+            . $db->quoteName('s.chapter_begin') . ', ' . $db->quoteName('s.chapter_end') . ', '
+            . $db->quoteName('s.verse_begin') . ', ' . $db->quoteName('s.verse_end') . ', '
+            . $db->quoteName('t.teachername') . ', ' . $db->quoteName('t.teacher_thumbnail') . ', '
+            . $db->quoteName('t.teacher_image') . ', '
+            . $db->quoteName('t.teacher_thumbnail', 'thumb') . ', '
+            . $db->quoteName('t.image') . ', ' . $db->quoteName('t.id', 'tid') . ', '
+            . $db->quoteName('s.id', 'sid') . ', '
+            . $db->quoteName('se.id', 'seriesid') . ', ' . $db->quoteName('se.series_text') . ', '
+            . $db->quoteName('se.series_thumbnail')
         )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_servers ON (#__bsms_servers.id = #__bsms_mediafiles.server_id)')
-            ->leftJoin('#__bsms_studies AS s ON (s.id = #__bsms_mediafiles.study_id)')
-            ->leftJoin('#__bsms_teachers AS t ON (t.id = s.teacher_id)')
-            ->leftJoin('#__bsms_series AS se ON (s.series_id = se.id)')
-            ->where('#__bsms_mediafiles.id = ' . (int)$id)
-            ->where('#__bsms_mediafiles.published = ' . 1)
-            ->where(
-                '#__bsms_mediafiles.language in (' . $db->quote(Factory::getLanguage()->getTag()) . ',' . $db->q(
-                    '*'
-                ) . ')'
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers') . ' ON ('
+                . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
             )
-            ->order('ordering asc');
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 's') . ' ON ('
+                . $db->quoteName('s.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON ('
+                . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                . ' AND ' . $db->quoteName('stj.ordering') . ' = 0)'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_teachers', 't') . ' ON ('
+                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'se') . ' ON ('
+                . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id') . ')'
+            )
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . (int) $id)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' IN (1, 2)')
+            ->where(
+                $db->quoteName('#__bsms_mediafiles.language') . ' IN ('
+                . $db->quote(Factory::getApplication()->getLanguage()->getTag()) . ',' . $db->quote('*') . ')'
+            )
+            ->order($db->quoteName('ordering') . ' ASC');
         $db->setQuery($query);
         $media = $db->loadObject();
 
@@ -1192,6 +1404,8 @@ class Cwmmedia
     }
 
     /**
+     * Convert YouTube URLs
+     *
      * @param   string  $path
      *
      * @return string
@@ -1203,12 +1417,105 @@ class Cwmmedia
         return $this->ensureHttpJoomla((new CWMAddonYoutube())->convertYoutube($path));
     }
 
-    public function ensureHttpJoomla($url)
+    /**
+     * Ensure URLs have HTTPS at the beginning.
+     *
+     * @param   string  $url  URL
+     *
+     * @return string
+     *
+     * @since 10.0.0
+     */
+    public function ensureHttpJoomla(string $url): string
     {
         $uri = new Uri($url);
         if (!$uri->getScheme()) {
             $url = "https:" . $url; // Default to HTTPS
         }
         return $url;
+    }
+
+    /**
+     * Process pop-up text template with placeholders
+     *
+     * Replaces template placeholders like {{title}}, {{teacher}}, {{scripture}}, etc.
+     * with actual values from the media object.
+     *
+     * @param   string    $text    Template text with placeholders
+     * @param   object    $media   Media object with study data
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed text with placeholders replaced
+     *
+     * @since 10.0.0
+     */
+    public function processPopupText(string $text, object $media, Registry $params): string
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Get scripture reference
+        $listing   = new Cwmlisting();
+        $scripture = '';
+        if (isset($media->booknumber) && $media->booknumber > 0) {
+            $savedId   = $media->id ?? null;
+            $media->id = $media->study_id ?? $media->id;
+            $scripture = $listing->getScripture($params, $media, 0, 1);
+            if ($savedId !== null) {
+                $media->id = $savedId;
+            }
+        }
+
+        // Get formatted date
+        $date = '';
+        if (isset($media->studydate)) {
+            $date = $listing->getStudyDate($params, $media->studydate);
+        }
+
+        // Replace placeholders
+        $replacements = [
+            '{{title}}'       => $media->studytitle ?? '',
+            '{{teacher}}'     => $media->teachername ?? '',
+            '{{scripture}}'   => $scripture,
+            '{{studydate}}'   => $date,
+            '{{series}}'      => $media->series_text ?? '',
+            '{{description}}' => $media->studyintro ?? '',
+            '{{filename}}'    => $params->get('filename', ''),
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $text);
+    }
+
+    /**
+     * Get popup header text from params
+     *
+     * @param   object    $media   Media object
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed header text
+     *
+     * @since 10.0.0
+     */
+    public function getPopupHeader(object $media, Registry $params): string
+    {
+        $template = $params->get('popuptitle', '{{title}}');
+        return $this->processPopupText($template, $media, $params);
+    }
+
+    /**
+     * Get popup footer text from params
+     *
+     * @param   object    $media   Media object
+     * @param   Registry  $params  Template parameters
+     *
+     * @return string Processed footer text
+     *
+     * @since 10.0.0
+     */
+    public function getPopupFooter(object $media, Registry $params): string
+    {
+        $template = $params->get('popupfooter', '');
+        return $this->processPopupText($template, $media, $params);
     }
 }

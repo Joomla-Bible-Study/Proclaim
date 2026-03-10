@@ -4,7 +4,7 @@
  * TeacherDisplay field modal
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -21,6 +21,7 @@ use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
@@ -40,6 +41,19 @@ class TeacherDisplayField extends FormField
     protected $type = 'Modal_TeacherDisplay';
 
     /**
+     * Method to get the field label markup.
+     *
+     * @return  string  The field label markup.
+     *
+     * @since   9.0.0
+     */
+    #[\Override]
+    protected function getLabel(): string
+    {
+        return str_replace($this->id, $this->id . '_name', parent::getLabel());
+    }
+
+    /**
      * Method to get the field input markup.
      *
      * @return  string  The field input markup.
@@ -47,6 +61,7 @@ class TeacherDisplayField extends FormField
      * @throws \Exception
      * @since    1.6
      */
+    #[\Override]
     protected function getInput(): string
     {
         $allowNew       = ((string)$this->element['new'] == 'true');
@@ -56,7 +71,7 @@ class TeacherDisplayField extends FormField
         $allowPropagate = ((string)$this->element['propagate'] == 'true');
 
         // Load language
-        Factory::getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         // The active article ID field.
         $value = (int)$this->value ?: '';
@@ -74,7 +89,7 @@ class TeacherDisplayField extends FormField
         if ($allowSelect) {
             static $scriptSelect = null;
 
-            if (is_null($scriptSelect)) {
+            if (\is_null($scriptSelect)) {
                 $scriptSelect = [];
             }
 
@@ -113,7 +128,7 @@ class TeacherDisplayField extends FormField
         $urlNew    = $linkSerie . '&amp;task=cwmteacher.add';
 
         if ($value) {
-            $db    = Factory::getContainer()->get('DatabaseDriver');
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('teachername') . 'AS name')
                 ->from($db->quoteName('#__bsms_teachers'))
@@ -214,7 +229,7 @@ class TeacherDisplayField extends FormField
                 'bootstrap.renderModal',
                 'ModalNew' . $modalId,
                 [
-                    'title'       => Text::_('JBS_NEW_MESSAGE'),
+                    'title'       => Text::_('JBS_TITLE_TEACHER_CREATING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,
@@ -242,7 +257,7 @@ class TeacherDisplayField extends FormField
                 'bootstrap.renderModal',
                 'ModalEdit' . $modalId,
                 [
-                    'title'       => Text::_('JBS_NEW_MESSAGE'),
+                    'title'       => Text::_('JBS_TITLE_TEACHER_EDITING'),
                     'backdrop'    => 'static',
                     'keyboard'    => false,
                     'closeButton' => false,

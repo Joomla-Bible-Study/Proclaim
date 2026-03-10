@@ -4,7 +4,7 @@
  * Default
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -14,7 +14,6 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Button\PublishedButton;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
@@ -22,24 +21,25 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmcomments\HtmlView $this */
+
 $app        = Factory::getApplication();
-$user       = $user = Factory::getApplication()->getSession()->get('user');
-$userId     = $user->get('id');
+$user       = $app->getIdentity();
+$userId     = $user->id;
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
-$archived   = $this->state->get('filter.published') == 2 ? true : false;
-$trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'ordering';
+$archived   = $this->state->get('filter.published') == 2;
+$trashed    = $this->state->get('filter.published') == -2;
+$saveOrder  = $listOrder === 'ordering';
 $sortFields = $this->getSortFields();
 $columns    = 9;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmcomments.saveOrderAjax&tmpl=component';
-    HtmlHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'comments', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->addInlineScript(
@@ -69,7 +69,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
                 <?php
-                echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
                     <div class="alert alert-info">
@@ -79,8 +79,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         <?php
                         echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                     </div>
-                    <?php
-                else : ?>
+                    <?php else : ?>
                     <table class="table table-striped itemlist" id="comments">
                         <caption class="visually-hidden">
                             <?php
@@ -191,11 +190,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         endif; ?>>
                         <?php
                         foreach ($this->items as $i => $item) :
-                            $link = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int)$item->id);
-                            $canCreate = $user->authorise('core.create');
-                            $canEdit = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
+                            $link       = Route::_('index.php?option=com_proclaim&task=cwmcomment.edit&id=' . (int)$item->id);
+                            $canCheckin  = $user->authorise('core.manage', 'com_checkin')
+                                || $item->checked_out == $userId || \is_null($item->checked_out);
+                            $canCreate  = $user->authorise('core.create');
+                            $canEdit    = $user->authorise('core.edit', 'com_proclaim.comment.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.comment.' . $item->id);
-                            $canChange = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
+                            $canChange  = $user->authorise('core.edit.state', 'com_proclaim.comment.' . $item->id);
                             ?>
                             <tr class="row<?php
                             echo $i % 2; ?>" data-draggable-group="<?php
@@ -205,31 +206,57 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                     echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
-                                    <?php
-                                    $options = [
-                                        'task_prefix' => 'cwmcomments.',
-                                        'disabled' => !$canChange,
-                                        'id' => 'state-' . $item->id
-                                    ];
-                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                                    ?>
+                                    <?php if ($item->published == 1) : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.unpublish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JBS_CMT_APPROVED'); ?>">
+                                            <span class="badge text-bg-success">
+                                                <span class="icon-check text-white" aria-hidden="true"></span>
+                                                <?php echo Text::_('JBS_CMT_APPROVED'); ?>
+                                            </span>
+                                        </a>
+                                    <?php elseif ($item->published == 0) : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.publish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JBS_CMT_PENDING_APPROVAL'); ?>">
+                                            <span class="badge text-bg-warning">
+                                                <span class="icon-clock text-dark" aria-hidden="true"></span>
+                                                <?php echo Text::_('JBS_CMT_PENDING_APPROVAL'); ?>
+                                            </span>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="javascript:void(0);"
+                                           onclick="return Joomla.listItemTask('cb<?php echo $i; ?>', 'cwmcomments.publish')"
+                                           class="tbody-icon<?php echo !$canChange ? ' disabled' : ''; ?>"
+                                           title="<?php echo Text::_('JTRASHED'); ?>">
+                                            <span class="badge text-bg-secondary">
+                                                <span class="icon-trash text-white" aria-hidden="true"></span>
+                                                <?php echo Text::_('JTRASHED'); ?>
+                                            </span>
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="nowrap has-context" style="width:10%;">
                                     <div class="float-left">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'cwmcomments.', $canCheckin); ?>
+                                        <?php endif; ?>
                                         <?php
                                         if ($canEdit || $canEditOwn) : ?>
                                             <a href="<?php
                                             echo $link; ?>"><?php
                                                 echo $this->escape($item->studytitle) . ' - '
                                                     . Text::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
-                                            <?php
-                                        else : ?>
+                                            <?php else : ?>
                                             <?php
                                             echo $this->escape($item->studytitle) . ' - ' . Text::_(
                                                 $item->bookname
                                             ) . ' ' . $item->chapter_begin; ?>
                                             <?php
-                                        endif; ?>
+                                            endif; ?>
                                     </div>
                                 </td>
                                 <td class="small d-none d-md-table-cell">
@@ -252,7 +279,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                 if (Multilanguage::isEnabled()) : ?>
                                     <td class="small d-none d-md-table-cell">
                                         <?php
-                                        echo LayoutHelper::render('joomla.content.language', $item); ?>
+                                            echo LayoutHelper::render('joomla.content.language', $item); ?>
                                     </td>
                                     <?php
                                 endif; ?>
@@ -267,12 +294,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     </table>
 
                     <?php
-                    // load the pagination. ?>
+                    // load the pagination.?>
                     <?php
                     echo $this->pagination->getListFooter(); ?>
 
                     <?php
-                    // Load the batch processing form. ?>
+                    // Load the batch processing form.?>
                     <?php
                     if (
                         $user->authorise('core.create', 'com_proclaim')
@@ -283,10 +310,10 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                         echo HTMLHelper::_(
                             'bootstrap.renderModal',
                             'collapseModal',
-                            array(
-                                'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
-                                'footer' => $this->loadTemplate('batch_footer'),
-                            ),
+                            [
+                                    'title'  => Text::_('JBS_CMN_BATCH_OPTIONS'),
+                                    'footer' => $this->loadTemplate('batch_footer'),
+                                ],
                             $this->loadTemplate('batch_body')
                         ); ?>
                         <?php
@@ -294,7 +321,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                     <?php
                 endif; ?>
                 <?php
-                // Load the batch processing form. ?>
+                // Load the batch processing form.?>
                 <input type="hidden" name="task" value=""/>
                 <input type="hidden" name="boxchecked" value="0"/>
                 <?php

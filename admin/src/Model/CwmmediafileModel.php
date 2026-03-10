@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -16,18 +16,18 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
-use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
-use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
@@ -73,7 +73,7 @@ class CwmmediafileModel extends AdminModel
         'linkType'      => 'batchLinkType',
         'mimetype'      => 'batchMimetype',
         'mediaType'     => 'batchMediatype',
-        'popup'         => 'popup',
+        'popup'         => 'batchPopup',
     ];
 
     /**
@@ -95,7 +95,9 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        if (!$row->move($direction, ' study_id = ' . (int)$row->study_id . ' AND published >= 0 ')) {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        if (!$row->move($direction, $db->quoteName('study_id') . ' = ' . (int)$row->study_id . ' AND ' . $db->quoteName('published') . ' >= 0')) {
             return false;
         }
 
@@ -120,25 +122,25 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Overrides the JModelAdmin save routine in order to implode the podcast_id
+     * Overrides the AdminModel save routine to implode the podcast_id
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean True on successfully save
+     * @return  bool True on successful save
      *
      * @since   7.0
      */
     public function save($data): bool
     {
         if ($data) {
-            // Implode only if they selected at least one podcast. Otherwise just clear the podcast_id field
+            // Implode only if they selected at least one podcast. Otherwise, just clear the podcast_id field
             $data['podcast_id'] = empty($data['podcast_id']) ? '' : implode(",", $data['podcast_id']);
 
             $params = new Registry();
             $params->loadArray($data['params']);
 
-            $jdb   = Factory::getContainer()->get('DatabaseDriver');
-            $table = new CwmserverTable($jdb);
+            $table = Factory::getApplication()->bootComponent('com_proclaim')
+                ->getMVCFactory()->createTable('Cwmserver', 'Administrator');
             $table->load($data['server_id']);
 
             $path = new Registry();
@@ -149,57 +151,48 @@ class CwmmediafileModel extends AdminModel
                 $set_path = $path->get('path') . '/';
             }
 
-            if (isset($params->toObject()->size) && $params->get('size', '0') === '0') {
-                if ($set_path && !$path->get('protocal')) {
-                    $path->set('protocal', 'https://');
-                } else {
-                    $path->set('protocal', rtrim(Uri::root(), '/'));
-                }
+            // Normalize URLs to canonical embed format on save
+            $addon = CWMAddon::getInstance($table->type);
 
-                if ($table->type === 'legacy' || $table->type === 'local') {
-                    $size = Cwmhelper::getRemoteFileSize(
-                        Cwmhelper::mediaBuildUrl($set_path, $params->get('filename'), $params, true, true)
-                    );
-                    $params->set('size', $size);
+            if ($addon) {
+                $filename   = $params->get('filename', '');
+                $normalized = $addon->normalizeFilename($filename);
+
+                if ($normalized !== $filename) {
+                    $params->set('filename', $normalized);
                 }
             }
 
-            if (
-                !Cwmmedia::isExternal($params->get('filename'))
-                && ($params->toObject()->media_hours === '00' || empty($params->toObject()->media_hours))
-                && ($params->toObject()->media_minutes === '00' || empty($params->toObject()->media_minutes))
-                && ($params->toObject()->media_seconds === '00' || (empty($params->toObject()->media_seconds)))
-            ) {
-                $path_server = Cwmhelper::mediaBuildUrl(
-                    $set_path,
-                    $params->get('filename'),
-                    $params,
-                    false,
-                    false,
-                    true
-                );
-                $jbspodcast  = new Cwmpodcast();
-
-                // Make a duration build from Params of media.
-                $prefix   = Uri::root();
-                $nohttp   = $jbspodcast->removeHttp($prefix);
-                $siteinfo = strpos($path_server, $nohttp);
-
-                if ($siteinfo) {
-                    $filename = substr($path_server, strlen($nohttp));
-                    $filename = JPATH_SITE . '/' . $filename;
-                } else {
-                    $filename = $path_server;
-                }
-
-                $duration = $jbspodcast->formatTime($jbspodcast->getDuration($filename));
-
-                $params->set('media_hours', $duration->hourse);
-                $params->set('media_minutes', $duration->minutes);
-                $params->set('media_seconds', $duration->seconds);
-            }
+            // Auto-detect missing metadata (size, MIME type, duration)
+            $this->autoDetectMetadata($params, $table, $set_path, $path);
 
             $data['params'] = $params->toArray();
+
+            // Clean up old image file when filename changes on an existing record
+            $recordId = (int) ($data['id'] ?? 0);
+
+            if ($recordId > 0) {
+                $db       = Factory::getContainer()->get(DatabaseInterface::class);
+                $oldQuery = $db->getQuery(true)
+                    ->select($db->quoteName('params'))
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+                    ->where($db->quoteName('id') . ' = ' . $recordId);
+                $db->setQuery($oldQuery);
+                $oldParamsJson = $db->loadResult();
+
+                if ($oldParamsJson) {
+                    $oldParams    = new Registry($oldParamsJson);
+                    $oldFilename  = $oldParams->get('filename', '');
+                    $newFilename  = $params->get('filename', '');
+
+                    CwmImageCleanup::cleanupOldMediaImage(
+                        $oldFilename,
+                        $newFilename,
+                        (int) $data['server_id'],
+                        $recordId
+                    );
+                }
+            }
 
             if (parent::save($data)) {
                 return true;
@@ -210,78 +203,116 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
+     * Auto-detect missing metadata for a media file.
+     * Detects file size, MIME type, and duration when not already set.
+     *
+     * @param   Registry  $params    Media file params (modified in place)
+     * @param   object    $server    Server table object
+     * @param   string    $set_path  Server path prefix
+     * @param   Registry  $path      Server params
+     *
+     * @return  void
+     *
+     * @since 10.1.0
+     */
+    protected function autoDetectMetadata(Registry $params, object $server, string $set_path, Registry $path): void
+    {
+        $filename = $params->get('filename');
+        if (empty($filename)) {
+            return;
+        }
+
+        $jbspodcast = new Cwmpodcast();
+
+        // Load the Addon for this server type
+        $addon = CWMAddon::getInstance($server->type);
+
+        if ($addon) {
+            // Delegate metadata detection to the addon
+            $addon->detectMetadata($params, $server, $set_path, $path, $jbspodcast);
+        }
+    }
+
+    /**
      * Get the media form
      *
-     * @return boolean|mixed
+     * @return bool|mixed
      *
      * @throws \Exception
      *
      * @since   9.0.0
      */
-    public function getMediaForm()
+    public function getMediaForm(): mixed
     {
-        // If a user hasn't selected a server yet, just return an empty form
+        // server_id is now set by getItem() (including admin default for new items)
         $server_id = $this->data->server_id;
 
-        if ($server_id === null) {
-            /** @var Registry $params */
-            $params    = Cwmparams::getAdmin()->params;
-            $server_id = $params->get('server');
-
-            if ($server_id !== '-1') {
-                $this->data->server_id = $server_id;
-            } else {
-                $server_id = null;
-            }
+        // No server selected yet — nothing to load
+        if (empty($server_id)) {
+            return null;
         }
 
         // Reverse lookup server_id to server type
-        $model       = new CwmserverModel();
+        /** @var CwmserverModel $model */
+        $model       = Factory::getApplication()->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmserver', 'Administrator');
         $s_item      = $model->getItem($server_id);
         $server_type = $s_item->type;
 
-        $reg = new Registry();
-        $reg->loadArray($s_item->params);
+        if (empty($server_type)) {
+            return null;
+        }
 
+        // Load server params (stored as JSON string in database)
+        $reg = new Registry();
+
+        if (\is_string($s_item->params)) {
+            $reg->loadString($s_item->params);
+        } elseif (\is_array($s_item->params)) {
+            $reg->loadArray($s_item->params);
+        }
+
+        // Load server media defaults (already converted to array by CwmserverModel::getItem)
         $reg1 = new Registry();
-        $reg1->loadArray($s_item->media);
+
+        if (\is_array($s_item->media)) {
+            $reg1->loadArray($s_item->media);
+        } elseif (\is_string($s_item->media)) {
+            $reg1->loadString($s_item->media);
+        }
+
         $reg1->merge($reg);
 
-        if ($server_type) {
-            $path = Path::clean(
-                JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
-            );
+        $path = Path::clean(
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
+        );
 
-            Form::addFormPath($path);
-            Form::addFieldPath($path . '/Field');
+        Form::addFormPath($path);
+        Form::addFieldPath($path . '/Field');
 
-            // Add language files
-            $lang = Factory::getApplication()->getLanguage();
-            $path = \Joomla\Filesystem\Path::clean(
-                JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
-            );
+        // Add language files
+        $lang = Factory::getApplication()->getLanguage();
+        $path = \Joomla\Filesystem\Path::clean(
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Addons/Servers/' . ucfirst($server_type)
+        );
 
-            if (!$lang->load('jbs_addon_' . strtolower($server_type), $path)) {
-                Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
-            }
-
-            $form = $this->loadForm(
-                'com_proclaim.mediafile.media',
-                "media",
-                ['control' => 'jform', 'load_data' => true],
-                true,
-                "/media"
-            );
-        } else {
-            Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'warning');
-            $form = $this->getForm();
+        if (!$lang->load('jbs_addon_' . strtolower($server_type), $path)) {
+            Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_ERROR_ADDON_LANGUAGE_NOT_LOADED'), 'error');
         }
+
+        $form = $this->loadForm(
+            'com_proclaim.mediafile.media',
+            "media",
+            ['control' => 'jform', 'load_data' => true],
+            true,
+            "/media"
+        );
 
         if (empty($form)) {
-            return false;
+            return null;
         }
 
-        // Pass this data through state.
+        // Pass server params through state for use by view/addons when setting defaults
         $this->setState('s_params', $reg1->toArray());
         $this->setState('type', $server_type);
 
@@ -300,7 +331,7 @@ class CwmmediafileModel extends AdminModel
      */
     public function getItem($pk = null): mixed
     {
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {
@@ -332,6 +363,15 @@ class CwmmediafileModel extends AdminModel
             $server_id             = $this->getState('mediafile.server_id');
             $this->data->server_id = empty($server_id) ? $this->data->server_id : $server_id;
 
+            // For new items with no server, apply admin default
+            if (empty($this->data->server_id) && empty($this->data->id)) {
+                $defaultServer = Cwmparams::getAdmin()->params->get('server');
+
+                if ($defaultServer !== null && $defaultServer !== '-1' && $defaultServer !== '') {
+                    $this->data->server_id = (int) $defaultServer;
+                }
+            }
+
             $study_id             = $this->getState('mediafile.study_id');
             $this->data->study_id = empty($study_id) ? $this->data->study_id : $study_id;
 
@@ -345,22 +385,21 @@ class CwmmediafileModel extends AdminModel
     /**
      * Get the form data
      *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   array  $data      Data for the form.
+     * @param   bool   $loadData  True if the form is to load its own data (default case), false if not.
      *
-     * @return boolean|object
+     * @return bool|object
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = [], $loadData = true)
+    public function getForm($data = [], $loadData = true): object|bool
     {
         if (empty($data)) {
             $this->getItem();
         }
 
         // Get the form.
-        // @TODO Rename the form to "media" instead of mediafile
         $form = $this->loadForm(
             'com_proclaim.mediafile',
             'mediafile',
@@ -371,17 +410,17 @@ class CwmmediafileModel extends AdminModel
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
-        // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
-        if ($jinput->get('a_id')) {
-            $id = $jinput->get('a_id', 0);
+        // The front end calls this model and uses a_id to avoid id clashes, so we need to check for that first.
+        if ($input->get('a_id')) {
+            $id = $input->get('a_id', 0);
         } else {
             // The back end uses id so we use that the rest of the time and set it to 0 by default.
-            $id = $jinput->get('id', 0);
+            $id = $input->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -409,7 +448,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -417,7 +456,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchPlayer($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -430,14 +469,10 @@ class CwmmediafileModel extends AdminModel
                 $table->player = (int)$value;
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -448,10 +483,10 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Custom clean the cache of com_proclaim and Proclaim modules
+     * Custom clean the cache of the com_proclaim and Proclaim modules
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
@@ -464,13 +499,13 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Batch popup changes for a group of media files.
+     * Batch pop-up changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -478,7 +513,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchLinkType($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -492,14 +527,10 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -516,7 +547,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -524,7 +555,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchMimetype($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
         /** @type CwmmediafileTable $table */
         $table = $this->getTable();
 
@@ -538,14 +569,10 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -556,13 +583,13 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Batch popup changes for a group of media files.
+     * Batch pop-up changes for a group of media files.
      *
      * @param   string  $value     The new value matching a client.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -570,7 +597,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchMediatype($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
         $table = $this->getTable();
 
         foreach ($pks as $pk) {
@@ -583,14 +610,10 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -607,7 +630,7 @@ class CwmmediafileModel extends AdminModel
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
-     * @return  boolean  True if successful, false otherwise and internal error is set.
+     * @return  bool  True if successful, false otherwise, and an internal error is set.
      *
      * @throws \Exception
      * @since   2.5
@@ -615,7 +638,7 @@ class CwmmediafileModel extends AdminModel
     protected function batchPopup($value, $pks, $contexts): bool
     {
         // Set the variables
-        $user  = Factory::getApplication()->getSession()->get('user');
+        $user  = Factory::getApplication()->getIdentity();
         $table = $this->getTable();
 
         foreach ($pks as $pk) {
@@ -628,14 +651,10 @@ class CwmmediafileModel extends AdminModel
                 $table->params = $reg->toString();
 
                 if (!$table->store()) {
-                    $this->setError($table->getError());
-
-                    return false;
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
             } else {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
         }
 
@@ -646,51 +665,11 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Method override to check-in a record or an array of record
-     *
-     * @param   mixed  $pks  The ID of the primary key or an array of IDs
-     *
-     * @return  mixed  Boolean false if there is an error, otherwise the count of records checked in.
-     *
-     * @throws \Exception
-     * @since   12.2
-     */
-    public function checkin($pks = [])
-    {
-        $pks   = (array)$pks;
-        $table = $this->getTable();
-        $count = 0;
-
-        if (empty($pks)) {
-            $pks = [(int)$this->getState('mediafile.id')];
-        }
-
-        // Check in all items.
-        foreach ($pks as $pk) {
-            if ($table->load($pk)) {
-                if ($table->checked_out > 0) {
-                    if (!parent::checkin($pk)) {
-                        return false;
-                    }
-
-                    $count++;
-                }
-            } else {
-                $this->setError($table->getError());
-
-                return false;
-            }
-        }
-
-        return $count;
-    }
-
-    /**
      * Method to test whether a record can be deleted.
      *
      * @param   object  $record  A record object.
      *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     * @return    bool    True if allowed to delete the record. Defaults to the permission set in the component.
      *
      * @throws \Exception
      * @since    1.6
@@ -702,7 +681,7 @@ class CwmmediafileModel extends AdminModel
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.mediafile.' . (int)$record->id
             );
@@ -727,6 +706,49 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
+     * Prepare and sanitise the table prior to saving.
+     *
+     * @param   CwmmediafileTable  $table  A reference to a Table object.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.0.0
+     */
+    protected function prepareTable($table): void
+    {
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+
+            // Set ordering to the last item if not set
+            if (empty($table->ordering)) {
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                $query = $db->getQuery(true);
+                $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
+                $db->setQuery($query);
+                $max = $db->loadResult();
+
+                $table->ordering = $max + 1;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
+    }
+
+    /**
      * Auto-populate the model state
      *
      * @return  void
@@ -737,7 +759,7 @@ class CwmmediafileModel extends AdminModel
     protected function populateState(): void
     {
         $app   = Factory::getApplication('administrator');
-        $input = $app->input;
+        $input = $app->getInput();
 
         // Load the Admin settings
         $admin    = Cwmparams::getAdmin();
@@ -763,14 +785,15 @@ class CwmmediafileModel extends AdminModel
      *
      * @param   object  $table  A record object.
      *
-     * @return    array    An array of conditions to add to add to ordering queries.
+     * @return    array    An array of conditions to add to ordering queries.
      *
      * @since    1.6
      */
     protected function getReorderConditions($table): array
     {
+        $db          = Factory::getContainer()->get(DatabaseInterface::class);
         $condition   = [];
-        $condition[] = 'study_id = ' . (int)$table->study_id;
+        $condition[] = $db->quoteName('study_id') . ' = ' . (int)$table->study_id;
 
         return $condition;
     }

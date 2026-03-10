@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -40,11 +42,11 @@ class HtmlView extends BaseHtmlView
     /**
      * Params
      *
-     * @var Registry
+     * @var Registry|null
      *
      * @since 7.0
      */
-    public Registry $params;
+    public ?Registry $params = null;
 
     /**
      * Params
@@ -55,7 +57,29 @@ class HtmlView extends BaseHtmlView
      */
     public mixed $state;
 
-    public object $main;
+    /**
+     * Main study image object
+     *
+     * @var object|null
+     * @since 7.0
+     */
+    public ?object $main = null;
+
+    /**
+     * Landing page helper instance
+     *
+     * @var Cwmlanding|null
+     * @since 10.0.0
+     */
+    public ?Cwmlanding $landing = null;
+
+    /**
+     * Pre-fetched landing page data
+     *
+     * @var array
+     * @since 10.1.0
+     */
+    public array $landingData = [];
 
     /**
      * Execute and display a template script.
@@ -67,6 +91,7 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0
      */
+    #[\Override]
     public function display($tpl = null): void
     {
         $document = Factory::getApplication()->getDocument();
@@ -79,17 +104,15 @@ class HtmlView extends BaseHtmlView
         // Prepare meta-information (under development)
         if ($itemparams->get('metakey')) {
             $document->setMetaData('keywords', $itemparams->get('metakey'));
-        } elseif (!$itemparams->get('metakey')) {
+        } else {
             $document->setMetaData('keywords', $this->params->get('metakey'));
         }
 
         if ($itemparams->get('metadesc')) {
             $document->setDescription($itemparams->get('metadesc'));
-        } elseif (!$itemparams->get('metadesc')) {
+        } else {
             $document->setDescription($this->params->get('metadesc'));
         }
-
-        Cwmimages::getShowHide();
 
         // Get the main study list image
         $this->main = Cwmimages::mainStudyImage();
@@ -97,6 +120,38 @@ class HtmlView extends BaseHtmlView
         $uri               = new Uri();
         $Uri_toString      = $uri->toString();
         $this->request_url = $Uri_toString;
+
+        // Pre-create landing helper for template use
+        $this->landing = new Cwmlanding();
+
+        // Fetch all landing data in a single query
+        $this->landingData = $this->landing->getLandingData($this->params);
+
+        // Add the show/hide javascript
+        $js = <<<JS
+    function ReverseDisplay2(d) {
+        var el = document.getElementById(d);
+        if (el) {
+            // Legacy/Table layout support
+            if (el.style.display == "none") {
+                el.style.display = "contents";
+            } else {
+                el.style.display = "none";
+            }
+        } else {
+            // Grid layout support (class toggling)
+            var elements = document.getElementsByClassName('landing-hidden-' + d);
+            for (var i = 0; i < elements.length; i++) {
+                if (elements[i].style.display == "none") {
+                    elements[i].style.display = "";
+                } else {
+                    elements[i].style.display = "none";
+                }
+            }
+        }
+    }
+JS;
+        $document->getWebAssetManager()->addInlineScript($js);
 
         parent::display($tpl);
     }
@@ -113,70 +168,25 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 9.2.4
      */
-    public function getShowHide($showIt, $showIt_phrase, $i)
+    public function getShowHide($showIt, $showIt_phrase, $i): string
     {
-        // End Switch
-        if ($this->params->get('landing' . $showIt . 'limit')) {
-            $showhide_tmp = Cwmimages::getShowHide();
-
-            $showhideall = "<div id='showhide" . $i . "'>";
-
-            $buttonlink = "\n\t" . '<a class="showhideheadingbutton" href="javascript:ReverseDisplay2(' . "'showhide"
-                . $showIt . "'" . ')">';
-            $labellink  = "\n\t" . '<a class="showhideheadinglabel" href="javascript:ReverseDisplay2(' . "'showhide"
-                . $showIt . "'" . ')">';
-
-            switch ($this->params->get('landing_hide', 0)) {
-                case 0: // Image only
-                    $showhideall .= $buttonlink;
-
-                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="'
-                    // . Text::_('JBS_CMN_SHOW_HIDE_ALL');
-                    // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //  $showIt_phrase . '" border="0" width="';
-                    // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
-
-                    // Spacer
-                    $showhideall .= ' ';
-                    $showhideall .= "\n\t" . '</a>';
-                    break;
-
-                case 1: // Image and label
-                    $showhideall .= $buttonlink;
-
-                    // $showhideall .= "\n\t\t" . '<img src="' . Uri::base() . $showhide_tmp->path . '" alt="' .
-                    //  Text::_('JBS_CMN_SHOW_HIDE_ALL');
-                    // $showhideall .= ' ' . $showIt_phrase . '" title="' . Text::_('JBS_CMN_SHOW_HIDE_ALL') . ' ' .
-                    //  $showIt_phrase . '" border="0" width="';
-                    // $showhideall .= $showhide_tmp->width . '" height="' . $showhide_tmp->height . '" />';
-
-                    $showhideall .= '<i class="fas fa-arrow-down" title="x"></i>';
-
-                    // Spacer
-                    $showhideall .= ' ';
-                    $showhideall .= "\n\t" . '</a>';
-                    $showhideall .= $labellink;
-                    $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                        'landing_hidelabel'
-                    ) . '</span>';
-                    $showhideall .= "\n\t" . '</a>';
-                    break;
-
-                case 2: // Label only
-                    $showhideall .= $labellink;
-                    $showhideall .= "\n\t\t" . '<span id="landing_label">' . $this->params->get(
-                        'landing_hidelabel'
-                    ) . '</span>';
-                    $showhideall .= "\n\t" . '</a>';
-                    break;
-            }
-
-            $showhideall .= "\n" . '</div> <!-- end div id="showhide" for ' . $i . ' -->' . "\n";
-
-            return $showhideall;
+        if (!$this->params->get('landing' . $showIt . 'limit')) {
+            return '';
         }
 
-        return '';
+        $data = [
+            'showIt'        => $showIt,
+            'showIt_phrase' => $showIt_phrase,
+            'i'             => $i,
+            'params'        => $this->params,
+            'image'         => Cwmimages::getShowHide(),
+        ];
+
+        // Example: Referencing a layout located in the Administrator component folder
+        return LayoutHelper::render(
+            'landing.showhide',
+            $data,
+            JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'
+        );
     }
 }

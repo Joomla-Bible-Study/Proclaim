@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,9 +17,11 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -37,7 +39,7 @@ class CwmlandingpageModel extends ListModel
      *
      * @throws \Exception
      * @since      1.6
-     * @see        JController
+     * @see        ListModel
      */
     public function __construct($config = [])
     {
@@ -84,14 +86,22 @@ class CwmlandingpageModel extends ListModel
         $t = $params->get('sermonsid');
 
         if (!$t) {
-            $input = Factory::getApplication();
-            $t     = $input->get('t', 1, 'int');
+            $t = Factory::getApplication()->getInput()->get('t', 1, 'int');
         }
 
         $template->id = $t;
 
         $this->setState('template', $template);
         $this->setState('administrator', $admin);
+
+        // Get show_archived parameter, fall back to template default
+        $app          = Factory::getApplication();
+        $menuParams   = $app->getParams();
+        $showArchived = $menuParams->get('show_archived', '');
+        if ($showArchived === '' || $showArchived === null) {
+            $showArchived = $params->get('default_show_archived', '0');
+        }
+        $this->setState('filter.show_archived', $showArchived);
 
         parent::populateState('s.studydate', 'DESC');
     }
@@ -106,15 +116,13 @@ class CwmlandingpageModel extends ListModel
      */
     protected function getListQuery(): DatabaseQuery
     {
-        $db              = Factory::getContainer()->get('DatabaseDriver');
+        $db              = $this->getDatabase();
         $query           = $db->getQuery(true);
         $template_params = Cwmparams::getTemplateparams();
-        $registry        = new Registry();
-        $registry->loadString($template_params->params);
-        $t_params = $registry;
+        $t_params        = $template_params->params;
 
         // Load the parameters. Merge Global and Menu Item params into new object
-        $app = Factory::getApplication('site');
+        $app = Factory::getApplication();
         /** @var Registry $params */
         $params = $app->getParams();
         $this->setState('params', $params);
@@ -125,25 +133,58 @@ class CwmlandingpageModel extends ListModel
             $menuparams->loadString($menu->params);
         }
 
-        $query->select("'list.select', 's.id'");
-        $query->from('#__bsms_studies as s');
-        $query->select('t.id as tid, t.teachername, t.title as teachertitle, t.language');
-        $query->join('LEFT', '#__bsms_teachers as t on s.teacher_id = t.id');
-        $query->select('se.id as sid, se.series_text, se.description as sdescription, se.series_thumbnail');
-        $query->join('LEFT', '#__bsms_series as se on s.series_id = se.id');
-        $query->select('m.id as mid, m.message_type');
-        $query->join('LEFT', '#__bsms_message_type as m on s.messagetype = m.id');
-        $query->select('GROUP_CONCAT(DISTINCT st.topic_id)');
-        $query->join('LEFT', '#__bsms_studytopics AS st ON s.id = st.study_id');
+        $query->select($db->quoteName('s.id'));
+        $query->from($db->quoteName('#__bsms_studies', 's'));
         $query->select(
-            'GROUP_CONCAT(DISTINCT tp.id), GROUP_CONCAT(DISTINCT tp.topic_text) as topics_text, GROUP_CONCAT(DISTINCT tp.params)'
+            $db->quoteName(['t.id', 't.teachername', 't.title', 't.language'], ['tid', 'teachertitle', null, null])
         );
-        $query->join('LEFT', '#__bsms_topics AS tp ON tp.id = st.topic_id');
-        $query->select('l.id as lid, l.location_text');
-        $query->join('LEFT', '#__bsms_locations as l on s.location_id = l.id');
-        $rightnow = date('Y-m-d H:i:s');
-        $query->where('s.published = 1');
-        $query->where("date_format(s.studydate, %Y-%m-%d %T') <= " . (int)$rightnow);
+        $query->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+            . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0');
+        $query->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
+            . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')');
+        $query->select(
+            $db->quoteName(
+                ['se.id', 'se.series_text', 'se.description', 'se.series_thumbnail'],
+                ['sid', null, 'sdescription', null]
+            )
+        );
+        $query->join('LEFT', $db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('s.series_id') . ' = ' . $db->quoteName('se.id'));
+        $query->select($db->quoteName(['m.id', 'm.message_type'], ['mid', null]));
+        $query->join('LEFT', $db->quoteName('#__bsms_message_type', 'm') . ' ON ' . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('m.id'));
+        $query->select('GROUP_CONCAT(DISTINCT ' . $db->quoteName('st.topic_id') . ')');
+        $query->join('LEFT', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'));
+        $query->select(
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.id') . '), ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.topic_text') . ') as topics_text, ' .
+            'GROUP_CONCAT(DISTINCT ' . $db->quoteName('tp.params') . ')'
+        );
+        $query->join('LEFT', $db->quoteName('#__bsms_topics', 'tp') . ' ON ' . $db->quoteName('tp.id') . ' = ' . $db->quoteName('st.topic_id'));
+        $query->select($db->quoteName(['l.id', 'l.location_text'], ['lid', null]));
+        $query->join('LEFT', $db->quoteName('#__bsms_locations', 'l') . ' ON ' . $db->quoteName('s.location_id') . ' = ' . $db->quoteName('l.id'));
+
+        $rightnow = (new Date())->toSql();
+
+        // Filter by published state based on show_archived parameter
+        $showArchived = $this->getState('filter.show_archived', '0');
+        switch ($showArchived) {
+            case '1': // Archived only
+                $archived = 2;
+                $query->where($db->quoteName('s.published') . ' = :published')
+                    ->bind(':published', $archived, ParameterType::INTEGER);
+                break;
+            case '2': // Both published and archived
+                $query->whereIn($db->quoteName('s.published'), [1, 2]);
+                break;
+            default: // Published only (backward compatible)
+                $published = 1;
+                $query->where($db->quoteName('s.published') . ' = :published')
+                    ->bind(':published', $published, ParameterType::INTEGER);
+                break;
+        }
+
+        $query->where($db->quoteName('s.studydate') . ' <= :rightnow')
+            ->bind(':rightnow', $rightnow, ParameterType::STRING);
 
         // Order by order filter
         $orderparam = $params->get('default_order');
@@ -152,11 +193,7 @@ class CwmlandingpageModel extends ListModel
             $orderparam = $t_params->get('default_order', '1');
         }
 
-        if ($orderparam == 2) {
-            $order = "ASC";
-        } else {
-            $order = "DESC";
-        }
+        $order = ($orderparam == 2) ? 'ASC' : 'DESC';
 
         $orderstate = $this->getState('filter.order');
 
@@ -164,7 +201,7 @@ class CwmlandingpageModel extends ListModel
             $order = $orderstate;
         }
 
-        $query->order('studydate ' . $order);
+        $query->order($db->quoteName('studydate') . ' ' . $db->escape($order));
 
         return $query;
     }

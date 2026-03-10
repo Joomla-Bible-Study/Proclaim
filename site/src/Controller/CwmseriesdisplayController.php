@@ -4,7 +4,7 @@
  * Controller for Seriesdisplay
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -40,14 +40,14 @@ class CwmseriesdisplayController extends BaseController
      * you will need to override it in your own controllers.
      *
      * @param   bool   $cachable   If true, the view output will be cached
-     * @param   array  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link InputFilter::clean()}.
+     * @param   array  $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link InputFilter::clean()}.
      *
-     * @return  static  A \CwmseriesdisplayController object to support chaining.
+     * @return  static  This object to support chaining.
      *
      * @throws  \Exception
      * @since   3.0
      */
-    public function display($cachable = false, $urlparams = []): CwmseriesdisplayController
+    public function display($cachable = false, $urlparams = []): static
     {
         return parent::display();
     }

@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package        Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license        GNU General Public License version 2 or later; see LICENSE.txt
  * @link           https://www.christianwebministries.org
  * */
@@ -16,10 +16,16 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
+use Joomla\CMS\Cache\Controller\CallbackController;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,7 +36,15 @@ use Joomla\Registry\Registry;
  */
 class Cwmstats
 {
-    /** @var int used to store query of messages
+    /**
+     * Static cache for query results within the same request.
+     *
+     * @var array<string, mixed>
+     * @since 10.1.0
+     */
+    private static array $cache = [];
+
+    /** @var int used to store the query of messages
      *
      * @since 9.0.0
      */
@@ -49,26 +63,62 @@ class Cwmstats
     private static string $total_messages_end = '';
 
     /**
+     * Get a Joomla persistent cache controller for cross-request caching.
+     *
+     * @param   int  $lifetime  Cache lifetime in seconds.
+     *
+     * @return  CallbackController
+     *
+     * @since   10.1.0
+     */
+    private static function getPersistentCache(int $lifetime = 900): CallbackController
+    {
+        /** @var CallbackController $cache */
+        $cache = Factory::getContainer()
+            ->get(CacheControllerFactoryInterface::class)
+            ->createCacheController('callback', [
+                'defaultgroup' => 'com_proclaim',
+                'caching'      => true,
+            ]);
+        $cache->setLifeTime($lifetime);
+
+        return $cache;
+    }
+
+    /**
      * Total plays of media files per study
      *
-     * @param   int  $id  ID number of study
+     * @param   int   $id               ID number of study
+     * @param   bool  $includePlatform  Include platform plays for ministry-created media
      *
-     * @return int Total plays form the media
+     * @return int Total plays from the media
      *
      * @since 9.0.0
      */
-    public static function totalPlays(int $id): int
+    public static function totalPlays(int $id, bool $includePlatform = false): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
-            ->select('sum(m.plays), m.study_id, m.published, s.id FROM #__bsms_mediafiles AS m')
-            ->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
-            ->where('m.study_id = ' . $db->q($id));
-        $db->setQuery($query);
-        $plays = $db->loadResult();
+            ->select('SUM(' . $db->quoteName('m.plays') . ')')
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->where($db->quoteName('m.study_id') . ' = ' . (int) $id);
 
-        return (int)$plays;
+        if ($includePlatform) {
+            $query->select(
+                '+ COALESCE(SUM(CASE WHEN ' . $db->quoteName('m.content_origin') . ' = 0 THEN '
+                . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0)'
+            );
+            $query->leftJoin(
+                $db->quoteName('#__bsms_platform_stats', 'ps')
+                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
+            );
+        }
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 
     /**
@@ -83,33 +133,40 @@ class Cwmstats
      */
     public static function getTotalMessages(string $start = '', string $end = ''): int
     {
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
+
+        // Delegate to CwmcountHelper for simple published count (no date filtering)
+        // Note: CwmcountHelper does NOT filter by access, so only use for super admins
+        if (empty($start) && empty($end) && $isAdmin) {
+            return CwmcountHelper::getCountByState('#__bsms_studies', 1)
+                + CwmcountHelper::getCountByState('#__bsms_studies', 2);
+        }
+
         if ($start !== self::$total_messages_start || $end !== self::$total_messages_end || !self::$total_messages) {
             self::$total_messages_start = $start;
             self::$total_messages_end   = $end;
 
-            $db    = Factory::getContainer()->get('DatabaseDriver');
-            $where = [];
-
-            if (!empty($start)) {
-                $where[] = 'time > UNIX_TIMESTAMP(\'' . $start . '\')';
-            }
-
-            if (!empty($end)) {
-                $where[] = 'time < UNIX_TIMESTAMP(\'' . $end . '\')';
-            }
-
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
             $query
                 ->select('COUNT(*)')
-                ->from('#__bsms_studies')
-                ->where('published =' . $db->q('1'));
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->whereIn($db->quoteName('s.published'), [1, 2]);
 
-            if (count($where) > 0) {
-                $query->where(implode(' AND ', $where));
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            if (!empty($start)) {
+                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+            }
+
+            if (!empty($end)) {
+                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
             }
 
             $db->setQuery($query);
-            self::$total_messages = (int)$db->loadResult();
+            self::$total_messages = (int) $db->loadResult();
         }
 
         return self::$total_messages;
@@ -127,26 +184,49 @@ class Cwmstats
      */
     public static function getTotalTopics(string $start = '', string $end = ''): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from('#__bsms_studies')
-            ->leftJoin('#__bsms_studytopics ON (#__bsms_studies.id = #__bsms_studytopics.study_id)')
-            ->leftJoin('#__bsms_topics ON (#__bsms_topics.id = #__bsms_studytopics.topic_id)')
-            ->where('#__bsms_topics.published = ' . $db->q('1'));
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        if (!empty($start)) {
-            $query->where('time > UNIX_TIMESTAMP(\'' . $start . '\')');
+        // Include user ID in cache key for non-admin users
+        $userId  = (int) $user->id;
+        $userKey = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $key     = 'totalTopics:' . $start . ':' . $end . ':' . $userKey;
+
+        if (isset(self::$cache[$key])) {
+            return self::$cache[$key];
         }
 
-        if (!empty($end)) {
-            $query->where('time < UNIX_TIMESTAMP(\'' . $end . '\')');
-        }
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () use ($start, $end) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->leftJoin($db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id'))
+                ->leftJoin($db->quoteName('#__bsms_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id'))
+                ->where($db->quoteName('t.published') . ' = 1');
 
-        $db->setQuery($query);
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
 
-        return (int)$db->loadResult();
+            if (!empty($start)) {
+                $query->where($db->quoteName('s.time') . ' > UNIX_TIMESTAMP(' . $db->quote($start) . ')');
+            }
+
+            if (!empty($end)) {
+                $query->where($db->quoteName('s.time') . ' < UNIX_TIMESTAMP(' . $db->quote($end) . ')');
+            }
+
+            $db->setQuery($query);
+
+            return (int) $db->loadResult();
+        }, [], md5($key));
+
+        self::$cache[$key] = $result;
+
+        return $result;
     }
 
     /**
@@ -158,25 +238,49 @@ class Cwmstats
      */
     public static function getTopStudies(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('id, studytitle, studydate, hits')
-            ->from('#__bsms_studies')
-            ->where('published = ' . $db->q('1'))
-            ->where('hits > ' . $db->q('0'))
-            ->order('hits desc');
-        $db->setQuery($query, 0, 1);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        foreach ($results as $result) {
-            $top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
-                $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $cacheKey = 'topStudies:' . $userKey;
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
         }
 
-        return $top_studies;
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->whereIn($db->quoteName('s.published'), [1, 2])
+                ->where($db->quoteName('s.hits') . ' > 0');
+
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            $query->order($db->quoteName('s.hits') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
+
+            foreach ($rows as $row) {
+                $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
+                    htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -188,15 +292,7 @@ class Cwmstats
      */
     public static function getTotalComments(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from('#__bsms_comments')
-            ->where('published = ' . $db->q('1'));
-        $db->setQuery($query);
-
-        return (int)$db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_comments', 1);
     }
 
     /**
@@ -208,52 +304,69 @@ class Cwmstats
      */
     public static function getTopThirtyDays(): string
     {
-        $month      = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
-        $last_month = date("Y-m-d 00:00:01", $month);
-        $db         = Factory::getContainer()->get('DatabaseDriver');
-        $query      = $db->getQuery(true);
-        $query
-            ->select('id, studytitle, studydate, hits')
-            ->from('#__bsms_studies')
-            ->where('published = ' . $db->q('1'))
-            ->where('hits > ' . $db->q('0'))
-            ->where('UNIX_TIMESTAMP(studydate) > UNIX_TIMESTAMP( ' . $db->q($last_month) . ' )')
-            ->order('hits desc');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        if (!$results) {
-            $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
-        } else {
-            foreach ($results as $result) {
-                $top_studies .= $result->hits . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->id . '">' .
-                    $result->studytitle . '</a> - ' . date('Y-m-d', strtotime($result->studydate)) . '<br>';
-            }
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $cacheKey = 'topThirtyDays:' . $userKey;
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
         }
 
-        return $top_studies;
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () {
+            $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
+            $last_month = date("Y-m-d 00:00:01", $month);
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
+            $query      = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->whereIn($db->quoteName('s.published'), [1, 2])
+                ->where($db->quoteName('s.hits') . ' > 0')
+                ->where($db->quoteName('s.studydate') . ' > ' . $db->quote($last_month));
+
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            $query->order($db->quoteName('s.hits') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
+
+            if (!$rows) {
+                $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
+            } else {
+                foreach ($rows as $row) {
+                    $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                        ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
+                        htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+                }
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
      * Get Total Media Files
      *
-     * @return int Number of Records under Media Files that are published.
+     * @return int Number of published + archived media files (excludes trashed).
      *
      * @since 9.0.0
      */
     public static function getTotalMediaFiles(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('COUNT(*)')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1);
-        $db->setQuery($query);
-
-        return (int)$db->loadResult();
+        return CwmcountHelper::getCountByState('#__bsms_mediafiles', 1)
+            + CwmcountHelper::getCountByState('#__bsms_mediafiles', 2);
     }
 
     /**
@@ -265,31 +378,55 @@ class Cwmstats
      */
     public static function getTopDownloads(): string
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select(
-                '#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
-                '#__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate '
-            )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
-            ->where('#__bsms_mediafiles.published = 1 ')
-            ->where('downloads > 0')
-            ->order('downloads desc');
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $cacheKey = 'topDownloads:' . $userKey;
 
-        foreach ($results as $result) {
-            $top_studies .=
-                $result->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;d=' .
-                $result->sid . '">' . $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) .
-                '<br>';
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
         }
 
-        return $top_studies;
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['mf.downloads']))
+                ->select($db->quoteName('s.id', 'sid'))
+                ->select($db->quoteName('s.studytitle', 'stitle'))
+                ->select($db->quoteName('s.studydate', 'sdate'))
+                ->select($db->quoteName('s.access', 'saccess'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+                ->whereIn($db->quoteName('mf.published'), [1, 2])
+                ->where($db->quoteName('mf.downloads') . ' > 0');
+
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            $query->order($db->quoteName('mf.downloads') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
+
+            foreach ($rows as $row) {
+                $top_studies .=
+                    (int) $row->downloads . ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' .
+                    (int) $row->sid . '">' . htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) .
+                    '<br>';
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
@@ -297,61 +434,93 @@ class Cwmstats
      *
      * @return  string HTML list of download links
      *
+     * @throws \Exception
      * @since 9.0.0
      */
     public static function getDownloadsLastThreeMonths(): string
     {
-        $month     = mktime(0, 0, 0, date("m") - 3, date("d"), date("Y"));
-        $lastmonth = date("Y-m-d 00:00:01", $month);
-        $db        = Factory::getContainer()->get('DatabaseDriver');
-        $query     = $db->getQuery(true);
-        $query
-            ->select(
-                '#__bsms_mediafiles.*, #__bsms_studies.published AS spub, #__bsms_mediafiles.published AS mpublished,' .
-                ' #__bsms_studies.id AS sid, #__bsms_studies.studytitle AS stitle, #__bsms_studies.studydate AS sdate '
-            )
-            ->from('#__bsms_mediafiles')
-            ->leftJoin('#__bsms_studies ON (#__bsms_mediafiles.study_id = #__bsms_studies.id)')
-            ->where('#__bsms_mediafiles.published = ' . $db->q('1'))
-            ->where('downloads > ' . (int)$db->q('0'))
-            ->where('UNIX_TIMESTAMP(createdate) > UNIX_TIMESTAMP( ' . $db->q($lastmonth) . ' )')
-            ->order('downloads DESC');
-        $db->setQuery($query, 0, 5);
-        $results     = $db->loadObjectList();
-        $top_studies = '';
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        if (!$results) {
-            $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
-        } else {
-            foreach ($results as $result) {
-                $top_studies .= $result->downloads . ' ' . Text::_('JBS_CMN_HITS') .
-                    ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $result->sid . '">' .
-                    $result->stitle . '</a> - ' . date('Y-m-d', strtotime($result->sdate)) . '<br>';
-            }
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $cacheKey = 'downloadsLast3Months:' . $userKey;
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
         }
 
-        return $top_studies;
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () {
+            $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
+            $lastmonth = date("Y-m-d 00:00:01", $month);
+            $db        = Factory::getContainer()->get(DatabaseInterface::class);
+            $query     = $db->getQuery(true);
+            $query
+                ->select($db->quoteName(['mf.downloads']))
+                ->select($db->quoteName('s.id', 'sid'))
+                ->select($db->quoteName('s.studytitle', 'stitle'))
+                ->select($db->quoteName('s.studydate', 'sdate'))
+                ->select($db->quoteName('s.access', 'saccess'))
+                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('mf.study_id') . ' = ' . $db->quoteName('s.id'))
+                ->whereIn($db->quoteName('mf.published'), [1, 2])
+                ->where($db->quoteName('mf.downloads') . ' > 0')
+                ->where($db->quoteName('mf.createdate') . ' > ' . $db->quote($lastmonth));
+
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            $query->order($db->quoteName('mf.downloads') . ' DESC');
+            $db->setQuery($query, 0, 5);
+            $rows        = $db->loadObjectList();
+            $top_studies = '';
+
+            if (!$rows) {
+                $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
+            } else {
+                foreach ($rows as $row) {
+                    $top_studies .= (int) $row->downloads . ' ' . Text::_('JBS_CMN_HITS') .
+                        ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->sid . '">' .
+                        htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) . '<br>';
+                }
+            }
+
+            return $top_studies;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
     }
 
     /**
      * Total Downloads
      *
-     * @return  int Number of Media Files Downloaded in Published state
+     * @return  int Total downloads across published + archived media files
      *
      * @since 9.0.0
      */
     public static function getTotalDownloads(): int
     {
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        if (isset(self::$cache['totalDownloads'])) {
+            return self::$cache['totalDownloads'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
         $query
-            ->select('SUM(downloads)')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1)
-            ->where('downloads > ' . 0);
+            ->select('SUM(' . $db->quoteName('downloads') . ')')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->whereIn($db->quoteName('published'), [1, 2])
+            ->where($db->quoteName('downloads') . ' > 0');
         $db->setQuery($query);
 
-        return (int)$db->loadResult();
+        self::$cache['totalDownloads'] = (int) $db->loadResult();
+
+        return self::$cache['totalDownloads'];
     }
 
     /**
@@ -366,55 +535,249 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
-        $final           = [];
-        $top_score_table = '';
-        $format          = Cwmparams::getAdmin()->params->get('format_popular', '0');
-        $db              = Factory::getContainer()->get('DatabaseDriver');
-        $query           = $db->getQuery(true);
-        $query
-            ->select('study_id, sum(downloads + plays) as added ')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1)
-            ->group('study_id')
-            ->order('added DESC');
-        $db->setQuery($query);
-        $results = $db->loadAssocList();
-        array_splice($results, 5);
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
 
-        foreach ($results as $key => $result) {
+        // Include user ID in cache key for non-admin users
+        $userId   = (int) $user->id;
+        $userKey  = $isAdmin ? 'admin' : 'uid:' . $userId;
+        $cacheKey = 'topScore:' . $userKey;
+
+        if (isset(self::$cache[$cacheKey])) {
+            return self::$cache[$cacheKey];
+        }
+
+        // L2: persistent cache across requests (TTL: 15 min)
+        $pc     = self::getPersistentCache();
+        $result = $pc->get(function () {
+            $admin  = Cwmparams::getAdmin();
+            $format = (int) $admin->params->get('format_popular', 0);
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
+
             $query = $db->getQuery(true);
-            $query
-                ->select(
-                    '#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.hits,' .
-                    '#__bsms_studies.id, #__bsms_mediafiles.study_id from #__bsms_studies'
-                )
-                ->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
-                ->where('#__bsms_mediafiles.study_id = ' . (int)$result['study_id']);
-            $db->setQuery($query);
-            $hits = $db->loadObject();
+            $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->join('INNER', $db->quoteName('#__bsms_mediafiles', 'mf') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
+                ->whereIn($db->quoteName('mf.published'), [1, 2]);
 
-            if ($hits) {
-                if ($format < 1) {
-                    $total = $result['added'] + $hits->hits;
-                } else {
-                    $total = $result->added;
-                }
+            // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
+            if ($format >= 2) {
+                $query->select(
+                    'COALESCE(SUM(CASE WHEN ' . $db->quoteName('mf.content_origin') . ' = 0 THEN '
+                    . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0) AS platform_plays'
+                );
+                $query->leftJoin(
+                    $db->quoteName('#__bsms_platform_stats', 'ps')
+                    . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('mf.id')
+                );
+            }
 
-                $link    = ' <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . $hits->id . '">' .
-                    $hits->studytitle . '</a> ' . date('Y-m-d', strtotime($hits->studydate)) . '<br>';
-                $final2  = ['total' => $total, 'link' => $link];
-                $final[] = $final2;
+            // Apply hybrid security filter: location-based + Joomla view-level access
+            CwmlocationHelper::applySecurityFilter($query, 's');
+
+            $query->group($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
+                ->order($db->quoteName('added') . ' DESC');
+
+            $db->setQuery($query, 0, 10); // Get more to account for re-sorting if hits are included
+            $rows = $db->loadObjectList();
+
+            $final = [];
+
+            foreach ($rows as $row) {
+                $platformPlays = (int) ($row->platform_plays ?? 0);
+
+                $total = match ($format) {
+                    0       => (int) $row->added + (int) $row->hits,
+                    1       => (int) $row->added,
+                    2       => (int) $row->added + $platformPlays,
+                    3       => (int) $row->added + (int) $row->hits + $platformPlays,
+                    default => (int) $row->added,
+                };
+
+                $link    = ' <a href="' . Route::_('index.php?option=com_proclaim&task=message.edit&id=' . (int) $row->id) . '">' .
+                    htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
+                $final[] = ['total' => $total, 'link' => $link];
+            }
+
+            // Re-sort by total descending
+            usort($final, function ($a, $b) {
+                return $b['total'] <=> $a['total'];
+            });
+
+            // Slice to top 5
+            $final = \array_slice($final, 0, 5);
+
+            $top_score_table = '';
+
+            foreach ($final as $item) {
+                $top_score_table .= (string) $item['total'] . ' ' . $item['link'];
+            }
+
+            return $top_score_table;
+        }, [], md5($cacheKey));
+
+        self::$cache[$cacheKey] = $result;
+
+        return $result;
+    }
+
+    /**
+     * Cached media stats to avoid duplicate queries
+     *
+     * @var array|null
+     * @since 9.0.0
+     */
+    private static ?array $mediaStats = null;
+
+    /**
+     * Get combined media stats (players and popups) in a single query
+     *
+     * @return array Stats array with player and popup counts
+     *
+     * @since 9.0.0
+     */
+    private static function getMediaStats(): array
+    {
+        if (self::$mediaStats !== null) {
+            return self::$mediaStats;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        // Use SQL to extract and count player/popup values directly from JSON params
+        // This avoids loading all records into PHP memory
+        $query->select([
+            'COUNT(*) as total',
+            // Player counts using JSON_EXTRACT (MySQL 5.7+)
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) IN ("0", "null") OR JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player") IS NULL THEN 1 ELSE 0 END) as player_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "100" THEN 1 ELSE 0 END) as player_global',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "1" THEN 1 ELSE 0 END) as player_internal',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "3" THEN 1 ELSE 0 END) as player_av',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "7" THEN 1 ELSE 0 END) as player_legacy',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.player")) = "8" THEN 1 ELSE 0 END) as player_embed',
+            // Popup counts
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) IN ("0", "100", "null") OR JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup") IS NULL THEN 1 ELSE 0 END) as popup_none',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "1" THEN 1 ELSE 0 END) as popup_popup',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "2" THEN 1 ELSE 0 END) as popup_inline',
+            'SUM(CASE WHEN JSON_UNQUOTE(JSON_EXTRACT(' . $db->quoteName('params') . ', "$.popup")) = "3" THEN 1 ELSE 0 END) as popup_squeezebox',
+        ])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->whereIn($db->quoteName('published'), [1, 2]);
+
+        $db->setQuery($query);
+
+        try {
+            $result = $db->loadAssoc();
+        } catch (\Exception $e) {
+            // Fallback to PHP processing if JSON functions not available
+            $result = self::getMediaStatsFallback();
+        }
+
+        self::$mediaStats = $result ?: [
+            'total'            => 0,
+            'player_none'      => 0,
+            'player_global'    => 0,
+            'player_internal'  => 0,
+            'player_av'        => 0,
+            'player_legacy'    => 0,
+            'player_embed'     => 0,
+            'popup_none'       => 0,
+            'popup_popup'      => 0,
+            'popup_inline'     => 0,
+            'popup_squeezebox' => 0,
+        ];
+
+        return self::$mediaStats;
+    }
+
+    /**
+     * Fallback method for databases without JSON support
+     *
+     * @return array Stats array
+     *
+     * @since 9.0.0
+     */
+    private static function getMediaStatsFallback(): array
+    {
+        $stats = [
+            'total'            => 0,
+            'player_none'      => 0,
+            'player_global'    => 0,
+            'player_internal'  => 0,
+            'player_av'        => 0,
+            'player_legacy'    => 0,
+            'player_embed'     => 0,
+            'popup_none'       => 0,
+            'popup_popup'      => 0,
+            'popup_inline'     => 0,
+            'popup_squeezebox' => 0,
+        ];
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->whereIn($db->quoteName('published'), [1, 2]);
+        $db->setQuery($query);
+        $rows = $db->loadColumn();
+
+        if (!$rows) {
+            return $stats;
+        }
+
+        $stats['total'] = \count($rows);
+        $registry       = new Registry();
+
+        foreach ($rows as $params) {
+            $registry->loadString($params);
+
+            // Count players
+            $player = $registry->get('player', 0);
+            switch ($player) {
+                case 0:
+                case null:
+                    $stats['player_none']++;
+                    break;
+                case '100':
+                    $stats['player_global']++;
+                    break;
+                case '1':
+                    $stats['player_internal']++;
+                    break;
+                case '3':
+                    $stats['player_av']++;
+                    break;
+                case '7':
+                    $stats['player_legacy']++;
+                    break;
+                case '8':
+                    $stats['player_embed']++;
+                    break;
+            }
+
+            // Count popups
+            $popup = $registry->get('popup', null);
+            switch ($popup) {
+                case null:
+                case 100:
+                case 0:
+                    $stats['popup_none']++;
+                    break;
+                case 1:
+                    $stats['popup_popup']++;
+                    break;
+                case 2:
+                    $stats['popup_inline']++;
+                    break;
+                case 3:
+                    $stats['popup_squeezebox']++;
+                    break;
             }
         }
 
-        rsort($final);
-        array_splice($final, 5);
-
-        foreach ($final as $value) {
-            $top_score_table = implode('', $value);
-        }
-
-        return $top_score_table;
+        return $stats;
     }
 
     /**
@@ -426,63 +789,35 @@ class Cwmstats
      */
     public static function getPlayers(): string
     {
-        $count_no_player       = 0;
-        $count_global_player   = 0;
-        $count_internal_player = 0;
-        $count_av_player       = 0;
-        $count_legacy_player   = 0;
-        $count_embed_code      = 0;
-        $db                    = Factory::getContainer()->get('DatabaseDriver');
-        $query                 = $db->getQuery(true);
-        $query
-            ->select('params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . $db->q('1'));
-        $db->setQuery($query);
-        $params = $db->loadObjectList();
+        $stats = self::getMediaStats();
 
-        $registry      = new Registry();
-        $media_players = '';
-
-        if ($params) {
-            $total_players = count($params);
-
-            foreach ($params as $param) {
-                $registry->loadString($param->params);
-
-                switch ($registry->get('player', 0)) {
-                    case 0:
-                        $count_no_player++;
-                        break;
-                    case '100':
-                        $count_global_player++;
-                        break;
-                    case '1':
-                        $count_internal_player++;
-                        break;
-                    case '3':
-                        $count_av_player++;
-                        break;
-                    case '7':
-                        $count_legacy_player++;
-                        break;
-                    case '8':
-                        $count_embed_code++;
-                        break;
-                }
-            }
-
-            $media_players = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_PLAYERS') . ': ' . $total_players . '</strong>' .
-                '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . $count_internal_player .
-                '<br /><strong><a href="http://extensions.joomla.org/extensions/extension/multimedia/multimedia-players/allvideos" target="blank">' .
-                Text::_('JBS_CMN_AVPLUGIN') . '</a>: </strong>' . $count_av_player . '<br /><strong>' .
-                Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . $count_legacy_player . '<br /><strong>' .
-                Text::_('JBS_CMN_NO_PLAYER_TREATED_DIRECT') . ': </strong>' . $count_no_player . '<br /><strong>' .
-                Text::_('JBS_CMN_GLOBAL_SETTINGS') . ': </strong>' . $count_global_player . '<br /><strong>' .
-                Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . $count_embed_code;
+        if ($stats['total'] === 0) {
+            return '';
         }
 
-        return $media_players;
+        // Count deprecated players that may still exist (AV Plugin and Legacy only)
+        $deprecatedCount = (int) $stats['player_av'] + (int) $stats['player_legacy'];
+
+        $output = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $stats['total'] . '</strong>' .
+            '<br /><strong>' . Text::_('JBS_CMN_DIRECT_LINK') . ': </strong>' . (int) $stats['player_none'] .
+            '<br /><strong>' . Text::_('JBS_CMN_INTERNAL_PLAYER') . ': </strong>' . (int) $stats['player_internal'] .
+            '<br /><strong>' . Text::_('JBS_CMN_EMBED_CODE') . ': </strong>' . (int) $stats['player_embed'] .
+            '<br /><strong>' . Text::_('JBS_CMN_USE_GLOBAL') . ': </strong>' . (int) $stats['player_global'];
+
+        // Only show deprecated section if there are any deprecated players remaining
+        if ($deprecatedCount > 0) {
+            $output .= '<br /><br /><em>' . Text::_('JBS_ADM_DEPRECATED_PLAYERS') . ':</em>';
+
+            if ((int) $stats['player_av'] > 0) {
+                $output .= '<br /><strong>' . Text::_('JBS_CMN_AVPLUGIN') . ': </strong>' . (int) $stats['player_av'];
+            }
+
+            if ((int) $stats['player_legacy'] > 0) {
+                $output .= '<br /><strong>' . Text::_('JBS_CMN_LEGACY_PLAYER') . ': </strong>' . (int) $stats['player_legacy'];
+            }
+        }
+
+        return $output;
     }
 
     /**
@@ -494,54 +829,52 @@ class Cwmstats
      */
     public static function getPopups(): string
     {
-        $no_player    = 0;
-        $pop_count    = 0;
-        $sq_count     = 0;
-        $inline_count = 0;
-        $global_count = 0;
-        $db           = Factory::getContainer()->get('DatabaseDriver');
-        $query        = $db->getQuery(true);
-        $query
-            ->select('params')
-            ->from('#__bsms_mediafiles')
-            ->where('published = ' . 1);
-        $db->setQuery($query);
-        $popups = $db->loadObjectList();
+        $stats = self::getMediaStats();
 
-        if ($popups) {
-            $total_media_files = count($popups);
-
-            foreach ($popups as $popup) {
-                $registry = new Registry();
-                $registry->loadString($popup->params);
-                $popup = $registry->get('popup', null);
-
-                switch ($popup) {
-                    case null:
-                    case 100:
-                    case 0:
-                        $no_player++;
-                        break;
-                    case 1:
-                        $pop_count++;
-                        break;
-                    case 2:
-                        $inline_count++;
-                        break;
-                    case 3:
-                        $sq_count++;
-                        break;
-                }
-            }
-
-            $popups = '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $total_media_files . '</strong>' .
-                '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . $inline_count . '<br /><strong>' .
-                Text::_('JBS_CMN_POPUP') . ': </strong>' . $pop_count . '<br /><strong>' .
-                Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . $sq_count . '<br /><strong>' .
-                Text::_('JBS_CMN_NO_OPTION_TREATED_GLOBAL') . ': </strong>' . $no_player;
+        if ($stats['total'] === 0) {
+            return '';
         }
 
-        return $popups;
+        return '<br /><strong>' . Text::_('JBS_CMN_TOTAL_MEDIAFILES') . ': ' . $stats['total'] . '</strong>' .
+            '<br /><strong>' . Text::_('JBS_CMN_INLINE') . ': </strong>' . (int) $stats['popup_inline'] .
+            '<br /><strong>' . Text::_('JBS_CMN_POPUP') . ': </strong>' . (int) $stats['popup_popup'] .
+            '<br /><strong>' . Text::_('JBS_CMN_SQUEEZEBOX') . ': </strong>' . (int) $stats['popup_squeezebox'] .
+            '<br /><strong>' . Text::_('JBS_CMN_USE_GLOBAL') . ': </strong>' . (int) $stats['popup_none'];
+    }
+
+    /**
+     * Get the raw podcast task state value.
+     *
+     * Returns the integer state of the proclaim.podcast scheduler task:
+     *  1 = enabled, 0 = disabled, -2 = trashed, -3 = not created.
+     *
+     * @return int  The task state value
+     *
+     * @since 10.1.0
+     */
+    public static function getPodcastTaskRawState(): int
+    {
+        if (isset(self::$cache['podcastTaskRawState'])) {
+            return self::$cache['podcastTaskRawState'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query
+            ->select($db->quoteName(['id', 'state']))
+            ->from($db->quoteName('#__scheduler_tasks'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.podcast'))
+            ->order($db->quoteName('state') . ' DESC');
+        $db->setQuery($query);
+
+        $task = $db->loadObject();
+
+        $state = $task ? (int) $task->state : -3;
+
+        self::$cache['podcastTaskRawState'] = $state;
+        self::$cache['podcastTaskId']       = $task ? (int) $task->id : 0;
+
+        return $state;
     }
 
     /**
@@ -553,56 +886,79 @@ class Cwmstats
      */
     public static function getPodcastTaskState(): string
     {
-        $states = new \stdClass();
-
-        $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
-        $query
-            ->select('id, state, title')
-            ->from('#__scheduler_tasks')
-            ->where('type = ' . $db->q('proclaim.podcast'))
-            ->order('state DESC');
-        $db->setQuery($query);
-
-        if (!$PodcastTask = $db->loadObject()) {
-            $PodcastTask        = $states;
-            $PodcastTask->state = '';
+        if (isset(self::$cache['podcastTaskState'])) {
+            return self::$cache['podcastTaskState'];
         }
 
-        switch ($PodcastTask->state) {
+        $rawState = self::getPodcastTaskRawState();
+        $taskId   = self::$cache['podcastTaskId'] ?? 0;
+
+        switch ($rawState) {
             case 1:
-                $states->state       = 'ENABLED';
-                $states->buttonstate = ' btn-success';
+                $stateKey    = 'JBS_CMN_TASK_ENABLED';
+                $buttonClass = 'btn-success';
                 break;
             case 0:
-                $states->state       = 'DISABLED';
-                $states->buttonstate = ' btn-warning';
+                $stateKey    = 'JBS_CMN_TASK_DISABLED';
+                $buttonClass = 'btn-warning';
                 break;
             case -2:
-                $states->state       = 'TRASHED';
-                $states->buttonstate = ' btn-light';
+                $stateKey    = 'JBS_CMN_TASK_TRASHED';
+                $buttonClass = 'btn-light';
                 break;
             default:
-                $states->state       = 'JBS_CMN_TASK_NOT_CREATED';
-                $states->buttonstate = ' btn-warning';
+                $stateKey    = 'JBS_CMN_TASK_NOT_CREATED';
+                $buttonClass = 'btn-warning';
                 break;
         }
 
-        $return = "<div style='float: left; padding: 10px;'>";
-        if ($states->state !== 'JBS_CMN_TASK_NOT_CREATED') {
-            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;task=task.edit&id=' . $PodcastTask->id) . "\" target=\"_blank\">";
+        $return = '<div class="d-inline-block me-2 mb-2">';
+
+        if ($rawState !== -3) {
+            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&task=task.edit&id=' . $taskId) . '" target="_blank">';
         } else {
-            $return .= "<a href=\"" . Route::_('index.php?option=com_scheduler&amp;view=tasks') . "\" target=\"_blank\">";
+            $return .= '<a href="' . Route::_('index.php?option=com_scheduler&view=tasks') . '" target="_blank">';
         }
 
-        $return .= "<button type='button' class='btn" . $states->buttonstate . "'><i class='icon-clock' title='Clock showing time'></i>" .
-            Text::_('JBS_CMN_PODCAST_TASK_STATUS') . "<strong>" . Text::_($states->state) . "</strong></button>";
+        $return .= '<button type="button" class="btn ' . $buttonClass . '">'
+            . '<i class="icon-clock" title="Clock showing time"></i>'
+            . Text::_('JBS_CMN_PODCAST_TASK_STATUS') . ' <strong>' . Text::_($stateKey) . '</strong>'
+            . '</button>';
 
-        $return .= "</a>";
+        $return .= '</a>';
+        $return .= '</div>';
 
-        $return .= "</div>";
+        self::$cache['podcastTaskState'] = $return;
 
         return $return;
+    }
+
+    /**
+     * Check if any published podcasts exist.
+     *
+     * @return bool  True if at least one published podcast exists
+     *
+     * @since 10.1.0
+     */
+    public static function hasPublishedPodcasts(): bool
+    {
+        if (isset(self::$cache['hasPublishedPodcasts'])) {
+            return self::$cache['hasPublishedPodcasts'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_podcast'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+
+        $result = (int) $db->loadResult() > 0;
+
+        self::$cache['hasPublishedPodcasts'] = $result;
+
+        return $result;
     }
 
     /**
@@ -615,86 +971,103 @@ class Cwmstats
      */
     public function getTopScoreSite(): bool|string
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $t     = $input->get('t', 1, 'int');
 
-        $admin = Cwmparams::getAdmin();
-        $limit = $admin->params->get('popular_limit', '25');
-        $top   = '<select onchange="goTo()" id="urlList" class="form-select chzn-color-state valid form-control-success" size="1" aria-invalid="false"><option value="">' .
-            Text::_('JBS_CMN_SELECT_POPULAR_STUDY') . '</option>';
-        $final = [];
+        $admin  = Cwmparams::getAdmin();
+        $limit  = (int) $admin->params->get('popular_limit', 25);
+        $format = (int) $admin->params->get('format_popular', 0);
 
-        $db    = Factory::getContainer()->get('DatabaseDriver');
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select('m.study_id, s.access, s.published AS spub, sum(m.downloads + m.plays) as added')
-            ->from('#__bsms_mediafiles AS m')
-            ->leftJoin('#__bsms_studies AS s ON (m.study_id = s.id)')
-            ->where('m.published = 1 GROUP BY m.study_id');
-        $db->setQuery($query);
-        $format = $admin->params->get('format_popular', '0');
+        $query->select($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']))
+            ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
+            ->whereIn($db->quoteName('m.published'), [1, 2])
+            ->whereIn($db->quoteName('s.published'), [1, 2]);
 
-        $items = $db->loadObjectList();
+        // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
+        if ($format >= 2) {
+            $query->select(
+                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('m.content_origin') . ' = 0 THEN '
+                . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0) AS platform_plays'
+            );
+            $query->leftJoin(
+                $db->quoteName('#__bsms_platform_stats', 'ps')
+                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
+            );
+        }
+
+        $query->group($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']));
+
+        $db->setQuery($query);
+        $items = $db->loadObjectList() ?: [];
 
         // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
         $user   = Factory::getApplication()->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
 
-        foreach ($items as $i => $iValue) {
-            if (($iValue->access > 1) && !in_array($iValue->access, $groups, true)) {
-                unset($items[$i]);
-            }
-        }
+        $final = [];
 
-        foreach ($items as $result) {
-            $query = $db->getQuery(true);
-            $query->select(
-                '#__bsms_studies.studydate, #__bsms_studies.studytitle, #__bsms_studies.alias,
-							#__bsms_studies.hits, #__bsms_studies.id, #__bsms_mediafiles.study_id'
-            )
-                ->from('#__bsms_studies')
-                ->leftJoin('#__bsms_mediafiles ON (#__bsms_studies.id = #__bsms_mediafiles.study_id)')
-                ->where('#__bsms_mediafiles.study_id = ' . (int)$result->study_id);
-            $db->setQuery($query);
-            $hits = $db->loadObject();
-
-            if (!$hits) {
-                return false;
+        foreach ($items as $item) {
+            if (($item->access > 1) && !\in_array($item->access, $groups, true)) {
+                continue;
             }
 
-            if (!$hits->studytitle) {
-                $name = $hits->id;
-            } else {
-                $name = $hits->studytitle;
-            }
+            $name          = $item->studytitle ?: $item->id;
+            $platformPlays = (int) ($item->platform_plays ?? 0);
 
-            if ($format < 1) {
-                $total = $result->added + $hits->hits;
-            } else {
-                $total = $result->added;
-            }
+            $total = match ($format) {
+                0       => (int) $item->added + (int) $item->hits,
+                1       => (int) $item->added,
+                2       => (int) $item->added + $platformPlays,
+                3       => (int) $item->added + (int) $item->hits + $platformPlays,
+                default => (int) $item->added,
+            };
 
-            $hits->slug = $hits->alias ? ($hits->id . ':' . $hits->alias) : $hits->id . ':'
-                . str_replace(' ', '-', htmlspecialchars_decode($hits->studytitle, ENT_QUOTES));
+            $slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
+                . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
 
-            $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $hits->slug . '&t=' . $t);
+            $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $slug . '&t=' . $t);
             $selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
-            $final2        = [
+
+            $final[] = [
                 'score'   => $total,
                 'select'  => $selectvalue,
                 'display' => $selectdisplay,
             ];
-            $final[]       = $final2;
         }
 
-        rsort($final);
-        array_splice($final, $limit);
+        // Sort by score descending
+        usort($final, function ($a, $b) {
+            return $b['score'] <=> $a['score'];
+        });
+
+        // Slice to limit
+        if ($limit > 0) {
+            $final = \array_slice($final, 0, $limit);
+        }
+
+        $options = [
+            HTMLHelper::_('select.option', '', Text::_('JBS_CMN_SELECT_POPULAR_STUDY')),
+        ];
 
         foreach ($final as $topscore) {
-            $top .= '<option value="' . $topscore['select'] . '">' . $topscore['display'] . '</option>';
+            $options[] = HTMLHelper::_('select.option', $topscore['select'], $topscore['display']);
         }
 
-        $top .= '</select>';
-
-        return $top;
+        return HTMLHelper::_(
+            'select.genericlist',
+            $options,
+            'urlList',
+            [
+                'list.attr'   => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value" size="1"',
+                'list.select' => '',
+                'option.key'  => 'value',
+                'option.text' => 'text',
+                'id'          => 'urlList',
+            ]
+        );
     }
 }

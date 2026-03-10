@@ -3,7 +3,7 @@
  * Modal
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -13,13 +13,15 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
-use Joomla\Input\Input;
+use Joomla\CMS\Factory;
 
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-HtmlHelper::_('behavior.multiselect');
-$input     = new Input;
+/** @var CWM\Component\Proclaim\Administrator\View\Cwmmediafiles\HtmlView $this */
+
+HTMLHelper::_('behavior.multiselect');
+$input     = Factory::getApplication()->getInput();
 $function  = $input->get('function', 'jSelectMessagetype', 'cmd');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -36,11 +38,11 @@ $saveOrder = $listOrder === 'messagetype.ordering';
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php
-                    echo JText::_('JOPTION_SELECT_PUBLISHED'); ?></option>
+                    echo Text::_('JOPTION_SELECT_PUBLISHED'); ?></option>
                 <?php
-                echo HtmlHelper::_(
+                echo HTMLHelper::_(
                     'select.options',
-                    HtmlHelper::_('jgrid.publishedOptions'),
+                    HTMLHelper::_('jgrid.publishedOptions'),
                     'value',
                     'text',
                     $this->state->get('filter.published'),
@@ -49,18 +51,16 @@ $saveOrder = $listOrder === 'messagetype.ordering';
             </select>
         </div>
     </fieldset>
-    <div class="clr"></div>
-
     <table class="adminlist">
         <thead>
         <tr>
             <th width="20" class="title">
                 <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php
-                echo count($this->items); ?>);"/>
+                echo \count($this->items); ?>);"/>
             </th>
             <th width="20" align="center">
                 <?php
-                echo HtmlHelper::_(
+                echo HTMLHelper::_(
                     'searchtools.sort',
                     'JBS_CMN_PUBLISHED',
                     'messagetype.publish',
@@ -71,7 +71,7 @@ $saveOrder = $listOrder === 'messagetype.ordering';
 
             <th width="10%">
                 <?php
-                echo HtmlHelper::_(
+                echo HTMLHelper::_(
                     'searchtools.sort',
                     'JBS_CMN_ORDERING',
                     'messagetype.ordering',
@@ -81,13 +81,13 @@ $saveOrder = $listOrder === 'messagetype.ordering';
                 <?php
                 if ($saveOrder) : ?>
                     <?php
-                    echo HtmlHelper::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
+                    echo HTMLHelper::_('grid.order', $this->items, 'filesave.png', 'messagetype.saveorder'); ?>
                 <?php
                 endif; ?>
             </th>
             <th>
                 <?php
-                echo HtmlHelper::_(
+                echo HTMLHelper::_(
                     'searchtools.sort',
                     'JBS_CMN_MESSAGETYPE',
                     'messagetype.message_type',
@@ -97,7 +97,7 @@ $saveOrder = $listOrder === 'messagetype.ordering';
             </th>
             <th width="1%" class="nowrap">
                 <?php
-                echo HtmlHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
+                echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'messagetype.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -111,59 +111,58 @@ $saveOrder = $listOrder === 'messagetype.ordering';
         </tfoot>
         <tbody>
         <?php
-        $n = count($this->items);
-        foreach ($this->items as $i => $item) :
-            $link = Route::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int)$item->id);
-            ?>
+        $n = \count($this->items);
+foreach ($this->items as $i => $item) :
+    $link = Route::_('index.php?option=com_proclaim&task=messagetype.edit&id=' . (int)$item->id);
+    ?>
             <tr class="row<?php
-            echo $i % 2; ?>">
+    echo $i % 2; ?>">
                 <td class="center">
                     <?php
-                    echo HtmlHelper::_('grid.id', $i, $item->id); ?>
+            echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td class="center">
                     <?php
-                    echo HtmlHelper::_('jgrid.published', $item->published, $i, 'messagetypes.', true, 'cb', '', ''); ?>
+            echo HTMLHelper::_('jgrid.published', $item->published, $i, 'messagetypes.', true, 'cb', '', ''); ?>
                 </td>
                 <td class="order">
                     <?php
-                    if ($listDirn === 'asc') : ?>
+            if ($listDirn === 'asc') : ?>
                         <span><?php
-                            echo $this->pagination->orderUpIcon(
-                                $i,
-                                ($item->id == @$this->items[$i - 1]->id),
-                                'messagetypes.orderup',
-                                'JLIB_HTML_MOVE_UP',
-                                $ordering
-                            ); ?></span>
+                    echo $this->pagination->orderUpIcon(
+                        $i,
+                        ($i > 0),
+                        'messagetypes.orderup',
+                        'JLIB_HTML_MOVE_UP',
+                        $saveOrder
+                    ); ?></span>
                         <span><?php
-                            echo $this->pagination->orderDownIcon(
-                                $i,
-                                $n,
-                                ($this->pagination->total == @$this->items[$i + 1]->id),
-                                'messagetypes.orderdown',
-                                'JLIB_HTML_MOVE_DOWN',
-                                $ordering
-                            ); ?></span>
-                    <?php
-                    elseif ($listDirn === 'desc') : ?>
+                    echo $this->pagination->orderDownIcon(
+                        $i,
+                        $n,
+                        ($i < $n - 1),
+                        'messagetypes.orderdown',
+                        'JLIB_HTML_MOVE_DOWN',
+                        $saveOrder
+                    ); ?></span>
+                    <?php elseif ($listDirn === 'desc') : ?>
                         <span><?php
-                            echo $this->pagination->orderUpIcon(
-                                $i,
-                                ($item->id == @$this->items[$i - 1]->id),
-                                'messagetypes.orderdown',
-                                'JLIB_HTML_MOVE_UP',
-                                $ordering
-                            ); ?></span>
+                    echo $this->pagination->orderUpIcon(
+                        $i,
+                        ($i > 0),
+                        'messagetypes.orderdown',
+                        'JLIB_HTML_MOVE_UP',
+                        $saveOrder
+                    ); ?></span>
                         <span><?php
-                            echo $this->pagination->orderDownIcon(
-                                $i,
-                                $n,
-                                ($this->pagination->total == @$this->items[$i + 1]->id),
-                                'messagetypes.orderup',
-                                'JLIB_HTML_MOVE_DOWN',
-                                $ordering
-                            ); ?></span>
+                    echo $this->pagination->orderDownIcon(
+                        $i,
+                        $n,
+                        ($i < $n - 1),
+                        'messagetypes.orderup',
+                        'JLIB_HTML_MOVE_DOWN',
+                        $saveOrder
+                    ); ?></span>
                     <?php
                     endif; ?>
                     <?php
@@ -174,8 +173,8 @@ $saveOrder = $listOrder === 'messagetype.ordering';
                     echo $disabled ?> class="text-area-order"/>
                 </td>
                 <td class="center">
-                    <a href="<?php
-                    echo $link; ?>"><?php
+                    <a class="pointer" href="javascript:void(0)" onclick="if (window.parent) window.parent.<?php echo $function; ?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->message_type)); ?>', '', '', '<?php echo $link; ?>', '', '');">
+                        <?php
                         echo $item->message_type; ?></a>
 
                     <p class="smallsub">
@@ -188,7 +187,7 @@ $saveOrder = $listOrder === 'messagetype.ordering';
                 </td>
             </tr>
         <?php
-        endforeach; ?>
+endforeach; ?>
         </tbody>
     </table>
 
@@ -196,11 +195,11 @@ $saveOrder = $listOrder === 'messagetype.ordering';
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
         <input type="hidden" name="filter_order" value="<?php
-        echo $listOrder; ?>"/>
+echo $listOrder; ?>"/>
         <input type="hidden" name="filter_order_Dir" value="<?php
-        echo $listDirn; ?>"/>
+echo $listDirn; ?>"/>
         <?php
-        echo HtmlHelper::_('form.token'); ?>
+echo HTMLHelper::_('form.token'); ?>
     </div>
 
 </form>

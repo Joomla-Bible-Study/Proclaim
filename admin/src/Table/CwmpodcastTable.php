@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -18,8 +18,10 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -33,209 +35,199 @@ class CwmpodcastTable extends Table
     /**
      * Primary Key
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * Published
      *
-     * @var integer
+     * @var int
      *
      * @since 9.0.0
      */
-    public $published = 1;
+    public ?int $published = 1;
+
+    /**
+     * Location ID (multi-campus)
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $location_id = null;
 
     /**
      * Title
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $title = null;
+    public ?string $title = null;
 
     /**
      * Website Address
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $website = null;
+    public ?string $website = null;
 
     /**
      * Description
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $description = null;
+    public ?string $description = null;
 
     /**
      * Image
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $image = null;
+    public ?string $image = null;
 
     /**
      * Image Height
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $imageh = null;
+    public ?int $imageh = null;
 
     /**
      * Image Width
      *
-     * @var integer
+     * @var int|null
      *
      * @since 9.0.0
      */
-    public $imagew = null;
+    public ?int $imagew = null;
 
     /**
      * Author
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $author = null;
+    public ?string $author = null;
 
     /**
      * Podcast Image
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $podcastimage = null;
-
-    /**
-     * Podcast Summary
-     *
-     * @var string
-     *
-     * @since 9.0.0
-     */
-    public $podcastsummary = null;
+    public ?string $podcastimage = null;
 
     /**
      * Podcast Search Words
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $podcastsearch = null;
+    public ?string $podcastsearch = null;
 
     /**
      * File Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $filename = null;
+    public ?string $filename = null;
 
     /**
      * Language of Podcast
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $language = null;
-
-    /**
-     * Podcast name
-     *
-     * @var string
-     *
-     * @since 9.0.0
-     */
-    public $podcastname = null;
+    public ?string $language = null;
 
     /**
      * Editor Name
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $editor_name = null;
+    public ?string $editor_name = null;
 
     /**
      * Editor Email Address
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $editor_email = null;
+    public ?string $editor_email = null;
 
     /**
      * Limit of the episodes in the podcast
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $podcastlimit = null;
+    public ?string $podcastlimit = null;
 
     /**
      * Episode Title
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $episodetitle = null;
+    public ?string $episodetitle = null;
 
     /**
      * Custom
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $custom = null;
+    public ?string $custom = null;
 
     /**
      * Details template ID
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $episodesubtitle = null;
+    public ?string $episodesubtitle = null;
 
     /**
      * Custom
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $customsubtitle = null;
+    public ?string $customsubtitle = null;
 
     /**
      * Details template ID
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $detailstemplateid = null;
+    public ?string $detailstemplateid = null;
 
     /**
      * Type of link to use for podcast.
@@ -244,16 +236,136 @@ class CwmpodcastTable extends Table
      * 1 = Direct Link.
      * 2 = Popup Player Window with default player as internal.
      *
-     * @var string
+     * @var string|null
      *
      * @since 9.0.0
      */
-    public $linktype = null;
+    public ?string $linktype = null;
+
+    /**
+     * iTunes category for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_category = 'Religion & Spirituality';
+
+    /**
+     * iTunes subcategory for the podcast feed
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_subcategory = 'Christianity';
+
+    /**
+     * iTunes explicit flag (true/false)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_explicit = 'false';
+
+    /**
+     * iTunes show type (episodic/serial)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $itunes_type = 'episodic';
+
+    /**
+     * Created date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $created = null;
+
+    /**
+     * Created by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $created_by = null;
+
+    /**
+     * Created by alias
+     *
+     * @var string
+     * @since 10.1.0
+     */
+    public ?string $created_by_alias = '';
+
+    /**
+     * Modified date
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $modified = null;
+
+    /**
+     * Modified by user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $modified_by = null;
+
+    /**
+     * Asset ID
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $asset_id = null;
+
+    /**
+     * Access Level
+     *
+     * @var int|null
+     * @since 9.0.0
+     */
+    public ?int $access = null;
+
+    /**
+     * Platform links JSON (multi-platform subscription links)
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $platform_links = null;
+
+    /**
+     * Params
+     *
+     * @var string|null
+     * @since 9.0.0
+     */
+    public ?string $params = null;
+
+    /**
+     * Checked out user ID
+     *
+     * @var int|null
+     * @since 10.1.0
+     */
+    public ?int $checked_out = null;
+
+    /**
+     * Checked out time
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $checked_out_time = null;
 
     /**
      * Constructor
      *
-     * @param   DatabaseDriver  $db  Database connector object
+     * @param   DatabaseInterface  $db  Database connector object
      *
      * @since 9.0.0
      */
@@ -263,30 +375,160 @@ class CwmpodcastTable extends Table
     }
 
     /**
+     * Perform pre-save checks on the table properties.
+     *
+     * @return  bool  True if checks pass.
+     *
+     * @throws  \UnexpectedValueException
+     *
+     * @since   10.1.0
+     */
+    #[\Override]
+    public function check(): bool
+    {
+        if (trim($this->title ?? '') === '') {
+            throw new \UnexpectedValueException(Text::_('JBS_CMN_ERROR_TITLE_REQUIRED'));
+        }
+
+        // Normalise "Global (All Campuses)" sentinel to NULL for DB storage
+        if ($this->location_id !== null && $this->location_id <= 0) {
+            $this->location_id = null;
+        }
+
+        // Validate podcastlink: must be empty or a numeric menu item ID
+        if (!empty($this->podcastlink) && !ctype_digit((string) $this->podcastlink)) {
+            throw new \UnexpectedValueException(
+                Text::_('JBS_PDC_PODCAST_URL_LEGACY_ERROR')
+            );
+        }
+
+        // Validate podcast artwork image on save
+        if (!empty($this->podcastimage)) {
+            $fullPath = JPATH_ROOT . '/' . ltrim($this->podcastimage, '/');
+
+            if (is_file($fullPath)) {
+                $imageInfo = @getimagesize($fullPath);
+
+                if ($imageInfo !== false) {
+                    [$width, $height, $type] = $imageInfo;
+
+                    // Block save: wrong format
+                    if ($type !== IMAGETYPE_JPEG && $type !== IMAGETYPE_PNG) {
+                        throw new \UnexpectedValueException(
+                            Text::_('JBS_PDC_VALIDATE_IMAGE_FORMAT')
+                        );
+                    }
+
+                    // Block save: too small
+                    if ($width < 1400 || $height < 1400) {
+                        throw new \UnexpectedValueException(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_SMALL', $width, $height)
+                        );
+                    }
+
+                    // Warn only: too large
+                    if ($width > 3000 || $height > 3000) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_TOO_LARGE', $width, $height),
+                            'warning'
+                        );
+                    }
+
+                    // Warn only: not square
+                    if ($width !== $height) {
+                        Factory::getApplication()->enqueueMessage(
+                            Text::sprintf('JBS_PDC_VALIDATE_IMAGE_NOT_SQUARE', $width, $height),
+                            'warning'
+                        );
+                    }
+                }
+            }
+        }
+
+        // Auto-prepend https:// to URL fields missing a schema
+        // website uses type="url" (Joomla handles validation), podcastlink stores menu item IDs
+        foreach (['alternatelink'] as $field) {
+            if (!empty($this->$field) && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $this->$field)) {
+                $this->$field = 'https://' . $this->$field;
+            }
+        }
+
+        // Auto-prepend https:// to URLs in platform_links JSON
+        if (!empty($this->platform_links) && \is_string($this->platform_links)) {
+            try {
+                $links = json_decode($this->platform_links, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $links = null;
+            }
+
+            if (\is_array($links)) {
+                $changed = false;
+
+                foreach ($links as &$link) {
+                    if (
+                        !empty($link['url'])
+                        && !preg_match('#^[a-z][a-z0-9+\-.]*://#i', $link['url'])
+                    ) {
+                        $link['url'] = 'https://' . $link['url'];
+                        $changed     = true;
+                    }
+                }
+
+                unset($link);
+
+                if ($changed) {
+                    $this->platform_links = json_encode($links);
+                }
+            }
+        }
+
+        return parent::check();
+    }
+
+    /**
      * Method to bind an associative array or object to the Table instance.This
      * method only binds properties that are publicly accessible and optionally
      * takes an array of properties to ignore when binding.
      *
      * @param   mixed  $array  An associative array or object to bind to the Table instance.
-     * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
+     * @param   mixed  $ignore  An optional array or space-separated list of properties to ignore while binding.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
-    public function bind($array, $ignore = '')
+    #[\Override]
+    public function bind($array, $ignore = ''): bool
     {
-        if (isset($array['params']) && is_array($array['params'])) {
+        if (isset($array['params']) && \is_array($array['params'])) {
             $registry = new Registry();
             $registry->loadArray($array['params']);
             $array['params'] = (string)$registry;
         }
 
         // Bind the rules.
-        if (isset($array['rules']) && is_array($array['rules'])) {
+        if (isset($array['rules']) && \is_array($array['rules'])) {
             $rules = new Rules($array['rules']);
             $this->setRules($rules);
+        }
+
+        // JSON-encode platform_links subform array for DB storage
+        if (isset($array['platform_links']) && \is_array($array['platform_links'])) {
+            $array['platform_links'] = json_encode(
+                array_values($array['platform_links']),
+                JSON_THROW_ON_ERROR
+            );
+        }
+
+        // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
+        foreach ([
+            'id', 'published', 'location_id', 'imageh', 'imagew',
+            'created_by', 'modified_by', 'asset_id', 'access', 'checked_out',
+        ] as $field) {
+            if (isset($array[$field])) {
+                $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;
+            }
         }
 
         return parent::bind($array, $ignore);
@@ -299,16 +541,17 @@ class CwmpodcastTable extends Table
      * a new row will be inserted into the database with the properties from the
      * Table instance.
      *
-     * @param   boolean  $updateNulls  True to update fields even if they are null.
+     * @param   bool  $updateNulls  True to update fields even if they are null.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @link    https://docs.joomla.org/Table/store
      * @since   11.1
      */
-    public function store($updateNulls = false)
+    #[\Override]
+    public function store($updateNulls = false): bool
     {
-        if (!$this->_rules) {
+        if (!$this->getRules()) {
             $this->setRules(
                 '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
             );
@@ -326,7 +569,8 @@ class CwmpodcastTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetName()
+    #[\Override]
+    protected function _getAssetName(): string
     {
         $k = $this->_tbl_key;
 
@@ -340,7 +584,8 @@ class CwmpodcastTable extends Table
      *
      * @since       1.6
      */
-    protected function _getAssetTitle()
+    #[\Override]
+    protected function _getAssetTitle(): string
     {
         return 'JBS Podcast: ' . $this->title;
     }
@@ -354,11 +599,12 @@ class CwmpodcastTable extends Table
      * @param   ?Table  $table  A Table object for the asset parent.
      * @param   null                          $id     Id to look up
      *
-     * @return  integer
+     * @return  int
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null): int
+    #[\Override]
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         // Get Proclaim Root ID
         return Cwmassets::parentId();

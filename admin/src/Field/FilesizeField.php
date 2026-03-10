@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -43,6 +43,7 @@ class FilesizeField extends ListField
      *
      * @since 1.5
      */
+    #[\Override]
     protected function getInput(): string
     {
         // Initialize some field attributes.
@@ -70,8 +71,8 @@ class FilesizeField extends ListField
      */
     private function sizeConverter(): string
     {
-        return "<button data-toggle=\"modal\" onclick=\"jQuery( '#collapseModal' ).modal('show'); return true;\" class=\"btn btn-primary\">
-	<span class=\"icon-checkbox-partial\" aria-hidden=\"true\"></span> " . Text::_('JBS_MED_FILESIZE_CONVERTER') .
-            "</button>";
+        return '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#collapseModal">
+            <span class="icon-checkbox-partial" aria-hidden="true"></span> ' . Text::_('JBS_MED_FILESIZE_CONVERTER') .
+            '</button>';
     }
 }

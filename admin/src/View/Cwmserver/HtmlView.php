@@ -4,14 +4,15 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Administrator\View\CWMServer;
+namespace CWM\Component\Proclaim\Administrator\View\Cwmserver;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -34,50 +35,50 @@ class HtmlView extends BaseHtmlView
     /**
      * Form
      *
-     * @var object
+     * @var ?\Joomla\CMS\Form\Form
      * @since    7.0.0
      */
-    protected $form;
+    protected ?\Joomla\CMS\Form\Form $form = null;
 
     /**
      * Server form
      *
-     * @var string
+     * @var mixed
      * @since    7.0.0
      */
-    protected $server_form;
+    protected mixed $server_form = null;
 
     /**
      * Item
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $item;
+    protected ?object $item = null;
 
     /**
      * State
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $state;
+    protected ?object $state = null;
 
     /**
      * Admin
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $admin;
+    protected ?object $admin = null;
 
     /**
      * Can Do
      *
-     * @var object
+     * @var ?object
      * @since    7.0.0
      */
-    protected $canDo;
+    protected ?object $canDo = null;
 
     /**
      * Execute and display a template script.
@@ -90,16 +91,21 @@ class HtmlView extends BaseHtmlView
      * @since   11.1
      * @see     fetch()
      */
+    #[\Override]
     public function display($tpl = null): void
     {
-        $this->form        = $this->get("form");
-        $this->state       = $this->get("State");
-        $this->item        = $this->get("Item");
+        /** @var CwmserverModel $model */
+        $model = $this->getModel();
+        $model->setUseExceptions(true);
+
+        $this->form        = $model->getForm();
+        $this->state       = $model->getState();
+        $this->item        = $model->getItem();
         $this->canDo       = ContentHelper::getActions('com_proclaim', 'server', (int)$this->item->id);
-        $this->server_form = $this->get('AddonServerForm');
+        $this->server_form = $model->getAddonServerForm();
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -107,8 +113,6 @@ class HtmlView extends BaseHtmlView
 
         // Set the toolbar
         $this->addToolbar();
-
-        $isNew = ($this->item->id < 1);
 
         // Display the template
         parent::display($tpl);
@@ -122,9 +126,9 @@ class HtmlView extends BaseHtmlView
      * @throws \Exception
      * @since 7.0.0
      */
-    protected function addToolbar()
+    protected function addToolbar(): void
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id < 1);
         $canDo = ContentHelper::getActions('com_proclaim');
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
@@ -158,7 +162,6 @@ class HtmlView extends BaseHtmlView
         }
 
         ToolbarHelper::divider();
-	    $help_url = 'https://www.christianwebministries.org/index.php?option=com_content&view=article&id=40:server-entry-screen-help&catid=20&Itemid=315&tmpl=component';
-	    ToolbarHelper::help('proclaim', false, $url = $help_url, 'com_proclaim');
+        ToolbarHelper::help('server', true);
     }
 }

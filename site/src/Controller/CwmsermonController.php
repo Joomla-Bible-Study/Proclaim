@@ -4,22 +4,25 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Site
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmnotificationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
+use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 use PHPMailer\PHPMailer\Exception;
 
@@ -54,17 +57,21 @@ class CwmsermonController extends FormController
     /**
      * Method to add a new record.
      *
-     * @return    void  True if the article can be added, false if not.
+     * @return    bool  True if the article can be added, false if not.
      *
      * @throws \Exception
      * @since    1.6
      */
-    public function add(): void
+    public function add(): bool
     {
-        if (!parent::add()) {
+        $result = parent::add();
+
+        if (!$result) {
             // Redirect to the return page.
             $this->setRedirect($this->getReturnPage());
         }
+
+        return $result;
     }
 
     /**
@@ -79,7 +86,7 @@ class CwmsermonController extends FormController
      */
     protected function getReturnPage(): string
     {
-        $return = Factory::getApplication()->input->get('return', null, 'base64');
+        $return = Factory::getApplication()->getInput()->get('return', null, 'base64');
 
         if (empty($return) || !Uri::isInternal(base64_decode($return))) {
             return Uri::base() . 'index.php?option=com_proclaim&view=cwmsermon';
@@ -93,17 +100,19 @@ class CwmsermonController extends FormController
      *
      * @param   string  $key  The name of the primary key of the URL variable.
      *
-     * @return    void  True if access level checks pass, false otherwise.
+     * @return    bool  True if access level checks pass, false otherwise.
      *
      * @throws \Exception
      * @since    1.6
      */
-    public function cancel($key = 'a_id'): void
+    public function cancel($key = 'a_id'): bool
     {
-        parent::cancel($key);
+        $result = parent::cancel($key);
 
         // Redirect to the return page.
         $this->setRedirect($this->getReturnPage());
+
+        return $result;
     }
 
     /**
@@ -112,7 +121,7 @@ class CwmsermonController extends FormController
      * @param   string  $key     The name of the primary key of the URL variable.
      * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
      *
-     * @return    boolean    True if access level check and checkout passes, false otherwise.
+     * @return    bool    True if access level check and checkout pass, false otherwise.
      *
      * @since    1.6
      */
@@ -127,7 +136,7 @@ class CwmsermonController extends FormController
      * @param   string  $key     The name of the primary key of the URL variable.
      * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
      *
-     * @return    boolean    True if successful, false otherwise.
+     * @return    bool    True if successful, false otherwise.
      *
      * @throws \Exception
      * @since    1.6
@@ -150,53 +159,103 @@ class CwmsermonController extends FormController
      * @return void
      *
      * @throws Exception
+     * @throws \Exception
      * @since 7.0
      */
     public function comment(): void
     {
-        $input = Factory::getApplication()->input;
+        // Check for CSRF token
+        $this->checkToken();
+
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
+
         /** @var CwmsermonModel $model */
-        $model = $this->getModel('sermon');
-        $t     = $input->get('t', '1');
-        $input->set('t', $t);
+        $model = $this->getModel();
+        $t     = $input->getInt('t', 1);
 
-        // Convert parameter fields to objects.
-        $registry = new Registry();
-        $registry->loadString($model->_template[0]->params);
-        $params = $registry;
+        // Get template params
+        $params = new Registry();
 
+        if (!empty($model->_template[0]->params)) {
+            $params->loadString($model->_template[0]->params);
+        }
+
+        // Check captcha if enabled (Joomla 5/6 compatible Captcha API)
         if ($params->get('use_captcha') > 0) {
-            // Begin reCaptcha
-            $data = $input->post;
-            PluginHelper::importPlugin('captcha');
-            $res = Factory::getApplication()->triggerEvent('onCheckAnswer', $_POST['recaptcha_response_field']);
+            $captchaPlugin = $params->get('captcha', $app->get('captcha', ''));
 
-            if (!$res[0]) {
-                // What happens when the CAPTCHA was entered incorrectly
-                $mess = Text::_('JBS_STY_INCORRECT_KEY');
-                echo "<script type='text/javascript'>alert('" . $mess . "')</script>";
-                echo "<script type='text/javascript'>window.parent.location.reload()</script>";
+            if ($captchaPlugin) {
+                try {
+                    $captcha         = Captcha::getInstance($captchaPlugin);
+                    $captchaResponse = $input->get('recaptcha_response_field', '', 'string');
 
-                return;
+                    if (!$captcha->checkAnswer($captchaResponse)) {
+                        $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                        $this->redirectBack($input, $t);
+
+                        return;
+                    }
+                } catch (\RuntimeException $e) {
+                    $app->enqueueMessage(Text::_('JBS_STY_INCORRECT_KEY'), 'error');
+                    $this->redirectBack($input, $t);
+
+                    return;
+                }
             }
         }
 
+        // Store the comment
         if ($model->storecomment()) {
-            $msg = Text::_('JBS_STY_COMMENT_SUBMITTED');
+            $published = $input->getInt('published', 1);
+
+            // Show appropriate message based on whether the comment is auto-approved or held
+            if ($published === 0) {
+                $app->enqueueMessage(Text::_('JBS_CMT_SUBMITTED_PENDING_APPROVAL'), 'message');
+
+                // Send moderation notification email if configured
+                $notifyEmail = $params->get('comment_notify_email', '');
+                if (!empty($notifyEmail) || $app->get('mailfrom')) {
+                    CwmnotificationHelper::notifyCommentPending(
+                        $input->getInt('study_id', 0),
+                        $input->getString('full_name', 'Anonymous'),
+                        $input->get('comment_text', '', 'raw'),
+                        $params
+                    );
+                }
+            } else {
+                $app->enqueueMessage(Text::_('JBS_STY_COMMENT_SUBMITTED'), 'success');
+            }
+
+            // Send general email notification if enabled
+            if ($params->get('email_comments') > 0) {
+                $this->commentsEmail($params);
+            }
         } else {
-            $msg = Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT');
+            $app->enqueueMessage(Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT'), 'error');
         }
 
-        if ($params->get('email_comments') > 0) {
-            $this->commentsEmail($params);
-        }
+        $this->redirectBack($input, $t);
+    }
 
-        $study_detail_id = $input->get('study_detail_id', 0, 'int');
+    /**
+     * Redirect back to the sermon page
+     *
+     * @param   Input  $input  Input object
+     * @param   int                  $t      Template ID
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    private function redirectBack($input, int $t): void
+    {
+        $studyId = $input->getInt('study_detail_id', $input->getInt('study_id', 0));
 
-        Factory::getApplication()->redirect(
+        $this->setRedirect(
             Route::_(
-                'index.php?option=com_proclaim&id=' . $study_detail_id . '&view=cwmsermon&t=' . $t . '&msg=' . $msg,
-                'Comment Added'
+                'index.php?option=com_proclaim&view=cwmsermon&id=' . $studyId . '&t=' . $t,
+                false
             )
         );
     }
@@ -215,7 +274,7 @@ class CwmsermonController extends FormController
     public function getModel(
         $name = 'Cwmsermon',
         $prefix = '',
-        $config = array('ignore_request' => true)
+        $config = ['ignore_request' => true]
     ): BaseDatabaseModel {
         return parent::getModel($name, $prefix, $config);
     }
@@ -223,16 +282,16 @@ class CwmsermonController extends FormController
     /**
      * Email comment out.
      *
-     * @param   Registry  $params  Params of to parse
+     * @param   Registry  $params  Params to parse
      *
      * @return void
      *
-     * @throws Exception
+     * @throws Exception|\Exception
      * @since 7.0
      */
     public function commentsEmail($params): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
 
         $comment_author    = $input->get('full_name', 'Anonymous', 'string');
         $comment_study_id  = $input->get('study_detail_id', 0, 'int');
@@ -242,14 +301,16 @@ class CwmsermonController extends FormController
         $comment_mailfrom  = $config->get('mailfrom');
 
         $comment_livesite = Uri::root();
-        $db               = Factory::getContainer()->get('DatabaseDriver');
+        $db               = Factory::getContainer()->get(DatabaseInterface::class);
         $query            = $db->getQuery(true);
-        $query->select('id, studytitle, studydate')->from('#__bsms_studies')->where('id = ' . (int)$comment_study_id);
+        $query->select($db->quoteName(['id', 'studytitle', 'studydate']))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('id') . ' = ' . (int) $comment_study_id);
         $db->setQuery($query);
         $comment_details    = $db->loadObject();
         $comment_title      = $comment_details->studytitle;
         $comment_study_date = $comment_details->studydate;
-        $mail               = Factory::getMailer();
+        $mail               = Factory::getContainer()->get(\Joomla\CMS\Mail\MailerInterface::class);
         $ToEmail            = $params->get('recipient', '');
         $Subject            = $params->get('subject', 'Comments');
 
@@ -286,7 +347,7 @@ class CwmsermonController extends FormController
      */
     public function download(): void
     {
-        $input = Factory::getApplication()->input;
+        $input = Factory::getApplication()->getInput();
         $task  = $input->get('task');
         $mid   = $input->getInt('mid');
 
@@ -305,7 +366,7 @@ class CwmsermonController extends FormController
      *
      * @since    1.6
      */
-    protected function allowAdd($data = array()): bool
+    protected function allowAdd($data = []): bool
     {
         $allow = null;
 
@@ -327,7 +388,7 @@ class CwmsermonController extends FormController
      *
      * @since    1.6
      */
-    protected function allowEdit($data = array(), $key = 'id'): bool
+    protected function allowEdit($data = [], $key = 'id'): bool
     {
         return true;
     }
@@ -345,7 +406,7 @@ class CwmsermonController extends FormController
      */
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id'): string
     {
-        $this->input = Factory::getApplication()->input;
+        $this->input = Factory::getApplication()->getInput();
 
         // Need to override the parent method completely.
         $tmpl   = $this->input->get('tmpl');

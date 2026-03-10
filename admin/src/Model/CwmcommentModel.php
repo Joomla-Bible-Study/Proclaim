@@ -4,7 +4,7 @@
  * Part of Proclaim Package
  *
  * @package    Proclaim.Admin
- * @copyright  (C) 2025 CWM Team All rights reserved
+ * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @link       https://www.christianwebministries.org
  * */
@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Table\CwmcommentTable;
+use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -44,15 +45,15 @@ class CwmcommentModel extends AdminModel
     protected $text_prefix = 'com_proclaim';
 
     /**
-     * Overrides the JModelAdmin save routine to save the topics(tags)
+     * Overrides the AdminModel save routine to save the topics(tags)
      *
      * @param   array  $data  The form data.
      *
-     * @return  boolean  True on success, False on error.
+     * @return  bool  True on success, False on error.
      *
      * @since 7.0.1
      */
-    public function save($data)
+    public function save($data): bool
     {
         if (parent::save($data)) {
             return true;
@@ -62,40 +63,26 @@ class CwmcommentModel extends AdminModel
     }
 
     /**
-     * Method to check-out a row for editing.
-     *
-     * @param   integer  $pk  The numeric id of the primary key.
-     *
-     * @return  boolean  False on failure or error, true otherwise.
-     *
-     * @since   11.1
-     */
-    public function checkout($pk = null)
-    {
-        return $pk;
-    }
-
-    /**
      * Get the form data
      *
      * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     * @param   bool  $loadData  True if the form is to load its own data (default case), false if not.
      *
      * @return  mixed  A JForm object on success, false on failure
      *
      * @throws \Exception
      * @since 7.0
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true): mixed
     {
         // Get the form.
-        $form = $this->loadForm('com_proclaim.comment', 'comment', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_proclaim.comment', 'comment', ['control' => 'jform', 'load_data' => $loadData]);
 
         if (empty($form)) {
             return false;
         }
 
-        $jinput = Factory::getApplication()->input;
+        $jinput = Factory::getApplication()->getInput();
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id')) {
@@ -105,7 +92,7 @@ class CwmcommentModel extends AdminModel
             $id = $jinput->get('id', 0);
         }
 
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -129,32 +116,30 @@ class CwmcommentModel extends AdminModel
     /**
      * Batch copy items to a new category or current.
      *
-     * @param   integer  $value     The new category.
-     * @param   array    $pks       An array of row IDs.
-     * @param   array    $contexts  An array of item contexts.
+     * @param   int    $value     The new category.
+     * @param   array  $pks       An array of row IDs.
+     * @param   array  $contexts  An array of item contexts.
      *
-     * @return  mixed  An array of new IDs on success, boolean false on failure.
+     * @return  mixed  An array of new IDs on success, bool false on failure.
      *
      * @throws \Exception
      * @since    11.1
      */
-    protected function batchCopy($value, $pks, $contexts)
+    protected function batchCopy($value, $pks, $contexts): array|bool
     {
         $categoryId = (int)'';
-        $newIds     = array();
+        $newIds     = [];
 
         /** @type CwmcommentTable $table */
         $table = $this->getTable();
         $i     = 0;
 
         // Check that the user has create permission for the component
-        $extension = Factory::getApplication()->input->get('option', '');
-        $user      = $user = Factory::getApplication()->getSession()->get('user');
+        $extension = Factory::getApplication()->getInput()->get('option', '');
+        $user      = Factory::getApplication()->getIdentity();
 
         if (!$user->authorise('core.create', $extension)) {
-            $this->setError(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
-
-            return false;
+            throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE'));
         }
 
         // Parent exists so we let's proceed
@@ -166,15 +151,10 @@ class CwmcommentModel extends AdminModel
 
             // Check that the row actually exists
             if (!$table->load($pk)) {
-                if ($error = $table->getError()) {
-                    // Fatal error
-                    $this->setError($error);
-
-                    return false;
-                }
-
-                // Not fatal error
-                $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk));
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JLIB_APPLICATION_ERROR_BATCH_MOVE_ROW_NOT_FOUND', $pk),
+                    'warning'
+                );
                 continue;
             }
 
@@ -186,16 +166,12 @@ class CwmcommentModel extends AdminModel
 
             // Check the row.
             if (!$table->check()) {
-                $this->setError($table->getError());
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Store the row.
             if (!$table->store()) {
-                $this->setError($table->getError());
-
-                return false;
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
 
             // Get the new item ID
@@ -224,7 +200,7 @@ class CwmcommentModel extends AdminModel
      * @throws  \Exception
      * @since   3.0
      */
-    public function getTable($name = 'Cwmcomment', $prefix = '', $options = array()): Table
+    public function getTable($name = 'Cwmcomment', $prefix = '', $options = []): Table
     {
         return parent::getTable($name, $prefix, $options);
     }
@@ -232,14 +208,14 @@ class CwmcommentModel extends AdminModel
     /**
      * Clean the cache
      *
-     * @param   string   $group      The cache group
-     * @param   integer  $client_id  The ID of the client
+     * @param   string  $group      The cache group
+     * @param   int     $client_id  The ID of the client
      *
      * @return  void
      *
      * @since    1.6
      */
-    protected function cleanCache($group = null, $client_id = 0)
+    protected function cleanCache($group = null, $client_id = 0): void
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
@@ -250,18 +226,19 @@ class CwmcommentModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return    boolean    True if allowed to delete the record. Defaults to the permission set in the component.
+     * @return    bool    True if allowed to delete the record. Defaults to the permission set in the component.
      *
+     * @throws \Exception
      * @since    1.6
      */
-    protected function canDelete($record)
+    protected function canDelete($record): bool
     {
         if (!empty($record->id)) {
             if ($record->published != -2) {
                 return false;
             }
 
-            return Factory::getApplication()->getSession()->get('user')->authorise(
+            return Factory::getApplication()->getIdentity()->authorise(
                 'core.delete',
                 'com_proclaim.comment.' . (int)$record->id
             );
@@ -275,14 +252,14 @@ class CwmcommentModel extends AdminModel
      *
      * @param   object  $record  A record object.
      *
-     * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+     * @return  bool  True if allowed to change the state of the record. Defaults to the permission for the component.
      *
      * @throws \Exception
      * @since    1.6
      */
-    protected function canEditState($record)
+    protected function canEditState($record): bool
     {
-        $user = Factory::getApplication()->getSession()->get('user');
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         if (!empty($record->id)) {
@@ -296,15 +273,33 @@ class CwmcommentModel extends AdminModel
     /**
      * Prepare and sanitise the table prior to saving.
      *
-     * @param   Table  $table  A reference to a JTable object.
+     * @param   CwmcommentTable  $table  A reference to a JTable object.
      *
      * @return  void
      *
+     * @throws \Exception
      * @since    1.6
      */
-    protected function prepareTable($table)
+    protected function prepareTable($table): void
     {
-        // Holder.
+        $date = new Date();
+        $user = Factory::getApplication()->getIdentity();
+
+        // Always ensure created date is set (handles empty string from form)
+        if (empty($table->created) || $table->created === '') {
+            $table->created = $date->toSql();
+        }
+
+        if (empty($table->id)) {
+            // Set the values for a new record
+            if (empty($table->created_by)) {
+                $table->created_by = $user->id;
+            }
+        } else {
+            // Set the values for existing records
+            $table->modified    = $date->toSql();
+            $table->modified_by = $user->id;
+        }
     }
 
     /**
@@ -317,7 +312,7 @@ class CwmcommentModel extends AdminModel
      */
     protected function loadFormData(): object
     {
-        $data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', array());
+        $data = Factory::getApplication()->getUserState('com_proclaim.edit.comment.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
