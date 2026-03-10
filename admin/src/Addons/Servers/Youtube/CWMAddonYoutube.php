@@ -1924,7 +1924,7 @@ class CWMAddonYoutube extends CWMAddon
         return ['success' => true];
     }
 
-    // ─── Description Sync ───────────────────────────────────────────────
+    // ─── Capability Flags ───────────────────────────────────────────────
 
     /**
      * YouTube supports description sync via OAuth.
@@ -1935,6 +1935,32 @@ class CWMAddonYoutube extends CWMAddon
      */
     #[\Override]
     public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
+
+    /**
+     * YouTube supports chapter import from video descriptions.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsChapters(): bool
+    {
+        return true;
+    }
+
+    /**
+     * YouTube supports caption download via OAuth (Captions API).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsCaptions(): bool
     {
         return true;
     }

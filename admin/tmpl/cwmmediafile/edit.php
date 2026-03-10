@@ -66,34 +66,40 @@ $this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
 
 $this->useCoreUI = true;
 
-// YouTube-specific integration for Chapters & Tracks tab
-$serverType = $this->state ? $this->state->get('type', '') : '';
-if (strtolower($serverType) === 'youtube' && !$new) {
+// Platform integration for Chapters & Tracks tab (addon-driven)
+$addonSupportsChapters = $this->addon !== null && $this->addon->supportsChapters();
+$addonSupportsCaptions = $this->addon !== null && $this->addon->supportsCaptions();
+$serverType = $this->state ? strtolower($this->state->get('type', '')) : '';
+
+if (($addonSupportsChapters || $addonSupportsCaptions) && !$new) {
     $wa->useScript('com_proclaim.cwm-youtube-tracks');
 
-    // Check if OAuth is connected
+    // Check if OAuth is connected (for platforms that need it for write operations)
     $sParams = $this->state->get('s_params', []);
     $oauthConnected = !empty($sParams['access_token']);
 
     $this->getDocument()->addScriptOptions('com_proclaim.youtubeTracks', [
-        'isYouTube'         => true,
-        'mediaId'           => (int) $this->item->id,
-        'oauthConnected'    => $oauthConnected,
-        'baseUrl'           => \Joomla\CMS\Uri\Uri::base(),
-        'token'             => Session::getFormToken(),
-        'toolbarTitle'      => Text::_('JBS_MED_YOUTUBE_INTEGRATION'),
-        'importChaptersBtn' => Text::_('JBS_MED_IMPORT_CHAPTERS_YOUTUBE'),
-        'listCaptionsBtn'   => Text::_('JBS_MED_DOWNLOAD_CAPTIONS_YOUTUBE'),
-        'importing'         => Text::_('JBS_MED_IMPORTING_CHAPTERS'),
-        'importSuccess'     => Text::_('JBS_MED_IMPORT_CHAPTERS_SUCCESS'),
-        'importFailed'      => Text::_('JBS_MED_IMPORT_CHAPTERS_NONE'),
-        'importError'       => Text::_('JBS_MED_IMPORT_CHAPTERS_ERROR'),
-        'loadingCaptions'   => Text::_('JBS_MED_LOADING_CAPTIONS'),
-        'noCaptions'        => Text::_('JBS_MED_NO_CAPTIONS_FOUND'),
-        'captionError'      => Text::_('JBS_MED_CAPTION_ERROR'),
-        'downloadBtn'       => Text::_('JBS_MED_DOWNLOAD_VTT'),
-        'downloaded'        => Text::_('JBS_MED_CAPTION_ADDED'),
-        'oauthRequired'     => Text::_('JBS_MED_OAUTH_REQUIRED_CAPTIONS'),
+        'isYouTube'          => $serverType === 'youtube',
+        'supportsChapters'   => $addonSupportsChapters,
+        'supportsCaptions'   => $addonSupportsCaptions,
+        'addonName'          => ucfirst($serverType),
+        'mediaId'            => (int) $this->item->id,
+        'oauthConnected'     => $oauthConnected,
+        'baseUrl'            => \Joomla\CMS\Uri\Uri::base(),
+        'token'              => Session::getFormToken(),
+        'toolbarTitle'       => Text::sprintf('JBS_MED_PLATFORM_INTEGRATION', ucfirst($serverType)),
+        'importChaptersBtn'  => Text::sprintf('JBS_MED_IMPORT_CHAPTERS_PLATFORM', ucfirst($serverType)),
+        'listCaptionsBtn'    => Text::sprintf('JBS_MED_DOWNLOAD_CAPTIONS_PLATFORM', ucfirst($serverType)),
+        'importing'          => Text::_('JBS_MED_IMPORTING_CHAPTERS'),
+        'importSuccess'      => Text::_('JBS_MED_IMPORT_CHAPTERS_SUCCESS'),
+        'importFailed'       => Text::_('JBS_MED_IMPORT_CHAPTERS_NONE'),
+        'importError'        => Text::_('JBS_MED_IMPORT_CHAPTERS_ERROR'),
+        'loadingCaptions'    => Text::_('JBS_MED_LOADING_CAPTIONS'),
+        'noCaptions'         => Text::_('JBS_MED_NO_CAPTIONS_FOUND'),
+        'captionError'       => Text::_('JBS_MED_CAPTION_ERROR'),
+        'downloadBtn'        => Text::_('JBS_MED_DOWNLOAD_VTT'),
+        'downloaded'         => Text::_('JBS_MED_CAPTION_ADDED'),
+        'oauthRequired'      => Text::_('JBS_MED_OAUTH_REQUIRED_CAPTIONS'),
     ]);
 }
 ?>

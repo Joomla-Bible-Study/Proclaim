@@ -277,11 +277,12 @@
     }
 
     /**
-     * Render the YouTube integration toolbar on the Chapters & Tracks tab
+     * Render the platform integration toolbar on the Chapters & Tracks tab.
+     * Buttons are driven by addon capability flags (supportsChapters, supportsCaptions).
      */
-    function renderYouTubeToolbar() {
+    function renderPlatformToolbar() {
         const cfg = getConfig();
-        if (!cfg.isYouTube || !cfg.mediaId) {
+        if (!cfg.mediaId || (!cfg.supportsChapters && !cfg.supportsCaptions)) {
             return;
         }
 
@@ -290,42 +291,59 @@
             return;
         }
 
+        // Platform icon (YouTube gets its brand icon, others get generic)
+        const iconClass = cfg.isYouTube ? 'icon-youtube' : 'icon-cloud-download';
+        const addonName = cfg.addonName || 'Platform';
+
         // Create toolbar container
         const toolbar = document.createElement('div');
         toolbar.className = 'card card-body bg-body-tertiary mb-3';
+
+        let buttonsHtml = '';
+
+        if (cfg.supportsChapters) {
+            buttonsHtml += '<button type="button" class="btn btn-primary" id="cwm-import-chapters-btn">'
+                + '<span class="icon-download me-1"></span>'
+                + (cfg.importChaptersBtn || 'Import Chapters from ' + addonName) + '</button>';
+        }
+
+        if (cfg.supportsCaptions) {
+            buttonsHtml += '<button type="button" class="btn btn-primary" id="cwm-list-captions-btn">'
+                + '<span class="icon-comments me-1"></span>'
+                + (cfg.listCaptionsBtn || 'Download Captions from ' + addonName) + '</button>';
+        }
+
         toolbar.innerHTML = '<h4 class="card-title mb-3">'
-            + '<span class="icon-youtube me-2" aria-hidden="true"></span>'
-            + (cfg.toolbarTitle || 'YouTube Integration') + '</h4>'
-            + '<div class="d-flex flex-wrap gap-2 mb-2">'
-            + '<button type="button" class="btn btn-primary" id="cwm-import-chapters-btn">'
-            + '<span class="icon-download me-1"></span>'
-            + (cfg.importChaptersBtn || 'Import Chapters from YouTube') + '</button>'
-            + '<button type="button" class="btn btn-primary" id="cwm-list-captions-btn">'
-            + '<span class="icon-comments me-1"></span>'
-            + (cfg.listCaptionsBtn || 'Download Captions from YouTube') + '</button>'
-            + '</div>'
+            + '<span class="' + iconClass + ' me-2" aria-hidden="true"></span>'
+            + (cfg.toolbarTitle || addonName + ' Integration') + '</h4>'
+            + '<div class="d-flex flex-wrap gap-2 mb-2">' + buttonsHtml + '</div>'
             + '<div id="cwm-youtube-tracks-result"></div>';
 
         tracksContent.insertBefore(toolbar, tracksContent.firstChild);
 
         const resultContainer = document.getElementById('cwm-youtube-tracks-result');
 
-        document.getElementById('cwm-import-chapters-btn').addEventListener('click', function () {
-            handleImportChapters(resultContainer);
-        });
+        var chaptersBtn = document.getElementById('cwm-import-chapters-btn');
+        if (chaptersBtn) {
+            chaptersBtn.addEventListener('click', function () {
+                handleImportChapters(resultContainer);
+            });
+        }
 
-        document.getElementById('cwm-list-captions-btn').addEventListener('click', function () {
-            handleListCaptions(resultContainer);
-        });
+        var captionsBtn = document.getElementById('cwm-list-captions-btn');
+        if (captionsBtn) {
+            captionsBtn.addEventListener('click', function () {
+                handleListCaptions(resultContainer);
+            });
 
-        // Show OAuth warning if not connected
-        if (!cfg.oauthConnected) {
-            const captionsBtn = document.getElementById('cwm-list-captions-btn');
-            captionsBtn.title = cfg.oauthRequired || 'OAuth required — connect in server settings';
-            captionsBtn.classList.add('disabled');
-            captionsBtn.setAttribute('aria-disabled', 'true');
+            // Show OAuth warning if not connected
+            if (!cfg.oauthConnected) {
+                captionsBtn.title = cfg.oauthRequired || 'OAuth required — connect in server settings';
+                captionsBtn.classList.add('disabled');
+                captionsBtn.setAttribute('aria-disabled', 'true');
+            }
         }
     }
 
-    document.addEventListener('DOMContentLoaded', renderYouTubeToolbar);
+    document.addEventListener('DOMContentLoaded', renderPlatformToolbar);
 })();

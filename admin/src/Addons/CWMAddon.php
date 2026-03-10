@@ -479,6 +479,38 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon supports importing chapters from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a platform-specific
+     * "Import Chapters" button. Override in child class for platforms
+     * that expose chapter/timestamp data (e.g. YouTube descriptions).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsChapters(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Whether this addon supports downloading captions from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a "Download Captions"
+     * button. Override in child class for platforms that expose caption
+     * tracks (e.g. YouTube Captions API via OAuth).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsCaptions(): bool
+    {
+        return false;
+    }
+
+    /**
      * Whether this addon supports fetching external platform statistics.
      * Override in child class and return true to enable stats sync.
      *
