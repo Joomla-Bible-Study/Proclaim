@@ -163,35 +163,55 @@ class CwmmediafileModel extends AdminModel
                 }
             }
 
-            // Auto-detect missing metadata (size, MIME type, duration)
-            $this->autoDetectMetadata($params, $table, $set_path, $path);
-
-            $data['params'] = $params->toArray();
-
-            // Clean up old image file when filename changes on an existing record
-            $recordId = (int) ($data['id'] ?? 0);
+            // Load old params once — used for both change detection and image cleanup
+            $recordId      = (int) ($data['id'] ?? 0);
+            $oldParams     = null;
+            $oldParamsJson = null;
 
             if ($recordId > 0) {
                 $db       = Factory::getContainer()->get(DatabaseInterface::class);
                 $oldQuery = $db->getQuery(true)
-                    ->select($db->quoteName('params'))
+                    ->select($db->quoteName(['params', 'server_id']))
                     ->from($db->quoteName('#__bsms_mediafiles'))
                     ->where($db->quoteName('id') . ' = ' . $recordId);
                 $db->setQuery($oldQuery);
-                $oldParamsJson = $db->loadResult();
+                $oldRecord = $db->loadObject();
 
-                if ($oldParamsJson) {
-                    $oldParams    = new Registry($oldParamsJson);
-                    $oldFilename  = $oldParams->get('filename', '');
-                    $newFilename  = $params->get('filename', '');
-
-                    CwmImageCleanup::cleanupOldMediaImage(
-                        $oldFilename,
-                        $newFilename,
-                        (int) $data['server_id'],
-                        $recordId
-                    );
+                if ($oldRecord) {
+                    $oldParamsJson = $oldRecord->params;
+                    $oldParams     = new Registry($oldParamsJson);
                 }
+            }
+
+            // Only run metadata detection if filename or server changed (avoids redundant API calls)
+            $filenameChanged = true;
+
+            if ($oldParams !== null) {
+                $oldFilename = $oldParams->get('filename', '');
+                $newFilename = $params->get('filename', '');
+                $oldServerId = isset($oldRecord) ? (int) $oldRecord->server_id : 0;
+                $newServerId = (int) $data['server_id'];
+
+                $filenameChanged = ($oldFilename !== $newFilename) || ($oldServerId !== $newServerId);
+            }
+
+            if ($filenameChanged) {
+                $this->autoDetectMetadata($params, $table, $set_path, $path);
+            }
+
+            $data['params'] = $params->toArray();
+
+            // Clean up old image file when filename changes on an existing record
+            if ($oldParams !== null) {
+                $oldFilename = $oldParams->get('filename', '');
+                $newFilename = $params->get('filename', '');
+
+                CwmImageCleanup::cleanupOldMediaImage(
+                    $oldFilename,
+                    $newFilename,
+                    (int) $data['server_id'],
+                    $recordId
+                );
             }
 
             if (parent::save($data)) {

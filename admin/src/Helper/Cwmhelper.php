@@ -40,20 +40,51 @@ class Cwmhelper
     public static string $extension = 'com_proclaim';
 
     /**
-     * Method to get file size
+     * Streaming platform hosts where file size is irrelevant (no downloadable file).
+     *
+     * @var string[]
+     * @since 10.2.0
+     */
+    private static array $streamingHosts = [
+        'youtu.be', 'youtube.com', 'vimeo.com', 'dailymotion.com',
+        'facebook.com', 'fb.watch', 'rumble.com', 'soundcloud.com',
+        'wistia.com', 'wistia.net', 'rfrm.io', 'rfrm.net',
+        'drive.google.com', 'docs.google.com',
+    ];
+
+    /**
+     * Per-request cache of remote file sizes to avoid duplicate HEAD requests.
+     *
+     * @var array<string, int>
+     * @since 10.2.0
+     */
+    private static array $fileSizeCache = [];
+
+    /**
+     * Method to get file size via HTTP HEAD request.
+     *
+     * Skips streaming platforms (YouTube, Vimeo, etc.) where file size is
+     * irrelevant. Uses a 5-second timeout and caches results per request.
      *
      * @param   string  $url  URL
      *
-     * @return  int  Return size or false read.
+     * @return  int  Return size or 0 on failure.
      *
      * @since 9.0.0
      */
     public static function getRemoteFileSize(string $url): int
     {
-        $size = 0;
-
-        if ($url === '' || substr_count($url, 'youtu.be') > 0 || substr_count($url, 'youtube.com') > 0) {
+        if ($url === '') {
             return 0;
+        }
+
+        // Skip streaming platforms — file size is meaningless for embedded players
+        $host = (string) parse_url($url, PHP_URL_HOST);
+
+        foreach (self::$streamingHosts as $streamHost) {
+            if (str_contains($host, $streamHost)) {
+                return 0;
+            }
         }
 
         // Removes a bad url problem in some DB's
@@ -69,15 +100,33 @@ class Cwmhelper
             }
         }
 
+        // Return cached result if we already fetched this URL in this request
+        if (isset(self::$fileSizeCache[$url])) {
+            return self::$fileSizeCache[$url];
+        }
+
+        $size = 0;
+
         try {
-            $headers = @get_headers($url, true);
+            // Use stream context with 5-second timeout instead of unbounded get_headers()
+            $context = stream_context_create([
+                'http' => [
+                    'method'  => 'HEAD',
+                    'timeout' => 5,
+                ],
+            ]);
+            $headers = @get_headers($url, true, $context);
         } catch (\Exception $e) {
+            self::$fileSizeCache[$url] = 0;
+
             return 0;
         }
 
         if (\is_array($headers)) {
             $head = array_change_key_case($headers);
         } else {
+            self::$fileSizeCache[$url] = 0;
+
             return 0;
         }
 
@@ -92,7 +141,10 @@ class Cwmhelper
             $size = $head['content-length'];
         }
 
-        return (int)$size;
+        $size                      = (int) $size;
+        self::$fileSizeCache[$url] = $size;
+
+        return $size;
     }
 
     /**
