@@ -35,6 +35,7 @@ if ($input->getInt('id')) {
 
 $wa = $this->getDocument()->getWebAssetManager();
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmteacher.cancel', 'formId' => 'teacher-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit')
     ->useScript('com_proclaim.phone-input')

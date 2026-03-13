@@ -47,6 +47,7 @@ $this->getDocument()->addScriptOptions('com_proclaim.platformIcons', $platformIc
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.podcast');
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmpodcast.cancel', 'formId' => 'podcast-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 
