@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for CwmserverMigrationHelper — focuses on pure static methods
@@ -31,9 +32,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // detectContentType() tests
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider contentTypeProvider
-     */
+    #[DataProvider('contentTypeProvider')]
     public function testDetectContentType(
         string $filename,
         string $mediacode,
@@ -277,9 +276,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // detectContentType() with AllVideos shortcodes
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider allVideosShortcodeProvider
-     */
+    #[DataProvider('allVideosShortcodeProvider')]
     public function testDetectContentTypeWithAllVideosShortcode(
         string $mediacode,
         string $player,
@@ -381,9 +378,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — YouTube
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider youtubeIdProvider
-     */
+    #[DataProvider('youtubeIdProvider')]
     public function testExtractYoutubeMediaId(string $text, ?string $expected): void
     {
         $result = CWMAddonYoutube::extractMediaId($text);
@@ -409,9 +404,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Vimeo
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider vimeoIdProvider
-     */
+    #[DataProvider('vimeoIdProvider')]
     public function testExtractVimeoMediaId(string $text, ?string $expected): void
     {
         $result = CWMAddonVimeo::extractMediaId($text);
@@ -435,9 +428,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Wistia
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider wistiaHashProvider
-     */
+    #[DataProvider('wistiaHashProvider')]
     public function testExtractWistiaMediaId(string $text, ?string $expected): void
     {
         $result = CWMAddonWistia::extractMediaId($text);
@@ -460,9 +451,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Dailymotion
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider dailymotionIdProvider
-     */
+    #[DataProvider('dailymotionIdProvider')]
     public function testExtractDailymotionMediaId(string $text, ?string $expected): void
     {
         $result = CWMAddonDailymotion::extractMediaId($text);
@@ -486,9 +475,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractMediaId() tests — Rumble
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider rumbleIdProvider
-     */
+    #[DataProvider('rumbleIdProvider')]
     public function testExtractRumbleMediaId(string $text, ?string $expected): void
     {
         $result = CWMAddonRumble::extractMediaId($text);
@@ -815,9 +802,7 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
     // extractAllVideosContent() tests
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider allVideosContentProvider
-     */
+    #[DataProvider('allVideosContentProvider')]
     public function testExtractAllVideosContent(string $mediacode, string $expected): void
     {
         $result = CwmserverMigrationHelper::extractAllVideosContent($mediacode);
