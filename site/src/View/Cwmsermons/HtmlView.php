@@ -168,6 +168,29 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        // Prevent Joomla's Page Cache plugin from caching filtered/landing results.
+        // Filtered pages are user-specific (session state) and must not be served stale.
+        $app          = Factory::getApplication();
+        $input        = $app->getInput();
+        $filterParams = ['sendingview', 'filter_series', 'filter_teacher', 'filter_book',
+            'filter_topic', 'filter_year', 'filter_messagetype', 'filter_location'];
+        $hasFilters = false;
+
+        foreach ($filterParams as $param) {
+            if ($input->getString($param, '')) {
+                $hasFilters = true;
+                break;
+            }
+        }
+
+        if ($hasFilters) {
+            $app->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate', true);
+            $app->setHeader('Pragma', 'no-cache', true);
+            $app->setHeader('Expires', '0', true);
+            // Tell Joomla's Page Cache plugin to skip this page
+            $app->allowCache(false);
+        }
+
         /** @var CwmsermonsModel $model */
         $model       = $this->getModel();
         $this->state = $model->getState();

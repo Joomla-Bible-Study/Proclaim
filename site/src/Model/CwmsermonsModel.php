@@ -169,10 +169,25 @@ class CwmsermonsModel extends ListModel
         $this->landing = 0;
         $landingcheck  = $app->getInput()->get('sendingview');
 
-        if ($landingcheck === 'landing') {
+        if ($landingcheck === 'landing' || $landingcheck === 'cwmlanding') {
             $landing       = 1;
             $this->landing = 1;
             $this->setState('sendingview', '');
+
+            // Clear session filters so only the landing page's active filter applies.
+            // Without this, old session values bleed through for filters not in the URL.
+            $clearKeys = [
+                'filter.book', 'filter.teacher', 'filter.series',
+                'filter.messageType', 'filter.year', 'filter.topic',
+                'filter.location', 'filter.landingbook', 'filter.landingteacher',
+                'filter.landingseries', 'filter.landingmessageType',
+                'filter.landingyear', 'filter.landingtopic', 'filter.landinglocation',
+            ];
+
+            foreach ($clearKeys as $key) {
+                $this->setState($key, 0);
+                $app->setUserState($this->context . '.' . $key, 0);
+            }
         } else {
             // Clear both model state AND session so getUserStateFromRequest()
             // doesn't resurrect old filter selections from the session.
