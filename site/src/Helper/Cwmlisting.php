@@ -1851,7 +1851,7 @@ class Cwmlisting
                 break;
             case 'hits':
                 if (isset($row->hits)) {
-                    $element = Text::_('JBS_CMN_HITS') . ' ' . $row->hits;
+                    $element = Text::sprintf('JBS_CMN_HITS', $row->hits);
                 } else {
                     $element = '';
                 }
