@@ -479,6 +479,64 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon supports importing chapters from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a platform-specific
+     * "Import Chapters" button. Override in child class for platforms
+     * that expose chapter/timestamp data (e.g. YouTube descriptions).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsChapters(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Whether this addon supports downloading captions from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a "Download Captions"
+     * button. Override in child class for platforms that expose caption
+     * tracks (e.g. YouTube Captions API via OAuth).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsCaptions(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Format chapters array as a timestamp block for video descriptions.
+     *
+     * The `0:00 Label` format is recognized by YouTube, Vimeo, and most
+     * video platforms for automatic chapter markers.
+     *
+     * @param   array  $chapters  Chapters from media params
+     *
+     * @return  string  Formatted timestamp block
+     *
+     * @since   10.2.0
+     */
+    public static function formatChaptersForDescription(array $chapters): string
+    {
+        $lines = [];
+
+        foreach ($chapters as $ch) {
+            $ch      = (array) $ch;
+            $time    = $ch['time'] ?? '0:00';
+            $label   = $ch['label'] ?? '';
+            $lines[] = $time . ' ' . $label;
+        }
+
+        return implode("\n", $lines);
+    }
+
+    /**
      * Whether this addon supports fetching external platform statistics.
      * Override in child class and return true to enable stats sync.
      *

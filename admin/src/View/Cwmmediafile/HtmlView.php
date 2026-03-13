@@ -60,6 +60,11 @@ class HtmlView extends BaseHtmlView
      */
     public mixed $addon = null;
 
+    /** @var ?\Joomla\CMS\Form\Form
+     * @since    10.2.0
+     */
+    public ?\Joomla\CMS\Form\Form $tracks_form = null;
+
     /**
      * Form
      *
@@ -164,6 +169,9 @@ class HtmlView extends BaseHtmlView
                 }
             }
         }
+
+        // Load the tracks form (chapters + subtitles)
+        $this->tracks_form = $model->getTracksForm();
 
         // Needed to load the article field type for the article selector
         FormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');

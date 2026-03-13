@@ -47,13 +47,18 @@
      * Fetch the generated video description for a study via AJAX.
      *
      * @param {number} studyId
+     * @param {number} [mediaId=0]  Optional media file ID — includes chapters from that file
      * @returns {Promise<{success: boolean, description?: string, error?: string}>}
      */
-    async function fetchDescription(studyId) {
+    async function fetchDescription(studyId, mediaId = 0) {
         const token = getToken();
-        const url = 'index.php?option=com_proclaim&task=cwmadmin.getVideoDescriptionXHR'
+        let url = 'index.php?option=com_proclaim&task=cwmadmin.getVideoDescriptionXHR'
             + '&study_id=' + studyId
             + '&' + token + '=1';
+
+        if (mediaId > 0) {
+            url += '&media_id=' + mediaId;
+        }
 
         return window.ProclaimFetch.fetchJson(
             url,
@@ -281,7 +286,12 @@
             + T('JLIB_HTML_PLEASE_WAIT', 'Please wait') + '...';
 
         try {
-            const result = await fetchDescription(studyId);
+            // Collect sync-capable media from the table rows
+            const syncMedia = collectSyncableMedia();
+
+            // Pass the first media ID so the description includes its chapters
+            const firstMediaId = syncMedia.length > 0 ? syncMedia[0].mediaId : 0;
+            const result = await fetchDescription(studyId, firstMediaId);
 
             if (!result.success || !result.description) {
                 Joomla.renderMessages({
@@ -290,9 +300,6 @@
 
                 return;
             }
-
-            // Collect sync-capable media from the table rows
-            const syncMedia = collectSyncableMedia();
 
             if (syncMedia.length > 0) {
                 // Show modal with preview + sync options
