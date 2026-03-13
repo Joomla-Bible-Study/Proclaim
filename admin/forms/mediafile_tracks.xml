@@ -27,10 +27,10 @@
                            hint="English" required="true" filter="STRING"/>
                     <field name="srclang" type="text" label="JBS_MED_TRACK_LANGUAGE"
                            hint="en" size="5" required="true" filter="STRING"/>
-                    <field name="src" type="text" label="JBS_MED_TRACK_URL"
+                    <field name="src" type="VttUpload" label="JBS_MED_TRACK_URL"
                            description="JBS_MED_TRACK_URL_DESC"
-                           hint="https://example.com/subtitles.vtt"
-                           required="true" filter="URL"/>
+                           required="true" filter="URL"
+                           addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
                     <field name="kind" type="list" label="JBS_MED_TRACK_KIND" default="captions">
                         <option value="captions">JBS_MED_TRACK_CAPTIONS</option>
                         <option value="subtitles">JBS_MED_TRACK_SUBTITLES</option>

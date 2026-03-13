@@ -648,6 +648,17 @@
             }
         },
         {
+            "name": "com_proclaim.cwm-vtt-upload",
+            "type": "script",
+            "uri": "com_proclaim/cwm-vtt-upload.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.sermon-filters",
             "type": "script",
             "uri": "com_proclaim/sermon-filters.min.js",
