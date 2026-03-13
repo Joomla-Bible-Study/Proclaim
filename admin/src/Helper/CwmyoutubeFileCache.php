@@ -58,7 +58,11 @@ class CwmyoutubeFileCache
             'storedAt' => time(),
         ];
 
-        @file_put_contents($file, json_encode($data, JSON_UNESCAPED_SLASHES), LOCK_EX);
+        try {
+            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), LOCK_EX);
+        } catch (\JsonException $e) {
+            // Video data contained unencodable values — skip caching
+        }
     }
 
     /**
@@ -120,7 +124,11 @@ class CwmyoutubeFileCache
             'storedAt'           => time(),
         ];
 
-        @file_put_contents($file, json_encode($data), LOCK_EX);
+        try {
+            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR), LOCK_EX);
+        } catch (\JsonException $e) {
+            // Should never happen with string data — skip caching
+        }
     }
 
     /**
@@ -196,7 +204,11 @@ class CwmyoutubeFileCache
             'ttl'       => $ttl,
         ];
 
-        @file_put_contents($file, json_encode($data), LOCK_EX);
+        try {
+            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR), LOCK_EX);
+        } catch (\JsonException $e) {
+            // Should never happen with scalar data — skip caching
+        }
     }
 
     /**
@@ -278,8 +290,8 @@ class CwmyoutubeFileCache
     {
         $dir = self::dir();
 
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            throw new \RuntimeException(\sprintf('Directory "%s" was not created', $dir));
         }
     }
 

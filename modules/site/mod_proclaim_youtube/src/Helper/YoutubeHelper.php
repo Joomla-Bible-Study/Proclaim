@@ -201,7 +201,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             $cache = Factory::getContainer()->get('cache.output');
             $cache->setLifeTime((int) ceil($cacheTime / 60));
             $cacheData = $video ?? ['_noVideo' => true];
-            $cache->store(json_encode($cacheData), $cacheKey, 'mod_proclaim_youtube');
+            $cache->store(json_encode($cacheData, JSON_THROW_ON_ERROR), $cacheKey, 'mod_proclaim_youtube');
         } catch (\Exception $e) {
             // Cache not available, continue without it
         }
@@ -312,7 +312,7 @@ class YoutubeHelper implements DatabaseAwareInterface
                 $cache = Factory::getContainer()->get('cache.output');
                 $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
                 $cache->store(
-                    json_encode($cacheData),
+                    json_encode($cacheData, JSON_THROW_ON_ERROR),
                     $cacheKey,
                     'mod_proclaim_youtube_status'
                 );
@@ -739,7 +739,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         try {
             $cache = Factory::getContainer()->get('cache.output');
             $cache->setLifeTime(2); // 2 minutes (aligned with poll interval)
-            $cache->store(json_encode($statusResult), $statusCacheKey, 'mod_proclaim_youtube_status');
+            $cache->store(json_encode($statusResult, JSON_THROW_ON_ERROR), $statusCacheKey, 'mod_proclaim_youtube_status');
         } catch (\Exception $e) {
             // Cache not available, continue without it
         }
