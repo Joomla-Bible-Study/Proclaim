@@ -136,11 +136,24 @@ class CwmsermonsModel extends ListModel
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
-        // Load the parameters.
-        $params = $app->getParams();
+        // Load the parameters — wrap in try/catch so a bad menu item
+        // (e.g. corrupted XML, missing columns) doesn't take down the page.
+        try {
+            $params = $app->getParams();
+        } catch (\Exception $e) {
+            $params = new Registry();
+        }
 
-        $template = Cwmparams::getTemplateparams();
-        $admin    = Cwmparams::getAdmin();
+        try {
+            $template = Cwmparams::getTemplateparams();
+            $admin    = Cwmparams::getAdmin();
+        } catch (\Exception $e) {
+            $template         = new \stdClass();
+            $template->id     = 1;
+            $template->params = new Registry();
+            $admin            = new \stdClass();
+            $admin->params    = new Registry();
+        }
 
         $template->params->merge($params);
         $template->params->merge($admin->params);
