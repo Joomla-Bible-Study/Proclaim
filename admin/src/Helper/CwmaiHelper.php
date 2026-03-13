@@ -102,9 +102,10 @@ class CwmaiHelper
             'text'   => !empty($context['generate_text'] ?? true),
         ];
 
-        $hasChapters     = !empty($context['video_chapters']);
+        $wantChapters    = !empty($context['generate_chapters'] ?? true);
+        $hasChapters     = $wantChapters && !empty($context['video_chapters']);
         $hasYouTube      = !empty($context['video_title']) || !empty($context['video_description']);
-        $suggestChapters = $fields['text'] && !$hasChapters && $hasYouTube;
+        $suggestChapters = $wantChapters && !$hasChapters && $hasYouTube;
 
         $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
         $userMessage  = self::buildUserMessage($context);

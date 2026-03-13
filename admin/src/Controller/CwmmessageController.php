@@ -286,6 +286,7 @@ class CwmmessageController extends FormController
             'generate_topics'   => (bool) $input->post->getInt('generate_topics', 1),
             'generate_intro'    => (bool) $input->post->getInt('generate_intro', 1),
             'generate_text'     => (bool) $input->post->getInt('generate_text', 1),
+            'generate_chapters' => (bool) $input->post->getInt('generate_chapters', 1),
         ];
 
         // Attempt to get video metadata from attached media file

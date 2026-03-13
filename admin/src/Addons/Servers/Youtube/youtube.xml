@@ -36,11 +36,12 @@
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
         <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
-            <field name="yt_description_format" type="textarea" rows="4"
-                   default="{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}"
-                   label="JBS_ADDON_YOUTUBE_DESC_FORMAT"
-                   description="JBS_ADDON_YOUTUBE_DESC_FORMAT_DESC"
-                   filter="raw" />
+            <field name="description_format" type="DescriptionFormat" rows="6"
+                   default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}&#10;&#10;{url}"
+                   label="JBS_ADDON_DESC_FORMAT"
+                   description="JBS_ADDON_DESC_FORMAT_DESC"
+                   filter="raw"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
         </fieldset>
     </fields>
     <fields name="media">

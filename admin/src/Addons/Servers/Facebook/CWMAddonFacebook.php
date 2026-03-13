@@ -381,4 +381,17 @@ class CWMAddonFacebook extends CWMAddon
             $params->set('mime_type', 'video/mp4');
         }
     }
+
+    /**
+     * Facebook supports video descriptions.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
 }

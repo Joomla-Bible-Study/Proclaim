@@ -367,4 +367,17 @@ class CWMAddonRumble extends CWMAddon
             $params->set('mime_type', 'video/mp4');
         }
     }
+
+    /**
+     * Rumble supports video descriptions.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
 }

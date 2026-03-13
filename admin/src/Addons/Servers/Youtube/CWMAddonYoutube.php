@@ -2296,18 +2296,11 @@ class CWMAddonYoutube extends CWMAddon
      * @return  string  Formatted timestamp block
      *
      * @since   10.2.0
+     *
+     * @deprecated  10.2.0  Use CWMAddon::formatChaptersForDescription() — same format works on all platforms
      */
     public static function formatChaptersForYouTube(array $chapters): string
     {
-        $lines = [];
-
-        foreach ($chapters as $ch) {
-            $ch      = (array) $ch;
-            $time    = $ch['time'] ?? '0:00';
-            $chLabel = $ch['label'] ?? '';
-            $lines[] = $time . ' ' . $chLabel;
-        }
-
-        return implode("\n", $lines);
+        return parent::formatChaptersForDescription($chapters);
     }
 }

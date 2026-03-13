@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -24,6 +25,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmessage\HtmlView $this */
+
+CwmlangHelper::registerAllForJs();
 
 $this->configFieldsets  = ['editorConfig'];
 $this->hiddenFieldsets  = ['basic-limited'];
@@ -107,6 +110,9 @@ echo Route::_(
         'legacy'  => 'bg-secondary',
     ];
 
+    // Server types that support description sync (copy/paste to platform)
+    $descSyncTypes = ['youtube', 'vimeo', 'wistia', 'facebook', 'dailymotion', 'rumble', 'soundcloud'];
+
     // Pre-scan mediafiles for YouTube type
     $hasYouTubeMedia = false;
 
@@ -179,6 +185,7 @@ echo Route::_(
                                 <?php echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?>
                             </th>
                             <th scope="col" class="w-5 text-center d-none d-md-table-cell">ID</th>
+                            <th scope="col" class="w-10 text-center d-none d-md-table-cell"><?php echo Text::_('JBS_MED_DESCRIPTION'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -244,6 +251,18 @@ echo Route::_(
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php echo (int) $item->id; ?>
                                 </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php if (\in_array($serverType, $descSyncTypes, true)) : ?>
+                                        <button type="button"
+                                                class="btn btn-primary btn-sm cwm-copy-desc-btn"
+                                                data-media-id="<?php echo (int) $item->id; ?>"
+                                                data-study-id="<?php echo (int) $this->item->id; ?>"
+                                                title="<?php echo Text::_('JBS_MED_COPY_DESC_TIP'); ?>">
+                                            <span class="icon-copy" aria-hidden="true"></span>
+                                            <?php echo Text::_('JBS_MED_COPY_DESC'); ?>
+                                        </button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -282,6 +301,10 @@ echo Route::_(
                             <div class="form-check form-check-inline mb-0">
                                 <input class="form-check-input" type="checkbox" id="ai-gen-text" checked>
                                 <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?></label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="checkbox" id="ai-gen-chapters" checked>
+                                <label class="form-check-label" for="ai-gen-chapters"><?php echo Text::_('JBS_CMN_AI_GEN_CHAPTERS'); ?></label>
                             </div>
                         </div>
                     </div>

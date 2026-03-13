@@ -415,15 +415,17 @@
     if (btnAiAssist) {
         btnAiAssist.addEventListener('click', async () => {
             // Read toggle checkbox states
-            const genTopics = document.getElementById('ai-gen-topics');
-            const genIntro  = document.getElementById('ai-gen-intro');
-            const genText   = document.getElementById('ai-gen-text');
-            const wantTopics = genTopics ? genTopics.checked : true;
-            const wantIntro  = genIntro ? genIntro.checked : true;
-            const wantText   = genText ? genText.checked : true;
+            const genTopics   = document.getElementById('ai-gen-topics');
+            const genIntro    = document.getElementById('ai-gen-intro');
+            const genText     = document.getElementById('ai-gen-text');
+            const genChapters = document.getElementById('ai-gen-chapters');
+            const wantTopics   = genTopics ? genTopics.checked : true;
+            const wantIntro    = genIntro ? genIntro.checked : true;
+            const wantText     = genText ? genText.checked : true;
+            const wantChapters = genChapters ? genChapters.checked : true;
 
             // Validate at least one checked
-            if (!wantTopics && !wantIntro && !wantText) {
+            if (!wantTopics && !wantIntro && !wantText && !wantChapters) {
                 alert(Joomla.Text._('JBS_CMN_AI_SELECT_ONE') || 'Select at least one field to generate.');
 
                 return;
@@ -453,6 +455,7 @@
             formData.append('generate_topics', wantTopics ? '1' : '0');
             formData.append('generate_intro', wantIntro ? '1' : '0');
             formData.append('generate_text', wantText ? '1' : '0');
+            formData.append('generate_chapters', wantChapters ? '1' : '0');
 
             // Gather scripture text
             const scriptureEls = document.querySelectorAll('[id^="jform_scripture"]');
@@ -525,9 +528,9 @@
                 document.getElementById('ai-studyintro').value = data.studyintro || '';
                 document.getElementById('ai-studytext').value  = data.studytext || '';
 
-                // Handle suggested chapters
+                // Handle suggested chapters (only show if user opted in)
                 if (chaptersSection) {
-                    if (data.chapters && data.chapters.length > 0) {
+                    if (wantChapters && data.chapters && data.chapters.length > 0) {
                         const chapterLines = data.chapters.map(
                             (ch) => `${ch.time} ${ch.label}`,
                         );
@@ -838,5 +841,113 @@
                 args: [seconds, true],
             }), '*');
         }
+    });
+
+    // ---- Per-media Copy Description modal ----
+
+    // Build the modal once and reuse it
+    const descModalHtml = `
+        <div class="modal fade" id="copyDescModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            ${Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description'}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-2">
+                            ${Joomla.Text._('JBS_MED_COPY_DESC_TIP') || 'Copy this description and paste it into your video platform.'}
+                        </p>
+                        <div id="copyDescLoading" class="text-center py-4" style="display:none;">
+                            <span class="spinner-border"></span>
+                        </div>
+                        <textarea id="copyDescText" class="form-control" rows="12" readonly
+                                  style="display:none; font-family:monospace; font-size:0.85rem;"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            ${Joomla.Text._('JCLOSE') || 'Close'}
+                        </button>
+                        <button type="button" class="btn btn-primary" id="copyDescCopyBtn" disabled>
+                            <span class="icon-copy" aria-hidden="true"></span>
+                            ${Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', descModalHtml);
+
+    const copyDescModalEl = document.getElementById('copyDescModal');
+    const copyDescModal   = new bootstrap.Modal(copyDescModalEl);
+    const copyDescText    = document.getElementById('copyDescText');
+    const copyDescLoading = document.getElementById('copyDescLoading');
+    const copyDescCopyBtn = document.getElementById('copyDescCopyBtn');
+
+    // Copy button inside modal
+    copyDescCopyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(copyDescText.value);
+            copyDescCopyBtn.classList.remove('btn-primary');
+            copyDescCopyBtn.classList.add('btn-success');
+            copyDescCopyBtn.innerHTML = '<span class="icon-checkmark" aria-hidden="true"></span> '
+                + (Joomla.Text._('JBS_MED_COPY_DESC_COPIED') || 'Copied!');
+            setTimeout(() => {
+                copyDescCopyBtn.classList.remove('btn-success');
+                copyDescCopyBtn.classList.add('btn-primary');
+                copyDescCopyBtn.innerHTML = '<span class="icon-copy" aria-hidden="true"></span> '
+                    + (Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description');
+            }, 2000);
+        } catch {
+            // Fallback: select the textarea so user can Ctrl+C
+            copyDescText.select();
+        }
+    });
+
+    document.querySelectorAll('.cwm-copy-desc-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const descMediaId = parseInt(btn.dataset.mediaId, 10) || 0;
+            const studyId     = parseInt(btn.dataset.studyId, 10) || 0;
+
+            if (!studyId) {
+                return;
+            }
+
+            // Reset modal state and show
+            copyDescText.value       = '';
+            copyDescText.style.display    = 'none';
+            copyDescLoading.style.display = 'block';
+            copyDescCopyBtn.disabled      = true;
+            copyDescModal.show();
+
+            try {
+                const url = `${ajaxBase}&task=cwmadmin.getVideoDescriptionXHR`
+                    + `&study_id=${studyId}&media_id=${descMediaId}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-CSRF-Token': '1' },
+                });
+                const data = await response.json();
+
+                copyDescLoading.style.display = 'none';
+
+                if (!data.success || !data.description) {
+                    copyDescText.value        = data.error || 'Failed to generate description';
+                    copyDescText.style.display = 'block';
+
+                    return;
+                }
+
+                copyDescText.value        = data.description;
+                copyDescText.style.display = 'block';
+                copyDescCopyBtn.disabled  = false;
+            } catch (e) {
+                copyDescLoading.style.display = 'none';
+                copyDescText.value        = e.message;
+                copyDescText.style.display = 'block';
+            }
+        });
     });
 })();
