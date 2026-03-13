@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
 
@@ -82,6 +83,50 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     ];
 
     /**
+     * Map of old com_biblestudy view names to new com_proclaim equivalents.
+     *
+     * Used by the legacy URL redirect handler to transparently redirect
+     * indexed/bookmarked URLs from the old Bible Study component.
+     *
+     * @var array<string, string>
+     * @since 10.2.0
+     */
+    private const LEGACY_VIEW_MAP = [
+        'sermon'               => 'cwmsermon',
+        'sermons'              => 'cwmsermons',
+        'teacher'              => 'cwmteacher',
+        'teachers'             => 'cwmteachers',
+        'seriesdisplay'        => 'cwmseriesdisplay',
+        'seriesdisplays'       => 'cwmseriesdisplays',
+        'landingpage'          => 'cwmlandingpage',
+        'latest'               => 'cwmlatest',
+        'popup'                => 'cwmpopup',
+        'terms'                => 'cwmterms',
+        'seriespodcastdisplay' => 'cwmseriespodcastdisplay',
+        'seriespodcastlist'    => 'cwmseriespodcastlist',
+    ];
+
+    /**
+     * Query parameters to carry over from old Bible Study URLs.
+     *
+     * @var string[]
+     * @since 10.2.0
+     */
+    private const LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
+
+    /**
+     * Map of old com_biblestudy task names to new com_proclaim equivalents.
+     *
+     * Only tasks that need explicit mapping are listed. The view prefix
+     * is applied automatically (e.g., 'download' on view 'sermon' becomes
+     * 'cwmsermon.download').
+     *
+     * @var string[]
+     * @since 10.2.0
+     */
+    private const LEGACY_TASK_MAP = ['download'];
+
+    /**
      * Views hidden from the admin submenu for non-admin users (require core.admin).
      *
      * @var string[]
@@ -122,10 +167,26 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'onAfterRoute'   => 'onAfterRoute',
-            'onBeforeRender' => 'onBeforeRender',
-            'onAfterRender'  => 'onAfterRender',
+            'onAfterInitialise' => 'onAfterInitialise',
+            'onAfterRoute'      => 'onAfterRoute',
+            'onBeforeRender'    => 'onBeforeRender',
+            'onAfterRender'     => 'onAfterRender',
         ];
+    }
+
+    /**
+     * Intercept legacy com_biblestudy URLs before routing.
+     *
+     * Must run before onAfterRoute because Joomla's router throws a 404
+     * for /component/biblestudy/ paths when com_biblestudy is not installed.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    public function onAfterInitialise(): void
+    {
+        $this->redirectLegacyUrls();
     }
 
     /**
@@ -291,6 +352,140 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         ]);
 
         $app->setHeader('Content-Security-Policy', $csp, true);
+    }
+
+    /**
+     * Redirect legacy com_biblestudy URLs to com_proclaim equivalents.
+     *
+     * Intercepts requests where option=com_biblestudy, maps the old view name
+     * to the new Proclaim view, carries over relevant query parameters, and
+     * issues a 301 (permanent) redirect. This ensures that search engine indexes,
+     * bookmarks, and external links from the old Bible Study component continue
+     * to work after migration.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    private function redirectLegacyUrls(): void
+    {
+        $app   = $this->getApplication();
+        $input = $app->getInput();
+
+        $oldView = '';
+        $oldTask = '';
+        $params  = [];
+
+        // Method 1: Check parsed input (non-SEF or Joomla-resolved URLs)
+        if ($input->getCmd('option', '') === 'com_biblestudy') {
+            $oldView = strtolower($input->getCmd('view', 'sermons'));
+            $oldTask = strtolower($input->getCmd('task', ''));
+        }
+
+        // Method 2: Check raw URI path for /component/biblestudy/ pattern
+        // Joomla 5+ doesn't resolve this SEF pattern for uninstalled components
+        if ($oldView === '') {
+            $path = Uri::getInstance()->getPath();
+
+            // Match /component/biblestudy/ or /component/biblestudy (with optional trailing segments)
+            if (preg_match('#/component/biblestudy(?:/([a-z]+))?#i', $path, $matches)) {
+                $oldView = !empty($matches[1]) ? strtolower($matches[1]) : 'sermons';
+
+                // Parse query string params since Joomla may not have populated input
+                $rawQuery = Uri::getInstance()->getQuery();
+                parse_str($rawQuery, $params);
+                $oldTask = strtolower($params['task'] ?? '');
+            }
+        }
+
+        if ($oldView === '') {
+            return;
+        }
+
+        $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
+
+        // Build the new URL with carried-over parameters
+        $query = ['option' => 'com_proclaim', 'view' => $newView];
+
+        // Map old task names (e.g., 'download' → 'cwmsermon.download')
+        if ($oldTask !== '' && \in_array($oldTask, self::LEGACY_TASK_MAP, true)) {
+            $query['task'] = $newView . '.' . $oldTask;
+        }
+
+        foreach (self::LEGACY_CARRY_PARAMS as $param) {
+            // Check both parsed input and raw query params
+            $value = $input->getString($param, '') ?: ($params[$param] ?? '');
+
+            if ($value !== '') {
+                $query[$param] = $value;
+            }
+        }
+
+        // Find the correct menu item for this view so Joomla's router resolves properly
+        if (!isset($query['Itemid'])) {
+            $itemId = $this->findMenuItemId($newView);
+
+            if ($itemId) {
+                $query['Itemid'] = $itemId;
+            }
+        }
+
+        $nonSef = 'index.php?' . http_build_query($query);
+
+        // Try to build a SEF URL; fall back to non-SEF if router isn't ready
+        try {
+            $sef = Route::_($nonSef, false);
+        } catch (\Exception $e) {
+            $sef = $nonSef;
+        }
+
+        $app->redirect($sef, 301);
+    }
+
+    /**
+     * Find a published menu item ID for the given Proclaim view.
+     *
+     * Searches the menu table for an item pointing to the specified view,
+     * falling back to any com_proclaim menu item if no exact match is found.
+     *
+     * @param   string  $view  The Proclaim view name (e.g., 'cwmsermons').
+     *
+     * @return  int  The menu item ID, or 0 if not found.
+     *
+     * @since   10.2.0
+     */
+    private function findMenuItemId(string $view): int
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim&view=' . $view . '%'))
+                ->setLimit(1);
+            $db->setQuery($query);
+            $itemId = (int) $db->loadResult();
+
+            if ($itemId) {
+                return $itemId;
+            }
+
+            // Fallback: any com_proclaim menu item
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim%'))
+                ->setLimit(1);
+            $db->setQuery($query);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
