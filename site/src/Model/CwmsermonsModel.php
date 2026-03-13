@@ -136,11 +136,24 @@ class CwmsermonsModel extends ListModel
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
-        // Load the parameters.
-        $params = $app->getParams();
+        // Load the parameters — wrap in try/catch so a bad menu item
+        // (e.g. corrupted XML, missing columns) doesn't take down the page.
+        try {
+            $params = $app->getParams();
+        } catch (\Exception $e) {
+            $params = new Registry();
+        }
 
-        $template = Cwmparams::getTemplateparams();
-        $admin    = Cwmparams::getAdmin();
+        try {
+            $template = Cwmparams::getTemplateparams();
+            $admin    = Cwmparams::getAdmin();
+        } catch (\Exception $e) {
+            $template         = new \stdClass();
+            $template->id     = 1;
+            $template->params = new Registry();
+            $admin            = new \stdClass();
+            $admin->params    = new Registry();
+        }
 
         $template->params->merge($params);
         $template->params->merge($admin->params);
@@ -161,20 +174,21 @@ class CwmsermonsModel extends ListModel
             $this->landing = 1;
             $this->setState('sendingview', '');
         } else {
-            $this->setState('filter.book', 0);
-            $this->setState('filter.teacher', 0);
-            $this->setState('filter.series', 0);
-            $this->setState('filter.messageType', 0);
-            $this->setState('filter.year', 0);
-            $this->setState('filter.topic', 0);
-            $this->setState('filter.location', 0);
-            $this->setState('filter.landingbook', 0);
-            $this->setState('filter.landingteacher', 0);
-            $this->setState('filter.landingseries', 0);
-            $this->setState('filter.landingmessageType', 0);
-            $this->setState('filter.landingyear', 0);
-            $this->setState('filter.landingtopic', 0);
-            $this->setState('filter.landinglocation', 0);
+            // Clear both model state AND session so getUserStateFromRequest()
+            // doesn't resurrect old filter selections from the session.
+            $filterKeys = [
+                'filter.book', 'filter.teacher', 'filter.series',
+                'filter.messageType', 'filter.year', 'filter.topic',
+                'filter.location', 'filter.landingbook', 'filter.landingteacher',
+                'filter.landingseries', 'filter.landingmessageType',
+                'filter.landingyear', 'filter.landingtopic', 'filter.landinglocation',
+            ];
+
+            foreach ($filterKeys as $key) {
+                $this->setState($key, 0);
+                $app->setUserState($this->context . '.' . $key, 0);
+            }
+
             $this->landing = 0;
         }
 
