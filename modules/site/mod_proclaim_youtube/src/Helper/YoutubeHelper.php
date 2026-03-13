@@ -17,6 +17,7 @@ namespace CWM\Module\ProclaimYoutube\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\SiteApplication;
@@ -27,7 +28,14 @@ use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
- * YouTube module helper
+ * YouTube module helper — thin orchestration layer.
+ *
+ * All YouTube API calls, quota tracking, file caching, and embed URL building
+ * are delegated to the server addon (CWMAddonYoutube) and its supporting
+ * helpers (CwmyoutubeQuota, CwmyoutubeFileCache, CwmyoutubeLogHelper).
+ *
+ * This class only handles module-specific concerns: Joomla output caching,
+ * priority mode orchestration, AJAX endpoints, and Proclaim model queries.
  *
  * @package     Proclaim.Module
  * @subpackage  mod_proclaim_youtube
@@ -101,7 +109,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         // Smart pre-check: if we have a last-known live/upcoming video,
         // verify its status with videos.list (1 unit) instead of search.list (100 units)
         if ($priorityMode !== 'latest_only') {
-            $lastKnown = self::getLastKnownVideo($serverId);
+            $lastKnown = CwmyoutubeFileCache::getLastKnownVideo($serverId);
 
             if (
                 $lastKnown
@@ -122,7 +130,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
                     if (!empty($status['scheduledStartTime'])) {
                         $lastKnown['scheduledStartTime'] = $status['scheduledStartTime'];
-                        self::storeScheduledStart($serverId, $lastKnown['videoId'], $status['scheduledStartTime']);
+                        CwmyoutubeFileCache::storeScheduledStart($serverId, $lastKnown['videoId'], $status['scheduledStartTime']);
                     }
 
                     $video = $lastKnown;
@@ -164,7 +172,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // All fetch methods returned null — fall back to last known good video
         if (!$video) {
-            $video = self::getLastKnownVideo($serverId);
+            $video = CwmyoutubeFileCache::getLastKnownVideo($serverId);
 
             if ($video) {
                 // Clear live/upcoming flags — this is a fallback, not real-time
@@ -182,12 +190,12 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Persist as last known good — survives Joomla cache clears and quota exhaustion
         if ($video && empty($video['isFallback'])) {
-            self::storeLastKnownVideo($serverId, $video);
+            CwmyoutubeFileCache::storeLastKnownVideo($serverId, $video);
         }
 
         // Cache the result (including null) to prevent repeated API calls.
         // Use the full cache_time for null results too — the old 60s TTL caused
-        // ~200 quota units/minute when no stream was active (search.list × 2 per miss).
+        // ~200 quota units/minute when no stream was active (search.list x 2 per miss).
         // Live transitions are detected by JS polling (getStatusAjax), not page loads.
         try {
             $cache = Factory::getContainer()->get('cache.output');
@@ -283,10 +291,10 @@ class YoutubeHelper implements DatabaseAwareInterface
 
             if (!empty($result['scheduledStartTime'])) {
                 $video['scheduledStartTime'] = $result['scheduledStartTime'];
-                self::storeScheduledStart($serverId, $video['videoId'], $result['scheduledStartTime']);
+                CwmyoutubeFileCache::storeScheduledStart($serverId, $video['videoId'], $result['scheduledStartTime']);
             } elseif (!empty($video['videoId'])) {
                 // Try persistent file cache if API didn't return it
-                $stored = self::getStoredScheduledStart($serverId, $video['videoId']);
+                $stored = CwmyoutubeFileCache::getStoredScheduledStart($serverId, $video['videoId']);
 
                 if ($stored !== '') {
                     $video['scheduledStartTime'] = $stored;
@@ -319,7 +327,7 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * Fetch currently live or upcoming video
      *
-     * Uses a search throttle to avoid burning 200 quota units (2 × search.list)
+     * Uses a search throttle to avoid burning 200 quota units (2 x search.list)
      * every few minutes when no stream is active. After a search returns empty,
      * subsequent calls within the throttle window (15 min) are skipped. The
      * throttle resets immediately when a stream is found.
@@ -338,7 +346,7 @@ class YoutubeHelper implements DatabaseAwareInterface
         // Search throttle: search.list costs 100 units per call (200 for live + upcoming).
         // When no stream is active, repeating this every cache miss wastes quota fast.
         // Throttle to once per 15 minutes when the last search returned empty.
-        $throttleData = self::getSearchThrottle($serverId);
+        $throttleData = CwmyoutubeFileCache::getSearchThrottle($serverId);
 
         if ($throttleData !== null) {
             $age = time() - ($throttleData['timestamp'] ?? 0);
@@ -377,7 +385,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         if ($result['success'] && !empty($result['videos'])) {
             // Found a live stream — clear throttle so future checks stay responsive
-            self::clearSearchThrottle($serverId);
+            CwmyoutubeFileCache::clearSearchThrottle($serverId);
 
             $video               = $result['videos'][0];
             $video['isLive']     = true;
@@ -391,7 +399,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             // Second search call — check quota again
             if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
                 // Record throttle for the live search we already did
-                self::setSearchThrottle($serverId, 900);
+                CwmyoutubeFileCache::setSearchThrottle($serverId, 900);
 
                 return null;
             }
@@ -402,7 +410,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
             if ($result['success'] && !empty($result['videos'])) {
                 // Found an upcoming stream — clear throttle
-                self::clearSearchThrottle($serverId);
+                CwmyoutubeFileCache::clearSearchThrottle($serverId);
 
                 // Filter out excluded videos for upcoming streams
                 foreach ($result['videos'] as $video) {
@@ -411,7 +419,7 @@ class YoutubeHelper implements DatabaseAwareInterface
                         $video['isUpcoming'] = true;
 
                         // Try persistent file cache first to avoid an API call
-                        $stored = self::getStoredScheduledStart($serverId, $video['videoId']);
+                        $stored = CwmyoutubeFileCache::getStoredScheduledStart($serverId, $video['videoId']);
 
                         if ($stored !== '') {
                             $video['scheduledStartTime'] = $stored;
@@ -426,7 +434,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
                             if (!empty($statusResult['scheduledStartTime'])) {
                                 $video['scheduledStartTime'] = $statusResult['scheduledStartTime'];
-                                self::storeScheduledStart($serverId, $video['videoId'], $statusResult['scheduledStartTime']);
+                                CwmyoutubeFileCache::storeScheduledStart($serverId, $video['videoId'], $statusResult['scheduledStartTime']);
                             }
                         }
 
@@ -438,7 +446,7 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Both searches returned empty — throttle future searches for 15 minutes.
         // This prevents burning 200 units every 5 minutes when no stream is active.
-        self::setSearchThrottle($serverId, 900);
+        CwmyoutubeFileCache::setSearchThrottle($serverId, 900);
 
         CwmyoutubeLogHelper::log(
             CwmyoutubeLogHelper::LEVEL_INFO,
@@ -515,70 +523,6 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
-     * Store the last successfully fetched video in a persistent file cache.
-     *
-     * This survives Joomla cache clears and quota exhaustion, ensuring the
-     * module can always show a video instead of "no video available."
-     *
-     * @param   int    $serverId  Server ID
-     * @param   array  $video     Video data array
-     *
-     * @return  void
-     *
-     * @since   10.1.0
-     */
-    private static function storeLastKnownVideo(int $serverId, array $video): void
-    {
-        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
-
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
-        }
-
-        $file = $dir . '/last_video_' . $serverId . '.json';
-        $data = [
-            'video'    => $video,
-            'storedAt' => time(),
-        ];
-
-        @file_put_contents($file, json_encode($data, JSON_UNESCAPED_SLASHES), LOCK_EX);
-    }
-
-    /**
-     * Retrieve the last known good video from the persistent file cache.
-     *
-     * No TTL — the file persists until overwritten by a newer successful fetch.
-     *
-     * @param   int  $serverId  Server ID
-     *
-     * @return  array|null  Video data array or null if not found
-     *
-     * @since   10.1.0
-     */
-    private static function getLastKnownVideo(int $serverId): ?array
-    {
-        $file = JPATH_CACHE . '/mod_proclaim_youtube/last_video_' . $serverId . '.json';
-
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
-            return null;
-        }
-
-        try {
-            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            return null;
-        }
-
-        return $data['video'] ?? null;
-    }
-
-    /**
      * Get recent sermons from Proclaim as a fallback when no YouTube video is available.
      *
      * Reuses the same CwmsermonsModel that mod_proclaim uses, so sermons include
@@ -612,7 +556,9 @@ class YoutubeHelper implements DatabaseAwareInterface
     }
 
     /**
-     * Get YouTube embed URL for a video
+     * Get YouTube embed URL for a video.
+     *
+     * Delegates to the YouTube server addon's buildSimpleEmbedUrl().
      *
      * @param   string  $videoId  YouTube video ID
      * @param   bool    $autoplay Whether to autoplay
@@ -624,23 +570,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function getEmbedUrl(string $videoId, bool $autoplay = false, bool $isLive = false): string
     {
-        $url = 'https://www.youtube.com/embed/' . htmlspecialchars($videoId, ENT_QUOTES, 'UTF-8');
-
-        $params = [];
-
-        if ($autoplay && $isLive) {
-            $params['autoplay'] = '1';
-            $params['mute']     = '1';
-        }
-
-        // Don't show related videos from other channels
-        $params['rel'] = '0';
-
-        if (!empty($params)) {
-            $url .= '?' . http_build_query($params);
-        }
-
-        return $url;
+        return CWMAddonYoutube::buildSimpleEmbedUrl($videoId, $autoplay, $isLive);
     }
 
     /**
@@ -678,7 +608,7 @@ class YoutubeHelper implements DatabaseAwareInterface
      * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
      *
      * If video_id is provided, checks the specific video's status using the Videos API.
-     * Otherwise falls back to searching for live/upcoming videos on the channel.
+     * Otherwise returns "no stream" without any API call.
      *
      * @return  array  Status data with isLive, isUpcoming, and videoId
      *
@@ -761,10 +691,10 @@ class YoutubeHelper implements DatabaseAwareInterface
 
                 if (!empty($result['scheduledStartTime'])) {
                     $statusResult['scheduledStartTime'] = $result['scheduledStartTime'];
-                    self::storeScheduledStart($serverId, $videoId, $result['scheduledStartTime']);
+                    CwmyoutubeFileCache::storeScheduledStart($serverId, $videoId, $result['scheduledStartTime']);
                 } else {
                     // Try persistent file cache
-                    $stored = self::getStoredScheduledStart($serverId, $videoId);
+                    $stored = CwmyoutubeFileCache::getStoredScheduledStart($serverId, $videoId);
 
                     if ($stored !== '') {
                         $statusResult['scheduledStartTime'] = $stored;
@@ -773,7 +703,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         } elseif (!empty($videoId)) {
             // Quota exhausted — return last known status without API call
-            $stored = self::getStoredScheduledStart($serverId, $videoId);
+            $stored = CwmyoutubeFileCache::getStoredScheduledStart($serverId, $videoId);
 
             $statusResult = [
                 'success'       => true,
@@ -872,175 +802,6 @@ class YoutubeHelper implements DatabaseAwareInterface
             return hash('sha256', 'mod_proclaim_youtube_status_' . $serverId . '_' . $secret);
         } catch (\Exception $e) {
             return '';
-        }
-    }
-
-    /**
-     * Store a scheduled start time in a persistent file cache.
-     *
-     * Joomla's output cache can be flushed at any time, and there may not be
-     * a linked Proclaim media record when an upcoming stream is first detected.
-     * This file-based store survives cache clears and persists for 24 hours.
-     *
-     * @param   int     $serverId           Server ID
-     * @param   string  $videoId            YouTube video ID
-     * @param   string  $scheduledStartTime ISO 8601 scheduled start time
-     *
-     * @return  void
-     *
-     * @since   10.1.0
-     */
-    public static function storeScheduledStart(int $serverId, string $videoId, string $scheduledStartTime): void
-    {
-        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
-
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
-        }
-
-        $file = $dir . '/schedule_' . $serverId . '_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $videoId) . '.json';
-        $data = [
-            'scheduledStartTime' => $scheduledStartTime,
-            'storedAt'           => time(),
-        ];
-
-        @file_put_contents($file, json_encode($data), LOCK_EX);
-    }
-
-    /**
-     * Retrieve a cached scheduled start time from the persistent file store.
-     *
-     * Returns the ISO 8601 time string if found and not expired (24h TTL),
-     * or an empty string if missing/expired.
-     *
-     * @param   int     $serverId  Server ID
-     * @param   string  $videoId   YouTube video ID
-     *
-     * @return  string  Scheduled start time or empty string
-     *
-     * @since   10.1.0
-     */
-    public static function getStoredScheduledStart(int $serverId, string $videoId): string
-    {
-        $file = JPATH_CACHE . '/mod_proclaim_youtube/schedule_'
-            . $serverId . '_' . preg_replace('/[^a-zA-Z0-9_-]/', '', $videoId) . '.json';
-
-        if (!file_exists($file)) {
-            return '';
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
-            return '';
-        }
-
-        try {
-            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            @unlink($file);
-
-            return '';
-        }
-
-        if (empty($data['scheduledStartTime'])) {
-            return '';
-        }
-
-        // 24-hour TTL
-        if (isset($data['storedAt']) && (time() - $data['storedAt']) > 86400) {
-            @unlink($file);
-
-            return '';
-        }
-
-        return $data['scheduledStartTime'];
-    }
-
-    /**
-     * Set a search throttle to prevent repeated expensive search.list calls.
-     *
-     * When search.list returns no live/upcoming streams, we record the time
-     * so subsequent calls within the TTL window skip the search entirely.
-     * This saves 200 quota units (2 × search.list) per throttle hit.
-     *
-     * @param   int  $serverId  Server ID
-     * @param   int  $ttl       Throttle duration in seconds (default 900 = 15 min)
-     *
-     * @return  void
-     *
-     * @since   10.2.0
-     */
-    private static function setSearchThrottle(int $serverId, int $ttl = 900): void
-    {
-        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
-
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
-        }
-
-        $file = $dir . '/search_throttle_' . $serverId . '.json';
-        $data = [
-            'timestamp' => time(),
-            'ttl'       => $ttl,
-        ];
-
-        @file_put_contents($file, json_encode($data), LOCK_EX);
-    }
-
-    /**
-     * Get the current search throttle data for a server.
-     *
-     * @param   int  $serverId  Server ID
-     *
-     * @return  array|null  Throttle data with 'timestamp' and 'ttl', or null if not throttled
-     *
-     * @since   10.2.0
-     */
-    private static function getSearchThrottle(int $serverId): ?array
-    {
-        $file = JPATH_CACHE . '/mod_proclaim_youtube/search_throttle_' . $serverId . '.json';
-
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
-            return null;
-        }
-
-        try {
-            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            @unlink($file);
-
-            return null;
-        }
-
-        if (!\is_array($data) || empty($data['timestamp'])) {
-            return null;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Clear the search throttle (e.g. when a live/upcoming stream is found).
-     *
-     * @param   int  $serverId  Server ID
-     *
-     * @return  void
-     *
-     * @since   10.2.0
-     */
-    private static function clearSearchThrottle(int $serverId): void
-    {
-        $file = JPATH_CACHE . '/mod_proclaim_youtube/search_throttle_' . $serverId . '.json';
-
-        if (file_exists($file)) {
-            @unlink($file);
         }
     }
 }
