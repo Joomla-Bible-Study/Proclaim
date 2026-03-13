@@ -28,6 +28,7 @@ gen/
 
 # Build reports
 build/reports/
+build/__pycache__/
 
 # Generated files
 /admin/proclaim.xml
