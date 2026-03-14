@@ -19,7 +19,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmteacher\HtmlView $this */
 
@@ -57,7 +56,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
     <div class="main-card">
         <?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
-        <?php // ===== Details Tab ===== ?>
+        <?php // ===== Details Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
         <div class="row">
             <div class="col-lg-9">
@@ -74,11 +73,6 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 <?php endif; ?>
             </div>
             <div class="col-lg-3">
-                <?php if (!empty($this->item->teacher_thumbnail)) : ?>
-                    <img src="<?php echo Uri::root() . $this->item->teacher_thumbnail; ?>"
-                         alt="<?php echo $this->escape($this->form->getValue('teachername')); ?>"
-                         class="img-thumbnail mb-3 d-block" style="max-width: 200px;"/>
-                <?php endif; ?>
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <hr/>
                 <?php echo $this->form->renderField('published'); ?>
@@ -90,7 +84,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Biography Tab ===== ?>
+        <?php // ===== Biography Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY')); ?>
         <div class="row">
             <div class="col-lg-12">
@@ -100,14 +94,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Links Tab ===== ?>
+        <?php // ===== Links Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'links', Text::_('JBS_TCH_LINKS')); ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php // ---- Website Field ---- ?>
+                <?php // ---- Website Field ----?>
                 <?php echo $this->form->renderField('website'); ?>
 
-                <?php // ---- Social Links Subform ---- ?>
+                <?php // ---- Social Links Subform ----?>
                 <div class="mt-4">
                     <h4 class="mb-2">
                         <i class="fa-solid fa-share-nodes"></i>
@@ -117,7 +111,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                     <?php echo $this->form->renderField('social_links'); ?>
                 </div>
 
-                <?php // ---- Legacy Links (if any exist) ---- ?>
+                <?php // ---- Legacy Links (if any exist) ----?>
                 <?php
                 $hasLegacyLinks = !empty($this->item->facebooklink)
                     || !empty($this->item->twitterlink)
@@ -125,7 +119,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                     || !empty($this->item->link1)
                     || !empty($this->item->link2)
                     || !empty($this->item->link3);
-                ?>
+?>
                 <?php if ($hasLegacyLinks) : ?>
                 <div class="accordion mt-5" id="legacyLinksAccordion">
                     <div class="accordion-item">
@@ -170,16 +164,16 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Messages Tab (existing records only) ===== ?>
+        <?php // ===== Messages Tab (existing records only) =====?>
         <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
         <?php
         $msgCount = \count($this->messages);
-        echo HTMLHelper::_(
-            'uitab.addTab',
-            'myTab',
-            'messages',
-            Text::sprintf('JBS_TCH_MESSAGES_COUNT', $msgCount)
-        ); ?>
+            echo HTMLHelper::_(
+                'uitab.addTab',
+                'myTab',
+                'messages',
+                Text::sprintf('JBS_TCH_MESSAGES_COUNT', $msgCount)
+            ); ?>
         <div class="row">
             <div class="col-lg-12">
                 <?php if ($msgCount > 0) : ?>
@@ -233,7 +227,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
         <?php endif; ?>
 
-        <?php // ===== Publishing Tab ===== ?>
+        <?php // ===== Publishing Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
         <div class="row">
             <div class="col-lg-12">
@@ -242,7 +236,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Permissions Tab ===== ?>
+        <?php // ===== Permissions Tab =====?>
         <?php if ($this->canDo->get('core.admin')) : ?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
         <fieldset id="fieldset-rules" class="options-form">
