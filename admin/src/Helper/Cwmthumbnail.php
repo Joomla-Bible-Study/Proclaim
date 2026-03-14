@@ -242,6 +242,11 @@ class Cwmthumbnail
         $normalizedNew      = Path::clean($newImagePath);
 
         if ($normalizedOriginal !== $normalizedNew) {
+            // Source may have been removed during cleanup above (same folder, different version hash)
+            if (!is_file($originalPath)) {
+                return false;
+            }
+
             // Copy instead of move if source is in a different location
             if (!File::copy($originalPath, $newImagePath)) {
                 return false;
