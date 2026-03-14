@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     credentials: 'same-origin',
                 },
-                { timeout: 15000, retries: 0, signal: abortController.signal },
+                { timeout: 30000, retries: 0, signal: abortController.signal },
             );
 
             if (!response.ok) {
