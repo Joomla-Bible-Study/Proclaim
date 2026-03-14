@@ -215,6 +215,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
             [
                 $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
                 $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
             ],
             'OR'
         );
@@ -247,7 +248,8 @@ class CwmseriespodcastdisplayModel extends ItemModel
                 . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $quotedNow . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $db->quote($nullDate) . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $quotedNow . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
             $query->extendWhere(
@@ -255,6 +257,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
                 [
                     $db->quoteName('series.published') . ' = 1',
                     $db->quoteName('study.series_id') . ' <= 0',
+                    $db->quoteName('study.series_id') . ' IS NULL',
                 ],
                 'OR'
             );

@@ -594,6 +594,7 @@ class CwmsermonsModel extends ListModel
             [
                 $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
                 $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
             ],
             'OR'
         );
@@ -626,11 +627,12 @@ class CwmsermonsModel extends ListModel
                 . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
             // Admin: only check series published state
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         }
 
         // Filter by start and end dates for messages.
