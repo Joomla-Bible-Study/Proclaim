@@ -224,27 +224,39 @@ class HtmlView extends BaseHtmlView
             http_response_code(404);
             $this->document->setTitle(Text::_('JBS_CMN_STUDY_NOT_FOUND'));
 
-            // Load a few recent published messages so the template can suggest alternatives
-            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.alias', 's.studyintro', 's.thumbnailm', 's.image']))
-                ->select($db->quoteName('t.teachername'))
-                ->select($db->quoteName('t.teacher_thumbnail'))
-                ->select($db->quoteName('se.series_text'))
-                ->join('LEFT', $db->quoteName('#__bsms_series', 'se')
-                    . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
-                ->from($db->quoteName('#__bsms_studies', 's'))
-                ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj')
-                    . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
-                    . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
-                ->join('LEFT', $db->quoteName('#__bsms_teachers', 't')
-                    . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
-                ->where($db->quoteName('s.published') . ' = 1')
-                ->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels())
-                ->order($db->quoteName('s.studydate') . ' DESC')
-                ->setLimit(5);
-            $db->setQuery($query);
-            $this->recentItems = $db->loadObjectList() ?: [];
+            // Load recent messages from cache (15 min TTL) to reduce server load
+            $cacheKey   = 'proclaim_notfound_recent_' . implode(',', $user->getAuthorisedViewLevels());
+            $cacheGroup = 'com_proclaim';
+            $cache      = Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)
+                ->createCacheController('callback', ['defaultgroup' => $cacheGroup, 'lifetime' => 15]);
+
+            $this->recentItems = $cache->get(
+                static function () use ($user) {
+                    $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.alias', 's.studyintro', 's.thumbnailm', 's.image']))
+                        ->select($db->quoteName('t.teachername'))
+                        ->select($db->quoteName('t.teacher_thumbnail'))
+                        ->select($db->quoteName('se.series_text'))
+                        ->join('LEFT', $db->quoteName('#__bsms_series', 'se')
+                            . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
+                        ->from($db->quoteName('#__bsms_studies', 's'))
+                        ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj')
+                            . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+                        ->join('LEFT', $db->quoteName('#__bsms_teachers', 't')
+                            . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                        ->where($db->quoteName('s.published') . ' = 1')
+                        ->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels())
+                        ->order($db->quoteName('s.studydate') . ' DESC')
+                        ->setLimit(5);
+                    $db->setQuery($query);
+
+                    return $db->loadObjectList() ?: [];
+                },
+                [],
+                $cacheKey
+            );
 
             $this->setLayout('notfound');
             parent::display($tpl);
