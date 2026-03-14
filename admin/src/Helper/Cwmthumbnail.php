@@ -205,8 +205,9 @@ class Cwmthumbnail
             if ($preserveOld) {
                 // Clean up old files so we don't accumulate stale images across re-uploads.
                 // Matches both versioned (name-hash.ext) and pre-versioning (name.ext) files.
-                $newFiles = [$newFilename, $thumbName];
-                $patterns = [
+                // Protect both the new target files and the source file from deletion
+                $keepFiles = [$newFilename, $thumbName, basename($originalPath)];
+                $patterns  = [
                     $destFolder . '/' . $baseFilename . '-*',
                     $destFolder . '/' . $baseFilename . '.*',
                     $destFolder . '/thumb_' . $baseFilename . '-*',
@@ -218,7 +219,7 @@ class Cwmthumbnail
 
                     if ($oldFiles) {
                         foreach ($oldFiles as $oldFile) {
-                            if (!\in_array(basename($oldFile), $newFiles, true)) {
+                            if (!\in_array(basename($oldFile), $keepFiles, true)) {
                                 File::delete($oldFile);
                             }
                         }
