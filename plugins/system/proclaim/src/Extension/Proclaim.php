@@ -116,16 +116,15 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private const LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
 
     /**
-     * Map of old com_biblestudy task names to new com_proclaim equivalents.
+     * Task names allowed to carry over from old com_biblestudy URLs.
      *
-     * Only tasks that need explicit mapping are listed. The view prefix
-     * is applied automatically (e.g., 'download' on view 'sermon' becomes
-     * 'cwmsermon.download').
+     * The view prefix is applied automatically (e.g., 'download' on view
+     * 'sermon' becomes 'cwmsermon.download').
      *
      * @var string[]
      * @since 10.2.0
      */
-    private const LEGACY_TASK_MAP = ['download'];
+    private const LEGACY_ALLOWED_TASKS = ['download'];
 
     /**
      * Views hidden from the admin submenu for non-admin users (require core.admin).
@@ -157,6 +156,14 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.1.0
      */
     private ?bool $has9xSchema = null;
+
+    /**
+     * Cached admin params for this request (null = not yet loaded).
+     *
+     * @var ?array
+     * @since 10.2.0
+     */
+    private ?array $adminParams = null;
 
     /**
      * Returns the events this plugin subscribes to.
@@ -370,7 +377,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function redirectLegacyUrls(): void
     {
-        $app   = $this->getApplication();
+        $app = $this->getApplication();
+
+        // Only process legacy URLs on the frontend
+        if (!$app->isClient('site')) {
+            return;
+        }
+
         $input = $app->getInput();
 
         $oldView = '';
@@ -416,7 +429,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $query = ['option' => 'com_proclaim', 'view' => $newView];
 
         // Map old task names (e.g., 'download' → 'cwmsermon.download')
-        if ($oldTask !== '' && \in_array($oldTask, self::LEGACY_TASK_MAP, true)) {
+        if ($oldTask !== '' && \in_array($oldTask, self::LEGACY_ALLOWED_TASKS, true)) {
             $query['task'] = $newView . '.' . $oldTask;
         }
 
@@ -593,19 +606,19 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        $oldView  = strtolower($m[1]);
-        $id       = (int) $m[2];
-        $alias    = $m[3];
+        $oldView = strtolower($m[1]);
+        $id      = (int) $m[2];
+        $alias   = $m[3];
 
         // Determine the database table for this view type
         $tableMap = [
-            'sermon'  => '#__bsms_studies',
-            'sermons' => '#__bsms_studies',
-            'latest'  => '#__bsms_studies',
-            'teacher' => '#__bsms_teachers',
-            'teachers' => '#__bsms_teachers',
-            'seriesdisplay'  => '#__bsms_series',
-            'seriesdisplays' => '#__bsms_series',
+            'sermon'               => '#__bsms_studies',
+            'sermons'              => '#__bsms_studies',
+            'latest'               => '#__bsms_studies',
+            'teacher'              => '#__bsms_teachers',
+            'teachers'             => '#__bsms_teachers',
+            'seriesdisplay'        => '#__bsms_series',
+            'seriesdisplays'       => '#__bsms_series',
             'seriespodcastdisplay' => '#__bsms_series',
             'seriespodcastlist'    => '#__bsms_series',
         ];
@@ -730,6 +743,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function getAdminParams(): array
     {
+        if ($this->adminParams !== null) {
+            return $this->adminParams;
+        }
+
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
@@ -739,10 +756,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $db->setQuery($query);
             $json = $db->loadResult();
 
-            return $json ? (json_decode($json, true, 512, JSON_THROW_ON_ERROR) ?: []) : [];
+            $decoded            = $json ? json_decode($json, true, 512, JSON_THROW_ON_ERROR) : [];
+            $this->adminParams  = $decoded ?: [];
         } catch (\Exception $e) {
-            return [];
+            $this->adminParams = [];
         }
+
+        return $this->adminParams;
     }
 
     /**
