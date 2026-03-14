@@ -2381,13 +2381,13 @@ class Cwmlisting
     public function createelement($element): string
     {
         return match ((int) $element) {
-            1 => 'p',
-            2 => 'h1',
-            3 => 'h2',
-            4 => 'h3',
-            5 => 'h4',
-            6 => 'h5',
-            7 => 'blockquote',
+            1       => 'p',
+            2       => 'h1',
+            3       => 'h2',
+            4       => 'h3',
+            5       => 'h4',
+            6       => 'h5',
+            7       => 'blockquote',
             default => 'div',
         };
     }

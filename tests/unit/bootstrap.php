@@ -225,7 +225,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
 
     if (str_contains($host, ':')) {
         [$host, $port] = explode(':', $host, 2);
-        $port = (int) $port;
+        $port          = (int) $port;
     }
 
     try {
@@ -288,12 +288,12 @@ require_once __DIR__ . '/ProclaimTestCase.php';
                         if ($new) {
                             return new class ($this) {
                                 private object $db;
-                                private string $type = '';
+                                private string $type  = '';
                                 private array $select = [];
-                                private array $from = [];
-                                private array $where = [];
-                                private ?int $limit = null;
-                                private array $order = [];
+                                private array $from   = [];
+                                private array $where  = [];
+                                private ?int $limit   = null;
+                                private array $order  = [];
 
                                 public function __construct(object $db)
                                 {

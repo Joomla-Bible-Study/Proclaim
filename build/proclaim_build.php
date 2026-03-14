@@ -275,18 +275,18 @@ function doSetup(): void
     $joomlaVersion = ask('Enter the default Joomla version for testing', $currentProps['joomla.version'] ?? '5.4.2');
 
     // Per-site configuration for J5 and J6
-    $sites = ['j5dev' => 'Joomla 5', 'j6dev' => 'Joomla 6'];
+    $sites      = ['j5dev' => 'Joomla 5', 'j6dev' => 'Joomla 6'];
     $siteConfig = [];
 
     foreach ($sites as $key => $label) {
         echo "\n--- $label Development Site ---\n";
-        $prefix = "builder.$key";
+        $prefix           = "builder.$key";
         $siteConfig[$key] = [
-            'url'     => ask("$label site URL", $currentProps["$prefix.url"] ?? "https://$key.local:8890"),
-            'db_host' => ask("$label database host", $currentProps["$prefix.db_host"] ?? 'localhost'),
-            'db_user' => ask("$label database username", $currentProps["$prefix.db_user"] ?? ''),
-            'db_pass' => ask("$label database password", $currentProps["$prefix.db_pass"] ?? ''),
-            'db_name' => ask("$label database name", $currentProps["$prefix.db_name"] ?? ''),
+            'url'      => ask("$label site URL", $currentProps["$prefix.url"] ?? "https://$key.local:8890"),
+            'db_host'  => ask("$label database host", $currentProps["$prefix.db_host"] ?? 'localhost'),
+            'db_user'  => ask("$label database username", $currentProps["$prefix.db_user"] ?? ''),
+            'db_pass'  => ask("$label database password", $currentProps["$prefix.db_pass"] ?? ''),
+            'db_name'  => ask("$label database name", $currentProps["$prefix.db_name"] ?? ''),
             'username' => ask("$label admin username", $currentProps["$prefix.username"] ?? 'admin'),
             'password' => ask("$label admin password", $currentProps["$prefix.password"] ?? 'admin'),
             'email'    => ask("$label admin email", $currentProps["$prefix.email"] ?? 'admin@example.com'),
@@ -314,12 +314,12 @@ function doSetup(): void
     ];
 
     foreach ($siteConfig as $key => $cfg) {
-        $prefix = "builder.$key";
-        $replacements["$prefix.url"]     = $cfg['url'];
-        $replacements["$prefix.db_host"] = $cfg['db_host'];
-        $replacements["$prefix.db_user"] = $cfg['db_user'];
-        $replacements["$prefix.db_pass"] = $cfg['db_pass'];
-        $replacements["$prefix.db_name"] = $cfg['db_name'];
+        $prefix                           = "builder.$key";
+        $replacements["$prefix.url"]      = $cfg['url'];
+        $replacements["$prefix.db_host"]  = $cfg['db_host'];
+        $replacements["$prefix.db_user"]  = $cfg['db_user'];
+        $replacements["$prefix.db_pass"]  = $cfg['db_pass'];
+        $replacements["$prefix.db_name"]  = $cfg['db_name'];
         $replacements["$prefix.username"] = $cfg['username'];
         $replacements["$prefix.password"] = $cfg['password'];
         $replacements["$prefix.email"]    = $cfg['email'];

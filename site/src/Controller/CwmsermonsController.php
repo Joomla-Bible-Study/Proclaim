@@ -140,7 +140,15 @@ class CwmsermonsController extends BaseController
             }
 
             /** @var CwmsermonsModel $model */
-            $model    = $this->getModel('Cwmsermons', 'Site');
+            $model = $this->getModel('Cwmsermons', 'Site');
+
+            // Trigger populateState, then force limitstart from the request.
+            // Joomla's Input object loses 'limitstart' during SEF routing /
+            // language-filter redirects, so read directly from $_GET.
+            $model->getState();
+            $limitstart = (int) ($_GET['limitstart'] ?? $_GET['start'] ?? 0);
+            $model->setState('list.start', $limitstart);
+
             $state    = $model->getState();
             $template = $state->get('template');
             $params   = $state->get('params');
@@ -189,13 +197,14 @@ class CwmsermonsController extends BaseController
             }
 
             echo json_encode([
-                'success'       => true,
-                'html'          => $html,
-                'pagination'    => $pagination->getPagesLinks(),
-                'pagesCounter'  => $pagination->getPagesCounter(),
-                'total'         => $pagination->total,
-                'pagesTotal'    => $pagination->pagesTotal,
-                'filterOptions' => $filterOptions,
+                'success'        => true,
+                'html'           => $html,
+                'pagination'     => $pagination->getPagesLinks(),
+                'pagesCounter'   => $pagination->getPagesCounter(),
+                'total'          => $pagination->total,
+                'pagesTotal'     => $pagination->pagesTotal,
+                'showPagination' => (string) $params->get('show_pagination', '2'),
+                'filterOptions'  => $filterOptions,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
