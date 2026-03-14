@@ -43,14 +43,11 @@ class CwmsermonsController extends BaseController
     public function download(): void
     {
         $input = Factory::getApplication()->getInput();
-        $task  = $input->get('task');
-        $mid   = $input->getInt('id');
+        $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        if ($task === 'download') {
-            CwmanalyticsHelper::logEvent('download', 0, $mid);
-            $downloader = new Cwmdownload();
-            $downloader->download($mid);
-        }
+        CwmanalyticsHelper::logEvent('download', 0, $mid);
+        $downloader = new Cwmdownload();
+        $downloader->download($mid);
     }
 
     /**

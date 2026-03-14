@@ -98,6 +98,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         'teachers'             => 'cwmteachers',
         'seriesdisplay'        => 'cwmseriesdisplay',
         'seriesdisplays'       => 'cwmseriesdisplays',
+        'landing'              => 'cwmsermons',
         'landingpage'          => 'cwmlandingpage',
         'latest'               => 'cwmlatest',
         'popup'                => 'cwmpopup',
@@ -398,6 +399,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
         }
 
+        // Method 3: Check for legacy view segments in SEF URLs under a Proclaim menu
+        // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
+        if ($oldView === '') {
+            $path = $path ?? Uri::getInstance()->getPath();
+            $this->redirectLegacySefSegments($path);
+        }
+
         if ($oldView === '') {
             return;
         }
@@ -486,6 +494,156 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         } catch (\Exception $e) {
             return 0;
         }
+    }
+
+    /**
+     * Detect and redirect legacy SEF URLs that contain old view segments
+     * under a valid Proclaim menu item.
+     *
+     * Matches patterns like /resources/sermons/sermon/671-alias/1 where
+     * "sermon" is a Proclaim 9.x / com_biblestudy view name embedded in
+     * the SEF path. Extracts the numeric ID, looks up the current alias,
+     * and 301-redirects to the correct modern URL.
+     *
+     * @param   string  $path  The raw URI path
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    private function redirectLegacySefSegments(string $path): void
+    {
+        // Build a regex alternation from legacy view names
+        $legacyViews = implode('|', array_keys(self::LEGACY_VIEW_MAP));
+
+        $app   = $this->getApplication();
+        $input = $app->getInput();
+
+        // Pattern A: /legacyview?task=download&mid=123 (no ID-alias, just query params)
+        // The view name must be a standalone segment (preceded by /)
+        if (preg_match('#/(' . $legacyViews . ')$#i', $path, $m)) {
+            $oldView = strtolower($m[1]);
+            $task    = strtolower($input->getCmd('task', ''));
+            $mid     = $input->getInt('mid', 0);
+
+            if ($task !== '' || $mid > 0) {
+                $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
+
+                // For task-based URLs (e.g. download), redirect to non-SEF URL directly.
+                // Route::_() may not work at onAfterInitialise (router not initialised).
+                $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
+
+                if ($mid > 0) {
+                    $query['mid'] = $mid;
+                }
+
+                $itemId = $this->findMenuItemId($newView);
+
+                if (!$itemId) {
+                    $itemId = $this->findMenuItemId($newView . 's');
+                }
+
+                if ($itemId) {
+                    $query['Itemid'] = $itemId;
+                }
+
+                $app->redirect(Uri::base(true) . '/index.php?' . http_build_query($query), 301);
+            }
+
+            return;
+        }
+
+        // Pattern C: /landing/filtertype/id/templateid (old landing page filter URLs)
+        // e.g., /resources/sermons/landing/teacher/115/1?filter_languages=*
+        //      → /resources/sermons?filter_teacher=115
+        // Also handles /landing/sermons/1 (unfiltered paginated list)
+        if (preg_match('#/landing/([a-z]+)/(\d+)(?:/(\d+))?$#i', $path, $m)) {
+            $filterType = strtolower($m[1]);
+            $filterId   = (int) $m[2];
+
+            // Strip /landing/... from the path to get the base sermons list URL
+            $cleanPath = preg_replace('#/landing/[a-z]+/\d+(?:/\d+)?$#i', '', $path);
+
+            // Map old filter type names to current query parameter names
+            $filterParamMap = [
+                'teacher'     => 'filter_teacher',
+                'series'      => 'filter_series',
+                'book'        => 'filter_book',
+                'topic'       => 'filter_topic',
+                'messagetype' => 'filter_messagetype',
+                'location'    => 'filter_location',
+                'year'        => 'filter_year',
+            ];
+
+            $filterParam = $filterParamMap[$filterType] ?? '';
+
+            if ($filterParam !== '' && $filterId > 0) {
+                // Redirect with the specific filter applied
+                $app->redirect(Uri::base(true) . $cleanPath . '?' . $filterParam . '=' . $filterId, 301);
+            } else {
+                // Generic landing page (e.g., /landing/sermons/1) — just redirect to sermons list
+                $app->redirect(Uri::base(true) . $cleanPath, 301);
+            }
+
+            return;
+        }
+
+        // Pattern B: /legacyview/id-alias or /legacyview/id-alias/templateid
+        if (!preg_match('#/(' . $legacyViews . ')/(\d+)[-:]([^/]+?)(?:/(\d+))?$#i', $path, $m)) {
+            return;
+        }
+
+        $oldView  = strtolower($m[1]);
+        $id       = (int) $m[2];
+        $alias    = $m[3];
+
+        // Determine the database table for this view type
+        $tableMap = [
+            'sermon'  => '#__bsms_studies',
+            'sermons' => '#__bsms_studies',
+            'latest'  => '#__bsms_studies',
+            'teacher' => '#__bsms_teachers',
+            'teachers' => '#__bsms_teachers',
+            'seriesdisplay'  => '#__bsms_series',
+            'seriesdisplays' => '#__bsms_series',
+            'seriespodcastdisplay' => '#__bsms_series',
+            'seriespodcastlist'    => '#__bsms_series',
+        ];
+
+        $table = $tableMap[$oldView] ?? '';
+
+        // Look up the current alias from the database
+        $currentAlias = $alias;
+
+        if ($table !== '' && $id > 0) {
+            try {
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                $query = $db->getQuery(true);
+                $query->select($db->quoteName('alias'))
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName('id') . ' = ' . $id);
+                $db->setQuery($query);
+                $result = $db->loadResult();
+
+                if ($result) {
+                    $currentAlias = $result;
+                }
+            } catch (\Exception $e) {
+                // Fall through with original alias
+            }
+        }
+
+        // Build the redirect URL by replacing the legacy segments in the path.
+        // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
+        //     → /resources/sermons/broken-but-not-destroyed
+        // This avoids Route::_() which may not work before routing is initialised.
+        $cleanPath = preg_replace(
+            '#/(' . $legacyViews . ')/\d+[-:][^/]+?(?:/\d+)?$#i',
+            '/' . $currentAlias,
+            $path
+        );
+
+        $app->redirect(Uri::base(true) . $cleanPath, 301);
     }
 
     /**
