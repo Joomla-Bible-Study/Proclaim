@@ -138,3 +138,325 @@ spl_autoload_register(function ($class) {
 
 // Load the base test case
 require_once __DIR__ . '/ProclaimTestCase.php';
+
+// ---------------------------------------------------------------------------
+// Optional: Bootstrap a real database connection from build.properties
+// When available, this allows integration tests to use Factory::getContainer()
+// to obtain a DatabaseInterface. No-op when build.properties is missing.
+// ---------------------------------------------------------------------------
+
+(function () {
+    $root      = \dirname(__DIR__, 2);
+    $propsFile = $root . '/build.properties';
+
+    if (!file_exists($propsFile)) {
+        return;
+    }
+
+    // Parse build.properties
+    $props = [];
+    $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+
+        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+            continue;
+        }
+
+        $eq = strpos($trimmed, '=');
+
+        if ($eq === false) {
+            continue;
+        }
+
+        $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
+    }
+
+    // Find the first Joomla installation path
+    $joomlaPath = '';
+
+    if (!empty($props['builder.joomla_paths'])) {
+        $paths      = array_map('trim', explode(',', $props['builder.joomla_paths']));
+        $joomlaPath = $paths[0] ?? '';
+    } elseif (!empty($props['builder.joomla_path'])) {
+        $joomlaPath = $props['builder.joomla_path'];
+    }
+
+    // Append subdirectory if configured (only relative paths, not absolute)
+    $joomlaDir = $props['builder.joomla_dir'] ?? '';
+
+    if ($joomlaDir !== '' && !str_starts_with($joomlaDir, '/')) {
+        $joomlaPath = rtrim($joomlaPath, '/') . '/' . ltrim($joomlaDir, '/');
+    }
+
+    if ($joomlaPath === '' || !is_dir($joomlaPath)) {
+        return;
+    }
+
+    $configFile = rtrim($joomlaPath, '/') . '/configuration.php';
+
+    if (!file_exists($configFile)) {
+        return;
+    }
+
+    // Load Joomla's configuration
+    require_once $configFile;
+
+    if (!class_exists('JConfig', false)) {
+        return;
+    }
+
+    $config = new \JConfig();
+
+    // Create a real database connection via PDO
+    $host   = $config->host ?? 'localhost';
+    $dbName = $config->db ?? '';
+    $user   = $config->user ?? '';
+    $pass   = $config->password ?? '';
+    $prefix = $config->dbprefix ?? '';
+
+    if ($dbName === '' || $user === '') {
+        return;
+    }
+
+    // Parse host:port
+    $port = 3306;
+
+    if (str_contains($host, ':')) {
+        [$host, $port] = explode(':', $host, 2);
+        $port = (int) $port;
+    }
+
+    try {
+        $pdo = new \PDO(
+            "mysql:host=$host;port=$port;dbname=$dbName;charset=utf8mb4",
+            $user,
+            $pass,
+            [
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+            ]
+        );
+    } catch (\PDOException $e) {
+        // Database not available — integration tests will skip gracefully
+        return;
+    }
+
+    // Create a minimal PSR-11 container that provides DatabaseInterface
+    $container = new class ($pdo, $prefix) {
+        private \PDO $pdo;
+        private string $prefix;
+        private ?object $db = null;
+
+        public function __construct(\PDO $pdo, string $prefix)
+        {
+            $this->pdo    = $pdo;
+            $this->prefix = $prefix;
+        }
+
+        public function has(string $id): bool
+        {
+            return $id === 'Joomla\\Database\\DatabaseInterface'
+                || $id === \Joomla\Database\DatabaseInterface::class;
+        }
+
+        public function get(string $id): object
+        {
+            if (!$this->has($id)) {
+                throw new \RuntimeException("Service not found: $id");
+            }
+
+            if ($this->db === null) {
+                $this->db = new class ($this->pdo, $this->prefix) extends \Joomla\Database\DatabaseDriver {
+                    private \PDO $pdo;
+                    private string $dbPrefix;
+
+                    public function __construct(\PDO $pdo, string $prefix)
+                    {
+                        $this->pdo      = $pdo;
+                        $this->dbPrefix = $prefix;
+                    }
+
+                    public function getPrefix(): string
+                    {
+                        return $this->dbPrefix;
+                    }
+
+                    public function getQuery($new = false)
+                    {
+                        if ($new) {
+                            return new class ($this) {
+                                private object $db;
+                                private string $type = '';
+                                private array $select = [];
+                                private array $from = [];
+                                private array $where = [];
+                                private ?int $limit = null;
+                                private array $order = [];
+
+                                public function __construct(object $db)
+                                {
+                                    $this->db = $db;
+                                }
+
+                                public function select($columns): static
+                                {
+                                    $this->type     = 'SELECT';
+                                    $this->select[] = $columns;
+
+                                    return $this;
+                                }
+
+                                public function from($table): static
+                                {
+                                    $this->from[] = $table;
+
+                                    return $this;
+                                }
+
+                                public function where($condition): static
+                                {
+                                    $this->where[] = $condition;
+
+                                    return $this;
+                                }
+
+                                public function order($column): static
+                                {
+                                    $this->order[] = $column;
+
+                                    return $this;
+                                }
+
+                                public function setLimit(?int $limit, int $offset = 0): static
+                                {
+                                    $this->limit = $limit;
+
+                                    return $this;
+                                }
+
+                                public function __toString(): string
+                                {
+                                    $flatten = static fn ($arr) => implode(', ', array_map(
+                                        static fn ($v) => \is_array($v) ? implode(', ', $v) : (string) $v,
+                                        $arr
+                                    ));
+                                    $sql = $this->type . ' ' . $flatten($this->select);
+                                    $sql .= ' FROM ' . $flatten($this->from);
+
+                                    if ($this->where) {
+                                        $sql .= ' WHERE ' . implode(' AND ', $this->where);
+                                    }
+
+                                    if ($this->order) {
+                                        $sql .= ' ORDER BY ' . implode(', ', $this->order);
+                                    }
+
+                                    if ($this->limit !== null) {
+                                        $sql .= ' LIMIT ' . $this->limit;
+                                    }
+
+                                    return $sql;
+                                }
+                            };
+                        }
+
+                        return null;
+                    }
+
+                    public function quoteName($name, $as = null): string|array
+                    {
+                        if (\is_array($name)) {
+                            return array_map(fn ($n) => '`' . str_replace('`', '``', $n) . '`', $name);
+                        }
+
+                        $quoted = '`' . str_replace('`', '``', $name) . '`';
+
+                        if ($as !== null) {
+                            $quoted .= ' AS `' . str_replace('`', '``', $as) . '`';
+                        }
+
+                        return $quoted;
+                    }
+
+                    public function quote($text, $escape = true): string
+                    {
+                        if (\is_array($text)) {
+                            return implode(', ', array_map(fn ($t) => $this->quote($t, $escape), $text));
+                        }
+
+                        return $this->pdo->quote((string) $text);
+                    }
+
+                    // Joomla shorthand alias for quote()
+                    public function q($text, $escape = true): string
+                    {
+                        return $this->quote($text, $escape);
+                    }
+
+                    public function setQuery($query, $offset = 0, $limit = 0): static
+                    {
+                        $this->sql = (string) $query;
+
+                        return $this;
+                    }
+
+                    /**
+                     * Replace #__ table prefix placeholder with the real prefix.
+                     */
+                    private function prepareSql(): string
+                    {
+                        return str_replace('#__', $this->dbPrefix, $this->sql);
+                    }
+
+                    public function loadResult(): mixed
+                    {
+                        $stmt = $this->pdo->query($this->prepareSql());
+
+                        return $stmt ? $stmt->fetchColumn() : null;
+                    }
+
+                    public function loadObject($class = \stdClass::class)
+                    {
+                        $stmt = $this->pdo->query($this->prepareSql());
+
+                        return $stmt ? ($stmt->fetch(\PDO::FETCH_OBJ) ?: null) : null;
+                    }
+
+                    public function loadObjectList($key = '', $class = \stdClass::class): array
+                    {
+                        $stmt = $this->pdo->query($this->prepareSql());
+
+                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_OBJ) : [];
+                    }
+
+                    public function loadColumn(): array
+                    {
+                        $stmt = $this->pdo->query($this->prepareSql());
+
+                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
+                    }
+
+                    public function execute(): bool
+                    {
+                        return (bool) $this->pdo->exec($this->prepareSql());
+                    }
+
+                    public function getTableList(): array
+                    {
+                        $stmt = $this->pdo->query('SHOW TABLES');
+
+                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
+                    }
+
+                    private string $sql = '';
+                };
+            }
+
+            return $this->db;
+        }
+    };
+
+    \Joomla\CMS\Factory::setContainer($container);
+})();
