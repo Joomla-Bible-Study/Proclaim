@@ -2380,37 +2380,16 @@ class Cwmlisting
      */
     public function createelement($element): string
     {
-        switch ($element) {
-            case 1:
-                $classelement = 'p';
-                break;
-            case 2:
-                $classelement = 'h1';
-                break;
-            case 3:
-                $classelement = 'h2';
-                break;
-            case 4:
-                $classelement = 'h3';
-                break;
-            case 5:
-                $classelement = 'h4';
-                break;
-            case 6:
-                $classelement = 'h5';
-                break;
-            case 7:
-                $classelement = 'blockquote';
-                break;
-            case 8:
-                $classelement = 'div';
-                break;
-            default:
-                $classelement = 'span';
-                break;
-        }
-
-        return $classelement;
+        return match ((int) $element) {
+            1 => 'p',
+            2 => 'h1',
+            3 => 'h2',
+            4 => 'h3',
+            5 => 'h4',
+            6 => 'h5',
+            7 => 'blockquote',
+            default => 'div',
+        };
     }
 
     /**
