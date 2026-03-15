@@ -209,6 +209,16 @@ class CWMHtml5Inline
 
         $render .= "</div>";
 
+        // Interactive transcript panel — renders from the first caption/subtitle track
+        if (!empty($subtitleTracks)) {
+            $firstTrack    = (object) $subtitleTracks[0];
+            $transcriptSrc = htmlspecialchars($firstTrack->src ?? '', ENT_QUOTES, 'UTF-8');
+
+            if (!empty($transcriptSrc)) {
+                $render .= '<div data-transcript-src="' . $transcriptSrc . '"></div>';
+            }
+        }
+
         return $render;
     }
 

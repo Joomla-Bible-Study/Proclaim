@@ -23,6 +23,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
 /**
@@ -323,6 +324,9 @@ class CwmmediafileTable extends Table
         // Attempt physical file deletion — never block DB deletion
         $this->deletePhysicalFile();
 
+        // Clean up locally stored caption/subtitle VTT files
+        $this->deleteCaptionFiles();
+
         return parent::delete($pk);
     }
 
@@ -383,6 +387,69 @@ class CwmmediafileTable extends Table
         } catch (\Exception $e) {
             Log::add(
                 'Media file #' . ($this->id ?? '?') . ': physical file deletion failed — ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
+     * Delete locally stored caption/subtitle VTT files for this media record.
+     *
+     * Only deletes files under media/com_proclaim/captions/ or media/biblestudy/subtitles/
+     * to avoid removing external URLs or files managed by other systems.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function deleteCaptionFiles(): void
+    {
+        try {
+            $mediaParams    = new Registry($this->params ?: '{}');
+            $subtitleTracks = $mediaParams->get('subtitle_tracks', []);
+
+            if (empty($subtitleTracks)) {
+                return;
+            }
+
+            foreach ($subtitleTracks as $track) {
+                $track = (object) $track;
+                $src   = $track->src ?? '';
+
+                if (empty($src)) {
+                    continue;
+                }
+
+                // Only delete local files managed by Proclaim
+                if (
+                    !str_contains($src, 'media/com_proclaim/captions/')
+                    && !str_contains($src, 'media/biblestudy/subtitles/')
+                ) {
+                    continue;
+                }
+
+                // Resolve to absolute path and verify it's within JPATH_ROOT
+                $absPath = JPATH_ROOT . '/' . ltrim($src, '/');
+                $absPath = Path::clean($absPath);
+
+                if (!str_starts_with($absPath, Path::clean(JPATH_ROOT . '/media/'))) {
+                    continue;
+                }
+
+                if (file_exists($absPath)) {
+                    @unlink($absPath);
+
+                    Log::add(
+                        'Media file #' . ($this->id ?? '?') . ': deleted caption file ' . $src,
+                        Log::INFO,
+                        'com_proclaim'
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            Log::add(
+                'Media file #' . ($this->id ?? '?') . ': caption cleanup failed — ' . $e->getMessage(),
                 Log::WARNING,
                 'com_proclaim'
             );
