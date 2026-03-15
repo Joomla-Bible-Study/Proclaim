@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for CwmanalyticsHelper — focuses on pure static methods
@@ -26,9 +27,7 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     // classifyReferrer() tests
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider referrerProvider
-     */
+    #[DataProvider('referrerProvider')]
     public function testClassifyReferrer(string $url, string $utmMedium, string $expectedType): void
     {
         $result = CwmanalyticsHelper::classifyReferrer($url, $utmMedium);
@@ -79,9 +78,7 @@ class CwmanalyticsHelperTest extends ProclaimTestCase
     // classifyUserAgent() tests
     // -------------------------------------------------------------------------
 
-    /**
-     * @dataProvider userAgentProvider
-     */
+    #[DataProvider('userAgentProvider')]
     public function testClassifyUserAgent(string $ua, string $device, string $browser, string $os): void
     {
         $result = CwmanalyticsHelper::classifyUserAgent($ua);

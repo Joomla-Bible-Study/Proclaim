@@ -199,6 +199,21 @@ class CwmmediafileModel extends AdminModel
                 $this->autoDetectMetadata($params, $table, $set_path, $path);
             }
 
+            // Parse chapter time strings into seconds for frontend use
+            $chapters = $params->get('chapters', []);
+
+            if (!empty($chapters)) {
+                $chapters = (array) $chapters;
+
+                foreach ($chapters as &$ch) {
+                    $ch            = (array) $ch;
+                    $ch['seconds'] = self::timeToSeconds($ch['time'] ?? '0:00');
+                }
+
+                unset($ch);
+                $params->set('chapters', $chapters);
+            }
+
             $data['params'] = $params->toArray();
 
             // Clean up old image file when filename changes on an existing record
@@ -337,6 +352,50 @@ class CwmmediafileModel extends AdminModel
         $this->setState('type', $server_type);
 
         return $form;
+    }
+
+    /**
+     * Get the tracks form (chapters and subtitle tracks).
+     *
+     * Loads the shared mediafile_tracks form XML for chapters and subtitle fields.
+     *
+     * @return  ?\Joomla\CMS\Form\Form  The tracks form, or null if not loaded.
+     *
+     * @throws  \Exception
+     *
+     * @since   10.2.0
+     */
+    public function getTracksForm(): ?\Joomla\CMS\Form\Form
+    {
+        $form = $this->loadForm(
+            'com_proclaim.mediafile.tracks',
+            'mediafile_tracks',
+            ['control' => 'jform', 'load_data' => true],
+            true,
+            '/form'
+        );
+
+        return $form ?: null;
+    }
+
+    /**
+     * Parse a time string (MM:SS or H:MM:SS) into total seconds.
+     *
+     * @param   string  $time  Time string like "2:30" or "1:05:30"
+     *
+     * @return  int  Total seconds
+     *
+     * @since   10.2.0
+     */
+    public static function timeToSeconds(string $time): int
+    {
+        $parts = array_map('intval', explode(':', $time));
+
+        return match (\count($parts)) {
+            3       => $parts[0] * 3600 + $parts[1] * 60 + $parts[2],
+            2       => $parts[0] * 60 + $parts[1],
+            default => (int) $time,
+        };
     }
 
     /**

@@ -291,8 +291,12 @@ class Router extends RouterView
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
+            $id = (int)$this->db->loadResult();
 
-            return (int)$this->db->loadResult();
+            // Return -1 for unknown aliases so routing completes and the
+            // view can render a friendly "not found" page with suggestions
+            // instead of Joomla's bare 404 error template.
+            return $id ?: -1;
         }
 
         return (int)$segment;

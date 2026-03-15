@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 // ============================================================================
 // Test infrastructure — local to this file
@@ -308,8 +309,8 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every parameter documented in Backward-Compatibility-Breaks-10.1.md
      * must appear in the $migrations array with the correct default value.
      *
-     * @dataProvider provideExpectedNewParams
      */
+    #[DataProvider('provideExpectedNewParams')]
     public function testMigrationHasAllDocumentedNewParams(string $param, string $expectedDefault): void
     {
         $migrations = makeMigHelper([])->getMigrations();
@@ -352,8 +353,8 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every rename documented in Backward-Compatibility-Breaks-10.1.md must be
      * registered in the $renames array.
      *
-     * @dataProvider provideExpectedRenames
      */
+    #[DataProvider('provideExpectedRenames')]
     public function testRenameMapHasAllDocumentedEntries(string $oldName, string $newName): void
     {
         $h    = makeMigHelper([]);
@@ -403,9 +404,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 2c – B/C completeness: color fields
     // =========================================================================
 
-    /**
-     * @dataProvider provideExpectedColorFields
-     */
+    #[DataProvider('provideExpectedColorFields')]
     public function testColorConversionListHasAllDocumentedFields(string $field): void
     {
         $h    = makeMigHelper([]);
@@ -688,9 +687,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 7 – rowspan image migration
     // =========================================================================
 
-    /**
-     * @dataProvider provideRowspanItemMap
-     */
+    #[DataProvider('provideRowspanItemMap')]
     public function testRowspanItemMapsToElement(int $rowspanitem, string $elementKey): void
     {
         $h = makeMigHelper([['rowspanitem' => (string) $rowspanitem, 'rowspanitemspan' => '3']]);

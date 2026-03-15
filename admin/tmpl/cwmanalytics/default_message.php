@@ -187,7 +187,7 @@ $tsJson = json_encode([
                     $platformPlays   = (int) ($mf['platform_play_count'] ?? 0);
                     $externalPlays   = (int) ($mf['external_plays'] ?? 0);
                     $totalReach      = (int) ($mf['total_reach'] ?? 0);
-                    $rowClass        = $isExternal ? 'table-secondary' : ($isMediaArchived ? 'table-warning' : '');
+                    $rowClass        = $isExternal ? 'opacity-75' : ($isMediaArchived ? 'opacity-75' : '');
                 ?>
                 <tr<?php echo $rowClass !== '' ? ' class="' . $rowClass . '"' : ''; ?>>
                     <td class="text-muted"><?php echo $i + 1; ?></td>

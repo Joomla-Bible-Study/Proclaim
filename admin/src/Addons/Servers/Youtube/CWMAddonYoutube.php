@@ -620,6 +620,10 @@ class CWMAddonYoutube extends CWMAddon
             'fetchPlaylistVideos',
             'fetchLiveVideos',
             'getVideoStatus',
+            'disconnectOAuth',
+            'importChapters',
+            'listCaptions',
+            'downloadCaption',
         ];
     }
 
@@ -1661,6 +1665,18 @@ class CWMAddonYoutube extends CWMAddon
                     }
                 }
 
+                // Auto-extract chapters from video description if not already set
+                $existingChapters = $params->get('chapters', []);
+
+                if (empty($existingChapters)) {
+                    $description = $item->snippet->description ?? '';
+                    $chapters    = \CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper::parseYouTubeChapters($description);
+
+                    if (!empty($chapters)) {
+                        $params->set('chapters', $chapters);
+                    }
+                }
+
                 // Auto-import YouTube tags as topics when setting is enabled
                 $adminParams = Cwmparams::getAdmin()->params;
 
@@ -1747,4 +1763,571 @@ class CWMAddonYoutube extends CWMAddon
         }
     }
 
+    // ─── OAuth 2.0 Methods ──────────────────────────────────────────────
+
+    /**
+     * Create a Google Client configured with OAuth credentials for write operations.
+     *
+     * Returns null if OAuth is not configured. Falls back to API key for read-only
+     * operations when OAuth tokens are absent.
+     *
+     * @param   int     $serverId    Server ID
+     * @param   string  $redirectUri OAuth redirect URI (only needed during auth flow)
+     *
+     * @return  ?Google\Client  Configured client, or null if no OAuth credentials
+     *
+     * @since   10.2.0
+     */
+    public function createOAuthClient(int $serverId, string $redirectUri = ''): ?Google\Client
+    {
+        $config   = $this->getServerConfig($serverId);
+        $clientId = $config['client_id'] ?? '';
+        $secret   = $config['client_secret'] ?? '';
+
+        if (empty($clientId) || empty($secret)) {
+            return null;
+        }
+
+        $client = new Google\Client();
+        $client->setApplicationName('Proclaim');
+        $client->setClientId($clientId);
+        $client->setClientSecret($secret);
+        $client->setScopes([YouTube::YOUTUBE_FORCE_SSL]);
+        $client->setAccessType('offline');
+        $client->setPrompt('consent');
+
+        if (!empty($redirectUri)) {
+            $client->setRedirectUri($redirectUri);
+        }
+
+        // Load stored token if available
+        $token = $config['oauth_token'] ?? null;
+
+        if (!empty($token)) {
+            if (\is_string($token)) {
+                try {
+                    $token = json_decode($token, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    return $client;
+                }
+            }
+
+            $client->setAccessToken($token);
+
+            // Auto-refresh expired tokens
+            if ($client->isAccessTokenExpired() && $client->getRefreshToken()) {
+                try {
+                    $newToken = $client->fetchAccessTokenWithRefreshToken();
+
+                    if (!isset($newToken['error'])) {
+                        $this->saveOAuthTokens($serverId, $newToken);
+                    }
+                } catch (\Exception $e) {
+                    CwmyoutubeLogHelper::log(
+                        CwmyoutubeLogHelper::LEVEL_ERROR,
+                        'YouTube OAuth token refresh failed: ' . $e->getMessage(),
+                        ['server_id' => $serverId]
+                    );
+                }
+            }
+        }
+
+        return $client;
+    }
+
+    /**
+     * Save OAuth tokens to server params.
+     *
+     * @param   int    $serverId   Server ID
+     * @param   array  $tokenData  Token data from Google Client
+     *
+     * @return  bool  True on success
+     *
+     * @since   10.2.0
+     */
+    public function saveOAuthTokens(int $serverId, array $tokenData): bool
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        $params = new Registry($paramsJson ?: '{}');
+        $params->set('oauth_token', $tokenData);
+
+        // Persist refresh_token separately — Google only sends it on first authorization
+        if (!empty($tokenData['refresh_token'])) {
+            $params->set('oauth_refresh_token', $tokenData['refresh_token']);
+        } elseif ($params->get('oauth_refresh_token')) {
+            // Ensure refresh token is in the token data for future use
+            $tokenData['refresh_token'] = $params->get('oauth_refresh_token');
+            $params->set('oauth_token', $tokenData);
+        }
+
+        // Set a simple flag for the status field to detect connection
+        $params->set('access_token', $tokenData['access_token'] ?? '1');
+
+        $update = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_servers'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($update);
+        $db->execute();
+
+        return true;
+    }
+
+    /**
+     * Remove OAuth tokens from server params.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  bool  True on success
+     *
+     * @since   10.2.0
+     */
+    public function disconnectOAuth(int $serverId): bool
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        $params = new Registry($paramsJson ?: '{}');
+        $params->remove('oauth_token');
+        $params->remove('oauth_refresh_token');
+        $params->remove('access_token');
+
+        $update = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_servers'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($update);
+        $db->execute();
+
+        return true;
+    }
+
+    /**
+     * Check whether OAuth is connected for a given server.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function isOAuthConnected(int $serverId): bool
+    {
+        $config = $this->getServerConfig($serverId);
+
+        return !empty($config['oauth_token']);
+    }
+
+    /**
+     * Handle disconnectOAuth AJAX action.
+     *
+     * @return  array  Response data
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    protected function handleDisconnectOAuthAction(): array
+    {
+        $serverId = Factory::getApplication()->getInput()->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided'];
+        }
+
+        $this->disconnectOAuth($serverId);
+
+        return ['success' => true];
+    }
+
+    // ─── Capability Flags ───────────────────────────────────────────────
+
+    /**
+     * YouTube supports description sync via OAuth.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
+
+    /**
+     * YouTube supports chapter import from video descriptions.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsChapters(): bool
+    {
+        return true;
+    }
+
+    /**
+     * YouTube supports caption download via OAuth (Captions API).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsCaptions(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Push a description to a YouTube video via the Data API v3.
+     *
+     * Requires OAuth — videos.update needs the full snippet (title, description,
+     * tags, categoryId), so we fetch it first then modify the description only.
+     *
+     * @param   int     $mediaId      The media file ID
+     * @param   string  $description  The description text
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function syncDescription(int $mediaId, string $description): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        try {
+            $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return ['success' => false, 'error' => 'Invalid media params JSON'];
+        }
+
+        $videoId = static::extractMediaId($params['filename'] ?? '');
+
+        if (!$videoId) {
+            return ['success' => false, 'error' => 'Could not extract YouTube video ID'];
+        }
+
+        $serverId = (int) $row->server_id;
+        $client   = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+        }
+
+        // Quota check: videos.list (1) + videos.update (50)
+        $cost = CwmyoutubeQuota::COST_VIDEOS + CwmyoutubeQuota::COST_VIDEO_UPDATE;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            // Fetch current video snippet (required — update replaces full snippet)
+            $response = $youtube->videos->listVideos('snippet', ['id' => $videoId]);
+
+            if (empty($response->items)) {
+                CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
+
+                return ['success' => false, 'error' => 'Video not found on YouTube'];
+            }
+
+            $video = $response->items[0];
+            $video->getSnippet()->setDescription($description);
+
+            $youtube->videos->update('snippet', $video);
+            CwmyoutubeQuota::recordUsage($serverId, $cost);
+
+            return ['success' => true];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    // ─── Import Chapters ────────────────────────────────────────────────
+
+    /**
+     * Handle importChapters AJAX action — pull chapters from YouTube video description.
+     *
+     * @return  array  Response data with chapters array
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    protected function handleImportChaptersAction(): array
+    {
+        $app     = Factory::getApplication();
+        $mediaId = $app->getInput()->getInt('media_id', 0);
+
+        if (!$mediaId) {
+            return ['success' => false, 'error' => 'No media ID provided'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        try {
+            $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return ['success' => false, 'error' => 'Invalid media params JSON'];
+        }
+
+        $videoId = static::extractMediaId($params['filename'] ?? '');
+
+        if (!$videoId) {
+            return ['success' => false, 'error' => 'Could not extract YouTube video ID'];
+        }
+
+        $serverId = (int) $row->server_id;
+        $config   = $this->getServerConfig($serverId);
+        $apiKey   = $config['api_key'] ?? '';
+
+        if (empty($apiKey)) {
+            return ['success' => false, 'error' => 'No YouTube API key configured'];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $client = new Google\Client();
+            $client->setApplicationName('Proclaim');
+            $client->setDeveloperKey($apiKey);
+
+            $youtube  = new YouTube($client);
+            $response = $youtube->videos->listVideos('snippet', ['id' => $videoId]);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
+
+            if (empty($response->items)) {
+                return ['success' => false, 'error' => 'Video not found on YouTube'];
+            }
+
+            $description = $response->items[0]->getSnippet()->getDescription();
+            $chapters    = \CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper::parseYouTubeChapters($description);
+
+            if (empty($chapters)) {
+                return ['success' => false, 'error' => 'No valid chapters found in the YouTube video description. YouTube requires at least 3 chapters, the first at 0:00, each at least 10 seconds apart.'];
+            }
+
+            return ['success' => true, 'chapters' => $chapters];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        }
+    }
+
+    // ─── Captions / Subtitles ───────────────────────────────────────────
+
+    /**
+     * Handle listCaptions AJAX action — list available caption tracks for a video.
+     *
+     * @return  array  Response data with tracks array
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    protected function handleListCaptionsAction(): array
+    {
+        $app     = Factory::getApplication();
+        $mediaId = $app->getInput()->getInt('media_id', 0);
+
+        if (!$mediaId) {
+            return ['success' => false, 'error' => 'No media ID provided'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        try {
+            $params = json_decode($row->params ?? '{}', true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return ['success' => false, 'error' => 'Invalid media params JSON'];
+        }
+
+        $videoId = static::extractMediaId($params['filename'] ?? '');
+
+        if (!$videoId) {
+            return ['success' => false, 'error' => 'Could not extract YouTube video ID'];
+        }
+
+        $serverId = (int) $row->server_id;
+        $client   = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth required for caption access. Connect in server settings.'];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_CAPTIONS_LIST)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube  = new YouTube($client);
+            $response = $youtube->captions->listCaptions('snippet', $videoId);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_CAPTIONS_LIST);
+
+            $tracks = [];
+
+            foreach ($response->items as $item) {
+                $snippet  = $item->getSnippet();
+                $tracks[] = [
+                    'id'        => $item->getId(),
+                    'language'  => $snippet->getLanguage(),
+                    'name'      => $snippet->getName(),
+                    'trackKind' => $snippet->getTrackKind(),
+                ];
+            }
+
+            return ['success' => true, 'tracks' => $tracks];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Handle downloadCaption AJAX action — download a caption track as VTT.
+     *
+     * @return  array  Response data with file path
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    protected function handleDownloadCaptionAction(): array
+    {
+        $app       = Factory::getApplication();
+        $captionId = $app->getInput()->getString('caption_id', '');
+        $mediaId   = $app->getInput()->getInt('media_id', 0);
+        $srclang   = $app->getInput()->getString('srclang', 'en');
+        $label     = $app->getInput()->getString('label', '');
+
+        if (empty($captionId) || !$mediaId) {
+            return ['success' => false, 'error' => 'Missing caption_id or media_id'];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([$db->quoteName('params'), $db->quoteName('server_id'), $db->quoteName('study_id')])
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $row = $db->loadObject();
+
+        if (!$row) {
+            return ['success' => false, 'error' => 'Media file not found'];
+        }
+
+        $serverId = (int) $row->server_id;
+        $client   = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth required for caption download'];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_CAPTIONS_DOWNLOAD)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted (caption download costs 200 units)'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            // Download caption in VTT format
+            $response = $youtube->captions->download($captionId, ['tfmt' => 'vtt']);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_CAPTIONS_DOWNLOAD);
+
+            // Save VTT file
+            $subtitleDir = JPATH_ROOT . '/media/biblestudy/subtitles';
+
+            if (!is_dir($subtitleDir)) {
+                mkdir($subtitleDir, 0755, true);
+            }
+
+            $safeLang = preg_replace('/[^a-zA-Z0-9_-]/', '', $srclang);
+            $filename = 'study' . (int) $row->study_id . '-media' . (int) $mediaId . '-' . $safeLang . '.vtt';
+            $filePath = $subtitleDir . '/' . $filename;
+
+            // The download response body contains the VTT content
+            $vttContent = (string) $response->getBody();
+            file_put_contents($filePath, $vttContent);
+
+            $relativePath = 'media/biblestudy/subtitles/' . $filename;
+
+            return [
+                'success' => true,
+                'src'     => $relativePath,
+                'srclang' => $safeLang,
+                'label'   => $label ?: $srclang,
+                'kind'    => 'captions',
+            ];
+        } catch (Exception $e) {
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        }
+    }
+
+    // ─── Push Chapters ──────────────────────────────────────────────────
+
+    /**
+     * Format chapters array as YouTube description timestamp block.
+     *
+     * @param   array  $chapters  Chapters from media params
+     *
+     * @return  string  Formatted timestamp block
+     *
+     * @since   10.2.0
+     *
+     * @deprecated  10.2.0  Use CWMAddon::formatChaptersForDescription() — same format works on all platforms
+     */
+    public static function formatChaptersForYouTube(array $chapters): string
+    {
+        return parent::formatChaptersForDescription($chapters);
+    }
 }

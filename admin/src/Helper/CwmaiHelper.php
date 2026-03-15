@@ -102,9 +102,11 @@ class CwmaiHelper
             'text'   => !empty($context['generate_text'] ?? true),
         ];
 
-        $hasChapters     = !empty($context['video_chapters']);
-        $hasYouTube      = !empty($context['video_title']) || !empty($context['video_description']);
-        $suggestChapters = $fields['text'] && !$hasChapters && $hasYouTube;
+        $wantChapters    = !empty($context['generate_chapters'] ?? true);
+        $hasChapters     = $wantChapters && !empty($context['video_chapters']);
+        // Suggest chapters whenever the user wants them and none exist yet —
+        // the AI can infer logical structure from sermon content alone.
+        $suggestChapters = $wantChapters && !$hasChapters;
 
         $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
         $userMessage  = self::buildUserMessage($context);
@@ -442,8 +444,8 @@ class CwmaiHelper
         }
 
         if ($suggestChapters) {
-            $instructions[] = $index . '. **Suggested Chapters** (chapters) — the attached YouTube video has no chapter '
-                . 'markers. Based on the sermon content, suggest 3-8 logical chapter timestamps. The first chapter must '
+            $instructions[] = $index . '. **Suggested Chapters** (chapters) — Based on the sermon content, suggest 3-8 '
+                . 'logical chapter timestamps that divide the sermon into meaningful sections. The first chapter must '
                 . 'start at 0:00. Return as an array of objects with "time" (display format like "0:00" or "1:23:45") '
                 . 'and "label" (short chapter title).';
             $jsonKeys[] = '"chapters":[{"time":"0:00","label":"Introduction"},{"time":"2:30","label":"Main Point"}]';
@@ -581,8 +583,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['content'][0]['text'] ?? '';
+        $data       = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content    = $data['content'][0]['text'] ?? '';
+        $stopReason = $data['stop_reason'] ?? '';
+
+        if ($stopReason === 'max_tokens') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -620,7 +629,7 @@ class CwmaiHelper
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 2048,
+                'maxOutputTokens'  => 4096,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -640,8 +649,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $finishReason = $data['candidates'][0]['finishReason'] ?? '';
+
+        if ($finishReason === 'MAX_TOKENS') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -666,7 +682,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'       => $model,
-            'max_tokens'  => 1024,
+            'max_tokens'  => 2048,
             'temperature' => 0.7,
             'messages'    => [
                 ['role' => 'system', 'content' => $systemPrompt],
@@ -691,8 +707,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['choices'][0]['message']['content'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['choices'][0]['message']['content'] ?? '';
+        $finishReason = $data['choices'][0]['finish_reason'] ?? '';
+
+        if ($finishReason === 'length') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }

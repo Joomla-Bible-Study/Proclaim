@@ -686,8 +686,10 @@ class CwmadminController extends FormController
             return;
         }
 
+        $mediaId = $this->input->getInt('media_id', 0);
+
         try {
-            $description = CwmdescriptionHelper::buildVideoDescription($studyId);
+            $description = CwmdescriptionHelper::buildVideoDescription($studyId, $mediaId);
 
             echo json_encode(['success' => true, 'description' => $description]);
         } catch (\Exception $e) {

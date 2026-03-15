@@ -13,6 +13,14 @@
             <field name="project_id" type="text" label="JBS_ADDON_WISTIA_PROJECT_ID"
                    description="JBS_ADDON_WISTIA_PROJECT_ID_DESC" class="inputbox" size="40" />
         </fieldset>
+        <fieldset name="wistia_sync" label="JBS_ADDON_WISTIA_SYNC_SETTINGS">
+            <field name="description_format" type="DescriptionFormat" rows="6"
+                   default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}&#10;&#10;{url}"
+                   label="JBS_ADDON_DESC_FORMAT"
+                   description="JBS_ADDON_DESC_FORMAT_DESC"
+                   filter="raw"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+        </fieldset>
     </fields>
     <fields name="media">
         <fieldset name="files_settings" label="JBS_ADDON_WISTIA_FILE_SETTINGS">

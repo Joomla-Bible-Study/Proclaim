@@ -370,4 +370,17 @@ class CWMAddonSoundcloud extends CWMAddon
             $params->set('mime_type', 'audio/mpeg');
         }
     }
+
+    /**
+     * SoundCloud supports track descriptions.
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function supportsDescriptionSync(): bool
+    {
+        return true;
+    }
 }

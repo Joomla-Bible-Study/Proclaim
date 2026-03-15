@@ -283,7 +283,8 @@
 
                 // Validate form
                 if (!document.formvalidator.isValid(document.getElementById('item-admin'))) {
-                    const errorText = Joomla.Text._('JGLOBAL_VALIDATION_FORM_FAILED') || 'Form validation failed';
+                    const rawText = Joomla.Text._('JGLOBAL_VALIDATION_FORM_FAILED');
+                    const errorText = (rawText && rawText !== 'JGLOBAL_VALIDATION_FORM_FAILED') ? rawText : 'Form validation failed';
                     Joomla.renderMessages({ error: [errorText] });
                     return;
                 }

@@ -18,7 +18,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Session\Session;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -43,14 +42,11 @@ class CwmsermonsController extends BaseController
     public function download(): void
     {
         $input = Factory::getApplication()->getInput();
-        $task  = $input->get('task');
-        $mid   = $input->getInt('id');
+        $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        if ($task === 'download') {
-            CwmanalyticsHelper::logEvent('download', 0, $mid);
-            $downloader = new Cwmdownload();
-            $downloader->download($mid);
-        }
+        CwmanalyticsHelper::logEvent('download', 0, $mid);
+        $downloader = new Cwmdownload();
+        $downloader->download($mid);
     }
 
     /**
@@ -107,7 +103,7 @@ class CwmsermonsController extends BaseController
      * update without a full reload.  Falls back gracefully — the form
      * still works via normal POST when JavaScript is disabled.
      *
-     * URL: index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw&{token}=1
+     * URL: index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw
      *
      * @return  void
      *
@@ -118,13 +114,6 @@ class CwmsermonsController extends BaseController
     {
         $app = Factory::getApplication();
         header('Content-Type: application/json; charset=utf-8');
-
-        if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
-            $app->close();
-
-            return;
-        }
 
         try {
             // Flatten bracket-format params (filter[teacher] → filter_teacher) so
@@ -143,7 +132,15 @@ class CwmsermonsController extends BaseController
             }
 
             /** @var CwmsermonsModel $model */
-            $model    = $this->getModel('Cwmsermons', 'Site');
+            $model = $this->getModel('Cwmsermons', 'Site');
+
+            // Trigger populateState, then force limitstart from the request.
+            // Joomla's Input object loses 'limitstart' during SEF routing /
+            // language-filter redirects, so read directly from $_GET.
+            $model->getState();
+            $limitstart = (int) ($_GET['limitstart'] ?? $_GET['start'] ?? 0);
+            $model->setState('list.start', $limitstart);
+
             $state    = $model->getState();
             $template = $state->get('template');
             $params   = $state->get('params');
@@ -192,13 +189,14 @@ class CwmsermonsController extends BaseController
             }
 
             echo json_encode([
-                'success'       => true,
-                'html'          => $html,
-                'pagination'    => $pagination->getPagesLinks(),
-                'pagesCounter'  => $pagination->getPagesCounter(),
-                'total'         => $pagination->total,
-                'pagesTotal'    => $pagination->pagesTotal,
-                'filterOptions' => $filterOptions,
+                'success'        => true,
+                'html'           => $html,
+                'pagination'     => $pagination->getPagesLinks(),
+                'pagesCounter'   => $pagination->getPagesCounter(),
+                'total'          => $pagination->total,
+                'pagesTotal'     => $pagination->pagesTotal,
+                'showPagination' => (string) $params->get('show_pagination', '2'),
+                'filterOptions'  => $filterOptions,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

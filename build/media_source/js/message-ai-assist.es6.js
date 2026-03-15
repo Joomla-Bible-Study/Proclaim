@@ -20,9 +20,10 @@
         return;
     }
 
-    const token      = config.dataset.token || '';
-    const mediaId    = parseInt(config.dataset.mediaId, 10) || 0;
-    const ajaxBase   = `index.php?option=com_proclaim&format=raw&${token}=1`;
+    const token          = config.dataset.token || '';
+    const mediaId        = parseInt(config.dataset.mediaId, 10) || 0;
+    const youtubeMediaId = parseInt(config.dataset.youtubeMediaId, 10) || 0;
+    const ajaxBase       = `index.php?option=com_proclaim&format=raw&${token}=1`;
 
     // ---- Helpers ----
 
@@ -33,16 +34,18 @@
      * @returns {string}
      */
     function getEditorValue(fieldName) {
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editorId = `jform_${fieldName}`;
-            const editor   = Joomla.editors.instances[editorId];
+        const editorId = `jform_${fieldName}`;
+
+        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        if (typeof JoomlaEditor !== 'undefined') {
+            const editor = JoomlaEditor.get(editorId);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
             }
         }
 
-        const el = document.getElementById(`jform_${fieldName}`);
+        const el = document.getElementById(editorId);
 
         return el ? el.value : '';
     }
@@ -56,8 +59,9 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editor = Joomla.editors.instances[editorId];
+        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        if (typeof JoomlaEditor !== 'undefined') {
+            const editor = JoomlaEditor.get(editorId);
 
             if (editor && typeof editor.setValue === 'function') {
                 editor.setValue(value);
@@ -79,6 +83,32 @@
      * @param {string|number} value  Topic ID or new topic text
      * @param {string} label         Display label
      */
+    /**
+     * Sync the hidden topics input from current Choices.js selections.
+     */
+    function syncTopicsHiddenInput() {
+        const selectEl = document.getElementById('jform_topics');
+
+        if (!selectEl) {
+            return;
+        }
+
+        const fancySelect = selectEl.closest('joomla-field-fancy-select');
+
+        if (!fancySelect || !fancySelect.choicesInstance) {
+            return;
+        }
+
+        const hiddenInput = document.getElementById('jform_topics_input');
+
+        if (hiddenInput) {
+            const items = fancySelect.choicesInstance.getValue();
+            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+
+            hiddenInput.value = vals.join(',');
+        }
+    }
+
     function addTopicToField(value, label) {
         const selectEl = document.getElementById('jform_topics');
 
@@ -93,28 +123,47 @@
         }
 
         const choices  = fancySelect.choicesInstance;
+
+        // Try to match by label against existing options (case-insensitive)
+        // so we use the numeric topic ID instead of the text name
+        const allChoices   = choices._store.choices || [];
+        const labelLower   = String(label).toLowerCase();
+        const matchedChoice = allChoices.find(
+            (c) => c.label && c.label.toLowerCase() === labelLower,
+        );
+
+        const resolvedValue = matchedChoice ? String(matchedChoice.value) : String(value);
+
+        // Check if already selected
         const existing = choices.getValue();
         const ids      = Array.isArray(existing) ? existing.map((i) => String(i.value)) : [];
 
-        if (ids.indexOf(String(value)) !== -1) {
+        if (ids.indexOf(resolvedValue) !== -1) {
             return;
         }
 
-        choices.setChoices(
-            [{ value: String(value), label, selected: true }],
-            'value',
-            'label',
-            false,
-        );
+        if (matchedChoice) {
+            // Select the existing option by its numeric ID
+            choices.setValue([{ value: resolvedValue, label: matchedChoice.label }]);
+        } else {
+            // New topic — add as text value (backend will create it)
+            choices.setChoices(
+                [{ value: resolvedValue, label, selected: true }],
+                'value',
+                'label',
+                false,
+            );
+        }
+    }
 
-        // Sync hidden input
-        const hiddenInput = document.getElementById('jform_topics_input');
+    // Safety net: sync hidden input before form submission
+    const topicsSelect = document.getElementById('jform_topics');
 
-        if (hiddenInput) {
-            const items = choices.getValue();
-            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+    if (topicsSelect) {
+        const form = topicsSelect.closest('form');
 
-            hiddenInput.value = vals.join(',');
+        if (form) {
+            form.addEventListener('submit', () => syncTopicsHiddenInput(), true);
         }
     }
 
@@ -147,6 +196,83 @@
         btn.insertAdjacentElement('afterend', badge);
 
         setTimeout(() => badge.remove(), 3000);
+    }
+
+    /**
+     * Parse chapter text lines (e.g. "0:00 Introduction") into structured array.
+     *
+     * @param {string} text  Multi-line chapter text
+     * @returns {Array<{time: string, label: string}>}
+     */
+    function parseChaptersText(text) {
+        if (!text) {
+            return [];
+        }
+
+        const chapters = [];
+
+        text.split('\n').forEach((line) => {
+            const match = line.trim().match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s+(.+)$/);
+
+            if (match) {
+                chapters.push({ time: match[1], label: match[2].trim() });
+            }
+        });
+
+        return chapters;
+    }
+
+    /**
+     * Save chapters to the media file via AJAX and show feedback.
+     *
+     * @param {HTMLElement} btn       The button that was clicked
+     * @param {HTMLTextAreaElement} textarea  The chapters textarea
+     */
+    function applyChaptersToMedia(btn, textarea) {
+        // Use YouTube media ID when available (chapters from YouTube apply to that file)
+        const targetMediaId = youtubeMediaId || mediaId;
+
+        if (!textarea || !textarea.value || !targetMediaId) {
+            return;
+        }
+
+        const chapters = parseChaptersText(textarea.value);
+
+        if (!chapters.length) {
+            return;
+        }
+
+        btn.disabled = true;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+        fetch(`${ajaxBase}&task=cwmmediafile.saveChapters&media_id=${targetMediaId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ chapters }),
+        })
+            .then((r) => r.json())
+            .then((data) => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+
+                if (data.success) {
+                    showAppliedFeedback(
+                        btn,
+                        (Joomla.Text._('JBS_CMN_AI_CHAPTERS_APPLIED') || '{count} chapters saved')
+                            .replace('{count}', data.count),
+                    );
+                } else {
+                    showAppliedFeedback(btn, data.error || 'Error');
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
     }
 
     // ---- Suggest Topics ----
@@ -337,15 +463,17 @@
     if (btnAiAssist) {
         btnAiAssist.addEventListener('click', async () => {
             // Read toggle checkbox states
-            const genTopics = document.getElementById('ai-gen-topics');
-            const genIntro  = document.getElementById('ai-gen-intro');
-            const genText   = document.getElementById('ai-gen-text');
-            const wantTopics = genTopics ? genTopics.checked : true;
-            const wantIntro  = genIntro ? genIntro.checked : true;
-            const wantText   = genText ? genText.checked : true;
+            const genTopics   = document.getElementById('ai-gen-topics');
+            const genIntro    = document.getElementById('ai-gen-intro');
+            const genText     = document.getElementById('ai-gen-text');
+            const genChapters = document.getElementById('ai-gen-chapters');
+            const wantTopics   = genTopics ? genTopics.checked : true;
+            const wantIntro    = genIntro ? genIntro.checked : true;
+            const wantText     = genText ? genText.checked : true;
+            const wantChapters = genChapters ? genChapters.checked : true;
 
             // Validate at least one checked
-            if (!wantTopics && !wantIntro && !wantText) {
+            if (!wantTopics && !wantIntro && !wantText && !wantChapters) {
                 alert(Joomla.Text._('JBS_CMN_AI_SELECT_ONE') || 'Select at least one field to generate.');
 
                 return;
@@ -369,12 +497,14 @@
             formData.append('title', titleEl ? titleEl.value : '');
             formData.append('studyintro', getEditorValue('studyintro'));
             formData.append('studytext', getEditorValue('studytext'));
-            formData.append('media_file_id', mediaId);
+            // Prefer YouTube media file for video context (chapters, tags, description)
+            formData.append('media_file_id', youtubeMediaId || mediaId);
 
             // Append toggle flags
             formData.append('generate_topics', wantTopics ? '1' : '0');
             formData.append('generate_intro', wantIntro ? '1' : '0');
             formData.append('generate_text', wantText ? '1' : '0');
+            formData.append('generate_chapters', wantChapters ? '1' : '0');
 
             // Gather scripture text
             const scriptureEls = document.querySelectorAll('[id^="jform_scripture"]');
@@ -447,9 +577,9 @@
                 document.getElementById('ai-studyintro').value = data.studyintro || '';
                 document.getElementById('ai-studytext').value  = data.studytext || '';
 
-                // Handle suggested chapters
+                // Handle suggested chapters (only show if user opted in)
                 if (chaptersSection) {
-                    if (data.chapters && data.chapters.length > 0) {
+                    if (wantChapters && data.chapters && data.chapters.length > 0) {
                         const chapterLines = data.chapters.map(
                             (ch) => `${ch.time} ${ch.label}`,
                         );
@@ -484,6 +614,8 @@
             });
 
             if (count > 0) {
+                // Allow Choices.js addItem events to settle, then sync hidden input
+                setTimeout(() => syncTopicsHiddenInput(), 150);
                 showAppliedFeedback(btnAddTopics, `${count} topic${count > 1 ? 's' : ''} added`);
             }
         });
@@ -509,6 +641,16 @@
                 showAppliedFeedback(btnApplyText, 'Applied');
             }
         });
+
+        // Apply chapters to media file
+        const btnApplyChapters = document.getElementById('btn-apply-chapters');
+
+        if (btnApplyChapters) {
+            btnApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('ai-chapters-text');
+                applyChaptersToMedia(btnApplyChapters, textarea);
+            });
+        }
 
         // Copy chapters to clipboard
         const btnCopyChapters = document.getElementById('btn-copy-chapters');
@@ -696,6 +838,16 @@
             });
         }
 
+        // Apply YouTube chapters to media file
+        const btnYtApplyChapters = document.getElementById('btn-yt-apply-chapters');
+
+        if (btnYtApplyChapters) {
+            btnYtApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('yt-chapters-text');
+                applyChaptersToMedia(btnYtApplyChapters, textarea);
+            });
+        }
+
         // Copy chapters to clipboard
         const btnYtCopyChapters = document.getElementById('btn-yt-copy-chapters');
 
@@ -740,5 +892,121 @@
                 args: [seconds, true],
             }), '*');
         }
+    });
+
+    // ---- Per-media Copy Description modal ----
+
+    // Lazily initialise the modal on first use to avoid bootstrap timing issues
+    let copyDescModal   = null;
+    let copyDescText    = null;
+    let copyDescLoading = null;
+    let copyDescCopyBtn = null;
+
+    function ensureCopyDescModal() {
+        if (copyDescModal) {
+            return;
+        }
+
+        const T = (key, fb) => {
+            const v = Joomla.Text._(key);
+
+            return (v && v !== key) ? v : fb;
+        };
+
+        const html = '<div class="modal fade" id="copyDescModal" tabindex="-1" aria-hidden="true">'
+            + '<div class="modal-dialog modal-lg"><div class="modal-content">'
+            + '<div class="modal-header"><h5 class="modal-title">'
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>'
+            + '<div class="modal-body">'
+            + '<p class="text-muted small mb-2">'
+            + T('JBS_MED_COPY_DESC_TIP', 'Copy this description and paste it into your video platform.')
+            + '</p>'
+            + '<div id="copyDescLoading" class="text-center py-4" style="display:none;">'
+            + '<span class="spinner-border"></span></div>'
+            + '<textarea id="copyDescText" class="form-control" rows="12" readonly'
+            + ' style="display:none; font-family:monospace; font-size:0.85rem;"></textarea>'
+            + '</div>'
+            + '<div class="modal-footer">'
+            + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+            + T('JCLOSE', 'Close') + '</button>'
+            + '<button type="button" class="btn btn-primary" id="copyDescCopyBtn" disabled>'
+            + '<span class="icon-copy" aria-hidden="true"></span> '
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</button></div></div></div></div>';
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        const modalEl = document.getElementById('copyDescModal');
+        copyDescModal   = new bootstrap.Modal(modalEl);
+        copyDescText    = document.getElementById('copyDescText');
+        copyDescLoading = document.getElementById('copyDescLoading');
+        copyDescCopyBtn = document.getElementById('copyDescCopyBtn');
+
+        copyDescCopyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(copyDescText.value);
+                copyDescCopyBtn.classList.remove('btn-primary');
+                copyDescCopyBtn.classList.add('btn-success');
+                copyDescCopyBtn.innerHTML = '<span class="icon-checkmark" aria-hidden="true"></span> '
+                    + T('JBS_MED_COPY_DESC_COPIED', 'Copied!');
+                setTimeout(() => {
+                    copyDescCopyBtn.classList.remove('btn-success');
+                    copyDescCopyBtn.classList.add('btn-primary');
+                    copyDescCopyBtn.innerHTML = '<span class="icon-copy" aria-hidden="true"></span> '
+                        + T('JBS_MED_COPY_DESC', 'Copy Description');
+                }, 2000);
+            } catch {
+                copyDescText.select();
+            }
+        });
+    }
+
+    document.querySelectorAll('.cwm-copy-desc-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const descMediaId = parseInt(btn.dataset.mediaId, 10) || 0;
+            const studyId     = parseInt(btn.dataset.studyId, 10) || 0;
+
+            if (!studyId) {
+                return;
+            }
+
+            // Initialise modal on first click
+            ensureCopyDescModal();
+
+            // Reset modal state and show
+            copyDescText.value            = '';
+            copyDescText.style.display    = 'none';
+            copyDescLoading.style.display = 'block';
+            copyDescCopyBtn.disabled      = true;
+            copyDescModal.show();
+
+            try {
+                const url = `${ajaxBase}&task=cwmadmin.getVideoDescriptionXHR`
+                    + `&study_id=${studyId}&media_id=${descMediaId}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-CSRF-Token': '1' },
+                });
+                const data = await response.json();
+
+                copyDescLoading.style.display = 'none';
+
+                if (!data.success || !data.description) {
+                    copyDescText.value        = data.error || 'Failed to generate description';
+                    copyDescText.style.display = 'block';
+
+                    return;
+                }
+
+                copyDescText.value        = data.description;
+                copyDescText.style.display = 'block';
+                copyDescCopyBtn.disabled  = false;
+            } catch (e) {
+                copyDescLoading.style.display = 'none';
+                copyDescText.value        = e.message;
+                copyDescText.style.display = 'block';
+            }
+        });
     });
 })();

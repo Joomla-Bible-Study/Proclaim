@@ -187,20 +187,36 @@ class CwmmessageController extends FormController
                     }
                 }
             } else {
-                // It's a new tag.  Gotta insert it into the Topics table.
+                // It's a text tag — match against existing topics first, then create if new
                 if ($aTag != "") {
-                    $model->save(['topic_text' => $aTag, 'language' => $data['language']]);
+                    $topicId = null;
 
-                    // Gotta somehow make sure this isn't a duplicate...
-                    $tagRow = Factory::getApplication()->bootComponent('com_proclaim')
-                        ->getMVCFactory()->createTable('Cwmstudytopics', 'Administrator');
-                    $tagRow->study_id = $data['id'];
-                    $tagRow->topic_id = $model->getState('topic.id');
+                    // Look up existing topic by name (case-insensitive)
+                    $lookupQuery = $db->getQuery(true)
+                        ->select($db->quoteName('id'))
+                        ->from($db->quoteName('#__bsms_topics'))
+                        ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(' . $db->quote($aTag) . ')')
+                        ->setLimit(1);
+                    $db->setQuery($lookupQuery);
+                    $topicId = (int) $db->loadResult();
 
-                    if (!$tagRow->store()) {
-                        $app->enqueueMessage('Error Storing New Tags', 'error');
+                    if (!$topicId) {
+                        // Create the new topic
+                        $model->save(['topic_text' => $aTag, 'language' => $data['language'] ?? '*']);
+                        $topicId = (int) $model->getState('topic.id');
+                    }
 
-                        return false;
+                    if ($topicId) {
+                        $tagRow = Factory::getApplication()->bootComponent('com_proclaim')
+                            ->getMVCFactory()->createTable('Cwmstudytopics', 'Administrator');
+                        $tagRow->study_id = $data['id'];
+                        $tagRow->topic_id = $topicId;
+
+                        if (!$tagRow->store()) {
+                            $app->enqueueMessage('Error Storing Tags', 'error');
+
+                            return false;
+                        }
                     }
                 }
             }
@@ -286,6 +302,7 @@ class CwmmessageController extends FormController
             'generate_topics'   => (bool) $input->post->getInt('generate_topics', 1),
             'generate_intro'    => (bool) $input->post->getInt('generate_intro', 1),
             'generate_text'     => (bool) $input->post->getInt('generate_text', 1),
+            'generate_chapters' => (bool) $input->post->getInt('generate_chapters', 1),
         ];
 
         // Attempt to get video metadata from attached media file

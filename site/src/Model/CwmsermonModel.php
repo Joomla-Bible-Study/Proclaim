@@ -22,7 +22,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\User\User;
 use Joomla\Database\ParameterType;
@@ -204,7 +203,8 @@ class CwmsermonModel extends FormModel
                         . $db->quoteName('se.published') . ' = 1'
                         . ' AND (' . $db->quoteName('se.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_up') . ' <= ' . $nowDate . ')'
                         . ' AND (' . $db->quoteName('se.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('se.publish_down') . ' >= ' . $nowDate . ')'
-                        . ') OR ' . $db->quoteName('s.series_id') . ' <= 0)'
+                        . ') OR ' . $db->quoteName('s.series_id') . ' <= 0'
+                        . ' OR ' . $db->quoteName('s.series_id') . ' IS NULL)'
                     );
                 }
 
@@ -228,9 +228,7 @@ class CwmsermonModel extends FormModel
                 $data = $db->loadObject();
 
                 if (empty($data)) {
-                    Factory::getApplication()->enqueueMessage(Text::_('JBS_CMN_STUDY_NOT_FOUND'), 'error');
-
-                    return $data;
+                    return null;
                 }
 
                 // Load media stats in a separate query to avoid Cartesian product with topics

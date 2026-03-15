@@ -175,6 +175,14 @@ class HtmlView extends BaseHtmlView
     public string $fluidListing = '';
 
     /**
+     * Recent messages for 404 not-found page
+     *
+     * @var array
+     * @since 10.2.0
+     */
+    public array $recentItems = [];
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -210,6 +218,49 @@ class HtmlView extends BaseHtmlView
         $item = $this->item;
 
         if (!$item) {
+            // Render within the site template so the user sees navigation,
+            // footer, and suggested messages instead of a bare error page.
+            // Set 404 for SEO after rendering starts so Gantry/Joomla can't intercept.
+            http_response_code(404);
+            $this->document->setTitle(Text::_('JBS_CMN_STUDY_NOT_FOUND'));
+
+            // Load recent messages from cache (15 min TTL) to reduce server load
+            $cacheKey   = 'proclaim_notfound_recent_' . implode(',', $user->getAuthorisedViewLevels());
+            $cacheGroup = 'com_proclaim';
+            $cache      = Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)
+                ->createCacheController('callback', ['defaultgroup' => $cacheGroup, 'lifetime' => 15]);
+
+            $this->recentItems = $cache->get(
+                static function () use ($user) {
+                    $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.alias', 's.studyintro', 's.thumbnailm', 's.image']))
+                        ->select($db->quoteName('t.teachername'))
+                        ->select($db->quoteName('t.teacher_thumbnail'))
+                        ->select($db->quoteName('se.series_text'))
+                        ->join('LEFT', $db->quoteName('#__bsms_series', 'se')
+                            . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
+                        ->from($db->quoteName('#__bsms_studies', 's'))
+                        ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj')
+                            . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+                        ->join('LEFT', $db->quoteName('#__bsms_teachers', 't')
+                            . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                        ->where($db->quoteName('s.published') . ' = 1')
+                        ->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels())
+                        ->order($db->quoteName('s.studydate') . ' DESC')
+                        ->setLimit(5);
+                    $db->setQuery($query);
+
+                    return $db->loadObjectList() ?: [];
+                },
+                [],
+                $cacheKey
+            );
+
+            $this->setLayout('notfound');
+            parent::display($tpl);
+
             return;
         }
 
@@ -446,13 +497,10 @@ class HtmlView extends BaseHtmlView
         $wa = $this->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.print');
 
-        // Load timestamp seek handler for study text with clickable timestamps
-        if (
-            empty($this->print)
-            && !empty($this->item->studytext)
-            && str_contains($this->item->studytext, 'cwm-timestamp')
-        ) {
-            $wa->useScript('com_proclaim.cwm-timestamp');
+        // Load player chapters script for chapter lists and timestamp seeking
+        if (empty($this->print)) {
+            $wa->useScript('com_proclaim.cwm-player-chapters');
+            $wa->useStyle('com_proclaim.cwm-chapters');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
