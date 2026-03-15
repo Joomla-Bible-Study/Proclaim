@@ -640,7 +640,15 @@ class Cwmlanding
                 ->order($this->db->quoteName('a.location_text') . ' ' . $order);
 
             $this->addAccessFilter($query);
-            $this->db->setQuery($query);
+
+            // Apply database-level LIMIT for grid mode (uselimit=0) to avoid
+            // loading thousands of rows just to hide them with CSS display:none
+            if ($locationuselimit === 0 && $limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -715,7 +723,13 @@ class Cwmlanding
                 ->order($this->db->quoteName('a.teachername') . ' ' . $order);
 
             $this->addAccessFilter($query);
-            $this->db->setQuery($query);
+
+            if ($teacheruselimit === 0 && $limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -813,7 +827,13 @@ class Cwmlanding
             }
 
             $this->addAccessFilter($query);
-            $this->db->setQuery($query);
+
+            if ($seriesuselimit === 0 && $limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -876,7 +896,13 @@ class Cwmlanding
                 ->order('YEAR(' . $this->db->quoteName('studydate') . ') ' . $order);
 
             $this->addAccessFilter($query, 'access');
-            $this->db->setQuery($query);
+
+            if ($limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -944,7 +970,13 @@ class Cwmlanding
                 ->order($this->db->quoteName('#__bsms_topics.topic_text') . ' ' . $order);
 
             $this->addAccessFilter($query, '#__bsms_studies.access');
-            $this->db->setQuery($query);
+
+            if ($limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -1007,7 +1039,13 @@ class Cwmlanding
                 ->order($this->db->quoteName('a.message_type') . ' ' . $order);
 
             $this->addAccessFilter($query);
-            $this->db->setQuery($query);
+
+            if ($messagetypeuselimit === 0 && $limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
@@ -1074,7 +1112,13 @@ class Cwmlanding
                 ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
-            $this->db->setQuery($query);
+
+            if ($limit < 10000) {
+                $this->db->setQuery($query, 0, $limit);
+            } else {
+                $this->db->setQuery($query);
+            }
+
             $items = $this->db->loadObjectList();
         } else {
             foreach ($items as $item) {
