@@ -44,6 +44,23 @@ class TeacherListField extends ListField
     protected $type = 'TeacherList';
 
     /**
+     * Use the fancy-select (Choices.js) layout when searchable="true".
+     *
+     * @return  string  The layout name
+     *
+     * @since   10.3.0
+     */
+    #[\Override]
+    protected function getLayout(): string
+    {
+        if ($this->element && (string) $this->element['searchable'] === 'true') {
+            return 'joomla.form.field.list-fancy-select';
+        }
+
+        return parent::getLayout();
+    }
+
+    /**
      * Method to get a list of options for a list input.
      *
      * @return  array  An array of JHtml options.
