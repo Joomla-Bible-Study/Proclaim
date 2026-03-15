@@ -2516,7 +2516,14 @@ class Cwmlisting
         $link  = '';
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('#__bsms_mediafiles') . '.*')
+        $query->select([
+                $db->quoteName('#__bsms_mediafiles.id'),
+                $db->quoteName('#__bsms_mediafiles.article_id'),
+                $db->quoteName('#__bsms_mediafiles.virtueMart_id'),
+                $db->quoteName('#__bsms_mediafiles.docMan_id'),
+                $db->quoteName('#__bsms_mediafiles.published'),
+                $db->quoteName('#__bsms_mediafiles.study_id'),
+            ])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('study_id') . ' = ' . $db->quote($id3));
 
