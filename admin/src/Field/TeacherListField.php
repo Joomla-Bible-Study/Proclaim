@@ -50,14 +50,16 @@ class TeacherListField extends ListField
      *
      * @since   10.3.0
      */
-    #[\Override]
+    /**
+     * {@inheritdoc}
+     */
     protected function getLayout(): string
     {
         if ($this->element && (string) $this->element['searchable'] === 'true') {
             return 'joomla.form.field.list-fancy-select';
         }
 
-        return parent::getLayout();
+        return 'joomla.form.field.list';
     }
 
     /**
