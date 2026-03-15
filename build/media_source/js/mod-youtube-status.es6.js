@@ -259,6 +259,7 @@
         }
 
         let pollTimer;
+        let fetchInFlight = false;
 
         function schedulePoll() {
             currentInterval = getBackoffInterval();
@@ -286,11 +287,20 @@
                 return;
             }
 
+            // Guard against overlapping fetches from rapid visibility changes
+            if (fetchInFlight) {
+                return;
+            }
+
+            fetchInFlight = true;
+
             fetch(ajaxUrl, {method: 'GET', headers: {'Accept': 'application/json'}})
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
+                    fetchInFlight = false;
+
                     if (!data.success) {
                         return;
                     }
@@ -359,6 +369,7 @@
                     schedulePoll();
                 })
                 .catch(function () {
+                    fetchInFlight = false;
                     unchangedCount += 1;
                     schedulePoll();
                 });

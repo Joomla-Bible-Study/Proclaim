@@ -1,20 +1,20 @@
 {
     "_comment": "Development version tracking - semantic versioning: major.minor.patch",
-    "_updated": "2026-03-09",
+    "_updated": "2026-03-15",
 
     "current": {
-        "version": "10.1.0",
+        "version": "10.2.0",
         "description": "Last stable release (from GitHub releases)"
     },
 
     "next": {
-        "patch": "10.1.1",
-        "minor": "10.2.0",
+        "patch": "10.2.1",
+        "minor": "10.3.0",
         "major": "11.0.0"
     },
 
     "active_development": {
-        "version": "10.2.0",
+        "version": "10.3.0",
         "description": "Use this for @since tags and migrations"
     },
 
