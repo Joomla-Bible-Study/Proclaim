@@ -5,6 +5,16 @@
     <config>
         <media_resource>filename</media_resource>
     </config>
+    <fields name="params">
+        <fieldset name="facebook_sync" label="JBS_ADDON_FACEBOOK_SYNC_SETTINGS">
+            <field name="description_format" type="DescriptionFormat" rows="6"
+                   default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;Topics: {topics}&#10;&#10;{url}"
+                   label="JBS_ADDON_DESC_FORMAT"
+                   description="JBS_ADDON_DESC_FORMAT_DESC"
+                   filter="raw"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field" />
+        </fieldset>
+    </fields>
     <fields name="media">
         <fieldset name="files_settings" label="JBS_ADDON_FACEBOOK_FILE_SETTINGS">
             <field name="player" type="list" label="JBS_MED_PLAYER"

@@ -102,9 +102,11 @@ class CwmaiHelper
             'text'   => !empty($context['generate_text'] ?? true),
         ];
 
-        $hasChapters     = !empty($context['video_chapters']);
-        $hasYouTube      = !empty($context['video_title']) || !empty($context['video_description']);
-        $suggestChapters = $fields['text'] && !$hasChapters && $hasYouTube;
+        $wantChapters    = !empty($context['generate_chapters'] ?? true);
+        $hasChapters     = $wantChapters && !empty($context['video_chapters']);
+        // Suggest chapters whenever the user wants them and none exist yet —
+        // the AI can infer logical structure from sermon content alone.
+        $suggestChapters = $wantChapters && !$hasChapters;
 
         $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
         $userMessage  = self::buildUserMessage($context);
@@ -442,8 +444,8 @@ class CwmaiHelper
         }
 
         if ($suggestChapters) {
-            $instructions[] = $index . '. **Suggested Chapters** (chapters) — the attached YouTube video has no chapter '
-                . 'markers. Based on the sermon content, suggest 3-8 logical chapter timestamps. The first chapter must '
+            $instructions[] = $index . '. **Suggested Chapters** (chapters) — Based on the sermon content, suggest 3-8 '
+                . 'logical chapter timestamps that divide the sermon into meaningful sections. The first chapter must '
                 . 'start at 0:00. Return as an array of objects with "time" (display format like "0:00" or "1:23:45") '
                 . 'and "label" (short chapter title).';
             $jsonKeys[] = '"chapters":[{"time":"0:00","label":"Introduction"},{"time":"2:30","label":"Main Point"}]';
