@@ -582,8 +582,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['content'][0]['text'] ?? '';
+        $data       = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content    = $data['content'][0]['text'] ?? '';
+        $stopReason = $data['stop_reason'] ?? '';
+
+        if ($stopReason === 'max_tokens') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -621,7 +628,7 @@ class CwmaiHelper
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 2048,
+                'maxOutputTokens'  => 4096,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -641,8 +648,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $finishReason = $data['candidates'][0]['finishReason'] ?? '';
+
+        if ($finishReason === 'MAX_TOKENS') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -667,7 +681,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'       => $model,
-            'max_tokens'  => 1024,
+            'max_tokens'  => 2048,
             'temperature' => 0.7,
             'messages'    => [
                 ['role' => 'system', 'content' => $systemPrompt],
@@ -692,8 +706,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['choices'][0]['message']['content'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['choices'][0]['message']['content'] ?? '';
+        $finishReason = $data['choices'][0]['finish_reason'] ?? '';
+
+        if ($finishReason === 'length') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }

@@ -270,7 +270,7 @@ class Cwmstats
             $top_studies = '';
 
             foreach ($rows as $row) {
-                $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                $top_studies .= Text::sprintf('JBS_CMN_HITS', (int) $row->hits) .
                     ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
                     htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
             }
@@ -342,7 +342,7 @@ class Cwmstats
                 $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
             } else {
                 foreach ($rows as $row) {
-                    $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                    $top_studies .= Text::sprintf('JBS_CMN_HITS', (int) $row->hits) .
                         ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
                         htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
                 }
@@ -482,7 +482,7 @@ class Cwmstats
                 $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
             } else {
                 foreach ($rows as $row) {
-                    $top_studies .= (int) $row->downloads . ' ' . Text::_('JBS_CMN_HITS') .
+                    $top_studies .= Text::sprintf('JBS_CMN_DOWNLOADS', (int) $row->downloads) .
                         ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->sid . '">' .
                         htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) . '<br>';
                 }

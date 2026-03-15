@@ -31,6 +31,7 @@ $input  = $app->getInput();
 
 $wa = $this->getDocument()->getWebAssetManager();
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmmessagetype.cancel', 'formId' => 'messagetype-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 ?>

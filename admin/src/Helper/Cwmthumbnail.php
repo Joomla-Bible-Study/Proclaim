@@ -192,16 +192,39 @@ class Cwmthumbnail
             $baseFilename = pathinfo($originalPath, PATHINFO_FILENAME);
         }
 
-        $newFilename  = $baseFilename . '.' . $extension;
-        $thumbName    = 'thumb_' . $baseFilename . '.jpg';
+        // Add a short version hash based on file content to bust browser cache
+        // when the image is replaced with a new file at the same logical path.
+        $versionHash  = substr(md5_file($originalPath), 0, 8);
+        $newFilename  = $baseFilename . '-' . $versionHash . '.' . $extension;
+        $thumbName    = 'thumb_' . $baseFilename . '-' . $versionHash . '.jpg';
         $newImagePath = $destFolder . '/' . $newFilename;
         $thumbPath    = $destFolder . '/' . $thumbName;
 
         // Handle existing destination folder
         if (is_dir($destFolder)) {
             if ($preserveOld) {
-                // Keep existing files - just overwrite specific files
-                // This preserves any other files in the folder
+                // Clean up old files so we don't accumulate stale images across re-uploads.
+                // Matches both versioned (name-hash.ext) and pre-versioning (name.ext) files.
+                // Protect both the new target files and the source file from deletion
+                $keepFiles = [$newFilename, $thumbName, basename($originalPath)];
+                $patterns  = [
+                    $destFolder . '/' . $baseFilename . '-*',
+                    $destFolder . '/' . $baseFilename . '.*',
+                    $destFolder . '/thumb_' . $baseFilename . '-*',
+                    $destFolder . '/thumb_' . $baseFilename . '.*',
+                ];
+
+                foreach ($patterns as $pattern) {
+                    $oldFiles = glob($pattern);
+
+                    if ($oldFiles) {
+                        foreach ($oldFiles as $oldFile) {
+                            if (!\in_array(basename($oldFile), $keepFiles, true)) {
+                                File::delete($oldFile);
+                            }
+                        }
+                    }
+                }
             } else {
                 // Archive old folder with timestamp instead of deleting
                 $archivePath = $destFolder . '_archive_' . date('YmdHis');
@@ -220,6 +243,11 @@ class Cwmthumbnail
         $normalizedNew      = Path::clean($newImagePath);
 
         if ($normalizedOriginal !== $normalizedNew) {
+            // Source may have been removed during cleanup above (same folder, different version hash)
+            if (!is_file($originalPath)) {
+                return false;
+            }
+
             // Copy instead of move if source is in a different location
             if (!File::copy($originalPath, $newImagePath)) {
                 return false;
@@ -245,16 +273,18 @@ class Cwmthumbnail
 
         // Generate WebP variants if GD supports it
         if (\function_exists('imagewebp')) {
-            $webpThumbPath = $destFolder . '/' . 'thumb_' . $baseFilename . '.webp';
+            $webpThumbName = 'thumb_' . $baseFilename . '-' . $versionHash . '.webp';
+            $webpThumbPath = $destFolder . '/' . $webpThumbName;
             $thumbnail->toFile($webpThumbPath, IMAGETYPE_WEBP);
-            $result['thumbnail_webp'] = $path . '/' . 'thumb_' . $baseFilename . '.webp';
+            $result['thumbnail_webp'] = $path . '/' . $webpThumbName;
 
             // Generate WebP of the full-size image (skip if source is already WebP)
             if ($extension !== 'webp') {
-                $webpImagePath = $destFolder . '/' . $baseFilename . '.webp';
+                $webpImageName = $baseFilename . '-' . $versionHash . '.webp';
+                $webpImagePath = $destFolder . '/' . $webpImageName;
                 $fullImage     = new Image($newImagePath);
                 $fullImage->toFile($webpImagePath, IMAGETYPE_WEBP);
-                $result['image_webp'] = $path . '/' . $baseFilename . '.webp';
+                $result['image_webp'] = $path . '/' . $webpImageName;
             } else {
                 $result['image_webp'] = $result['image'];
             }

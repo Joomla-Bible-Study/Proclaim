@@ -274,10 +274,65 @@ function doSetup(): void
     $joomlaDir     = ask('Enter subdirectory within Joomla path (leave empty if none)', $currentProps['builder.joomla_dir'] ?? '');
     $joomlaVersion = ask('Enter the default Joomla version for testing', $currentProps['joomla.version'] ?? '5.4.2');
 
-    $content = "# Build properties\n";
-    $content .= 'builder.joomla_paths=' . implode(',', $paths) . "\n";
-    $content .= "builder.joomla_dir=$joomlaDir\n";
-    $content .= "joomla.version=$joomlaVersion\n";
+    // Per-site configuration for J5 and J6
+    $sites      = ['j5dev' => 'Joomla 5', 'j6dev' => 'Joomla 6'];
+    $siteConfig = [];
+
+    foreach ($sites as $key => $label) {
+        echo "\n--- $label Development Site ---\n";
+        $prefix           = "builder.$key";
+        $siteConfig[$key] = [
+            'url'      => ask("$label site URL", $currentProps["$prefix.url"] ?? "https://$key.local:8890"),
+            'db_host'  => ask("$label database host", $currentProps["$prefix.db_host"] ?? 'localhost'),
+            'db_user'  => ask("$label database username", $currentProps["$prefix.db_user"] ?? ''),
+            'db_pass'  => ask("$label database password", $currentProps["$prefix.db_pass"] ?? ''),
+            'db_name'  => ask("$label database name", $currentProps["$prefix.db_name"] ?? ''),
+            'username' => ask("$label admin username", $currentProps["$prefix.username"] ?? 'admin'),
+            'password' => ask("$label admin password", $currentProps["$prefix.password"] ?? 'admin'),
+            'email'    => ask("$label admin email", $currentProps["$prefix.email"] ?? 'admin@example.com'),
+        ];
+    }
+
+    // Start from the dist template so all comments are preserved
+    $distFile = BUILD_DIR . '/../../build.dist.properties';
+
+    if (!file_exists($distFile)) {
+        $distFile = BASE_DIR . '/build.dist.properties';
+    }
+
+    if (!file_exists($distFile)) {
+        throw new \RuntimeException('build.dist.properties not found.');
+    }
+
+    $content = file_get_contents($distFile);
+
+    // Replace template values with user input
+    $replacements = [
+        'builder.joomla_paths' => implode(',', $paths),
+        'builder.joomla_dir'   => $joomlaDir,
+        'joomla.version'       => $joomlaVersion,
+    ];
+
+    foreach ($siteConfig as $key => $cfg) {
+        $prefix                           = "builder.$key";
+        $replacements["$prefix.url"]      = $cfg['url'];
+        $replacements["$prefix.db_host"]  = $cfg['db_host'];
+        $replacements["$prefix.db_user"]  = $cfg['db_user'];
+        $replacements["$prefix.db_pass"]  = $cfg['db_pass'];
+        $replacements["$prefix.db_name"]  = $cfg['db_name'];
+        $replacements["$prefix.username"] = $cfg['username'];
+        $replacements["$prefix.password"] = $cfg['password'];
+        $replacements["$prefix.email"]    = $cfg['email'];
+    }
+
+    foreach ($replacements as $key => $value) {
+        // Replace "key=anything" with "key=value", preserving the line
+        $content = preg_replace(
+            '/^(' . preg_quote($key, '/') . ')=.*$/m',
+            '$1=' . $value,
+            $content
+        );
+    }
 
     file_put_contents(PROPERTIES_FILE, $content);
     echo "\nConfiguration saved to build.properties\n";

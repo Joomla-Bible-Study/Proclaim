@@ -186,11 +186,11 @@ class YoutubeHelper implements DatabaseAwareInterface
         }
 
         // Cache the result (including null) to prevent repeated API calls
+        // FIX #1: Use full cache_time for null results too — 60s TTL was burning
+        // ~200 quota units/minute in live_only mode when no stream is active
         try {
             $cache = Factory::getContainer()->get('cache.output');
-            // Shorter TTL for null results so new videos are detected within 60 seconds
-            $ttl = $video ? $cacheTime : 60;
-            $cache->setLifeTime((int) ceil($ttl / 60));
+            $cache->setLifeTime((int) ceil($cacheTime / 60));
             $cacheData = $video ?? ['_noVideo' => true];
             $cache->store(json_encode($cacheData), $cacheKey, 'mod_proclaim_youtube');
         } catch (\Exception $e) {
@@ -329,6 +329,25 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     private function fetchLiveVideo(CWMAddonYoutube $youtube, int $serverId, bool $showUpcoming = true, array $excludeVideos = []): ?array
     {
+        // FIX #2: 15-minute search throttle — prevents repeated expensive search.list
+        // calls (100 units each) when no live/upcoming stream is active.
+        // Saves ~200 units per throttle hit (live + upcoming searches).
+        $throttle = self::getSearchThrottle($serverId);
+
+        if ($throttle !== null) {
+            $elapsed = time() - $throttle['timestamp'];
+
+            if ($elapsed < ($throttle['ttl'] ?? 900)) {
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_INFO,
+                    'Search throttled — skipping live/upcoming search',
+                    ['server_id' => $serverId, 'seconds_remaining' => ($throttle['ttl'] ?? 900) - $elapsed]
+                );
+
+                return null;
+            }
+        }
+
         // Quota gate: search.list costs 100 units
         if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
             CwmyoutubeLogHelper::log(
@@ -350,6 +369,9 @@ class YoutubeHelper implements DatabaseAwareInterface
         $result = $youtube->fetchLiveVideos($input);
 
         if ($result['success'] && !empty($result['videos'])) {
+            // Live stream found — clear any existing throttle
+            self::clearSearchThrottle($serverId);
+
             // Live videos are never excluded - return the first one
             $video               = $result['videos'][0];
             $video['isLive']     = true;
@@ -362,6 +384,9 @@ class YoutubeHelper implements DatabaseAwareInterface
         if ($showUpcoming) {
             // Second search call — check quota again
             if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
+                // Set throttle since at least one search returned no results
+                self::setSearchThrottle($serverId);
+
                 return null;
             }
 
@@ -370,6 +395,9 @@ class YoutubeHelper implements DatabaseAwareInterface
             $result = $youtube->fetchLiveVideos($input);
 
             if ($result['success'] && !empty($result['videos'])) {
+                // Upcoming stream found — clear any existing throttle
+                self::clearSearchThrottle($serverId);
+
                 // Filter out excluded videos for upcoming streams
                 foreach ($result['videos'] as $video) {
                     if (!empty($video['videoId']) && !\in_array($video['videoId'], $excludeVideos, true)) {
@@ -401,6 +429,9 @@ class YoutubeHelper implements DatabaseAwareInterface
                 }
             }
         }
+
+        // No live or upcoming found — set 15-minute search throttle
+        self::setSearchThrottle($serverId);
 
         return null;
     }
@@ -633,8 +664,8 @@ class YoutubeHelper implements DatabaseAwareInterface
      *
      * Called via com_ajax: index.php?option=com_ajax&module=mod_proclaim_youtube&method=getStatus&format=json
      *
-     * If video_id is provided, checks the specific video's status using the Videos API.
-     * Otherwise falls back to searching for live/upcoming videos on the channel.
+     * FIX #3: Only checks specific video ID status (1 unit). No longer falls back to
+     * search.list (100 units each) — the initial page load handles discovery.
      *
      * @return  array  Status data with isLive, isUpcoming, and videoId
      *
@@ -744,52 +775,11 @@ class YoutubeHelper implements DatabaseAwareInterface
             }
         }
 
-        // Fall back to search API only if no video ID was given (100 units each)
-        if ($statusResult === null && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
-            // Check for currently live videos
-            $liveInput = new Input([
-                'server_id'   => $serverId,
-                'max_results' => 1,
-                'event_type'  => 'live',
-            ]);
+        // FIX #3: Removed search.list fallback — AJAX polling should only check
+        // a known video ID (1 unit), not run expensive searches (200 units).
+        // The initial page load via getVideo() handles live/upcoming discovery.
 
-            $result = $youtube->fetchLiveVideos($liveInput);
-
-            if ($result['success'] && !empty($result['videos'])) {
-                $video = $result['videos'][0];
-
-                $statusResult = [
-                    'success'    => true,
-                    'isLive'     => true,
-                    'isUpcoming' => false,
-                    'videoId'    => $video['videoId'] ?? '',
-                ];
-            }
-        }
-
-        if ($statusResult === null && CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
-            // Check for upcoming videos
-            $upcomingInput = new Input([
-                'server_id'   => $serverId,
-                'max_results' => 1,
-                'event_type'  => 'upcoming',
-            ]);
-
-            $result = $youtube->fetchLiveVideos($upcomingInput);
-
-            if ($result['success'] && !empty($result['videos'])) {
-                $video = $result['videos'][0];
-
-                $statusResult = [
-                    'success'    => true,
-                    'isLive'     => false,
-                    'isUpcoming' => true,
-                    'videoId'    => $video['videoId'] ?? '',
-                ];
-            }
-        }
-
-        // No live or upcoming video (or quota exhausted without a video ID)
+        // No video ID provided or quota exhausted
         if ($statusResult === null) {
             $statusResult = [
                 'success'    => true,
@@ -952,5 +942,92 @@ class YoutubeHelper implements DatabaseAwareInterface
         }
 
         return $data['scheduledStartTime'];
+    }
+
+    /**
+     * Set a search throttle to prevent repeated expensive search.list calls.
+     *
+     * When search.list returns no live/upcoming streams, we record the time
+     * so subsequent calls within the TTL window skip the search entirely.
+     * This saves 200 quota units (2 x search.list) per throttle hit.
+     *
+     * @param   int  $serverId  Server ID
+     * @param   int  $ttl       Throttle duration in seconds (default 900 = 15 min)
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private static function setSearchThrottle(int $serverId, int $ttl = 900): void
+    {
+        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
+
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $file = $dir . '/search_throttle_' . $serverId . '.json';
+        $data = [
+            'timestamp' => time(),
+            'ttl'       => $ttl,
+        ];
+
+        @file_put_contents($file, json_encode($data), LOCK_EX);
+    }
+
+    /**
+     * Get the current search throttle data for a server.
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  array|null  Throttle data with 'timestamp' and 'ttl', or null if not throttled
+     *
+     * @since   10.1.0
+     */
+    private static function getSearchThrottle(int $serverId): ?array
+    {
+        $file = JPATH_CACHE . '/mod_proclaim_youtube/search_throttle_' . $serverId . '.json';
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $raw = @file_get_contents($file);
+
+        if ($raw === false) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            @unlink($file);
+
+            return null;
+        }
+
+        if (!\is_array($data) || empty($data['timestamp'])) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Clear the search throttle (e.g. when a live/upcoming stream is found).
+     *
+     * @param   int  $serverId  Server ID
+     *
+     * @return  void
+     *
+     * @since   10.1.0
+     */
+    private static function clearSearchThrottle(int $serverId): void
+    {
+        $file = JPATH_CACHE . '/mod_proclaim_youtube/search_throttle_' . $serverId . '.json';
+
+        if (file_exists($file)) {
+            @unlink($file);
+        }
     }
 }

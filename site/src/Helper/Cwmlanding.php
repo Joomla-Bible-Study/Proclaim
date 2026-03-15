@@ -253,13 +253,10 @@ class Cwmlanding
         string $class = ''
     ): string {
         $classAttr = $class ? ' class="' . $class . '"' : '';
-        $baseUrl   = 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;sendingview=cwmlanding';
-        $filters   = '&amp;filter_teacher=0&amp;filter_series=0&amp;filter_topic=0&amp;filter_location=0'
-                   . '&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template;
+        $url       = 'index.php?option=com_proclaim&view=cwmsermons&sendingview=cwmlanding'
+                   . '&' . $filterName . '=' . $filterValue . '&t=' . $template;
 
-        $url = $baseUrl . '&amp;' . $filterName . '=' . $filterValue . $filters;
-
-        return '<a' . $classAttr . ' href="' . $url . '">' . $text . '</a>';
+        return '<a' . $classAttr . ' href="' . Route::_($url) . '">' . $text . '</a>';
     }
 
     /**
@@ -760,10 +757,8 @@ class Cwmlanding
 
         if ($linkTo === 0) {
             // Link to a filtered list of sermons
-            $url = 'index.php?option=com_proclaim&view=Cwmsermons&t=' . $template
-                . '&sendingview=landing&filter_teacher=' . $item->id
-                . '&filter_book=0&filter_series=0&filter_topic=0'
-                . '&filter_location=0&filter_year=0&filter_messagetype=0';
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&t=' . $template
+                . '&sendingview=landing&filter_teacher=' . $item->id;
         } else {
             // Link to the teacher's profile page
             $url = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $item->id . '&t=' . $template;
@@ -832,15 +827,13 @@ class Cwmlanding
 
         $buildLink = function ($item, $class = '') use ($template, $seriesLinkTo) {
             if ($seriesLinkTo === 0) {
-                $url = 'index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_series=' . $item->id
-                    . '&amp;sendingview=landing&amp;filter_book=0&amp;filter_teacher=0'
-                    . '&amp;filter_topic=0&amp;filter_location=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t='
-                    . $template;
+                $url = 'index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $item->id
+                    . '&sendingview=landing&t=' . $template;
             } else {
-                $url = 'index.php?option=com_proclaim&amp;sendingview=landing&amp;view=cwmseriesdisplay&amp;id='
-                    . $item->id . '&amp;t=' . $template;
+                $url = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id='
+                    . $item->id . '&sendingview=landing&t=' . $template;
             }
-            return '<a href="' . $url . '">' . $item->series_text . '</a>';
+            return '<a href="' . Route::_($url) . '">' . $item->series_text . '</a>';
         };
 
         if ($seriesuselimit === 0) {
@@ -967,9 +960,8 @@ class Cwmlanding
         }
 
         $linkBuilder = fn ($item) => '<div class="col" style="margin-right:7px">'
-            . '<a href="index.php?option=com_proclaim&amp;view=Cwmsermons&amp;filter_topic=' . $item->id
-            . '&amp;sendingview=cwmlanding&amp;filter_teacher=0&amp;filter_series=0&amp;filter_location=0'
-            . '&amp;filter_book=0&amp;filter_year=0&amp;filter_messagetype=0&amp;t=' . $template . '">'
+            . '<a href="' . Route::_('index.php?option=com_proclaim&view=cwmsermons&filter_topic=' . $item->id
+            . '&sendingview=cwmlanding&t=' . $template) . '">'
             . Cwmtranslated::getTopicItemTranslated($item) . '</a></div>';
 
         $html = $this->buildGridHtml($items, $limit, $linkBuilder, 'showhidetopics');

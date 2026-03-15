@@ -777,6 +777,11 @@ namespace Joomla\CMS {
             {
                 return self::$container;
             }
+
+            public static function setContainer($container): void
+            {
+                self::$container = $container;
+            }
         }
     }
 }

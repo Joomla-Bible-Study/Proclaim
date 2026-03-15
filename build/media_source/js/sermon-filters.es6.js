@@ -323,6 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#proclaim-pagination-top a, #proclaim-pagination-bottom a').forEach((link) => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
                 const href = link.getAttribute('href') || '';
                 const url = new URL(href, window.location.origin);
                 const limitstart = url.searchParams.get('limitstart') || url.searchParams.get('start') || '0';
@@ -335,28 +337,35 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Update top and bottom pagination containers from response data.
      *
+     * Respects the show_pagination template param:
+     *   '1' = top only, '2' = bottom only, '3' = both
+     * The server returns showPagination in the response so the JS
+     * doesn't render pagination bars the template hides on initial load.
+     *
      * @param {Object} result  The JSON response from filterAjax
      */
     function updatePagination(result) {
         const paginationHtml = result.pagination || '';
         const counterHtml = result.pagesCounter || '';
+        const showWhere = String(result.showPagination || opts.showPagination || '2');
+
+        // Build HTML matching the server-rendered template structure:
+        //   .proclaim-pagination-bar > .proclaim-page-counter + <nav>
+        const barHtml = `<div class="proclaim-pagination-bar">${
+            counterHtml ? `<span class="proclaim-page-counter">${counterHtml}</span>` : ''
+        }${paginationHtml}</div>`;
 
         if (paginationTop) {
-            if (result.pagesTotal > 1) {
-                paginationTop.innerHTML = `<div class="pagination pagination-centered">${
-                    counterHtml ? `<p class="counter float-right">${counterHtml}</p>` : ''
-                }${paginationHtml}</div>`;
+            if (result.pagesTotal > 1 && (showWhere === '1' || showWhere === '3')) {
+                paginationTop.innerHTML = barHtml;
             } else {
                 paginationTop.innerHTML = '';
             }
         }
 
         if (paginationBottom) {
-            if (result.pagesTotal > 1) {
-                paginationBottom.innerHTML = `<nav class="pagination__wrapper" aria-label="Pagination">${
-                    counterHtml ? `<div class="text-end me-3">${counterHtml}</div>` : ''
-                }</nav>`
-                    + `<div class="pagination pagination-centered">${paginationHtml}</div>`;
+            if (result.pagesTotal > 1 && (showWhere === '2' || showWhere === '3')) {
+                paginationBottom.innerHTML = barHtml;
             } else {
                 paginationBottom.innerHTML = '';
             }
@@ -478,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     credentials: 'same-origin',
                 },
-                { timeout: 15000, retries: 0, signal: abortController.signal },
+                { timeout: 30000, retries: 0, signal: abortController.signal },
             );
 
             if (!response.ok) {

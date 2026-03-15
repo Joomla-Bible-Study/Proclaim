@@ -857,18 +857,11 @@
 
         /**
              * Apply view settings and close modal
-             * Syncs TinyMCE editors and closes the modal
+             * Syncs all editors (TinyMCE, JCE, etc.) and closes the modal
              */
         applyViewSettings() {
-            // Sync all TinyMCE editors to their textareas before closing
-            if (typeof window.tinymce !== 'undefined' && this.viewSettingsModal) {
-                this.viewSettingsModal.querySelectorAll('textarea.mce_editable').forEach((textarea) => {
-                    const editor = window.tinymce.get(textarea.id);
-                    if (editor) {
-                        editor.save();
-                    }
-                });
-            }
+            // Sync all Joomla-registered editors to their textareas before closing
+            this.syncEditors(this.viewSettingsModal);
 
             // Mark as dirty since view settings were changed
             this.markDirty();
@@ -1181,8 +1174,9 @@
                 window.ProclaimLazyLoad.loadFieldset(fieldsetName, container, templateId)
                     .then(() => {
                         this.viewSettingsLoaded.add(loadKey);
-                        // Initialize TinyMCE editors in the loaded content
-                        this.fixHiddenEditors(container);
+                        // Notify Joomla that new dynamic content was loaded
+                        // so TinyMCE and other field plugins can initialize
+                        container.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
                     })
                     .catch((error) => {
                         console.error('Failed to load view settings fieldset:', error);
@@ -1230,9 +1224,8 @@
                         }
 
                         // Notify Joomla that new dynamic content was loaded.
-                        // Joomla 6's TinyMCE plugin listens for this event and
-                        // initializes editors with correct config, license key,
-                        // and dark mode support.
+                        // Editor plugins (TinyMCE, JCE, etc.) listen for this
+                        // event and initialize editors in the new content.
                         container.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
                     } else {
                         container.replaceChildren(Object.assign(document.createElement('div'), {
@@ -1519,18 +1512,11 @@
 
         /**
              * Apply section settings and close modal
-             * Syncs TinyMCE editors and closes the modal
+             * Syncs all editors (TinyMCE, JCE, etc.) and closes the modal
              */
         applySectionSettings() {
-            // Sync all TinyMCE editors to their textareas before closing
-            if (typeof window.tinymce !== 'undefined' && this.sectionSettingsModal) {
-                this.sectionSettingsModal.querySelectorAll('textarea.mce_editable').forEach((textarea) => {
-                    const editor = window.tinymce.get(textarea.id);
-                    if (editor) {
-                        editor.save();
-                    }
-                });
-            }
+            // Sync all Joomla-registered editors to their textareas before closing
+            this.syncEditors(this.sectionSettingsModal);
 
             // Mark as dirty since section settings were changed
             this.markDirty();
@@ -3377,6 +3363,30 @@
             }
             if (redoBtn) {
                 redoBtn.disabled = this.redoStack.length === 0;
+            }
+        }
+
+        // =====================================================================
+        // Editor Sync (works with TinyMCE, JCE, CodeMirror, etc.)
+        // =====================================================================
+
+        /**
+             * Sync all Joomla-registered editors inside a container to their textareas.
+             * Uses Joomla.editors.instances which is editor-agnostic.
+             * @param {HTMLElement|null} container - The container to search for editors
+             */
+        syncEditors(container) {
+            if (!container) { return; }
+
+            // Use Joomla's editor-agnostic API
+            const instances = window.Joomla?.editors?.instances;
+            if (instances) {
+                container.querySelectorAll('textarea').forEach((textarea) => {
+                    const editor = instances[textarea.id];
+                    if (editor && typeof editor.getValue === 'function') {
+                        textarea.value = editor.getValue();
+                    }
+                });
             }
         }
 

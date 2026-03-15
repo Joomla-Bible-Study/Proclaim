@@ -18,6 +18,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
 
@@ -82,6 +83,50 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     ];
 
     /**
+     * Map of old com_biblestudy view names to new com_proclaim equivalents.
+     *
+     * Used by the legacy URL redirect handler to transparently redirect
+     * indexed/bookmarked URLs from the old Bible Study component.
+     *
+     * @var array<string, string>
+     * @since 10.2.0
+     */
+    private const LEGACY_VIEW_MAP = [
+        'sermon'               => 'cwmsermon',
+        'sermons'              => 'cwmsermons',
+        'teacher'              => 'cwmteacher',
+        'teachers'             => 'cwmteachers',
+        'seriesdisplay'        => 'cwmseriesdisplay',
+        'seriesdisplays'       => 'cwmseriesdisplays',
+        'landing'              => 'cwmsermons',
+        'landingpage'          => 'cwmlandingpage',
+        'latest'               => 'cwmlatest',
+        'popup'                => 'cwmpopup',
+        'terms'                => 'cwmterms',
+        'seriespodcastdisplay' => 'cwmseriespodcastdisplay',
+        'seriespodcastlist'    => 'cwmseriespodcastlist',
+    ];
+
+    /**
+     * Query parameters to carry over from old Bible Study URLs.
+     *
+     * @var string[]
+     * @since 10.2.0
+     */
+    private const LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
+
+    /**
+     * Task names allowed to carry over from old com_biblestudy URLs.
+     *
+     * The view prefix is applied automatically (e.g., 'download' on view
+     * 'sermon' becomes 'cwmsermon.download').
+     *
+     * @var string[]
+     * @since 10.2.0
+     */
+    private const LEGACY_ALLOWED_TASKS = ['download'];
+
+    /**
      * Views hidden from the admin submenu for non-admin users (require core.admin).
      *
      * @var string[]
@@ -113,6 +158,14 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private ?bool $has9xSchema = null;
 
     /**
+     * Cached admin params for this request (null = not yet loaded).
+     *
+     * @var ?array
+     * @since 10.2.0
+     */
+    private ?array $adminParams = null;
+
+    /**
      * Returns the events this plugin subscribes to.
      *
      * @return  array
@@ -122,10 +175,26 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'onAfterRoute'   => 'onAfterRoute',
-            'onBeforeRender' => 'onBeforeRender',
-            'onAfterRender'  => 'onAfterRender',
+            'onAfterInitialise' => 'onAfterInitialise',
+            'onAfterRoute'      => 'onAfterRoute',
+            'onBeforeRender'    => 'onBeforeRender',
+            'onAfterRender'     => 'onAfterRender',
         ];
+    }
+
+    /**
+     * Intercept legacy com_biblestudy URLs before routing.
+     *
+     * Must run before onAfterRoute because Joomla's router throws a 404
+     * for /component/biblestudy/ paths when com_biblestudy is not installed.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    public function onAfterInitialise(): void
+    {
+        $this->redirectLegacyUrls();
     }
 
     /**
@@ -294,6 +363,303 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
+     * Redirect legacy com_biblestudy URLs to com_proclaim equivalents.
+     *
+     * Intercepts requests where option=com_biblestudy, maps the old view name
+     * to the new Proclaim view, carries over relevant query parameters, and
+     * issues a 301 (permanent) redirect. This ensures that search engine indexes,
+     * bookmarks, and external links from the old Bible Study component continue
+     * to work after migration.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    private function redirectLegacyUrls(): void
+    {
+        $app = $this->getApplication();
+
+        // Only process legacy URLs on the frontend
+        if (!$app->isClient('site')) {
+            return;
+        }
+
+        $input = $app->getInput();
+
+        $oldView = '';
+        $oldTask = '';
+        $params  = [];
+
+        // Method 1: Check parsed input (non-SEF or Joomla-resolved URLs)
+        if ($input->getCmd('option', '') === 'com_biblestudy') {
+            $oldView = strtolower($input->getCmd('view', 'sermons'));
+            $oldTask = strtolower($input->getCmd('task', ''));
+        }
+
+        // Method 2: Check raw URI path for /component/biblestudy/ pattern
+        // Joomla 5+ doesn't resolve this SEF pattern for uninstalled components
+        if ($oldView === '') {
+            $path = Uri::getInstance()->getPath();
+
+            // Match /component/biblestudy/ or /component/biblestudy (with optional trailing segments)
+            if (preg_match('#/component/biblestudy(?:/([a-z]+))?#i', $path, $matches)) {
+                $oldView = !empty($matches[1]) ? strtolower($matches[1]) : 'sermons';
+
+                // Parse query string params since Joomla may not have populated input
+                $rawQuery = Uri::getInstance()->getQuery();
+                parse_str($rawQuery, $params);
+                $oldTask = strtolower($params['task'] ?? '');
+            }
+        }
+
+        // Method 3: Check for legacy view segments in SEF URLs under a Proclaim menu
+        // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
+        if ($oldView === '') {
+            $path = $path ?? Uri::getInstance()->getPath();
+            $this->redirectLegacySefSegments($path);
+        }
+
+        if ($oldView === '') {
+            return;
+        }
+
+        $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
+
+        // Build the new URL with carried-over parameters
+        $query = ['option' => 'com_proclaim', 'view' => $newView];
+
+        // Map old task names (e.g., 'download' → 'cwmsermon.download')
+        if ($oldTask !== '' && \in_array($oldTask, self::LEGACY_ALLOWED_TASKS, true)) {
+            $query['task'] = $newView . '.' . $oldTask;
+        }
+
+        foreach (self::LEGACY_CARRY_PARAMS as $param) {
+            // Check both parsed input and raw query params
+            $value = $input->getString($param, '') ?: ($params[$param] ?? '');
+
+            if ($value !== '') {
+                $query[$param] = $value;
+            }
+        }
+
+        // Find the correct menu item for this view so Joomla's router resolves properly
+        if (!isset($query['Itemid'])) {
+            $itemId = $this->findMenuItemId($newView);
+
+            if ($itemId) {
+                $query['Itemid'] = $itemId;
+            }
+        }
+
+        $nonSef = 'index.php?' . http_build_query($query);
+
+        // Try to build a SEF URL; fall back to non-SEF if router isn't ready
+        try {
+            $sef = Route::_($nonSef, false);
+        } catch (\Exception $e) {
+            $sef = $nonSef;
+        }
+
+        $app->redirect($sef, 301);
+    }
+
+    /**
+     * Find a published menu item ID for the given Proclaim view.
+     *
+     * Searches the menu table for an item pointing to the specified view,
+     * falling back to any com_proclaim menu item if no exact match is found.
+     *
+     * @param   string  $view  The Proclaim view name (e.g., 'cwmsermons').
+     *
+     * @return  int  The menu item ID, or 0 if not found.
+     *
+     * @since   10.2.0
+     */
+    private function findMenuItemId(string $view): int
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim&view=' . $view . '%'))
+                ->setLimit(1);
+            $db->setQuery($query);
+            $itemId = (int) $db->loadResult();
+
+            if ($itemId) {
+                return $itemId;
+            }
+
+            // Fallback: any com_proclaim menu item
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('id'))
+                ->from($db->quoteName('#__menu'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('client_id') . ' = 0')
+                ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim%'))
+                ->setLimit(1);
+            $db->setQuery($query);
+
+            return (int) $db->loadResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Detect and redirect legacy SEF URLs that contain old view segments
+     * under a valid Proclaim menu item.
+     *
+     * Matches patterns like /resources/sermons/sermon/671-alias/1 where
+     * "sermon" is a Proclaim 9.x / com_biblestudy view name embedded in
+     * the SEF path. Extracts the numeric ID, looks up the current alias,
+     * and 301-redirects to the correct modern URL.
+     *
+     * @param   string  $path  The raw URI path
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    private function redirectLegacySefSegments(string $path): void
+    {
+        // Build a regex alternation from legacy view names
+        $legacyViews = implode('|', array_keys(self::LEGACY_VIEW_MAP));
+
+        $app   = $this->getApplication();
+        $input = $app->getInput();
+
+        // Pattern A: /legacyview?task=download&mid=123 (no ID-alias, just query params)
+        // The view name must be a standalone segment (preceded by /)
+        if (preg_match('#/(' . $legacyViews . ')$#i', $path, $m)) {
+            $oldView = strtolower($m[1]);
+            $task    = strtolower($input->getCmd('task', ''));
+            $mid     = $input->getInt('mid', 0);
+
+            if ($task !== '' || $mid > 0) {
+                $newView = self::LEGACY_VIEW_MAP[$oldView] ?? 'cwmsermons';
+
+                // For task-based URLs (e.g. download), redirect to non-SEF URL directly.
+                // Route::_() may not work at onAfterInitialise (router not initialised).
+                $query = ['option' => 'com_proclaim', 'task' => $newView . '.' . $task];
+
+                if ($mid > 0) {
+                    $query['mid'] = $mid;
+                }
+
+                $itemId = $this->findMenuItemId($newView);
+
+                if (!$itemId) {
+                    $itemId = $this->findMenuItemId($newView . 's');
+                }
+
+                if ($itemId) {
+                    $query['Itemid'] = $itemId;
+                }
+
+                $app->redirect(Uri::base(true) . '/index.php?' . http_build_query($query), 301);
+            }
+
+            return;
+        }
+
+        // Pattern C: /landing/filtertype/id/templateid (old landing page filter URLs)
+        // e.g., /resources/sermons/landing/teacher/115/1?filter_languages=*
+        //      → /resources/sermons?filter_teacher=115
+        // Also handles /landing/sermons/1 (unfiltered paginated list)
+        if (preg_match('#/landing/([a-z]+)/(\d+)(?:/(\d+))?$#i', $path, $m)) {
+            $filterType = strtolower($m[1]);
+            $filterId   = (int) $m[2];
+
+            // Strip /landing/... from the path to get the base sermons list URL
+            $cleanPath = preg_replace('#/landing/[a-z]+/\d+(?:/\d+)?$#i', '', $path);
+
+            // Map old filter type names to current query parameter names
+            $filterParamMap = [
+                'teacher'     => 'filter_teacher',
+                'series'      => 'filter_series',
+                'book'        => 'filter_book',
+                'topic'       => 'filter_topic',
+                'messagetype' => 'filter_messagetype',
+                'location'    => 'filter_location',
+                'year'        => 'filter_year',
+            ];
+
+            $filterParam = $filterParamMap[$filterType] ?? '';
+
+            if ($filterParam !== '' && $filterId > 0) {
+                // Redirect with the specific filter applied
+                $app->redirect(Uri::base(true) . $cleanPath . '?' . $filterParam . '=' . $filterId, 301);
+            } else {
+                // Generic landing page (e.g., /landing/sermons/1) — just redirect to sermons list
+                $app->redirect(Uri::base(true) . $cleanPath, 301);
+            }
+
+            return;
+        }
+
+        // Pattern B: /legacyview/id-alias or /legacyview/id-alias/templateid
+        if (!preg_match('#/(' . $legacyViews . ')/(\d+)[-:]([^/]+?)(?:/(\d+))?$#i', $path, $m)) {
+            return;
+        }
+
+        $oldView = strtolower($m[1]);
+        $id      = (int) $m[2];
+        $alias   = $m[3];
+
+        // Determine the database table for this view type
+        $tableMap = [
+            'sermon'               => '#__bsms_studies',
+            'sermons'              => '#__bsms_studies',
+            'latest'               => '#__bsms_studies',
+            'teacher'              => '#__bsms_teachers',
+            'teachers'             => '#__bsms_teachers',
+            'seriesdisplay'        => '#__bsms_series',
+            'seriesdisplays'       => '#__bsms_series',
+            'seriespodcastdisplay' => '#__bsms_series',
+            'seriespodcastlist'    => '#__bsms_series',
+        ];
+
+        $table = $tableMap[$oldView] ?? '';
+
+        // Look up the current alias from the database
+        $currentAlias = $alias;
+
+        if ($table !== '' && $id > 0) {
+            try {
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                $query = $db->getQuery(true);
+                $query->select($db->quoteName('alias'))
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName('id') . ' = ' . $id);
+                $db->setQuery($query);
+                $result = $db->loadResult();
+
+                if ($result) {
+                    $currentAlias = $result;
+                }
+            } catch (\Exception $e) {
+                // Fall through with original alias
+            }
+        }
+
+        // Build the redirect URL by replacing the legacy segments in the path.
+        // e.g., /resources/sermons/sermon/671-broken-but-not-destroyed/1
+        //     → /resources/sermons/broken-but-not-destroyed
+        // This avoids Route::_() which may not work before routing is initialised.
+        $cleanPath = preg_replace(
+            '#/(' . $legacyViews . ')/\d+[-:][^/]+?(?:/\d+)?$#i',
+            '/' . $currentAlias,
+            $path
+        );
+
+        $app->redirect(Uri::base(true) . $cleanPath, 301);
+    }
+
+    /**
      * Enforce session-based rate limiting for POST requests to com_proclaim.
      *
      * @return  void
@@ -377,6 +743,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function getAdminParams(): array
     {
+        if ($this->adminParams !== null) {
+            return $this->adminParams;
+        }
+
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
@@ -386,10 +756,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $db->setQuery($query);
             $json = $db->loadResult();
 
-            return $json ? (json_decode($json, true, 512, JSON_THROW_ON_ERROR) ?: []) : [];
+            $decoded            = $json ? json_decode($json, true, 512, JSON_THROW_ON_ERROR) : [];
+            $this->adminParams  = $decoded ?: [];
         } catch (\Exception $e) {
-            return [];
+            $this->adminParams = [];
         }
+
+        return $this->adminParams;
     }
 
     /**

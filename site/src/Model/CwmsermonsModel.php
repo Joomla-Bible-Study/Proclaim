@@ -136,11 +136,24 @@ class CwmsermonsModel extends ListModel
 
         $forcedLanguage = $app->getInput()->get('forcedLanguage', '', 'cmd');
 
-        // Load the parameters.
-        $params = $app->getParams();
+        // Load the parameters — wrap in try/catch so a bad menu item
+        // (e.g. corrupted XML, missing columns) doesn't take down the page.
+        try {
+            $params = $app->getParams();
+        } catch (\Exception $e) {
+            $params = new Registry();
+        }
 
-        $template = Cwmparams::getTemplateparams();
-        $admin    = Cwmparams::getAdmin();
+        try {
+            $template = Cwmparams::getTemplateparams();
+            $admin    = Cwmparams::getAdmin();
+        } catch (\Exception $e) {
+            $template         = new \stdClass();
+            $template->id     = 1;
+            $template->params = new Registry();
+            $admin            = new \stdClass();
+            $admin->params    = new Registry();
+        }
 
         $template->params->merge($params);
         $template->params->merge($admin->params);
@@ -156,25 +169,41 @@ class CwmsermonsModel extends ListModel
         $this->landing = 0;
         $landingcheck  = $app->getInput()->get('sendingview');
 
-        if ($landingcheck === 'landing') {
+        if ($landingcheck === 'landing' || $landingcheck === 'cwmlanding') {
             $landing       = 1;
             $this->landing = 1;
             $this->setState('sendingview', '');
+
+            // Clear session filters so only the landing page's active filter applies.
+            // Without this, old session values bleed through for filters not in the URL.
+            $clearKeys = [
+                'filter.book', 'filter.teacher', 'filter.series',
+                'filter.messageType', 'filter.year', 'filter.topic',
+                'filter.location', 'filter.landingbook', 'filter.landingteacher',
+                'filter.landingseries', 'filter.landingmessageType',
+                'filter.landingyear', 'filter.landingtopic', 'filter.landinglocation',
+            ];
+
+            foreach ($clearKeys as $key) {
+                $this->setState($key, 0);
+                $app->setUserState($this->context . '.' . $key, 0);
+            }
         } else {
-            $this->setState('filter.book', 0);
-            $this->setState('filter.teacher', 0);
-            $this->setState('filter.series', 0);
-            $this->setState('filter.messageType', 0);
-            $this->setState('filter.year', 0);
-            $this->setState('filter.topic', 0);
-            $this->setState('filter.location', 0);
-            $this->setState('filter.landingbook', 0);
-            $this->setState('filter.landingteacher', 0);
-            $this->setState('filter.landingseries', 0);
-            $this->setState('filter.landingmessageType', 0);
-            $this->setState('filter.landingyear', 0);
-            $this->setState('filter.landingtopic', 0);
-            $this->setState('filter.landinglocation', 0);
+            // Clear both model state AND session so getUserStateFromRequest()
+            // doesn't resurrect old filter selections from the session.
+            $filterKeys = [
+                'filter.book', 'filter.teacher', 'filter.series',
+                'filter.messageType', 'filter.year', 'filter.topic',
+                'filter.location', 'filter.landingbook', 'filter.landingteacher',
+                'filter.landingseries', 'filter.landingmessageType',
+                'filter.landingyear', 'filter.landingtopic', 'filter.landinglocation',
+            ];
+
+            foreach ($filterKeys as $key) {
+                $this->setState($key, 0);
+                $app->setUserState($this->context . '.' . $key, 0);
+            }
+
             $this->landing = 0;
         }
 
@@ -565,6 +594,7 @@ class CwmsermonsModel extends ListModel
             [
                 $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
                 $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
             ],
             'OR'
         );
@@ -597,11 +627,12 @@ class CwmsermonsModel extends ListModel
                 . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
             // Admin: only check series published state
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         }
 
         // Filter by start and end dates for messages.
