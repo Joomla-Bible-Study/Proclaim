@@ -86,7 +86,11 @@ class CwmaiHelper
         $cached   = $session->get($cacheKey);
 
         if ($cached !== null) {
-            $cached = json_decode($cached, true);
+            try {
+                $cached = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $cached = null;
+            }
 
             if (\is_array($cached) && !empty($cached['_ts']) && (time() - $cached['_ts']) < self::CACHE_TTL) {
                 unset($cached['_ts']);
@@ -575,7 +579,12 @@ class CwmaiHelper
         $response = $http->post('https://api.anthropic.com/v1/messages', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -641,7 +650,12 @@ class CwmaiHelper
         $response = $http->post($url, $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -699,7 +713,12 @@ class CwmaiHelper
         $response = $http->post('https://api.openai.com/v1/chat/completions', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
