@@ -34,16 +34,18 @@
      * @returns {string}
      */
     function getEditorValue(fieldName) {
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editorId = `jform_${fieldName}`;
-            const editor   = Joomla.editors.instances[editorId];
+        const editorId = `jform_${fieldName}`;
+
+        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        if (typeof JoomlaEditor !== 'undefined') {
+            const editor = JoomlaEditor.get(editorId);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
             }
         }
 
-        const el = document.getElementById(`jform_${fieldName}`);
+        const el = document.getElementById(editorId);
 
         return el ? el.value : '';
     }
@@ -57,8 +59,9 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editor = Joomla.editors.instances[editorId];
+        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        if (typeof JoomlaEditor !== 'undefined') {
+            const editor = JoomlaEditor.get(editorId);
 
             if (editor && typeof editor.setValue === 'function') {
                 editor.setValue(value);
@@ -80,6 +83,32 @@
      * @param {string|number} value  Topic ID or new topic text
      * @param {string} label         Display label
      */
+    /**
+     * Sync the hidden topics input from current Choices.js selections.
+     */
+    function syncTopicsHiddenInput() {
+        const selectEl = document.getElementById('jform_topics');
+
+        if (!selectEl) {
+            return;
+        }
+
+        const fancySelect = selectEl.closest('joomla-field-fancy-select');
+
+        if (!fancySelect || !fancySelect.choicesInstance) {
+            return;
+        }
+
+        const hiddenInput = document.getElementById('jform_topics_input');
+
+        if (hiddenInput) {
+            const items = fancySelect.choicesInstance.getValue();
+            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+
+            hiddenInput.value = vals.join(',');
+        }
+    }
+
     function addTopicToField(value, label) {
         const selectEl = document.getElementById('jform_topics');
 
@@ -94,28 +123,47 @@
         }
 
         const choices  = fancySelect.choicesInstance;
+
+        // Try to match by label against existing options (case-insensitive)
+        // so we use the numeric topic ID instead of the text name
+        const allChoices   = choices._store.choices || [];
+        const labelLower   = String(label).toLowerCase();
+        const matchedChoice = allChoices.find(
+            (c) => c.label && c.label.toLowerCase() === labelLower,
+        );
+
+        const resolvedValue = matchedChoice ? String(matchedChoice.value) : String(value);
+
+        // Check if already selected
         const existing = choices.getValue();
         const ids      = Array.isArray(existing) ? existing.map((i) => String(i.value)) : [];
 
-        if (ids.indexOf(String(value)) !== -1) {
+        if (ids.indexOf(resolvedValue) !== -1) {
             return;
         }
 
-        choices.setChoices(
-            [{ value: String(value), label, selected: true }],
-            'value',
-            'label',
-            false,
-        );
+        if (matchedChoice) {
+            // Select the existing option by its numeric ID
+            choices.setValue([{ value: resolvedValue, label: matchedChoice.label }]);
+        } else {
+            // New topic — add as text value (backend will create it)
+            choices.setChoices(
+                [{ value: resolvedValue, label, selected: true }],
+                'value',
+                'label',
+                false,
+            );
+        }
+    }
 
-        // Sync hidden input
-        const hiddenInput = document.getElementById('jform_topics_input');
+    // Safety net: sync hidden input before form submission
+    const topicsSelect = document.getElementById('jform_topics');
 
-        if (hiddenInput) {
-            const items = choices.getValue();
-            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+    if (topicsSelect) {
+        const form = topicsSelect.closest('form');
 
-            hiddenInput.value = vals.join(',');
+        if (form) {
+            form.addEventListener('submit', () => syncTopicsHiddenInput(), true);
         }
     }
 
@@ -449,7 +497,8 @@
             formData.append('title', titleEl ? titleEl.value : '');
             formData.append('studyintro', getEditorValue('studyintro'));
             formData.append('studytext', getEditorValue('studytext'));
-            formData.append('media_file_id', mediaId);
+            // Prefer YouTube media file for video context (chapters, tags, description)
+            formData.append('media_file_id', youtubeMediaId || mediaId);
 
             // Append toggle flags
             formData.append('generate_topics', wantTopics ? '1' : '0');
@@ -565,6 +614,8 @@
             });
 
             if (count > 0) {
+                // Allow Choices.js addItem events to settle, then sync hidden input
+                setTimeout(() => syncTopicsHiddenInput(), 150);
                 showAppliedFeedback(btnAddTopics, `${count} topic${count > 1 ? 's' : ''} added`);
             }
         });
@@ -845,66 +896,71 @@
 
     // ---- Per-media Copy Description modal ----
 
-    // Build the modal once and reuse it
-    const descModalHtml = `
-        <div class="modal fade" id="copyDescModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            ${Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description'}
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-muted small mb-2">
-                            ${Joomla.Text._('JBS_MED_COPY_DESC_TIP') || 'Copy this description and paste it into your video platform.'}
-                        </p>
-                        <div id="copyDescLoading" class="text-center py-4" style="display:none;">
-                            <span class="spinner-border"></span>
-                        </div>
-                        <textarea id="copyDescText" class="form-control" rows="12" readonly
-                                  style="display:none; font-family:monospace; font-size:0.85rem;"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            ${Joomla.Text._('JCLOSE') || 'Close'}
-                        </button>
-                        <button type="button" class="btn btn-primary" id="copyDescCopyBtn" disabled>
-                            <span class="icon-copy" aria-hidden="true"></span>
-                            ${Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description'}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-    document.body.insertAdjacentHTML('beforeend', descModalHtml);
+    // Lazily initialise the modal on first use to avoid bootstrap timing issues
+    let copyDescModal   = null;
+    let copyDescText    = null;
+    let copyDescLoading = null;
+    let copyDescCopyBtn = null;
 
-    const copyDescModalEl = document.getElementById('copyDescModal');
-    const copyDescModal   = new bootstrap.Modal(copyDescModalEl);
-    const copyDescText    = document.getElementById('copyDescText');
-    const copyDescLoading = document.getElementById('copyDescLoading');
-    const copyDescCopyBtn = document.getElementById('copyDescCopyBtn');
-
-    // Copy button inside modal
-    copyDescCopyBtn.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(copyDescText.value);
-            copyDescCopyBtn.classList.remove('btn-primary');
-            copyDescCopyBtn.classList.add('btn-success');
-            copyDescCopyBtn.innerHTML = '<span class="icon-checkmark" aria-hidden="true"></span> '
-                + (Joomla.Text._('JBS_MED_COPY_DESC_COPIED') || 'Copied!');
-            setTimeout(() => {
-                copyDescCopyBtn.classList.remove('btn-success');
-                copyDescCopyBtn.classList.add('btn-primary');
-                copyDescCopyBtn.innerHTML = '<span class="icon-copy" aria-hidden="true"></span> '
-                    + (Joomla.Text._('JBS_MED_COPY_DESC') || 'Copy Description');
-            }, 2000);
-        } catch {
-            // Fallback: select the textarea so user can Ctrl+C
-            copyDescText.select();
+    function ensureCopyDescModal() {
+        if (copyDescModal) {
+            return;
         }
-    });
+
+        const T = (key, fb) => {
+            const v = Joomla.Text._(key);
+
+            return (v && v !== key) ? v : fb;
+        };
+
+        const html = '<div class="modal fade" id="copyDescModal" tabindex="-1" aria-hidden="true">'
+            + '<div class="modal-dialog modal-lg"><div class="modal-content">'
+            + '<div class="modal-header"><h5 class="modal-title">'
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>'
+            + '<div class="modal-body">'
+            + '<p class="text-muted small mb-2">'
+            + T('JBS_MED_COPY_DESC_TIP', 'Copy this description and paste it into your video platform.')
+            + '</p>'
+            + '<div id="copyDescLoading" class="text-center py-4" style="display:none;">'
+            + '<span class="spinner-border"></span></div>'
+            + '<textarea id="copyDescText" class="form-control" rows="12" readonly'
+            + ' style="display:none; font-family:monospace; font-size:0.85rem;"></textarea>'
+            + '</div>'
+            + '<div class="modal-footer">'
+            + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+            + T('JCLOSE', 'Close') + '</button>'
+            + '<button type="button" class="btn btn-primary" id="copyDescCopyBtn" disabled>'
+            + '<span class="icon-copy" aria-hidden="true"></span> '
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</button></div></div></div></div>';
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        const modalEl = document.getElementById('copyDescModal');
+        copyDescModal   = new bootstrap.Modal(modalEl);
+        copyDescText    = document.getElementById('copyDescText');
+        copyDescLoading = document.getElementById('copyDescLoading');
+        copyDescCopyBtn = document.getElementById('copyDescCopyBtn');
+
+        copyDescCopyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(copyDescText.value);
+                copyDescCopyBtn.classList.remove('btn-primary');
+                copyDescCopyBtn.classList.add('btn-success');
+                copyDescCopyBtn.innerHTML = '<span class="icon-checkmark" aria-hidden="true"></span> '
+                    + T('JBS_MED_COPY_DESC_COPIED', 'Copied!');
+                setTimeout(() => {
+                    copyDescCopyBtn.classList.remove('btn-success');
+                    copyDescCopyBtn.classList.add('btn-primary');
+                    copyDescCopyBtn.innerHTML = '<span class="icon-copy" aria-hidden="true"></span> '
+                        + T('JBS_MED_COPY_DESC', 'Copy Description');
+                }, 2000);
+            } catch {
+                copyDescText.select();
+            }
+        });
+    }
 
     document.querySelectorAll('.cwm-copy-desc-btn').forEach((btn) => {
         btn.addEventListener('click', async () => {
@@ -915,8 +971,11 @@
                 return;
             }
 
+            // Initialise modal on first click
+            ensureCopyDescModal();
+
             // Reset modal state and show
-            copyDescText.value       = '';
+            copyDescText.value            = '';
             copyDescText.style.display    = 'none';
             copyDescLoading.style.display = 'block';
             copyDescCopyBtn.disabled      = true;
