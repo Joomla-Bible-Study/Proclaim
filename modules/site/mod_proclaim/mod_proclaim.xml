@@ -302,31 +302,12 @@
                 <!-- Option-source fields used by the Layout Editor settings modal.
                      These are not displayed; they exist so that scriptoptions.php
                      can extract the dropdown choices via $form->getField(). -->
-                <field name="show_verses" type="list" default="0" hidden="true"
-                       label="JBS_TPL_VERSES_SHOW_VERSES">
-                    <option value="0">JBS_TPL_SHOW_ONLY_CHAPTERS</option>
-                    <option value="1">JBS_TPL_SHOW_VERSES_AND_CHAPTERS</option>
-                    <option value="2">JBS_TPL_SHOW_ONLY_BOOKS</option>
-                </field>
-                <field name="scripture_separator" type="list" default="middot" hidden="true"
-                       label="JBS_TPL_SCRIPTURE_SEPARATOR">
-                    <option value="newline">JBS_TPL_SEPARATOR_STACKED</option>
-                    <option value="middot">JBS_TPL_SEPARATOR_MIDDOT</option>
-                    <option value="pipe">JBS_TPL_SEPARATOR_PIPE</option>
-                    <option value="semicolon">JBS_TPL_SEPARATOR_SEMICOLON</option>
-                </field>
-                <field name="date_format" type="list" default="2" hidden="true"
-                       label="JBS_TPL_VERSES_DATE_FORMAT">
-                    <option value="0">JBS_TPL_DATE_FORMAT_MMM_D_YYYY</option>
-                    <option value="1">JBS_TPL_DATE_FORMAT_MMM_D</option>
-                    <option value="2">JBS_TPL_DATE_FORMAT_M_D_YYYY</option>
-                    <option value="3">JBS_TPL_DATE_FORMAT_M_D</option>
-                    <option value="4">JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY</option>
-                    <option value="5">JBS_TPL_DATE_FORMAT_MMMM_D_YYYY</option>
-                    <option value="6">JBS_TPL_DATE_FORMAT_D_MMMM_YYYY</option>
-                    <option value="7">JBS_TPL_DATE_FORMAT_D_M_YYYY</option>
-                    <option value="8">JBS_TPL_DATE_FORMAT_USE_GLOBAL</option>
-                </field>
+                <field name="show_verses" type="ShowVerses" default="0" hidden="true"
+                       label="JBS_TPL_VERSES_SHOW_VERSES"/>
+                <field name="scripture_separator" type="ScriptureSeparator" default="middot" hidden="true"
+                       label="JBS_TPL_SCRIPTURE_SEPARATOR"/>
+                <field name="date_format" type="DateFormat" default="2" hidden="true"
+                       label="JBS_TPL_VERSES_DATE_FORMAT"/>
                 <!-- Hidden fields for layout data storage - managed by Layout Editor -->
                 <field name="scripturesrow" type="hidden" default="0"/>
                 <field name="scripturescol" type="hidden" default="1"/>
