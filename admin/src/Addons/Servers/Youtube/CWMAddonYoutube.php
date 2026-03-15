@@ -271,6 +271,33 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Build a simple embed URL for a video ID without a media record.
+     *
+     * Used by the YouTube module for live/upcoming videos that have no
+     * corresponding Proclaim media file (and therefore no Registry params).
+     *
+     * @param   string  $videoId   YouTube video ID
+     * @param   bool    $autoplay  Whether to autoplay (only applied when isLive)
+     * @param   bool    $isLive    Whether this is a currently-live video
+     *
+     * @return  string  Embed URL
+     *
+     * @since   10.2.0
+     */
+    public static function buildSimpleEmbedUrl(string $videoId, bool $autoplay = false, bool $isLive = false): string
+    {
+        $url    = 'https://www.youtube.com/embed/' . htmlspecialchars($videoId, ENT_QUOTES, 'UTF-8');
+        $params = ['rel' => '0', 'enablejsapi' => '1'];
+
+        if ($autoplay && $isLive) {
+            $params['autoplay'] = '1';
+            $params['mute']     = '1';
+        }
+
+        return $url . '?' . http_build_query($params);
+    }
+
+    /**
      * Render inline YouTube player (responsive 16:9 iframe).
      *
      * @param   string    $url          The raw YouTube URL
