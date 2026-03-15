@@ -44,22 +44,26 @@ class TeacherListField extends ListField
     protected $type = 'TeacherList';
 
     /**
-     * Use the fancy-select (Choices.js) layout when searchable="true".
+     * Set up the field, switching to fancy-select layout when searchable="true".
      *
-     * @return  string  The layout name
+     * @param   \SimpleXMLElement  $element  The XML element
+     * @param   mixed              $value    The field value
+     * @param   string             $group    The field group
+     *
+     * @return  bool
      *
      * @since   10.3.0
      */
-    /**
-     * {@inheritdoc}
-     */
-    protected function getLayout(): string
+    #[\Override]
+    public function setup(\SimpleXMLElement $element, $value, $group = null): bool
     {
-        if ($this->element && (string) $this->element['searchable'] === 'true') {
-            return 'joomla.form.field.list-fancy-select';
+        $result = parent::setup($element, $value, $group);
+
+        if ($result && (string) $this->element['searchable'] === 'true') {
+            $this->layout = 'joomla.form.field.list-fancy-select';
         }
 
-        return 'joomla.form.field.list';
+        return $result;
     }
 
     /**
