@@ -501,6 +501,8 @@ class HtmlView extends BaseHtmlView
         if (empty($this->print)) {
             $wa->useScript('com_proclaim.cwm-player-chapters');
             $wa->useStyle('com_proclaim.cwm-chapters');
+            $wa->useScript('com_proclaim.cwm-transcript');
+            $wa->useStyle('com_proclaim.cwm-transcript-css');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op

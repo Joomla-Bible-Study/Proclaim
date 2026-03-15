@@ -151,6 +151,22 @@
             }
         },
         {
+            "name": "com_proclaim.cwm-transcript",
+            "type": "script",
+            "uri": "com_proclaim/cwm-transcript.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-transcript-css",
+            "type": "style",
+            "uri": "com_proclaim/cwm-transcript.css"
+        },
+        {
             "name": "com_proclaim.admin-youtube-log",
             "type": "script",
             "uri": "com_proclaim/admin-youtube-log.min.js",
