@@ -5,8 +5,8 @@
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
-    <version>10.1.0</version>
-    <creationDate>Mar 10, 2026</creationDate>
+    <version>10.2.0</version>
+    <creationDate>Mar 15, 2026</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>MOD_PROCLAIM_DESCRIPTION</description>
     <namespace path="src">CWM\Module\Proclaim</namespace>
