@@ -46,6 +46,19 @@ class CwmteacherModel extends AdminModel
      * @since    3.2
      */
     public $typeAlias = 'com_proclaim.teacher';
+
+    /**
+     * Batch commands mapping.
+     *
+     * @var   array
+     * @since 10.3.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'landing_show'  => 'batchLandingShow',
+        'list_show'     => 'batchListShow',
+    ];
+
     /**
      * Controller Prefix
      *
@@ -597,4 +610,75 @@ class CwmteacherModel extends AdminModel
         parent::cleanCache('mod_proclaim');
     }
 
+    /**
+     * Batch set landing_show for a group of teachers.
+     *
+     * @param   int    $value     The landing_show value (0/1/2)
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchLandingShow(int $value, array $pks, array $contexts): bool
+    {
+        $user  = Factory::getApplication()->getIdentity();
+        /** @var CwmteacherTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->landing_show = $value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch set list_show for a group of teachers.
+     *
+     * @param   int    $value     The list_show value (0/1)
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchListShow(int $value, array $pks, array $contexts): bool
+    {
+        $user  = Factory::getApplication()->getIdentity();
+        /** @var CwmteacherTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->list_show = $value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
 }
