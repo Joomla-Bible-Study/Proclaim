@@ -204,9 +204,6 @@ class CwmserverController extends FormController
      */
     public function batch($model = null): bool
     {
-        $this->checkToken();
-
-        // Preset the redirect
         $this->setRedirect(
             Route::_('index.php?option=com_proclaim&view=cwmservers' . $this->getRedirectToListAppend(), false)
         );

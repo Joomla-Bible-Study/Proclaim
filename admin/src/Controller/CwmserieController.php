@@ -117,22 +117,6 @@ class CwmserieController extends FormController
     }
 
     /**
-     * Method override to check if you can add a new record.
-     *
-     * @param   array  $data  An array of input data.
-     *
-     * @return  bool
-     *
-     * @since   1.6
-     */
-    protected function allowAdd($data = []): bool
-    {
-        $allow = null;
-
-        return $allow ?? parent::allowAdd();
-    }
-
-    /**
      * Method override to check if you can edit an existing record.
      *
      * @param   array   $data  An array of input data.

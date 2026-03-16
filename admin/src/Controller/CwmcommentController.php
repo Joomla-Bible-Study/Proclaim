@@ -64,21 +64,6 @@ class CwmcommentController extends FormController
     }
 
     /**
-     * Method override to check if you can add a new record.
-     *
-     * @param   array  $data  An array of input data.
-     *
-     * @return  bool
-     *
-     * @since   1.6
-     */
-    protected function allowAdd($data = []): bool
-    {
-        // In the absence of better information, revert to the component permissions.
-        return parent::allowAdd();
-    }
-
-    /**
      * Method override to check if you can edit an existing record.
      *
      * @param   array   $data  An array of input data.
