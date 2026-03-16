@@ -6,6 +6,18 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.cwm-archive",
+            "type": "script",
+            "uri": "com_proclaim/cwm-archive.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwm-fetch",
             "type": "script",
             "uri": "com_proclaim/cwm-fetch.min.js",
@@ -691,6 +703,17 @@
             }
         },
         {
+            "name": "com_proclaim.cwm-landing-toggle",
+            "type": "script",
+            "uri": "com_proclaim/cwm-landing-toggle.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.sermon-filters",
             "type": "script",
             "uri": "com_proclaim/sermon-filters.min.js",
@@ -811,6 +834,17 @@
             }
         },
         {
+            "name": "com_proclaim.social-share",
+            "type": "script",
+            "uri": "com_proclaim/cwm-social-share.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.share",
             "type": "script",
             "uri": "com_proclaim/proclaim-share.min.js",
@@ -873,6 +907,39 @@
             "name": "com_proclaim.topics-field",
             "type": "style",
             "uri": "com_proclaim/topics-field.min.css"
+        },
+        {
+            "name": "com_proclaim.upload-field",
+            "type": "script",
+            "uri": "com_proclaim/upload-field.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-calendar-noseconds",
+            "type": "script",
+            "uri": "com_proclaim/cwm-calendar-noseconds.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.topics-free-tagging",
+            "type": "script",
+            "uri": "com_proclaim/topics-free-tagging.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
         }
     ]
 }

@@ -2860,24 +2860,18 @@ class Cwmlisting
 
         $doc = $app->getDocument();
 
-        // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
-        $escapedDesc = addslashes($data['description'] ?: 'Check out this message');
-        $config      = "var a2a_config = a2a_config || {};
-a2a_config.onclick = 1;
-a2a_config.num_services = 8;
-a2a_config.thanks = { postShare: true, ad: false };
-a2a_config.templates = a2a_config.templates || {};
-a2a_config.templates.email = {
-    subject: '\${title}',
-    body: '" . $escapedDesc . "\\n\\n\${link}'
-};";
+        $shareOptions = [
+            'description' => $data['description'] ?: 'Check out this message',
+        ];
 
         if ($data['imageUrl']) {
-            $config .= "\na2a_config.linkurl_default = '" . addslashes($data['link']) . "';";
+            $shareOptions['linkUrl'] = $data['link'];
         }
 
+        $doc->addScriptOptions('com_proclaim.socialShare', $shareOptions);
+
         $wa = $doc->getWebAssetManager();
-        $wa->addInlineScript($config);
+        $wa->useScript('com_proclaim.social-share');
 
         $wa->registerAndUseScript(
             'com_proclaim.addtoany',
