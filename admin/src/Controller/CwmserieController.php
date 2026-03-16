@@ -78,11 +78,21 @@ class CwmserieController extends FormController
     #[\Override]
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
-        if ($this->input->get('layout') === 'modal' && $this->task === 'save') {
-            $id     = $model->getState('cwmserie.id', '');
-            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
-                . '&layout=modalreturn&from-task=save';
+        if ($this->input->get('layout') !== 'modal') {
+            return;
+        }
 
+        $id = $model->getState('cwmserie.id', '');
+
+        if ($this->task === 'save') {
+            // Save & Close in modal — redirect to modalreturn to send data back to parent
+            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item
+                . $this->getRedirectToItemAppend($id) . '&layout=modalreturn&from-task=save';
+            $this->setRedirect(Route::_($return, false));
+        } elseif ($this->task === 'apply') {
+            // Apply in modal — stay on modal layout
+            $return = 'index.php?option=' . $this->option . '&task=' . $this->view_item . '.edit'
+                . $this->getRedirectToItemAppend($id) . '&layout=modal&tmpl=component';
             $this->setRedirect(Route::_($return, false));
         }
     }
