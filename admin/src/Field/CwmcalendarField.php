@@ -67,36 +67,11 @@ class CwmcalendarField extends JoomlaCalendarField
             $html
         );
 
-        // Register the value-interceptor JS once per page
+        // Register the value-interceptor JS once per page (external file,
+        // no PHP data needed — the script targets [data-cwm-no-seconds] inputs)
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->addInlineScript(
-            <<<'JS'
-            (function() {
-                if (window._cwmCalNoSec) return;
-                window._cwmCalNoSec = true;
-
-                var desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
-
-                document.querySelectorAll('[data-cwm-no-seconds] input[type="text"]').forEach(function(input) {
-                    Object.defineProperty(input, 'value', {
-                        get: function() {
-                            return desc.get.call(this);
-                        },
-                        set: function(v) {
-                            if (typeof v === 'string') {
-                                v = v.replace(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}):\d{2}$/, '$1');
-                            }
-                            desc.set.call(this, v);
-                        },
-                        configurable: true
-                    });
-                });
-            })();
-            JS,
-            ['position' => 'after'],
-            [],
-            ['core']
-        );
+        $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+        $wa->useScript('com_proclaim.cwm-calendar-noseconds');
 
         return $html;
     }

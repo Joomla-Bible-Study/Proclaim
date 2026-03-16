@@ -21,3 +21,13 @@
 .proclaim-topics-field + .choices .choices__item {
     margin-right: 5px;
 }
+
+/* Ensure Choices.js dropdowns in subform rows are not clipped and
+   render above adjacent rows (used by TeacherListField searchable). */
+.subform-repeatable-group joomla-field-fancy-select .choices__list--dropdown,
+.subform-repeatable-group joomla-field-fancy-select .choices__list[aria-expanded] {
+    z-index: 1050;
+}
+.subform-repeatable-group {
+    overflow: visible !important;
+}

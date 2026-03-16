@@ -63,14 +63,10 @@ class TeacherListField extends ListField
             $this->layout = 'joomla.form.field.list-fancy-select';
 
             // Ensure the Choices.js dropdown is not clipped by parent containers
-            // and renders above adjacent subform rows.
-            Factory::getApplication()->getDocument()->getWebAssetManager()
-                ->addInlineStyle(
-                    '.subform-repeatable-group joomla-field-fancy-select .choices__list--dropdown,'
-                    . ' .subform-repeatable-group joomla-field-fancy-select .choices__list[aria-expanded] {'
-                    . ' z-index: 1050; }'
-                    . ' .subform-repeatable-group { overflow: visible !important; }'
-                );
+            // and renders above adjacent subform rows (rules live in topics-field.css).
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+            $wa->useStyle('com_proclaim.topics-field');
         }
 
         return $result;
