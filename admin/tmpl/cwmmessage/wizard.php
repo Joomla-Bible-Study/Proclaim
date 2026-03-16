@@ -75,6 +75,7 @@ $steps = [
         <div class="card card-body bg-body-tertiary">
             <?php echo $this->form->renderField('studytitle'); ?>
             <?php echo $this->form->renderField('studydate'); ?>
+            <?php echo $this->form->renderField('image'); ?>
         </div>
     </div>
 
