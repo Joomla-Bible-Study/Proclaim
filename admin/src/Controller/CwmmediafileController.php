@@ -99,7 +99,7 @@ class CwmmediafileController extends FormController
             $app->setUserState('com_proclaim.edit.mediafile.server_id', null);
         }
 
-        return true;
+        return $result;
     }
 
     /**
