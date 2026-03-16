@@ -1137,6 +1137,23 @@ abstract class CWMAddon
     }
 
     /**
+     * Render a popup player for a direct media URL (no addon match).
+     *
+     * Falls back to an HTML5 audio element for direct file links.
+     *
+     * @param   string  $url  The direct media file URL
+     *
+     * @return  string  HTML audio element
+     *
+     * @since   10.3.0
+     */
+    public static function renderDirectPopupPlayer(string $url): string
+    {
+        return '<audio controls autoplay><source src="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8')
+            . '" type="audio/mpeg"></audio>';
+    }
+
+    /**
      * Cached addon instances for URL resolution.
      *
      * @var   array|null
