@@ -1340,7 +1340,7 @@ class Cwmlanding
                 'url'          => Route::_($url),
                 'image'        => $image,
                 'landing_show' => (int) ($item->landing_show ?? 0),
-                'meta'         => $item->description ?? '',
+                'meta'         => !empty($item->description) ? mb_substr(trim(strip_tags($item->description)), 0, 120) : '',
             ];
         }
 
