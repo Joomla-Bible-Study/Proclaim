@@ -55,8 +55,14 @@ class CwmcalendarField extends JoomlaCalendarField
      */
     public function filter($value, $group = null, ?\Joomla\Registry\Registry $input = null)
     {
-        if (\is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $value)) {
-            $value .= ':00';
+        if (\is_string($value)) {
+            // Append :00 if seconds are missing (H:i without :ss)
+            if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $value)) {
+                $value .= ':00';
+            }
+
+            // Reset any non-zero seconds to :00 — sermon dates don't need second precision
+            $value = preg_replace('/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}):\d{2}$/', '$1:00', $value);
         }
 
         return parent::filter($value, $group, $input);
