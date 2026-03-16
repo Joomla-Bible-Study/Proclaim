@@ -375,6 +375,14 @@ class CwmmessageController extends FormController
         $title = $validData['studytitle'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'message', $id);
+
+        // Wizard flow: redirect to the full edit form after save
+        if ($this->input->getInt('wizard_return', 0) === 1 && $id > 0) {
+            $this->setRedirect(
+                Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . $id, false),
+                Text::_('JLIB_APPLICATION_SAVE_SUCCESS')
+            );
+        }
     }
 
     /**

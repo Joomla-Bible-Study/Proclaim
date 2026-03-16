@@ -175,7 +175,21 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->getInput()->set('hidemainmenu', true);
+        $input  = Factory::getApplication()->getInput();
+        $layout = $input->get('layout', 'edit');
+        $input->set('hidemainmenu', true);
+
+        // Wizard layout gets a simplified toolbar
+        if ($layout === 'wizard') {
+            ToolbarHelper::title(
+                Text::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . Text::_('JBS_WIZ_TITLE') . ' ]</small></small>',
+                'book book'
+            );
+            ToolbarHelper::cancel('cwmmessage.cancel');
+
+            return;
+        }
+
         $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(

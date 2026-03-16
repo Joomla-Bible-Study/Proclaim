@@ -112,6 +112,22 @@
             }
         },
         {
+            "name": "com_proclaim.message-wizard",
+            "type": "script",
+            "uri": "com_proclaim/message-wizard.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.message-wizard-css",
+            "type": "style",
+            "uri": "com_proclaim/message-wizard.css"
+        },
+        {
             "name": "com_proclaim.message-ai-assist",
             "type": "script",
             "uri": "com_proclaim/message-ai-assist.min.js",

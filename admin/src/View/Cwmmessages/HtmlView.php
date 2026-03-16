@@ -27,6 +27,7 @@ use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -178,6 +179,9 @@ class HtmlView extends BaseHtmlView
 
         if ($canDo->get('core.create')) {
             $toolbar->addNew('cwmmessage.add');
+            $toolbar->linkButton('wizard', 'JBS_CMN_QUICK_CREATE')
+                ->url(Route::_('index.php?option=com_proclaim&view=cwmmessage&layout=wizard', false))
+                ->icon('icon-magic');
         }
 
         if (!$this->isEmptyState && ($canDo->get('core.edit.state') || \count($this->transitions))) {
