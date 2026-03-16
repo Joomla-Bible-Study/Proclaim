@@ -2,7 +2,8 @@
 <form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <field name="teacher_id" type="TeacherList"
            label="JBS_CMN_TEACHER"
-           required="true">
+           required="true"
+           searchable="true">
         <option value="">JBS_CMN_SELECT_TEACHER</option>
     </field>
 </form>

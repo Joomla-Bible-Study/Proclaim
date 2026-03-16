@@ -44,6 +44,39 @@ class TeacherListField extends ListField
     protected $type = 'TeacherList';
 
     /**
+     * Set up the field, switching to fancy-select layout when searchable="true".
+     *
+     * @param   \SimpleXMLElement  $element  The XML element
+     * @param   mixed              $value    The field value
+     * @param   string             $group    The field group
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    #[\Override]
+    public function setup(\SimpleXMLElement $element, $value, $group = null): bool
+    {
+        $result = parent::setup($element, $value, $group);
+
+        if ($result && (string) $this->element['searchable'] === 'true') {
+            $this->layout = 'joomla.form.field.list-fancy-select';
+
+            // Ensure the Choices.js dropdown is not clipped by parent containers
+            // and renders above adjacent subform rows.
+            Factory::getApplication()->getDocument()->getWebAssetManager()
+                ->addInlineStyle(
+                    '.subform-repeatable-group joomla-field-fancy-select .choices__list--dropdown,'
+                    . ' .subform-repeatable-group joomla-field-fancy-select .choices__list[aria-expanded] {'
+                    . ' z-index: 1050; }'
+                    . ' .subform-repeatable-group { overflow: visible !important; }'
+                );
+        }
+
+        return $result;
+    }
+
+    /**
      * Method to get a list of options for a list input.
      *
      * @return  array  An array of JHtml options.
