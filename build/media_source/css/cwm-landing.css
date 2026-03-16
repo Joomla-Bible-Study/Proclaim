@@ -1,0 +1,485 @@
+/**
+ * Proclaim Landing Page Styles
+ *
+ * BEM-like naming: .proclaim-landing-{block}__{element}--{modifier}
+ * Three layout styles: --cards, --hero, --dashboard
+ *
+ * @since 10.3.0
+ */
+
+/* =========================================================================
+   Shared
+   ========================================================================= */
+
+.proclaim-landing {
+    margin: 0 auto;
+}
+
+.proclaim-landing__header {
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.proclaim-landing__header-image {
+    margin-bottom: 1rem;
+}
+
+.proclaim-landing__title {
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.proclaim-landing__intro {
+    color: #6c757d;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+}
+
+.proclaim-landing__section {
+    padding: 2rem 0;
+}
+
+.proclaim-landing__section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+    color: #2c3e50;
+}
+
+/* Hidden items toggle */
+.proclaim-landing--hidden {
+    display: none !important;
+}
+
+.proclaim-landing__show-more {
+    margin-top: 1rem;
+}
+
+.proclaim-landing__toggle-count {
+    opacity: 0.6;
+    margin-left: 0.25rem;
+}
+
+.proclaim-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.proclaim-skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+/* =========================================================================
+   Card Grid Style (.proclaim-landing--cards)
+   ========================================================================= */
+
+.proclaim-landing-card {
+    display: block;
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.proclaim-landing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    color: inherit;
+    text-decoration: none;
+}
+
+.proclaim-landing-card__img {
+    height: 160px;
+    overflow: hidden;
+    background: #e9ecef;
+}
+
+.proclaim-landing-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.proclaim-landing-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 3rem;
+}
+
+.proclaim-landing-card__body {
+    padding: 1rem;
+}
+
+.proclaim-landing-card__name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.proclaim-landing-card__meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+/* Pills for text-only sections */
+.proclaim-landing-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.proclaim-landing-pill {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    background: #f1f3f5;
+    color: #495057;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: 1px solid #dee2e6;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.proclaim-landing-pill:hover {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+    text-decoration: none;
+}
+
+/* =========================================================================
+   Hero Sections Style (.proclaim-landing--hero)
+   ========================================================================= */
+
+.proclaim-landing-band {
+    padding: 3rem 0;
+}
+
+.proclaim-landing-band--light {
+    background: #fff;
+}
+
+.proclaim-landing-band--dark {
+    background: #f8f9fa;
+}
+
+.proclaim-landing-band--accent {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+}
+
+.proclaim-landing-band__title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.proclaim-landing-band--accent .proclaim-landing__show-more {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.proclaim-landing-band--accent .proclaim-landing__show-more:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Hero overlay cards */
+.proclaim-landing-hero-card {
+    position: relative;
+    display: block;
+    border-radius: 1rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: #fff;
+    height: 240px;
+}
+
+.proclaim-landing-hero-card:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.proclaim-landing-hero-card__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s;
+}
+
+.proclaim-landing-hero-card:hover .proclaim-landing-hero-card__bg {
+    transform: scale(1.05);
+}
+
+.proclaim-landing-hero-card__bg--placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.proclaim-landing-hero-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.1) 60%);
+}
+
+.proclaim-landing-hero-card__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+}
+
+.proclaim-landing-hero-card__title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.proclaim-landing-hero-card__sub {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+}
+
+/* Hero tags */
+.proclaim-landing-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.proclaim-landing-tag {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.proclaim-landing-tag--light {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.proclaim-landing-tag--light:hover {
+    background: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+}
+
+.proclaim-landing-tag--dark {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.proclaim-landing-tag--dark:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* =========================================================================
+   Dashboard Style (.proclaim-landing--dashboard)
+   ========================================================================= */
+
+/* Featured row */
+.proclaim-landing-featured {
+    padding: 2rem 0;
+}
+
+.proclaim-landing-featured__label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c757d;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.proclaim-landing-featured-card {
+    display: flex;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    transition: box-shadow 0.2s;
+    height: 100%;
+}
+
+.proclaim-landing-featured-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    color: inherit;
+    text-decoration: none;
+}
+
+.proclaim-landing-featured-card__img {
+    width: 140px;
+    min-height: 140px;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    background-color: #e9ecef;
+}
+
+.proclaim-landing-featured-card__img--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 2rem;
+}
+
+.proclaim-landing-featured-card__body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.proclaim-landing-featured-card__tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #0d6efd;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.proclaim-landing-featured-card__title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.3rem;
+    color: #2c3e50;
+}
+
+.proclaim-landing-featured-card__meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Accordion */
+.proclaim-landing-accordion .accordion-item {
+    border: none;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.proclaim-landing-accordion .accordion-button {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.proclaim-landing-accordion__count {
+    background: #e9ecef;
+    color: #6c757d;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 1rem;
+    margin-left: 0.5rem;
+    font-weight: 400;
+}
+
+/* List items inside accordion */
+.proclaim-landing-list-item {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f1f3f5;
+    text-decoration: none;
+    color: #495057;
+    transition: color 0.15s;
+}
+
+.proclaim-landing-list-item:last-child {
+    border-bottom: none;
+}
+
+.proclaim-landing-list-item:hover {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.proclaim-landing-list-item__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: #6c757d;
+    transition: background 0.15s, color 0.15s;
+}
+
+.proclaim-landing-list-item:hover .proclaim-landing-list-item__icon {
+    background: #dbeafe;
+    color: #0d6efd;
+}
+
+.proclaim-landing-list-item__name {
+    flex: 1;
+    font-weight: 500;
+}
+
+/* =========================================================================
+   Responsive
+   ========================================================================= */
+
+@media (max-width: 767.98px) {
+    .proclaim-landing-hero-card {
+        height: 180px;
+    }
+
+    .proclaim-landing-band {
+        padding: 2rem 0;
+    }
+
+    .proclaim-landing-featured-card {
+        flex-direction: column;
+    }
+
+    .proclaim-landing-featured-card__img {
+        width: 100%;
+        min-height: 120px;
+    }
+}

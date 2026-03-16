@@ -127,8 +127,10 @@ class HtmlView extends BaseHtmlView
         // Fetch all landing data in a single query
         $this->landingData = $this->landing->getLandingData($this->params);
 
-        // Add the show/hide javascript
-        $document->getWebAssetManager()->useScript('com_proclaim.cwm-landing-toggle');
+        // Load landing page assets
+        $wa = $document->getWebAssetManager();
+        $wa->useStyle('com_proclaim.cwm-landing');
+        $wa->useScript('com_proclaim.cwm-landing-toggle');
 
         parent::display($tpl);
     }
