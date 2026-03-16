@@ -62,13 +62,14 @@ class TeacherListField extends ListField
         if ($result && (string) $this->element['searchable'] === 'true') {
             $this->layout = 'joomla.form.field.list-fancy-select';
 
-            // The Choices.js dropdown inside a subform table needs a higher
-            // z-index to render above adjacent rows and subform controls.
+            // Ensure the Choices.js dropdown is not clipped by parent containers
+            // and renders above adjacent subform rows.
             Factory::getApplication()->getDocument()->getWebAssetManager()
                 ->addInlineStyle(
                     '.subform-repeatable-group joomla-field-fancy-select .choices__list--dropdown,'
                     . ' .subform-repeatable-group joomla-field-fancy-select .choices__list[aria-expanded] {'
                     . ' z-index: 1050; }'
+                    . ' .subform-repeatable-group { overflow: visible !important; }'
                 );
         }
 

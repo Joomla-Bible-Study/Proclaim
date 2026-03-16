@@ -82,7 +82,7 @@
                multiple="true"
                min="0" max="10"
                groupByFieldset="false"
-               layout="joomla.form.field.subform.repeatable-table"
+               layout="joomla.form.field.subform.repeatable"
                buttons="add,remove,move"/>
 
         <field name="location_id" type="LocationList" label="JBS_CMN_LOCATION"
