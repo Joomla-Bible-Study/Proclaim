@@ -37,7 +37,7 @@ use Joomla\CMS\Layout\LayoutHelper;
                 <?php echo Text::_('JBS_CMN_LANDING_SHOW'); ?>
             </label>
             <select name="batch[landing_show]" id="batch-landing-show" class="form-select">
-                <option value=""><?php echo Text::_('JLIB_HTML_BATCH_NO_CHANGE'); ?></option>
+                <option value=""><?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?></option>
                 <option value="0"><?php echo Text::_('JBS_CMN_NO_SHOW_LANDING'); ?></option>
                 <option value="1"><?php echo Text::_('JBS_CMN_SHOW_ABOVE_LANDING'); ?></option>
                 <option value="2"><?php echo Text::_('JBS_CMN_SHOW_BELOW_LANDING'); ?></option>
@@ -48,7 +48,7 @@ use Joomla\CMS\Layout\LayoutHelper;
                 <?php echo Text::_('JBS_TCH_SHOW_LIST_VIEW'); ?>
             </label>
             <select name="batch[list_show]" id="batch-list-show" class="form-select">
-                <option value=""><?php echo Text::_('JLIB_HTML_BATCH_NO_CHANGE'); ?></option>
+                <option value=""><?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?></option>
                 <option value="0"><?php echo Text::_('JHIDE'); ?></option>
                 <option value="1"><?php echo Text::_('JSHOW'); ?></option>
             </select>
