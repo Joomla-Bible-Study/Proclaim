@@ -1199,41 +1199,36 @@ class Cwmlanding
         $useLimit = (int) $params->get('landingteachersuselimit', 0);
         $linkTo   = (int) $params->get('linkto', 0);
 
-        if ($items === null) {
-            $order    = $this->getSortOrder($params, 'teachers_order');
-            $language = $this->getLanguageFilter($params);
+        // Always run own query — pre-fetched union items lack image columns
+        $order    = $this->getSortOrder($params, 'teachers_order');
+        $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
-            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
-                ->from($this->db->quoteName('#__bsms_teachers', 'a'))
-                ->innerJoin(
-                    $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
-                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
-                )
-                ->innerJoin(
-                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                    . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
-                )
-                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
-                ->where($this->db->quoteName('a.published') . ' = 1')
-                ->where($this->db->quoteName('a.landing_show') . ' > 0')
-                ->group($this->db->quoteName('a.id'))
-                ->order($this->db->quoteName('a.teachername') . ' ' . $order);
+        $query = $this->db->getQuery(true);
+        $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+            ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+            )
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
+            )
+            ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+            ->where($this->db->quoteName('a.published') . ' = 1')
+            ->where($this->db->quoteName('a.landing_show') . ' > 0')
+            ->group($this->db->quoteName('a.id'))
+            ->order($this->db->quoteName('a.teachername') . ' ' . $order);
 
-            $this->addAccessFilter($query);
+        $this->addAccessFilter($query);
 
-            if ($useLimit === 0 && $limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
-
-            $items = $this->db->loadObjectList();
+        if ($useLimit === 0 && $limit < 10000) {
+            $this->db->setQuery($query, 0, $limit);
         } else {
-            foreach ($items as $item) {
-                $item->teachername = $item->text;
-            }
+            $this->db->setQuery($query);
         }
+
+        $items = $this->db->loadObjectList();
 
         $result = [];
 
@@ -1289,44 +1284,39 @@ class Cwmlanding
         $useLimit     = (int) $params->get('landingseriesuselimit', 0);
         $seriesLinkTo = (int) $params->get('series_linkto', 0);
 
-        if ($items === null) {
-            $order    = $this->getSortOrder($params, 'series_order');
-            $language = $this->getLanguageFilter($params);
+        // Always run own query — pre-fetched union items lack image columns
+        $order    = $this->getSortOrder($params, 'series_order');
+        $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
-            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
-                ->from($this->db->quoteName('#__bsms_series', 'a'))
-                ->innerJoin(
-                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
-                )
-                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
-                ->where($this->db->quoteName('b.published') . ' = 1')
-                ->where($this->db->quoteName('a.published') . ' = 1')
-                ->group($this->db->quoteName('a.id'))
-                ->order($this->db->quoteName('a.series_text') . ' ' . $order);
+        $query = $this->db->getQuery(true);
+        $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+            ->from($this->db->quoteName('#__bsms_series', 'a'))
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+            )
+            ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+            ->where($this->db->quoteName('b.published') . ' = 1')
+            ->where($this->db->quoteName('a.published') . ' = 1')
+            ->group($this->db->quoteName('a.id'))
+            ->order($this->db->quoteName('a.series_text') . ' ' . $order);
 
-            if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
-                $nullDate = $this->db->quote($this->db->getNullDate());
-                $nowDate  = $this->db->quote((new Date())->toSql());
-                $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
-                    ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
-            }
-
-            $this->addAccessFilter($query);
-
-            if ($useLimit === 0 && $limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
-
-            $items = $this->db->loadObjectList();
-        } else {
-            foreach ($items as $item) {
-                $item->series_text = $item->text;
-            }
+        if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $this->db->quote($this->db->getNullDate());
+            $nowDate  = $this->db->quote((new Date())->toSql());
+            $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
         }
+
+        $this->addAccessFilter($query);
+
+        if ($useLimit === 0 && $limit < 10000) {
+            $this->db->setQuery($query, 0, $limit);
+        } else {
+            $this->db->setQuery($query);
+        }
+
+        $items = $this->db->loadObjectList();
 
         $result = [];
 
