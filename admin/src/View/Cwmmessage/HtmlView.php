@@ -127,6 +127,13 @@ class HtmlView extends BaseHtmlView
         $this->mediafiles = $model->getMediaFiles();
         $this->state      = $model->getState();
 
+        // For modalreturn layout, just load item data and render (no toolbar, no extras)
+        if ($this->getLayout() === 'modalreturn') {
+            parent::display($tpl);
+
+            return;
+        }
+
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
@@ -158,8 +165,20 @@ class HtmlView extends BaseHtmlView
         // Push translatable strings to JS
         Text::script('JBS_STY_SEARCH_VERSIONS');
 
+        $forcedLanguage = $input->get('forcedLanguage', '', 'cmd');
+
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage) {
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+        }
+
         // Set the toolbar
-        $this->addToolbar();
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+        } else {
+            $this->addModalToolbar();
+        }
 
         // Display the template
         parent::display($tpl);
@@ -175,7 +194,21 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        Factory::getApplication()->getInput()->set('hidemainmenu', true);
+        $input  = Factory::getApplication()->getInput();
+        $layout = $input->get('layout', 'edit');
+        $input->set('hidemainmenu', true);
+
+        // Wizard layout gets a simplified toolbar
+        if ($layout === 'wizard') {
+            ToolbarHelper::title(
+                Text::_('JBS_CMN_STUDIES') . ': <small><small>[ ' . Text::_('JBS_WIZ_TITLE') . ' ]</small></small>',
+                'book book'
+            );
+            ToolbarHelper::cancel('cwmmessage.cancel');
+
+            return;
+        }
+
         $isNew = ($this->item->id === 0);
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
@@ -217,5 +250,33 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
         ToolbarHelper::help('message', true);
+    }
+
+    /**
+     * Add toolbar for modal layout (Apply/Save/Cancel only).
+     *
+     * @return void
+     *
+     * @since  10.2.0
+     */
+    protected function addModalToolbar(): void
+    {
+        $isNew   = ($this->item->id === 0);
+        $toolbar = $this->getDocument()->getToolbar();
+
+        ToolbarHelper::title(
+            Text::_('JBS_CMN_STUDIES') . ': <small><small>[' . ($isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT')) . ']</small></small>',
+            'book book'
+        );
+
+        $canCreate = $isNew && $this->canDo->get('core.create', 'com_proclaim');
+        $canEdit   = $this->canDo->get('core.edit', 'com_proclaim');
+
+        if ($canCreate || $canEdit) {
+            $toolbar->apply('cwmmessage.apply');
+            $toolbar->save('cwmmessage.save');
+        }
+
+        $toolbar->cancel('cwmmessage.cancel');
     }
 }

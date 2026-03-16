@@ -56,8 +56,9 @@ if ($isNewRecord) {
     );
 }
 ?>
+<?php $currentLayout = $input->get('layout', 'edit'); ?>
 <form action="<?php
-echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int)$this->item->id); ?>"
+echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentLayout . '&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form"
       aria-label="<?php
         echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"

@@ -367,6 +367,32 @@ class CwmmessageController extends FormController
      *
      * @since   10.1.0
      */
+    /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+
+        // When editing in modal then redirect to modalreturn layout
+        if ($result && $this->input->get('layout') === 'modal') {
+            $id     = $this->input->get('id');
+            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+                . '&layout=modalreturn&from-task=cancel';
+
+            $this->setRedirect(Route::_($return, false));
+        }
+
+        return $result;
+    }
+
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
         $id    = (int) $model->getState('cwmmessage.id');
@@ -375,6 +401,29 @@ class CwmmessageController extends FormController
         $title = $validData['studytitle'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'message', $id);
+
+        // Modal layout: redirect to modalreturn or stay in modal
+        if ($this->input->get('layout') === 'modal') {
+            if ($this->task === 'save') {
+                $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item
+                    . $this->getRedirectToItemAppend($id) . '&layout=modalreturn&from-task=save';
+                $this->setRedirect(Route::_($return, false));
+            } elseif ($this->task === 'apply') {
+                $return = 'index.php?option=' . $this->option . '&task=' . $this->view_item . '.edit'
+                    . $this->getRedirectToItemAppend($id) . '&layout=modal&tmpl=component';
+                $this->setRedirect(Route::_($return, false));
+            }
+
+            return;
+        }
+
+        // Wizard flow: redirect to the full edit form after save
+        if ($this->input->getInt('wizard_return', 0) === 1 && $id > 0) {
+            $this->setRedirect(
+                Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . $id, false),
+                Text::_('JLIB_APPLICATION_SAVE_SUCCESS')
+            );
+        }
     }
 
     /**
