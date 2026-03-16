@@ -16,6 +16,7 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
@@ -86,6 +87,12 @@ $steps = [
             <?php echo $this->form->renderField('teachers'); ?>
             <?php echo $this->form->renderField('series_id'); ?>
             <?php echo $this->form->renderField('location_id'); ?>
+            <?php echo $this->form->renderField('topics'); ?>
+            <?php echo $this->form->renderField('messagetype'); ?>
+            <?php echo $this->form->renderField('access'); ?>
+            <?php if (Multilanguage::isEnabled()) : ?>
+                <?php echo $this->form->renderField('language'); ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -149,9 +156,8 @@ $steps = [
     <input type="hidden" name="wizard_return" value="1">
     <input type="hidden" name="jform[id]" value="0">
     <input type="hidden" name="jform[published]" value="1">
-    <input type="hidden" name="jform[language]" value="*">
-    <input type="hidden" name="jform[access]" value="1">
-    <input type="hidden" name="jform[messagetype]"
-           value="<?php echo (int) $admin_params->get('messagetype', 0); ?>">
+    <?php if (!Multilanguage::isEnabled()) : ?>
+        <input type="hidden" name="jform[language]" value="*">
+    <?php endif; ?>
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
