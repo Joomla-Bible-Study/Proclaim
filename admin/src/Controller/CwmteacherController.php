@@ -49,6 +49,32 @@ class CwmteacherController extends FormController
     protected $option = 'com_proclaim';
 
     /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+
+        // When editing in modal then redirect to modalreturn layout
+        if ($result && $this->input->get('layout') === 'modal') {
+            $id     = $this->input->get('id');
+            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
+                . '&layout=modalreturn&from-task=cancel';
+
+            $this->setRedirect(Route::_($return, false));
+        }
+
+        return $result;
+    }
+
+    /**
      * Method to run batch operations.
      *
      * @param   BaseModel  $model  The model.
@@ -120,5 +146,18 @@ class CwmteacherController extends FormController
         $title = trim(($validData['teachername'] ?? '') . ' ' . ($validData['title'] ?? ''));
 
         CwmactionlogHelper::log($key, $title, 'teacher', $id);
+
+        // Modal layout: redirect to modalreturn or stay in modal
+        if ($this->input->get('layout') === 'modal') {
+            if ($this->task === 'save') {
+                $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item
+                    . $this->getRedirectToItemAppend($id) . '&layout=modalreturn&from-task=save';
+                $this->setRedirect(Route::_($return, false));
+            } elseif ($this->task === 'apply') {
+                $return = 'index.php?option=' . $this->option . '&task=' . $this->view_item . '.edit'
+                    . $this->getRedirectToItemAppend($id) . '&layout=modal&tmpl=component';
+                $this->setRedirect(Route::_($return, false));
+            }
+        }
     }
 }

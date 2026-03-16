@@ -34,9 +34,11 @@ $params = $this->state->get('params');
 $params = $params->toArray();
 $app    = Factory::getApplication();
 $input  = $app->getInput();
+
+$currentLayout = $input->get('layout', 'edit');
 ?>
 <form action="<?php
-echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"
+echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate">
     <div class="main-card">
         <?php
