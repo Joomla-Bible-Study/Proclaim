@@ -180,8 +180,7 @@ class HtmlView extends BaseHtmlView
             $toolbar->addNew('cwmmessage.add');
             $toolbar->linkButton('wizard', 'JBS_CMN_QUICK_CREATE')
                 ->url(Route::_('index.php?option=com_proclaim&view=cwmmessage&layout=wizard', false))
-                ->icon('icon-wand-magic-sparkles')
-                ->buttonClass('btn btn-info');
+                ->icon('icon-wand');
         }
 
         if (!$this->isEmptyState && ($canDo->get('core.edit.state') || \count($this->transitions))) {
