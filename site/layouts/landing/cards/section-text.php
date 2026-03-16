@@ -15,6 +15,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $section      = $displayData['section'];
@@ -28,24 +29,7 @@ if (empty($items)) {
     return;
 }
 
-$visibleItems = [];
-$hiddenItems  = [];
-
-foreach ($items as $index => $item) {
-    if ($useLimit === 1) {
-        if ($item['landing_show'] === 2) {
-            $hiddenItems[] = $item;
-        } else {
-            $visibleItems[] = $item;
-        }
-    } else {
-        if ($index >= $limit && $limit < 10000) {
-            $hiddenItems[] = $item;
-        } else {
-            $visibleItems[] = $item;
-        }
-    }
-}
+[$visibleItems, $hiddenItems] = Cwmlanding::splitItems($items, $limit, $useLimit);
 
 $iconClass = match ($section['sectionType']) {
     'topics'       => 'fas fa-tags',

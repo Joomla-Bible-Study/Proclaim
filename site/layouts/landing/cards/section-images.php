@@ -20,6 +20,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
+use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Uri\Uri;
 
@@ -35,26 +36,7 @@ if (empty($items)) {
 }
 
 // Determine which items are visible vs hidden
-$visibleItems = [];
-$hiddenItems  = [];
-
-foreach ($items as $index => $item) {
-    if ($useLimit === 1) {
-        // Per-record mode: landing_show=1 visible, landing_show=2 hidden
-        if ($item['landing_show'] === 2) {
-            $hiddenItems[] = $item;
-        } else {
-            $visibleItems[] = $item;
-        }
-    } else {
-        // Grid mode: items past limit are hidden
-        if ($index >= $limit && $limit < 10000) {
-            $hiddenItems[] = $item;
-        } else {
-            $visibleItems[] = $item;
-        }
-    }
-}
+[$visibleItems, $hiddenItems] = Cwmlanding::splitItems($items, $limit, $useLimit);
 
 $iconClass = match ($section['sectionType']) {
     'teachers' => 'fas fa-user-tie',
