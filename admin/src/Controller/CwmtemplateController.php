@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
@@ -36,6 +37,16 @@ use Joomla\Utilities\ArrayHelper;
  */
 class CwmtemplateController extends FormController
 {
+    use MultiCampusAccessTrait;
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_templates';
+
     /**
      * Method override to check if you can edit an existing record.
      *
@@ -50,45 +61,36 @@ class CwmtemplateController extends FormController
     protected function allowEdit($data = [], $key = 'id'): bool
     {
         $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-        $isAdmin  = $user->authorise('core.admin');
 
-        if (!$isAdmin && $recordId > 0) {
+        $denied = $this->checkRecordAccessLevel($recordId);
+        if ($denied === false) {
+            return false;
+        }
+
+        $user    = Factory::getApplication()->getIdentity();
+        $isAdmin = $user->authorise('core.admin');
+
+        // Location-based access check: non-admins can only edit templates
+        // assigned to their campus. Global templates (location_id = 0/NULL)
+        // are read-only — campus users must clone them first.
+        if (!$isAdmin && $recordId > 0 && CwmlocationHelper::isEnabled()) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
-                ->select([$db->quoteName('access'), $db->quoteName('location_id')])
+                ->select($db->quoteName('location_id'))
                 ->from($db->quoteName('#__bsms_templates'))
                 ->where($db->quoteName('id') . ' = :rid')
                 ->bind(':rid', $recordId, ParameterType::INTEGER);
             $db->setQuery($query);
-            $row = $db->loadObject();
+            $locationId = (int) $db->loadResult();
 
-            if (!$row) {
+            if ($locationId === 0) {
                 return false;
             }
 
-            // View-level access check
-            $access = (int) $row->access;
+            $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
+            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
                 return false;
-            }
-
-            // Location-based access check: non-admins can only edit templates
-            // assigned to their campus. Global templates (location_id = 0/NULL)
-            // are read-only — campus users must clone them first.
-            if (CwmlocationHelper::isEnabled()) {
-                $locationId = (int) ($row->location_id ?? 0);
-
-                if ($locationId === 0) {
-                    return false;
-                }
-
-                $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
-
-                if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
-                    return false;
-                }
             }
         }
 

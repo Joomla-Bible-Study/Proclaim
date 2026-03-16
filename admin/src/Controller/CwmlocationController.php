@@ -16,13 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
-use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Location controller class
@@ -32,6 +31,9 @@ use Joomla\Database\ParameterType;
  */
 class CwmlocationController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -39,6 +41,14 @@ class CwmlocationController extends FormController
      * @since 7.0
      */
     protected $view_list = 'cwmlocations';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_locations';
 
     /**
      * Method to cancel an edit — redirects to modalreturn when in modal layout.
@@ -53,15 +63,7 @@ class CwmlocationController extends FormController
     public function cancel($key = null): bool
     {
         $result = parent::cancel($key);
-
-        // When editing in modal then redirect to modalreturn layout
-        if ($result && $this->input->get('layout') === 'modal') {
-            $id     = $this->input->get('id');
-            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
-                . '&layout=modalreturn&from-task=cancel';
-
-            $this->setRedirect(Route::_($return, false));
-        }
+        $this->handleModalCancel($result);
 
         return $result;
     }
@@ -79,23 +81,9 @@ class CwmlocationController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_locations'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -133,20 +121,10 @@ class CwmlocationController extends FormController
     #[\Override]
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
-        if ($this->input->get('layout') !== 'modal') {
+        $id = (int) $model->getState('cwmlocation.id');
+
+        if ($this->handleModalPostSave($id)) {
             return;
-        }
-
-        $id = $model->getState('cwmlocation.id', '');
-
-        if ($this->task === 'save') {
-            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item
-                . $this->getRedirectToItemAppend($id) . '&layout=modalreturn&from-task=save';
-            $this->setRedirect(Route::_($return, false));
-        } elseif ($this->task === 'apply') {
-            $return = 'index.php?option=' . $this->option . '&task=' . $this->view_item . '.edit'
-                . $this->getRedirectToItemAppend($id) . '&layout=modal&tmpl=component';
-            $this->setRedirect(Route::_($return, false));
         }
     }
 }

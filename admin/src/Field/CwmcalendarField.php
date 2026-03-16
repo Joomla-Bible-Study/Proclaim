@@ -75,4 +75,29 @@ class CwmcalendarField extends JoomlaCalendarField
 
         return $html;
     }
+
+    /**
+     * Filter the input value — re-append seconds if stripped by the JS.
+     *
+     * The cwm-calendar-noseconds JS removes :SS from the display value.
+     * Joomla's CalendarField::filter() expects seconds when showtime is
+     * enabled. Re-append :00 before passing to parent::filter().
+     *
+     * @param   mixed                $value  The input value
+     * @param   string               $group  The field group
+     * @param   ?\Joomla\Registry\Registry  $input  Input registry
+     *
+     * @return  mixed  The filtered value
+     *
+     * @since   10.3.0
+     */
+    public function filter($value, $group = null, ?\Joomla\Registry\Registry $input = null)
+    {
+        // Re-append :00 seconds if the value matches Y-m-d H:i without seconds
+        if (\is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $value)) {
+            $value .= ':00';
+        }
+
+        return parent::filter($value, $group, $input);
+    }
 }
