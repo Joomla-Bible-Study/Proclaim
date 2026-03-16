@@ -210,7 +210,7 @@ class CWMAddonSoundcloud extends CWMAddon
         return '<div class="proclaim-audio-wrap" style="max-width:100%;">'
             . '<iframe class="playhit" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
             . ' width="100%" height="' . (int) $height . '" scrolling="no" frameborder="no"'
-            . ' allow="autoplay"></iframe>'
+            . ' allow="autoplay" loading="lazy"></iframe>'
             . '</div>';
     }
 
