@@ -4,7 +4,7 @@
  * @package  Proclaim
  * @since    10.3.0
  */
-(() => {
+document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     const TOTAL_STEPS = 6;
@@ -247,4 +247,4 @@
             }
         }
     });
-})();
+});
