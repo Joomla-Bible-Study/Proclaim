@@ -39,8 +39,9 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 ?>
 
+<?php $currentLayout = Factory::getApplication()->getInput()->get('layout', 'edit'); ?>
 <form action="<?php
-echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"
+echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
     <?php
     echo LayoutHelper::render('edit.seriestitle_alias', $this); ?>
