@@ -74,7 +74,6 @@ $steps = [
         <h3 class="mb-3"><?php echo Text::_('JBS_WIZ_STEP_TITLE_DATE'); ?></h3>
         <div class="card card-body bg-body-tertiary">
             <?php echo $this->form->renderField('studytitle'); ?>
-            <?php echo $this->form->renderField('alias'); ?>
             <?php echo $this->form->renderField('studydate'); ?>
         </div>
     </div>
