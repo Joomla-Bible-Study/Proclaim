@@ -15,20 +15,14 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\CalendarField as JoomlaCalendarField;
 
 /**
- * Calendar field that hides seconds from the displayed value.
+ * Calendar field subclass for Proclaim date fields.
  *
- * The DB stores DATETIME with seconds, and Joomla's CalendarField always
- * renders them. The calendar JS also rewrites the input value on init
- * using its format string (which includes %S). This subclass intercepts
- * the input element's value setter via Object.defineProperty so that
- * every write — PHP, JS init, date pick — has seconds stripped.
- *
- * Pair with timeformat="12" in XML for 12-hour AM/PM display in the
- * calendar popup.
+ * Extends Joomla's CalendarField to handle the case where seconds
+ * may be absent from the submitted value (e.g., browser autofill or
+ * copy-paste without seconds). Re-appends :00 before validation.
  *
  * Usage in XML: type="cwmcalendar" (with addfieldprefix set)
  *
@@ -45,46 +39,14 @@ class CwmcalendarField extends JoomlaCalendarField
     protected $type = 'Cwmcalendar';
 
     /**
-     * Get the field input markup.
+     * Filter the input value — re-append seconds if missing.
      *
-     * Delegates to the core CalendarField, adds a data marker, and
-     * registers JS that intercepts the value property setter on the
-     * input element to strip :SS from every value assignment.
-     *
-     * @return  string  The field input markup.
-     *
-     * @since  10.1.0
-     */
-    #[\Override]
-    protected function getInput(): string
-    {
-        $html = parent::getInput();
-
-        // Mark the wrapper so JS can target these fields
-        $html = str_replace(
-            'class="field-calendar"',
-            'class="field-calendar" data-cwm-no-seconds="1"',
-            $html
-        );
-
-        // Register the value-interceptor JS once per page (external file,
-        // no PHP data needed — the script targets [data-cwm-no-seconds] inputs)
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-        $wa->useScript('com_proclaim.cwm-calendar-noseconds');
-
-        return $html;
-    }
-
-    /**
-     * Filter the input value — re-append seconds if stripped by the JS.
-     *
-     * The cwm-calendar-noseconds JS removes :SS from the display value.
      * Joomla's CalendarField::filter() expects seconds when showtime is
-     * enabled. Re-append :00 before passing to parent::filter().
+     * enabled. If the submitted value has no seconds (H:i without :ss),
+     * append :00 before passing to parent::filter().
      *
-     * @param   mixed                $value  The input value
-     * @param   string               $group  The field group
+     * @param   mixed                       $value  The input value
+     * @param   string                      $group  The field group
      * @param   ?\Joomla\Registry\Registry  $input  Input registry
      *
      * @return  mixed  The filtered value
@@ -93,7 +55,6 @@ class CwmcalendarField extends JoomlaCalendarField
      */
     public function filter($value, $group = null, ?\Joomla\Registry\Registry $input = null)
     {
-        // Re-append :00 seconds if the value matches Y-m-d H:i without seconds
         if (\is_string($value) && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $value)) {
             $value .= ':00';
         }

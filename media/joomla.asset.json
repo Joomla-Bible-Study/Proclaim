@@ -920,17 +920,6 @@
             }
         },
         {
-            "name": "com_proclaim.cwm-calendar-noseconds",
-            "type": "script",
-            "uri": "com_proclaim/cwm-calendar-noseconds.min.js",
-            "dependencies": [
-                "core"
-            ],
-            "attributes": {
-                "defer": true
-            }
-        },
-        {
             "name": "com_proclaim.topics-free-tagging",
             "type": "script",
             "uri": "com_proclaim/topics-free-tagging.min.js",
