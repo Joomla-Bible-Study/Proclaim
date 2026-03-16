@@ -17,6 +17,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Session\Session;
 
 $app = Factory::getApplication();
@@ -74,10 +75,7 @@ $typeIcons = [
 ?>
 <div class="container-fluid p-3">
     <?php if (empty($this->types)) : ?>
-        <div class="alert alert-info">
-            <span class="icon-info-circle" aria-hidden="true"></span>
-            <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-        </div>
+        <?php echo LayoutHelper::render('html.empty_state'); ?>
     <?php else : ?>
         <h6 class="text-body-secondary mb-3"><?php echo Text::_('JBS_CMN_SELECT_SERVERTYPE'); ?></h6>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
