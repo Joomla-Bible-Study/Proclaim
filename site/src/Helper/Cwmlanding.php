@@ -1262,12 +1262,8 @@ class Cwmlanding
 
         $this->addAccessFilter($query);
 
-        if ($useLimit === 0 && $limit < 10000) {
-            $this->db->setQuery($query, 0, $limit);
-        } else {
-            $this->db->setQuery($query);
-        }
-
+        // Fetch all items — splitItems() handles visible/hidden split in PHP
+        $this->db->setQuery($query);
         $items = $this->db->loadObjectList();
 
         $result = [];
@@ -1350,11 +1346,8 @@ class Cwmlanding
 
         $this->addAccessFilter($query);
 
-        if ($useLimit === 0 && $limit < 10000) {
-            $this->db->setQuery($query, 0, $limit);
-        } else {
-            $this->db->setQuery($query);
-        }
+        // Fetch all items — splitItems() handles visible/hidden split in PHP
+        $this->db->setQuery($query);
 
         $items = $this->db->loadObjectList();
 
@@ -1433,11 +1426,8 @@ class Cwmlanding
 
             $this->addAccessFilter($query);
 
-            if ($useLimit === 0 && $limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
 
             $items = $this->db->loadObjectList();
         } else {
@@ -1509,11 +1499,8 @@ class Cwmlanding
 
             $this->addAccessFilter($query);
 
-            if ($useLimit === 0 && $limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
 
             $items = $this->db->loadObjectList();
         } else {
@@ -1594,11 +1581,8 @@ class Cwmlanding
 
             $this->addAccessFilter($query, '#__bsms_studies.access');
 
-            if ($limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
 
             $items = $this->db->loadObjectList();
         } else {
@@ -1671,11 +1655,8 @@ class Cwmlanding
 
             $this->addAccessFilter($query);
 
-            if ($limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
 
             $items = $this->db->loadObjectList();
         } else {
@@ -1742,11 +1723,8 @@ class Cwmlanding
 
             $this->addAccessFilter($query, 'access');
 
-            if ($limit < 10000) {
-                $this->db->setQuery($query, 0, $limit);
-            } else {
-                $this->db->setQuery($query);
-            }
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
 
             $items = $this->db->loadObjectList();
         } else {
