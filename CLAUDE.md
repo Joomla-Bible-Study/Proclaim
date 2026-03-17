@@ -180,14 +180,10 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 ## Development Setup
 
-1. Clone joomla-cms (required for unit tests):
-   ```bash
-   git clone https://github.com/joomla/joomla-cms.git ../joomla-cms
-   ```
-2. Run `composer install --dev` to install dependencies (also installs joomla-cms deps automatically)
-3. Run `npm install && npm run build` to generate `media/` assets (JS, CSS, images, vendor libs)
-4. Run `composer setup` for interactive configuration (set `builder.joomla_dir` to your joomla-cms path)
-5. Run `composer symlink` to link component to your Joomla installation
+1. Run `composer install --dev` to install dependencies (auto-clones joomla-cms for testing)
+2. Run `npm install && npm run build` to generate `media/` assets (JS, CSS, images, vendor libs)
+3. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
+4. Run `composer symlink` to link component to your Joomla installation
 
 > **Note**: `media/js/`, `media/css/`, `media/images/`, `media/vendor/`, and `media/fancybox/` are
 > generated — they are gitignored and must be built locally. Source files live in `build/media_source/`.

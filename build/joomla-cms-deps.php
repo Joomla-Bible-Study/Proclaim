@@ -48,18 +48,40 @@ foreach ($lines as $line) {
     }
 }
 
+// Default location: sibling directory to this repo
 if ($joomlaDir === '') {
-    echo "  \033[33mSkipping joomla-cms deps: builder.joomla_dir not set in build.properties\033[0m" . PHP_EOL;
-    echo "  Set it to your joomla-cms clone path to enable unit testing." . PHP_EOL;
+    $joomlaDir = dirname($root) . '/joomla-cms';
 
-    return;
+    // Update build.properties with the default path
+    $propsContent = file_get_contents($propsFile);
+    $propsContent = preg_replace(
+        '/^builder\.joomla_dir=.*$/m',
+        'builder.joomla_dir=' . $joomlaDir,
+        $propsContent
+    );
+    file_put_contents($propsFile, $propsContent);
 }
 
 if (!is_dir($joomlaDir)) {
-    echo "  \033[33mSkipping joomla-cms deps: directory not found: $joomlaDir\033[0m" . PHP_EOL;
-    echo "  Clone it: git clone https://github.com/joomla/joomla-cms.git $joomlaDir" . PHP_EOL;
+    echo "  Cloning joomla-cms (one-time setup)..." . PHP_EOL;
 
-    return;
+    $cmd    = sprintf('git clone --depth 1 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
+    $output = [];
+    $code   = 0;
+
+    exec($cmd, $output, $code);
+
+    if ($code !== 0) {
+        echo "  \033[31m✗ Failed to clone joomla-cms (exit code: $code)\033[0m" . PHP_EOL;
+
+        foreach ($output as $line) {
+            echo "    $line" . PHP_EOL;
+        }
+
+        return;
+    }
+
+    echo "  \033[32m✓ joomla-cms cloned to $joomlaDir\033[0m" . PHP_EOL;
 }
 
 $vendorAutoload = rtrim($joomlaDir, '/') . '/libraries/vendor/autoload.php';
