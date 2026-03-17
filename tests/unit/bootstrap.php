@@ -157,6 +157,7 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
         // IMPORTANT: This autoloader is appended (not prepended) so our Composer
         // autoloader always wins for framework classes like Joomla\Database\*.
         spl_autoload_register(function ($class) use ($rootDir) {
+
             // Joomla\CMS\ → libraries/src/
             $cmsPrefix = 'Joomla\\CMS\\';
 

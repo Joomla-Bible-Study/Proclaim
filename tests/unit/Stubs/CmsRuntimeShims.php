@@ -17,6 +17,35 @@
 // phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
 // phpcs:disable PSR1.Files.SideEffects
 
+namespace Joomla\CMS\Event {
+
+    /**
+     * Shim for AbstractImmutableEvent — Joomla 5.4.x CMS source has offsetSet()
+     * without : void return type, but joomla/event v4.0 requires it.
+     * This shim provides a compatible definition that satisfies both.
+     */
+    class AbstractImmutableEvent extends \Joomla\Event\AbstractEvent
+    {
+        public function offsetSet($name, $value): void
+        {
+            throw new \BadMethodCallException('Immutable event');
+        }
+
+        public function offsetUnset($name): void
+        {
+            throw new \BadMethodCallException('Immutable event');
+        }
+    }
+
+    class AbstractEvent extends AbstractImmutableEvent
+    {
+        public static function create(string $eventName, array $arguments = [])
+        {
+            return new static($eventName, $arguments);
+        }
+    }
+}
+
 namespace Joomla\CMS {
 
     class Factory
