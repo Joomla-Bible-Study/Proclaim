@@ -56,12 +56,13 @@ use Joomla\CMS\Layout\LayoutHelper;
     </div>
     <div class="row">
         <div class="form-group col-md-6">
-            <label id="batch-landing-ordering-lbl" for="batch-landing-ordering">
-                <?php echo Text::_('JBS_TCH_LANDING_ORDERING'); ?>
+            <label id="batch-move-position-lbl" for="batch-move-position">
+                <?php echo Text::_('JBS_TCH_BATCH_MOVE_POSITION'); ?>
             </label>
-            <input type="number" name="batch[landing_ordering]" id="batch-landing-ordering"
-                   class="form-control" value="" min="0" step="1"
+            <input type="number" name="batch[move_position]" id="batch-move-position"
+                   class="form-control" value="" min="1" step="1"
                    placeholder="<?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?>">
+            <div class="form-text"><?php echo Text::_('JBS_TCH_BATCH_MOVE_POSITION_DESC'); ?></div>
         </div>
     </div>
 </div>

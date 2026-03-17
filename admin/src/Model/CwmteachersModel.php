@@ -64,8 +64,6 @@ class CwmteachersModel extends ListModel
                 'teacher.landing_show',
                 'list_show',
                 'teacher.list_show',
-                'landing_ordering',
-                'teacher.landing_ordering',
             ];
         }
 

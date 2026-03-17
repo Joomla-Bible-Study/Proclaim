@@ -54,15 +54,11 @@
             <option value="1">JBS_CMN_SHOW_ABOVE_LANDING</option>
             <option value="2">JBS_CMN_SHOW_BELOW_LANDING</option>
         </field>
-        <field name="landing_ordering" type="number" label="JBS_TCH_LANDING_ORDERING"
-               description="JBS_TCH_LANDING_ORDERING_DESC" class="col-12 small"
-               default="0" min="0" step="1"/>
         <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
                description="JBS_CMN_FIELD_LANGUAGE_DESC" class="col-12 small">
             <option value="*">JALL</option>
         </field>
         <field name="ordering" type="text" label="JFIELD_ORDERING_LABEL"
-               description="JFIELD_ORDERING_DESC" size="6"
                default="0"/>
     </fieldset>
 

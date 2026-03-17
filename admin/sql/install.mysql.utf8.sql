@@ -556,7 +556,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `address`           MEDIUMTEXT,
     `social_links`      TEXT                                                      DEFAULT NULL,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
-    `landing_ordering`  INT(3)                                           NOT NULL DEFAULT 0,
     `created`           DATETIME                                         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`        INT(10) UNSIGNED                                 NOT NULL DEFAULT '0',
     `created_by_alias`  VARCHAR(255)                                     NOT NULL DEFAULT '',

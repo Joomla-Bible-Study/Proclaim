@@ -57,7 +57,7 @@ class CwmteacherModel extends AdminModel
         'assetgroup_id'    => 'batchAccess',
         'landing_show'     => 'batchLandingShow',
         'list_show'        => 'batchListShow',
-        'landing_ordering' => 'batchLandingOrdering',
+        'move_position'    => 'batchMovePosition',
     ];
 
     /**
@@ -129,13 +129,11 @@ class CwmteacherModel extends AdminModel
         ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
-            $form->setFieldAttribute('landing_ordering', 'disabled', 'true');
             $form->setFieldAttribute('published', 'disabled', 'true');
 
             // Disable fields while saving.
             // The controller has already verified this is a record you can edit.
             $form->setFieldAttribute('ordering', 'filter', 'unset');
-            $form->setFieldAttribute('landing_ordering', 'filter', 'unset');
             $form->setFieldAttribute('published', 'filter', 'unset');
         }
 
@@ -329,7 +327,7 @@ class CwmteacherModel extends AdminModel
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
         $image         = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
+        $data['image'] = urldecode($image->url);
 
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
@@ -686,9 +684,12 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
-     * Batch set landing_ordering for a group of teachers.
+     * Batch move selected teachers to a specific ordering position.
      *
-     * @param   int    $value     The landing_ordering value
+     * Inserts the selected teachers (sorted alphabetically) starting at the
+     * given position and shifts all other teachers down to make room.
+     *
+     * @param   int    $value     The target ordering position (1-based)
      * @param   array  $pks       An array of row IDs
      * @param   array  $contexts  An array of item contexts
      *
@@ -696,24 +697,54 @@ class CwmteacherModel extends AdminModel
      *
      * @since   10.3.0
      */
-    protected function batchLandingOrdering(int $value, array $pks, array $contexts): bool
+    protected function batchMovePosition(int $value, array $pks, array $contexts): bool
     {
-        $user  = Factory::getApplication()->getIdentity();
-        /** @var CwmteacherTable $table */
-        $table = $this->getTable();
+        $user = Factory::getApplication()->getIdentity();
 
+        // Verify permissions for all selected items
         foreach ($pks as $pk) {
-            if ($user->authorise('core.edit', $contexts[$pk])) {
-                $table->reset();
-                $table->load($pk);
-                $table->landing_ordering = $value;
-
-                if (!$table->store()) {
-                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
-                }
-            } else {
+            if (!$user->authorise('core.edit', $contexts[$pk])) {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
+        }
+
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
+        $position = max(1, $value);
+
+        // Get all teacher IDs in current ordering, excluding the selected ones
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->whereNotIn($db->quoteName('id'), $pks)
+            ->order($db->quoteName('ordering') . ' ASC');
+        $db->setQuery($query);
+        $otherIds = $db->loadColumn();
+
+        // Get the selected teacher IDs sorted alphabetically
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->whereIn($db->quoteName('id'), $pks)
+            ->order($db->quoteName('teachername') . ' ASC');
+        $db->setQuery($query);
+        $selectedIds = $db->loadColumn();
+
+        // Build new ordering: insert selected at target position
+        $insertAt = min($position - 1, \count($otherIds));
+        $newOrder = array_merge(
+            \array_slice($otherIds, 0, $insertAt),
+            $selectedIds,
+            \array_slice($otherIds, $insertAt)
+        );
+
+        // Update all ordering values
+        foreach ($newOrder as $index => $id) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_teachers'))
+                ->set($db->quoteName('ordering') . ' = ' . ($index + 1))
+                ->where($db->quoteName('id') . ' = ' . (int) $id);
+            $db->setQuery($query);
+            $db->execute();
         }
 
         $this->cleanCache();

@@ -18,8 +18,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -75,6 +78,42 @@ class CwmteachersController extends AdminController
     public function getModel($name = 'Cwmteacher', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Reset ordering for all teachers alphabetically by name.
+     *
+     * @return  void
+     *
+     * @throws \Exception
+     * @since   10.3.0
+     */
+    public function resetOrdering(): void
+    {
+        Session::checkToken() or die(Text::_('JINVALID_TOKEN'));
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Get all teacher IDs ordered alphabetically
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->order($db->quoteName('teachername') . ' ASC');
+        $db->setQuery($query);
+        $ids = $db->loadColumn();
+
+        // Update each teacher's ordering sequentially
+        foreach ($ids as $index => $id) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_teachers'))
+                ->set($db->quoteName('ordering') . ' = ' . ($index + 1))
+                ->where($db->quoteName('id') . ' = ' . (int) $id);
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        $this->setMessage(Text::sprintf('JBS_TCH_ORDERING_RESET_SUCCESS', \count($ids)));
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmteachers');
     }
 
     /**

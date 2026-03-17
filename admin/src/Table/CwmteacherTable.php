@@ -125,9 +125,6 @@ class CwmteacherTable extends Table
     /** @var int|null Show on landing page @since 7.0.0 */
     public ?int $landing_show = null;
 
-    /** @var int Landing page display order (lower = first) @since 10.3.0 */
-    public int $landing_ordering = 0;
-
     /** @var string|null @since 10.1.0 */
     public ?string $created = null;
 

@@ -1258,7 +1258,7 @@ class Cwmlanding
             ->where($this->db->quoteName('a.published') . ' = 1')
             ->where($this->db->quoteName('a.landing_show') . ' > 0')
             ->group($this->db->quoteName('a.id'))
-            ->order($this->db->quoteName('a.landing_ordering') . ' ASC')
+            ->order($this->db->quoteName('a.ordering') . ' ASC')
             ->order($this->db->quoteName('a.teachername') . ' ' . $order);
 
         $this->addAccessFilter($query);
@@ -1278,7 +1278,9 @@ class Cwmlanding
             }
 
             $image = null;
-            if (!empty($item->teacher_thumbnail)) {
+            if (!empty($item->teacher_image)) {
+                $image = Cwmimages::getTeacherImage($item->teacher_image, $item->image ?? '');
+            } elseif (!empty($item->teacher_thumbnail)) {
                 $image = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb ?? '');
             }
 

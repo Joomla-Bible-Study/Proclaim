@@ -109,7 +109,7 @@
 }
 
 .proclaim-landing-card__img {
-    height: 160px;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     background: #e9ecef;
 }
@@ -118,6 +118,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 20%;
 }
 
 .proclaim-landing-card__placeholder {
@@ -221,7 +222,7 @@
     overflow: hidden;
     text-decoration: none;
     color: #fff;
-    height: 240px;
+    aspect-ratio: 3 / 4;
 }
 
 .proclaim-landing-hero-card:hover {
@@ -233,7 +234,7 @@
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center;
+    background-position: center 20%;
     transition: transform 0.3s;
 }
 
@@ -467,7 +468,7 @@
 
 @media (max-width: 767.98px) {
     .proclaim-landing-hero-card {
-        height: 180px;
+        aspect-ratio: 3 / 4;
     }
 
     .proclaim-landing-band {
