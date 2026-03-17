@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="schema">
+        <fieldset name="schema" label="PLG_SCHEMAORG_PROCLAIM_SCHEMA_LABEL">
+
+            <field name="Sermon" type="subform" showon="schemaType:Sermon">
+                <form>
+                    <field name="@type" type="hidden" default="CreativeWork"/>
+
+                    <field name="noteSermon" type="note"
+                           description="PLG_SCHEMAORG_PROCLAIM_NOTE_DESC"
+                           class="alert alert-info w-100"/>
+
+                    <field name="image" type="media"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_IMAGE"/>
+
+                    <field name="headline" type="text"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_HEADLINE"
+                           filter="string" size="60"/>
+
+                    <field name="description" type="textarea"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
+                           filter="string" rows="3"/>
+
+                    <field name="author" type="subform"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_AUTHOR">
+                        <form>
+                            <field name="@type" type="hidden" default="person"/>
+                            <field name="name" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_AUTHOR_NAME"
+                                   filter="string"/>
+                        </form>
+                    </field>
+
+                    <field name="datePublished" type="calendar"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_PUBLISHED"
+                           class="input-small" filter="user_utc"
+                           showtime="false" todaybutton="true"
+                           translateformat="true"/>
+
+                    <field name="dateModified" type="calendar"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_MODIFIED"
+                           class="input-small" filter="user_utc"
+                           showtime="false" todaybutton="true"
+                           translateformat="true"/>
+
+                    <field name="genericField" type="subform"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM"
+                           multiple="true">
+                        <form>
+                            <field name="genericTitle" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
+                                   filter="string" size="30"/>
+                            <field name="genericValue" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
+                                   filter="string" size="30"/>
+                        </form>
+                    </field>
+
+                </form>
+            </field>
+
+        </fieldset>
+    </fields>
+</form>
