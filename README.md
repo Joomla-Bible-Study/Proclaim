@@ -78,8 +78,13 @@ composer symlink
 ```
 
 > **Disk space:** `composer install --dev` automatically clones the [joomla-cms](https://github.com/joomla/joomla-cms)
-> repository (~500MB shallow clone) as a sibling directory. This provides real Joomla CMS classes for unit testing
-> instead of stubs. Total dev environment is approximately 1.5GB.
+> repository as a sibling directory and installs its Composer dependencies. This provides real Joomla CMS classes
+> for unit testing instead of stubs. Approximate sizes:
+> - joomla-cms shallow clone: ~50MB
+> - joomla-cms Composer dependencies: ~96MB
+> - Proclaim Composer dependencies: ~42MB
+> - Proclaim npm dependencies: ~136MB
+> - **Total dev environment: ~1GB** (excluding git history)
 
 ### Common Commands
 

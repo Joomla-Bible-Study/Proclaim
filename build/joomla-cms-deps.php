@@ -102,8 +102,9 @@ if (!file_exists($composerJson)) {
     return;
 }
 
-// Run composer install inside the joomla-cms directory
-$cmd    = sprintf('cd %s && composer install --no-interaction --quiet 2>&1', escapeshellarg($joomlaDir));
+// Run composer install inside the joomla-cms directory (--no-dev skips their
+// test dependencies like phpunit which we don't need — saves ~30MB)
+$cmd    = sprintf('cd %s && composer install --no-dev --no-interaction --quiet 2>&1', escapeshellarg($joomlaDir));
 $output = [];
 $code   = 0;
 
