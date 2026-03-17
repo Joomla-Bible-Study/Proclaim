@@ -66,8 +66,9 @@ if (file_exists($propsFile)) {
 }
 
 // Environment variable override (useful for CI)
-if (empty($joomlaCmsPath) && !empty(getenv('JOOMLA_CMS_PATH'))) {
-    $joomlaCmsPath = getenv('JOOMLA_CMS_PATH');
+$envPath = getenv('JOOMLA_CMS_PATH');
+if (empty($joomlaCmsPath) && $envPath !== false && $envPath !== '' && is_dir($envPath)) {
+    $joomlaCmsPath = $envPath;
 }
 
 // ---------------------------------------------------------------------------
@@ -77,11 +78,10 @@ if (empty($joomlaCmsPath) && !empty(getenv('JOOMLA_CMS_PATH'))) {
 $joomlaLoaded = false;
 
 if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
-    $loaderFile    = rtrim($joomlaCmsPath, '/') . '/libraries/loader.php';
-    $vendorFile    = rtrim($joomlaCmsPath, '/') . '/libraries/vendor/autoload.php';
-    $namespaceFile = rtrim($joomlaCmsPath, '/') . '/libraries/namespacemap.php';
+    $loaderFile = rtrim($joomlaCmsPath, '/') . '/libraries/loader.php';
+    $cmsSrcDir  = rtrim($joomlaCmsPath, '/') . '/libraries/src';
 
-    if (is_file($loaderFile) && is_file($vendorFile)) {
+    if (is_file($loaderFile) && is_dir($cmsSrcDir)) {
         // Define Joomla path constants pointing at the CMS clone
         $rootDir = rtrim($joomlaCmsPath, '/');
 
@@ -137,72 +137,67 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JDEBUG', false);
         }
 
-        // Load the Joomla Platform (same as Joomla's own test bootstrap)
-        require_once $loaderFile;
-
-        if (!class_exists('JLoader')) {
-            throw new RuntimeException('Joomla Platform not loaded from: ' . $loaderFile);
+        // Load our Composer autoloader FIRST — provides PHPUnit and framework
+        // packages (joomla/database, joomla/registry, etc.) without conflicts.
+        $ourAutoload = $componentRoot . '/libraries/vendor/autoload.php';
+        if (is_file($ourAutoload)) {
+            require_once $ourAutoload;
         }
 
-        \JLoader::setup();
+        // Load runtime shims for classes that tests call (Factory, Text, Uri, Route).
+        // These must load BEFORE the CMS source autoloader so they take priority
+        // over the real CMS classes which have heavy dependency chains.
+        require_once $componentRoot . '/tests/unit/Stubs/CmsRuntimeShims.php';
 
-        // Load Joomla's Composer autoloader (provides CMS classes)
-        // NOTE: We do NOT prepend it — our own autoloader (loaded later)
-        // takes priority so our PHPUnit version isn't overridden by Joomla's.
-        /** @var \Composer\Autoload\ClassLoader $joomlaLoader */
-        $joomlaLoader = require $vendorFile;
+        // Register a PSR-4 autoloader for Joomla CMS source classes.
+        // We do NOT use JLoader (intercepts PHPUnit lookups) or joomla-cms's
+        // vendor/autoload.php (PSR package version conflicts).
+        // Our Composer provides framework packages; joomla-cms provides CMS classes.
+        //
+        // IMPORTANT: This autoloader is appended (not prepended) so our Composer
+        // autoloader always wins for framework classes like Joomla\Database\*.
+        spl_autoload_register(function ($class) use ($rootDir) {
 
-        // Decorate with Joomla's class loader
-        class_exists('\\Joomla\\CMS\\Autoload\\ClassLoader');
-        $joomlaLoader->unregister();
-        spl_autoload_register([new \Joomla\CMS\Autoload\ClassLoader($joomlaLoader), 'loadClass'], true, false);
+            // Joomla\CMS\ → libraries/src/
+            $cmsPrefix = 'Joomla\\CMS\\';
 
-        // Load extension namespace map
-        if (is_file($namespaceFile)) {
-            require_once $namespaceFile;
-            $extensionPsr4Loader = new \JNamespacePsr4Map();
-            $extensionPsr4Loader->load();
-        }
+            if (str_starts_with($class, $cmsPrefix)) {
+                $file = $rootDir . '/libraries/src/' . str_replace('\\', '/', substr($class, \strlen($cmsPrefix))) . '.php';
+
+                if (is_file($file)) {
+                    require_once $file;
+
+                    return true;
+                }
+            }
+
+            // Joomla\Component\ → administrator/components/
+            $compPrefix = 'Joomla\\Component\\';
+
+            if (str_starts_with($class, $compPrefix)) {
+                $relative = substr($class, \strlen($compPrefix));
+                $parts    = explode('\\', $relative, 3);
+
+                if (\count($parts) >= 3) {
+                    $component = strtolower($parts[0]);
+                    $file      = $rootDir . '/administrator/components/com_' . $component . '/src/'
+                        . str_replace('\\', '/', $parts[2]) . '.php';
+
+                    if (is_file($file)) {
+                        require_once $file;
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
 
         // Define Joomla version
-        \defined('JVERSION') or \define('JVERSION', (new \Joomla\CMS\Version())->getShortVersion());
+        \defined('JVERSION') or \define('JVERSION', '5.4.0');
 
         $joomlaLoaded = true;
-
-        // Create a minimal mock application so Factory::getApplication() works in tests
-        if (\Joomla\CMS\Factory::$application === null) {
-            $mockApp = new class extends \Joomla\CMS\Application\CMSApplication {
-                public function __construct()
-                {
-                    // Skip parent constructor — no real app bootstrap needed
-                    $this->input  = new \Joomla\Input\Input();
-                    $this->config = new \Joomla\Registry\Registry();
-                }
-
-                protected function doExecute(): void
-                {
-                }
-
-                public function getName(): string
-                {
-                    return 'test';
-                }
-
-                public function isClient($identifier): bool
-                {
-                    return $identifier === 'site';
-                }
-
-                public function getIdentity(): \Joomla\CMS\User\User
-                {
-                    $user     = new \Joomla\CMS\User\User();
-                    $user->id = 42;
-
-                    return $user;
-                }
-            };
-            \Joomla\CMS\Factory::$application = $mockApp;
-        }
 
         fwrite(STDERR, "Joomla CMS loaded from: $joomlaCmsPath" . PHP_EOL);
     }
@@ -227,14 +222,8 @@ if (!\defined('JPATH_TESTS')) {
     \define('JPATH_TESTS', $componentRoot . '/tests');
 }
 
-// ---------------------------------------------------------------------------
-// Load our Composer autoloader (for component dev dependencies like PHPUnit)
-// ---------------------------------------------------------------------------
-
-$composerAutoload = $componentRoot . '/libraries/vendor/autoload.php';
-if (file_exists($composerAutoload)) {
-    require_once $composerAutoload;
-}
+// Our Composer autoloader was loaded earlier (before JLoader) to avoid
+// PSR package version conflicts with joomla-cms's vendor directory.
 
 // ---------------------------------------------------------------------------
 // Register PSR-4 autoloader for the Proclaim component
@@ -271,71 +260,75 @@ spl_autoload_register(function ($class) use ($componentRoot) {
 require_once __DIR__ . '/ProclaimTestCase.php';
 
 // ---------------------------------------------------------------------------
-// Optional: Bootstrap a real database connection from build.properties
+// Optional: Bootstrap a real database connection
+// Sources: 1) JTEST_DB_* env vars (CI), 2) build.properties → Joomla config
 // ---------------------------------------------------------------------------
 
 (function () use ($componentRoot) {
-    $propsFile = $componentRoot . '/build.properties';
+    $host   = '';
+    $dbName = '';
+    $user   = '';
+    $pass   = '';
+    $prefix = '';
 
-    if (!file_exists($propsFile)) {
-        return;
+    // Source 1: JTEST_DB_* environment variables (CI)
+    if (getenv('JTEST_DB_HOST') && getenv('JTEST_DB_NAME')) {
+        $host   = getenv('JTEST_DB_HOST');
+        $dbName = getenv('JTEST_DB_NAME');
+        $user   = getenv('JTEST_DB_USER') ?: '';
+        $pass   = getenv('JTEST_DB_PASSWORD') ?: '';
+        $prefix = getenv('JTEST_DB_PREFIX') ?: '';
     }
 
-    // Parse build.properties
-    $props = [];
-    $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    // Source 2: build.properties → Joomla configuration.php
+    if ($dbName === '') {
+        $propsFile = $componentRoot . '/build.properties';
 
-    foreach ($lines as $line) {
-        $trimmed = trim($line);
+        if (file_exists($propsFile)) {
+            $props = [];
+            $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
-            continue;
+            foreach ($lines as $line) {
+                $trimmed = trim($line);
+
+                if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+                    continue;
+                }
+
+                $eq = strpos($trimmed, '=');
+
+                if ($eq !== false) {
+                    $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
+                }
+            }
+
+            $joomlaPath = '';
+
+            if (!empty($props['builder.joomla_paths'])) {
+                $paths      = array_map('trim', explode(',', $props['builder.joomla_paths']));
+                $joomlaPath = $paths[0] ?? '';
+            } elseif (!empty($props['builder.joomla_path'])) {
+                $joomlaPath = $props['builder.joomla_path'];
+            }
+
+            $configFile = $joomlaPath !== '' && is_dir($joomlaPath)
+                ? rtrim($joomlaPath, '/') . '/configuration.php'
+                : '';
+
+            if ($configFile !== '' && file_exists($configFile)) {
+                require_once $configFile;
+
+                if (class_exists('JConfig', false)) {
+                    $config = new \JConfig();
+                    $host   = $config->host ?? 'localhost';
+                    $dbName = $config->db ?? '';
+                    $user   = $config->user ?? '';
+                    $pass   = $config->password ?? '';
+                    $prefix = $config->dbprefix ?? '';
+                }
+            }
         }
-
-        $eq = strpos($trimmed, '=');
-
-        if ($eq === false) {
-            continue;
-        }
-
-        $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
     }
-
-    // Find the first Joomla installation path (for database config)
-    $joomlaPath = '';
-
-    if (!empty($props['builder.joomla_paths'])) {
-        $paths      = array_map('trim', explode(',', $props['builder.joomla_paths']));
-        $joomlaPath = $paths[0] ?? '';
-    } elseif (!empty($props['builder.joomla_path'])) {
-        $joomlaPath = $props['builder.joomla_path'];
-    }
-
-    if ($joomlaPath === '' || !is_dir($joomlaPath)) {
-        return;
-    }
-
-    $configFile = rtrim($joomlaPath, '/') . '/configuration.php';
-
-    if (!file_exists($configFile)) {
-        return;
-    }
-
-    // Load Joomla's configuration
-    require_once $configFile;
-
-    if (!class_exists('JConfig', false)) {
-        return;
-    }
-
-    $config = new \JConfig();
-
-    // Create a real database connection
-    $host   = $config->host ?? 'localhost';
-    $dbName = $config->db ?? '';
-    $user   = $config->user ?? '';
-    $pass   = $config->password ?? '';
-    $prefix = $config->dbprefix ?? '';
 
     if ($dbName === '' || $user === '') {
         return;
@@ -350,7 +343,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
     }
 
     try {
-        $options = [
+        $db = \Joomla\Database\DatabaseDriver::getInstance([
             'driver'   => 'mysqli',
             'host'     => $host,
             'port'     => $port,
@@ -358,28 +351,13 @@ require_once __DIR__ . '/ProclaimTestCase.php';
             'password' => $pass,
             'database' => $dbName,
             'prefix'   => $prefix,
-        ];
-
-        $db = \Joomla\Database\DatabaseDriver::getInstance($options);
+        ]);
         $db->connect();
 
-        // Register in DI container for Factory::getContainer()->get(DatabaseInterface::class)
-        try {
-            $container = \Joomla\CMS\Factory::getContainer();
-
-            if ($container instanceof \Joomla\DI\Container) {
-                $container->set(\Joomla\Database\DatabaseInterface::class, $db);
-            }
-        } catch (\Throwable) {
-            // Container not available or key protected — tests use direct DB access
-        }
-
-        // Store reference for tests that need direct access
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 
         fwrite(STDERR, "Database connected: $dbName@$host:$port" . PHP_EOL);
     } catch (\Throwable $e) {
-        // Database not available — integration tests will skip gracefully
         \define('PROCLAIM_TEST_DB_AVAILABLE', false);
         fwrite(STDERR, "Database not available: " . $e->getMessage() . PHP_EOL);
     }

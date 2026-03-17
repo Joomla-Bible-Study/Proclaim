@@ -65,7 +65,9 @@ if ($joomlaDir === '') {
 if (!is_dir($joomlaDir)) {
     echo "  Cloning joomla-cms (one-time setup)..." . PHP_EOL;
 
-    $cmd    = sprintf('git clone --depth 1 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
+    // Clone the 5.4.3 stable tag — known-compatible with our framework v4.0 packages.
+    // Using a stable tag ensures consistent class signatures across environments.
+    $cmd    = sprintf('git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
     $output = [];
     $code   = 0;
 
@@ -84,38 +86,11 @@ if (!is_dir($joomlaDir)) {
     echo "  \033[32m✓ joomla-cms cloned to $joomlaDir\033[0m" . PHP_EOL;
 }
 
-$vendorAutoload = rtrim($joomlaDir, '/') . '/libraries/vendor/autoload.php';
+// Verify the clone has the required files
+$loaderFile = rtrim($joomlaDir, '/') . '/libraries/loader.php';
 
-if (file_exists($vendorAutoload)) {
-    echo "  \033[32m✓ joomla-cms dependencies already installed\033[0m" . PHP_EOL;
-
-    return;
-}
-
-echo "  Installing joomla-cms Composer dependencies..." . PHP_EOL;
-
-$composerJson = rtrim($joomlaDir, '/') . '/composer.json';
-
-if (!file_exists($composerJson)) {
-    echo "  \033[31m✗ No composer.json found in $joomlaDir\033[0m" . PHP_EOL;
-
-    return;
-}
-
-// Run composer install inside the joomla-cms directory (--no-dev skips their
-// test dependencies like phpunit which we don't need — saves ~30MB)
-$cmd    = sprintf('cd %s && composer install --no-dev --no-interaction --quiet 2>&1', escapeshellarg($joomlaDir));
-$output = [];
-$code   = 0;
-
-exec($cmd, $output, $code);
-
-if ($code === 0) {
-    echo "  \033[32m✓ joomla-cms dependencies installed successfully\033[0m" . PHP_EOL;
+if (file_exists($loaderFile)) {
+    echo "  \033[32m✓ joomla-cms source ready (no composer install needed)\033[0m" . PHP_EOL;
 } else {
-    echo "  \033[31m✗ Failed to install joomla-cms dependencies (exit code: $code)\033[0m" . PHP_EOL;
-
-    foreach ($output as $line) {
-        echo "    $line" . PHP_EOL;
-    }
+    echo "  \033[31m✗ joomla-cms clone appears incomplete — missing libraries/loader.php\033[0m" . PHP_EOL;
 }
