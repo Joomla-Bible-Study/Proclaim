@@ -43,14 +43,21 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Clone joomla-cms for test framework
+        run: git clone --depth 1 --branch 5.4-dev https://github.com/joomla/joomla-cms.git ../joomla-cms
+
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
+        env:
+          JOOMLA_CMS_PATH: ${{ github.workspace }}/../joomla-cms
 
       - name: Check PHP syntax
         run: composer lint:syntax
 
       - name: Run PHPUnit tests
         run: composer test
+        env:
+          JOOMLA_CMS_PATH: ${{ github.workspace }}/../joomla-cms
 
   js-checks:
     name: JS Lint & Tests
