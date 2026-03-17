@@ -259,71 +259,75 @@ spl_autoload_register(function ($class) use ($componentRoot) {
 require_once __DIR__ . '/ProclaimTestCase.php';
 
 // ---------------------------------------------------------------------------
-// Optional: Bootstrap a real database connection from build.properties
+// Optional: Bootstrap a real database connection
+// Sources: 1) JTEST_DB_* env vars (CI), 2) build.properties → Joomla config
 // ---------------------------------------------------------------------------
 
 (function () use ($componentRoot) {
-    $propsFile = $componentRoot . '/build.properties';
+    $host   = '';
+    $dbName = '';
+    $user   = '';
+    $pass   = '';
+    $prefix = '';
 
-    if (!file_exists($propsFile)) {
-        return;
+    // Source 1: JTEST_DB_* environment variables (CI)
+    if (getenv('JTEST_DB_HOST') && getenv('JTEST_DB_NAME')) {
+        $host   = getenv('JTEST_DB_HOST');
+        $dbName = getenv('JTEST_DB_NAME');
+        $user   = getenv('JTEST_DB_USER') ?: '';
+        $pass   = getenv('JTEST_DB_PASSWORD') ?: '';
+        $prefix = getenv('JTEST_DB_PREFIX') ?: '';
     }
 
-    // Parse build.properties
-    $props = [];
-    $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    // Source 2: build.properties → Joomla configuration.php
+    if ($dbName === '') {
+        $propsFile = $componentRoot . '/build.properties';
 
-    foreach ($lines as $line) {
-        $trimmed = trim($line);
+        if (file_exists($propsFile)) {
+            $props = [];
+            $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
-            continue;
+            foreach ($lines as $line) {
+                $trimmed = trim($line);
+
+                if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+                    continue;
+                }
+
+                $eq = strpos($trimmed, '=');
+
+                if ($eq !== false) {
+                    $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
+                }
+            }
+
+            $joomlaPath = '';
+
+            if (!empty($props['builder.joomla_paths'])) {
+                $paths      = array_map('trim', explode(',', $props['builder.joomla_paths']));
+                $joomlaPath = $paths[0] ?? '';
+            } elseif (!empty($props['builder.joomla_path'])) {
+                $joomlaPath = $props['builder.joomla_path'];
+            }
+
+            $configFile = $joomlaPath !== '' && is_dir($joomlaPath)
+                ? rtrim($joomlaPath, '/') . '/configuration.php'
+                : '';
+
+            if ($configFile !== '' && file_exists($configFile)) {
+                require_once $configFile;
+
+                if (class_exists('JConfig', false)) {
+                    $config = new \JConfig();
+                    $host   = $config->host ?? 'localhost';
+                    $dbName = $config->db ?? '';
+                    $user   = $config->user ?? '';
+                    $pass   = $config->password ?? '';
+                    $prefix = $config->dbprefix ?? '';
+                }
+            }
         }
-
-        $eq = strpos($trimmed, '=');
-
-        if ($eq === false) {
-            continue;
-        }
-
-        $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
     }
-
-    // Find the first Joomla installation path (for database config)
-    $joomlaPath = '';
-
-    if (!empty($props['builder.joomla_paths'])) {
-        $paths      = array_map('trim', explode(',', $props['builder.joomla_paths']));
-        $joomlaPath = $paths[0] ?? '';
-    } elseif (!empty($props['builder.joomla_path'])) {
-        $joomlaPath = $props['builder.joomla_path'];
-    }
-
-    if ($joomlaPath === '' || !is_dir($joomlaPath)) {
-        return;
-    }
-
-    $configFile = rtrim($joomlaPath, '/') . '/configuration.php';
-
-    if (!file_exists($configFile)) {
-        return;
-    }
-
-    // Load Joomla's configuration
-    require_once $configFile;
-
-    if (!class_exists('JConfig', false)) {
-        return;
-    }
-
-    $config = new \JConfig();
-
-    // Create a real database connection
-    $host   = $config->host ?? 'localhost';
-    $dbName = $config->db ?? '';
-    $user   = $config->user ?? '';
-    $pass   = $config->password ?? '';
-    $prefix = $config->dbprefix ?? '';
 
     if ($dbName === '' || $user === '') {
         return;
@@ -338,7 +342,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
     }
 
     try {
-        $options = [
+        $db = \Joomla\Database\DatabaseDriver::getInstance([
             'driver'   => 'mysqli',
             'host'     => $host,
             'port'     => $port,
@@ -346,28 +350,13 @@ require_once __DIR__ . '/ProclaimTestCase.php';
             'password' => $pass,
             'database' => $dbName,
             'prefix'   => $prefix,
-        ];
-
-        $db = \Joomla\Database\DatabaseDriver::getInstance($options);
+        ]);
         $db->connect();
 
-        // Register in DI container for Factory::getContainer()->get(DatabaseInterface::class)
-        try {
-            $container = \Joomla\CMS\Factory::getContainer();
-
-            if ($container instanceof \Joomla\DI\Container) {
-                $container->set(\Joomla\Database\DatabaseInterface::class, $db);
-            }
-        } catch (\Throwable) {
-            // Container not available or key protected — tests use direct DB access
-        }
-
-        // Store reference for tests that need direct access
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 
         fwrite(STDERR, "Database connected: $dbName@$host:$port" . PHP_EOL);
     } catch (\Throwable $e) {
-        // Database not available — integration tests will skip gracefully
         \define('PROCLAIM_TEST_DB_AVAILABLE', false);
         fwrite(STDERR, "Database not available: " . $e->getMessage() . PHP_EOL);
     }

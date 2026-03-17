@@ -21,6 +21,22 @@ jobs:
     name: PHP Lint & Tests
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_USER: proclaim_test
+          MYSQL_PASSWORD: proclaim_test
+          MYSQL_ROOT_PASSWORD: proclaim_test
+          MYSQL_DATABASE: proclaim_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +45,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, json, xml
+          extensions: mbstring, json, xml, mysqli
           coverage: none
 
       - name: Get Composer cache directory
@@ -49,13 +65,21 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
 
+      - name: Import database schema
+        run: mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < admin/sql/install.mysql.utf8.sql
+
       - name: Check PHP syntax
         run: composer lint:syntax
 
-      - name: Run PHPUnit unit tests
-        run: composer test:unit
+      - name: Run PHPUnit tests
+        run: composer test
         env:
           JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
+          JTEST_DB_HOST: 127.0.0.1
+          JTEST_DB_NAME: proclaim_test
+          JTEST_DB_USER: proclaim_test
+          JTEST_DB_PASSWORD: proclaim_test
+          JTEST_DB_PREFIX: ''
 
   js-checks:
     name: JS Lint & Tests
