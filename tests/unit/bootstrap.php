@@ -3,6 +3,10 @@
 /**
  * PHPUnit Bootstrap for Proclaim Component Unit Tests
  *
+ * Loads the real Joomla CMS framework from a local joomla-cms clone
+ * (configured via builder.joomla_dir in build.properties). This ensures
+ * tests validate against actual Joomla class signatures.
+ *
  * @package    Proclaim.UnitTest
  * @copyright  (C) 2026 CWM Team All rights reserved
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
@@ -16,121 +20,247 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Define Joomla path constants for testing
-if (!\defined('JPATH_BASE')) {
-    \define('JPATH_BASE', \dirname(__DIR__, 2));
+// Set fixed precision value to avoid round related issues (matches Joomla)
+ini_set('precision', 14);
+
+// Set server variables needed by Joomla's Uri class in CLI context
+$_SERVER['HTTP_HOST']   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? '/';
+$_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+
+// Component root (this repo)
+$componentRoot = \dirname(__DIR__, 2);
+
+// ---------------------------------------------------------------------------
+// Resolve Joomla CMS path from build.properties
+// ---------------------------------------------------------------------------
+
+$joomlaCmsPath = '';
+
+$propsFile = $componentRoot . '/build.properties';
+
+if (file_exists($propsFile)) {
+    $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
+
+        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+            continue;
+        }
+
+        $eq = strpos($trimmed, '=');
+
+        if ($eq === false) {
+            continue;
+        }
+
+        $key   = trim(substr($trimmed, 0, $eq));
+        $value = trim(substr($trimmed, $eq + 1));
+
+        if ($key === 'builder.joomla_dir' && $value !== '' && is_dir($value)) {
+            $joomlaCmsPath = $value;
+            break;
+        }
+    }
 }
 
-if (!\defined('JPATH_ROOT')) {
-    \define('JPATH_ROOT', JPATH_BASE);
+// Environment variable override (useful for CI)
+if (empty($joomlaCmsPath) && !empty(getenv('JOOMLA_CMS_PATH'))) {
+    $joomlaCmsPath = getenv('JOOMLA_CMS_PATH');
 }
 
-if (!\defined('JPATH_SITE')) {
-    \define('JPATH_SITE', JPATH_ROOT);
+// ---------------------------------------------------------------------------
+// Load Joomla CMS framework
+// ---------------------------------------------------------------------------
+
+$joomlaLoaded = false;
+
+if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
+    $loaderFile    = rtrim($joomlaCmsPath, '/') . '/libraries/loader.php';
+    $vendorFile    = rtrim($joomlaCmsPath, '/') . '/libraries/vendor/autoload.php';
+    $namespaceFile = rtrim($joomlaCmsPath, '/') . '/libraries/namespacemap.php';
+
+    if (is_file($loaderFile) && is_file($vendorFile)) {
+        // Define Joomla path constants pointing at the CMS clone
+        $rootDir = rtrim($joomlaCmsPath, '/');
+
+        if (!\defined('JPATH_BASE')) {
+            \define('JPATH_BASE', $rootDir);
+        }
+
+        if (!\defined('JPATH_ROOT')) {
+            \define('JPATH_ROOT', $rootDir);
+        }
+
+        if (!\defined('JPATH_SITE')) {
+            \define('JPATH_SITE', $rootDir);
+        }
+
+        if (!\defined('JPATH_ADMINISTRATOR')) {
+            \define('JPATH_ADMINISTRATOR', $rootDir . '/administrator');
+        }
+
+        if (!\defined('JPATH_LIBRARIES')) {
+            \define('JPATH_LIBRARIES', $rootDir . '/libraries');
+        }
+
+        if (!\defined('JPATH_CACHE')) {
+            \define('JPATH_CACHE', $rootDir . '/administrator/cache');
+        }
+
+        if (!\defined('JPATH_CONFIGURATION')) {
+            \define('JPATH_CONFIGURATION', $rootDir);
+        }
+
+        if (!\defined('JPATH_PLUGINS')) {
+            \define('JPATH_PLUGINS', $rootDir . '/plugins');
+        }
+
+        if (!\defined('JPATH_THEMES')) {
+            \define('JPATH_THEMES', $rootDir . '/templates');
+        }
+
+        if (!\defined('JPATH_API')) {
+            \define('JPATH_API', $rootDir . '/api');
+        }
+
+        if (!\defined('JPATH_INSTALLATION')) {
+            \define('JPATH_INSTALLATION', $rootDir . '/installation');
+        }
+
+        if (!\defined('JPATH_MANIFESTS')) {
+            \define('JPATH_MANIFESTS', JPATH_ADMINISTRATOR . '/manifests');
+        }
+
+        if (!\defined('JDEBUG')) {
+            \define('JDEBUG', false);
+        }
+
+        // Load the Joomla Platform (same as Joomla's own test bootstrap)
+        require_once $loaderFile;
+
+        if (!class_exists('JLoader')) {
+            throw new RuntimeException('Joomla Platform not loaded from: ' . $loaderFile);
+        }
+
+        \JLoader::setup();
+
+        // Load Joomla's Composer autoloader (provides CMS classes)
+        // NOTE: We do NOT prepend it — our own autoloader (loaded later)
+        // takes priority so our PHPUnit version isn't overridden by Joomla's.
+        /** @var \Composer\Autoload\ClassLoader $joomlaLoader */
+        $joomlaLoader = require $vendorFile;
+
+        // Decorate with Joomla's class loader
+        class_exists('\\Joomla\\CMS\\Autoload\\ClassLoader');
+        $joomlaLoader->unregister();
+        spl_autoload_register([new \Joomla\CMS\Autoload\ClassLoader($joomlaLoader), 'loadClass'], true, false);
+
+        // Load extension namespace map
+        if (is_file($namespaceFile)) {
+            require_once $namespaceFile;
+            $extensionPsr4Loader = new \JNamespacePsr4Map();
+            $extensionPsr4Loader->load();
+        }
+
+        // Define Joomla version
+        \defined('JVERSION') or \define('JVERSION', (new \Joomla\CMS\Version())->getShortVersion());
+
+        $joomlaLoaded = true;
+
+        // Create a minimal mock application so Factory::getApplication() works in tests
+        if (\Joomla\CMS\Factory::$application === null) {
+            $mockApp = new class extends \Joomla\CMS\Application\CMSApplication {
+                public function __construct()
+                {
+                    // Skip parent constructor — no real app bootstrap needed
+                    $this->input  = new \Joomla\Input\Input();
+                    $this->config = new \Joomla\Registry\Registry();
+                }
+
+                protected function doExecute(): void
+                {
+                }
+
+                public function getName(): string
+                {
+                    return 'test';
+                }
+
+                public function isClient($identifier): bool
+                {
+                    return $identifier === 'site';
+                }
+
+                public function getIdentity(): \Joomla\CMS\User\User
+                {
+                    $user     = new \Joomla\CMS\User\User();
+                    $user->id = 42;
+
+                    return $user;
+                }
+            };
+            \Joomla\CMS\Factory::$application = $mockApp;
+        }
+
+        fwrite(STDERR, "Joomla CMS loaded from: $joomlaCmsPath" . PHP_EOL);
+    }
 }
 
-if (!\defined('JPATH_ADMINISTRATOR')) {
-    \define('JPATH_ADMINISTRATOR', JPATH_ROOT . '/administrator');
+if (!$joomlaLoaded) {
+    fwrite(STDERR, "ERROR: Joomla CMS not found. Set builder.joomla_dir in build.properties" . PHP_EOL);
+    fwrite(STDERR, "       or set JOOMLA_CMS_PATH environment variable." . PHP_EOL);
+    fwrite(STDERR, "       See: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Development-Setup" . PHP_EOL);
+    exit(1);
 }
+
+// ---------------------------------------------------------------------------
+// Component-specific constants
+// ---------------------------------------------------------------------------
 
 if (!\defined('BIBLESTUDY_PATH_ADMIN')) {
-    \define('BIBLESTUDY_PATH_ADMIN', JPATH_ROOT . '/admin');
+    \define('BIBLESTUDY_PATH_ADMIN', $componentRoot . '/admin');
 }
 
 if (!\defined('JPATH_TESTS')) {
-    \define('JPATH_TESTS', \dirname(__DIR__));
+    \define('JPATH_TESTS', $componentRoot . '/tests');
 }
 
-if (!\defined('JPATH_LIBRARIES')) {
-    \define('JPATH_LIBRARIES', JPATH_ROOT . '/libraries');
-}
+// ---------------------------------------------------------------------------
+// Load our Composer autoloader (for component dev dependencies like PHPUnit)
+// ---------------------------------------------------------------------------
 
-if (!\defined('JPATH_CACHE')) {
-    \define('JPATH_CACHE', JPATH_BASE . '/cache');
-}
-
-if (!\defined('JPATH_CONFIGURATION')) {
-    \define('JPATH_CONFIGURATION', JPATH_BASE);
-}
-
-if (!\defined('JPATH_PLUGINS')) {
-    \define('JPATH_PLUGINS', JPATH_BASE . '/plugins');
-}
-
-if (!\defined('JPATH_THEMES')) {
-    \define('JPATH_THEMES', JPATH_BASE . '/templates');
-}
-
-if (!\defined('JDEBUG')) {
-    \define('JDEBUG', false);
-}
-
-// Load Composer autoloader FIRST so real Joomla framework packages
-// (joomla/database, joomla/registry, etc.) take priority over stubs.
-$composerAutoload = JPATH_ROOT . '/libraries/vendor/autoload.php';
+$composerAutoload = $componentRoot . '/libraries/vendor/autoload.php';
 if (file_exists($composerAutoload)) {
     require_once $composerAutoload;
 }
 
-// Load Joomla CMS stubs AFTER Composer autoloader. These stubs fill in
-// CMS classes (controllers, models, views) that aren't available as
-// Composer packages. The class_exists() guards ensure they only define
-// classes not already loaded from real packages.
-require_once __DIR__ . '/Stubs/JoomlaCmsStubs.php';
-
+// ---------------------------------------------------------------------------
 // Register PSR-4 autoloader for the Proclaim component
-spl_autoload_register(function ($class) {
-    $prefix  = 'CWM\\Component\\Proclaim\\Administrator\\';
-    $baseDir = JPATH_ROOT . '/admin/src/';
+// ---------------------------------------------------------------------------
 
-    $len = \strlen($prefix);
-    if (strncmp($prefix, $class, $len) === 0) {
-        $relativeClass = substr($class, $len);
-        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-        if (file_exists($file)) {
-            require $file;
-            return true;
-        }
-    }
+spl_autoload_register(function ($class) use ($componentRoot) {
+    $mappings = [
+        'CWM\\Component\\Proclaim\\Administrator\\' => $componentRoot . '/admin/src/',
+        'CWM\\Component\\Proclaim\\Site\\'           => $componentRoot . '/site/src/',
+        'CWM\\Component\\Proclaim\\Tests\\'          => $componentRoot . '/tests/unit/',
+        'CWM\\Component\\Proclaim\\Tests\\Integration\\' => $componentRoot . '/tests/integration/',
+        'CWM\\Module\\Proclaim\\Site\\'              => $componentRoot . '/modules/site/mod_proclaim/src/',
+    ];
 
-    $prefix  = 'CWM\\Component\\Proclaim\\Site\\';
-    $baseDir = JPATH_ROOT . '/site/src/';
+    foreach ($mappings as $prefix => $baseDir) {
+        $len = \strlen($prefix);
 
-    $len = \strlen($prefix);
-    if (strncmp($prefix, $class, $len) === 0) {
-        $relativeClass = substr($class, $len);
-        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-        if (file_exists($file)) {
-            require $file;
-            return true;
-        }
-    }
+        if (strncmp($prefix, $class, $len) === 0) {
+            $relativeClass = substr($class, $len);
+            $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
-    // Autoload test classes
-    $prefix  = 'CWM\\Component\\Proclaim\\Tests\\';
-    $baseDir = JPATH_ROOT . '/tests/unit/';
+            if (file_exists($file)) {
+                require $file;
 
-    $len = \strlen($prefix);
-    if (strncmp($prefix, $class, $len) === 0) {
-        $relativeClass = substr($class, $len);
-        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-        if (file_exists($file)) {
-            require $file;
-            return true;
-        }
-    }
-
-    // Autoload integration test classes
-    $prefix  = 'CWM\\Component\\Proclaim\\Tests\\Integration\\';
-    $baseDir = JPATH_ROOT . '/tests/integration/';
-
-    $len = \strlen($prefix);
-    if (strncmp($prefix, $class, $len) === 0) {
-        $relativeClass = substr($class, $len);
-        $file          = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-        if (file_exists($file)) {
-            require $file;
-            return true;
+                return true;
+            }
         }
     }
 
@@ -142,13 +272,10 @@ require_once __DIR__ . '/ProclaimTestCase.php';
 
 // ---------------------------------------------------------------------------
 // Optional: Bootstrap a real database connection from build.properties
-// When available, this allows integration tests to use Factory::getContainer()
-// to obtain a DatabaseInterface. No-op when build.properties is missing.
 // ---------------------------------------------------------------------------
 
-(function () {
-    $root      = \dirname(__DIR__, 2);
-    $propsFile = $root . '/build.properties';
+(function () use ($componentRoot) {
+    $propsFile = $componentRoot . '/build.properties';
 
     if (!file_exists($propsFile)) {
         return;
@@ -174,7 +301,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
     }
 
-    // Find the first Joomla installation path
+    // Find the first Joomla installation path (for database config)
     $joomlaPath = '';
 
     if (!empty($props['builder.joomla_paths'])) {
@@ -182,13 +309,6 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         $joomlaPath = $paths[0] ?? '';
     } elseif (!empty($props['builder.joomla_path'])) {
         $joomlaPath = $props['builder.joomla_path'];
-    }
-
-    // Append subdirectory if configured (only relative paths, not absolute)
-    $joomlaDir = $props['builder.joomla_dir'] ?? '';
-
-    if ($joomlaDir !== '' && !str_starts_with($joomlaDir, '/')) {
-        $joomlaPath = rtrim($joomlaPath, '/') . '/' . ltrim($joomlaDir, '/');
     }
 
     if ($joomlaPath === '' || !is_dir($joomlaPath)) {
@@ -210,7 +330,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
 
     $config = new \JConfig();
 
-    // Create a real database connection via PDO
+    // Create a real database connection
     $host   = $config->host ?? 'localhost';
     $dbName = $config->db ?? '';
     $user   = $config->user ?? '';
@@ -230,271 +350,37 @@ require_once __DIR__ . '/ProclaimTestCase.php';
     }
 
     try {
-        $pdo = new \PDO(
-            "mysql:host=$host;port=$port;dbname=$dbName;charset=utf8mb4",
-            $user,
-            $pass,
-            [
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-            ]
-        );
-    } catch (\PDOException $e) {
+        $options = [
+            'driver'   => 'mysqli',
+            'host'     => $host,
+            'port'     => $port,
+            'user'     => $user,
+            'password' => $pass,
+            'database' => $dbName,
+            'prefix'   => $prefix,
+        ];
+
+        $db = \Joomla\Database\DatabaseDriver::getInstance($options);
+        $db->connect();
+
+        // Register in DI container for Factory::getContainer()->get(DatabaseInterface::class)
+        try {
+            $container = \Joomla\CMS\Factory::getContainer();
+
+            if ($container instanceof \Joomla\DI\Container) {
+                $container->set(\Joomla\Database\DatabaseInterface::class, $db);
+            }
+        } catch (\Throwable) {
+            // Container not available or key protected — tests use direct DB access
+        }
+
+        // Store reference for tests that need direct access
+        \define('PROCLAIM_TEST_DB_AVAILABLE', true);
+
+        fwrite(STDERR, "Database connected: $dbName@$host:$port" . PHP_EOL);
+    } catch (\Throwable $e) {
         // Database not available — integration tests will skip gracefully
-        return;
+        \define('PROCLAIM_TEST_DB_AVAILABLE', false);
+        fwrite(STDERR, "Database not available: " . $e->getMessage() . PHP_EOL);
     }
-
-    // Create a minimal PSR-11 container that provides DatabaseInterface
-    $container = new class ($pdo, $prefix) {
-        private \PDO $pdo;
-        private string $prefix;
-        private ?object $db = null;
-
-        public function __construct(\PDO $pdo, string $prefix)
-        {
-            $this->pdo    = $pdo;
-            $this->prefix = $prefix;
-        }
-
-        public function has(string $id): bool
-        {
-            return $id === 'Joomla\\Database\\DatabaseInterface'
-                || $id === \Joomla\Database\DatabaseInterface::class;
-        }
-
-        public function get(string $id): object
-        {
-            if (!$this->has($id)) {
-                throw new \RuntimeException("Service not found: $id");
-            }
-
-            if ($this->db === null) {
-                $this->db = new class ($this->pdo, $this->prefix) extends \Joomla\Database\DatabaseDriver {
-                    private \PDO $pdo;
-                    private string $dbPrefix;
-
-                    public function __construct(\PDO $pdo, string $prefix)
-                    {
-                        $this->pdo      = $pdo;
-                        $this->dbPrefix = $prefix;
-                    }
-
-                    public function getPrefix(): string
-                    {
-                        return $this->dbPrefix;
-                    }
-
-                    public function getQuery($new = false)
-                    {
-                        if ($new) {
-                            return new class ($this) {
-                                private object $db;
-                                private string $type  = '';
-                                private array $select = [];
-                                private array $from   = [];
-                                private array $where  = [];
-                                private ?int $limit   = null;
-                                private array $order  = [];
-
-                                public function __construct(object $db)
-                                {
-                                    $this->db = $db;
-                                }
-
-                                public function select($columns): static
-                                {
-                                    $this->type     = 'SELECT';
-                                    $this->select[] = $columns;
-
-                                    return $this;
-                                }
-
-                                public function from($table): static
-                                {
-                                    $this->from[] = $table;
-
-                                    return $this;
-                                }
-
-                                public function where($condition): static
-                                {
-                                    $this->where[] = $condition;
-
-                                    return $this;
-                                }
-
-                                public function order($column): static
-                                {
-                                    $this->order[] = $column;
-
-                                    return $this;
-                                }
-
-                                public function setLimit(?int $limit, int $offset = 0): static
-                                {
-                                    $this->limit = $limit;
-
-                                    return $this;
-                                }
-
-                                public function __toString(): string
-                                {
-                                    $flatten = static fn ($arr) => implode(', ', array_map(
-                                        static fn ($v) => \is_array($v) ? implode(', ', $v) : (string) $v,
-                                        $arr
-                                    ));
-                                    $sql = $this->type . ' ' . $flatten($this->select);
-                                    $sql .= ' FROM ' . $flatten($this->from);
-
-                                    if ($this->where) {
-                                        $sql .= ' WHERE ' . implode(' AND ', $this->where);
-                                    }
-
-                                    if ($this->order) {
-                                        $sql .= ' ORDER BY ' . implode(', ', $this->order);
-                                    }
-
-                                    if ($this->limit !== null) {
-                                        $sql .= ' LIMIT ' . $this->limit;
-                                    }
-
-                                    return $sql;
-                                }
-                            };
-                        }
-
-                        return null;
-                    }
-
-                    public function quoteName($name, $as = null): string|array
-                    {
-                        if (\is_array($name)) {
-                            return array_map(fn ($n) => '`' . str_replace('`', '``', $n) . '`', $name);
-                        }
-
-                        $quoted = '`' . str_replace('`', '``', $name) . '`';
-
-                        if ($as !== null) {
-                            $quoted .= ' AS `' . str_replace('`', '``', $as) . '`';
-                        }
-
-                        return $quoted;
-                    }
-
-                    public function quote($text, $escape = true): string
-                    {
-                        if (\is_array($text)) {
-                            return implode(', ', array_map(fn ($t) => $this->quote($t, $escape), $text));
-                        }
-
-                        return $this->pdo->quote((string) $text);
-                    }
-
-                    // Joomla shorthand alias for quote()
-                    public function q($text, $escape = true): string
-                    {
-                        return $this->quote($text, $escape);
-                    }
-
-                    public function setQuery($query, $offset = 0, $limit = 0): static
-                    {
-                        $this->sql = (string) $query;
-
-                        return $this;
-                    }
-
-                    /**
-                     * Replace #__ table prefix placeholder with the real prefix.
-                     */
-                    private function prepareSql(): string
-                    {
-                        return str_replace('#__', $this->dbPrefix, $this->sql);
-                    }
-
-                    public function loadResult(): mixed
-                    {
-                        $stmt = $this->pdo->query($this->prepareSql());
-
-                        return $stmt ? $stmt->fetchColumn() : null;
-                    }
-
-                    public function loadObject($class = \stdClass::class)
-                    {
-                        $stmt = $this->pdo->query($this->prepareSql());
-
-                        return $stmt ? ($stmt->fetch(\PDO::FETCH_OBJ) ?: null) : null;
-                    }
-
-                    public function loadObjectList($key = '', $class = \stdClass::class): array
-                    {
-                        $stmt = $this->pdo->query($this->prepareSql());
-
-                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_OBJ) : [];
-                    }
-
-                    public function loadColumn($offset = 0): array
-                    {
-                        $stmt = $this->pdo->query($this->prepareSql());
-
-                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
-                    }
-
-                    public function execute(): bool
-                    {
-                        return (bool) $this->pdo->exec($this->prepareSql());
-                    }
-
-                    public function getTableList(): array
-                    {
-                        $stmt = $this->pdo->query('SHOW TABLES');
-
-                        return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
-                    }
-
-                    protected $sql = '';
-
-                    // Abstract method stubs required by real DatabaseDriver
-                    public function getTableCreate($tables) { return []; }
-                    protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
-                    {
-                        return new class implements \Joomla\Database\StatementInterface {
-                            public function bindParam($parameter, &$variable, $dataType = 'string', $length = 0, $driverOptions = []): bool { return true; }
-                            public function closeCursor(): void {}
-                            public function errorCode(): int|string { return 0; }
-                            public function errorInfo(): array { return []; }
-                            public function execute(?array $parameters = null): bool { return true; }
-                            public function fetch(?int $fetchStyle = null, int $cursorOrientation = 0, int $cursorOffset = 0): mixed { return false; }
-                            public function fetchColumn(int $columnNumber = 0): mixed { return false; }
-                            public function rowCount(): int|false { return 0; }
-                            public function setFetchMode(int $fetchMode, ...$args): void {}
-                        };
-                    }
-                    public function setUtf() { return false; }
-                    public function connect() {}
-                    public function connected() { return true; }
-                    public function escape($text, $extra = false) { return addslashes((string) $text); }
-                    public function getCollation() { return 'utf8mb4_general_ci'; }
-                    public function getConnectionCollation() { return 'utf8mb4_general_ci'; }
-                    public function getConnectionEncryption(): string { return ''; }
-                    public function isConnectionEncryptionSupported(): bool { return false; }
-                    public function getTableColumns($table, $typeOnly = true) { return []; }
-                    public function getTableKeys($tables) { return []; }
-                    public function getVersion() { return '8.0'; }
-                    public function insertid() { return 0; }
-                    public static function isSupported() { return true; }
-                    public function lockTable($tableName) { return $this; }
-                    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null) { return $this; }
-                    public function select($database) { return true; }
-                    public function transactionCommit($toSavepoint = false) {}
-                    public function transactionRollback($toSavepoint = false) {}
-                    public function transactionStart($asSavepoint = false) {}
-                    public function unlockTables() { return $this; }
-                };
-            }
-
-            return $this->db;
-        }
-    };
-
-    \Joomla\CMS\Factory::setContainer($container);
 })();
