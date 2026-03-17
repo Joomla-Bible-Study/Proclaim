@@ -65,10 +65,9 @@ if ($joomlaDir === '') {
 if (!is_dir($joomlaDir)) {
     echo "  Cloning joomla-cms (one-time setup)..." . PHP_EOL;
 
-    // Clone the 5.4-dev branch — latest stable Joomla 5 that matches our target.
-    // Using --branch pins to a known-compatible version instead of the default
-    // staging branch which may have incompatible PSR/dependency versions.
-    $cmd    = sprintf('git clone --depth 1 --branch 5.4-dev https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
+    // Clone the 5.4.3 stable tag — known-compatible with our framework v4.0 packages.
+    // Using a stable tag ensures consistent class signatures across environments.
+    $cmd    = sprintf('git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
     $output = [];
     $code   = 0;
 

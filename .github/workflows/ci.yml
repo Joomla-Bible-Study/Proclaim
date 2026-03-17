@@ -60,7 +60,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Clone joomla-cms for test framework
-        run: git clone --depth 1 --branch 5.4-dev https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
