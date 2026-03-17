@@ -311,14 +311,142 @@ class CwmschemaorgHelper
     }
 
     /**
-     * Inject a JSON-LD array into the document head.
+     * Build ItemList JSON-LD for the teachers list page.
      *
-     * @param   array  $data  JSON-LD data array
+     * @param   array   $items     Array of teacher items
+     * @param   string  $pageUrl   Canonical page URL
+     * @param   string  $siteName  Site name
      *
-     * @return void
+     * @return array JSON-LD data array
      *
-     * @since 10.1.0
+     * @since 10.3.0
      */
+    public static function buildTeacherList(array $items, string $pageUrl, string $siteName): array
+    {
+        $data = [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'ItemList',
+            'url'           => $pageUrl,
+            'numberOfItems' => \count($items),
+        ];
+
+        if ($siteName !== '') {
+            $data['name'] = $siteName;
+        }
+
+        $listItems = [];
+
+        foreach ($items as $position => $item) {
+            $listItem = [
+                '@type'    => 'ListItem',
+                'position' => $position + 1,
+            ];
+
+            $personData = [
+                '@type' => 'Person',
+                'name'  => $item->teachername ?? '',
+            ];
+
+            if (!empty($item->id)) {
+                $personData['url'] = self::buildAbsoluteUrl(
+                    'index.php?option=com_proclaim&view=cwmteacher&id=' . (int) $item->id
+                );
+            }
+
+            if (!empty($item->title)) {
+                $personData['jobTitle'] = $item->title;
+            }
+
+            $imagePath = $item->teacher_image ?? $item->teacher_thumbnail ?? '';
+
+            if (\is_string($imagePath) && $imagePath !== '' && !str_contains($imagePath, '<')) {
+                $personData['image'] = Uri::root() . ltrim($imagePath, '/');
+            }
+
+            $listItem['item'] = $personData;
+            $listItems[]      = $listItem;
+        }
+
+        if ($listItems !== []) {
+            $data['itemListElement'] = $listItems;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Build ItemList JSON-LD for the series list page.
+     *
+     * @param   array   $items     Array of series items
+     * @param   string  $pageUrl   Canonical page URL
+     * @param   string  $siteName  Site name
+     *
+     * @return array JSON-LD data array
+     *
+     * @since 10.3.0
+     */
+    public static function buildSeriesList(array $items, string $pageUrl, string $siteName): array
+    {
+        $data = [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'ItemList',
+            'url'           => $pageUrl,
+            'numberOfItems' => \count($items),
+        ];
+
+        if ($siteName !== '') {
+            $data['name'] = $siteName;
+        }
+
+        $listItems = [];
+
+        foreach ($items as $position => $item) {
+            $listItem = [
+                '@type'    => 'ListItem',
+                'position' => $position + 1,
+            ];
+
+            $seriesData = [
+                '@type' => 'CreativeWorkSeries',
+                'name'  => $item->series_text ?? '',
+            ];
+
+            if (!empty($item->id)) {
+                $seriesData['url'] = self::buildAbsoluteUrl(
+                    'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . (int) $item->id
+                );
+            }
+
+            $desc = self::cleanDescription($item->description ?? '');
+
+            if ($desc !== '') {
+                $seriesData['description'] = $desc;
+            }
+
+            $imagePath = $item->series_thumbnail ?? '';
+
+            if (\is_string($imagePath) && $imagePath !== '' && !str_contains($imagePath, '<')) {
+                $seriesData['image'] = Uri::root() . ltrim($imagePath, '/');
+            }
+
+            if (!empty($item->teachername)) {
+                $seriesData['author'] = [
+                    '@type' => 'Person',
+                    'name'  => $item->teachername,
+                ];
+            }
+
+            $listItem['item'] = $seriesData;
+            $listItems[]      = $listItem;
+        }
+
+        if ($listItems !== []) {
+            $data['itemListElement'] = $listItems;
+        }
+
+        return $data;
+    }
+
     /**
      * Check if Joomla's Schema.org system plugin has stored schema for an item.
      *
@@ -353,9 +481,29 @@ class CwmschemaorgHelper
         }
     }
 
-    public static function inject(array $data): void
+    /**
+     * Inject a JSON-LD array into the document head.
+     *
+     * When $itemId and $context are provided, checks if Joomla's system
+     * schema.org plugin already has per-item schema stored — if so, skips
+     * injection to avoid duplicate structured data.
+     *
+     * @param   array   $data     JSON-LD data array
+     * @param   int     $itemId   Optional item ID for duplicate check
+     * @param   string  $context  Optional admin form context (e.g., 'com_proclaim.cwmmessage')
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
+    public static function inject(array $data, int $itemId = 0, string $context = ''): void
     {
         if ($data === []) {
+            return;
+        }
+
+        // Skip if Joomla's system plugin already has per-item schema for this item
+        if ($itemId > 0 && $context !== '' && self::hasJoomlaSchema($itemId, $context)) {
             return;
         }
 

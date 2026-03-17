@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmteachers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -24,6 +25,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -246,5 +248,14 @@ class HtmlView extends BaseHtmlView
         if ($this->params->get('robots')) {
             $this->document->setMetaData('robots', $this->params->get('robots'));
         }
+
+        // Schema.org structured data
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildTeacherList(
+                $this->items ?? [],
+                Uri::getInstance()->toString(),
+                $app->get('sitename')
+            )
+        );
     }
 }
