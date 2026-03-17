@@ -207,9 +207,14 @@ class ProclaimComponent extends MVCComponent implements
         Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
         return [
-            'com_proclaim.cwmmessage' => Text::_('JBS_CMN_MESSAGES'),
-            'com_proclaim.teacher'    => Text::_('JBS_CMN_TEACHERS'),
-            'com_proclaim.serie'      => Text::_('JBS_CMN_SERIES'),
+            // Admin form contexts (for Schema.org tab on edit forms)
+            'com_proclaim.cwmmessage'       => Text::_('JBS_CMN_MESSAGES'),
+            'com_proclaim.teacher'          => Text::_('JBS_CMN_TEACHERS'),
+            'com_proclaim.serie'            => Text::_('JBS_CMN_SERIES'),
+            // Frontend view contexts (for JSON-LD output)
+            'com_proclaim.cwmsermon'        => Text::_('JBS_CMN_MESSAGES'),
+            'com_proclaim.cwmteacher'       => Text::_('JBS_CMN_TEACHERS'),
+            'com_proclaim.cwmseriesdisplay' => Text::_('JBS_CMN_SERIES'),
         ];
     }
 
