@@ -319,6 +319,40 @@ class CwmschemaorgHelper
      *
      * @since 10.1.0
      */
+    /**
+     * Check if Joomla's Schema.org system plugin has stored schema for an item.
+     *
+     * When true, the system plugin will output the schema in its @graph —
+     * our standalone inject() should be skipped to avoid duplicates.
+     *
+     * @param   int     $itemId   The item ID
+     * @param   string  $context  The admin form context (e.g., 'com_proclaim.cwmmessage')
+     *
+     * @return  bool  True if the system plugin has per-item schema stored
+     *
+     * @since   10.3.0
+     */
+    public static function hasJoomlaSchema(int $itemId, string $context): bool
+    {
+        if ($itemId <= 0) {
+            return false;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . ' = ' . $itemId)
+                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            $db->setQuery($query);
+
+            return (int) $db->loadResult() > 0;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
     public static function inject(array $data): void
     {
         if ($data === []) {
@@ -326,14 +360,15 @@ class CwmschemaorgHelper
         }
 
         try {
-            $document = Factory::getApplication()->getDocument();
-            $json     = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $document    = Factory::getApplication()->getDocument();
+            $prettyPrint = \defined('JDEBUG') && JDEBUG ? JSON_PRETTY_PRINT : 0;
+            $json        = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | $prettyPrint);
         } catch (\Exception $e) {
             return;
         }
 
         $document->addCustomTag(
-            '<script type="application/ld+json">' . $json . '</script>'
+            '<script type="application/ld+json">' . "\n" . $json . "\n" . '</script>'
         );
     }
 

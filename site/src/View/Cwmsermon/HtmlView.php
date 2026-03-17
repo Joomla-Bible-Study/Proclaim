@@ -640,6 +640,9 @@ class HtmlView extends BaseHtmlView
         }
 
         // Schema.org structured data (skip in print mode)
+        // Our helper outputs item-specific CreativeWork JSON-LD.
+        // The system plugin separately outputs page-level @graph (Organization, WebSite, WebPage).
+        // Both are needed — they complement each other.
         if (empty($this->print)) {
             CwmschemaorgHelper::inject(
                 CwmschemaorgHelper::buildSermonDetail(
