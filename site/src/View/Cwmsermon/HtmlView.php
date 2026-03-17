@@ -560,7 +560,7 @@ class HtmlView extends BaseHtmlView
         $menu    = $app->getMenu()->getActive();
         $pathway = $app->getPathway();
 
-        $this->item->metadesc = $this->item->studyintro;
+        $this->item->metadesc = mb_substr(trim(strip_tags($this->item->studyintro ?? '')), 0, 160);
         $this->item->metakey  = $this->item->topics;
 
         // Because the application sets a default page title,
@@ -607,7 +607,7 @@ class HtmlView extends BaseHtmlView
         if ($this->item->params->get('metadesc')) {
             $this->document->setDescription($this->item->params->get('metadesc'));
         } else {
-            $this->document->setDescription($this->item->studyintro);
+            $this->document->setDescription(mb_substr(trim(strip_tags($this->item->studyintro ?? '')), 0, 160));
         }
 
         if ($this->item->params->get('metakey')) {
