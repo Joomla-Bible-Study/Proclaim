@@ -62,12 +62,13 @@ class TemplateMigStore
  * Delegates loadObjectList() to the shared TemplateMigStore so that after
  * updateTemplateParams() mutates the store, subsequent reads get fresh data.
  */
-class TemplateMigFakeDb implements \Joomla\Database\DatabaseInterface
+class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
 {
     private TemplateMigStore $store;
 
     public function __construct(TemplateMigStore $store)
     {
+        // Skip parent constructor — no real DB connection needed
         $this->store = $store;
     }
 
@@ -110,59 +111,35 @@ class TemplateMigFakeDb implements \Joomla\Database\DatabaseInterface
         return '`' . (string) $name . '`';
     }
 
-    // DatabaseInterface required stubs (unused by migration tests)
-    public function connect(): void {}
-    public function connected(): bool { return true; }
-    public function createDatabase($options, $utf = true): bool { return true; }
-    public function createQuery(): \Joomla\Database\QueryInterface { return $this->getQuery(true); }
-    public function decodeBinary($data) { return $data; }
-    public function disconnect(): void {}
-    public function dropTable($table, $ifExists = true): static { return $this; }
-    public function escape($text, $extra = false): string { return addslashes((string) $text); }
-    public function getAffectedRows(): int { return 0; }
-    public function getCollation(): string|bool { return 'utf8mb4_general_ci'; }
-    public function getConnection() { return null; }
-    public function getConnectionCollation(): string|bool { return 'utf8mb4_general_ci'; }
+    // Abstract method implementations required by DatabaseDriver
+    public function getTableCreate($tables) { return []; }
+
+    protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
+    {
+        throw new \RuntimeException('prepareStatement not implemented in test fake');
+    }
+
+    public function setUtf() { return false; }
+    public function connect() {}
+    public function connected() { return true; }
+    public function escape($text, $extra = false) { return addslashes((string) $text); }
+    public function getCollation() { return 'utf8mb4_general_ci'; }
+    public function getConnectionCollation() { return 'utf8mb4_general_ci'; }
     public function getConnectionEncryption(): string { return ''; }
     public function isConnectionEncryptionSupported(): bool { return false; }
-    public function isMinimumVersion(): bool { return true; }
-    public function getCount(): int { return 0; }
-    public function getDateFormat(): string { return 'Y-m-d H:i:s'; }
-    public function getMinimum(): string { return '5.7'; }
-    public function getName(): string { return 'fake'; }
-    public function getNullDate(): string { return '0000-00-00 00:00:00'; }
-    public function getPrefix(): string { return ''; }
-    public function getNumRows(): int { return 0; }
-    public function getServerType(): string { return 'mysql'; }
-    public function getTableColumns($table, $typeOnly = true): array { return []; }
-    public function getTableKeys($tables): array { return []; }
-    public function getTableList(): array { return []; }
-    public function getVersion(): string { return '8.0'; }
-    public function hasUtfSupport(): bool { return true; }
-    public function insertid(): int|bool { return 0; }
-    public function insertObject($table, &$object, $key = null): bool { return true; }
-    public static function isSupported(): bool { return true; }
-    public function loadAssoc(): ?array { return null; }
-    public function loadAssocList($key = null, $column = null): ?array { return null; }
-    public function loadObject($class = \stdClass::class): ?object { return null; }
-    public function loadResult() { return null; }
-    public function loadRow(): ?array { return null; }
-    public function loadRowList($key = null): ?array { return null; }
-    public function lockTable($tableName): static { return $this; }
-    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null): static { return $this; }
-    public function select($database): bool { return true; }
-    public function setUtf(): static { return $this; }
-    public function transactionCommit($toSavepoint = false): void {}
-    public function transactionRollback($toSavepoint = false): void {}
-    public function transactionStart($asSavepoint = false): void {}
-    public function truncateTable($table): void {}
-    public function updateObject($table, &$object, $key, $nulls = false): bool { return true; }
-    public function replacePrefix($sql, $prefix = '#__'): string { return $sql; }
-    public function getExporter() { return null; }
-    public function getImporter() { return null; }
-    public function getIterator($column = null, $class = \stdClass::class) { return new \ArrayIterator([]); }
-    public function quoteBinary($data): string { return $data; }
-    public function unlockTables(): static { return $this; }
+    public function getTableColumns($table, $typeOnly = true) { return []; }
+    public function getTableKeys($tables) { return []; }
+    public function getTableList() { return []; }
+    public function getVersion() { return '8.0'; }
+    public function insertid() { return 0; }
+    public static function isSupported() { return true; }
+    public function lockTable($tableName) { return $this; }
+    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null) { return $this; }
+    public function select($database) { return true; }
+    public function transactionCommit($toSavepoint = false) {}
+    public function transactionRollback($toSavepoint = false) {}
+    public function transactionStart($asSavepoint = false) {}
+    public function unlockTables() { return $this; }
 }
 
 /**
