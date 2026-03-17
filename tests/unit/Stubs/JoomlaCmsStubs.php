@@ -1080,6 +1080,27 @@ namespace Joomla\Database {
         {
         }
     }
+
+    if (!interface_exists('Joomla\Database\QueryInterface', false)) {
+        interface QueryInterface
+        {
+            public function select($columns);
+
+            public function from($tables, $subQueryAlias = null);
+
+            public function where($conditions, $glue = 'AND');
+
+            public function whereIn(string $keyName, array $keyValues, $dataType = ParameterType::INTEGER);
+        }
+    }
+
+    if (!class_exists('Joomla\Database\ParameterType', false)) {
+        class ParameterType
+        {
+            public const INTEGER = 'int';
+            public const STRING = 'string';
+        }
+    }
 }
 
 // ============================================================================
