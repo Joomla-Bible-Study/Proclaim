@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Date\Date;
@@ -1284,6 +1285,15 @@ class Cwmlanding
                 $image = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb ?? '');
             }
 
+            // Fall back to default teacher image from admin settings
+            if (!$image || empty($image->path)) {
+                $defaultImage = $params->get('default_teacher_image')
+                    ?: Cwmparams::getAdmin()->params->get('default_teacher_image', '');
+                if ($defaultImage) {
+                    $image = (object) ['path' => $defaultImage];
+                }
+            }
+
             $result[] = [
                 'id'           => (int) $item->id,
                 'text'         => $item->teachername,
@@ -1366,8 +1376,19 @@ class Cwmlanding
             }
 
             $image = null;
-            if (!empty($item->series_thumbnail)) {
+            if (!empty($item->image)) {
+                $image = (object) ['path' => $item->image];
+            } elseif (!empty($item->series_thumbnail)) {
                 $image = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
+            }
+
+            // Fall back to default series image from admin settings
+            if (!$image || empty($image->path)) {
+                $defaultImage = $params->get('default_series_image')
+                    ?: Cwmparams::getAdmin()->params->get('default_series_image', '');
+                if ($defaultImage) {
+                    $image = (object) ['path' => $defaultImage];
+                }
             }
 
             $result[] = [
