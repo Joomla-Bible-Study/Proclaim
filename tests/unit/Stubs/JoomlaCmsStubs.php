@@ -3,13 +3,13 @@
 /**
  * Joomla CMS class stubs for unit testing.
  *
- * These minimal stubs allow our source classes to be loaded by PHP's autoloader
- * without requiring the full Joomla CMS framework. They provide the class hierarchy
- * (extends/implements/traits) so that ReflectionClass/ReflectionMethod works on
- * our Proclaim classes.
+ * These stubs provide the Joomla\CMS\* class hierarchy that is NOT available
+ * as Composer packages. Framework packages (joomla/database, joomla/registry,
+ * joomla/input, joomla/event, joomla/di, joomla/filesystem) are loaded from
+ * real Composer dev dependencies — see composer.json require-dev.
  *
- * IMPORTANT: Method signatures here MUST match the real Joomla CMS signatures.
- * If our source code has an incompatible override, fix the source code — not these stubs.
+ * IMPORTANT: Method signatures MUST match the real Joomla CMS signatures.
+ * If our source code has an incompatible override, fix the source — not these stubs.
  *
  * @package    Proclaim.UnitTest
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -23,7 +23,7 @@
 // phpcs:disable PSR12.Files.FileHeader
 
 // ============================================================================
-// MVC Controller stubs — matches Joomla 5.x signatures
+// MVC Controller stubs
 // ============================================================================
 
 namespace Joomla\CMS\MVC\Controller {
@@ -398,7 +398,7 @@ namespace Joomla\CMS\MVC\Factory {
 }
 
 // ============================================================================
-// Table stubs — matches Joomla 5.x Table class
+// Table stubs
 // ============================================================================
 
 namespace Joomla\CMS\Table {
@@ -406,24 +406,9 @@ namespace Joomla\CMS\Table {
     if (!class_exists('Joomla\CMS\Table\Table', false)) {
         class Table
         {
-            /**
-             * @var string Name of the database table
-             */
             protected string $_tbl = '';
-
-            /**
-             * @var string|array Name of the primary key field(s)
-             */
             protected $_tbl_key = 'id';
-
-            /**
-             * @var array Array of primary key field names
-             */
             protected array $_tbl_keys = [];
-
-            /**
-             * @var \Joomla\CMS\Access\Rules|null ACL rules
-             */
             protected $_rules;
 
             public function __construct($table = '', $key = 'id', $db = null, $dispatcher = null)
@@ -432,90 +417,30 @@ namespace Joomla\CMS\Table {
                 $this->_tbl_key = $key;
             }
 
-            public function bind($src, $ignore = ''): bool
-            {
-                return true;
-            }
-
-            public function check(): bool
-            {
-                return true;
-            }
-
-            public function store($updateNulls = false): bool
-            {
-                return true;
-            }
-
-            public function load($keys = null, $reset = true): bool
-            {
-                return true;
-            }
-
-            public function delete($pk = null): bool
-            {
-                return true;
-            }
-
-            public function checkIn($pk = null): bool
-            {
-                return true;
-            }
-
-            public function checkOut($userId, $pk = null): bool
-            {
-                return true;
-            }
-
-            public function publish($pks = null, $state = 1, $userId = 0): bool
-            {
-                return true;
-            }
-
-            public function getDatabase()
-            {
-                return null;
-            }
-
-            public function getDbo()
-            {
-                return null;
-            }
-
-            public function getKeyName($multiple = false)
-            {
-                return 'id';
-            }
-
-            public function getTableName(): string
-            {
-                return '';
-            }
-
-            public function reset(): void
-            {
-            }
-
-            protected function _getAssetName(): string
-            {
-                return '';
-            }
-
-            protected function _getAssetTitle(): string
-            {
-                return '';
-            }
-
-            protected function _getAssetParentId(?Table $table = null, $id = null): int
-            {
-                return 1;
-            }
+            public function bind($src, $ignore = ''): bool { return true; }
+            public function check(): bool { return true; }
+            public function store($updateNulls = false): bool { return true; }
+            public function load($keys = null, $reset = true): bool { return true; }
+            public function delete($pk = null): bool { return true; }
+            public function checkIn($pk = null): bool { return true; }
+            public function checkOut($userId, $pk = null): bool { return true; }
+            public function publish($pks = null, $state = 1, $userId = 0): bool { return true; }
+            public function getDatabase() { return null; }
+            public function getDbo() { return null; }
+            public function getKeyName($multiple = false) { return 'id'; }
+            public function getTableName(): string { return ''; }
+            public function reset(): void {}
+            public function getRules() { return $this->_rules; }
+            public function setRules($input): void { $this->_rules = $input; }
+            protected function _getAssetName(): string { return ''; }
+            protected function _getAssetTitle(): string { return ''; }
+            protected function _getAssetParentId(?Table $table = null, $id = null): int { return 1; }
         }
     }
 }
 
 // ============================================================================
-// Form stubs — matches Joomla 5.x FormField
+// Form stubs
 // ============================================================================
 
 namespace Joomla\CMS\Form {
@@ -528,34 +453,12 @@ namespace Joomla\CMS\Form {
             protected $value;
             protected $element;
 
-            public function __construct($form = null)
-            {
-            }
-
-            protected function getInput(): string
-            {
-                return '';
-            }
-
-            protected function getLabel(): string
-            {
-                return '';
-            }
-
-            public function setup(\SimpleXMLElement $element, $value, $group = null): bool
-            {
-                return true;
-            }
-
-            protected function getOptions(): array
-            {
-                return [];
-            }
-
-            protected function getLayoutData(): array
-            {
-                return [];
-            }
+            public function __construct($form = null) {}
+            protected function getInput(): string { return ''; }
+            protected function getLabel(): string { return ''; }
+            public function setup(\SimpleXMLElement $element, $value, $group = null): bool { return true; }
+            protected function getOptions(): array { return []; }
+            protected function getLayoutData(): array { return []; }
         }
     }
 }
@@ -568,11 +471,7 @@ namespace Joomla\CMS\Form\Field {
         class ListField extends FormField
         {
             protected $type = 'List';
-
-            protected function getOptions(): array
-            {
-                return [];
-            }
+            protected function getOptions(): array { return []; }
         }
     }
 
@@ -587,11 +486,7 @@ namespace Joomla\CMS\Form\Field {
         class RadioField extends FormField
         {
             protected $type = 'Radio';
-
-            protected function getOptions(): array
-            {
-                return [];
-            }
+            protected function getOptions(): array { return []; }
         }
     }
 
@@ -612,14 +507,8 @@ namespace Joomla\CMS\Extension {
     if (!class_exists('Joomla\CMS\Extension\MVCComponent', false)) {
         class MVCComponent
         {
-            public function __construct($dispatcher = null)
-            {
-            }
-
-            public function getMVCFactory()
-            {
-                return null;
-            }
+            public function __construct($dispatcher = null) {}
+            public function getMVCFactory() { return null; }
         }
     }
 
@@ -632,39 +521,25 @@ namespace Joomla\CMS\Extension {
 }
 
 // ============================================================================
-// Fields service stubs
+// Service interface stubs
 // ============================================================================
 
 namespace Joomla\CMS\Fields {
-
     if (!interface_exists('Joomla\CMS\Fields\FieldsServiceInterface', false)) {
-        interface FieldsServiceInterface
-        {
-        }
+        interface FieldsServiceInterface {}
     }
 }
 
-// ============================================================================
-// Router stubs
-// ============================================================================
-
 namespace Joomla\CMS\Component\Router {
-
     if (!interface_exists('Joomla\CMS\Component\Router\RouterServiceInterface', false)) {
-        interface RouterServiceInterface
-        {
-        }
+        interface RouterServiceInterface {}
     }
-
     if (!trait_exists('Joomla\CMS\Component\Router\RouterServiceTrait', false)) {
-        trait RouterServiceTrait
-        {
-        }
+        trait RouterServiceTrait {}
     }
 }
 
 namespace Joomla\CMS\Component\Router\Rules {
-
     if (!interface_exists('Joomla\CMS\Component\Router\Rules\RulesInterface', false)) {
         interface RulesInterface
         {
@@ -675,89 +550,44 @@ namespace Joomla\CMS\Component\Router\Rules {
     }
 }
 
-// ============================================================================
-// Workflow stubs
-// ============================================================================
-
 namespace Joomla\CMS\Workflow {
-
     if (!interface_exists('Joomla\CMS\Workflow\WorkflowServiceInterface', false)) {
-        interface WorkflowServiceInterface
-        {
-        }
+        interface WorkflowServiceInterface {}
     }
-
     if (!trait_exists('Joomla\CMS\Workflow\WorkflowServiceTrait', false)) {
-        trait WorkflowServiceTrait
-        {
-        }
+        trait WorkflowServiceTrait {}
     }
 }
-
-// ============================================================================
-// HTML stubs
-// ============================================================================
 
 namespace Joomla\CMS\HTML {
-
     if (!trait_exists('Joomla\CMS\HTML\HTMLRegistryAwareTrait', false)) {
-        trait HTMLRegistryAwareTrait
-        {
-        }
+        trait HTMLRegistryAwareTrait {}
     }
 }
-
-// ============================================================================
-// Versioning stubs
-// ============================================================================
 
 namespace Joomla\CMS\Versioning {
-
     if (!trait_exists('Joomla\CMS\Versioning\VersionableModelTrait', false)) {
-        trait VersionableModelTrait
-        {
-        }
+        trait VersionableModelTrait {}
     }
 }
 
 // ============================================================================
-// URI stubs
+// CMS utility stubs
 // ============================================================================
 
 namespace Joomla\CMS\Uri {
-
     if (!class_exists('Joomla\CMS\Uri\Uri', false)) {
         class Uri
         {
-            public static function root($pathonly = false, $path = null): string
-            {
-                return $pathonly ? '/' : 'http://localhost/';
-            }
-
-            public static function base($pathonly = false): string
-            {
-                return $pathonly ? '/' : 'http://localhost/';
-            }
-
-            public static function current(): string
-            {
-                return 'http://localhost/';
-            }
-
-            public static function isInternal($url): bool
-            {
-                return true;
-            }
+            public static function root($pathonly = false, $path = null): string { return $pathonly ? '/' : 'http://localhost/'; }
+            public static function base($pathonly = false): string { return $pathonly ? '/' : 'http://localhost/'; }
+            public static function current(): string { return 'http://localhost/'; }
+            public static function isInternal($url): bool { return true; }
         }
     }
 }
 
-// ============================================================================
-// Factory stubs
-// ============================================================================
-
 namespace Joomla\CMS {
-
     if (!class_exists('Joomla\CMS\Factory', false)) {
         class Factory
         {
@@ -769,116 +599,215 @@ namespace Joomla\CMS {
                 if (self::$application === null) {
                     self::$application = new \Joomla\CMS\Application\CMSApplication();
                 }
-
                 return self::$application;
             }
 
-            public static function getContainer()
-            {
-                return self::$container;
-            }
-
-            public static function setContainer($container): void
-            {
-                self::$container = $container;
-            }
+            public static function getContainer() { return self::$container; }
+            public static function setContainer($container): void { self::$container = $container; }
         }
     }
 }
 
-// ============================================================================
-// Language stubs
-// ============================================================================
-
 namespace Joomla\CMS\Language {
-
     if (!class_exists('Joomla\CMS\Language\Text', false)) {
         class Text
         {
-            public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false): string
-            {
-                return $string;
-            }
-
-            public static function sprintf($string, ...$args): string
-            {
-                return vsprintf($string, $args);
-            }
-
-            public static function plural($string, $n): string
-            {
-                return $string;
-            }
+            public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false): string { return $string; }
+            public static function sprintf($string, ...$args): string { return vsprintf($string, $args); }
+            public static function plural($string, $n): string { return $string; }
+            public static function script($string): string { return $string; }
         }
     }
 
     if (!class_exists('Joomla\CMS\Language\Multilanguage', false)) {
         class Multilanguage
         {
-            public static function isEnabled(): bool
-            {
-                return false;
-            }
+            public static function isEnabled(): bool { return false; }
         }
     }
 
     if (!class_exists('Joomla\CMS\Language\LanguageHelper', false)) {
         class LanguageHelper
         {
-            public static function getLanguages($key = 'default'): array
+            public static function getLanguages($key = 'default'): array { return []; }
+        }
+    }
+}
+
+namespace Joomla\CMS\Application {
+    if (!class_exists('Joomla\CMS\Application\CMSApplication', false)) {
+        class CMSApplication
+        {
+            public function getInput() { return new \Joomla\Input\Input(); }
+            public function getIdentity()
             {
-                return [];
+                $user = new \Joomla\CMS\User\User();
+                $user->id = 42;
+                return $user;
+            }
+            public function isClient(string $identifier): bool { return false; }
+            public function enqueueMessage(string $msg, string $type = 'message'): void {}
+            public function getSession() { return null; }
+            public function getMessageQueue(): array { return []; }
+            public function get($name, $default = null) { return $default; }
+            public function getDocument() { return null; }
+            public function getUserState($key, $default = null) { return $default; }
+            public function setUserState($key, $value) { return $value; }
+            public function triggerEvent(string $event, array $args = []): array { return []; }
+        }
+    }
+
+    if (!interface_exists('Joomla\CMS\Application\CMSApplicationInterface', false)) {
+        interface CMSApplicationInterface {}
+    }
+
+    if (!class_exists('Joomla\CMS\Application\SiteApplication', false)) {
+        class SiteApplication extends CMSApplication {}
+    }
+
+    if (!class_exists('Joomla\CMS\Application\ApplicationHelper', false)) {
+        class ApplicationHelper
+        {
+            public static function stringURLSafe($string): string
+            {
+                return preg_replace('/[^a-z0-9\-]/', '', strtolower(str_replace(' ', '-', $string)));
             }
         }
     }
 }
 
-// ============================================================================
-// Plugin stubs
-// ============================================================================
-
 namespace Joomla\CMS\Plugin {
-
     if (!class_exists('Joomla\CMS\Plugin\CMSPlugin', false)) {
         class CMSPlugin
         {
             protected $params;
+            public function __construct($subject = null, $config = []) {}
+            protected function getApplication() { return null; }
+        }
+    }
 
-            public function __construct($subject = null, $config = [])
-            {
-            }
-
-            protected function getApplication()
-            {
-                return null;
-            }
+    if (!class_exists('Joomla\CMS\Plugin\PluginHelper', false)) {
+        class PluginHelper
+        {
+            public static function importPlugin($type, $plugin = null, $autocreate = true): void {}
+            public static function isEnabled($type, $plugin = null): bool { return false; }
         }
     }
 }
 
-// ============================================================================
-// Component stubs
-// ============================================================================
-
 namespace Joomla\CMS\Component {
-
     if (!class_exists('Joomla\CMS\Component\ComponentHelper', false)) {
         class ComponentHelper
         {
-            public static function getParams($option, $strict = false)
-            {
-                return new \Joomla\Registry\Registry();
-            }
+            public static function getParams($option, $strict = false) { return new \Joomla\Registry\Registry(); }
+        }
+    }
+}
+
+namespace Joomla\CMS\Session {
+    if (!class_exists('Joomla\CMS\Session\Session', false)) {
+        class Session
+        {
+            public static function checkToken($method = 'post'): bool { return true; }
+        }
+    }
+}
+
+namespace Joomla\CMS\Response {
+    if (!class_exists('Joomla\CMS\Response\JsonResponse', false)) {
+        class JsonResponse
+        {
+            public function __construct($response = null, $message = null, $error = false, $ignoreMessages = false) {}
+            public function __toString(): string { return '{}'; }
+        }
+    }
+}
+
+namespace Joomla\CMS\Router {
+    if (!class_exists('Joomla\CMS\Router\Route', false)) {
+        class Route
+        {
+            public static function _($url, $xhtml = true, $tls = null, $absolute = false): string { return $url; }
+        }
+    }
+}
+
+namespace Joomla\CMS\Toolbar {
+    if (!class_exists('Joomla\CMS\Toolbar\ToolbarHelper', false)) {
+        class ToolbarHelper
+        {
+            public static function title($title, $icon = 'generic.png'): void {}
+            public static function addNew($task = '', $alt = 'JTOOLBAR_NEW'): void {}
+            public static function save($task = '', $alt = 'JTOOLBAR_SAVE'): void {}
+            public static function cancel($task = '', $alt = 'JTOOLBAR_CANCEL'): void {}
+            public static function deleteList($msg = '', $task = '', $alt = 'JTOOLBAR_DELETE'): void {}
+            public static function publish($task = '', $alt = 'JTOOLBAR_PUBLISH', $check = false): void {}
+            public static function unpublish($task = '', $alt = 'JTOOLBAR_UNPUBLISH', $check = false): void {}
+            public static function help($ref, $com = false, $override = null, $component = null): void {}
+            public static function preferences($component, $height = '550', $width = '875', $alt = 'JToolbar_Options'): void {}
+        }
+    }
+}
+
+namespace Joomla\CMS\Access {
+    if (!class_exists('Joomla\CMS\Access\Rules', false)) {
+        class Rules
+        {
+            public function __construct($input = '') {}
+        }
+    }
+}
+
+namespace Joomla\CMS\Log {
+    if (!class_exists('Joomla\CMS\Log\Log', false)) {
+        class Log
+        {
+            public const int ALL     = 0;
+            public const int ERROR   = 2;
+            public const int WARNING = 4;
+            public const int INFO    = 6;
+
+            public static function add(string $entry, int $priority = self::INFO, string $category = '', ?string $date = null): void {}
+            public static function addLogger(array $options, int $priorities = self::ALL, array $categories = []): void {}
+        }
+    }
+}
+
+namespace Joomla\CMS\Image {
+    if (!class_exists('Joomla\CMS\Image\Image', false)) {
+        class Image {}
+    }
+}
+
+namespace Joomla\CMS\Date {
+    if (!class_exists('Joomla\CMS\Date\Date', false)) {
+        class Date extends \DateTime
+        {
+            public function toSql(): string { return $this->format('Y-m-d H:i:s'); }
+        }
+    }
+}
+
+namespace Joomla\CMS\User {
+    if (!class_exists('Joomla\CMS\User\User', false)) {
+        class User
+        {
+            public int $id          = 0;
+            public string $name     = '';
+            public string $username = '';
+            public string $email    = '';
+
+            public function authorise(string $action, ?string $assetname = null): bool { return true; }
+            public function getAuthorisedViewLevels(): array { return [1]; }
         }
     }
 }
 
 // ============================================================================
-// Content stubs (CONDITION_PUBLISHED constants)
+// Core component stubs
 // ============================================================================
 
 namespace Joomla\Component\Content\Administrator\Extension {
-
     if (!class_exists('Joomla\Component\Content\Administrator\Extension\ContentComponent', false)) {
         class ContentComponent
         {
@@ -890,495 +819,57 @@ namespace Joomla\Component\Content\Administrator\Extension {
     }
 }
 
-// ============================================================================
-// Session stubs
-// ============================================================================
-
-namespace Joomla\CMS\Session {
-
-    if (!class_exists('Joomla\CMS\Session\Session', false)) {
-        class Session
+namespace Joomla\Component\Content\Administrator\Helper {
+    if (!class_exists('Joomla\Component\Content\Administrator\Helper\ContentHelper', false)) {
+        class ContentHelper
         {
-            public static function checkToken($method = 'post'): bool
+            public static function getActions(string $component, string $section = '', int $id = 0): object
             {
-                return true;
+                return new class {
+                    public function get(string $action, $default = null): bool { return true; }
+                };
             }
         }
     }
 }
-
-// ============================================================================
-// Response stubs
-// ============================================================================
-
-namespace Joomla\CMS\Response {
-
-    if (!class_exists('Joomla\CMS\Response\JsonResponse', false)) {
-        class JsonResponse
-        {
-            public function __construct($response = null, $message = null, $error = false, $ignoreMessages = false)
-            {
-            }
-
-            public function __toString(): string
-            {
-                return '{}';
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Router stubs
-// ============================================================================
-
-namespace Joomla\CMS\Router {
-
-    if (!class_exists('Joomla\CMS\Router\Route', false)) {
-        class Route
-        {
-            public static function _($url, $xhtml = true, $tls = null, $absolute = false): string
-            {
-                return $url;
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Toolbar stubs
-// ============================================================================
-
-namespace Joomla\CMS\Toolbar {
-
-    if (!class_exists('Joomla\CMS\Toolbar\ToolbarHelper', false)) {
-        class ToolbarHelper
-        {
-            public static function title($title, $icon = 'generic.png'): void
-            {
-            }
-
-            public static function addNew($task = '', $alt = 'JTOOLBAR_NEW'): void
-            {
-            }
-
-            public static function save($task = '', $alt = 'JTOOLBAR_SAVE'): void
-            {
-            }
-
-            public static function cancel($task = '', $alt = 'JTOOLBAR_CANCEL'): void
-            {
-            }
-
-            public static function deleteList($msg = '', $task = '', $alt = 'JTOOLBAR_DELETE'): void
-            {
-            }
-
-            public static function publish($task = '', $alt = 'JTOOLBAR_PUBLISH', $check = false): void
-            {
-            }
-
-            public static function unpublish($task = '', $alt = 'JTOOLBAR_UNPUBLISH', $check = false): void
-            {
-            }
-
-            public static function help($ref, $com = false, $override = null, $component = null): void
-            {
-            }
-
-            public static function preferences($component, $height = '550', $width = '875', $alt = 'JToolbar_Options'): void
-            {
-            }
-        }
-    }
-}
-
-// ============================================================================
-// DI Container stub
-// ============================================================================
-
-namespace Joomla\DI {
-
-    if (!class_exists('Joomla\DI\Container', false)) {
-        class Container
-        {
-            public function get($id)
-            {
-                return null;
-            }
-
-            public function has($id): bool
-            {
-                return false;
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Database stubs
-// ============================================================================
-
-// All Joomla\Database classes (DatabaseDriver, DatabaseInterface,
-// QueryInterface, ParameterType) are provided by the real joomla/database
-// Composer package (require-dev). No stubs needed.
-
-// ============================================================================
-// Event stubs
-// ============================================================================
-
-namespace Joomla\Event {
-
-    if (!interface_exists('Joomla\Event\SubscriberInterface', false)) {
-        interface SubscriberInterface
-        {
-            public static function getSubscribedEvents(): array;
-        }
-    }
-}
-
-// ============================================================================
-// Registry stubs
-// ============================================================================
-
-namespace Joomla\Registry {
-
-    if (!class_exists('Joomla\Registry\Registry', false)) {
-        class Registry
-        {
-            private array $data = [];
-
-            public function __construct($data = null)
-            {
-                if (\is_array($data)) {
-                    $this->data = $data;
-                }
-            }
-
-            public function get($path, $default = null)
-            {
-                return $this->data[$path] ?? $default;
-            }
-
-            public function set($path, $value)
-            {
-                $this->data[$path] = $value;
-
-                return $this;
-            }
-
-            public function loadString($data, $format = 'JSON')
-            {
-                if (\is_string($data) && $data !== '') {
-                    $decoded = json_decode($data, true);
-
-                    if (\is_array($decoded)) {
-                        $this->data = $decoded;
-                    }
-                }
-
-                return $this;
-            }
-
-            public function loadArray(array $array)
-            {
-                $this->data = $array;
-
-                return $this;
-            }
-
-            public function toArray(): array
-            {
-                return $this->data;
-            }
-
-            public function toString($format = 'JSON', $options = 0): string
-            {
-                return json_encode($this->data, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES) ?: '{}';
-            }
-
-            public function remove($path)
-            {
-                unset($this->data[$path]);
-
-                return $this;
-            }
-
-            public function __toString(): string
-            {
-                return $this->toString();
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Input stubs
-// ============================================================================
-
-namespace Joomla\Input {
-
-    if (!class_exists('Joomla\Input\Input', false)) {
-        class Input
-        {
-            private array $data;
-
-            public function __construct(array $source = [])
-            {
-                $this->data = $source;
-            }
-
-            public function get($name, $default = null, $filter = 'cmd')
-            {
-                return $this->data[$name] ?? $default;
-            }
-
-            public function getInt($name, $default = 0): int
-            {
-                return (int) ($this->data[$name] ?? $default);
-            }
-
-            public function getCmd($name, $default = ''): string
-            {
-                return (string) ($this->data[$name] ?? $default);
-            }
-
-            public function getString($name, $default = ''): string
-            {
-                return (string) ($this->data[$name] ?? $default);
-            }
-
-            public function set($name, $value): void
-            {
-                $this->data[$name] = $value;
-            }
-
-            public function getMethod(): string
-            {
-                return $_SERVER['REQUEST_METHOD'] ?? 'GET';
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Application stubs
-// ============================================================================
-
-namespace Joomla\CMS\Application {
-
-    if (!class_exists('Joomla\CMS\Application\CMSApplication', false)) {
-        class CMSApplication
-        {
-            public function getInput()
-            {
-                return new \Joomla\Input\Input();
-            }
-
-            public function getIdentity()
-            {
-                $user     = new \Joomla\CMS\User\User();
-                $user->id = 42;
-
-                return $user;
-            }
-
-            public function isClient(string $identifier): bool
-            {
-                return false;
-            }
-
-            public function enqueueMessage(string $msg, string $type = 'message'): void
-            {
-            }
-
-            public function getSession()
-            {
-                return null;
-            }
-
-            public function getMessageQueue(): array
-            {
-                return [];
-            }
-
-            public function get($name, $default = null)
-            {
-                return $default;
-            }
-
-            public function getDocument()
-            {
-                return null;
-            }
-
-            public function triggerEvent(string $event, array $args = []): array
-            {
-                return [];
-            }
-        }
-    }
-
-    if (!interface_exists('Joomla\CMS\Application\CMSApplicationInterface', false)) {
-        interface CMSApplicationInterface
-        {
-        }
-    }
-}
-
-// ============================================================================
-// Plugin helper stubs
-// ============================================================================
-
-namespace Joomla\CMS\Plugin {
-
-    if (!class_exists('Joomla\CMS\Plugin\PluginHelper', false)) {
-        class PluginHelper
-        {
-            public static function importPlugin($type, $plugin = null, $autocreate = true): void
-            {
-            }
-
-            public static function isEnabled($type, $plugin = null): bool
-            {
-                return false;
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Action Log stubs
-// ============================================================================
 
 namespace Joomla\Component\Actionlogs\Administrator\Helper {
-
     if (!class_exists('Joomla\Component\Actionlogs\Administrator\Helper\ActionlogsHelper', false)) {
         class ActionlogsHelper
         {
-            public static function addLog($messages, $messageLanguageKey, $context, $userId = null): void
+            public static function addLog($messages, $messageLanguageKey, $context, $userId = null): void {}
+        }
+    }
+}
+
+namespace Joomla\CMS\HTML {
+    if (!class_exists('Joomla\CMS\HTML\HTMLHelper', false)) {
+        class HTMLHelper
+        {
+            public static function cleanImageURL($url): object
             {
+                $obj = new \stdClass();
+                $obj->url = $url ?? '';
+                $obj->attributes = ['width' => 0, 'height' => 0];
+                return $obj;
             }
         }
     }
 }
 
-// ============================================================================
-// Filesystem stubs — Joomla\Filesystem (for Cwmthumbnail integration tests)
-// ============================================================================
-
-namespace Joomla\Filesystem {
-
-    if (!class_exists('Joomla\Filesystem\Path', false)) {
-        class Path
+namespace Joomla\CMS\Filter {
+    if (!class_exists('Joomla\CMS\Filter\InputFilter', false)) {
+        class InputFilter
         {
-            public static function clean(string $path, string $ds = DIRECTORY_SEPARATOR): string
+            public static function getInstance($tagsArray = [], $attrArray = [], $tagsMethod = 0, $attrMethod = 0, $xssAuto = 1): static
             {
-                return str_replace(['/', '\\'], $ds, $path);
+                return new static();
             }
 
-            /**
-             * @param string|array $paths  Directory or array of directories to search
-             * @param string       $file   Filename to find
-             *
-             * @return string|false  Full path if found, false otherwise
-             */
-            public static function find($paths, string $file)
+            public function clean($source, $type = 'string')
             {
-                if (\is_string($paths)) {
-                    $paths = [$paths];
-                }
-
-                foreach ($paths as $path) {
-                    $fullPath = rtrim($path, '/\\') . DIRECTORY_SEPARATOR . $file;
-
-                    if (is_file($fullPath)) {
-                        return $fullPath;
-                    }
-                }
-
-                return false;
+                return $source;
             }
-        }
-    }
-
-    if (!class_exists('Joomla\Filesystem\Folder', false)) {
-        class Folder
-        {
-            public static function delete(string $path): bool
-            {
-                return true;
-            }
-
-            public static function create(string $path, int $mode = 0755): bool
-            {
-                return true;
-            }
-        }
-    }
-
-    if (!class_exists('Joomla\Filesystem\File', false)) {
-        class File
-        {
-            public static function delete(string $file): bool
-            {
-                return true;
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Log stub — Joomla\CMS\Log
-// ============================================================================
-
-namespace Joomla\CMS\Log {
-
-    if (!class_exists('Joomla\CMS\Log\Log', false)) {
-        class Log
-        {
-            public const int ALL     = 0;
-            public const int ERROR   = 2;
-            public const int WARNING = 4;
-            public const int INFO    = 6;
-
-            public static function add(string $entry, int $priority = self::INFO, string $category = '', ?string $date = null): void
-            {
-            }
-
-            public static function addLogger(array $options, int $priorities = self::ALL, array $categories = []): void
-            {
-            }
-        }
-    }
-}
-
-// ============================================================================
-// Image stub — Joomla\CMS\Image
-// ============================================================================
-
-namespace Joomla\CMS\Image {
-
-    if (!class_exists('Joomla\CMS\Image\Image', false)) {
-        class Image
-        {
-        }
-    }
-}
-
-// ============================================================================
-// User stub — Joomla\CMS\User
-// ============================================================================
-
-namespace Joomla\CMS\User {
-
-    if (!class_exists('Joomla\CMS\User\User', false)) {
-        class User
-        {
-            public int $id          = 0;
-            public string $name     = '';
-            public string $username = '';
-            public string $email    = '';
         }
     }
 }
