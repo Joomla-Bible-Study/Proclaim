@@ -17,9 +17,8 @@ namespace CWM\Component\Proclaim\Tests\Site\Model;
 
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use PHPUnit\Framework\Attributes\TestDox;
-use Joomla\Database\DatabaseDriver;
 use Joomla\Database\QueryInterface;
+use PHPUnit\Framework\Attributes\TestDox;
 
 /**
  * Test class for CwmsermonsModel filter methods
@@ -86,11 +85,11 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      */
     private function createMockDb(): object
     {
-        return new class {
+        return new class () {
             public function quoteName($name, $as = null): string|array
             {
                 if (\is_array($name)) {
-                    return array_map(static fn($n) => '`' . $n . '`', $name);
+                    return array_map(static fn ($n) => '`' . $n . '`', $name);
                 }
 
                 return '`' . $name . '`';
@@ -99,7 +98,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
             public function getQuery(bool $new = false): object
             {
                 // Return a minimal object for subquery building in addTeacherFilter
-                return new class {
+                return new class () {
                     public function select($columns): static
                     {
                         return $this;

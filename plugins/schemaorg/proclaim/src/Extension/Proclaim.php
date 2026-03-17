@@ -157,7 +157,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         $data->schema['schemaType'] = 'Sermon';
 
-        $sermon = [];
+        $sermon          = [];
         $sermon['@type'] = 'CreativeWork';
 
         if (!empty($data->studytitle)) {
@@ -207,7 +207,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         $data->schema['schemaType'] = 'Sermon';
 
-        $teacher = [];
+        $teacher          = [];
         $teacher['@type'] = 'Person';
 
         if (!empty($data->teachername)) {
@@ -242,7 +242,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         $data->schema['schemaType'] = 'Sermon';
 
-        $series = [];
+        $series          = [];
         $series['@type'] = 'CreativeWorkSeries';
 
         if (!empty($data->series_text)) {

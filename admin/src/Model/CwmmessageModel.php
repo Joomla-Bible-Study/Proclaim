@@ -996,7 +996,7 @@ class CwmmessageModel extends AdminModel
             $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
 
             if (!$hasSchema) {
-                $data->schema = $data->schema ?? [];
+                $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Sermon';
 
                 $sermon = ['@type' => 'CreativeWork'];
@@ -1087,7 +1087,7 @@ class CwmmessageModel extends AdminModel
 
                         if (!empty($topics)) {
                             // Translate language keys (e.g., JBS_TOP_APOLOGETICS → Apologetics)
-                            $translated = array_map(static fn ($t) => Text::_($t), $topics);
+                            $translated     = array_map(static fn ($t) => Text::_($t), $topics);
                             $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
                         }
                     } catch (\Throwable) {

@@ -14,7 +14,7 @@
  * @since      10.3.0
  */
 
-$root      = dirname(__DIR__);
+$root      = \dirname(__DIR__);
 $propsFile = $root . '/build.properties';
 
 if (!file_exists($propsFile)) {
@@ -50,7 +50,7 @@ foreach ($lines as $line) {
 
 // Default location: sibling directory to this repo
 if ($joomlaDir === '') {
-    $joomlaDir = dirname($root) . '/joomla-cms';
+    $joomlaDir = \dirname($root) . '/joomla-cms';
 
     // Update build.properties with the default path
     $propsContent = file_get_contents($propsFile);
@@ -67,7 +67,7 @@ if (!is_dir($joomlaDir)) {
 
     // Clone the 5.4.3 stable tag — known-compatible with our framework v4.0 packages.
     // Using a stable tag ensures consistent class signatures across environments.
-    $cmd    = sprintf('git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
+    $cmd    = \sprintf('git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git %s 2>&1', escapeshellarg($joomlaDir));
     $output = [];
     $code   = 0;
 

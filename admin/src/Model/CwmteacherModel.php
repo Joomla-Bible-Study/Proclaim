@@ -55,10 +55,10 @@ class CwmteacherModel extends AdminModel
      * @since 10.3.0
      */
     protected $batch_commands = [
-        'assetgroup_id'    => 'batchAccess',
-        'landing_show'     => 'batchLandingShow',
-        'list_show'        => 'batchListShow',
-        'move_position'    => 'batchMovePosition',
+        'assetgroup_id' => 'batchAccess',
+        'landing_show'  => 'batchLandingShow',
+        'list_show'     => 'batchListShow',
+        'move_position' => 'batchMovePosition',
     ];
 
     /**
