@@ -991,6 +991,167 @@ class CwmmessageModel extends AdminModel
             $data = $this->getItem();
         }
 
+        // Auto-populate Schema.org defaults from message data if not already configured
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Sermon';
+
+                $sermon = ['@type' => 'CreativeWork'];
+
+                if (!empty($data->studytitle)) {
+                    $sermon['headline'] = $data->studytitle;
+                }
+
+                if (!empty($data->studyintro)) {
+                    $sermon['description'] = trim(strip_tags(html_entity_decode($data->studyintro, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->studydate)) {
+                    $sermon['datePublished'] = $data->studydate;
+                }
+
+                // Look up all teachers from junction table
+                if (!empty($data->id)) {
+                    try {
+                        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+                        $query = $db->getQuery(true)
+                            ->select($db->quoteName('t.teachername'))
+                            ->from($db->quoteName('#__bsms_teachers', 't'))
+                            ->innerJoin(
+                                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+                            )
+                            ->where($db->quoteName('st.study_id') . ' = ' . (int) $data->id)
+                            ->order($db->quoteName('st.ordering') . ' ASC');
+                        $db->setQuery($query);
+                        $teacherNames = $db->loadColumn() ?: [];
+                    } catch (\Throwable) {
+                        $teacherNames = [];
+                    }
+
+                    if (!empty($teacherNames)) {
+                        $sermon['author'] = [
+                            '@type' => 'person',
+                            'name'  => implode(', ', $teacherNames),
+                        ];
+                    }
+                }
+
+                if (!empty($data->modified) && $data->modified !== '0000-00-00 00:00:00') {
+                    $sermon['dateModified'] = $data->modified;
+                }
+
+                if (!empty($data->image)) {
+                    $sermon['image'] = $data->image;
+                }
+
+                // Add series and topics as custom schema fields
+                $customFields = [];
+
+                // Series as isPartOf
+                if (!empty($data->series_id) && (int) $data->series_id > 0) {
+                    try {
+                        $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
+                        $query = $db->getQuery(true)
+                            ->select($db->quoteName('series_text'))
+                            ->from($db->quoteName('#__bsms_series'))
+                            ->where($db->quoteName('id') . ' = ' . (int) $data->series_id);
+                        $db->setQuery($query);
+                        $seriesName = $db->loadResult();
+
+                        if ($seriesName) {
+                            $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
+                        }
+                    } catch (\Throwable) {
+                        // DB not available
+                    }
+                }
+
+                // Topics as about
+                if (!empty($data->id)) {
+                    try {
+                        $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
+                        $query = $db->getQuery(true)
+                            ->select($db->quoteName('t.topic_text'))
+                            ->from($db->quoteName('#__bsms_topics', 't'))
+                            ->innerJoin(
+                                $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                                . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
+                            )
+                            ->where($db->quoteName('st.study_id') . ' = ' . (int) $data->id);
+                        $db->setQuery($query);
+                        $topics = $db->loadColumn() ?: [];
+
+                        if (!empty($topics)) {
+                            // Translate language keys (e.g., JBS_TOP_APOLOGETICS → Apologetics)
+                            $translated = array_map(static fn ($t) => Text::_($t), $topics);
+                            $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
+                        }
+                    } catch (\Throwable) {
+                        // DB not available
+                    }
+                }
+
+                // Message type as genre
+                if (!empty($data->messagetype) && (int) $data->messagetype > 0) {
+                    try {
+                        $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
+                        $query = $db->getQuery(true)
+                            ->select($db->quoteName('message_type'))
+                            ->from($db->quoteName('#__bsms_message_type'))
+                            ->where($db->quoteName('id') . ' = ' . (int) $data->messagetype);
+                        $db->setQuery($query);
+                        $messageType = $db->loadResult();
+
+                        if ($messageType) {
+                            $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($messageType)];
+                        }
+                    } catch (\Throwable) {
+                        // DB not available
+                    }
+                }
+
+                // Location as locationCreated
+                if (!empty($data->location_id) && (int) $data->location_id > 0) {
+                    try {
+                        $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
+                        $query = $db->getQuery(true)
+                            ->select($db->quoteName('location_text'))
+                            ->from($db->quoteName('#__bsms_locations'))
+                            ->where($db->quoteName('id') . ' = ' . (int) $data->location_id);
+                        $db->setQuery($query);
+                        $location = $db->loadResult();
+
+                        if ($location) {
+                            $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
+                        }
+                    } catch (\Throwable) {
+                        // DB not available
+                    }
+                }
+
+                // Publisher (site name)
+                try {
+                    $siteName = Factory::getApplication()->get('sitename', '');
+
+                    if ($siteName !== '') {
+                        $customFields[] = ['genericTitle' => 'publisher', 'genericValue' => $siteName];
+                    }
+                } catch (\Throwable) {
+                    // App not available
+                }
+
+                if (!empty($customFields)) {
+                    $sermon['genericField'] = $customFields;
+                }
+
+                $data->schema['Sermon'] = $sermon;
+            }
+        }
+
         return $data;
     }
 
