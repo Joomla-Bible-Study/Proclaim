@@ -147,9 +147,9 @@
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
         <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+        <field name="thumbnail_teacher_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
                description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+        <field name="thumbnail_series_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
                description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
         <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>

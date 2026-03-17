@@ -101,10 +101,19 @@ class Cwmthumbnail
         }
 
         if ($imageInfo[0] > $maxDimension || $imageInfo[1] > $maxDimension) {
-            return ['valid' => false, 'error' => "Image dimensions exceed maximum ({$maxDimension}px)"];
+            return ['valid' => false, 'error' => "Image dimensions exceed maximum ({$maxDimension}px)", 'warning' => null];
         }
 
-        return ['valid' => true, 'error' => null];
+        // Warn about low-resolution images (below 400px on longest side)
+        $minRecommended = 400;
+        $warning        = null;
+
+        if ($imageInfo[0] < $minRecommended && $imageInfo[1] < $minRecommended) {
+            $warning = "Image is only {$imageInfo[0]}×{$imageInfo[1]}px. "
+                . "For best quality, use images at least {$minRecommended}px on the longest side.";
+        }
+
+        return ['valid' => true, 'error' => null, 'warning' => $warning];
     }
 
     /**
@@ -259,9 +268,23 @@ class Cwmthumbnail
             }
         }
 
-        // Create JPEG thumbnail for universal compatibility
-        $image     = new Image($newImagePath);
-        $thumbnail = $image->resize($size, (int) round($size * 0.5625), true, self::SCALE_INSIDE);
+        // Create JPEG thumbnail preserving original aspect ratio.
+        // $size is the max dimension — the other scales proportionally.
+        $image       = new Image($newImagePath);
+        $sourceWidth  = $image->getWidth();
+        $sourceHeight = $image->getHeight();
+
+        if ($sourceWidth >= $sourceHeight) {
+            // Landscape or square: width is the max
+            $thumbWidth  = $size;
+            $thumbHeight = (int) round($size * ($sourceHeight / $sourceWidth));
+        } else {
+            // Portrait: height is the max
+            $thumbHeight = $size;
+            $thumbWidth  = (int) round($size * ($sourceWidth / $sourceHeight));
+        }
+
+        $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
         $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
 
         $result = [
@@ -344,10 +367,20 @@ class Cwmthumbnail
             File::delete($thumb);
         }
 
-        // Create new thumbnail with 16:9 aspect ratio (consistent with create())
-        $image     = new Image($path);
-        $height    = (int) round($newSize * 0.5625);
-        $thumbnail = $image->resize($newSize, $height, true, self::SCALE_INSIDE);
+        // Create new thumbnail preserving original aspect ratio
+        $image        = new Image($path);
+        $sourceWidth  = $image->getWidth();
+        $sourceHeight = $image->getHeight();
+
+        if ($sourceWidth >= $sourceHeight) {
+            $thumbWidth  = $newSize;
+            $thumbHeight = (int) round($newSize * ($sourceHeight / $sourceWidth));
+        } else {
+            $thumbHeight = $newSize;
+            $thumbWidth  = (int) round($newSize * ($sourceWidth / $sourceHeight));
+        }
+
+        $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
         $thumbnail->toFile($directory . '/' . $thumbFilename, $outputType);
 
         // Generate WebP variant alongside
