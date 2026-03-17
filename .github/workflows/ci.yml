@@ -44,12 +44,10 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Clone joomla-cms for test framework
-        run: git clone --depth 1 --branch 5.4-dev https://github.com/joomla/joomla-cms.git ../joomla-cms
+        run: git clone --depth 1 --branch 5.4-dev https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
-        env:
-          JOOMLA_CMS_PATH: ${{ github.workspace }}/../joomla-cms
 
       - name: Check PHP syntax
         run: composer lint:syntax
@@ -57,7 +55,7 @@ jobs:
       - name: Run PHPUnit tests
         run: composer test
         env:
-          JOOMLA_CMS_PATH: ${{ github.workspace }}/../joomla-cms
+          JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
 
   js-checks:
     name: JS Lint & Tests

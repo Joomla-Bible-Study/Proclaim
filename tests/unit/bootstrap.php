@@ -66,8 +66,9 @@ if (file_exists($propsFile)) {
 }
 
 // Environment variable override (useful for CI)
-if (empty($joomlaCmsPath) && !empty(getenv('JOOMLA_CMS_PATH'))) {
-    $joomlaCmsPath = getenv('JOOMLA_CMS_PATH');
+$envPath = getenv('JOOMLA_CMS_PATH');
+if (empty($joomlaCmsPath) && $envPath !== false && $envPath !== '' && is_dir($envPath)) {
+    $joomlaCmsPath = $envPath;
 }
 
 // ---------------------------------------------------------------------------
