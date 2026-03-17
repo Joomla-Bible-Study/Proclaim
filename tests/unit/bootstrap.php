@@ -204,6 +204,9 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
 }
 
 if (!$joomlaLoaded) {
+    fwrite(STDERR, "DEBUG: joomlaCmsPath='{$joomlaCmsPath}' exists=" . (is_dir($joomlaCmsPath) ? 'yes' : 'no') . PHP_EOL);
+    fwrite(STDERR, "DEBUG: envPath='" . (getenv('JOOMLA_CMS_PATH') ?: 'unset') . "'" . PHP_EOL);
+    fwrite(STDERR, "DEBUG: componentRoot='{$componentRoot}'" . PHP_EOL);
     fwrite(STDERR, "ERROR: Joomla CMS not found. Set builder.joomla_dir in build.properties" . PHP_EOL);
     fwrite(STDERR, "       or set JOOMLA_CMS_PATH environment variable." . PHP_EOL);
     fwrite(STDERR, "       See: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Development-Setup" . PHP_EOL);
