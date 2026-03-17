@@ -137,72 +137,66 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JDEBUG', false);
         }
 
-        // Load the Joomla Platform (same as Joomla's own test bootstrap)
-        require_once $loaderFile;
-
-        if (!class_exists('JLoader')) {
-            throw new RuntimeException('Joomla Platform not loaded from: ' . $loaderFile);
+        // Load our Composer autoloader FIRST — provides PHPUnit and framework
+        // packages (joomla/database, joomla/registry, etc.) without conflicts.
+        $ourAutoload = $componentRoot . '/libraries/vendor/autoload.php';
+        if (is_file($ourAutoload)) {
+            require_once $ourAutoload;
         }
 
-        \JLoader::setup();
+        // Load runtime shims for classes that tests call (Factory, Text, Uri, Route).
+        // These must load BEFORE the CMS source autoloader so they take priority
+        // over the real CMS classes which have heavy dependency chains.
+        require_once $componentRoot . '/tests/unit/Stubs/CmsRuntimeShims.php';
 
-        // Load Joomla's Composer autoloader (provides CMS classes)
-        // NOTE: We do NOT prepend it — our own autoloader (loaded later)
-        // takes priority so our PHPUnit version isn't overridden by Joomla's.
-        /** @var \Composer\Autoload\ClassLoader $joomlaLoader */
-        $joomlaLoader = require $vendorFile;
+        // Register a PSR-4 autoloader for Joomla CMS source classes.
+        // We do NOT use JLoader (intercepts PHPUnit lookups) or joomla-cms's
+        // vendor/autoload.php (PSR package version conflicts).
+        // Our Composer provides framework packages; joomla-cms provides CMS classes.
+        //
+        // IMPORTANT: This autoloader is appended (not prepended) so our Composer
+        // autoloader always wins for framework classes like Joomla\Database\*.
+        spl_autoload_register(function ($class) use ($rootDir) {
+            // Joomla\CMS\ → libraries/src/
+            $cmsPrefix = 'Joomla\\CMS\\';
 
-        // Decorate with Joomla's class loader
-        class_exists('\\Joomla\\CMS\\Autoload\\ClassLoader');
-        $joomlaLoader->unregister();
-        spl_autoload_register([new \Joomla\CMS\Autoload\ClassLoader($joomlaLoader), 'loadClass'], true, false);
+            if (str_starts_with($class, $cmsPrefix)) {
+                $file = $rootDir . '/libraries/src/' . str_replace('\\', '/', substr($class, \strlen($cmsPrefix))) . '.php';
 
-        // Load extension namespace map
-        if (is_file($namespaceFile)) {
-            require_once $namespaceFile;
-            $extensionPsr4Loader = new \JNamespacePsr4Map();
-            $extensionPsr4Loader->load();
-        }
+                if (is_file($file)) {
+                    require_once $file;
+
+                    return true;
+                }
+            }
+
+            // Joomla\Component\ → administrator/components/
+            $compPrefix = 'Joomla\\Component\\';
+
+            if (str_starts_with($class, $compPrefix)) {
+                $relative = substr($class, \strlen($compPrefix));
+                $parts    = explode('\\', $relative, 3);
+
+                if (\count($parts) >= 3) {
+                    $component = strtolower($parts[0]);
+                    $file      = $rootDir . '/administrator/components/com_' . $component . '/src/'
+                        . str_replace('\\', '/', $parts[2]) . '.php';
+
+                    if (is_file($file)) {
+                        require_once $file;
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
 
         // Define Joomla version
-        \defined('JVERSION') or \define('JVERSION', (new \Joomla\CMS\Version())->getShortVersion());
+        \defined('JVERSION') or \define('JVERSION', '5.4.0');
 
         $joomlaLoaded = true;
-
-        // Create a minimal mock application so Factory::getApplication() works in tests
-        if (\Joomla\CMS\Factory::$application === null) {
-            $mockApp = new class extends \Joomla\CMS\Application\CMSApplication {
-                public function __construct()
-                {
-                    // Skip parent constructor — no real app bootstrap needed
-                    $this->input  = new \Joomla\Input\Input();
-                    $this->config = new \Joomla\Registry\Registry();
-                }
-
-                protected function doExecute(): void
-                {
-                }
-
-                public function getName(): string
-                {
-                    return 'test';
-                }
-
-                public function isClient($identifier): bool
-                {
-                    return $identifier === 'site';
-                }
-
-                public function getIdentity(): \Joomla\CMS\User\User
-                {
-                    $user     = new \Joomla\CMS\User\User();
-                    $user->id = 42;
-
-                    return $user;
-                }
-            };
-            \Joomla\CMS\Factory::$application = $mockApp;
-        }
 
         fwrite(STDERR, "Joomla CMS loaded from: $joomlaCmsPath" . PHP_EOL);
     }
@@ -227,14 +221,8 @@ if (!\defined('JPATH_TESTS')) {
     \define('JPATH_TESTS', $componentRoot . '/tests');
 }
 
-// ---------------------------------------------------------------------------
-// Load our Composer autoloader (for component dev dependencies like PHPUnit)
-// ---------------------------------------------------------------------------
-
-$composerAutoload = $componentRoot . '/libraries/vendor/autoload.php';
-if (file_exists($composerAutoload)) {
-    require_once $composerAutoload;
-}
+// Our Composer autoloader was loaded earlier (before JLoader) to avoid
+// PSR package version conflicts with joomla-cms's vendor directory.
 
 // ---------------------------------------------------------------------------
 // Register PSR-4 autoloader for the Proclaim component
