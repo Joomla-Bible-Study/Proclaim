@@ -26,7 +26,9 @@ use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -549,9 +551,27 @@ class CwmserieModel extends AdminModel
     }
 
     /**
+     * Preprocess the form to import system plugins (needed for Schema.org tab).
+     *
+     * @param   Form    $form   The form to preprocess
+     * @param   mixed   $data   The form data
+     * @param   string  $group  Plugin group
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessForm(Form $form, $data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected into the form.
      *
-     * @return  array    The default data is an empty array.
+     * @return  mixed    The default data is an empty array.
      *
      * @throws \Exception
      * @since   7.0

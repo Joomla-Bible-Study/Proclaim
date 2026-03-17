@@ -31,6 +31,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Workflow\Workflow;
 use Joomla\Database\DatabaseInterface;
@@ -950,6 +951,28 @@ class CwmmessageModel extends AdminModel
         $this->cleanCache();
 
         return true;
+    }
+
+    /**
+     * Preprocess the form to import system plugins (needed for Schema.org tab).
+     *
+     * Joomla's default preprocessForm only imports the 'content' plugin group.
+     * System plugins (like plg_system_schemaorg) need explicit import to
+     * participate in form preparation for third-party components.
+     *
+     * @param   Form    $form   The form to preprocess
+     * @param   mixed   $data   The form data
+     * @param   string  $group  Plugin group (default: 'content')
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessForm(Form $form, $data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessForm($form, $data, $group);
     }
 
     /**

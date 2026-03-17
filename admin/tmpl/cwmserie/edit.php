@@ -134,6 +134,19 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
         <?php endif; ?>
 
+        <?php // ===== Schema.org Tab =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
         <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <input type="hidden" name="task" value=""/>
