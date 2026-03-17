@@ -2229,6 +2229,12 @@
         <fieldset name="LANDINGPAGE_PAGESETTINGS" label="JBS_TPL_LANDINGPAGE_DISPLAY_SETTINGS"
                   layoutContext="landingPage"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+            <field name="landing_style" type="list" default="hero"
+                   label="JBS_TPL_LANDING_STYLE" description="JBS_TPL_LANDING_STYLE_DESC">
+                <option value="cards">JBS_TPL_LANDING_STYLE_CARDS</option>
+                <option value="hero">JBS_TPL_LANDING_STYLE_HERO</option>
+                <option value="dashboard">JBS_TPL_LANDING_STYLE_DASHBOARD</option>
+            </field>
             <field name="landing_show_page_title" type="radio" default="1"
                    label="JBS_TPL_LISTITEMS_SHOW_PAGE_TITLE"
                    layout="joomla.form.field.radio.switcher">

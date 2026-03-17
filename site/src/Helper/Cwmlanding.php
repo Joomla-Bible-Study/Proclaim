@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Date\Date;
@@ -611,6 +612,7 @@ class Cwmlanding
      *
      * @throws   \Exception
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getLocationsLandingData() with layout rendering instead
      */
     public function getLocationsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -691,6 +693,7 @@ class Cwmlanding
      * @return string
      *
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getTeacherLandingData() with layout rendering instead
      */
     public function getTeacherLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -791,6 +794,7 @@ class Cwmlanding
      * @return string
      *
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getSeriesLandingData() with layout rendering instead
      */
     public function getSeriesLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -875,6 +879,7 @@ class Cwmlanding
      * @return string
      *
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getYearsLandingData() with layout rendering instead
      */
     public function getYearsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -934,6 +939,7 @@ class Cwmlanding
      * @return string
      *
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getTopicsLandingData() with layout rendering instead
      */
     public function getTopicsLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -1012,6 +1018,7 @@ class Cwmlanding
      * @return string
      *
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getMessageTypesLandingData() with layout rendering instead
      */
     public function getMessageTypesLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -1087,6 +1094,7 @@ class Cwmlanding
      *
      * @return string
      * @since    8.0.0
+     * @deprecated 10.3.0 Use getBooksLandingData() with layout rendering instead
      */
     public function getBooksLandingPage(Registry $params, int $id = 0, ?array $items = null): string
     {
@@ -1139,5 +1147,639 @@ class Cwmlanding
         $html .= '<div style="clear:both;"></div>';
 
         return $html;
+    }
+
+    // =========================================================================
+    // Data-returning methods for layout-based rendering (Phase 1)
+    // =========================================================================
+
+    /**
+     * Split landing items into visible (above fold) and hidden (below fold) arrays.
+     *
+     * Always respects landing_show: 1=above fold, 2=below fold.
+     * In grid mode (useLimit=0), numeric limit further caps visible items.
+     *
+     * @param   array  $items     Item arrays with 'landing_show' key
+     * @param   int    $limit     Numeric limit for grid mode
+     * @param   int    $useLimit  0=grid mode with landing_show, 1=per-record mode only
+     *
+     * @return  array{0: array, 1: array}  [visibleItems, hiddenItems]
+     *
+     * @since   10.3.0
+     */
+    public static function splitItems(array $items, int $limit, int $useLimit): array
+    {
+        $visibleItems = [];
+        $hiddenItems  = [];
+        $visibleCount = 0;
+
+        foreach ($items as $item) {
+            // landing_show=2 always goes below fold
+            if ($item['landing_show'] === 2) {
+                $hiddenItems[] = $item;
+                continue;
+            }
+
+            // In grid mode, apply numeric limit on visible (landing_show=1) items
+            if ($useLimit === 0 && $limit < 10000 && $visibleCount >= $limit) {
+                $hiddenItems[] = $item;
+                continue;
+            }
+
+            $visibleItems[] = $item;
+            $visibleCount++;
+        }
+
+        return [$visibleItems, $hiddenItems];
+    }
+
+    /**
+     * Get structured data for any landing section by type.
+     *
+     * Dispatches to the per-type data method. Returns a standardized array
+     * that layouts can render without knowing the section type.
+     *
+     * @param   string         $sectionId  Section type (teachers, series, etc.)
+     * @param   Registry       $params     Template params
+     * @param   array|null     $items      Optional pre-fetched items from union query
+     *
+     * @return  array{items: array, limit: int, useLimit: int, divId: string, hasImages: bool, sectionType: string}
+     *
+     * @since   10.3.0
+     */
+    public function getSectionData(string $sectionId, Registry $params, ?array $items = null): array
+    {
+        return match ($sectionId) {
+            'teachers'     => $this->getTeacherLandingData($params, $items),
+            'series'       => $this->getSeriesLandingData($params, $items),
+            'locations'    => $this->getLocationsLandingData($params, $items),
+            'messagetypes' => $this->getMessageTypesLandingData($params, $items),
+            'topics'       => $this->getTopicsLandingData($params, $items),
+            'books'        => $this->getBooksLandingData($params, $items),
+            'years'        => $this->getYearsLandingData($params, $items),
+            default        => ['items' => [], 'limit' => 0, 'useLimit' => 0, 'divId' => '', 'hasImages' => false, 'sectionType' => $sectionId],
+        };
+    }
+
+    /**
+     * Get teacher data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getTeacherLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('teachertemplateid', 1);
+        $limit    = (int) $params->get('landingteacherslimit', 10000) ?: 10000;
+        $useLimit = (int) $params->get('landingteachersuselimit', 0);
+        $linkTo   = (int) $params->get('linkto', 0);
+
+        // Always run own query — pre-fetched union items lack image columns
+        $order    = $this->getSortOrder($params, 'teachers_order');
+        $language = $this->getLanguageFilter($params);
+
+        $query = $this->db->getQuery(true);
+        $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+            ->from($this->db->quoteName('#__bsms_teachers', 'a'))
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
+                . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('stj.teacher_id')
+            )
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                . $this->db->quoteName('b.id') . ' = ' . $this->db->quoteName('stj.study_id')
+            )
+            ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+            ->where($this->db->quoteName('a.published') . ' = 1')
+            ->where($this->db->quoteName('a.landing_show') . ' > 0')
+            ->group($this->db->quoteName('a.id'))
+            ->order($this->db->quoteName('a.ordering') . ' ASC')
+            ->order($this->db->quoteName('a.teachername') . ' ' . $order);
+
+        $this->addAccessFilter($query);
+
+        // Fetch all items — splitItems() handles visible/hidden split in PHP
+        $this->db->setQuery($query);
+        $items = $this->db->loadObjectList();
+
+        $result = [];
+
+        foreach ($items as $item) {
+            if ($linkTo === 0) {
+                $url = 'index.php?option=com_proclaim&view=cwmsermons&t=' . $template
+                    . '&sendingview=landing&filter_teacher=' . $item->id;
+            } else {
+                $url = 'index.php?option=com_proclaim&view=cwmteacher&id=' . $item->id . '&t=' . $template;
+            }
+
+            $image = null;
+            if (!empty($item->teacher_image)) {
+                $image = Cwmimages::getTeacherImage($item->teacher_image, $item->image ?? '');
+            } elseif (!empty($item->teacher_thumbnail)) {
+                $image = Cwmimages::getTeacherThumbnail($item->teacher_thumbnail, $item->thumb ?? '');
+            }
+
+            // Fall back to default teacher image from admin settings
+            if (!$image || empty($image->path)) {
+                $defaultImage = $params->get('default_teacher_image')
+                    ?: Cwmparams::getAdmin()->params->get('default_teacher_image', '');
+                if ($defaultImage) {
+                    $image = (object) ['path' => $defaultImage];
+                }
+            }
+
+            $result[] = [
+                'id'           => (int) $item->id,
+                'text'         => $item->teachername,
+                'url'          => Route::_($url),
+                'image'        => $image,
+                'landing_show' => (int) ($item->landing_show ?? 0),
+                'meta'         => $item->title ?? '',
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => $useLimit,
+            'divId'       => 'showhideteachers',
+            'hasImages'   => true,
+            'sectionType' => 'teachers',
+        ];
+    }
+
+    /**
+     * Get series data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getSeriesLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template     = (int) $params->get('serieslisttemplateid', 1);
+        $limit        = (int) $params->get('landingserieslimit', 10000) ?: 10000;
+        $useLimit     = (int) $params->get('landingseriesuselimit', 0);
+        $seriesLinkTo = (int) $params->get('series_linkto', 0);
+
+        // Always run own query — pre-fetched union items lack image columns
+        $order    = $this->getSortOrder($params, 'series_order');
+        $language = $this->getLanguageFilter($params);
+
+        $query = $this->db->getQuery(true);
+        $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+            ->from($this->db->quoteName('#__bsms_series', 'a'))
+            ->innerJoin(
+                $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.series_id')
+            )
+            ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+            ->where($this->db->quoteName('b.published') . ' = 1')
+            ->where($this->db->quoteName('a.published') . ' = 1')
+            ->group($this->db->quoteName('a.id'))
+            ->order($this->db->quoteName('a.series_text') . ' ' . $order);
+
+        if (!$this->user->authorise('core.edit.state', 'com_proclaim') && !$this->user->authorise('core.edit', 'com_proclaim')) {
+            $nullDate = $this->db->quote($this->db->getNullDate());
+            $nowDate  = $this->db->quote((new Date())->toSql());
+            $query->where('(' . $this->db->quoteName('a.publish_up') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_up') . ' <= ' . $nowDate . ')')
+                ->where('(' . $this->db->quoteName('a.publish_down') . ' = ' . $nullDate . ' OR ' . $this->db->quoteName('a.publish_down') . ' >= ' . $nowDate . ')');
+        }
+
+        $this->addAccessFilter($query);
+
+        // Fetch all items — splitItems() handles visible/hidden split in PHP
+        $this->db->setQuery($query);
+
+        $items = $this->db->loadObjectList();
+
+        $result = [];
+
+        foreach ($items as $item) {
+            if ($seriesLinkTo === 0) {
+                $url = 'index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $item->id
+                    . '&sendingview=landing&t=' . $template;
+            } else {
+                $url = 'index.php?option=com_proclaim&view=cwmseriesdisplay&id='
+                    . $item->id . '&sendingview=landing&t=' . $template;
+            }
+
+            $image = null;
+            if (!empty($item->image)) {
+                $image = (object) ['path' => $item->image];
+            } elseif (!empty($item->series_thumbnail)) {
+                $image = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
+            }
+
+            // Fall back to default series image from admin settings
+            if (!$image || empty($image->path)) {
+                $defaultImage = $params->get('default_series_image')
+                    ?: Cwmparams::getAdmin()->params->get('default_series_image', '');
+                if ($defaultImage) {
+                    $image = (object) ['path' => $defaultImage];
+                }
+            }
+
+            $result[] = [
+                'id'           => (int) $item->id,
+                'text'         => $item->series_text,
+                'url'          => Route::_($url),
+                'image'        => $image,
+                'landing_show' => (int) ($item->landing_show ?? 0),
+                'meta'         => !empty($item->description) ? mb_substr(trim(html_entity_decode(strip_tags($item->description), ENT_QUOTES, 'UTF-8')), 0, 120) : '',
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => $useLimit,
+            'divId'       => 'showhideseries',
+            'hasImages'   => true,
+            'sectionType' => 'series',
+        ];
+    }
+
+    /**
+     * Get locations data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getLocationsLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landinglocationslimit', 10000) ?: 10000;
+        $useLimit = (int) $params->get('landinglocationsuselimit', 0);
+
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'locations_order');
+            $language = $this->getLanguageFilter($params);
+
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_locations', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.location_id')
+                )
+                ->where($this->db->quoteName('b.location_id') . ' > 0')
+                ->where($this->db->quoteName('a.published') . ' = 1')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.location_text') . ' ' . $order);
+
+            $this->addAccessFilter($query);
+
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
+
+            $items = $this->db->loadObjectList();
+        } else {
+            foreach ($items as $item) {
+                $item->location_text = $item->text;
+            }
+        }
+
+        $result = [];
+
+        foreach ($items as $item) {
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&sendingview=cwmlanding'
+                . '&filter_location=' . $item->id . '&t=' . $template;
+
+            $result[] = [
+                'id'           => (int) $item->id,
+                'text'         => $item->location_text,
+                'url'          => Route::_($url),
+                'image'        => null,
+                'landing_show' => (int) ($item->landing_show ?? 0),
+                'meta'         => null,
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => $useLimit,
+            'divId'       => 'showhidelocations',
+            'hasImages'   => false,
+            'sectionType' => 'locations',
+        ];
+    }
+
+    /**
+     * Get message types data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getMessageTypesLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingmessagetypeslimit', 10000) ?: 10000;
+        $useLimit = (int) $params->get('landingmessagetypeuselimit', 0);
+
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'messagetypes_order');
+            $language = $this->getLanguageFilter($params);
+
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_message_type', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.id') . ' = ' . $this->db->quoteName('b.messagetype')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->where($this->db->quoteName('a.landing_show') . ' > 0')
+                ->group($this->db->quoteName('a.id'))
+                ->order($this->db->quoteName('a.message_type') . ' ' . $order);
+
+            $this->addAccessFilter($query);
+
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
+
+            $items = $this->db->loadObjectList();
+        } else {
+            foreach ($items as $item) {
+                $item->message_type = $item->text;
+            }
+        }
+
+        $result = [];
+
+        foreach ($items as $item) {
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&sendingview=cwmlanding'
+                . '&filter_messagetype=' . $item->id . '&t=' . $template;
+
+            $result[] = [
+                'id'           => (int) $item->id,
+                'text'         => $item->message_type,
+                'url'          => Route::_($url),
+                'image'        => null,
+                'landing_show' => (int) ($item->landing_show ?? 0),
+                'meta'         => null,
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => $useLimit,
+            'divId'       => 'showhidemessagetypes',
+            'hasImages'   => false,
+            'sectionType' => 'messagetypes',
+        ];
+    }
+
+    /**
+     * Get topics data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getTopicsLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingtopicslimit', 10000) ?: 10000;
+
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'topics_order');
+            $language = $this->getLanguageFilter($params);
+
+            $query = $this->db->getQuery(true);
+            $query->select(
+                'DISTINCT ' . $this->db->quoteName('#__bsms_topics.id') . ', '
+                . $this->db->quoteName('#__bsms_topics.topic_text') . ', '
+                . $this->db->quoteName('#__bsms_topics.params', 'topic_params')
+            )
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_studytopics') . ' ON '
+                    . $this->db->quoteName('#__bsms_studies.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.study_id')
+                )
+                ->join(
+                    'LEFT',
+                    $this->db->quoteName('#__bsms_topics') . ' ON '
+                    . $this->db->quoteName('#__bsms_topics.id') . ' = ' . $this->db->quoteName('#__bsms_studytopics.topic_id')
+                )
+                ->where($this->db->quoteName('#__bsms_topics.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.published') . ' = 1')
+                ->where($this->db->quoteName('#__bsms_studies.language') . ' IN (' . $language . ')')
+                ->group($this->db->quoteName('#__bsms_topics.id'))
+                ->order($this->db->quoteName('#__bsms_topics.topic_text') . ' ' . $order);
+
+            $this->addAccessFilter($query, '#__bsms_studies.access');
+
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
+
+            $items = $this->db->loadObjectList();
+        } else {
+            foreach ($items as $item) {
+                $item->topic_text = $item->text;
+                if (!property_exists($item, 'topic_params') && property_exists($item, 'params')) {
+                    $item->topic_params = $item->params;
+                }
+            }
+        }
+
+        $result = [];
+
+        foreach ($items as $item) {
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&filter_topic=' . $item->id
+                . '&sendingview=cwmlanding&t=' . $template;
+
+            $result[] = [
+                'id'           => (int) $item->id,
+                'text'         => Cwmtranslated::getTopicItemTranslated($item),
+                'url'          => Route::_($url),
+                'image'        => null,
+                'landing_show' => 0,
+                'meta'         => null,
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => 0,
+            'divId'       => 'showhidetopics',
+            'hasImages'   => false,
+            'sectionType' => 'topics',
+        ];
+    }
+
+    /**
+     * Get books data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getBooksLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingbookslimit', 10000) ?: 10000;
+
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'books_order');
+            $language = $this->getLanguageFilter($params);
+
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
+                ->from($this->db->quoteName('#__bsms_books', 'a'))
+                ->innerJoin(
+                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
+                    . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
+                )
+                ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('b.published') . ' = 1')
+                ->group($this->db->quoteName('a.bookname'))
+                ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
+
+            $this->addAccessFilter($query);
+
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
+
+            $items = $this->db->loadObjectList();
+        } else {
+            foreach ($items as $item) {
+                $item->booknumber = $item->id;
+                $item->bookname   = $item->text;
+            }
+        }
+
+        $result = [];
+
+        foreach ($items as $item) {
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&sendingview=cwmlanding'
+                . '&filter_book=' . $item->booknumber . '&t=' . $template;
+
+            $result[] = [
+                'id'           => (int) $item->booknumber,
+                'text'         => Text::_($item->bookname),
+                'url'          => Route::_($url),
+                'image'        => null,
+                'landing_show' => 0,
+                'meta'         => null,
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => 0,
+            'divId'       => 'showhidebooks',
+            'hasImages'   => false,
+            'sectionType' => 'books',
+        ];
+    }
+
+    /**
+     * Get years data for landing page layouts.
+     *
+     * @param   Registry    $params  Template params
+     * @param   array|null  $items   Optional pre-fetched items
+     *
+     * @return  array  Standardized section data array
+     *
+     * @since   10.3.0
+     */
+    public function getYearsLandingData(Registry $params, ?array $items = null): array
+    {
+        $this->initDependencies();
+
+        $template = (int) $params->get('studieslisttemplateid', 1);
+        $limit    = (int) $params->get('landingyearslimit', 10000) ?: 10000;
+
+        if ($items === null) {
+            $order    = $this->getSortOrder($params, 'years_order');
+            $language = $this->getLanguageFilter($params);
+
+            $query = $this->db->getQuery(true);
+            $query->select('DISTINCT YEAR(' . $this->db->quoteName('studydate') . ') AS ' . $this->db->quoteName('theYear'))
+                ->from($this->db->quoteName('#__bsms_studies'))
+                ->where($this->db->quoteName('language') . ' IN (' . $language . ')')
+                ->where($this->db->quoteName('published') . ' = 1')
+                ->group('YEAR(' . $this->db->quoteName('studydate') . ')')
+                ->order('YEAR(' . $this->db->quoteName('studydate') . ') ' . $order);
+
+            $this->addAccessFilter($query, 'access');
+
+            // Fetch all items — splitItems() handles visible/hidden split in PHP
+            $this->db->setQuery($query);
+
+            $items = $this->db->loadObjectList();
+        } else {
+            foreach ($items as $item) {
+                $item->theYear = $item->id;
+            }
+        }
+
+        $result = [];
+
+        foreach ($items as $item) {
+            $url = 'index.php?option=com_proclaim&view=cwmsermons&sendingview=cwmlanding'
+                . '&filter_year=' . $item->theYear . '&t=' . $template;
+
+            $result[] = [
+                'id'           => (int) $item->theYear,
+                'text'         => (string) $item->theYear,
+                'url'          => Route::_($url),
+                'image'        => null,
+                'landing_show' => 0,
+                'meta'         => null,
+            ];
+        }
+
+        return [
+            'items'       => $result,
+            'limit'       => $limit,
+            'useLimit'    => 0,
+            'divId'       => 'showhideyears',
+            'hasImages'   => false,
+            'sectionType' => 'years',
+        ];
     }
 }
