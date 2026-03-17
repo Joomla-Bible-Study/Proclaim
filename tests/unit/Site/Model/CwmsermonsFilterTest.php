@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Tests\Site\Model;
 
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -45,65 +46,46 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $method->invokeArgs($instance, $args);
     }
 
+    /** @var array Tracks where() calls on the mock query */
+    private array $whereCalls = [];
+
     /**
-     * Create a mock query object that tracks where() calls.
+     * Create a PHPUnit mock of QueryInterface that tracks where() calls.
      *
-     * @return  object  Mock with ->where() and ->whereCalls property
+     * @return  QueryInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    private function createMockQuery(): object
+    private function createMockQuery(): QueryInterface
     {
-        return new class implements QueryInterface {
-            /** @var array Captured where() call arguments */
-            public array $whereCalls = [];
+        $this->whereCalls = [];
 
-            public function where($condition, $glue = 'AND'): static
-            {
-                $this->whereCalls[] = $condition;
+        $mock = $this->createMock(QueryInterface::class);
 
-                return $this;
-            }
+        $mock->method('where')->willReturnCallback(function ($condition) use ($mock) {
+            $this->whereCalls[] = $condition;
 
-            public function whereIn(string $keyName, array $keyValues, $dataType = 'int'): static
-            {
-                $this->whereCalls[] = $keyName . ' IN (' . implode(',', $keyValues) . ')';
+            return $mock;
+        });
 
-                return $this;
-            }
+        $mock->method('whereIn')->willReturnCallback(function ($keyName, $keyValues) use ($mock) {
+            $this->whereCalls[] = $keyName . ' IN (' . implode(',', $keyValues) . ')';
 
-            public function select($columns): static
-            {
-                return $this;
-            }
+            return $mock;
+        });
 
-            public function from($tables, $subQueryAlias = null): static
-            {
-                return $this;
-            }
+        $mock->method('select')->willReturnSelf();
+        $mock->method('from')->willReturnSelf();
 
-            public function __toString(): string
-            {
-                return '';
-            }
-        };
+        return $mock;
     }
 
     /**
-     * Create a mock database object with quoteName().
+     * Create a mock database driver with quoteName() and getQuery().
      *
-     * @return  object  Mock with ->quoteName() and ->getQuery()
+     * @return  object  Mock database object
      */
     private function createMockDb(): object
     {
-        $mockQuery = $this->createMockQuery();
-
-        return new class ($mockQuery) {
-            private object $query;
-
-            public function __construct(object $query)
-            {
-                $this->query = $query;
-            }
-
+        return new class {
             public function quoteName($name, $as = null): string|array
             {
                 if (\is_array($name)) {
@@ -115,7 +97,33 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
             public function getQuery(bool $new = false): object
             {
-                return $this->query;
+                // Return a minimal object for subquery building in addTeacherFilter
+                return new class {
+                    public function select($columns): static
+                    {
+                        return $this;
+                    }
+
+                    public function from($tables, $subQueryAlias = null): static
+                    {
+                        return $this;
+                    }
+
+                    public function where($condition): static
+                    {
+                        return $this;
+                    }
+
+                    public function whereIn(string $keyName, array $keyValues, $dataType = 'int'): static
+                    {
+                        return $this;
+                    }
+
+                    public function __toString(): string
+                    {
+                        return 'EXISTS (SELECT 1)';
+                    }
+                };
             }
 
             public function quote($text, $escape = true): string
@@ -144,7 +152,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', null, 0]);
 
-        $this->assertEmpty($query->whereCalls, 'null param + no user filter should add no WHERE');
+        $this->assertEmpty($this->whereCalls, 'null param + no user filter should add no WHERE');
     }
 
     /**
@@ -157,7 +165,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', ['-1'], 0]);
 
-        $this->assertEmpty($query->whereCalls, '["-1"] sentinel should add no WHERE');
+        $this->assertEmpty($this->whereCalls, '["-1"] sentinel should add no WHERE');
     }
 
     /**
@@ -170,7 +178,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', [''], 0]);
 
-        $this->assertEmpty($query->whereCalls, '[""] empty string should add no WHERE — this was the module bug');
+        $this->assertEmpty($this->whereCalls, '[""] empty string should add no WHERE — this was the module bug');
     }
 
     /**
@@ -183,7 +191,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', [null], 0]);
 
-        $this->assertEmpty($query->whereCalls, '[null] should add no WHERE');
+        $this->assertEmpty($this->whereCalls, '[null] should add no WHERE');
     }
 
     /**
@@ -196,8 +204,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', ['5'], 0]);
 
-        $this->assertCount(1, $query->whereCalls, 'Single valid param should add one WHERE');
-        $this->assertStringContainsString('= 5', $query->whereCalls[0]);
+        $this->assertCount(1, $this->whereCalls, 'Single valid param should add one WHERE');
+        $this->assertStringContainsString('= 5', $this->whereCalls[0]);
     }
 
     /**
@@ -210,8 +218,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', ['5', '10'], 0]);
 
-        $this->assertCount(1, $query->whereCalls);
-        $this->assertStringContainsString('IN (5,10)', $query->whereCalls[0]);
+        $this->assertCount(1, $this->whereCalls);
+        $this->assertStringContainsString('IN (5,10)', $this->whereCalls[0]);
     }
 
     /**
@@ -224,8 +232,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', null, 7]);
 
-        $this->assertCount(1, $query->whereCalls);
-        $this->assertStringContainsString('= 7', $query->whereCalls[0]);
+        $this->assertCount(1, $this->whereCalls);
+        $this->assertStringContainsString('= 7', $this->whereCalls[0]);
     }
 
     /**
@@ -238,7 +246,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', ['5', '10'], 5]);
 
-        $this->assertCount(2, $query->whereCalls, 'Param + user filter should add two WHERE clauses');
+        $this->assertCount(2, $this->whereCalls, 'Param + user filter should add two WHERE clauses');
     }
 
     /**
@@ -251,8 +259,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addParamFilter', [$query, $db, 'study.location_id', [''], 5]);
 
-        $this->assertCount(1, $query->whereCalls, 'Empty param + user filter should only apply user filter');
-        $this->assertStringContainsString('= 5', $query->whereCalls[0]);
+        $this->assertCount(1, $this->whereCalls, 'Empty param + user filter should only apply user filter');
+        $this->assertStringContainsString('= 5', $this->whereCalls[0]);
     }
 
     // =========================================================================
@@ -269,7 +277,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addTeacherFilter', [$query, $db, null, 0]);
 
-        $this->assertEmpty($query->whereCalls);
+        $this->assertEmpty($this->whereCalls);
     }
 
     /**
@@ -282,7 +290,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addTeacherFilter', [$query, $db, [''], 0]);
 
-        $this->assertEmpty($query->whereCalls, '[""] should not create EXISTS subquery');
+        $this->assertEmpty($this->whereCalls, '[""] should not create EXISTS subquery');
     }
 
     /**
@@ -295,8 +303,8 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addTeacherFilter', [$query, $db, ['3'], 0]);
 
-        $this->assertCount(1, $query->whereCalls);
-        $this->assertStringContainsString('EXISTS', $query->whereCalls[0]);
+        $this->assertCount(1, $this->whereCalls);
+        $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
     }
 
     // =========================================================================
@@ -313,7 +321,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addBookFilter', [$query, $db, null, 0]);
 
-        $this->assertEmpty($query->whereCalls);
+        $this->assertEmpty($this->whereCalls);
     }
 
     /**
@@ -326,7 +334,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addBookFilter', [$query, $db, [''], 0]);
 
-        $this->assertEmpty($query->whereCalls, '[""] should not filter by book');
+        $this->assertEmpty($this->whereCalls, '[""] should not filter by book');
     }
 
     /**
@@ -339,6 +347,6 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
         $this->invokeFilter('addBookFilter', [$query, $db, ['-1'], 0]);
 
-        $this->assertEmpty($query->whereCalls);
+        $this->assertEmpty($this->whereCalls);
     }
 }

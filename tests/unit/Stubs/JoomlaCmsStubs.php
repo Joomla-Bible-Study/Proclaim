@@ -1019,89 +1019,9 @@ namespace Joomla\DI {
 // Database stubs
 // ============================================================================
 
-namespace Joomla\Database {
-
-    if (!class_exists('Joomla\Database\DatabaseDriver', false)) {
-        abstract class DatabaseDriver
-        {
-            public function getQuery($new = false)
-            {
-                return null;
-            }
-
-            public function setQuery($query, $offset = 0, $limit = 0)
-            {
-                return $this;
-            }
-
-            public function loadObjectList($key = '', $class = \stdClass::class): array
-            {
-                return [];
-            }
-
-            public function loadObject($class = \stdClass::class)
-            {
-                return null;
-            }
-
-            public function loadResult()
-            {
-                return null;
-            }
-
-            public function execute()
-            {
-                return false;
-            }
-
-            public function quote($text, $escape = true): string
-            {
-                return "'" . $text . "'";
-            }
-
-            public function quoteName($name, $as = null): string|array
-            {
-                if (\is_array($name)) {
-                    return array_map(static fn ($n) => '`' . $n . '`', $name);
-                }
-
-                return '`' . $name . '`';
-            }
-
-            public function getPrefix(): string
-            {
-                return '';
-            }
-        }
-    }
-
-    if (!class_exists('Joomla\Database\DatabaseInterface', false)) {
-        interface DatabaseInterface
-        {
-        }
-    }
-
-    if (!interface_exists('Joomla\Database\QueryInterface', false)) {
-        interface QueryInterface
-        {
-            public function select($columns);
-
-            public function from($tables, $subQueryAlias = null);
-
-            public function where($conditions, $glue = 'AND');
-
-            public function whereIn(string $keyName, array $keyValues, $dataType = ParameterType::INTEGER);
-        }
-    }
-
-    if (!class_exists('Joomla\Database\ParameterType', false)) {
-        class ParameterType
-        {
-            public const INTEGER = 'int';
-            public const STRING = 'string';
-        }
-    }
-}
+// All Joomla\Database classes (DatabaseDriver, DatabaseInterface,
+// QueryInterface, ParameterType) are provided by the real joomla/database
+// Composer package (require-dev). No stubs needed.
 
 // ============================================================================
 // Event stubs

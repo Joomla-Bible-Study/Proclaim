@@ -65,17 +65,18 @@ if (!\defined('JDEBUG')) {
     \define('JDEBUG', false);
 }
 
-// Load Joomla CMS stubs BEFORE Composer autoloader so they are available
-// when our source classes (which extend Joomla base classes) are loaded.
-// These stubs provide minimal class/interface/trait definitions that satisfy
-// PHP's autoloader without requiring the full Joomla CMS framework.
-require_once __DIR__ . '/Stubs/JoomlaCmsStubs.php';
-
-// Load Composer autoloader
+// Load Composer autoloader FIRST so real Joomla framework packages
+// (joomla/database, joomla/registry, etc.) take priority over stubs.
 $composerAutoload = JPATH_ROOT . '/libraries/vendor/autoload.php';
 if (file_exists($composerAutoload)) {
     require_once $composerAutoload;
 }
+
+// Load Joomla CMS stubs AFTER Composer autoloader. These stubs fill in
+// CMS classes (controllers, models, views) that aren't available as
+// Composer packages. The class_exists() guards ensure they only define
+// classes not already loaded from real packages.
+require_once __DIR__ . '/Stubs/JoomlaCmsStubs.php';
 
 // Register PSR-4 autoloader for the Proclaim component
 spl_autoload_register(function ($class) {
@@ -431,7 +432,7 @@ require_once __DIR__ . '/ProclaimTestCase.php';
                         return $stmt ? $stmt->fetchAll(\PDO::FETCH_OBJ) : [];
                     }
 
-                    public function loadColumn(): array
+                    public function loadColumn($offset = 0): array
                     {
                         $stmt = $this->pdo->query($this->prepareSql());
 
@@ -450,7 +451,44 @@ require_once __DIR__ . '/ProclaimTestCase.php';
                         return $stmt ? $stmt->fetchAll(\PDO::FETCH_COLUMN) : [];
                     }
 
-                    private string $sql = '';
+                    protected $sql = '';
+
+                    // Abstract method stubs required by real DatabaseDriver
+                    public function getTableCreate($tables) { return []; }
+                    protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
+                    {
+                        return new class implements \Joomla\Database\StatementInterface {
+                            public function bindParam($parameter, &$variable, $dataType = 'string', $length = 0, $driverOptions = []): bool { return true; }
+                            public function closeCursor(): void {}
+                            public function errorCode(): int|string { return 0; }
+                            public function errorInfo(): array { return []; }
+                            public function execute(?array $parameters = null): bool { return true; }
+                            public function fetch(?int $fetchStyle = null, int $cursorOrientation = 0, int $cursorOffset = 0): mixed { return false; }
+                            public function fetchColumn(int $columnNumber = 0): mixed { return false; }
+                            public function rowCount(): int|false { return 0; }
+                            public function setFetchMode(int $fetchMode, ...$args): void {}
+                        };
+                    }
+                    public function setUtf() { return false; }
+                    public function connect() {}
+                    public function connected() { return true; }
+                    public function escape($text, $extra = false) { return addslashes((string) $text); }
+                    public function getCollation() { return 'utf8mb4_general_ci'; }
+                    public function getConnectionCollation() { return 'utf8mb4_general_ci'; }
+                    public function getConnectionEncryption(): string { return ''; }
+                    public function isConnectionEncryptionSupported(): bool { return false; }
+                    public function getTableColumns($table, $typeOnly = true) { return []; }
+                    public function getTableKeys($tables) { return []; }
+                    public function getVersion() { return '8.0'; }
+                    public function insertid() { return 0; }
+                    public static function isSupported() { return true; }
+                    public function lockTable($tableName) { return $this; }
+                    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null) { return $this; }
+                    public function select($database) { return true; }
+                    public function transactionCommit($toSavepoint = false) {}
+                    public function transactionRollback($toSavepoint = false) {}
+                    public function transactionStart($asSavepoint = false) {}
+                    public function unlockTables() { return $this; }
                 };
             }
 
