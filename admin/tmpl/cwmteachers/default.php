@@ -35,7 +35,7 @@ $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder  = $listOrder == 'teacher.ordering';
 $sortFields = $this->getSortFields();
-$columns    = 9;
+$columns    = 10;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmteachers.saveOrderAjax&tmpl=component';
@@ -115,12 +115,31 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             <?php
                             endif; ?>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo Text::_('JBS_TCH_SHOW_LIST'); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_TCH_SHOW_LIST',
+                                    'teacher.list_show',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_TCH_SHOW_LANDING_PAGE',
+                                    'teacher.landing_show',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
+                            </th>
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_TCH_LANDING_ORDERING',
+                                    'teacher.landing_ordering',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-lg-table-cell">
                                 <?php
@@ -235,6 +254,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 echo ' - ' . Text::_('JBS_TCH_BELOW');
                             } ?>
                                     </div>
+                                </td>
+                                <td class="small d-none d-md-table-cell text-center">
+                                    <?php echo (int) $item->landing_ordering; ?>
                                 </td>
                                 <td class="d-none d-lg-table-cell">
                                     <?php

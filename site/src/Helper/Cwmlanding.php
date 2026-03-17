@@ -1258,6 +1258,7 @@ class Cwmlanding
             ->where($this->db->quoteName('a.published') . ' = 1')
             ->where($this->db->quoteName('a.landing_show') . ' > 0')
             ->group($this->db->quoteName('a.id'))
+            ->order($this->db->quoteName('a.landing_ordering') . ' ASC')
             ->order($this->db->quoteName('a.teachername') . ' ' . $order);
 
         $this->addAccessFilter($query);

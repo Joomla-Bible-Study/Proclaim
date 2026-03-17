@@ -60,6 +60,12 @@ class CwmteachersModel extends ListModel
                 'teacher.alias',
                 'language',
                 'teacher.language',
+                'landing_show',
+                'teacher.landing_show',
+                'list_show',
+                'teacher.list_show',
+                'landing_ordering',
+                'teacher.landing_ordering',
             ];
         }
 

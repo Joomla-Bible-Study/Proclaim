@@ -54,4 +54,14 @@ use Joomla\CMS\Layout\LayoutHelper;
             </select>
         </div>
     </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label id="batch-landing-ordering-lbl" for="batch-landing-ordering">
+                <?php echo Text::_('JBS_TCH_LANDING_ORDERING'); ?>
+            </label>
+            <input type="number" name="batch[landing_ordering]" id="batch-landing-ordering"
+                   class="form-control" value="" min="0" step="1"
+                   placeholder="<?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?>">
+        </div>
+    </div>
 </div>

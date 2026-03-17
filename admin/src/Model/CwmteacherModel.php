@@ -54,9 +54,10 @@ class CwmteacherModel extends AdminModel
      * @since 10.3.0
      */
     protected $batch_commands = [
-        'assetgroup_id' => 'batchAccess',
-        'landing_show'  => 'batchLandingShow',
-        'list_show'     => 'batchListShow',
+        'assetgroup_id'    => 'batchAccess',
+        'landing_show'     => 'batchLandingShow',
+        'list_show'        => 'batchListShow',
+        'landing_ordering' => 'batchLandingOrdering',
     ];
 
     /**
@@ -128,11 +129,13 @@ class CwmteacherModel extends AdminModel
         ) {
             // Disable fields for display.
             $form->setFieldAttribute('ordering', 'disabled', 'true');
+            $form->setFieldAttribute('landing_ordering', 'disabled', 'true');
             $form->setFieldAttribute('published', 'disabled', 'true');
 
             // Disable fields while saving.
             // The controller has already verified this is a record you can edit.
             $form->setFieldAttribute('ordering', 'filter', 'unset');
+            $form->setFieldAttribute('landing_ordering', 'filter', 'unset');
             $form->setFieldAttribute('published', 'filter', 'unset');
         }
 
@@ -668,6 +671,42 @@ class CwmteacherModel extends AdminModel
                 $table->reset();
                 $table->load($pk);
                 $table->list_show = $value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch set landing_ordering for a group of teachers.
+     *
+     * @param   int    $value     The landing_ordering value
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchLandingOrdering(int $value, array $pks, array $contexts): bool
+    {
+        $user  = Factory::getApplication()->getIdentity();
+        /** @var CwmteacherTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->landing_ordering = $value;
 
                 if (!$table->store()) {
                     throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
