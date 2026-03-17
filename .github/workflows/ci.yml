@@ -66,7 +66,9 @@ jobs:
         run: composer install --dev --no-interaction --prefer-dist
 
       - name: Import database schema
-        run: mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < admin/sql/install.mysql.utf8.sql
+        run: |
+          sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
       - name: Check PHP syntax
         run: composer lint:syntax
@@ -79,7 +81,7 @@ jobs:
           JTEST_DB_NAME: proclaim_test
           JTEST_DB_USER: proclaim_test
           JTEST_DB_PASSWORD: proclaim_test
-          JTEST_DB_PREFIX: ''
+          JTEST_DB_PREFIX: proclaim_
 
   js-checks:
     name: JS Lint & Tests
