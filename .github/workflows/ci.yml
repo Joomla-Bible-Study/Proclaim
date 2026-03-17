@@ -52,8 +52,8 @@ jobs:
       - name: Check PHP syntax
         run: composer lint:syntax
 
-      - name: Run PHPUnit tests
-        run: composer test
+      - name: Run PHPUnit unit tests
+        run: composer test:unit
         env:
           JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
 
