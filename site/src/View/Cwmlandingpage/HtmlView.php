@@ -131,6 +131,7 @@ class HtmlView extends BaseHtmlView
         $wa = $document->getWebAssetManager();
         $wa->useStyle('com_proclaim.cwm-landing');
         $wa->useScript('com_proclaim.cwm-landing-toggle');
+        $wa->useScript('bootstrap.collapse');
 
         parent::display($tpl);
     }

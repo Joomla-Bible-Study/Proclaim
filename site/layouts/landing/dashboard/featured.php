@@ -20,68 +20,65 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
 $allSections = $displayData['allSections'] ?? [];
+$params      = $displayData['params'] ?? null;
 
-// Pick the first teacher and first series as featured
-$featuredTeacher = null;
-$featuredSeries  = null;
+// Use the "before break" limit from section settings, default to 2
+$teacherLimit = $params ? (int) $params->get('landingteacherslimit', 2) : 2;
+$seriesLimit  = $params ? (int) $params->get('landingserieslimit', 2) : 2;
+
+$featuredTeachers = [];
+$featuredSeries   = [];
 
 if (!empty($allSections['teachers']['items'])) {
-    $featuredTeacher = $allSections['teachers']['items'][0];
+    $featuredTeachers = \array_slice($allSections['teachers']['items'], 0, $teacherLimit ?: 2);
 }
 
 if (!empty($allSections['series']['items'])) {
-    $featuredSeries = $allSections['series']['items'][0];
+    $featuredSeries = \array_slice($allSections['series']['items'], 0, $seriesLimit ?: 2);
 }
 
-if (!$featuredTeacher && !$featuredSeries) {
+if (empty($featuredTeachers) && empty($featuredSeries)) {
     return;
 }
+
+$iconMap = [
+    'teachers' => 'fas fa-user-tie',
+    'series'   => 'fas fa-layer-group',
+];
+
+$tagMap = [
+    'teachers' => Text::_('JBS_CMN_FEATURED_TEACHER'),
+    'series'   => Text::_('JBS_CMN_LATEST_SERIES'),
+];
 ?>
 <div class="proclaim-landing-featured">
     <div class="proclaim-landing-featured__label"><?php echo Text::_('JBS_CMN_FEATURED'); ?></div>
-    <div class="row g-3">
-        <?php if ($featuredSeries) : ?>
-            <div class="col-md-6">
-                <a href="<?php echo $featuredSeries['url']; ?>" class="proclaim-landing-featured-card">
-                    <?php if ($featuredSeries['image'] && !empty($featuredSeries['image']->path)) : ?>
-                        <div class="proclaim-landing-featured-card__img"
-                             style="background-image: url('<?php echo Uri::root() . htmlspecialchars($featuredSeries['image']->path, ENT_QUOTES, 'UTF-8'); ?>');"></div>
-                    <?php else : ?>
-                        <div class="proclaim-landing-featured-card__img proclaim-landing-featured-card__img--placeholder">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                    <?php endif; ?>
-                    <div class="proclaim-landing-featured-card__body">
-                        <div class="proclaim-landing-featured-card__tag"><?php echo Text::_('JBS_CMN_LATEST_SERIES'); ?></div>
-                        <p class="proclaim-landing-featured-card__title"><?php echo htmlspecialchars($featuredSeries['text'], ENT_QUOTES, 'UTF-8'); ?></p>
-                        <?php if (!empty($featuredSeries['meta'])) : ?>
-                            <p class="proclaim-landing-featured-card__meta"><?php echo htmlspecialchars($featuredSeries['meta'], ENT_QUOTES, 'UTF-8'); ?></p>
-                        <?php endif; ?>
-                    </div>
-                </a>
-            </div>
-        <?php endif; ?>
 
-        <?php if ($featuredTeacher) : ?>
-            <div class="col-md-6">
-                <a href="<?php echo $featuredTeacher['url']; ?>" class="proclaim-landing-featured-card">
-                    <?php if ($featuredTeacher['image'] && !empty($featuredTeacher['image']->path)) : ?>
-                        <div class="proclaim-landing-featured-card__img"
-                             style="background-image: url('<?php echo Uri::root() . htmlspecialchars($featuredTeacher['image']->path, ENT_QUOTES, 'UTF-8'); ?>');"></div>
-                    <?php else : ?>
-                        <div class="proclaim-landing-featured-card__img proclaim-landing-featured-card__img--placeholder">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                    <?php endif; ?>
-                    <div class="proclaim-landing-featured-card__body">
-                        <div class="proclaim-landing-featured-card__tag"><?php echo Text::_('JBS_CMN_FEATURED_TEACHER'); ?></div>
-                        <p class="proclaim-landing-featured-card__title"><?php echo htmlspecialchars($featuredTeacher['text'], ENT_QUOTES, 'UTF-8'); ?></p>
-                        <?php if (!empty($featuredTeacher['meta'])) : ?>
-                            <p class="proclaim-landing-featured-card__meta"><?php echo htmlspecialchars($featuredTeacher['meta'], ENT_QUOTES, 'UTF-8'); ?></p>
-                        <?php endif; ?>
+    <?php foreach (['series' => $featuredSeries, 'teachers' => $featuredTeachers] as $type => $items) : ?>
+        <?php if (!empty($items)) : ?>
+            <div class="row g-3 mb-3">
+                <?php foreach ($items as $item) : ?>
+                    <div class="col-md-6">
+                        <a href="<?php echo $item['url']; ?>" class="proclaim-landing-featured-card">
+                            <?php if ($item['image'] && !empty($item['image']->path)) : ?>
+                                <div class="proclaim-landing-featured-card__img"
+                                     style="background-image: url('<?php echo Uri::root() . htmlspecialchars($item['image']->path, ENT_QUOTES, 'UTF-8'); ?>');"></div>
+                            <?php else : ?>
+                                <div class="proclaim-landing-featured-card__img proclaim-landing-featured-card__img--placeholder">
+                                    <i class="<?php echo $iconMap[$type]; ?>"></i>
+                                </div>
+                            <?php endif; ?>
+                            <div class="proclaim-landing-featured-card__body">
+                                <div class="proclaim-landing-featured-card__tag"><?php echo $tagMap[$type]; ?></div>
+                                <p class="proclaim-landing-featured-card__title"><?php echo htmlspecialchars($item['text'], ENT_QUOTES, 'UTF-8'); ?></p>
+                                <?php if (!empty($item['meta'])) : ?>
+                                    <p class="proclaim-landing-featured-card__meta"><?php echo htmlspecialchars($item['meta'], ENT_QUOTES, 'UTF-8'); ?></p>
+                                <?php endif; ?>
+                            </div>
+                        </a>
                     </div>
-                </a>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
-    </div>
+    <?php endforeach; ?>
 </div>

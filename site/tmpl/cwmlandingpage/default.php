@@ -65,6 +65,7 @@ foreach ($sections as $section) {
 
             echo LayoutHelper::render('landing.dashboard.featured', [
                 'allSections' => $sectionsByType,
+                'params'      => $this->params,
             ], $layoutPath);
 
             // Dashboard uses accordion wrapper
