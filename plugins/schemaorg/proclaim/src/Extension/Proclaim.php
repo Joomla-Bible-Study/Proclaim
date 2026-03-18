@@ -132,9 +132,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // No JS needed — field edit detection is fully server-side.
-        // The _autoValues hidden field stores auto-generated values at form load.
-        // On save, we compare submitted values against _autoValues to detect edits.
+        // No JS needed — field edit detection is fully server-side via _fieldHashes.
     }
 
     /**
@@ -225,7 +223,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $customFields  = [];
                     $newHashes     = [];
 
-                    $trackFields = ['headline', 'name', 'description', 'jobTitle'];
+                    $trackFields = ['headline', 'name', 'description', 'jobTitle', 'url'];
 
                     foreach ($trackFields as $field) {
                         $submittedVal = $incoming[$field] ?? '';

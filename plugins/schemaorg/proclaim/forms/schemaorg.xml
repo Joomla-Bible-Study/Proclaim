@@ -3,9 +3,6 @@
     <fields name="schema">
         <fieldset name="schema" label="PLG_SCHEMAORG_PROCLAIM_SCHEMA_LABEL">
 
-            <!-- JSON of auto-generated field values for edit detection -->
-            <field name="_autoValues" type="hidden" default="{}"/>
-
             <!-- Sermon schema fields (CreativeWork) -->
             <field name="Sermon" type="subform" showon="schemaType:Sermon">
                 <form>
