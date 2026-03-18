@@ -187,29 +187,57 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // Preserve _autoHash for Smart Sync: Joomla's form filter strips unknown
-        // fields, so _autoHash is lost during form save. We restore it from the
-        // existing DB row. If no row exists (first save), we stamp a fresh hash
-        // so Smart Sync can track future edits.
-        $entry = $event->getData();
+        $entry      = $event->getData();
+        $item       = $event->getItem();
+        $itemId     = (int) ($entry->itemId ?? 0);
+        $schemaType = $entry->schemaType ?? '';
 
-        if (!empty($entry->schema)) {
+        // Smart Sync on individual save: if schema was auto-generated (hash match),
+        // silently refresh it from the updated item data. If manually edited (hash
+        // mismatch), preserve the admin's customizations and show a notice.
+        if (!empty($entry->schema) && $itemId > 0) {
             try {
-                $schemaData = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                $existingHash = $this->loadExistingAutoHash((int) ($entry->itemId ?? 0), $context);
+                $schemaData   = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
+                $existingHash = $this->loadExistingAutoHash($itemId, $context);
 
                 if ($existingHash !== null) {
-                    // Row exists — restore the original hash so manual edits are detectable
-                    $schemaData['_autoHash'] = $existingHash;
+                    // Existing row — check if it was manually edited
+                    $existingSchema = $this->loadExistingSchema($itemId, $context);
+                    unset($existingSchema['_autoHash']);
+                    ksort($existingSchema);
+                    $currentHash = substr(md5(json_encode($existingSchema, JSON_UNESCAPED_UNICODE)), 0, 12);
+
+                    if ($currentHash === $existingHash) {
+                        // Not manually edited — regenerate from item data
+                        $fresh = $this->generateSchemaFromItem($item, $context);
+
+                        if ($fresh !== null) {
+                            $fresh['_autoHash'] = self::hashSchema($fresh);
+                            $entry->schema = json_encode($fresh, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                            $schemaData = $fresh;
+                        } else {
+                            $schemaData['_autoHash'] = $existingHash;
+                            $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                        }
+                    } else {
+                        // Manually edited — preserve customizations, restore hash
+                        $schemaData['_autoHash'] = $existingHash;
+                        $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+                        Factory::getApplication()->enqueueMessage(
+                            Text::_('PLG_SCHEMAORG_PROCLAIM_CUSTOM_PRESERVED'),
+                            'info'
+                        );
+                    }
                 } else {
                     // First save — stamp hash of the auto-generated data
+                    unset($schemaData['_autoHash']);
                     ksort($schemaData);
                     $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
+                    $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
                 }
-
-                $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (\Throwable) {
-                // JSON error — skip hash
+                // JSON error — skip
             }
         }
 
@@ -506,6 +534,23 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function loadExistingAutoHash(int $itemId, string $context): ?string
     {
+        $schema = $this->loadExistingSchema($itemId, $context);
+
+        return $schema['_autoHash'] ?? null;
+    }
+
+    /**
+     * Load the full existing schema array from #__schemaorg.
+     *
+     * @param   int     $itemId   Item ID
+     * @param   string  $context  Context string
+     *
+     * @return  array|null  Schema data or null if no row
+     *
+     * @since   10.3.0
+     */
+    private function loadExistingSchema(int $itemId, string $context): ?array
+    {
         if ($itemId <= 0) {
             return null;
         }
@@ -523,12 +568,151 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 return null;
             }
 
-            $data = json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
-
-            return $data['_autoHash'] ?? null;
+            return json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Compute a short hash of schema data for Smart Sync fingerprinting.
+     *
+     * @param   array  $schema  Schema data (without _autoHash)
+     *
+     * @return  string  12-character hash
+     *
+     * @since   10.3.0
+     */
+    private static function hashSchema(array $schema): string
+    {
+        unset($schema['_autoHash']);
+        ksort($schema);
+
+        return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Generate fresh auto-schema from a Table item based on context.
+     *
+     * @param   \Joomla\CMS\Table\TableInterface  $item     The saved Table object
+     * @param   string                             $context  Form context
+     *
+     * @return  array|null  Schema data array or null if context not handled
+     *
+     * @since   10.3.0
+     */
+    private function generateSchemaFromItem(\Joomla\CMS\Table\TableInterface $item, string $context): ?array
+    {
+        return match ($context) {
+            'com_proclaim.cwmmessage' => $this->buildSermonSchema($item),
+            'com_proclaim.teacher'    => $this->buildTeacherSchema($item),
+            'com_proclaim.serie'      => $this->buildSeriesSchema($item),
+            default                   => null,
+        };
+    }
+
+    /**
+     * Build sermon schema from a Table item.
+     *
+     * @param   \Joomla\CMS\Table\TableInterface  $item  Message table
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private function buildSermonSchema(\Joomla\CMS\Table\TableInterface $item): array
+    {
+        $schema = ['@type' => 'CreativeWork'];
+
+        if (!empty($item->studytitle)) {
+            $schema['headline'] = $item->studytitle;
+        }
+
+        if (!empty($item->studyintro)) {
+            $schema['description'] = $this->cleanText($item->studyintro);
+        }
+
+        if (!empty($item->studydate) && $item->studydate !== '0000-00-00 00:00:00') {
+            $schema['datePublished'] = $item->studydate;
+        }
+
+        if (!empty($item->modified) && $item->modified !== '0000-00-00 00:00:00') {
+            $schema['dateModified'] = $item->modified;
+        }
+
+        if (!empty($item->image)) {
+            $schema['image'] = $item->image;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build teacher schema from a Table item.
+     *
+     * @param   \Joomla\CMS\Table\TableInterface  $item  Teacher table
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private function buildTeacherSchema(\Joomla\CMS\Table\TableInterface $item): array
+    {
+        $schema = ['@type' => 'Person'];
+
+        if (!empty($item->teachername)) {
+            $schema['name'] = $item->teachername;
+        }
+
+        if (!empty($item->title)) {
+            $schema['jobTitle'] = $item->title;
+        }
+
+        if (!empty($item->short)) {
+            $schema['description'] = $this->cleanText($item->short);
+        } elseif (!empty($item->information)) {
+            $schema['description'] = $this->cleanText($item->information);
+        }
+
+        if (!empty($item->teacher_image)) {
+            $schema['image'] = $item->teacher_image;
+        } elseif (!empty($item->teacher_thumbnail)) {
+            $schema['image'] = $item->teacher_thumbnail;
+        }
+
+        if (!empty($item->website)) {
+            $schema['url'] = $item->website;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build series schema from a Table item.
+     *
+     * @param   \Joomla\CMS\Table\TableInterface  $item  Series table
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private function buildSeriesSchema(\Joomla\CMS\Table\TableInterface $item): array
+    {
+        $schema = ['@type' => 'CreativeWorkSeries'];
+
+        if (!empty($item->series_text)) {
+            $schema['name'] = $item->series_text;
+        }
+
+        if (!empty($item->description)) {
+            $schema['description'] = $this->cleanText($item->description);
+        }
+
+        if (!empty($item->series_thumbnail)) {
+            $schema['image'] = $item->series_thumbnail;
+        }
+
+        return $schema;
     }
 
     /**
