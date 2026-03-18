@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
@@ -2099,6 +2100,55 @@ class CwmadminController extends FormController
                 'success' => true,
                 'count'   => $count,
                 'message' => Text::_('JBS_ADM_ALIAS_ROWS') . $count,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Bulk-sync Schema.org data for all published items via AJAX.
+     *
+     * @return void
+     *
+     * @since  10.3.0
+     */
+    public function schemaSyncXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $force  = $app->getInput()->getBool('force', false);
+            $counts = CwmschemaorgHelper::syncAll($force);
+            $total  = $counts['messages'] + $counts['teachers'] + $counts['series'];
+
+            echo json_encode([
+                'success'  => true,
+                'count'    => $total,
+                'counts'   => $counts,
+                'message'  => Text::sprintf(
+                    'JBS_ADM_SCHEMA_SYNC_RESULT',
+                    $counts['messages'],
+                    $counts['teachers'],
+                    $counts['series']
+                ),
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([

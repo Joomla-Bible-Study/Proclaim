@@ -96,6 +96,35 @@ $this->useCoreUI = true;
     </div>
 </div>
 
+<!-- Bootstrap 5 Modal for Schema.org Sync -->
+<div class="modal fade" id="schema-sync-modal" tabindex="-1"
+     aria-labelledby="schemaSyncModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="schemaSyncModalLabel">
+                    <i class="icon-code me-2" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="schema-sync-spinner mb-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden"><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
+                    </div>
+                </div>
+                <p class="schema-sync-status-text fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_SCHEMA_SYNCING'); ?></p>
+                <p class="schema-sync-result-text text-muted small mb-0"></p>
+            </div>
+            <div class="modal-footer justify-content-center" style="display: none;">
+                <button type="button" class="btn btn-success btn-close-schema-modal">
+                    <i class="icon-checkmark me-1" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap 5 Modal for Player Tools -->
 <div class="modal fade" id="player-tools-modal" tabindex="-1"
      aria-labelledby="playerToolsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -192,6 +221,13 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-location" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_LOCATION_WIZARD'); ?></span>
                         </a>
+                        <button type="button"
+                           class="cwmadmin-action-card"
+                           id="btn-schema-sync"
+                           title="<?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>">
+                            <i class="icon-code" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?></span>
+                        </button>
                     </div>
                 </div>
             </div>

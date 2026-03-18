@@ -166,6 +166,27 @@
                 }
             }
 
+            // Initialize Bootstrap 5 modal for schema sync
+            const schemaSyncModalEl = document.getElementById('schema-sync-modal');
+            if (schemaSyncModalEl && typeof bootstrap !== 'undefined') {
+                this.schemaSyncModal = new bootstrap.Modal(schemaSyncModalEl, {
+                    backdrop: 'static',
+                    keyboard: false,
+                });
+
+                const schemaSyncBtn = document.getElementById('btn-schema-sync');
+                if (schemaSyncBtn) {
+                    schemaSyncBtn.addEventListener('click', () => this.handleSchemaSync());
+                }
+
+                const schemaCloseBtn = schemaSyncModalEl.querySelector('.btn-close-schema-modal');
+                if (schemaCloseBtn) {
+                    schemaCloseBtn.addEventListener('click', () => {
+                        if (this.schemaSyncModal) this.schemaSyncModal.hide();
+                    });
+                }
+            }
+
             // Initialize Bootstrap 5 modal for player tools
             const playerToolsModalEl = document.getElementById('player-tools-modal');
             if (playerToolsModalEl && typeof bootstrap !== 'undefined') {
@@ -360,6 +381,71 @@
                 console.error('Alias update error:', error);
 
                 // Hide spinner and show error
+                if (spinner) spinner.style.display = 'none';
+                if (statusText) {
+                    statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
+                        Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                }
+                if (resultText) {
+                    resultText.textContent = error.message || 'An error occurred';
+                }
+                if (footer) footer.style.display = 'flex';
+            }
+        }
+
+        /**
+         * Schema.org Sync — bulk-populate #__schemaorg for all items.
+         */
+        async handleSchemaSync() {
+            const modal = document.getElementById('schema-sync-modal');
+            const spinner = modal?.querySelector('.schema-sync-spinner');
+            const statusText = modal?.querySelector('.schema-sync-status-text');
+            const resultText = modal?.querySelector('.schema-sync-result-text');
+            const footer = modal?.querySelector('.modal-footer');
+
+            // Reset modal state
+            if (spinner) spinner.style.display = 'block';
+            if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_SCHEMA_SYNCING') || 'Syncing schema data...';
+            if (resultText) resultText.textContent = '';
+            if (footer) footer.style.display = 'none';
+
+            if (this.schemaSyncModal) {
+                this.schemaSyncModal.show();
+            }
+
+            try {
+                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&force=1&${this.token}=1`;
+                const result = await this.fetchJson(url);
+
+                if (spinner) spinner.style.display = 'none';
+
+                if (result.success) {
+                    if (statusText) {
+                        statusText.innerHTML = `<i class="icon-checkmark text-success me-2"></i>${
+                            Joomla.Text._('JBS_ADM_SCHEMA_SYNC_COMPLETE') || 'Schema sync complete!'}`;
+                    }
+                    if (resultText) {
+                        resultText.textContent = result.message || `${result.count} items synced`;
+                    }
+
+                    this.announceToScreenReader(result.message || 'Schema sync complete');
+
+                    setTimeout(() => {
+                        if (this.schemaSyncModal) this.schemaSyncModal.hide();
+                    }, 4000);
+                } else {
+                    if (statusText) {
+                        statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
+                            Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                    }
+                    if (resultText) {
+                        resultText.textContent = result.message || 'An error occurred';
+                    }
+                    if (footer) footer.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Schema sync error:', error);
+
                 if (spinner) spinner.style.display = 'none';
                 if (statusText) {
                     statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
