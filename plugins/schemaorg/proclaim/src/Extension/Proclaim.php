@@ -190,30 +190,52 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         $entry  = $event->getData();
+        $item   = $event->getItem();
         $itemId = (int) ($entry->itemId ?? 0);
 
-        // Preserve _autoHash for Smart Sync detection.
-        // On first save: stamp a hash of the auto-generated data.
-        // On subsequent saves: restore the ORIGINAL hash from the DB so that
-        // any manual edits cause a mismatch that bulk Smart Sync detects.
-        // We never regenerate here — the model's loadFormData() provides fresh
-        // defaults each time the form loads, and the user's form edits are saved as-is.
+        // Smart Sync on save — three cases:
+        // 1. User didn't touch schema tab + existing was auto-generated → regenerate
+        // 2. User didn't touch schema tab + existing was manually edited → preserve
+        // 3. User actively edited schema tab → save their edits
         if (!empty($entry->schema) && $itemId > 0) {
             try {
-                $schemaData   = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                $existingHash = $this->loadExistingAutoHash($itemId, $context);
+                $incoming       = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
+                $existingSchema = $this->loadExistingSchema($itemId, $context);
+                $existingHash   = $existingSchema['_autoHash'] ?? null;
 
-                if ($existingHash !== null) {
-                    // Existing row — restore original hash (form filter stripped it)
-                    $schemaData['_autoHash'] = $existingHash;
+                if ($existingSchema === null) {
+                    // First save — stamp hash
+                    unset($incoming['_autoHash']);
+                    ksort($incoming);
+                    $incoming['_autoHash'] = substr(md5(json_encode($incoming, JSON_UNESCAPED_UNICODE)), 0, 12);
                 } else {
-                    // First save — stamp hash of the auto-generated data
-                    unset($schemaData['_autoHash']);
-                    ksort($schemaData);
-                    $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
+                    // Compare incoming vs existing (without hash) to detect user edits
+                    $incomingClean  = $incoming;
+                    $existingClean  = $existingSchema;
+                    unset($incomingClean['_autoHash'], $existingClean['_autoHash']);
+
+                    $userEditedNow = ($incomingClean !== $existingClean);
+
+                    if ($userEditedNow) {
+                        // Case 3: user actively edited schema — save as-is, keep old hash
+                        $incoming['_autoHash'] = $existingHash;
+                    } elseif ($existingHash !== null && self::hashSchema($existingClean) === $existingHash) {
+                        // Case 1: untouched + auto-generated → regenerate from item
+                        $fresh = $this->generateSchemaFromItem($item, $context);
+
+                        if ($fresh !== null) {
+                            $fresh['_autoHash'] = self::hashSchema($fresh);
+                            $incoming = $fresh;
+                        } else {
+                            $incoming['_autoHash'] = $existingHash;
+                        }
+                    } else {
+                        // Case 2: untouched + previously manually edited → preserve
+                        $incoming['_autoHash'] = $existingHash;
+                    }
                 }
 
-                $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (\Throwable) {
                 // JSON error — skip
             }
