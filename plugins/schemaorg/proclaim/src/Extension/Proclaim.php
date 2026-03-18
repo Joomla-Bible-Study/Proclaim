@@ -712,8 +712,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $schema['url'] = $item->website;
         }
 
+        // worksFor: teacher org_name → admin setting → site name
         try {
-            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+            $orgName = !empty($item->org_name)
+                ? $item->org_name
+                : \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
 
             if ($orgName !== '') {
                 $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];

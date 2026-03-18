@@ -1240,8 +1240,8 @@ class CwmschemaorgHelper
             $schema['sameAs'] = $sameAs;
         }
 
-        // worksFor (organization) — uses admin setting, teacher can override in schema tab
-        $orgName = self::getOrgName();
+        // worksFor: teacher org_name → admin setting → site name
+        $orgName = !empty($teacher->org_name) ? $teacher->org_name : self::getOrgName();
 
         if ($orgName !== '') {
             $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];

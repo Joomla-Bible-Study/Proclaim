@@ -13,6 +13,9 @@
                size="30"/>
         <field name="title" type="text" size="60"
                label="JBS_CMN_TITLE" description="JBS_TCH_TITLE_DESC"/>
+        <field name="org_name" type="text" size="60"
+               label="JBS_TCH_ORG_NAME" description="JBS_TCH_ORG_NAME_DESC"
+               hint="JBS_TCH_ORG_NAME_HINT" filter="string"/>
         <field name="phone" type="tel" size="60"
                label="JBS_TCH_PHONE"/>
         <field name="email" type="email" size="50" label="JBS_TCH_EMAIL" description="JBS_TCH_EMAIL_DESC"

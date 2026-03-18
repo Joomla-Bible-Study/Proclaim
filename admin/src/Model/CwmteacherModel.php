@@ -574,6 +574,16 @@ class CwmteacherModel extends AdminModel
                     );
                 }
 
+                // worksFor: teacher org_name → admin setting → site name
+                $orgName = !empty($data->org_name) ? $data->org_name : CwmschemaorgHelper::getOrgName();
+
+                if ($orgName !== '') {
+                    $teacher['worksFor'] = [
+                        '@type' => 'Organization',
+                        'name'  => $orgName,
+                    ];
+                }
+
                 $data->schema['Teacher'] = $teacher;
             }
         }

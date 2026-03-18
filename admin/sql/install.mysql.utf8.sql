@@ -531,6 +531,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `teachername`       VARCHAR(250)                                     NOT NULL DEFAULT '',
     `alias`             VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
     `title`             VARCHAR(250)                                              DEFAULT NULL,
+    `org_name`          VARCHAR(255)                                              DEFAULT NULL,
     `phone`             VARCHAR(50)                                               DEFAULT NULL,
     `email`             VARCHAR(100)                                              DEFAULT NULL,
     `website`           TEXT,
