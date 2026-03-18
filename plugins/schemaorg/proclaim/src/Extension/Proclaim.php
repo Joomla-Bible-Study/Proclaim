@@ -133,29 +133,28 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         // Inject JS to track which schema fields the user edits.
-        // Stores field names in a JSON array so save can selectively preserve edits.
+        // Uses event delegation on document to catch subform fields that
+        // Joomla renders after DOMContentLoaded.
         $this->getApplication()->getDocument()->addScriptDeclaration(
             <<<'JS'
             document.addEventListener('DOMContentLoaded', function() {
                 var tracker = document.getElementById('jform_schema__editedFields');
                 if (!tracker) return;
                 var edited = new Set();
-                var skip = ['jform[schema][_editedFields]', 'jform[schema][schemaType]'];
-                document.querySelectorAll('[name^="jform[schema]"]').forEach(function(el) {
-                    if (skip.indexOf(el.name) !== -1 || el.type === 'hidden') return;
-                    function mark() {
-                        // Extract the field name from the subform path
-                        // e.g., jform[schema][Sermon][headline] → headline
-                        var parts = el.name.replace(/\]/g, '').split('[');
-                        var field = parts[parts.length - 1];
-                        if (field && field !== '@type') {
-                            edited.add(field);
-                            tracker.value = JSON.stringify(Array.from(edited));
-                        }
+                function handleEdit(e) {
+                    var el = e.target;
+                    if (!el.name || !el.name.startsWith('jform[schema]')) return;
+                    if (el.name === 'jform[schema][_editedFields]' || el.name === 'jform[schema][schemaType]') return;
+                    if (el.type === 'hidden') return;
+                    var parts = el.name.replace(/\]/g, '').split('[');
+                    var field = parts[parts.length - 1];
+                    if (field && field !== '@type') {
+                        edited.add(field);
+                        tracker.value = JSON.stringify(Array.from(edited));
                     }
-                    el.addEventListener('change', mark);
-                    el.addEventListener('input', mark);
-                });
+                }
+                document.addEventListener('change', handleEdit, true);
+                document.addEventListener('input', handleEdit, true);
             });
             JS
         );
