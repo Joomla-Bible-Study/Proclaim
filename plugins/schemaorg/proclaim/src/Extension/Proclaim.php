@@ -189,71 +189,31 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        $entry      = $event->getData();
-        $item       = $event->getItem();
-        $itemId     = (int) ($entry->itemId ?? 0);
-        $schemaType = $entry->schemaType ?? '';
+        $entry  = $event->getData();
+        $itemId = (int) ($entry->itemId ?? 0);
 
-        // Smart Sync on individual save: if schema was auto-generated (hash match),
-        // silently refresh it from the updated item data. If manually edited (hash
-        // mismatch), preserve the admin's customizations and show a notice.
+        // Preserve _autoHash for Smart Sync detection.
+        // On first save: stamp a hash of the auto-generated data.
+        // On subsequent saves: restore the ORIGINAL hash from the DB so that
+        // any manual edits cause a mismatch that bulk Smart Sync detects.
+        // We never regenerate here — the model's loadFormData() provides fresh
+        // defaults each time the form loads, and the user's form edits are saved as-is.
         if (!empty($entry->schema) && $itemId > 0) {
             try {
                 $schemaData   = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
                 $existingHash = $this->loadExistingAutoHash($itemId, $context);
 
                 if ($existingHash !== null) {
-                    // Existing row — check if it was manually edited
-                    $existingSchema = $this->loadExistingSchema($itemId, $context);
-                    unset($existingSchema['_autoHash']);
-                    ksort($existingSchema);
-                    $currentHash = substr(md5(json_encode($existingSchema, JSON_UNESCAPED_UNICODE)), 0, 12);
-
-                    if ($currentHash === $existingHash) {
-                        // Not manually edited — regenerate from item data
-                        $fresh = $this->generateSchemaFromItem($item, $context);
-
-                        if ($fresh !== null) {
-                            $fresh['_autoHash'] = self::hashSchema($fresh);
-                            $entry->schema = json_encode($fresh, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-                            $schemaData = $fresh;
-                        } else {
-                            $schemaData['_autoHash'] = $existingHash;
-                            $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-                        }
-                    } else {
-                        // Manually edited — preserve customizations, restore hash
-                        $schemaData['_autoHash'] = $existingHash;
-                        $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-
-                        // Build a return URL to come back to this edit page
-                        $app       = Factory::getApplication();
-                        $returnUrl = base64_encode($app->getInput()->server->getString('HTTP_REFERER', ''));
-                        $refreshUrl = Route::_(
-                            'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
-                            . '&item_id=' . $itemId
-                            . '&schema_context=' . $context
-                            . '&return=' . $returnUrl
-                            . '&' . Session::getFormToken() . '=1',
-                            false
-                        );
-
-                        $app->enqueueMessage(
-                            Text::_('PLG_SCHEMAORG_PROCLAIM_CUSTOM_PRESERVED')
-                            . ' <a href="' . $refreshUrl . '" class="btn btn-sm btn-outline-primary ms-2">'
-                            . '<i class="icon-refresh me-1"></i>'
-                            . Text::_('PLG_SCHEMAORG_PROCLAIM_FORCE_REFRESH')
-                            . '</a>',
-                            'info'
-                        );
-                    }
+                    // Existing row — restore original hash (form filter stripped it)
+                    $schemaData['_autoHash'] = $existingHash;
                 } else {
                     // First save — stamp hash of the auto-generated data
                     unset($schemaData['_autoHash']);
                     ksort($schemaData);
                     $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
-                    $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
                 }
+
+                $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (\Throwable) {
                 // JSON error — skip
             }
