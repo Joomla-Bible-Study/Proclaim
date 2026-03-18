@@ -977,6 +977,28 @@ class CwmmessageModel extends AdminModel
     }
 
     /**
+     * Import system plugins for data preparation.
+     *
+     * The system schemaorg plugin listens on onContentPrepareData to load
+     * saved schema from #__schemaorg. The base method only imports the
+     * 'content' group, so system plugins never hear the event.
+     *
+     * @param   string  $context  The context identifier
+     * @param   mixed   &$data   The data to process
+     * @param   string  $group   Plugin group (default: 'content')
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessData($context, &$data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessData($context, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected in the form.
      *
      * @return  mixed    The default data is an empty array.

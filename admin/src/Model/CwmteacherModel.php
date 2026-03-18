@@ -489,6 +489,17 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
+     * @inheritDoc
+     * @since 10.3.0
+     */
+    protected function preprocessData($context, &$data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessData($context, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected in the form.
      *
      * @return    mixed    The data for the form.
