@@ -71,9 +71,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.3.0
      */
     private const CONTEXT_TYPE_MAP = [
+        // Form contexts
         'com_proclaim.cwmmessage' => 'Sermon',
         'com_proclaim.teacher'    => 'Teacher',
         'com_proclaim.serie'      => 'Series',
+        // Content event contexts (model name differs from form name)
+        'com_proclaim.cwmteacher' => 'Teacher',
+        'com_proclaim.cwmserie'   => 'Series',
     ];
 
     /**
@@ -746,10 +750,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function generateSchemaFromItem(\Joomla\CMS\Table\TableInterface $item, string $context): ?array
     {
         return match ($context) {
-            'com_proclaim.cwmmessage' => $this->buildSermonSchema($item),
-            'com_proclaim.teacher'    => $this->buildTeacherSchema($item),
-            'com_proclaim.serie'      => $this->buildSeriesSchema($item),
-            default                   => null,
+            'com_proclaim.cwmmessage'                   => $this->buildSermonSchema($item),
+            'com_proclaim.teacher', 'com_proclaim.cwmteacher' => $this->buildTeacherSchema($item),
+            'com_proclaim.serie', 'com_proclaim.cwmserie'     => $this->buildSeriesSchema($item),
+            default                                     => null,
         };
     }
 
