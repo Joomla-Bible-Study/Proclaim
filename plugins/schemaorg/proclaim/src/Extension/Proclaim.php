@@ -132,17 +132,29 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // Inject JS to track schema field edits — sets _schemaEdited=1 on any change
+        // Inject JS to track which schema fields the user edits.
+        // Stores field names in a JSON array so save can selectively preserve edits.
         $this->getApplication()->getDocument()->addScriptDeclaration(
             <<<'JS'
             document.addEventListener('DOMContentLoaded', function() {
-                var flag = document.getElementById('jform_schema__schemaEdited');
-                if (!flag) return;
-                // Listen on the schema tab container for any input changes
+                var tracker = document.getElementById('jform_schema__editedFields');
+                if (!tracker) return;
+                var edited = new Set();
+                var skip = ['jform[schema][_editedFields]', 'jform[schema][schemaType]'];
                 document.querySelectorAll('[name^="jform[schema]"]').forEach(function(el) {
-                    if (el.name === 'jform[schema][_schemaEdited]' || el.name === 'jform[schema][schemaType]') return;
-                    el.addEventListener('change', function() { flag.value = '1'; });
-                    el.addEventListener('input', function() { flag.value = '1'; });
+                    if (skip.indexOf(el.name) !== -1 || el.type === 'hidden') return;
+                    function mark() {
+                        // Extract the field name from the subform path
+                        // e.g., jform[schema][Sermon][headline] → headline
+                        var parts = el.name.replace(/\]/g, '').split('[');
+                        var field = parts[parts.length - 1];
+                        if (field && field !== '@type') {
+                            edited.add(field);
+                            tracker.value = JSON.stringify(Array.from(edited));
+                        }
+                    }
+                    el.addEventListener('change', mark);
+                    el.addEventListener('input', mark);
                 });
             });
             JS
@@ -209,33 +221,45 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $item   = $event->getItem();
         $itemId = (int) ($entry->itemId ?? 0);
 
-        // Smart Sync on save — uses _schemaEdited flag set by JS when user
-        // touches any schema field:
-        // - _schemaEdited=0: user didn't touch schema → regenerate from item data
-        //   so title/description changes auto-update the schema
-        // - _schemaEdited=1: user actively edited schema → save their edits
-        $formSchema    = $event->getSchema();
-        $userEditedNow = !empty($formSchema['_schemaEdited']);
+        // Field-level Smart Sync on save:
+        // 1. Regenerate fresh schema from current item data (picks up title changes etc.)
+        // 2. Overlay any fields the user actively edited in this session
+        // This way: title change auto-updates headline, but a manually edited
+        // description stays locked — only the specific fields the user touched are kept.
+        $formSchema   = $event->getSchema();
+        $editedFields = [];
+
+        if (!empty($formSchema['_editedFields'])) {
+            try {
+                $editedFields = json_decode($formSchema['_editedFields'], true, 512, JSON_THROW_ON_ERROR) ?: [];
+            } catch (\Throwable) {
+                $editedFields = [];
+            }
+        }
 
         if (!empty($entry->schema) && $itemId > 0) {
             try {
                 $incoming = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                unset($incoming['_schemaEdited']);
+                unset($incoming['_editedFields']);
 
-                if ($userEditedNow) {
-                    // User edited schema tab — save their edits, stamp new hash
-                    $incoming['_autoHash'] = self::hashSchema($incoming);
-                } else {
-                    // User didn't touch schema — regenerate from current item data
-                    $fresh = $this->generateSchemaFromItem($item, $context);
+                // Start with fresh auto-generated schema from item data
+                $fresh = $this->generateSchemaFromItem($item, $context);
 
-                    if ($fresh !== null) {
-                        $fresh['_autoHash'] = self::hashSchema($fresh);
-                        $incoming = $fresh;
+                if ($fresh !== null) {
+                    // Overlay user-edited fields from the form submission
+                    foreach ($editedFields as $field) {
+                        if (\array_key_exists($field, $incoming)) {
+                            $fresh[$field] = $incoming[$field];
+                        }
                     }
-                }
 
-                $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                    $fresh['_autoHash'] = self::hashSchema($fresh);
+                    $entry->schema = json_encode($fresh, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                } else {
+                    // Couldn't generate — save form data as-is
+                    $incoming['_autoHash'] = self::hashSchema($incoming);
+                    $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                }
             } catch (\Throwable) {
                 // JSON error — skip
             }
