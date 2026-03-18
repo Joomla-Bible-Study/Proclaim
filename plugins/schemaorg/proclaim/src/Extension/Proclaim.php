@@ -132,50 +132,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // Track which schema fields the user edits by comparing values
-        // on form submit against their original values at page load.
-        // Joomla's subform web component prevents event bubbling, so
-        // input/change listeners on document don't work.
-        $this->getApplication()->getDocument()->addScriptDeclaration(
-            <<<'JS'
-            document.addEventListener('DOMContentLoaded', function() {
-                var tracker = document.getElementById('jform_schema__editedFields');
-                if (!tracker) return;
-                var originals = {};
-                // Capture original values after a delay (subform fields render async)
-                setTimeout(function() {
-                    document.querySelectorAll('input, textarea, select').forEach(function(el) {
-                        if (!el.name || el.name.indexOf('[schema]') === -1) return;
-                        if (el.type === 'hidden') return;
-                        var parts = el.name.replace(/\]/g, '').split('[');
-                        var field = parts[parts.length - 1];
-                        if (field && field !== '@type' && field !== '_editedFields' && field !== 'schemaType') {
-                            originals[field] = el.value;
-                        }
-                    });
-                    console.log('[Schema Edit Tracker] captured originals:', originals);
-                }, 1500);
-                // On form submit, compare current vs original
-                var form = document.getElementById('adminForm') || document.querySelector('form[name="adminForm"]');
-                if (form) {
-                    form.addEventListener('submit', function() {
-                        var edited = [];
-                        document.querySelectorAll('input, textarea, select').forEach(function(el) {
-                            if (!el.name || el.name.indexOf('[schema]') === -1) return;
-                            if (el.type === 'hidden') return;
-                            var parts = el.name.replace(/\]/g, '').split('[');
-                            var field = parts[parts.length - 1];
-                            if (field && originals.hasOwnProperty(field) && el.value !== originals[field]) {
-                                edited.push(field);
-                            }
-                        });
-                        tracker.value = JSON.stringify(edited);
-                        console.log('[Schema Edit Tracker] submit — edited fields:', edited);
-                    });
-                }
-            });
-            JS
-        );
+        // No JS needed — field edit detection is fully server-side.
+        // The _autoValues hidden field stores auto-generated values at form load.
+        // On save, we compare submitted values against _autoValues to detect edits.
     }
 
     /**
@@ -238,98 +197,43 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $item   = $event->getItem();
         $itemId = (int) ($entry->itemId ?? 0);
 
-        // Field-level Smart Sync on save:
-        // 1. Regenerate fresh schema from current item data
-        // 2. Merge _editedFields (JS, this session) into _customFields (persistent)
-        // 3. Overlay custom fields from the form data — everything else auto-updates
+        // Field-level Smart Sync on save (fully server-side):
         //
-        // _customFields is stored in the schema JSON and persists across sessions.
-        // The Reset button clears it. Bulk sync ignores it (force overwrites all).
-        $formSchema      = $event->getSchema();
-        $sessionEdited   = [];
-        $debug           = true; // TODO: remove after debugging
-
-        if (!empty($formSchema['_editedFields'])) {
-            try {
-                $sessionEdited = json_decode($formSchema['_editedFields'], true, 512, JSON_THROW_ON_ERROR) ?: [];
-            } catch (\Throwable) {
-                $sessionEdited = [];
-            }
-        }
-
-        if ($debug) {
-            try {
-                $app = Factory::getApplication();
-                $app->enqueueMessage('Schema Debug — _editedFields raw: ' . ($formSchema['_editedFields'] ?? '(not set)'), 'info');
-                $app->enqueueMessage('Schema Debug — sessionEdited: ' . json_encode($sessionEdited), 'info');
-                $app->enqueueMessage('Schema Debug — entry->schema keys: ' . implode(', ', array_keys(json_decode($entry->schema ?? '{}', true) ?: [])), 'info');
-            } catch (\Throwable) {
-                // skip
-            }
-        }
-
+        // 1. Regenerate fresh schema from current item data
+        // 2. Compare each submitted field against the auto-generated value
+        // 3. Fields that differ = user customized → preserve submitted value
+        // 4. Fields that match = not customized → use fresh auto-generated value
+        //
+        // No JS tracking needed — the comparison happens entirely at save time.
         if (!empty($entry->schema) && $itemId > 0) {
             try {
                 $incoming = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                unset($incoming['_editedFields']);
+                unset($incoming['_autoValues'], $incoming['_editedFields']);
 
-                // Load persistent custom fields list from existing DB row
-                $existingSchema = $this->loadExistingSchema($itemId, $context);
-                $customFields   = $existingSchema['_customFields'] ?? [];
-
-                // Merge in any fields edited this session
-                $customFields = array_values(array_unique(array_merge($customFields, $sessionEdited)));
-
-                if ($debug) {
-                    try {
-                        $app = Factory::getApplication();
-                        $app->enqueueMessage('Schema Debug — existing _customFields: ' . json_encode($existingSchema['_customFields'] ?? []), 'info');
-                        $app->enqueueMessage('Schema Debug — merged customFields: ' . json_encode($customFields), 'info');
-                        $app->enqueueMessage('Schema Debug — incoming headline: ' . ($incoming['headline'] ?? '(none)'), 'info');
-                    } catch (\Throwable) {
-                        // skip
-                    }
-                }
-
-                // Regenerate fresh schema from item data
                 $fresh = $this->generateSchemaFromItem($item, $context);
 
                 if ($fresh !== null) {
-                    // For fields edited this session: if user set it back to the
-                    // auto-generated value, remove from _customFields (un-customize)
-                    foreach ($sessionEdited as $field) {
-                        $incomingVal = $incoming[$field] ?? null;
-                        $freshVal    = $fresh[$field] ?? null;
+                    $customFields = [];
 
-                        if ($incomingVal === $freshVal) {
-                            // Value matches auto-generated — remove custom override
-                            $customFields = array_values(array_filter(
-                                $customFields,
-                                static fn ($f) => $f !== $field
-                            ));
+                    // Compare submitted values against auto-generated for tracked fields
+                    $trackFields = ['headline', 'name', 'description', 'jobTitle',
+                        'datePublished', 'dateModified', 'image', 'url'];
+
+                    foreach ($trackFields as $field) {
+                        $submittedVal = $incoming[$field] ?? '';
+                        $autoVal      = $fresh[$field] ?? '';
+
+                        if ($submittedVal !== '' && $submittedVal !== $autoVal) {
+                            // User has a custom value → preserve it
+                            $customFields[] = $field;
+                            $fresh[$field]  = $submittedVal;
                         }
                     }
 
-                    if ($debug) {
-                        try {
-                            Factory::getApplication()->enqueueMessage(
-                                'Schema Debug — fresh headline: ' . ($fresh['headline'] ?? '(none)')
-                                . ' | item studytitle: ' . ($item->studytitle ?? '(none)'),
-                                'info'
-                            );
-                            Factory::getApplication()->enqueueMessage(
-                                'Schema Debug — final customFields after un-customize: ' . json_encode($customFields),
-                                'info'
-                            );
-                        } catch (\Throwable) {
-                            // skip
-                        }
-                    }
-
-                    // Overlay persistent custom fields from form submission
-                    foreach ($customFields as $field) {
-                        if (\array_key_exists($field, $incoming)) {
-                            $fresh[$field] = $incoming[$field];
+                    // Preserve complex subform fields from submission
+                    foreach (['author', 'sameAs', 'worksFor', 'genericField'] as $complexField) {
+                        if (!empty($incoming[$complexField])) {
+                            $fresh[$complexField] = $incoming[$complexField];
                         }
                     }
 
@@ -340,29 +244,16 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
                 } else {
-                    $incoming['_customFields'] = !empty($customFields) ? $customFields : null;
-                    $incoming['_autoHash']     = self::hashSchema($incoming);
+                    $incoming['_autoHash'] = self::hashSchema($incoming);
                     $finalSchema = json_encode(
                         array_filter($incoming, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
                 }
 
-                // Write directly to DB — the system plugin's event object
-                // reference doesn't reliably persist our modifications.
-                $schemaType = $entry->schemaType ?? '';
+                // Write directly to DB
+                $schemaType    = $entry->schemaType ?? '';
                 $entry->schema = $finalSchema;
-
-                if ($debug) {
-                    try {
-                        $app = Factory::getApplication();
-                        $app->enqueueMessage('Schema Debug — writing to DB: itemId=' . $itemId . ', type=' . $schemaType, 'warning');
-                        $app->enqueueMessage('Schema Debug — JSON has _customFields: ' . (str_contains($finalSchema, '_customFields') ? 'YES' : 'NO'), 'warning');
-                    } catch (\Throwable) {
-                        // skip
-                    }
-                }
-
                 $this->writeSchemaToDb($itemId, $context, $schemaType, $finalSchema);
             } catch (\Throwable) {
                 // JSON error — skip

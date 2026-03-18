@@ -3,8 +3,8 @@
     <fields name="schema">
         <fieldset name="schema" label="PLG_SCHEMAORG_PROCLAIM_SCHEMA_LABEL">
 
-            <!-- JSON array of schema field names the user edited in this session -->
-            <field name="_editedFields" type="hidden" default="[]"/>
+            <!-- JSON of auto-generated field values for edit detection -->
+            <field name="_autoValues" type="hidden" default="{}"/>
 
             <!-- Sermon schema fields (CreativeWork) -->
             <field name="Sermon" type="subform" showon="schemaType:Sermon">
