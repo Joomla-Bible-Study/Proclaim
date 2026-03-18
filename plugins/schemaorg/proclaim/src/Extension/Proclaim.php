@@ -175,12 +175,41 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // Only auto-populate if no schema type has been selected yet
-        if (!empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None') {
+        // Auto-populate schema fields from item data.
+        // If schema type is already set, merge missing auto-generated fields
+        // into existing data so newly added fields appear on existing records.
+        $hasExisting = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+        if ($hasExisting) {
+            // Build fresh auto-populated data into a temp object
+            $temp = clone $data;
+            unset($temp->schema);
+            $temp->schema = [];
+
+            match ($context) {
+                'com_proclaim.cwmmessage' => $this->populateSermon($temp),
+                'com_proclaim.teacher'    => $this->populateTeacher($temp),
+                'com_proclaim.serie'      => $this->populateSeries($temp),
+                default                   => null,
+            };
+
+            // Merge: existing values take precedence, fresh fills gaps
+            $schemaType = $data->schema['schemaType'];
+            $existing   = $data->schema[$schemaType] ?? [];
+            $fresh      = $temp->schema[$schemaType] ?? [];
+
+            foreach ($fresh as $key => $value) {
+                if (!isset($existing[$key]) || $existing[$key] === '') {
+                    $existing[$key] = $value;
+                }
+            }
+
+            $data->schema[$schemaType] = $existing;
+
             return;
         }
 
-        // Auto-set schema type and populate fields based on context
+        // First time — auto-set schema type and populate all fields
         match ($context) {
             'com_proclaim.cwmmessage' => $this->populateSermon($data),
             'com_proclaim.teacher'    => $this->populateTeacher($data),
@@ -270,7 +299,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     }
 
                     // Preserve complex subform fields from submission
-                    foreach (['author', 'sameAs', 'worksFor', 'genericField'] as $complexField) {
+                    foreach (['author', 'sameAs', 'worksFor', 'publisher', 'genericField'] as $complexField) {
                         if (!empty($incoming[$complexField])) {
                             $fresh[$complexField] = $incoming[$complexField];
                         }
@@ -455,6 +484,16 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $sermon['image'] = $data->thumbnailm;
         }
 
+        try {
+            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $sermon['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable) {
+            // Helper not available
+        }
+
         $data->schema['Sermon'] = $sermon;
     }
 
@@ -536,8 +575,37 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $series['description'] = $this->cleanText($data->description);
         }
 
-        if (!empty($data->series_thumbnail)) {
+        if (!empty($data->image)) {
+            $series['image'] = $data->image;
+        } elseif (!empty($data->series_thumbnail)) {
             $series['image'] = $data->series_thumbnail;
+        }
+
+        // Build frontend URL for this series
+        $url = $this->buildFrontendUrl('cwmseriesdisplays', 'cwmseriesdisplay', (int) ($data->id ?? 0), $data->alias ?? '');
+
+        if ($url !== '') {
+            $series['url'] = $url;
+        }
+
+        if (!empty($data->publish_up) && $data->publish_up !== '0000-00-00 00:00:00') {
+            $series['datePublished'] = $data->publish_up;
+        } elseif (!empty($data->created) && $data->created !== '0000-00-00 00:00:00') {
+            $series['datePublished'] = $data->created;
+        }
+
+        if (!empty($data->modified) && $data->modified !== '0000-00-00 00:00:00') {
+            $series['dateModified'] = $data->modified;
+        }
+
+        try {
+            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $series['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable) {
+            // Helper not available
         }
 
         $data->schema['Series'] = $series;
@@ -894,8 +962,37 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $schema['description'] = $this->cleanText($item->description);
         }
 
-        if (!empty($item->series_thumbnail)) {
+        if (!empty($item->image)) {
+            $schema['image'] = $item->image;
+        } elseif (!empty($item->series_thumbnail)) {
             $schema['image'] = $item->series_thumbnail;
+        }
+
+        // Build frontend URL for this series
+        $url = $this->buildFrontendUrl('cwmseriesdisplays', 'cwmseriesdisplay', (int) ($item->id ?? 0), $item->alias ?? '');
+
+        if ($url !== '') {
+            $schema['url'] = $url;
+        }
+
+        if (!empty($item->publish_up) && $item->publish_up !== '0000-00-00 00:00:00') {
+            $schema['datePublished'] = $item->publish_up;
+        } elseif (!empty($item->created) && $item->created !== '0000-00-00 00:00:00') {
+            $schema['datePublished'] = $item->created;
+        }
+
+        if (!empty($item->modified) && $item->modified !== '0000-00-00 00:00:00') {
+            $schema['dateModified'] = $item->modified;
+        }
+
+        try {
+            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable) {
+            // Helper not available
         }
 
         return $schema;
@@ -916,5 +1013,35 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
 
         return trim(preg_replace('/\s+/', ' ', $text));
+    }
+
+    /**
+     * Build an absolute frontend URL for a Proclaim item.
+     *
+     * Uses Route::link('site', ...) which respects menu items and
+     * the router's noIDs/SEF configuration for proper URL segments.
+     *
+     * @param   string  $listView    Parent list view name (unused, kept for signature)
+     * @param   string  $itemView    Single item view name (e.g., 'cwmseriesdisplay')
+     * @param   int     $itemId      Item ID
+     * @param   string  $alias       Item alias (unused — router handles slug)
+     *
+     * @return  string  Absolute URL or empty string
+     *
+     * @since   10.3.0
+     */
+    private function buildFrontendUrl(string $listView, string $itemView, int $itemId, string $alias): string
+    {
+        if ($itemId <= 0) {
+            return '';
+        }
+
+        try {
+            $rawRoute = 'index.php?option=com_proclaim&view=' . $itemView . '&id=' . $itemId;
+
+            return Route::link('site', $rawRoute, true, Route::TLS_IGNORE, true);
+        } catch (\Throwable) {
+            return '';
+        }
     }
 }

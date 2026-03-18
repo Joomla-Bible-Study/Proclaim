@@ -164,7 +164,7 @@ class ProclaimNomenuRules implements RulesInterface
     {
         foreach ($views as $view) {
             // Check if this view has the specified parent
-            if (isset($view->parent) && $view->parent->name === $parentName && $view->key) {
+            if (isset($view->parent) && \is_object($view->parent) && $view->parent->name === $parentName && $view->key) {
                 // Try to resolve the segment using this child view's ID method
                 if (\is_callable([$this->router, 'get' . ucfirst($view->name) . 'Id'])) {
                     $result = \call_user_func(
@@ -203,7 +203,7 @@ class ProclaimNomenuRules implements RulesInterface
 
                 // Use parent view name if available for cleaner URLs
                 // e.g., /cwmsermons/sermon-alias instead of /cwmsermon/sermon-alias
-                if (isset($view->parent, $view->parent->name)) {
+                if (isset($view->parent) && \is_object($view->parent) && isset($view->parent->name)) {
                     $segments[] = $view->parent->name;
                 } else {
                     $segments[] = $query['view'];

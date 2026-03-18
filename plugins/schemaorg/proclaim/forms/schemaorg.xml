@@ -145,6 +145,32 @@
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
                            filter="string" rows="3"/>
 
+                    <field name="url" type="url"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_URL"
+                           filter="url" validate="url"/>
+
+                    <field name="datePublished" type="calendar"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_PUBLISHED"
+                           class="input-small" filter="user_utc"
+                           showtime="false" todaybutton="true"
+                           translateformat="true"/>
+
+                    <field name="dateModified" type="calendar"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_MODIFIED"
+                           class="input-small" filter="user_utc"
+                           showtime="false" todaybutton="true"
+                           translateformat="true"/>
+
+                    <field name="publisher" type="subform"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_PUBLISHER">
+                        <form>
+                            <field name="@type" type="hidden" default="Organization"/>
+                            <field name="name" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_ORG_NAME"
+                                   filter="string" size="60"/>
+                        </form>
+                    </field>
+
                     <field name="genericField" type="subform"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM"
                            multiple="true">
