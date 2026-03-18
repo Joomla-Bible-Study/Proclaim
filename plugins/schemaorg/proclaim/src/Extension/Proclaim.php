@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Schema.org plugin for Proclaim — adds Sermon schema type with auto-population.
+ * Schema.org plugin for Proclaim — adds Sermon, Teacher, and Series schema types.
  *
  * @package     Proclaim
  * @subpackage  Plugin.Schemaorg.Proclaim
@@ -19,6 +19,8 @@ namespace CWM\Plugin\Schemaorg\Proclaim\Extension;
 
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareDataEvent;
+use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareFormEvent;
+use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
@@ -29,9 +31,9 @@ use Joomla\Event\SubscriberInterface;
 /**
  * Proclaim Schema.org Plugin
  *
- * Adds "Sermon" as a schema type option for Proclaim messages, teachers,
- * and series. Auto-populates schema fields from item data so admins
- * don't need to enter duplicate information.
+ * Registers Sermon, Teacher, and Series as schema type options for
+ * Proclaim content. Auto-populates schema fields from item data so
+ * admins don't need to enter duplicate information.
  *
  * @since  10.3.0
  */
@@ -50,12 +52,24 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     protected $autoloadLanguage = true;
 
     /**
-     * The name of the schema type shown in the dropdown.
+     * The default plugin name (required by SchemaorgPluginTrait).
      *
      * @var   string
      * @since 10.3.0
      */
     protected $pluginName = 'Sermon';
+
+    /**
+     * Context-to-schema-type mapping.
+     *
+     * @var   array<string, string>
+     * @since 10.3.0
+     */
+    private const CONTEXT_TYPE_MAP = [
+        'com_proclaim.cwmmessage' => 'Sermon',
+        'com_proclaim.teacher'    => 'Teacher',
+        'com_proclaim.serie'      => 'Series',
+    ];
 
     /**
      * Returns an array of events this subscriber will listen to.
@@ -71,6 +85,46 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'onSchemaPrepareData'       => 'onSchemaPrepareData',
             'onSchemaBeforeCompileHead' => ['onSchemaBeforeCompileHead', Priority::BELOW_NORMAL],
         ];
+    }
+
+    /**
+     * Register all Proclaim schema types and load form fields.
+     *
+     * Overrides the trait method to add Sermon, Teacher, and Series
+     * as separate options in the schemaType dropdown.
+     *
+     * @param   PrepareFormEvent  $event  The form event
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public function onSchemaPrepareForm(PrepareFormEvent $event): void
+    {
+        $form    = $event->getForm();
+        $context = $form->getName();
+
+        if (!$this->isSupported($context)) {
+            return;
+        }
+
+        $schemaType = $form->getField('schemaType', 'schema');
+
+        if ($schemaType instanceof ListField) {
+            // Only add the type relevant to this context
+            $type = self::CONTEXT_TYPE_MAP[$context] ?? null;
+
+            if ($type !== null) {
+                $schemaType->addOption($type, ['value' => $type]);
+            }
+        }
+
+        // Load the form fields
+        $formFile = JPATH_PLUGINS . '/' . $this->_type . '/' . $this->_name . '/forms/schemaorg.xml';
+
+        if (is_file($formFile)) {
+            $form->loadFile($formFile);
+        }
     }
 
     /**
@@ -110,7 +164,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Clean up Sermon schema data before output.
+     * Clean up schema data before output in the @graph.
      *
      * @param   BeforeCompileHeadEvent  $event  The compile head event
      *
@@ -124,7 +178,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $graph  = $schema->get('@graph');
 
         foreach ($graph as &$entry) {
-            if (!isset($entry['@type']) || $entry['@type'] !== 'CreativeWork') {
+            $type = $entry['@type'] ?? '';
+
+            if (!\in_array($type, ['CreativeWork', 'Person', 'CreativeWorkSeries'], true)) {
                 continue;
             }
 
@@ -179,7 +235,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // Primary teacher as author
         if (!empty($data->teachername)) {
             $sermon['author'] = [
-                '@type' => 'person',
+                '@type' => 'Person',
                 'name'  => $data->teachername,
             ];
         }
@@ -205,28 +261,32 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function populateTeacher(object $data): void
     {
-        $data->schema['schemaType'] = 'Sermon';
+        $data->schema['schemaType'] = 'Teacher';
 
         $teacher          = [];
         $teacher['@type'] = 'Person';
 
         if (!empty($data->teachername)) {
-            $teacher['headline'] = $data->teachername;
+            $teacher['name'] = $data->teachername;
         }
 
         if (!empty($data->title)) {
-            $teacher['description'] = $data->title;
+            $teacher['jobTitle'] = $data->title;
         }
 
         if (!empty($data->short)) {
             $teacher['description'] = $this->cleanText($data->short);
+        } elseif (!empty($data->information)) {
+            $teacher['description'] = $this->cleanText($data->information);
         }
 
         if (!empty($data->teacher_image)) {
             $teacher['image'] = $data->teacher_image;
+        } elseif (!empty($data->teacher_thumbnail)) {
+            $teacher['image'] = $data->teacher_thumbnail;
         }
 
-        $data->schema['Sermon'] = $teacher;
+        $data->schema['Teacher'] = $teacher;
     }
 
     /**
@@ -240,13 +300,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function populateSeries(object $data): void
     {
-        $data->schema['schemaType'] = 'Sermon';
+        $data->schema['schemaType'] = 'Series';
 
         $series          = [];
         $series['@type'] = 'CreativeWorkSeries';
 
         if (!empty($data->series_text)) {
-            $series['headline'] = $data->series_text;
+            $series['name'] = $data->series_text;
         }
 
         if (!empty($data->description)) {
@@ -257,7 +317,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $series['image'] = $data->series_thumbnail;
         }
 
-        $data->schema['Sermon'] = $series;
+        $data->schema['Series'] = $series;
     }
 
     /**

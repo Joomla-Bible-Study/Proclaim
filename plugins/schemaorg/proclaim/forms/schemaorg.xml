@@ -3,12 +3,13 @@
     <fields name="schema">
         <fieldset name="schema" label="PLG_SCHEMAORG_PROCLAIM_SCHEMA_LABEL">
 
+            <!-- Sermon schema fields (CreativeWork) -->
             <field name="Sermon" type="subform" showon="schemaType:Sermon">
                 <form>
                     <field name="@type" type="hidden" default="CreativeWork"/>
 
                     <field name="noteSermon" type="note"
-                           description="PLG_SCHEMAORG_PROCLAIM_NOTE_DESC"
+                           description="PLG_SCHEMAORG_PROCLAIM_NOTE_SERMON_DESC"
                            class="alert alert-info w-100"/>
 
                     <field name="image" type="media"
@@ -25,7 +26,7 @@
                     <field name="author" type="subform"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_AUTHOR">
                         <form>
-                            <field name="@type" type="hidden" default="person"/>
+                            <field name="@type" type="hidden" default="Person"/>
                             <field name="name" type="text"
                                    label="PLG_SCHEMAORG_PROCLAIM_FIELD_AUTHOR_NAME"
                                    filter="string"/>
@@ -43,6 +44,82 @@
                            class="input-small" filter="user_utc"
                            showtime="false" todaybutton="true"
                            translateformat="true"/>
+
+                    <field name="genericField" type="subform"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM"
+                           multiple="true">
+                        <form>
+                            <field name="genericTitle" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
+                                   filter="string" size="30"/>
+                            <field name="genericValue" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
+                                   filter="string" size="30"/>
+                        </form>
+                    </field>
+
+                </form>
+            </field>
+
+            <!-- Teacher schema fields (Person) -->
+            <field name="Teacher" type="subform" showon="schemaType:Teacher">
+                <form>
+                    <field name="@type" type="hidden" default="Person"/>
+
+                    <field name="noteTeacher" type="note"
+                           description="PLG_SCHEMAORG_PROCLAIM_NOTE_TEACHER_DESC"
+                           class="alert alert-info w-100"/>
+
+                    <field name="image" type="media"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_IMAGE"/>
+
+                    <field name="name" type="text"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_NAME"
+                           filter="string" size="60"/>
+
+                    <field name="jobTitle" type="text"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_JOB_TITLE"
+                           filter="string" size="60"/>
+
+                    <field name="description" type="textarea"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
+                           filter="string" rows="3"/>
+
+                    <field name="genericField" type="subform"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM"
+                           multiple="true">
+                        <form>
+                            <field name="genericTitle" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_KEY"
+                                   filter="string" size="30"/>
+                            <field name="genericValue" type="text"
+                                   label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM_VALUE"
+                                   filter="string" size="30"/>
+                        </form>
+                    </field>
+
+                </form>
+            </field>
+
+            <!-- Series schema fields (CreativeWorkSeries) -->
+            <field name="Series" type="subform" showon="schemaType:Series">
+                <form>
+                    <field name="@type" type="hidden" default="CreativeWorkSeries"/>
+
+                    <field name="noteSeries" type="note"
+                           description="PLG_SCHEMAORG_PROCLAIM_NOTE_SERIES_DESC"
+                           class="alert alert-info w-100"/>
+
+                    <field name="image" type="media"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_IMAGE"/>
+
+                    <field name="name" type="text"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_NAME"
+                           filter="string" size="60"/>
+
+                    <field name="description" type="textarea"
+                           label="PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION"
+                           filter="string" rows="3"/>
 
                     <field name="genericField" type="subform"
                            label="PLG_SCHEMAORG_PROCLAIM_FIELD_CUSTOM"
