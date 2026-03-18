@@ -299,29 +299,26 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
                     $fresh['_customFields'] = !empty($customFields) ? $customFields : null;
                     $fresh['_autoHash']     = self::hashSchema($fresh);
-                    $entry->schema = json_encode(
+                    $finalSchema = json_encode(
                         array_filter($fresh, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
-
-                    if ($debug) {
-                        try {
-                            $app = Factory::getApplication();
-                            $app->enqueueMessage('Schema Debug — FINAL headline: ' . ($fresh['headline'] ?? '(none)'), 'warning');
-                            $app->enqueueMessage('Schema Debug — FINAL _customFields: ' . json_encode($fresh['_customFields'] ?? null), 'warning');
-                            $app->enqueueMessage('Schema Debug — FINAL JSON has _customFields: ' . (str_contains($entry->schema, '_customFields') ? 'YES' : 'NO'), 'warning');
-                        } catch (\Throwable) {
-                            // skip
-                        }
-                    }
                 } else {
                     $incoming['_customFields'] = !empty($customFields) ? $customFields : null;
                     $incoming['_autoHash']     = self::hashSchema($incoming);
-                    $entry->schema = json_encode(
+                    $finalSchema = json_encode(
                         array_filter($incoming, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
                 }
+
+                // Write directly to DB — the system plugin's event object
+                // reference doesn't reliably persist our modifications.
+                $entry->schema = $finalSchema;
+                $this->writeSchemaToDb($itemId, $context, $entry->schemaType, $finalSchema);
+
+                // Tell the system plugin to skip its own DB write
+                unset($entry->schemaType);
             } catch (\Throwable) {
                 // JSON error — skip
             }
@@ -686,6 +683,46 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @since   10.3.0
      */
+    /**
+     * Write schema data directly to #__schemaorg, bypassing the system plugin.
+     *
+     * @param   int     $itemId      Item ID
+     * @param   string  $context     Context string
+     * @param   string  $schemaType  Schema type name
+     * @param   string  $schemaJson  JSON-encoded schema data
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function writeSchemaToDb(int $itemId, string $context, string $schemaType, string $schemaJson): void
+    {
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . ' = ' . $itemId)
+                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            $existingId = (int) $db->setQuery($query)->loadResult();
+
+            $row             = new \stdClass();
+            $row->itemId     = $itemId;
+            $row->context    = $context;
+            $row->schemaType = $schemaType;
+            $row->schema     = $schemaJson;
+
+            if ($existingId > 0) {
+                $row->id = $existingId;
+                $db->updateObject('#__schemaorg', $row, 'id');
+            } else {
+                $db->insertObject('#__schemaorg', $row, 'id');
+            }
+        } catch (\Throwable) {
+            // DB error — skip silently
+        }
+    }
+
     private static function stripInternal(array $schema): array
     {
         unset($schema['_autoHash'], $schema['_customFields'], $schema['_editedFields']);
