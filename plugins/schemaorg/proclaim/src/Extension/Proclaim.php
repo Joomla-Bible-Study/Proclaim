@@ -314,11 +314,20 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
                 // Write directly to DB — the system plugin's event object
                 // reference doesn't reliably persist our modifications.
+                $schemaType = $entry->schemaType ?? '';
                 $entry->schema = $finalSchema;
-                $this->writeSchemaToDb($itemId, $context, $entry->schemaType, $finalSchema);
 
-                // Tell the system plugin to skip its own DB write
-                unset($entry->schemaType);
+                if ($debug) {
+                    try {
+                        $app = Factory::getApplication();
+                        $app->enqueueMessage('Schema Debug — writing to DB: itemId=' . $itemId . ', type=' . $schemaType, 'warning');
+                        $app->enqueueMessage('Schema Debug — JSON has _customFields: ' . (str_contains($finalSchema, '_customFields') ? 'YES' : 'NO'), 'warning');
+                    } catch (\Throwable) {
+                        // skip
+                    }
+                }
+
+                $this->writeSchemaToDb($itemId, $context, $schemaType, $finalSchema);
             } catch (\Throwable) {
                 // JSON error — skip
             }
@@ -639,7 +648,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         try {
-            $db    = $this->getDatabase();
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('schema'))
                 ->from($db->quoteName('#__schemaorg'))
@@ -698,7 +707,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function writeSchemaToDb(int $itemId, string $context, string $schemaType, string $schemaJson): void
     {
         try {
-            $db    = $this->getDatabase();
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__schemaorg'))
@@ -718,8 +727,12 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             } else {
                 $db->insertObject('#__schemaorg', $row, 'id');
             }
-        } catch (\Throwable) {
-            // DB error — skip silently
+        } catch (\Throwable $e) {
+            try {
+                Factory::getApplication()->enqueueMessage('Schema DB write error: ' . $e->getMessage(), 'error');
+            } catch (\Throwable) {
+                // skip
+            }
         }
     }
 
