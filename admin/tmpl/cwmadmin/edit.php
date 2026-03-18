@@ -272,6 +272,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SEO_METADATA'); ?></h3>
                     <?php echo $this->form->renderField('metakey', 'params'); ?>
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                    <?php echo $this->form->renderField('org_name', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>

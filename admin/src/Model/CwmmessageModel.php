@@ -1136,15 +1136,11 @@ class CwmmessageModel extends AdminModel
                     }
                 }
 
-                // Publisher (site name)
-                try {
-                    $siteName = Factory::getApplication()->get('sitename', '');
+                // Publisher (org name or site name)
+                $orgName = CwmschemaorgHelper::getOrgName();
 
-                    if ($siteName !== '') {
-                        $customFields[] = ['genericTitle' => 'publisher', 'genericValue' => $siteName];
-                    }
-                } catch (\Throwable) {
-                    // App not available
+                if ($orgName !== '') {
+                    $customFields[] = ['genericTitle' => 'publisher', 'genericValue' => $orgName];
                 }
 
                 if (!empty($customFields)) {

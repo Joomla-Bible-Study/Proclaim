@@ -662,6 +662,16 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $schema['image'] = $item->image;
         }
 
+        try {
+            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable) {
+            // Helper not available
+        }
+
         return $schema;
     }
 
@@ -700,6 +710,16 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         if (!empty($item->website)) {
             $schema['url'] = $item->website;
+        }
+
+        try {
+            $orgName = \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable) {
+            // Helper not available
         }
 
         return $schema;

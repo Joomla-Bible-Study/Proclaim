@@ -28,6 +28,9 @@
                description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
         <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
                description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
+        <field name="org_name" type="text" size="60" label="JBS_ADM_ORG_NAME"
+               description="JBS_ADM_ORG_NAME_DESC" filter="string"
+               hint="JBS_ADM_ORG_NAME_HINT"/>
         <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
                description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
                layout="joomla.form.field.radio.switcher">

@@ -462,6 +462,31 @@ class CwmschemaorgHelper
      *
      * @since   10.3.0
      */
+    /**
+     * Get the organization name for Schema.org publisher/worksFor.
+     *
+     * Uses the admin param `org_name` if set, otherwise falls back to site name.
+     *
+     * @return  string  Organization name
+     *
+     * @since   10.3.0
+     */
+    public static function getOrgName(): string
+    {
+        try {
+            $params  = Cwmparams::getAdmin()->params;
+            $orgName = $params->get('org_name', '');
+
+            if ($orgName !== '') {
+                return $orgName;
+            }
+
+            return Factory::getApplication()->get('sitename', '');
+        } catch (\Throwable) {
+            return '';
+        }
+    }
+
     public static function hasJoomlaSchema(int $itemId, string $context): bool
     {
         if ($itemId <= 0) {
@@ -1139,6 +1164,13 @@ class CwmschemaorgHelper
             $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
         }
 
+        // Publisher (organization)
+        $orgName = self::getOrgName();
+
+        if ($orgName !== '') {
+            $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+        }
+
         return $schema;
     }
 
@@ -1206,6 +1238,13 @@ class CwmschemaorgHelper
 
         if (!empty($sameAs)) {
             $schema['sameAs'] = $sameAs;
+        }
+
+        // worksFor (organization) — uses admin setting, teacher can override in schema tab
+        $orgName = self::getOrgName();
+
+        if ($orgName !== '') {
+            $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];
         }
 
         return $schema;
