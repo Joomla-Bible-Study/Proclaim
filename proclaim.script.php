@@ -72,9 +72,10 @@ class com_proclaimInstallerScript extends InstallerScript
         ],
         // -- plugins => { (folder) => { (element) => (published) }* }*
         'plugins' => [
-            'finder' => ['proclaim' => 1],
-            'system' => ['proclaim' => 1],
-            'task'   => [
+            'finder'    => ['proclaim' => 1],
+            'schemaorg' => ['proclaim' => 1],
+            'system'    => ['proclaim' => 1],
+            'task'      => [
                 'proclaim' => 1,
             ],
         ],
