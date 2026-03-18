@@ -303,6 +303,17 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                         array_filter($fresh, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
+
+                    if ($debug) {
+                        try {
+                            $app = Factory::getApplication();
+                            $app->enqueueMessage('Schema Debug — FINAL headline: ' . ($fresh['headline'] ?? '(none)'), 'warning');
+                            $app->enqueueMessage('Schema Debug — FINAL _customFields: ' . json_encode($fresh['_customFields'] ?? null), 'warning');
+                            $app->enqueueMessage('Schema Debug — FINAL JSON has _customFields: ' . (str_contains($entry->schema, '_customFields') ? 'YES' : 'NO'), 'warning');
+                        } catch (\Throwable) {
+                            // skip
+                        }
+                    }
                 } else {
                     $incoming['_customFields'] = !empty($customFields) ? $customFields : null;
                     $incoming['_autoHash']     = self::hashSchema($incoming);
