@@ -19,6 +19,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 $app   = Factory::getApplication();
 $input = $app->getInput();
@@ -142,6 +144,20 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
                 <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
                     <?php echo $field->renderField(); ?>
                 <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.serie'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
