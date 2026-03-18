@@ -20,7 +20,10 @@ namespace CWM\Plugin\Schemaorg\Proclaim\Extension;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareDataEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareFormEvent;
+use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
@@ -83,6 +86,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         return [
             'onSchemaPrepareForm'       => 'onSchemaPrepareForm',
             'onSchemaPrepareData'       => 'onSchemaPrepareData',
+            'onSchemaPrepareSave'       => 'onSchemaPrepareSave',
             'onSchemaBeforeCompileHead' => ['onSchemaBeforeCompileHead', Priority::BELOW_NORMAL],
         ];
     }
@@ -161,6 +165,75 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'com_proclaim.serie'      => $this->populateSeries($data),
             default                   => null,
         };
+    }
+
+    /**
+     * Warn about missing schema fields on save.
+     *
+     * Enqueues a notice (not an error) when key structured data fields
+     * are empty so the admin knows the output may be incomplete.
+     *
+     * @param   PrepareSaveEvent  $event  The save event
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public function onSchemaPrepareSave(PrepareSaveEvent $event): void
+    {
+        $context = $event->getContext();
+
+        if (!$this->isSupported($context)) {
+            return;
+        }
+
+        $schema     = $event->getSchema();
+        $schemaType = $schema['schemaType'] ?? '';
+        $typeData   = $schema[$schemaType] ?? [];
+
+        if (empty($typeData) || $schemaType === 'None') {
+            return;
+        }
+
+        $missing = [];
+
+        // Define recommended fields per schema type
+        $recommended = match ($schemaType) {
+            'Sermon'  => [
+                'headline'      => 'PLG_SCHEMAORG_PROCLAIM_FIELD_HEADLINE',
+                'description'   => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
+                'datePublished' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_PUBLISHED',
+            ],
+            'Teacher' => [
+                'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
+                'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
+            ],
+            'Series'  => [
+                'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
+                'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
+            ],
+            default   => [],
+        };
+
+        foreach ($recommended as $field => $langKey) {
+            if (empty($typeData[$field])) {
+                $missing[] = Text::_($langKey);
+            }
+        }
+
+        if (!empty($missing)) {
+            try {
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf(
+                        'PLG_SCHEMAORG_PROCLAIM_MISSING_FIELDS',
+                        implode(', ', $missing)
+                    ),
+                    'notice'
+                );
+            } catch (\Throwable) {
+                // App not available
+            }
+        }
     }
 
     /**
