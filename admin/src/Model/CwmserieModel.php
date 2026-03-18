@@ -586,6 +586,32 @@ class CwmserieModel extends AdminModel
             $data = $this->getItem();
         }
 
+        // Auto-populate Schema.org defaults from series data if not already configured
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema               = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Series';
+
+                $series = ['@type' => 'CreativeWorkSeries'];
+
+                if (!empty($data->series_text)) {
+                    $series['name'] = $data->series_text;
+                }
+
+                if (!empty($data->description)) {
+                    $series['description'] = trim(strip_tags(html_entity_decode($data->description, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->series_thumbnail)) {
+                    $series['image'] = $data->series_thumbnail;
+                }
+
+                $data->schema['Series'] = $series;
+            }
+        }
+
         return $data;
     }
 

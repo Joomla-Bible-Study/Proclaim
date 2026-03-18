@@ -499,8 +499,43 @@ class CwmteacherModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
+        $data    = empty($session) ? $this->data : $session;
 
-        return empty($session) ? $this->data : $session;
+        // Auto-populate Schema.org defaults from teacher data if not already configured
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema               = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Teacher';
+
+                $teacher = ['@type' => 'Person'];
+
+                if (!empty($data->teachername)) {
+                    $teacher['name'] = $data->teachername;
+                }
+
+                if (!empty($data->title)) {
+                    $teacher['jobTitle'] = $data->title;
+                }
+
+                if (!empty($data->short)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->short, ENT_QUOTES, 'UTF-8')));
+                } elseif (!empty($data->information)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->information, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->teacher_image)) {
+                    $teacher['image'] = $data->teacher_image;
+                } elseif (!empty($data->teacher_thumbnail)) {
+                    $teacher['image'] = $data->teacher_thumbnail;
+                }
+
+                $data->schema['Teacher'] = $teacher;
+            }
+        }
+
+        return $data;
     }
 
     /**
