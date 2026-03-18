@@ -71,13 +71,27 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @since 10.3.0
      */
     private const CONTEXT_TYPE_MAP = [
-        // Form contexts
+        // Form contexts (canonical — used in #__schemaorg)
         'com_proclaim.cwmmessage' => 'Sermon',
         'com_proclaim.teacher'    => 'Teacher',
         'com_proclaim.serie'      => 'Series',
         // Content event contexts (model name differs from form name)
         'com_proclaim.cwmteacher' => 'Teacher',
         'com_proclaim.cwmserie'   => 'Series',
+    ];
+
+    /**
+     * Map content event contexts to canonical form contexts.
+     *
+     * The model name (cwmteacher) differs from the form name (teacher),
+     * creating two contexts. The DB always uses the form context.
+     *
+     * @var   array<string, string>
+     * @since 10.3.0
+     */
+    private const CONTEXT_CANONICAL = [
+        'com_proclaim.cwmteacher' => 'com_proclaim.teacher',
+        'com_proclaim.cwmserie'   => 'com_proclaim.serie',
     ];
 
     /**
@@ -195,6 +209,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
+        // Normalize to canonical form context for DB consistency
+        $dbContext = self::CONTEXT_CANONICAL[$context] ?? $context;
+
         $entry  = $event->getData();
         $item   = $event->getItem();
         $itemId = (int) ($entry->itemId ?? 0);
@@ -219,7 +236,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     // Compare submitted vs PREVIOUS auto-gen (not current auto-gen).
                     // If submitted == previous auto-gen → user didn't touch it → auto-update.
                     // If submitted != previous auto-gen AND != current auto-gen → user customized.
-                    $existingSchema = $this->loadExistingSchema($itemId, $context);
+                    $existingSchema = $this->loadExistingSchema($itemId, $dbContext);
                     // Per-field hashes of previous auto-generated values.
                     // Smaller than storing full values, and only need to
                     // know IF the submitted value matches, not WHAT it was.
@@ -278,7 +295,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 // overwriting with stale data afterward
                 $schemaType    = $entry->schemaType ?? '';
                 $entry->schema = $finalSchema;
-                $this->writeSchemaToDb($itemId, $context, $schemaType, $finalSchema);
+                $this->writeSchemaToDb($itemId, $dbContext, $schemaType, $finalSchema);
 
                 // Tell system plugin to skip its own DB write
                 unset($entry->schemaType);
