@@ -222,18 +222,20 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $itemId = (int) ($entry->itemId ?? 0);
 
         // Field-level Smart Sync on save:
-        // 1. Regenerate fresh schema from current item data (picks up title changes etc.)
-        // 2. Overlay any fields the user actively edited in this session
-        // This way: title change auto-updates headline, but a manually edited
-        // description stays locked — only the specific fields the user touched are kept.
-        $formSchema   = $event->getSchema();
-        $editedFields = [];
+        // 1. Regenerate fresh schema from current item data
+        // 2. Merge _editedFields (JS, this session) into _customFields (persistent)
+        // 3. Overlay custom fields from the form data — everything else auto-updates
+        //
+        // _customFields is stored in the schema JSON and persists across sessions.
+        // The Reset button clears it. Bulk sync ignores it (force overwrites all).
+        $formSchema      = $event->getSchema();
+        $sessionEdited   = [];
 
         if (!empty($formSchema['_editedFields'])) {
             try {
-                $editedFields = json_decode($formSchema['_editedFields'], true, 512, JSON_THROW_ON_ERROR) ?: [];
+                $sessionEdited = json_decode($formSchema['_editedFields'], true, 512, JSON_THROW_ON_ERROR) ?: [];
             } catch (\Throwable) {
-                $editedFields = [];
+                $sessionEdited = [];
             }
         }
 
@@ -242,23 +244,37 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 $incoming = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
                 unset($incoming['_editedFields']);
 
-                // Start with fresh auto-generated schema from item data
+                // Load persistent custom fields list from existing DB row
+                $existingSchema = $this->loadExistingSchema($itemId, $context);
+                $customFields   = $existingSchema['_customFields'] ?? [];
+
+                // Merge in any fields edited this session
+                $customFields = array_values(array_unique(array_merge($customFields, $sessionEdited)));
+
+                // Regenerate fresh schema from item data
                 $fresh = $this->generateSchemaFromItem($item, $context);
 
                 if ($fresh !== null) {
-                    // Overlay user-edited fields from the form submission
-                    foreach ($editedFields as $field) {
+                    // Overlay persistent custom fields from form submission
+                    foreach ($customFields as $field) {
                         if (\array_key_exists($field, $incoming)) {
                             $fresh[$field] = $incoming[$field];
                         }
                     }
 
-                    $fresh['_autoHash'] = self::hashSchema($fresh);
-                    $entry->schema = json_encode($fresh, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                    $fresh['_customFields'] = !empty($customFields) ? $customFields : null;
+                    $fresh['_autoHash']     = self::hashSchema($fresh);
+                    $entry->schema = json_encode(
+                        array_filter($fresh, static fn ($v) => $v !== null),
+                        JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
+                    );
                 } else {
-                    // Couldn't generate — save form data as-is
-                    $incoming['_autoHash'] = self::hashSchema($incoming);
-                    $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                    $incoming['_customFields'] = !empty($customFields) ? $customFields : null;
+                    $incoming['_autoHash']     = self::hashSchema($incoming);
+                    $entry->schema = json_encode(
+                        array_filter($incoming, static fn ($v) => $v !== null),
+                        JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
+                    );
                 }
             } catch (\Throwable) {
                 // JSON error — skip
@@ -335,8 +351,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 continue;
             }
 
-            // Strip internal auto-hash fingerprint from output
-            unset($entry['_autoHash']);
+            // Strip internal tracking fields from output
+            unset($entry['_autoHash'], $entry['_customFields']);
 
             if (!empty($entry['datePublished'])) {
                 $entry['datePublished'] = $this->prepareDate($entry['datePublished']);
@@ -626,7 +642,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private static function stripInternal(array $schema): array
     {
-        unset($schema['_autoHash'], $schema['_schemaEdited']);
+        unset($schema['_autoHash'], $schema['_customFields'], $schema['_editedFields']);
 
         return $schema;
     }

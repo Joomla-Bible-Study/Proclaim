@@ -1062,7 +1062,7 @@ class CwmschemaorgHelper
      */
     public static function computeAutoHash(array $schema): string
     {
-        unset($schema['_autoHash']);
+        unset($schema['_autoHash'], $schema['_customFields'], $schema['_editedFields']);
         ksort($schema);
 
         return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
