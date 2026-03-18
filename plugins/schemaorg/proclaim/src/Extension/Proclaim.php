@@ -215,9 +215,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 if ($fresh !== null) {
                     $customFields = [];
 
-                    // Compare submitted values against auto-generated for tracked fields
-                    $trackFields = ['headline', 'name', 'description', 'jobTitle',
-                        'datePublished', 'dateModified', 'image', 'url'];
+                    // Only track fields users would actually customize.
+                    // Dates, images, URLs always auto-update from item data —
+                    // format differences (timezone, paths) cause false positives.
+                    $trackFields = ['headline', 'name', 'description', 'jobTitle'];
 
                     foreach ($trackFields as $field) {
                         $submittedVal = $incoming[$field] ?? '';
@@ -251,10 +252,14 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     );
                 }
 
-                // Write directly to DB
+                // Write directly to DB and prevent the system plugin from
+                // overwriting with stale data afterward
                 $schemaType    = $entry->schemaType ?? '';
                 $entry->schema = $finalSchema;
                 $this->writeSchemaToDb($itemId, $context, $schemaType, $finalSchema);
+
+                // Tell system plugin to skip its own DB write
+                unset($entry->schemaType);
             } catch (\Throwable) {
                 // JSON error — skip
             }
