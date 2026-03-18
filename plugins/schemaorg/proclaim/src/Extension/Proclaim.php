@@ -213,19 +213,38 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 $fresh = $this->generateSchemaFromItem($item, $context);
 
                 if ($fresh !== null) {
-                    $customFields = [];
+                    // Load previous auto-generated values from DB to detect real edits.
+                    // Compare submitted vs PREVIOUS auto-gen (not current auto-gen).
+                    // If submitted == previous auto-gen → user didn't touch it → auto-update.
+                    // If submitted != previous auto-gen AND != current auto-gen → user customized.
+                    $existingSchema = $this->loadExistingSchema($itemId, $context);
+                    // Per-field hashes of previous auto-generated values.
+                    // Smaller than storing full values, and only need to
+                    // know IF the submitted value matches, not WHAT it was.
+                    $prevHashes    = $existingSchema['_fieldHashes'] ?? [];
+                    $customFields  = [];
+                    $newHashes     = [];
 
-                    // Only track fields users would actually customize.
-                    // Dates, images, URLs always auto-update from item data —
-                    // format differences (timezone, paths) cause false positives.
                     $trackFields = ['headline', 'name', 'description', 'jobTitle'];
 
                     foreach ($trackFields as $field) {
                         $submittedVal = $incoming[$field] ?? '';
-                        $autoVal      = $fresh[$field] ?? '';
+                        $freshVal     = $fresh[$field] ?? '';
+                        $freshHash    = $freshVal !== '' ? substr(md5($freshVal), 0, 8) : '';
+                        $prevHash     = $prevHashes[$field] ?? '';
+                        $submittedHash = $submittedVal !== '' ? substr(md5($submittedVal), 0, 8) : '';
 
-                        if ($submittedVal !== '' && $submittedVal !== $autoVal) {
-                            // User has a custom value → preserve it
+                        // Store current auto-gen hash for next save
+                        if ($freshHash !== '') {
+                            $newHashes[$field] = $freshHash;
+                        }
+
+                        if ($submittedVal === '' || $submittedHash === $prevHash) {
+                            // Matches previous auto-gen → user didn't touch it → use fresh
+                        } elseif ($submittedHash === $freshHash) {
+                            // Matches current auto-gen → user set it back → un-customize
+                        } else {
+                            // Genuinely custom value → preserve
                             $customFields[] = $field;
                             $fresh[$field]  = $submittedVal;
                         }
@@ -238,6 +257,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                         }
                     }
 
+                    $fresh['_fieldHashes']  = !empty($newHashes) ? $newHashes : null;
                     $fresh['_customFields'] = !empty($customFields) ? $customFields : null;
                     $fresh['_autoHash']     = self::hashSchema($fresh);
                     $finalSchema = json_encode(
@@ -336,7 +356,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             // Strip internal tracking fields from output
-            unset($entry['_autoHash'], $entry['_customFields']);
+            unset($entry['_autoHash'], $entry['_customFields'], $entry['_fieldHashes']);
 
             if (!empty($entry['datePublished'])) {
                 $entry['datePublished'] = $this->prepareDate($entry['datePublished']);
@@ -670,7 +690,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
     private static function stripInternal(array $schema): array
     {
-        unset($schema['_autoHash'], $schema['_customFields'], $schema['_editedFields']);
+        unset($schema['_autoHash'], $schema['_customFields'], $schema['_fieldHashes'], $schema['_editedFields']);
 
         return $schema;
     }
