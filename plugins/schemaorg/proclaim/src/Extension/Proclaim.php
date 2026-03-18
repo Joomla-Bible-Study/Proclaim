@@ -187,15 +187,26 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // Stamp auto-hash on the entry so Smart Sync can detect manual edits
+        // Preserve _autoHash for Smart Sync: Joomla's form filter strips unknown
+        // fields, so _autoHash is lost during form save. We restore it from the
+        // existing DB row. If no row exists (first save), we stamp a fresh hash
+        // so Smart Sync can track future edits.
         $entry = $event->getData();
 
         if (!empty($entry->schema)) {
             try {
                 $schemaData = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                unset($schemaData['_autoHash']);
-                ksort($schemaData);
-                $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
+                $existingHash = $this->loadExistingAutoHash((int) ($entry->itemId ?? 0), $context);
+
+                if ($existingHash !== null) {
+                    // Row exists — restore the original hash so manual edits are detectable
+                    $schemaData['_autoHash'] = $existingHash;
+                } else {
+                    // First save — stamp hash of the auto-generated data
+                    ksort($schemaData);
+                    $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
+                }
+
                 $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
             } catch (\Throwable) {
                 // JSON error — skip hash
@@ -481,6 +492,43 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         return $sameAs;
+    }
+
+    /**
+     * Load the existing _autoHash from the #__schemaorg row, if any.
+     *
+     * @param   int     $itemId   Item ID
+     * @param   string  $context  Context string
+     *
+     * @return  string|null  The stored hash, or null if no row/hash exists
+     *
+     * @since   10.3.0
+     */
+    private function loadExistingAutoHash(int $itemId, string $context): ?string
+    {
+        if ($itemId <= 0) {
+            return null;
+        }
+
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('schema'))
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . ' = ' . $itemId)
+                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            $stored = $db->setQuery($query)->loadResult();
+
+            if ($stored === null) {
+                return null;
+            }
+
+            $data = json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
+
+            return $data['_autoHash'] ?? null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     /**
