@@ -61,6 +61,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <div class="row">
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
+                <?php echo $this->form->renderField('org_name'); ?>
                 <?php echo $this->form->renderField('phone'); ?>
                 <?php echo $this->form->renderField('email'); ?>
                 <?php echo $this->form->renderField('address'); ?>
