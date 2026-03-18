@@ -210,43 +210,29 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $itemId = (int) ($entry->itemId ?? 0);
 
         // Smart Sync on save — uses _schemaEdited flag set by JS when user
-        // touches any schema field. Three cases:
-        // 1. User didn't edit schema + existing was auto-generated → regenerate from item
-        // 2. User didn't edit schema + existing was manually edited → preserve
-        // 3. User actively edited schema → save their edits
+        // touches any schema field:
+        // - _schemaEdited=0: user didn't touch schema → regenerate from item data
+        //   so title/description changes auto-update the schema
+        // - _schemaEdited=1: user actively edited schema → save their edits
         $formSchema    = $event->getSchema();
         $userEditedNow = !empty($formSchema['_schemaEdited']);
 
         if (!empty($entry->schema) && $itemId > 0) {
             try {
-                $incoming       = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
-                $existingSchema = $this->loadExistingSchema($itemId, $context);
-                $existingHash   = $existingSchema['_autoHash'] ?? null;
-
-                // Remove the edit flag from stored data
+                $incoming = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
                 unset($incoming['_schemaEdited']);
 
-                if ($existingSchema === null) {
-                    // First save — stamp hash
-                    unset($incoming['_autoHash']);
+                if ($userEditedNow) {
+                    // User edited schema tab — save their edits, stamp new hash
                     $incoming['_autoHash'] = self::hashSchema($incoming);
-                } elseif ($userEditedNow) {
-                    // Case 3: user actively edited schema — save as-is, keep old hash
-                    $incoming['_autoHash'] = $existingHash;
-                } elseif ($existingHash !== null
-                    && self::hashSchema(self::stripInternal($existingSchema)) === $existingHash) {
-                    // Case 1: untouched + auto-generated → regenerate from item
+                } else {
+                    // User didn't touch schema — regenerate from current item data
                     $fresh = $this->generateSchemaFromItem($item, $context);
 
                     if ($fresh !== null) {
                         $fresh['_autoHash'] = self::hashSchema($fresh);
                         $incoming = $fresh;
-                    } else {
-                        $incoming['_autoHash'] = $existingHash;
                     }
-                } else {
-                    // Case 2: untouched + previously manually edited → preserve
-                    $incoming['_autoHash'] = $existingHash;
                 }
 
                 $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
