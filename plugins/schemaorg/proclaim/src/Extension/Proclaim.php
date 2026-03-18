@@ -209,10 +209,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     ksort($incoming);
                     $incoming['_autoHash'] = substr(md5(json_encode($incoming, JSON_UNESCAPED_UNICODE)), 0, 12);
                 } else {
-                    // Compare incoming vs existing (without hash) to detect user edits
-                    $incomingClean  = $incoming;
-                    $existingClean  = $existingSchema;
-                    unset($incomingClean['_autoHash'], $existingClean['_autoHash']);
+                    // Compare incoming vs existing to detect user edits.
+                    // Strip empty values and internal keys — the form POST includes
+                    // empty fields (description="", image="") that DB data omits.
+                    $incomingClean  = self::normalizeForCompare($incoming);
+                    $existingClean  = self::normalizeForCompare($existingSchema);
 
                     $userEditedNow = ($incomingClean !== $existingClean);
 
@@ -589,6 +590,46 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         ksort($schema);
 
         return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Normalize schema data for comparison by removing empty values,
+     * internal keys, and note fields that the form POST includes but
+     * stored data omits.
+     *
+     * @param   array  $schema  Schema data
+     *
+     * @return  array  Normalized data for comparison
+     *
+     * @since   10.3.0
+     */
+    private static function normalizeForCompare(array $schema): array
+    {
+        unset($schema['_autoHash']);
+
+        // Recursively remove empty values and note fields
+        $filtered = [];
+
+        foreach ($schema as $key => $value) {
+            // Skip note fields (form-only, never stored)
+            if (str_starts_with($key, 'note')) {
+                continue;
+            }
+
+            if (\is_array($value)) {
+                $nested = self::normalizeForCompare($value);
+
+                if (!empty($nested)) {
+                    $filtered[$key] = $nested;
+                }
+            } elseif ($value !== '' && $value !== null) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        ksort($filtered);
+
+        return $filtered;
     }
 
     /**
