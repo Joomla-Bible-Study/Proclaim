@@ -599,6 +599,8 @@ class CwmteacherModel extends AdminModel
             }
         }
 
+        $this->preprocessData('com_proclaim.teacher', $data);
+
         return $data;
     }
 

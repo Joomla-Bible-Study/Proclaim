@@ -1173,6 +1173,10 @@ class CwmmessageModel extends AdminModel
             }
         }
 
+        // Fire onContentPrepareData so the system schemaorg plugin can load
+        // saved schema from #__schemaorg, overwriting auto-populated defaults.
+        $this->preprocessData('com_proclaim.cwmmessage', $data);
+
         return $data;
     }
 

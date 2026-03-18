@@ -626,6 +626,8 @@ class CwmserieModel extends AdminModel
             }
         }
 
+        $this->preprocessData('com_proclaim.serie', $data);
+
         return $data;
     }
 
