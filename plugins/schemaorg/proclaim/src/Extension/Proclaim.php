@@ -143,7 +143,12 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 var edited = new Set();
                 function handleEdit(e) {
                     var el = e.target;
-                    if (!el.name || !el.name.startsWith('jform[schema]')) return;
+                    if (!el.name) return;
+                    // Debug: log all schema-related events
+                    if (el.name.indexOf('schema') !== -1) {
+                        console.log('[Schema Edit Tracker] event=' + e.type + ' name=' + el.name + ' type=' + el.type);
+                    }
+                    if (!el.name.startsWith('jform[schema]')) return;
                     if (el.name === 'jform[schema][_editedFields]' || el.name === 'jform[schema][schemaType]') return;
                     if (el.type === 'hidden') return;
                     var parts = el.name.replace(/\]/g, '').split('[');
@@ -151,10 +156,12 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     if (field && field !== '@type') {
                         edited.add(field);
                         tracker.value = JSON.stringify(Array.from(edited));
+                        console.log('[Schema Edit Tracker] tracked field: ' + field + ' → _editedFields:', tracker.value);
                     }
                 }
                 document.addEventListener('change', handleEdit, true);
                 document.addEventListener('input', handleEdit, true);
+                console.log('[Schema Edit Tracker] initialized, listening for schema field edits');
             });
             JS
         );
