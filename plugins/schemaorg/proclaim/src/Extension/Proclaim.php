@@ -131,6 +131,22 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         if (is_file($formFile)) {
             $form->loadFile($formFile);
         }
+
+        // Inject JS to track schema field edits — sets _schemaEdited=1 on any change
+        $this->getApplication()->getDocument()->addScriptDeclaration(
+            <<<'JS'
+            document.addEventListener('DOMContentLoaded', function() {
+                var flag = document.getElementById('jform_schema__schemaEdited');
+                if (!flag) return;
+                // Listen on the schema tab container for any input changes
+                document.querySelectorAll('[name^="jform[schema]"]').forEach(function(el) {
+                    if (el.name === 'jform[schema][_schemaEdited]' || el.name === 'jform[schema][schemaType]') return;
+                    el.addEventListener('change', function() { flag.value = '1'; });
+                    el.addEventListener('input', function() { flag.value = '1'; });
+                });
+            });
+            JS
+        );
     }
 
     /**
@@ -193,47 +209,44 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $item   = $event->getItem();
         $itemId = (int) ($entry->itemId ?? 0);
 
-        // Smart Sync on save — three cases:
-        // 1. User didn't touch schema tab + existing was auto-generated → regenerate
-        // 2. User didn't touch schema tab + existing was manually edited → preserve
-        // 3. User actively edited schema tab → save their edits
+        // Smart Sync on save — uses _schemaEdited flag set by JS when user
+        // touches any schema field. Three cases:
+        // 1. User didn't edit schema + existing was auto-generated → regenerate from item
+        // 2. User didn't edit schema + existing was manually edited → preserve
+        // 3. User actively edited schema → save their edits
+        $formSchema    = $event->getSchema();
+        $userEditedNow = !empty($formSchema['_schemaEdited']);
+
         if (!empty($entry->schema) && $itemId > 0) {
             try {
                 $incoming       = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
                 $existingSchema = $this->loadExistingSchema($itemId, $context);
                 $existingHash   = $existingSchema['_autoHash'] ?? null;
 
+                // Remove the edit flag from stored data
+                unset($incoming['_schemaEdited']);
+
                 if ($existingSchema === null) {
                     // First save — stamp hash
                     unset($incoming['_autoHash']);
-                    ksort($incoming);
-                    $incoming['_autoHash'] = substr(md5(json_encode($incoming, JSON_UNESCAPED_UNICODE)), 0, 12);
-                } else {
-                    // Compare incoming vs existing to detect user edits.
-                    // Strip empty values and internal keys — the form POST includes
-                    // empty fields (description="", image="") that DB data omits.
-                    $incomingClean  = self::normalizeForCompare($incoming);
-                    $existingClean  = self::normalizeForCompare($existingSchema);
+                    $incoming['_autoHash'] = self::hashSchema($incoming);
+                } elseif ($userEditedNow) {
+                    // Case 3: user actively edited schema — save as-is, keep old hash
+                    $incoming['_autoHash'] = $existingHash;
+                } elseif ($existingHash !== null
+                    && self::hashSchema(self::stripInternal($existingSchema)) === $existingHash) {
+                    // Case 1: untouched + auto-generated → regenerate from item
+                    $fresh = $this->generateSchemaFromItem($item, $context);
 
-                    $userEditedNow = ($incomingClean !== $existingClean);
-
-                    if ($userEditedNow) {
-                        // Case 3: user actively edited schema — save as-is, keep old hash
-                        $incoming['_autoHash'] = $existingHash;
-                    } elseif ($existingHash !== null && self::hashSchema($existingClean) === $existingHash) {
-                        // Case 1: untouched + auto-generated → regenerate from item
-                        $fresh = $this->generateSchemaFromItem($item, $context);
-
-                        if ($fresh !== null) {
-                            $fresh['_autoHash'] = self::hashSchema($fresh);
-                            $incoming = $fresh;
-                        } else {
-                            $incoming['_autoHash'] = $existingHash;
-                        }
+                    if ($fresh !== null) {
+                        $fresh['_autoHash'] = self::hashSchema($fresh);
+                        $incoming = $fresh;
                     } else {
-                        // Case 2: untouched + previously manually edited → preserve
                         $incoming['_autoHash'] = $existingHash;
                     }
+                } else {
+                    // Case 2: untouched + previously manually edited → preserve
+                    $incoming['_autoHash'] = $existingHash;
                 }
 
                 $entry->schema = json_encode($incoming, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
@@ -586,10 +599,26 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private static function hashSchema(array $schema): string
     {
-        unset($schema['_autoHash']);
+        $schema = self::stripInternal($schema);
         ksort($schema);
 
         return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Strip internal tracking keys from schema data.
+     *
+     * @param   array  $schema  Schema data
+     *
+     * @return  array  Cleaned data
+     *
+     * @since   10.3.0
+     */
+    private static function stripInternal(array $schema): array
+    {
+        unset($schema['_autoHash'], $schema['_schemaEdited']);
+
+        return $schema;
     }
 
     /**

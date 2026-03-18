@@ -3,6 +3,9 @@
     <fields name="schema">
         <fieldset name="schema" label="PLG_SCHEMAORG_PROCLAIM_SCHEMA_LABEL">
 
+            <!-- Tracks whether the user edited any schema field in this session -->
+            <field name="_schemaEdited" type="hidden" default="0"/>
+
             <!-- Sermon schema fields (CreativeWork) -->
             <field name="Sermon" type="subform" showon="schemaType:Sermon">
                 <form>
