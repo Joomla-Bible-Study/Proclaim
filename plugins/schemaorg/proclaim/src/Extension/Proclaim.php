@@ -195,6 +195,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if (!empty($entry['image'])) {
                 $entry['image'] = $this->prepareImage($entry['image']);
             }
+
+            // Flatten sameAs subform [{value: url}, ...] → [url, ...]
+            if (!empty($entry['sameAs']) && \is_array($entry['sameAs'])) {
+                $flat = [];
+
+                foreach ($entry['sameAs'] as $item) {
+                    if (\is_array($item) && !empty($item['value'])) {
+                        $flat[] = $item['value'];
+                    } elseif (\is_string($item)) {
+                        $flat[] = $item;
+                    }
+                }
+
+                $entry['sameAs'] = !empty($flat) ? $flat : null;
+            }
         }
 
         $schema->set('@graph', $graph);
@@ -286,6 +301,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $teacher['image'] = $data->teacher_thumbnail;
         }
 
+        if (!empty($data->website)) {
+            $teacher['url'] = $data->website;
+        }
+
+        // Social links → sameAs array
+        $sameAs = $this->collectSocialLinks($data);
+
+        if (!empty($sameAs)) {
+            // Structure as subform expects: array of {value: url}
+            $teacher['sameAs'] = array_map(
+                static fn ($url) => ['value' => $url],
+                $sameAs
+            );
+        }
+
         $data->schema['Teacher'] = $teacher;
     }
 
@@ -318,6 +348,48 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         $data->schema['Series'] = $series;
+    }
+
+    /**
+     * Collect validated social link URLs from teacher data.
+     *
+     * Prefers the new social_links JSON field, falls back to legacy columns.
+     *
+     * @param   object  $data  The form data object
+     *
+     * @return  array  List of validated URLs
+     *
+     * @since   10.3.0
+     */
+    private function collectSocialLinks(object $data): array
+    {
+        $sameAs = [];
+
+        // New social_links JSON field
+        if (!empty($data->social_links) && \is_string($data->social_links)) {
+            try {
+                $links = json_decode($data->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                foreach ($links as $link) {
+                    if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                        $sameAs[] = $link['url'];
+                    }
+                }
+            } catch (\Throwable) {
+                // Malformed JSON
+            }
+        }
+
+        // Legacy link fields as fallback
+        if (empty($sameAs)) {
+            foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                if (!empty($data->$field) && filter_var($data->$field, FILTER_VALIDATE_URL)) {
+                    $sameAs[] = $data->$field;
+                }
+            }
+        }
+
+        return $sameAs;
     }
 
     /**

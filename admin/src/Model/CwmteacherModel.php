@@ -531,6 +531,60 @@ class CwmteacherModel extends AdminModel
                     $teacher['image'] = $data->teacher_thumbnail;
                 }
 
+                // Website as url
+                if (!empty($data->website)) {
+                    $teacher['url'] = $data->website;
+                }
+
+                // Collect social links for sameAs
+                $sameAs = [];
+
+                // New social_links JSON field
+                if (!empty($data->social_links) && \is_string($data->social_links)) {
+                    try {
+                        $links = json_decode($data->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                        foreach ($links as $link) {
+                            if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                                $sameAs[] = $link['url'];
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Malformed JSON — skip
+                    }
+                }
+
+                // Legacy link fields as fallback
+                if (empty($sameAs)) {
+                    foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                        if (!empty($data->$field) && filter_var($data->$field, FILTER_VALIDATE_URL)) {
+                            $sameAs[] = $data->$field;
+                        }
+                    }
+                }
+
+                if (!empty($sameAs)) {
+                    // Structure as subform expects: array of {value: url}
+                    $teacher['sameAs'] = array_map(
+                        static fn ($url) => ['value' => $url],
+                        $sameAs
+                    );
+                }
+
+                // worksFor — site name as organization
+                try {
+                    $siteName = Factory::getApplication()->get('sitename', '');
+
+                    if ($siteName !== '') {
+                        $teacher['worksFor'] = [
+                            '@type' => 'Organization',
+                            'name'  => $siteName,
+                        ];
+                    }
+                } catch (\Throwable) {
+                    // App not available
+                }
+
                 $data->schema['Teacher'] = $teacher;
             }
         }
