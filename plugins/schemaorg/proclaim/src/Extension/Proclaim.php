@@ -278,11 +278,30 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 $fresh = $this->generateSchemaFromItem($item, $context);
 
                 if ($fresh !== null) {
+                    // For fields edited this session: if user set it back to the
+                    // auto-generated value, remove from _customFields (un-customize)
+                    foreach ($sessionEdited as $field) {
+                        $incomingVal = $incoming[$field] ?? null;
+                        $freshVal    = $fresh[$field] ?? null;
+
+                        if ($incomingVal === $freshVal) {
+                            // Value matches auto-generated — remove custom override
+                            $customFields = array_values(array_filter(
+                                $customFields,
+                                static fn ($f) => $f !== $field
+                            ));
+                        }
+                    }
+
                     if ($debug) {
                         try {
                             Factory::getApplication()->enqueueMessage(
                                 'Schema Debug — fresh headline: ' . ($fresh['headline'] ?? '(none)')
                                 . ' | item studytitle: ' . ($item->studytitle ?? '(none)'),
+                                'info'
+                            );
+                            Factory::getApplication()->enqueueMessage(
+                                'Schema Debug — final customFields after un-customize: ' . json_encode($customFields),
                                 'info'
                             );
                         } catch (\Throwable) {
