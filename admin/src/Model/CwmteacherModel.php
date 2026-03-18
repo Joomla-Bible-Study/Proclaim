@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -501,11 +502,9 @@ class CwmteacherModel extends AdminModel
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
         $data    = empty($session) ? $this->data : $session;
 
-        // Auto-populate Schema.org defaults from teacher data if not already configured
-        if (\is_object($data) && !empty($data->id)) {
-            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
-
-            if (!$hasSchema) {
+        // Auto-populate Schema.org defaults from teacher data if not already saved
+        if (\is_object($data) && !empty($data->id)
+            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.teacher')) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Teacher';
 
@@ -571,22 +570,7 @@ class CwmteacherModel extends AdminModel
                     );
                 }
 
-                // worksFor — site name as organization
-                try {
-                    $siteName = Factory::getApplication()->get('sitename', '');
-
-                    if ($siteName !== '') {
-                        $teacher['worksFor'] = [
-                            '@type' => 'Organization',
-                            'name'  => $siteName,
-                        ];
-                    }
-                } catch (\Throwable) {
-                    // App not available
-                }
-
                 $data->schema['Teacher'] = $teacher;
-            }
         }
 
         return $data;

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
@@ -586,11 +587,9 @@ class CwmserieModel extends AdminModel
             $data = $this->getItem();
         }
 
-        // Auto-populate Schema.org defaults from series data if not already configured
-        if (\is_object($data) && !empty($data->id)) {
-            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
-
-            if (!$hasSchema) {
+        // Auto-populate Schema.org defaults from series data if not already saved
+        if (\is_object($data) && !empty($data->id)
+            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.serie')) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Series';
 
@@ -609,7 +608,6 @@ class CwmserieModel extends AdminModel
                 }
 
                 $data->schema['Series'] = $series;
-            }
         }
 
         return $data;

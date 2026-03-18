@@ -873,17 +873,6 @@ class CwmschemaorgHelper
                 $schema['sameAs'] = $sameAs;
             }
 
-            // worksFor
-            try {
-                $siteName = Factory::getApplication()->get('sitename', '');
-
-                if ($siteName !== '') {
-                    $schema['worksFor'] = ['@type' => 'Organization', 'name' => $siteName];
-                }
-            } catch (\Throwable) {
-                // App not available
-            }
-
             self::upsertSchemaRow($db, (int) $teacher->id, $context, 'Teacher', $schema);
             $count++;
         }

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
@@ -991,11 +992,9 @@ class CwmmessageModel extends AdminModel
             $data = $this->getItem();
         }
 
-        // Auto-populate Schema.org defaults from message data if not already configured
-        if (\is_object($data) && !empty($data->id)) {
-            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
-
-            if (!$hasSchema) {
+        // Auto-populate Schema.org defaults from message data if not already saved
+        if (\is_object($data) && !empty($data->id)
+            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.cwmmessage')) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Sermon';
 
@@ -1149,7 +1148,6 @@ class CwmmessageModel extends AdminModel
                 }
 
                 $data->schema['Sermon'] = $sermon;
-            }
         }
 
         return $data;

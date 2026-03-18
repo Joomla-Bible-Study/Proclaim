@@ -169,15 +169,25 @@
             // Initialize Bootstrap 5 modal for schema sync
             const schemaSyncModalEl = document.getElementById('schema-sync-modal');
             if (schemaSyncModalEl && typeof bootstrap !== 'undefined') {
-                this.schemaSyncModal = new bootstrap.Modal(schemaSyncModalEl, {
-                    backdrop: 'static',
-                    keyboard: false,
-                });
+                this.schemaSyncModal = new bootstrap.Modal(schemaSyncModalEl);
 
                 const schemaSyncBtn = document.getElementById('btn-schema-sync');
                 if (schemaSyncBtn) {
-                    schemaSyncBtn.addEventListener('click', () => this.handleSchemaSync());
+                    schemaSyncBtn.addEventListener('click', () => {
+                        // Reset to choice view
+                        const choose = schemaSyncModalEl.querySelector('.schema-sync-choose');
+                        const progress = schemaSyncModalEl.querySelector('.schema-sync-progress');
+                        const footer = schemaSyncModalEl.querySelector('.modal-footer');
+                        if (choose) choose.style.display = 'block';
+                        if (progress) progress.style.display = 'none';
+                        if (footer) footer.style.display = 'none';
+                        this.schemaSyncModal.show();
+                    });
                 }
+
+                schemaSyncModalEl.querySelectorAll('.btn-schema-sync-run').forEach((btn) => {
+                    btn.addEventListener('click', () => this.handleSchemaSync(btn.dataset.force === '1'));
+                });
 
                 const schemaCloseBtn = schemaSyncModalEl.querySelector('.btn-close-schema-modal');
                 if (schemaCloseBtn) {
@@ -395,26 +405,28 @@
 
         /**
          * Schema.org Sync — bulk-populate #__schemaorg for all items.
+         * @param {boolean} force - If true, overwrite existing entries
          */
-        async handleSchemaSync() {
+        async handleSchemaSync(force = false) {
             const modal = document.getElementById('schema-sync-modal');
+            const choose = modal?.querySelector('.schema-sync-choose');
+            const progress = modal?.querySelector('.schema-sync-progress');
             const spinner = modal?.querySelector('.schema-sync-spinner');
             const statusText = modal?.querySelector('.schema-sync-status-text');
             const resultText = modal?.querySelector('.schema-sync-result-text');
             const footer = modal?.querySelector('.modal-footer');
 
-            // Reset modal state
+            // Switch from choice to progress view
+            if (choose) choose.style.display = 'none';
+            if (progress) progress.style.display = 'block';
             if (spinner) spinner.style.display = 'block';
             if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_SCHEMA_SYNCING') || 'Syncing schema data...';
             if (resultText) resultText.textContent = '';
             if (footer) footer.style.display = 'none';
 
-            if (this.schemaSyncModal) {
-                this.schemaSyncModal.show();
-            }
-
             try {
-                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&force=1&${this.token}=1`;
+                const forceParam = force ? '1' : '0';
+                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&force=${forceParam}&${this.token}=1`;
                 const result = await this.fetchJson(url);
 
                 if (spinner) spinner.style.display = 'none';
