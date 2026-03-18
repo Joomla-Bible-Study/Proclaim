@@ -2169,6 +2169,36 @@ class CwmadminController extends FormController
     }
 
     /**
+     * Force-refresh schema.org data for a single item.
+     *
+     * Called via link in the "custom preserved" notice after save.
+     *
+     * @return void
+     *
+     * @since  10.3.0
+     */
+    public function schemaForceRefresh(): void
+    {
+        Session::checkToken('get') || jexit(Text::_('JINVALID_TOKEN'));
+
+        $app     = Factory::getApplication();
+        $itemId  = $app->getInput()->getInt('item_id', 0);
+        $context = $app->getInput()->getCmd('schema_context', '');
+        $return  = $app->getInput()->getBase64('return', '');
+
+        if ($itemId > 0 && $context !== '') {
+            $synced = CwmschemaorgHelper::syncOne($itemId, $context);
+
+            if ($synced) {
+                $app->enqueueMessage(Text::_('JBS_ADM_SCHEMA_FORCE_REFRESHED'), 'success');
+            }
+        }
+
+        $redirect = $return ? base64_decode($return) : 'index.php?option=com_proclaim';
+        $app->redirect($redirect);
+    }
+
+    /**
      * Change Players XHR - AJAX version with optimized batch update
      *
      * @return void

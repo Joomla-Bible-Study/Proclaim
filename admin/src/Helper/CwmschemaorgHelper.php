@@ -654,6 +654,70 @@ class CwmschemaorgHelper
      */
     public const SYNC_FORCE = 'force';
 
+    /**
+     * Force-sync schema.org data for a single item by ID and context.
+     *
+     * @param   int     $itemId   Item ID
+     * @param   string  $context  Context (e.g., 'com_proclaim.cwmmessage')
+     *
+     * @return  bool  True if synced
+     *
+     * @since   10.3.0
+     */
+    public static function syncOne(int $itemId, string $context): bool
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $contextMap = [
+            'com_proclaim.cwmmessage' => '#__bsms_studies',
+            'com_proclaim.teacher'    => '#__bsms_teachers',
+            'com_proclaim.serie'      => '#__bsms_series',
+        ];
+
+        $table = $contextMap[$context] ?? null;
+
+        if ($table === null) {
+            return false;
+        }
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName($table))
+            ->where($db->quoteName('id') . ' = ' . $itemId);
+        $item = $db->setQuery($query)->loadObject();
+
+        if ($item === null) {
+            return false;
+        }
+
+        $schemaType = match ($context) {
+            'com_proclaim.cwmmessage' => 'Sermon',
+            'com_proclaim.teacher'    => 'Teacher',
+            'com_proclaim.serie'      => 'Series',
+            default                   => null,
+        };
+
+        if ($schemaType === null) {
+            return false;
+        }
+
+        // Build schema using context-specific logic
+        $schema = match ($context) {
+            'com_proclaim.cwmmessage' => self::buildSermonSchemaFromRow($db, $item),
+            'com_proclaim.teacher'    => self::buildTeacherSchemaFromRow($item),
+            'com_proclaim.serie'      => self::buildSeriesSchemaFromRow($item),
+            default                   => null,
+        };
+
+        if ($schema === null) {
+            return false;
+        }
+
+        self::upsertSchemaRow($db, $itemId, $context, $schemaType, $schema);
+
+        return true;
+    }
+
     public static function syncAll(string $mode = self::SYNC_SMART): array
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
@@ -1023,6 +1087,156 @@ class CwmschemaorgHelper
         ksort($data);
 
         return $storedHash !== substr(md5(json_encode($data, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Build sermon schema from a DB row object (used by syncOne and bulk sync).
+     *
+     * @param   DatabaseInterface  $db   Database instance (for teacher/topic lookups)
+     * @param   object             $msg  Message row from #__bsms_studies
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildSermonSchemaFromRow(DatabaseInterface $db, object $msg): array
+    {
+        $schema = ['@type' => 'CreativeWork'];
+
+        if (!empty($msg->studytitle)) {
+            $schema['headline'] = $msg->studytitle;
+        }
+
+        if (!empty($msg->studyintro)) {
+            $schema['description'] = self::cleanDescription($msg->studyintro);
+        }
+
+        if (!empty($msg->studydate) && $msg->studydate !== '0000-00-00 00:00:00') {
+            $schema['datePublished'] = $msg->studydate;
+        }
+
+        if (!empty($msg->modified) && $msg->modified !== '0000-00-00 00:00:00') {
+            $schema['dateModified'] = $msg->modified;
+        }
+
+        if (!empty($msg->image)) {
+            $schema['image'] = $msg->image;
+        }
+
+        // Teacher names
+        $tQuery = $db->getQuery(true)
+            ->select($db->quoteName('t.teachername'))
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id)
+            ->order($db->quoteName('st.ordering') . ' ASC');
+        $names = $db->setQuery($tQuery)->loadColumn() ?: [];
+
+        if (!empty($names)) {
+            $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build teacher schema from a DB row object.
+     *
+     * @param   object  $teacher  Teacher row from #__bsms_teachers
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildTeacherSchemaFromRow(object $teacher): array
+    {
+        $schema = ['@type' => 'Person'];
+
+        if (!empty($teacher->teachername)) {
+            $schema['name'] = $teacher->teachername;
+        }
+
+        if (!empty($teacher->title)) {
+            $schema['jobTitle'] = $teacher->title;
+        }
+
+        if (!empty($teacher->short)) {
+            $schema['description'] = self::cleanDescription($teacher->short);
+        } elseif (!empty($teacher->information)) {
+            $schema['description'] = self::cleanDescription($teacher->information);
+        }
+
+        if (!empty($teacher->teacher_image)) {
+            $schema['image'] = $teacher->teacher_image;
+        } elseif (!empty($teacher->teacher_thumbnail)) {
+            $schema['image'] = $teacher->teacher_thumbnail;
+        }
+
+        if (!empty($teacher->website)) {
+            $schema['url'] = $teacher->website;
+        }
+
+        // Social links
+        $sameAs = [];
+
+        if (!empty($teacher->social_links) && \is_string($teacher->social_links)) {
+            try {
+                $links = json_decode($teacher->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                foreach ($links as $link) {
+                    if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                        $sameAs[] = ['value' => $link['url']];
+                    }
+                }
+            } catch (\Throwable) {
+                // skip
+            }
+        }
+
+        if (empty($sameAs)) {
+            foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                if (!empty($teacher->$field) && filter_var($teacher->$field, FILTER_VALIDATE_URL)) {
+                    $sameAs[] = ['value' => $teacher->$field];
+                }
+            }
+        }
+
+        if (!empty($sameAs)) {
+            $schema['sameAs'] = $sameAs;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build series schema from a DB row object.
+     *
+     * @param   object  $series  Series row from #__bsms_series
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildSeriesSchemaFromRow(object $series): array
+    {
+        $schema = ['@type' => 'CreativeWorkSeries'];
+
+        if (!empty($series->series_text)) {
+            $schema['name'] = $series->series_text;
+        }
+
+        if (!empty($series->description)) {
+            $schema['description'] = self::cleanDescription($series->description);
+        }
+
+        if (!empty($series->series_thumbnail)) {
+            $schema['image'] = $series->series_thumbnail;
+        }
+
+        return $schema;
     }
 
     /**

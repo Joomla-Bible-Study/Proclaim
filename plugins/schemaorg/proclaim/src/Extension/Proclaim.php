@@ -24,6 +24,8 @@ use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
@@ -224,8 +226,24 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                         $schemaData['_autoHash'] = $existingHash;
                         $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 
-                        Factory::getApplication()->enqueueMessage(
-                            Text::_('PLG_SCHEMAORG_PROCLAIM_CUSTOM_PRESERVED'),
+                        // Build a return URL to come back to this edit page
+                        $app       = Factory::getApplication();
+                        $returnUrl = base64_encode($app->getInput()->server->getString('HTTP_REFERER', ''));
+                        $refreshUrl = Route::_(
+                            'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                            . '&item_id=' . $itemId
+                            . '&schema_context=' . $context
+                            . '&return=' . $returnUrl
+                            . '&' . Session::getFormToken() . '=1',
+                            false
+                        );
+
+                        $app->enqueueMessage(
+                            Text::_('PLG_SCHEMAORG_PROCLAIM_CUSTOM_PRESERVED')
+                            . ' <a href="' . $refreshUrl . '" class="btn btn-sm btn-outline-primary ms-2">'
+                            . '<i class="icon-refresh me-1"></i>'
+                            . Text::_('PLG_SCHEMAORG_PROCLAIM_FORCE_REFRESH')
+                            . '</a>',
                             'info'
                         );
                     }
