@@ -633,19 +633,43 @@ class CwmschemaorgHelper
      *
      * @since   10.3.0
      */
-    public static function syncAll(bool $force = false): array
+    /**
+     * Sync mode: only create entries for items that have no schema row.
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_NEW = 'new';
+
+    /**
+     * Sync mode: update entries that haven't been manually edited (hash match).
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_SMART = 'smart';
+
+    /**
+     * Sync mode: overwrite all entries regardless of manual edits.
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_FORCE = 'force';
+
+    public static function syncAll(string $mode = self::SYNC_SMART): array
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $counts  = ['messages' => 0, 'teachers' => 0, 'series' => 0];
+        $counts  = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
 
-        // Sync messages
-        $counts['messages'] = self::syncMessages($db, $force);
+        $result = self::syncMessages($db, $mode);
+        $counts['messages'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
 
-        // Sync teachers
-        $counts['teachers'] = self::syncTeachers($db, $force);
+        $result = self::syncTeachers($db, $mode);
+        $counts['teachers'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
 
-        // Sync series
-        $counts['series'] = self::syncSeries($db, $force);
+        $result = self::syncSeries($db, $mode);
+        $counts['series'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
 
         return $counts;
     }
@@ -653,17 +677,18 @@ class CwmschemaorgHelper
     /**
      * Sync schema.org data for all published messages.
      *
-     * @param   DatabaseInterface  $db     Database instance
-     * @param   bool               $force  Overwrite existing entries
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
      *
-     * @return  int  Number of items synced
+     * @return  array{synced: int, skipped: int}
      *
      * @since   10.3.0
      */
-    private static function syncMessages(DatabaseInterface $db, bool $force): int
+    private static function syncMessages(DatabaseInterface $db, string $mode): array
     {
         $context = 'com_proclaim.cwmmessage';
-        $count   = 0;
+        $synced  = 0;
+        $skipped = 0;
 
         $query = $db->getQuery(true)
             ->select([
@@ -683,7 +708,8 @@ class CwmschemaorgHelper
         $messages = $db->loadObjectList() ?: [];
 
         foreach ($messages as $msg) {
-            if (!$force && self::hasSchemaRow($db, (int) $msg->id, $context)) {
+            if (!self::shouldSync($db, (int) $msg->id, $context, $mode)) {
+                $skipped++;
                 continue;
             }
 
@@ -785,26 +811,27 @@ class CwmschemaorgHelper
             }
 
             self::upsertSchemaRow($db, (int) $msg->id, $context, 'Sermon', $schema);
-            $count++;
+            $synced++;
         }
 
-        return $count;
+        return ['synced' => $synced, 'skipped' => $skipped];
     }
 
     /**
      * Sync schema.org data for all published teachers.
      *
-     * @param   DatabaseInterface  $db     Database instance
-     * @param   bool               $force  Overwrite existing entries
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
      *
-     * @return  int  Number of items synced
+     * @return  array{synced: int, skipped: int}
      *
      * @since   10.3.0
      */
-    private static function syncTeachers(DatabaseInterface $db, bool $force): int
+    private static function syncTeachers(DatabaseInterface $db, string $mode): array
     {
         $context = 'com_proclaim.teacher';
-        $count   = 0;
+        $synced  = 0;
+        $skipped = 0;
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -814,7 +841,8 @@ class CwmschemaorgHelper
         $teachers = $db->loadObjectList() ?: [];
 
         foreach ($teachers as $teacher) {
-            if (!$force && self::hasSchemaRow($db, (int) $teacher->id, $context)) {
+            if (!self::shouldSync($db, (int) $teacher->id, $context, $mode)) {
+                $skipped++;
                 continue;
             }
 
@@ -874,26 +902,27 @@ class CwmschemaorgHelper
             }
 
             self::upsertSchemaRow($db, (int) $teacher->id, $context, 'Teacher', $schema);
-            $count++;
+            $synced++;
         }
 
-        return $count;
+        return ['synced' => $synced, 'skipped' => $skipped];
     }
 
     /**
      * Sync schema.org data for all published series.
      *
-     * @param   DatabaseInterface  $db     Database instance
-     * @param   bool               $force  Overwrite existing entries
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
      *
-     * @return  int  Number of items synced
+     * @return  array{synced: int, skipped: int}
      *
      * @since   10.3.0
      */
-    private static function syncSeries(DatabaseInterface $db, bool $force): int
+    private static function syncSeries(DatabaseInterface $db, string $mode): array
     {
         $context = 'com_proclaim.serie';
-        $count   = 0;
+        $synced  = 0;
+        $skipped = 0;
 
         $query = $db->getQuery(true)
             ->select('*')
@@ -903,7 +932,8 @@ class CwmschemaorgHelper
         $allSeries = $db->loadObjectList() ?: [];
 
         foreach ($allSeries as $series) {
-            if (!$force && self::hasSchemaRow($db, (int) $series->id, $context)) {
+            if (!self::shouldSync($db, (int) $series->id, $context, $mode)) {
+                $skipped++;
                 continue;
             }
 
@@ -922,42 +952,121 @@ class CwmschemaorgHelper
             }
 
             self::upsertSchemaRow($db, (int) $series->id, $context, 'Series', $schema);
-            $count++;
+            $synced++;
         }
 
-        return $count;
+        return ['synced' => $synced, 'skipped' => $skipped];
     }
 
     /**
-     * Check if a schema.org row exists for an item.
+     * Compute a fingerprint hash of auto-generated schema data.
+     *
+     * The hash allows Smart Sync to detect whether schema was manually
+     * edited: if stored schema (minus _autoHash) still hashes to the
+     * stored _autoHash, the admin never touched it.
+     *
+     * @param   array  $schema  Schema data (without _autoHash key)
+     *
+     * @return  string  Short hash
+     *
+     * @since   10.3.0
+     */
+    public static function computeAutoHash(array $schema): string
+    {
+        unset($schema['_autoHash']);
+        ksort($schema);
+
+        return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Check if a stored schema row has been manually edited.
+     *
+     * Compares the stored _autoHash against the actual hash of the stored data.
+     * If they match, the admin never edited the schema fields.
      *
      * @param   DatabaseInterface  $db       Database instance
      * @param   int                $itemId   Item ID
      * @param   string             $context  Context string
      *
-     * @return  bool
+     * @return  bool|null  True = manually edited, false = untouched, null = no row
      *
      * @since   10.3.0
      */
-    private static function hasSchemaRow(DatabaseInterface $db, int $itemId, string $context): bool
+    private static function isManuallyEdited(DatabaseInterface $db, int $itemId, string $context): ?bool
     {
         $query = $db->getQuery(true)
-            ->select('COUNT(*)')
+            ->select($db->quoteName('schema'))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $itemId)
             ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+        $stored = $db->setQuery($query)->loadResult();
 
-        return (int) $db->setQuery($query)->loadResult() > 0;
+        if ($stored === null) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Throwable) {
+            return true;
+        }
+
+        $storedHash = $data['_autoHash'] ?? null;
+
+        if ($storedHash === null) {
+            // No hash means it was created before Smart Sync or manually
+            return true;
+        }
+
+        unset($data['_autoHash']);
+        ksort($data);
+
+        return $storedHash !== substr(md5(json_encode($data, JSON_UNESCAPED_UNICODE)), 0, 12);
     }
 
     /**
-     * Insert or update a schema.org row.
+     * Determine whether an item should be synced based on mode.
+     *
+     * @param   DatabaseInterface  $db       Database instance
+     * @param   int                $itemId   Item ID
+     * @param   string             $context  Context string
+     * @param   string             $mode     Sync mode (new, smart, force)
+     *
+     * @return  bool  True if the item should be written
+     *
+     * @since   10.3.0
+     */
+    private static function shouldSync(DatabaseInterface $db, int $itemId, string $context, string $mode): bool
+    {
+        if ($mode === self::SYNC_FORCE) {
+            return true;
+        }
+
+        $edited = self::isManuallyEdited($db, $itemId, $context);
+
+        if ($edited === null) {
+            // No existing row — always sync
+            return true;
+        }
+
+        if ($mode === self::SYNC_NEW) {
+            // Row exists — skip
+            return false;
+        }
+
+        // Smart mode: sync only if not manually edited
+        return !$edited;
+    }
+
+    /**
+     * Insert or update a schema.org row with auto-hash fingerprint.
      *
      * @param   DatabaseInterface  $db          Database instance
      * @param   int                $itemId      Item ID
      * @param   string             $context     Context string
      * @param   string             $schemaType  Schema type name
-     * @param   array              $schema      Schema data array
+     * @param   array              $schema      Schema data array (without _autoHash)
      *
      * @return  void
      *
@@ -970,6 +1079,9 @@ class CwmschemaorgHelper
         string $schemaType,
         array $schema
     ): void {
+        // Stamp auto-hash before saving
+        $schema['_autoHash'] = self::computeAutoHash($schema);
+
         // Check for existing row
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))

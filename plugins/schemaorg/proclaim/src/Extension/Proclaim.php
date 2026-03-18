@@ -187,6 +187,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
+        // Stamp auto-hash on the entry so Smart Sync can detect manual edits
+        $entry = $event->getData();
+
+        if (!empty($entry->schema)) {
+            try {
+                $schemaData = json_decode($entry->schema, true, 512, JSON_THROW_ON_ERROR);
+                unset($schemaData['_autoHash']);
+                ksort($schemaData);
+                $schemaData['_autoHash'] = substr(md5(json_encode($schemaData, JSON_UNESCAPED_UNICODE)), 0, 12);
+                $entry->schema = json_encode($schemaData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            } catch (\Throwable) {
+                // JSON error — skip hash
+            }
+        }
+
         $schema     = $event->getSchema();
         $schemaType = $schema['schemaType'] ?? '';
         $typeData   = $schema[$schemaType] ?? [];
@@ -256,6 +271,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if (!\in_array($type, ['CreativeWork', 'Person', 'CreativeWorkSeries'], true)) {
                 continue;
             }
+
+            // Strip internal auto-hash fingerprint from output
+            unset($entry['_autoHash']);
 
             if (!empty($entry['datePublished'])) {
                 $entry['datePublished'] = $this->prepareDate($entry['datePublished']);

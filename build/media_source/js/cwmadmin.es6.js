@@ -186,7 +186,7 @@
                 }
 
                 schemaSyncModalEl.querySelectorAll('.btn-schema-sync-run').forEach((btn) => {
-                    btn.addEventListener('click', () => this.handleSchemaSync(btn.dataset.force === '1'));
+                    btn.addEventListener('click', () => this.handleSchemaSync(btn.dataset.mode || 'smart'));
                 });
 
                 const schemaCloseBtn = schemaSyncModalEl.querySelector('.btn-close-schema-modal');
@@ -405,9 +405,9 @@
 
         /**
          * Schema.org Sync — bulk-populate #__schemaorg for all items.
-         * @param {boolean} force - If true, overwrite existing entries
+         * @param {string} mode - 'smart', 'new', or 'force'
          */
-        async handleSchemaSync(force = false) {
+        async handleSchemaSync(mode = 'smart') {
             const modal = document.getElementById('schema-sync-modal');
             const choose = modal?.querySelector('.schema-sync-choose');
             const progress = modal?.querySelector('.schema-sync-progress');
@@ -425,8 +425,7 @@
             if (footer) footer.style.display = 'none';
 
             try {
-                const forceParam = force ? '1' : '0';
-                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&force=${forceParam}&${this.token}=1`;
+                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&mode=${mode}&${this.token}=1`;
                 const result = await this.fetchJson(url);
 
                 if (spinner) spinner.style.display = 'none';

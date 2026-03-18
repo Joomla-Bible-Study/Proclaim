@@ -112,12 +112,16 @@ $this->useCoreUI = true;
                 <div class="schema-sync-choose text-center">
                     <p class="mb-3"><?php echo Text::_('JBS_ADM_SCHEMA_SYNC_DESC'); ?></p>
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-primary btn-schema-sync-run" data-force="0">
+                        <button type="button" class="btn btn-primary btn-schema-sync-run" data-mode="smart">
+                            <i class="icon-refresh me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_SMART'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-schema-sync-run" data-mode="new">
                             <i class="icon-plus me-1" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_NEW'); ?>
                         </button>
-                        <button type="button" class="btn btn-outline-warning btn-schema-sync-run" data-force="1">
-                            <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <button type="button" class="btn btn-outline-warning btn-schema-sync-run" data-mode="force">
+                            <i class="icon-warning me-1" aria-hidden="true"></i>
                             <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_FORCE'); ?>
                         </button>
                     </div>

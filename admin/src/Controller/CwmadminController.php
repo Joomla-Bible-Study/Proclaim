@@ -2135,20 +2135,28 @@ class CwmadminController extends FormController
         }
 
         try {
-            $force  = $app->getInput()->getBool('force', false);
-            $counts = CwmschemaorgHelper::syncAll($force);
+            $mode   = $app->getInput()->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
+            $valid  = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
+            $mode   = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
+            $counts = CwmschemaorgHelper::syncAll($mode);
             $total  = $counts['messages'] + $counts['teachers'] + $counts['series'];
+
+            $message = Text::sprintf(
+                'JBS_ADM_SCHEMA_SYNC_RESULT',
+                $counts['messages'],
+                $counts['teachers'],
+                $counts['series']
+            );
+
+            if ($counts['skipped'] > 0) {
+                $message .= ' ' . Text::sprintf('JBS_ADM_SCHEMA_SYNC_SKIPPED', $counts['skipped']);
+            }
 
             echo json_encode([
                 'success'  => true,
                 'count'    => $total,
                 'counts'   => $counts,
-                'message'  => Text::sprintf(
-                    'JBS_ADM_SCHEMA_SYNC_RESULT',
-                    $counts['messages'],
-                    $counts['teachers'],
-                    $counts['series']
-                ),
+                'message'  => $message,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
