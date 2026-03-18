@@ -587,9 +587,13 @@ class CwmserieModel extends AdminModel
             $data = $this->getItem();
         }
 
-        // Auto-populate Schema.org defaults from series data if not already saved
-        if (\is_object($data) && !empty($data->id)
-            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.serie')) {
+        // Auto-populate Schema.org defaults from series data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Series';
 
@@ -608,6 +612,7 @@ class CwmserieModel extends AdminModel
                 }
 
                 $data->schema['Series'] = $series;
+            }
         }
 
         return $data;

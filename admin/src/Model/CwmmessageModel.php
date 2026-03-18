@@ -992,9 +992,13 @@ class CwmmessageModel extends AdminModel
             $data = $this->getItem();
         }
 
-        // Auto-populate Schema.org defaults from message data if not already saved
-        if (\is_object($data) && !empty($data->id)
-            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.cwmmessage')) {
+        // Auto-populate Schema.org defaults from message data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Sermon';
 
@@ -1148,6 +1152,7 @@ class CwmmessageModel extends AdminModel
                 }
 
                 $data->schema['Sermon'] = $sermon;
+            }
         }
 
         return $data;

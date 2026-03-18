@@ -502,9 +502,13 @@ class CwmteacherModel extends AdminModel
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
         $data    = empty($session) ? $this->data : $session;
 
-        // Auto-populate Schema.org defaults from teacher data if not already saved
-        if (\is_object($data) && !empty($data->id)
-            && !CwmschemaorgHelper::hasJoomlaSchema((int) $data->id, 'com_proclaim.teacher')) {
+        // Auto-populate Schema.org defaults from teacher data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
                 $data->schema               = $data->schema ?? [];
                 $data->schema['schemaType'] = 'Teacher';
 
@@ -571,6 +575,7 @@ class CwmteacherModel extends AdminModel
                 }
 
                 $data->schema['Teacher'] = $teacher;
+            }
         }
 
         return $data;
