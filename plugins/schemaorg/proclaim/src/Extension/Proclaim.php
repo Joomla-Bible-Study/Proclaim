@@ -230,12 +230,24 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // The Reset button clears it. Bulk sync ignores it (force overwrites all).
         $formSchema      = $event->getSchema();
         $sessionEdited   = [];
+        $debug           = true; // TODO: remove after debugging
 
         if (!empty($formSchema['_editedFields'])) {
             try {
                 $sessionEdited = json_decode($formSchema['_editedFields'], true, 512, JSON_THROW_ON_ERROR) ?: [];
             } catch (\Throwable) {
                 $sessionEdited = [];
+            }
+        }
+
+        if ($debug) {
+            try {
+                $app = Factory::getApplication();
+                $app->enqueueMessage('Schema Debug — _editedFields raw: ' . ($formSchema['_editedFields'] ?? '(not set)'), 'info');
+                $app->enqueueMessage('Schema Debug — sessionEdited: ' . json_encode($sessionEdited), 'info');
+                $app->enqueueMessage('Schema Debug — entry->schema keys: ' . implode(', ', array_keys(json_decode($entry->schema ?? '{}', true) ?: [])), 'info');
+            } catch (\Throwable) {
+                // skip
             }
         }
 
@@ -251,10 +263,33 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 // Merge in any fields edited this session
                 $customFields = array_values(array_unique(array_merge($customFields, $sessionEdited)));
 
+                if ($debug) {
+                    try {
+                        $app = Factory::getApplication();
+                        $app->enqueueMessage('Schema Debug — existing _customFields: ' . json_encode($existingSchema['_customFields'] ?? []), 'info');
+                        $app->enqueueMessage('Schema Debug — merged customFields: ' . json_encode($customFields), 'info');
+                        $app->enqueueMessage('Schema Debug — incoming headline: ' . ($incoming['headline'] ?? '(none)'), 'info');
+                    } catch (\Throwable) {
+                        // skip
+                    }
+                }
+
                 // Regenerate fresh schema from item data
                 $fresh = $this->generateSchemaFromItem($item, $context);
 
                 if ($fresh !== null) {
+                    if ($debug) {
+                        try {
+                            Factory::getApplication()->enqueueMessage(
+                                'Schema Debug — fresh headline: ' . ($fresh['headline'] ?? '(none)')
+                                . ' | item studytitle: ' . ($item->studytitle ?? '(none)'),
+                                'info'
+                            );
+                        } catch (\Throwable) {
+                            // skip
+                        }
+                    }
+
                     // Overlay persistent custom fields from form submission
                     foreach ($customFields as $field) {
                         if (\array_key_exists($field, $incoming)) {
