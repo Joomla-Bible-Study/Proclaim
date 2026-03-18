@@ -132,36 +132,47 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // Inject JS to track which schema fields the user edits.
-        // Uses event delegation on document to catch subform fields that
-        // Joomla renders after DOMContentLoaded.
+        // Track which schema fields the user edits by comparing values
+        // on form submit against their original values at page load.
+        // Joomla's subform web component prevents event bubbling, so
+        // input/change listeners on document don't work.
         $this->getApplication()->getDocument()->addScriptDeclaration(
             <<<'JS'
             document.addEventListener('DOMContentLoaded', function() {
                 var tracker = document.getElementById('jform_schema__editedFields');
                 if (!tracker) return;
-                var edited = new Set();
-                function handleEdit(e) {
-                    var el = e.target;
-                    if (!el.name) return;
-                    // Debug: log all schema-related events
-                    if (el.name.indexOf('schema') !== -1) {
-                        console.log('[Schema Edit Tracker] event=' + e.type + ' name=' + el.name + ' type=' + el.type);
-                    }
-                    if (!el.name.startsWith('jform[schema]')) return;
-                    if (el.name === 'jform[schema][_editedFields]' || el.name === 'jform[schema][schemaType]') return;
-                    if (el.type === 'hidden') return;
-                    var parts = el.name.replace(/\]/g, '').split('[');
-                    var field = parts[parts.length - 1];
-                    if (field && field !== '@type') {
-                        edited.add(field);
-                        tracker.value = JSON.stringify(Array.from(edited));
-                        console.log('[Schema Edit Tracker] tracked field: ' + field + ' → _editedFields:', tracker.value);
-                    }
+                var originals = {};
+                // Capture original values after a delay (subform fields render async)
+                setTimeout(function() {
+                    document.querySelectorAll('input, textarea, select').forEach(function(el) {
+                        if (!el.name || el.name.indexOf('[schema]') === -1) return;
+                        if (el.type === 'hidden') return;
+                        var parts = el.name.replace(/\]/g, '').split('[');
+                        var field = parts[parts.length - 1];
+                        if (field && field !== '@type' && field !== '_editedFields' && field !== 'schemaType') {
+                            originals[field] = el.value;
+                        }
+                    });
+                    console.log('[Schema Edit Tracker] captured originals:', originals);
+                }, 1500);
+                // On form submit, compare current vs original
+                var form = document.getElementById('adminForm') || document.querySelector('form[name="adminForm"]');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        var edited = [];
+                        document.querySelectorAll('input, textarea, select').forEach(function(el) {
+                            if (!el.name || el.name.indexOf('[schema]') === -1) return;
+                            if (el.type === 'hidden') return;
+                            var parts = el.name.replace(/\]/g, '').split('[');
+                            var field = parts[parts.length - 1];
+                            if (field && originals.hasOwnProperty(field) && el.value !== originals[field]) {
+                                edited.push(field);
+                            }
+                        });
+                        tracker.value = JSON.stringify(edited);
+                        console.log('[Schema Edit Tracker] submit — edited fields:', edited);
+                    });
                 }
-                document.addEventListener('change', handleEdit, true);
-                document.addEventListener('input', handleEdit, true);
-                console.log('[Schema Edit Tracker] initialized, listening for schema field edits');
             });
             JS
         );
