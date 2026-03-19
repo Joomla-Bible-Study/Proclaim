@@ -181,10 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
             introText = getValue('jform_studyintro');
         }
 
-        // Strip HTML for preview
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = introText;
-        const introPreview = (tempDiv.textContent || '').substring(0, 200);
+        // Strip HTML for preview (DOMParser is safe — no script execution)
+        const parsed = new DOMParser().parseFromString(introText, 'text/html');
+        const introPreview = (parsed.body.textContent || '').substring(0, 200);
 
         const escHtml = (str) => {
             const d = document.createElement('div');
