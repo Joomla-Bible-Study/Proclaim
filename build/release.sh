@@ -114,12 +114,8 @@ gh release create "$TAG" "build/${ZIP_NAME}" \
 echo ""
 
 # --- Step 5: Publish to ARS ---
-if [ -z "$PRERELEASE_FLAG" ]; then
-    echo "[5/6] Publishing to ARS..."
-    bash build/ars-release.sh "$VERSION"
-else
-    echo "[5/6] Skipping ARS (pre-release)."
-fi
+echo "[5/6] Publishing to ARS..."
+bash build/ars-release.sh "$VERSION"
 echo ""
 
 # --- Step 6: Update development versions.json ---

@@ -37,11 +37,23 @@ else
 fi
 
 TAG="v${VERSION}"
-ALIAS="proclaim-${VERSION}"
+ALIAS=$(echo "proclaim-${VERSION}" | tr '.' '-')
 ZIP_NAME="${ZIP_PREFIX}-${VERSION}.zip"
 GITHUB_DOWNLOAD_URL="https://github.com/Joomla-Bible-Study/Proclaim/releases/download/${TAG}/${ZIP_NAME}"
 
-echo "Publishing Proclaim ${VERSION} to ARS..."
+# Determine ARS maturity from version string
+# beta/beta1/beta2 → beta, rc/rc1/rc2 → rc, alpha → alpha, else → stable
+if [[ "$VERSION" == *-alpha* ]]; then
+    ARS_MATURITY="alpha"
+elif [[ "$VERSION" == *-beta* ]]; then
+    ARS_MATURITY="beta"
+elif [[ "$VERSION" == *-rc* ]]; then
+    ARS_MATURITY="rc"
+else
+    ARS_MATURITY="stable"
+fi
+
+echo "Publishing Proclaim ${VERSION} to ARS (maturity: ${ARS_MATURITY})..."
 echo "  GitHub release: ${TAG}"
 echo "  Download URL:   ${GITHUB_DOWNLOAD_URL}"
 
@@ -126,7 +138,7 @@ if [ -n "$EXISTING_ID" ]; then
             \"category_id\": ${ARS_CATEGORY_ID},
             \"version\": \"${VERSION}\",
             \"alias\": \"${ALIAS}\",
-            \"maturity\": \"stable\",
+            \"maturity\": \"${ARS_MATURITY}\",
             \"notes\": $(echo "$RELEASE_NOTES" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))'),
             \"published\": 1
         }" \
@@ -143,7 +155,7 @@ else
             \"category_id\": ${ARS_CATEGORY_ID},
             \"version\": \"${VERSION}\",
             \"alias\": \"${ALIAS}\",
-            \"maturity\": \"stable\",
+            \"maturity\": \"${ARS_MATURITY}\",
             \"notes\": $(echo "$RELEASE_NOTES" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))'),
             \"published\": 1,
             \"access\": 1,
