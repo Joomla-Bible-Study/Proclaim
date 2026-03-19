@@ -886,6 +886,17 @@
             }
         },
         {
+            "name": "com_proclaim.schema-indicators",
+            "type": "script",
+            "uri": "com_proclaim/schema-indicators.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.form-validate-submit",
             "type": "script",
             "uri": "com_proclaim/form-validate-submit.min.js",

@@ -150,7 +150,17 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // No JS needed — field edit detection is fully server-side via _fieldHashes.
+        // Register JS for custom field indicators
+        try {
+            $app = Factory::getApplication();
+            $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.schema-indicators');
+
+            // Make language strings available to JS
+            Text::script('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM');
+            Text::script('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM_DESC');
+        } catch (\Throwable) {
+            // Document not available (e.g., CLI)
+        }
     }
 
     /**
@@ -205,6 +215,20 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             $data->schema[$schemaType] = $existing;
+
+            // Pass custom field indicators to JS
+            $customFields = $existing['_customFields'] ?? [];
+
+            if (!empty($customFields)) {
+                try {
+                    Factory::getApplication()->getDocument()->addScriptOptions(
+                        'com_proclaim.schemaCustomFields',
+                        $customFields
+                    );
+                } catch (\Throwable) {
+                    // Document not available
+                }
+            }
 
             return;
         }
