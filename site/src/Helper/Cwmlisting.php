@@ -138,6 +138,7 @@ class Cwmlisting
             'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
             'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
             'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone', 'teacherorgname',
+            'spacer1', 'spacer2', 'spacer3',
         ];
 
         foreach ($standardParams as $paramName) {
@@ -1152,6 +1153,13 @@ class Cwmlisting
                 } else {
                     $data = trim($item->teacherorgname ?? $item->org_name ?? '');
                 }
+                break;
+
+            case $extra . 'spacer1':
+            case $extra . 'spacer2':
+            case $extra . 'spacer3':
+                // Empty element for layout spacing — renders as blank with the chosen HTML tag and custom class
+                $data = '&nbsp;';
                 break;
 
             case $extra . 'teacherfb':
