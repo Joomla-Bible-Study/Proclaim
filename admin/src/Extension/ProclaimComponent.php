@@ -23,6 +23,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Schemaorg\SchemaorgServiceInterface;
+use Joomla\CMS\Schemaorg\SchemaorgServiceTrait;
 use Joomla\CMS\Workflow\WorkflowServiceInterface;
 use Joomla\CMS\Workflow\WorkflowServiceTrait;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
@@ -37,10 +39,12 @@ class ProclaimComponent extends MVCComponent implements
     BootableExtensionInterface,
     FieldsServiceInterface,
     RouterServiceInterface,
+    SchemaorgServiceInterface,
     WorkflowServiceInterface
 {
     use RouterServiceTrait;
     use HTMLRegistryAwareTrait;
+    use SchemaorgServiceTrait;
     use WorkflowServiceTrait;
 
     /**
@@ -185,6 +189,34 @@ class ProclaimComponent extends MVCComponent implements
         return [
             'com_proclaim.cwmcpanel' => Text::_('com_proclaim'),
             'com_proclaim.cwmadmin'  => Text::_('JCATEGORY'),
+        ];
+    }
+
+    /**
+     * Returns valid contexts for Schema.org structured data.
+     *
+     * Each context maps to an admin edit form where the Schema.org tab
+     * will appear, allowing admins to configure structured data per item.
+     *
+     * @return  array  Context => label pairs
+     *
+     * @since   10.3.0
+     */
+    public function getSchemaorgContexts(): array
+    {
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+        return [
+            // Admin form contexts (for Schema.org tab on edit forms)
+            'com_proclaim.cwmmessage' => Text::_('JBS_CMN_MESSAGES'),
+            'com_proclaim.teacher'    => Text::_('JBS_CMN_TEACHERS'),
+            'com_proclaim.serie'      => Text::_('JBS_CMN_SERIES'),
+            // Admin content event contexts (model name differs from form name)
+            'com_proclaim.cwmteacher' => Text::_('JBS_CMN_TEACHERS'),
+            'com_proclaim.cwmserie'   => Text::_('JBS_CMN_SERIES'),
+            // Frontend view contexts (for JSON-LD output)
+            'com_proclaim.cwmsermon'        => Text::_('JBS_CMN_MESSAGES'),
+            'com_proclaim.cwmseriesdisplay' => Text::_('JBS_CMN_SERIES'),
         ];
     }
 

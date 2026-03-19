@@ -270,7 +270,7 @@ class Cwmthumbnail
 
         // Create JPEG thumbnail preserving original aspect ratio.
         // $size is the max dimension — the other scales proportionally.
-        $image       = new Image($newImagePath);
+        $image        = new Image($newImagePath);
         $sourceWidth  = $image->getWidth();
         $sourceHeight = $image->getHeight();
 

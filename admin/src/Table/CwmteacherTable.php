@@ -44,6 +44,9 @@ class CwmteacherTable extends Table
     /** @var string|null Teacher title/honorific @since 7.0.0 */
     public ?string $title = null;
 
+    /** @var string|null Organization name override for schema.org @since 10.3.0 */
+    public ?string $org_name = null;
+
     /** @var string|null @since 7.0.0 */
     public ?string $phone = null;
 

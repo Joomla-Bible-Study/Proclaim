@@ -19,6 +19,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 $app   = Factory::getApplication();
 $input = $app->getInput();
@@ -127,6 +129,33 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
                 <?php else : ?>
                 <div class="alert alert-info">
                     <?php echo Text::_('JBS_SER_NO_MESSAGES_IN_SERIES'); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
+        <?php // ===== Schema.org Tab =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.serie'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
                 </div>
                 <?php endif; ?>
             </div>

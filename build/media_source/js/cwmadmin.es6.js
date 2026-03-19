@@ -166,6 +166,37 @@
                 }
             }
 
+            // Initialize Bootstrap 5 modal for schema sync
+            const schemaSyncModalEl = document.getElementById('schema-sync-modal');
+            if (schemaSyncModalEl && typeof bootstrap !== 'undefined') {
+                this.schemaSyncModal = new bootstrap.Modal(schemaSyncModalEl);
+
+                const schemaSyncBtn = document.getElementById('btn-schema-sync');
+                if (schemaSyncBtn) {
+                    schemaSyncBtn.addEventListener('click', () => {
+                        // Reset to choice view
+                        const choose = schemaSyncModalEl.querySelector('.schema-sync-choose');
+                        const progress = schemaSyncModalEl.querySelector('.schema-sync-progress');
+                        const footer = schemaSyncModalEl.querySelector('.modal-footer');
+                        if (choose) choose.style.display = 'block';
+                        if (progress) progress.style.display = 'none';
+                        if (footer) footer.style.display = 'none';
+                        this.schemaSyncModal.show();
+                    });
+                }
+
+                schemaSyncModalEl.querySelectorAll('.btn-schema-sync-run').forEach((btn) => {
+                    btn.addEventListener('click', () => this.handleSchemaSync(btn.dataset.mode || 'smart'));
+                });
+
+                const schemaCloseBtn = schemaSyncModalEl.querySelector('.btn-close-schema-modal');
+                if (schemaCloseBtn) {
+                    schemaCloseBtn.addEventListener('click', () => {
+                        if (this.schemaSyncModal) this.schemaSyncModal.hide();
+                    });
+                }
+            }
+
             // Initialize Bootstrap 5 modal for player tools
             const playerToolsModalEl = document.getElementById('player-tools-modal');
             if (playerToolsModalEl && typeof bootstrap !== 'undefined') {
@@ -360,6 +391,72 @@
                 console.error('Alias update error:', error);
 
                 // Hide spinner and show error
+                if (spinner) spinner.style.display = 'none';
+                if (statusText) {
+                    statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
+                        Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                }
+                if (resultText) {
+                    resultText.textContent = error.message || 'An error occurred';
+                }
+                if (footer) footer.style.display = 'flex';
+            }
+        }
+
+        /**
+         * Schema.org Sync — bulk-populate #__schemaorg for all items.
+         * @param {string} mode - 'smart', 'new', or 'force'
+         */
+        async handleSchemaSync(mode = 'smart') {
+            const modal = document.getElementById('schema-sync-modal');
+            const choose = modal?.querySelector('.schema-sync-choose');
+            const progress = modal?.querySelector('.schema-sync-progress');
+            const spinner = modal?.querySelector('.schema-sync-spinner');
+            const statusText = modal?.querySelector('.schema-sync-status-text');
+            const resultText = modal?.querySelector('.schema-sync-result-text');
+            const footer = modal?.querySelector('.modal-footer');
+
+            // Switch from choice to progress view
+            if (choose) choose.style.display = 'none';
+            if (progress) progress.style.display = 'block';
+            if (spinner) spinner.style.display = 'block';
+            if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_SCHEMA_SYNCING') || 'Syncing schema data...';
+            if (resultText) resultText.textContent = '';
+            if (footer) footer.style.display = 'none';
+
+            try {
+                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&mode=${mode}&${this.token}=1`;
+                const result = await this.fetchJson(url);
+
+                if (spinner) spinner.style.display = 'none';
+
+                if (result.success) {
+                    if (statusText) {
+                        statusText.innerHTML = `<i class="icon-checkmark text-success me-2"></i>${
+                            Joomla.Text._('JBS_ADM_SCHEMA_SYNC_COMPLETE') || 'Schema sync complete!'}`;
+                    }
+                    if (resultText) {
+                        resultText.textContent = result.message || `${result.count} items synced`;
+                    }
+
+                    this.announceToScreenReader(result.message || 'Schema sync complete');
+
+                    setTimeout(() => {
+                        if (this.schemaSyncModal) this.schemaSyncModal.hide();
+                    }, 4000);
+                } else {
+                    if (statusText) {
+                        statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
+                            Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                    }
+                    if (resultText) {
+                        resultText.textContent = result.message || 'An error occurred';
+                    }
+                    if (footer) footer.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Schema sync error:', error);
+
                 if (spinner) spinner.style.display = 'none';
                 if (statusText) {
                     statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${

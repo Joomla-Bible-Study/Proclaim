@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
@@ -2108,6 +2109,93 @@ class CwmadminController extends FormController
         }
 
         $app->close();
+    }
+
+    /**
+     * Bulk-sync Schema.org data for all published items via AJAX.
+     *
+     * @return void
+     *
+     * @since  10.3.0
+     */
+    public function schemaSyncXHR(): void
+    {
+        $app = Factory::getApplication();
+
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode([
+                'success' => false,
+                'message' => Text::_('JINVALID_TOKEN'),
+            ], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
+
+        try {
+            $mode   = $app->getInput()->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
+            $valid  = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
+            $mode   = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
+            $counts = CwmschemaorgHelper::syncAll($mode);
+            $total  = $counts['messages'] + $counts['teachers'] + $counts['series'];
+
+            $message = Text::sprintf(
+                'JBS_ADM_SCHEMA_SYNC_RESULT',
+                $counts['messages'],
+                $counts['teachers'],
+                $counts['series']
+            );
+
+            if ($counts['skipped'] > 0) {
+                $message .= ' ' . Text::sprintf('JBS_ADM_SCHEMA_SYNC_SKIPPED', $counts['skipped']);
+            }
+
+            echo json_encode([
+                'success'  => true,
+                'count'    => $total,
+                'counts'   => $counts,
+                'message'  => $message,
+            ], JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], JSON_THROW_ON_ERROR);
+        }
+
+        $app->close();
+    }
+
+    /**
+     * Force-refresh schema.org data for a single item.
+     *
+     * Called via link in the "custom preserved" notice after save.
+     *
+     * @return void
+     *
+     * @since  10.3.0
+     */
+    public function schemaForceRefresh(): void
+    {
+        Session::checkToken('get') || jexit(Text::_('JINVALID_TOKEN'));
+
+        $app     = Factory::getApplication();
+        $itemId  = $app->getInput()->getInt('item_id', 0);
+        $context = $app->getInput()->getCmd('schema_context', '');
+        $return  = $app->getInput()->getBase64('return', '');
+
+        if ($itemId > 0 && $context !== '') {
+            $synced = CwmschemaorgHelper::syncOne($itemId, $context);
+
+            if ($synced) {
+                $app->enqueueMessage(Text::_('JBS_ADM_SCHEMA_FORCE_REFRESHED'), 'success');
+            }
+        }
+
+        $redirect = $return ? base64_decode($return) : 'index.php?option=com_proclaim';
+        $app->redirect($redirect);
     }
 
     /**

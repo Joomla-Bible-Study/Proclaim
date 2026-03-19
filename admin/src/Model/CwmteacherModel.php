@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -28,6 +29,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -54,10 +56,10 @@ class CwmteacherModel extends AdminModel
      * @since 10.3.0
      */
     protected $batch_commands = [
-        'assetgroup_id'    => 'batchAccess',
-        'landing_show'     => 'batchLandingShow',
-        'list_show'        => 'batchListShow',
-        'move_position'    => 'batchMovePosition',
+        'assetgroup_id' => 'batchAccess',
+        'landing_show'  => 'batchLandingShow',
+        'list_show'     => 'batchListShow',
+        'move_position' => 'batchMovePosition',
     ];
 
     /**
@@ -469,6 +471,35 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
+     * Preprocess the form to import system plugins (needed for Schema.org tab).
+     *
+     * @param   Form    $form   The form to preprocess
+     * @param   mixed   $data   The form data
+     * @param   string  $group  Plugin group
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessForm(Form $form, $data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    /**
+     * @inheritDoc
+     * @since 10.3.0
+     */
+    protected function preprocessData($context, &$data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessData($context, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected in the form.
      *
      * @return    mixed    The data for the form.
@@ -480,8 +511,97 @@ class CwmteacherModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
+        $data    = empty($session) ? $this->data : $session;
 
-        return empty($session) ? $this->data : $session;
+        // Auto-populate Schema.org defaults from teacher data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema               = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Teacher';
+
+                $teacher = ['@type' => 'Person'];
+
+                if (!empty($data->teachername)) {
+                    $teacher['name'] = $data->teachername;
+                }
+
+                if (!empty($data->title)) {
+                    $teacher['jobTitle'] = $data->title;
+                }
+
+                if (!empty($data->short)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->short, ENT_QUOTES, 'UTF-8')));
+                } elseif (!empty($data->information)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->information, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->teacher_image)) {
+                    $teacher['image'] = $data->teacher_image;
+                } elseif (!empty($data->teacher_thumbnail)) {
+                    $teacher['image'] = $data->teacher_thumbnail;
+                }
+
+                // Website as url
+                if (!empty($data->website)) {
+                    $teacher['url'] = $data->website;
+                }
+
+                // Collect social links for sameAs
+                $sameAs = [];
+
+                // New social_links JSON field
+                if (!empty($data->social_links) && \is_string($data->social_links)) {
+                    try {
+                        $links = json_decode($data->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                        foreach ($links as $link) {
+                            if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                                $sameAs[] = $link['url'];
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Malformed JSON — skip
+                    }
+                }
+
+                // Legacy link fields as fallback
+                if (empty($sameAs)) {
+                    foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                        if (!empty($data->$field) && filter_var($data->$field, FILTER_VALIDATE_URL)) {
+                            $sameAs[] = $data->$field;
+                        }
+                    }
+                }
+
+                if (!empty($sameAs)) {
+                    // Structure as subform expects: array of {value: url}
+                    $teacher['sameAs'] = array_map(
+                        static fn ($url) => ['value' => $url],
+                        $sameAs
+                    );
+                }
+
+                // worksFor: teacher org_name → admin setting → site name
+                $orgName = !empty($data->org_name) ? $data->org_name : CwmschemaorgHelper::getOrgName();
+
+                if ($orgName !== '') {
+                    $teacher['worksFor'] = [
+                        '@type' => 'Organization',
+                        'name'  => $orgName,
+                    ];
+                }
+
+                $data->schema['Teacher'] = $teacher;
+            }
+        }
+
+        $this->preprocessData('com_proclaim.teacher', $data);
+
+        return $data;
     }
 
     /**

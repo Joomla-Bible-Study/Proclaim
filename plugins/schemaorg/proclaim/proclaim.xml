@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="schemaorg" method="upgrade">
+    <name>plg_schemaorg_proclaim</name>
+    <author>CWM Team</author>
+    <creationDate>2026-03</creationDate>
+    <copyright>(C) 2026 CWM Team All rights reserved</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <version>10.3.0</version>
+    <description>PLG_SCHEMAORG_PROCLAIM_XML_DESCRIPTION</description>
+    <namespace path="src">CWM\Plugin\Schemaorg\Proclaim</namespace>
+    <files>
+        <folder plugin="proclaim">services</folder>
+        <folder>src</folder>
+        <folder>forms</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/plg_schemaorg_proclaim.ini</language>
+        <language tag="en-GB">language/en-GB/plg_schemaorg_proclaim.sys.ini</language>
+    </languages>
+</extension>

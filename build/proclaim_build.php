@@ -162,6 +162,7 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/modules/site/mod_proclaim_podcast'               => "$joomlaPath/modules/mod_proclaim_podcast",
         BASE_DIR . '/modules/site/mod_proclaim_youtube'               => "$joomlaPath/modules/mod_proclaim_youtube",
         BASE_DIR . '/plugins/finder/proclaim'                         => "$joomlaPath/plugins/finder/proclaim",
+        BASE_DIR . '/plugins/schemaorg/proclaim'                      => "$joomlaPath/plugins/schemaorg/proclaim",
         BASE_DIR . '/plugins/system/proclaim'                         => "$joomlaPath/plugins/system/proclaim",
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",

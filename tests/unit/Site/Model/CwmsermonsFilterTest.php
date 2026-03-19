@@ -17,8 +17,8 @@ namespace CWM\Component\Proclaim\Tests\Site\Model;
 
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\Database\DatabaseDriver;
 use Joomla\Database\QueryInterface;
+use PHPUnit\Framework\Attributes\TestDox;
 
 /**
  * Test class for CwmsermonsModel filter methods
@@ -85,11 +85,11 @@ class CwmsermonsFilterTest extends ProclaimTestCase
      */
     private function createMockDb(): object
     {
-        return new class {
+        return new class () {
             public function quoteName($name, $as = null): string|array
             {
                 if (\is_array($name)) {
-                    return array_map(static fn($n) => '`' . $n . '`', $name);
+                    return array_map(static fn ($n) => '`' . $n . '`', $name);
                 }
 
                 return '`' . $name . '`';
@@ -98,7 +98,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
             public function getQuery(bool $new = false): object
             {
                 // Return a minimal object for subquery building in addTeacherFilter
-                return new class {
+                return new class () {
                     public function select($columns): static
                     {
                         return $this;
@@ -142,9 +142,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addParamFilter tests
     // =========================================================================
 
-    /**
-     * @testdox addParamFilter: null params adds no WHERE clause
-     */
+    #[TestDox('addParamFilter: null params adds no WHERE clause')]
     public function testAddParamFilterNullNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -155,9 +153,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, 'null param + no user filter should add no WHERE');
     }
 
-    /**
-     * @testdox addParamFilter: ['-1'] sentinel adds no WHERE clause
-     */
+    #[TestDox("addParamFilter: ['-1'] sentinel adds no WHERE clause")]
     public function testAddParamFilterSentinelNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -168,9 +164,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '["-1"] sentinel should add no WHERE');
     }
 
-    /**
-     * @testdox addParamFilter: [''] empty string adds no WHERE clause (module param bug)
-     */
+    #[TestDox("addParamFilter: [''] empty string adds no WHERE clause (module param bug)")]
     public function testAddParamFilterEmptyStringNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -181,9 +175,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] empty string should add no WHERE — this was the module bug');
     }
 
-    /**
-     * @testdox addParamFilter: [null] adds no WHERE clause
-     */
+    #[TestDox('addParamFilter: [null] adds no WHERE clause')]
     public function testAddParamFilterNullElementNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -194,9 +186,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[null] should add no WHERE');
     }
 
-    /**
-     * @testdox addParamFilter: single valid value adds = clause
-     */
+    #[TestDox('addParamFilter: single valid value adds = clause')]
     public function testAddParamFilterSingleValue(): void
     {
         $query = $this->createMockQuery();
@@ -208,9 +198,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('= 5', $this->whereCalls[0]);
     }
 
-    /**
-     * @testdox addParamFilter: multiple values adds IN clause
-     */
+    #[TestDox('addParamFilter: multiple values adds IN clause')]
     public function testAddParamFilterMultipleValues(): void
     {
         $query = $this->createMockQuery();
@@ -222,9 +210,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('IN (5,10)', $this->whereCalls[0]);
     }
 
-    /**
-     * @testdox addParamFilter: user filter only adds = clause
-     */
+    #[TestDox('addParamFilter: user filter only adds = clause')]
     public function testAddParamFilterUserFilterOnly(): void
     {
         $query = $this->createMockQuery();
@@ -236,9 +222,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('= 7', $this->whereCalls[0]);
     }
 
-    /**
-     * @testdox addParamFilter: param + user filter adds both clauses
-     */
+    #[TestDox('addParamFilter: param + user filter adds both clauses')]
     public function testAddParamFilterParamAndUserFilter(): void
     {
         $query = $this->createMockQuery();
@@ -249,9 +233,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertCount(2, $this->whereCalls, 'Param + user filter should add two WHERE clauses');
     }
 
-    /**
-     * @testdox addParamFilter: empty string param + user filter only applies user filter
-     */
+    #[TestDox('addParamFilter: empty string param + user filter only applies user filter')]
     public function testAddParamFilterEmptyStringWithUserFilter(): void
     {
         $query = $this->createMockQuery();
@@ -267,9 +249,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addTeacherFilter tests
     // =========================================================================
 
-    /**
-     * @testdox addTeacherFilter: null params adds no WHERE clause
-     */
+    #[TestDox('addTeacherFilter: null params adds no WHERE clause')]
     public function testAddTeacherFilterNullNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -280,9 +260,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls);
     }
 
-    /**
-     * @testdox addTeacherFilter: [''] empty string adds no WHERE clause
-     */
+    #[TestDox("addTeacherFilter: [''] empty string adds no WHERE clause")]
     public function testAddTeacherFilterEmptyStringNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -293,9 +271,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] should not create EXISTS subquery');
     }
 
-    /**
-     * @testdox addTeacherFilter: valid teacher ID adds EXISTS clause
-     */
+    #[TestDox('addTeacherFilter: valid teacher ID adds EXISTS clause')]
     public function testAddTeacherFilterValidId(): void
     {
         $query = $this->createMockQuery();
@@ -311,9 +287,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     // addBookFilter tests
     // =========================================================================
 
-    /**
-     * @testdox addBookFilter: null params adds no WHERE clause
-     */
+    #[TestDox('addBookFilter: null params adds no WHERE clause')]
     public function testAddBookFilterNullNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -324,9 +298,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls);
     }
 
-    /**
-     * @testdox addBookFilter: [''] empty string adds no WHERE clause
-     */
+    #[TestDox("addBookFilter: [''] empty string adds no WHERE clause")]
     public function testAddBookFilterEmptyStringNoFilter(): void
     {
         $query = $this->createMockQuery();
@@ -337,9 +309,7 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[""] should not filter by book');
     }
 
-    /**
-     * @testdox addBookFilter: ['-1'] sentinel adds no WHERE clause
-     */
+    #[TestDox("addBookFilter: ['-1'] sentinel adds no WHERE clause")]
     public function testAddBookFilterSentinelNoFilter(): void
     {
         $query = $this->createMockQuery();
