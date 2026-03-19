@@ -335,7 +335,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('location_id', 'params'); ?>
                     <?php echo $this->form->renderField('teacher_id', 'params'); ?>
                     <?php echo $this->form->renderField('series_id', 'params'); ?>
-                    <?php echo $this->form->renderField('booknumber', 'params'); ?>
                     <?php echo $this->form->renderField('messagetype', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">

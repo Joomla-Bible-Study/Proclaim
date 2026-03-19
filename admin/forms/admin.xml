@@ -169,10 +169,6 @@
                description="JBS_ADM_FILLIN_STUDY_DESC">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
         </field>
-        <field name="booknumber" type="BookList" default="-1" label="JBS_CMN_BOOK"
-               description="JBS_ADM_FILLIN_STUDY_DESC">
-            <option value="-1">JBS_CMN_SELECT_BOOK</option>
-        </field>
         <field name="messagetype" type="MessageTypeList" default="-1"
                label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
             <option value="-1">JBS_CMN_SHOW_ALL</option>
