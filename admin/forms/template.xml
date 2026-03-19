@@ -1035,6 +1035,16 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="tsteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tsteacherorgnamecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tsteacherorgnamecolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tsteacherorgnameelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tsteacherorgnamecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tsteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="tsteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
@@ -1246,6 +1256,16 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteacher-titlelinktype" type="TeacherLinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
+            <field name="tdteacherorgnamerow" type="RowOptions" size="1" default="0" label="JBS_TCH_ORG_NAME"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tdteacherorgnamecol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tdteacherorgnamecolspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tdteacherorgnameelement" type="ElementOptions" default="0" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tdteacherorgnamecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="tdteachercardrow" type="RowOptions" size="1" default="0" label="JBS_CMN_TEACHER_CARD"
                    description="JBS_TPL_ROW_DESC"/>
             <field name="tdteachercardcol" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
