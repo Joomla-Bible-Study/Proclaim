@@ -127,6 +127,8 @@
       "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
       "@joomla-cms-deps"
     ],
-    "joomla-cms-deps": "@php build/joomla-cms-deps.php"
+    "joomla-cms-deps": "@php build/joomla-cms-deps.php",
+    "ars-publish": "bash build/ars-release.sh",
+    "release": "bash build/release.sh"
   }
 }
