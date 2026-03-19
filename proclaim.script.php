@@ -400,6 +400,37 @@ class com_proclaimInstallerScript extends InstallerScript
                 }
             }
         }
+
+        // Second pass: fix columns that SHOULD exist but are missing.
+        // This catches bugs where a migration's schema version advanced
+        // but the column was never added (e.g., missing from install SQL).
+        $requiredFixes = [
+            '#__bsms_podcast' => [
+                'platform_links' => 'TEXT DEFAULT NULL',
+            ],
+        ];
+
+        foreach ($requiredFixes as $table => $columns) {
+            if (!$this->tableExists($table)) {
+                continue;
+            }
+
+            $liveColumns = $this->getTableColumns($table);
+
+            foreach ($columns as $column => $definition) {
+                if (!\in_array($column, $liveColumns, true)) {
+                    try {
+                        $db->setQuery(
+                            'ALTER TABLE ' . $db->quoteName($table)
+                            . ' ADD COLUMN ' . $db->quoteName($column) . ' ' . $definition
+                        );
+                        $db->execute();
+                    } catch (\Exception $e) {
+                        // Ignore
+                    }
+                }
+            }
+        }
     }
 
     /**
