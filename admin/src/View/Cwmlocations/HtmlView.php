@@ -183,6 +183,15 @@ class HtmlView extends BaseHtmlView
             }
         }
 
+        // Add merge button when user has both delete and edit permissions
+        if ($this->canDo->get('core.delete') && $this->canDo->get('core.edit')) {
+            $childBar->popupButton('merge')
+                ->text('JBS_LOC_MERGE')
+                ->selector('mergeModal')
+                ->listCheck(true)
+                ->icon('icon-copy');
+        }
+
         if ($this->state->get('filter.published') === '-2' && $this->canDo->get('core.delete')) {
             $toolbar->delete('', 'cwmlocations.delete')
                 ->text('JTOOLBAR_EMPTY_TRASH')

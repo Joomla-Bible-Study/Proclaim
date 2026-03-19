@@ -182,6 +182,76 @@ class CwmlocationsModel extends ListModel
     }
 
     /**
+     * Override getItems to attach usage counts to each location.
+     *
+     * @return  array|false
+     *
+     * @since   10.3.0
+     */
+    public function getItems(): array|false
+    {
+        $items = parent::getItems();
+
+        if ($items === false) {
+            return false;
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Tables that reference location_id
+        $tables = [
+            'messages'      => '#__bsms_studies',
+            'series'        => '#__bsms_series',
+            'podcasts'      => '#__bsms_podcast',
+            'servers'       => '#__bsms_servers',
+            'templates'     => '#__bsms_templates',
+            'templatecodes' => '#__bsms_templatecode',
+        ];
+
+        // Collect all location IDs from current page
+        $ids = array_map(fn ($item) => (int) $item->id, $items);
+
+        if (empty($ids)) {
+            return $items;
+        }
+
+        // Batch-load counts for all locations on this page
+        $counts = [];
+
+        foreach ($tables as $key => $table) {
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('location_id'),
+                    'COUNT(*) AS ' . $db->quoteName('cnt'),
+                ])
+                ->from($db->quoteName($table))
+                ->whereIn($db->quoteName('location_id'), $ids)
+                ->group($db->quoteName('location_id'));
+            $db->setQuery($query);
+            $rows = $db->loadObjectList('location_id');
+
+            foreach ($ids as $id) {
+                $counts[$id][$key] = isset($rows[$id]) ? (int) $rows[$id]->cnt : 0;
+            }
+        }
+
+        // Attach counts to items
+        foreach ($items as $item) {
+            $item->usage = $counts[(int) $item->id] ?? [
+                'messages'      => 0,
+                'series'        => 0,
+                'podcasts'      => 0,
+                'servers'       => 0,
+                'templates'     => 0,
+                'templatecodes' => 0,
+            ];
+            $item->usage_total = array_sum($item->usage);
+        }
+
+        return $items;
+    }
+
+    /**
      * Get List Query
      *
      * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.

@@ -2623,22 +2623,22 @@ class Cwmlisting
 
         // Build replacements array for single str_replace call
         $replacements = [
-            '{{teacher}}'     => $row->teachername ?? '',
-            '{{title}}'       => $row->studytitle ?? '',
-            '{{date}}'        => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
-            '{{studyintro}}'  => $row->studyintro ?? '',
-            '{{scripture}}'   => $this->getScripture($params, $row, 0, 1),
-            '{{topics}}'      => $row->topic_text ?? '',
-            '{{url}}'         => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            '{{thumbnail}}'   => $thumbnail,
-            '{{seriestext}}'  => $row->series_text ?? '',
-            '{{messagetype}}' => $row->message_type ?? '',
-            '{{bookname}}'    => $row->bookname ?? '',
-            '{{hits}}'        => $row->hits ?? '',
-            '{{location}}'    => $row->location_text ?? '',
-            '{{plays}}'            => $row->totalplays ?? '',
-            '{{downloads}}'        => $row->totaldownloads ?? '',
-            '{{teacherorgname}}'   => $row->teacherorgname ?? $row->org_name ?? '',
+            '{{teacher}}'        => $row->teachername ?? '',
+            '{{title}}'          => $row->studytitle ?? '',
+            '{{date}}'           => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
+            '{{studyintro}}'     => $row->studyintro ?? '',
+            '{{scripture}}'      => $this->getScripture($params, $row, 0, 1),
+            '{{topics}}'         => $row->topic_text ?? '',
+            '{{url}}'            => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
+            '{{thumbnail}}'      => $thumbnail,
+            '{{seriestext}}'     => $row->series_text ?? '',
+            '{{messagetype}}'    => $row->message_type ?? '',
+            '{{bookname}}'       => $row->bookname ?? '',
+            '{{hits}}'           => $row->hits ?? '',
+            '{{location}}'       => $row->location_text ?? '',
+            '{{plays}}'          => $row->totalplays ?? '',
+            '{{downloads}}'      => $row->totaldownloads ?? '',
+            '{{teacherorgname}}' => $row->teacherorgname ?? $row->org_name ?? '',
         ];
 
         $label = str_replace(array_keys($replacements), array_values($replacements), $label);
