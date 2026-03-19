@@ -204,7 +204,7 @@ class CWMAddonWistia extends CWMAddon
 
         return '<div class="proclaim-video-wrap" style="position:relative;padding-bottom:56.25%;overflow:hidden;max-width:100%;">'
             . '<iframe class="playhit" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
-            . ' allow="autoplay; fullscreen" allowtransparency="true" frameborder="0"'
+            . ' allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" loading="lazy"'
             . ' style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>'
             . '</div>';
     }

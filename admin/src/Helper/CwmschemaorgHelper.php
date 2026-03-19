@@ -17,8 +17,10 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Schema.org JSON-LD structured data helper.
@@ -311,29 +313,237 @@ class CwmschemaorgHelper
     }
 
     /**
+     * Build ItemList JSON-LD for the teachers list page.
+     *
+     * @param   array   $items     Array of teacher items
+     * @param   string  $pageUrl   Canonical page URL
+     * @param   string  $siteName  Site name
+     *
+     * @return array JSON-LD data array
+     *
+     * @since 10.3.0
+     */
+    public static function buildTeacherList(array $items, string $pageUrl, string $siteName): array
+    {
+        $data = [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'ItemList',
+            'url'           => $pageUrl,
+            'numberOfItems' => \count($items),
+        ];
+
+        if ($siteName !== '') {
+            $data['name'] = $siteName;
+        }
+
+        $listItems = [];
+
+        foreach ($items as $position => $item) {
+            $listItem = [
+                '@type'    => 'ListItem',
+                'position' => $position + 1,
+            ];
+
+            $personData = [
+                '@type' => 'Person',
+                'name'  => $item->teachername ?? '',
+            ];
+
+            if (!empty($item->id)) {
+                $personData['url'] = self::buildAbsoluteUrl(
+                    'index.php?option=com_proclaim&view=cwmteacher&id=' . (int) $item->id
+                );
+            }
+
+            if (!empty($item->title)) {
+                $personData['jobTitle'] = $item->title;
+            }
+
+            $imagePath = $item->teacher_image ?? $item->teacher_thumbnail ?? '';
+
+            if (\is_string($imagePath) && $imagePath !== '' && !str_contains($imagePath, '<')) {
+                $personData['image'] = Uri::root() . ltrim($imagePath, '/');
+            }
+
+            $listItem['item'] = $personData;
+            $listItems[]      = $listItem;
+        }
+
+        if ($listItems !== []) {
+            $data['itemListElement'] = $listItems;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Build ItemList JSON-LD for the series list page.
+     *
+     * @param   array   $items     Array of series items
+     * @param   string  $pageUrl   Canonical page URL
+     * @param   string  $siteName  Site name
+     *
+     * @return array JSON-LD data array
+     *
+     * @since 10.3.0
+     */
+    public static function buildSeriesList(array $items, string $pageUrl, string $siteName): array
+    {
+        $data = [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'ItemList',
+            'url'           => $pageUrl,
+            'numberOfItems' => \count($items),
+        ];
+
+        if ($siteName !== '') {
+            $data['name'] = $siteName;
+        }
+
+        $listItems = [];
+
+        foreach ($items as $position => $item) {
+            $listItem = [
+                '@type'    => 'ListItem',
+                'position' => $position + 1,
+            ];
+
+            $seriesData = [
+                '@type' => 'CreativeWorkSeries',
+                'name'  => $item->series_text ?? '',
+            ];
+
+            if (!empty($item->id)) {
+                $seriesData['url'] = self::buildAbsoluteUrl(
+                    'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . (int) $item->id
+                );
+            }
+
+            $desc = self::cleanDescription($item->description ?? '');
+
+            if ($desc !== '') {
+                $seriesData['description'] = $desc;
+            }
+
+            $imagePath = $item->series_thumbnail ?? '';
+
+            if (\is_string($imagePath) && $imagePath !== '' && !str_contains($imagePath, '<')) {
+                $seriesData['image'] = Uri::root() . ltrim($imagePath, '/');
+            }
+
+            if (!empty($item->teachername)) {
+                $seriesData['author'] = [
+                    '@type' => 'Person',
+                    'name'  => $item->teachername,
+                ];
+            }
+
+            $listItem['item'] = $seriesData;
+            $listItems[]      = $listItem;
+        }
+
+        if ($listItems !== []) {
+            $data['itemListElement'] = $listItems;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Check if Joomla's Schema.org system plugin has stored schema for an item.
+     *
+     * When true, the system plugin will output the schema in its @graph —
+     * our standalone inject() should be skipped to avoid duplicates.
+     *
+     * @param   int     $itemId   The item ID
+     * @param   string  $context  The admin form context (e.g., 'com_proclaim.cwmmessage')
+     *
+     * @return  bool  True if the system plugin has per-item schema stored
+     *
+     * @since   10.3.0
+     */
+    /**
+     * Get the organization name for Schema.org publisher/worksFor.
+     *
+     * Uses the admin param `org_name` if set, otherwise falls back to site name.
+     *
+     * @return  string  Organization name
+     *
+     * @since   10.3.0
+     */
+    public static function getOrgName(): string
+    {
+        try {
+            $params  = Cwmparams::getAdmin()->params;
+            $orgName = $params->get('org_name', '');
+
+            if ($orgName !== '') {
+                return $orgName;
+            }
+
+            return Factory::getApplication()->get('sitename', '');
+        } catch (\Throwable) {
+            return '';
+        }
+    }
+
+    public static function hasJoomlaSchema(int $itemId, string $context): bool
+    {
+        if ($itemId <= 0) {
+            return false;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . ' = ' . $itemId)
+                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            $db->setQuery($query);
+
+            return (int) $db->loadResult() > 0;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    /**
      * Inject a JSON-LD array into the document head.
      *
-     * @param   array  $data  JSON-LD data array
+     * When $itemId and $context are provided, checks if Joomla's system
+     * schema.org plugin already has per-item schema stored — if so, skips
+     * injection to avoid duplicate structured data.
+     *
+     * @param   array   $data     JSON-LD data array
+     * @param   int     $itemId   Optional item ID for duplicate check
+     * @param   string  $context  Optional admin form context (e.g., 'com_proclaim.cwmmessage')
      *
      * @return void
      *
      * @since 10.1.0
      */
-    public static function inject(array $data): void
+    public static function inject(array $data, int $itemId = 0, string $context = ''): void
     {
         if ($data === []) {
             return;
         }
 
+        // Skip if Joomla's system plugin already has per-item schema for this item
+        if ($itemId > 0 && $context !== '' && self::hasJoomlaSchema($itemId, $context)) {
+            return;
+        }
+
         try {
-            $document = Factory::getApplication()->getDocument();
-            $json     = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $document    = Factory::getApplication()->getDocument();
+            $prettyPrint = \defined('JDEBUG') && JDEBUG ? JSON_PRETTY_PRINT : 0;
+            $json        = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | $prettyPrint);
         } catch (\Exception $e) {
             return;
         }
 
         $document->addCustomTag(
-            '<script type="application/ld+json">' . $json . '</script>'
+            '<script type="application/ld+json">' . "\n" . $json . "\n" . '</script>'
         );
     }
 
@@ -434,5 +644,716 @@ class CwmschemaorgHelper
         }
 
         return $links;
+    }
+
+    /**
+     * Bulk-sync schema.org data for all published messages, teachers, and series.
+     *
+     * Inserts or updates rows in Joomla's #__schemaorg table with auto-generated
+     * structured data from item fields.
+     *
+     * @param   bool  $force  If true, overwrite existing schema entries
+     *
+     * @return  array{messages: int, teachers: int, series: int}  Count of synced items per type
+     *
+     * @since   10.3.0
+     */
+    /**
+     * Sync mode: only create entries for items that have no schema row.
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_NEW = 'new';
+
+    /**
+     * Sync mode: update entries that haven't been manually edited (hash match).
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_SMART = 'smart';
+
+    /**
+     * Sync mode: overwrite all entries regardless of manual edits.
+     *
+     * @since 10.3.0
+     */
+    public const SYNC_FORCE = 'force';
+
+    /**
+     * Force-sync schema.org data for a single item by ID and context.
+     *
+     * @param   int     $itemId   Item ID
+     * @param   string  $context  Context (e.g., 'com_proclaim.cwmmessage')
+     *
+     * @return  bool  True if synced
+     *
+     * @since   10.3.0
+     */
+    public static function syncOne(int $itemId, string $context): bool
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $contextMap = [
+            'com_proclaim.cwmmessage' => '#__bsms_studies',
+            'com_proclaim.teacher'    => '#__bsms_teachers',
+            'com_proclaim.serie'      => '#__bsms_series',
+        ];
+
+        $table = $contextMap[$context] ?? null;
+
+        if ($table === null) {
+            return false;
+        }
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName($table))
+            ->where($db->quoteName('id') . ' = ' . $itemId);
+        $item = $db->setQuery($query)->loadObject();
+
+        if ($item === null) {
+            return false;
+        }
+
+        $schemaType = match ($context) {
+            'com_proclaim.cwmmessage' => 'Sermon',
+            'com_proclaim.teacher'    => 'Teacher',
+            'com_proclaim.serie'      => 'Series',
+            default                   => null,
+        };
+
+        if ($schemaType === null) {
+            return false;
+        }
+
+        // Build schema using context-specific logic
+        $schema = match ($context) {
+            'com_proclaim.cwmmessage' => self::buildSermonSchemaFromRow($db, $item),
+            'com_proclaim.teacher'    => self::buildTeacherSchemaFromRow($item),
+            'com_proclaim.serie'      => self::buildSeriesSchemaFromRow($item),
+            default                   => null,
+        };
+
+        if ($schema === null) {
+            return false;
+        }
+
+        self::upsertSchemaRow($db, $itemId, $context, $schemaType, $schema);
+
+        return true;
+    }
+
+    public static function syncAll(string $mode = self::SYNC_SMART): array
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $counts  = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
+
+        $result = self::syncMessages($db, $mode);
+        $counts['messages'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
+
+        $result = self::syncTeachers($db, $mode);
+        $counts['teachers'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
+
+        $result = self::syncSeries($db, $mode);
+        $counts['series'] = $result['synced'];
+        $counts['skipped'] += $result['skipped'];
+
+        return $counts;
+    }
+
+    /**
+     * Sync schema.org data for all published messages.
+     *
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
+     *
+     * @return  array{synced: int, skipped: int}
+     *
+     * @since   10.3.0
+     */
+    private static function syncMessages(DatabaseInterface $db, string $mode): array
+    {
+        $context = 'com_proclaim.cwmmessage';
+        $synced  = 0;
+        $skipped = 0;
+
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('m.id'),
+                $db->quoteName('m.studytitle'),
+                $db->quoteName('m.studyintro'),
+                $db->quoteName('m.studydate'),
+                $db->quoteName('m.modified'),
+                $db->quoteName('m.image'),
+                $db->quoteName('m.series_id'),
+                $db->quoteName('m.messagetype'),
+                $db->quoteName('m.location_id'),
+            ])
+            ->from($db->quoteName('#__bsms_studies', 'm'))
+            ->where($db->quoteName('m.published') . ' = 1');
+        $db->setQuery($query);
+        $messages = $db->loadObjectList() ?: [];
+
+        foreach ($messages as $msg) {
+            if (!self::shouldSync($db, (int) $msg->id, $context, $mode)) {
+                $skipped++;
+                continue;
+            }
+
+            $schema = ['@type' => 'CreativeWork'];
+
+            if (!empty($msg->studytitle)) {
+                $schema['headline'] = $msg->studytitle;
+            }
+
+            if (!empty($msg->studyintro)) {
+                $schema['description'] = self::cleanDescription($msg->studyintro);
+            }
+
+            if (!empty($msg->studydate) && $msg->studydate !== '0000-00-00 00:00:00') {
+                $schema['datePublished'] = $msg->studydate;
+            }
+
+            if (!empty($msg->modified) && $msg->modified !== '0000-00-00 00:00:00') {
+                $schema['dateModified'] = $msg->modified;
+            }
+
+            if (!empty($msg->image)) {
+                $schema['image'] = $msg->image;
+            }
+
+            // Teacher names
+            $tQuery = $db->getQuery(true)
+                ->select($db->quoteName('t.teachername'))
+                ->from($db->quoteName('#__bsms_teachers', 't'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+                )
+                ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id)
+                ->order($db->quoteName('st.ordering') . ' ASC');
+            $names = $db->setQuery($tQuery)->loadColumn() ?: [];
+
+            if (!empty($names)) {
+                $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
+            }
+
+            // Custom fields: series, topics, genre, location
+            $customFields = [];
+
+            if (!empty($msg->series_id) && (int) $msg->series_id > 0) {
+                $sQuery = $db->getQuery(true)
+                    ->select($db->quoteName('series_text'))
+                    ->from($db->quoteName('#__bsms_series'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $msg->series_id);
+                $seriesName = $db->setQuery($sQuery)->loadResult();
+
+                if ($seriesName) {
+                    $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
+                }
+            }
+
+            if (!empty($msg->messagetype) && (int) $msg->messagetype > 0) {
+                $mtQuery = $db->getQuery(true)
+                    ->select($db->quoteName('message_type'))
+                    ->from($db->quoteName('#__bsms_message_type'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $msg->messagetype);
+                $msgType = $db->setQuery($mtQuery)->loadResult();
+
+                if ($msgType) {
+                    $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($msgType)];
+                }
+            }
+
+            if (!empty($msg->location_id) && (int) $msg->location_id > 0) {
+                $lQuery = $db->getQuery(true)
+                    ->select($db->quoteName('location_text'))
+                    ->from($db->quoteName('#__bsms_locations'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $msg->location_id);
+                $location = $db->setQuery($lQuery)->loadResult();
+
+                if ($location) {
+                    $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
+                }
+            }
+
+            // Topics
+            $topQuery = $db->getQuery(true)
+                ->select($db->quoteName('t.topic_text'))
+                ->from($db->quoteName('#__bsms_topics', 't'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                    . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
+                )
+                ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id);
+            $topics = $db->setQuery($topQuery)->loadColumn() ?: [];
+
+            if (!empty($topics)) {
+                $translated     = array_map(static fn ($t) => Text::_($t), $topics);
+                $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
+            }
+
+            if (!empty($customFields)) {
+                $schema['genericField'] = $customFields;
+            }
+
+            self::upsertSchemaRow($db, (int) $msg->id, $context, 'Sermon', $schema);
+            $synced++;
+        }
+
+        return ['synced' => $synced, 'skipped' => $skipped];
+    }
+
+    /**
+     * Sync schema.org data for all published teachers.
+     *
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
+     *
+     * @return  array{synced: int, skipped: int}
+     *
+     * @since   10.3.0
+     */
+    private static function syncTeachers(DatabaseInterface $db, string $mode): array
+    {
+        $context = 'com_proclaim.teacher';
+        $synced  = 0;
+        $skipped = 0;
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+        $teachers = $db->loadObjectList() ?: [];
+
+        foreach ($teachers as $teacher) {
+            if (!self::shouldSync($db, (int) $teacher->id, $context, $mode)) {
+                $skipped++;
+                continue;
+            }
+
+            $schema = ['@type' => 'Person'];
+
+            if (!empty($teacher->teachername)) {
+                $schema['name'] = $teacher->teachername;
+            }
+
+            if (!empty($teacher->title)) {
+                $schema['jobTitle'] = $teacher->title;
+            }
+
+            if (!empty($teacher->short)) {
+                $schema['description'] = self::cleanDescription($teacher->short);
+            } elseif (!empty($teacher->information)) {
+                $schema['description'] = self::cleanDescription($teacher->information);
+            }
+
+            if (!empty($teacher->teacher_image)) {
+                $schema['image'] = $teacher->teacher_image;
+            } elseif (!empty($teacher->teacher_thumbnail)) {
+                $schema['image'] = $teacher->teacher_thumbnail;
+            }
+
+            if (!empty($teacher->website)) {
+                $schema['url'] = $teacher->website;
+            }
+
+            // Social links → sameAs
+            $sameAs = [];
+
+            if (!empty($teacher->social_links) && \is_string($teacher->social_links)) {
+                try {
+                    $links = json_decode($teacher->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                    foreach ($links as $link) {
+                        if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                            $sameAs[] = ['value' => $link['url']];
+                        }
+                    }
+                } catch (\Throwable) {
+                    // Malformed JSON
+                }
+            }
+
+            if (empty($sameAs)) {
+                foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                    if (!empty($teacher->$field) && filter_var($teacher->$field, FILTER_VALIDATE_URL)) {
+                        $sameAs[] = ['value' => $teacher->$field];
+                    }
+                }
+            }
+
+            if (!empty($sameAs)) {
+                $schema['sameAs'] = $sameAs;
+            }
+
+            self::upsertSchemaRow($db, (int) $teacher->id, $context, 'Teacher', $schema);
+            $synced++;
+        }
+
+        return ['synced' => $synced, 'skipped' => $skipped];
+    }
+
+    /**
+     * Sync schema.org data for all published series.
+     *
+     * @param   DatabaseInterface  $db    Database instance
+     * @param   string             $mode  Sync mode
+     *
+     * @return  array{synced: int, skipped: int}
+     *
+     * @since   10.3.0
+     */
+    private static function syncSeries(DatabaseInterface $db, string $mode): array
+    {
+        $context = 'com_proclaim.serie';
+        $synced  = 0;
+        $skipped = 0;
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName('#__bsms_series'))
+            ->where($db->quoteName('published') . ' = 1');
+        $db->setQuery($query);
+        $allSeries = $db->loadObjectList() ?: [];
+
+        foreach ($allSeries as $series) {
+            if (!self::shouldSync($db, (int) $series->id, $context, $mode)) {
+                $skipped++;
+                continue;
+            }
+
+            $schema = ['@type' => 'CreativeWorkSeries'];
+
+            if (!empty($series->series_text)) {
+                $schema['name'] = $series->series_text;
+            }
+
+            if (!empty($series->description)) {
+                $schema['description'] = self::cleanDescription($series->description);
+            }
+
+            if (!empty($series->series_thumbnail)) {
+                $schema['image'] = $series->series_thumbnail;
+            }
+
+            self::upsertSchemaRow($db, (int) $series->id, $context, 'Series', $schema);
+            $synced++;
+        }
+
+        return ['synced' => $synced, 'skipped' => $skipped];
+    }
+
+    /**
+     * Compute a fingerprint hash of auto-generated schema data.
+     *
+     * The hash allows Smart Sync to detect whether schema was manually
+     * edited: if stored schema (minus _autoHash) still hashes to the
+     * stored _autoHash, the admin never touched it.
+     *
+     * @param   array  $schema  Schema data (without _autoHash key)
+     *
+     * @return  string  Short hash
+     *
+     * @since   10.3.0
+     */
+    public static function computeAutoHash(array $schema): string
+    {
+        unset($schema['_autoHash'], $schema['_customFields'], $schema['_fieldHashes'], $schema['_editedFields']);
+        ksort($schema);
+
+        return substr(md5(json_encode($schema, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Check if a stored schema row has been manually edited.
+     *
+     * Compares the stored _autoHash against the actual hash of the stored data.
+     * If they match, the admin never edited the schema fields.
+     *
+     * @param   DatabaseInterface  $db       Database instance
+     * @param   int                $itemId   Item ID
+     * @param   string             $context  Context string
+     *
+     * @return  bool|null  True = manually edited, false = untouched, null = no row
+     *
+     * @since   10.3.0
+     */
+    private static function isManuallyEdited(DatabaseInterface $db, int $itemId, string $context): ?bool
+    {
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('schema'))
+            ->from($db->quoteName('#__schemaorg'))
+            ->where($db->quoteName('itemId') . ' = ' . $itemId)
+            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+        $stored = $db->setQuery($query)->loadResult();
+
+        if ($stored === null) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Throwable) {
+            return true;
+        }
+
+        $storedHash = $data['_autoHash'] ?? null;
+
+        if ($storedHash === null) {
+            // No hash means it was created before Smart Sync or manually
+            return true;
+        }
+
+        unset($data['_autoHash']);
+        ksort($data);
+
+        return $storedHash !== substr(md5(json_encode($data, JSON_UNESCAPED_UNICODE)), 0, 12);
+    }
+
+    /**
+     * Build sermon schema from a DB row object (used by syncOne and bulk sync).
+     *
+     * @param   DatabaseInterface  $db   Database instance (for teacher/topic lookups)
+     * @param   object             $msg  Message row from #__bsms_studies
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildSermonSchemaFromRow(DatabaseInterface $db, object $msg): array
+    {
+        $schema = ['@type' => 'CreativeWork'];
+
+        if (!empty($msg->studytitle)) {
+            $schema['headline'] = $msg->studytitle;
+        }
+
+        if (!empty($msg->studyintro)) {
+            $schema['description'] = self::cleanDescription($msg->studyintro);
+        }
+
+        if (!empty($msg->studydate) && $msg->studydate !== '0000-00-00 00:00:00') {
+            $schema['datePublished'] = $msg->studydate;
+        }
+
+        if (!empty($msg->modified) && $msg->modified !== '0000-00-00 00:00:00') {
+            $schema['dateModified'] = $msg->modified;
+        }
+
+        if (!empty($msg->image)) {
+            $schema['image'] = $msg->image;
+        }
+
+        // Teacher names
+        $tQuery = $db->getQuery(true)
+            ->select($db->quoteName('t.teachername'))
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id)
+            ->order($db->quoteName('st.ordering') . ' ASC');
+        $names = $db->setQuery($tQuery)->loadColumn() ?: [];
+
+        if (!empty($names)) {
+            $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
+        }
+
+        // Publisher (organization)
+        $orgName = self::getOrgName();
+
+        if ($orgName !== '') {
+            $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build teacher schema from a DB row object.
+     *
+     * @param   object  $teacher  Teacher row from #__bsms_teachers
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildTeacherSchemaFromRow(object $teacher): array
+    {
+        $schema = ['@type' => 'Person'];
+
+        if (!empty($teacher->teachername)) {
+            $schema['name'] = $teacher->teachername;
+        }
+
+        if (!empty($teacher->title)) {
+            $schema['jobTitle'] = $teacher->title;
+        }
+
+        if (!empty($teacher->short)) {
+            $schema['description'] = self::cleanDescription($teacher->short);
+        } elseif (!empty($teacher->information)) {
+            $schema['description'] = self::cleanDescription($teacher->information);
+        }
+
+        if (!empty($teacher->teacher_image)) {
+            $schema['image'] = $teacher->teacher_image;
+        } elseif (!empty($teacher->teacher_thumbnail)) {
+            $schema['image'] = $teacher->teacher_thumbnail;
+        }
+
+        if (!empty($teacher->website)) {
+            $schema['url'] = $teacher->website;
+        }
+
+        // Social links
+        $sameAs = [];
+
+        if (!empty($teacher->social_links) && \is_string($teacher->social_links)) {
+            try {
+                $links = json_decode($teacher->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                foreach ($links as $link) {
+                    if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                        $sameAs[] = ['value' => $link['url']];
+                    }
+                }
+            } catch (\Throwable) {
+                // skip
+            }
+        }
+
+        if (empty($sameAs)) {
+            foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                if (!empty($teacher->$field) && filter_var($teacher->$field, FILTER_VALIDATE_URL)) {
+                    $sameAs[] = ['value' => $teacher->$field];
+                }
+            }
+        }
+
+        if (!empty($sameAs)) {
+            $schema['sameAs'] = $sameAs;
+        }
+
+        // worksFor: teacher org_name → admin setting → site name
+        $orgName = !empty($teacher->org_name) ? $teacher->org_name : self::getOrgName();
+
+        if ($orgName !== '') {
+            $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Build series schema from a DB row object.
+     *
+     * @param   object  $series  Series row from #__bsms_series
+     *
+     * @return  array
+     *
+     * @since   10.3.0
+     */
+    private static function buildSeriesSchemaFromRow(object $series): array
+    {
+        $schema = ['@type' => 'CreativeWorkSeries'];
+
+        if (!empty($series->series_text)) {
+            $schema['name'] = $series->series_text;
+        }
+
+        if (!empty($series->description)) {
+            $schema['description'] = self::cleanDescription($series->description);
+        }
+
+        if (!empty($series->series_thumbnail)) {
+            $schema['image'] = $series->series_thumbnail;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Determine whether an item should be synced based on mode.
+     *
+     * @param   DatabaseInterface  $db       Database instance
+     * @param   int                $itemId   Item ID
+     * @param   string             $context  Context string
+     * @param   string             $mode     Sync mode (new, smart, force)
+     *
+     * @return  bool  True if the item should be written
+     *
+     * @since   10.3.0
+     */
+    private static function shouldSync(DatabaseInterface $db, int $itemId, string $context, string $mode): bool
+    {
+        if ($mode === self::SYNC_FORCE) {
+            return true;
+        }
+
+        $edited = self::isManuallyEdited($db, $itemId, $context);
+
+        if ($edited === null) {
+            // No existing row — always sync
+            return true;
+        }
+
+        if ($mode === self::SYNC_NEW) {
+            // Row exists — skip
+            return false;
+        }
+
+        // Smart mode: sync only if not manually edited
+        return !$edited;
+    }
+
+    /**
+     * Insert or update a schema.org row with auto-hash fingerprint.
+     *
+     * @param   DatabaseInterface  $db          Database instance
+     * @param   int                $itemId      Item ID
+     * @param   string             $context     Context string
+     * @param   string             $schemaType  Schema type name
+     * @param   array              $schema      Schema data array (without _autoHash)
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private static function upsertSchemaRow(
+        DatabaseInterface $db,
+        int $itemId,
+        string $context,
+        string $schemaType,
+        array $schema
+    ): void {
+        // Stamp auto-hash before saving
+        $schema['_autoHash'] = self::computeAutoHash($schema);
+
+        // Check for existing row
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__schemaorg'))
+            ->where($db->quoteName('itemId') . ' = ' . $itemId)
+            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+        $existingId = (int) $db->setQuery($query)->loadResult();
+
+        $entry             = new \stdClass();
+        $entry->itemId     = $itemId;
+        $entry->context    = $context;
+        $entry->schemaType = $schemaType;
+        $entry->schema     = json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+        if ($existingId > 0) {
+            $entry->id = $existingId;
+            $db->updateObject('#__schemaorg', $entry, 'id');
+        } else {
+            $db->insertObject('#__schemaorg', $entry, 'id');
+        }
     }
 }

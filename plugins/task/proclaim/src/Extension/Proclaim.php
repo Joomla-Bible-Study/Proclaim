@@ -12,6 +12,7 @@ namespace CWM\Plugin\Task\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
@@ -471,6 +472,17 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 foreach ($errors as $err) {
                     $this->logTask('  - ' . $err);
                 }
+            }
+
+            // Scrub expired YouTube cache files (throttle, schedule, old quota)
+            $scrubResult = CwmyoutubeFileCache::scrub();
+
+            if ($scrubResult['removed'] > 0) {
+                $this->logTask(Text::sprintf(
+                    'PLG_TASK_PROCLAIM_PLATFORMSTATS_CACHE_SCRUB',
+                    $scrubResult['removed'],
+                    $scrubResult['kept']
+                ));
             }
         } catch (\Exception $e) {
             try {

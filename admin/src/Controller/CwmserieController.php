@@ -16,12 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
-use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Controller for a Serie
@@ -31,6 +30,9 @@ use Joomla\Database\ParameterType;
  */
 class CwmserieController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -38,6 +40,14 @@ class CwmserieController extends FormController
      * @since 7.0
      */
     protected $view_list = 'cwmseries';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_series';
 
     /**
      * Method to cancel an edit — redirects to modalreturn when in modal layout.
@@ -52,15 +62,7 @@ class CwmserieController extends FormController
     public function cancel($key = null): bool
     {
         $result = parent::cancel($key);
-
-        // When editing in modal then redirect to modalreturn layout
-        if ($result && $this->input->get('layout') === 'modal') {
-            $id     = $this->input->get('id');
-            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
-                . '&layout=modalreturn&from-task=cancel';
-
-            $this->setRedirect(Route::_($return, false));
-        }
+        $this->handleModalCancel($result);
 
         return $result;
     }
@@ -78,12 +80,10 @@ class CwmserieController extends FormController
     #[\Override]
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
-        if ($this->input->get('layout') === 'modal' && $this->task === 'save') {
-            $id     = $model->getState('cwmserie.id', '');
-            $return = 'index.php?option=' . $this->option . '&view=' . $this->view_item . $this->getRedirectToItemAppend($id)
-                . '&layout=modalreturn&from-task=save';
+        $id = (int) $model->getState('cwmserie.id');
 
-            $this->setRedirect(Route::_($return, false));
+        if ($this->handleModalPostSave($id)) {
+            return;
         }
     }
 
@@ -107,22 +107,6 @@ class CwmserieController extends FormController
     }
 
     /**
-     * Method override to check if you can add a new record.
-     *
-     * @param   array  $data  An array of input data.
-     *
-     * @return  bool
-     *
-     * @since   1.6
-     */
-    protected function allowAdd($data = []): bool
-    {
-        $allow = null;
-
-        return $allow ?? parent::allowAdd();
-    }
-
-    /**
      * Method override to check if you can edit an existing record.
      *
      * @param   array   $data  An array of input data.
@@ -135,31 +119,11 @@ class CwmserieController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_series'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
-        // Check general edit permission first.
-        if ($user->authorise('core.edit', 'com_proclaim.serie.' . $recordId)) {
-            return true;
-        }
-
-        // Since there is no asset tracking, revert to the component permissions.
         return parent::allowEdit($data, $key);
     }
 }

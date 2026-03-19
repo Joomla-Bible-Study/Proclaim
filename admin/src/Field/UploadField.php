@@ -52,22 +52,11 @@ class UploadField extends FormField
         $handler = $this->getAttribute('handler');
         $token   = Session::getFormToken();
 
-        $wa->addInlineScript(
-            'document.addEventListener("DOMContentLoaded", function() {
-                if (typeof uploader === "undefined") { return; }
-                uploader.setOption("url", "index.php?option=com_proclaim&task=cwmmediafile.xhr&' . $token . '=1");
-                uploader.bind("BeforeUpload", function() {
-                    var pathEl = document.getElementById("jform_params_localFolder");
-                    var typeEl = document.getElementById("jform_serverType");
-                    uploader.setOption("multipart_params", {
-                        handler: "' . $handler . '",
-                        path: pathEl ? pathEl.value : "",
-                        type: typeEl ? typeEl.value : ""
-                    });
-                });
-                uploader.init();
-            });'
-        );
+        $wa->useScript('com_proclaim.upload-field');
+        $document->addScriptOptions('com_proclaim.uploadField', [
+            'url'     => 'index.php?option=com_proclaim&task=cwmmediafile.xhr&' . $token . '=1',
+            'handler' => $handler,
+        ]);
 
         $class    = $this->getAttribute('class') ? (string) $this->getAttribute('class') : '';
         $required = 'requires="' . $this->getAttribute('required') . '"';

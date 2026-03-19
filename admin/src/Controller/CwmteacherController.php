@@ -11,14 +11,13 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
-use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -32,6 +31,9 @@ use Joomla\Database\ParameterType;
  */
 class CwmteacherController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -47,6 +49,32 @@ class CwmteacherController extends FormController
      * @since  7.0.0
      */
     protected $option = 'com_proclaim';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_teachers';
+
+    /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+        $this->handleModalCancel($result);
+
+        return $result;
+    }
 
     /**
      * Method to run batch operations.
@@ -80,23 +108,9 @@ class CwmteacherController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_teachers'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -120,5 +134,9 @@ class CwmteacherController extends FormController
         $title = trim(($validData['teachername'] ?? '') . ' ' . ($validData['title'] ?? ''));
 
         CwmactionlogHelper::log($key, $title, 'teacher', $id);
+
+        if ($this->handleModalPostSave($id)) {
+            return;
+        }
     }
 }

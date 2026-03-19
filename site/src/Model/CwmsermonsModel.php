@@ -873,7 +873,8 @@ class CwmsermonsModel extends ListModel
         bool $isExpression = false,
     ): void {
         $colRef   = $isExpression ? $column : $db->quoteName($column);
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
 
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
@@ -913,7 +914,8 @@ class CwmsermonsModel extends ListModel
         ?array $paramValues,
         int $filterValue,
     ): void {
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
 
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
@@ -969,7 +971,8 @@ class CwmsermonsModel extends ListModel
         ?array $paramValues,
         int $filterValue,
     ): void {
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
         $col      = $db->quoteName('study.booknumber');
 
         if ($hasParam && $filterValue < 1) {

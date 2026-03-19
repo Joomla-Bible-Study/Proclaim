@@ -23,6 +23,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmessage\HtmlView $this */
 
@@ -423,18 +424,34 @@ echo Route::_(
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php
-                echo $this->form->getInput('rules'); ?>
+        <?php // ===== Schema.org Tab (injected by system plugin when enabled) =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.cwmmessage'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
+                </div>
+                <?php endif; ?>
             </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <!-- Hidden fields -->
         <?php

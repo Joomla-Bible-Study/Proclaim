@@ -96,6 +96,55 @@ $this->useCoreUI = true;
     </div>
 </div>
 
+<!-- Bootstrap 5 Modal for Schema.org Sync -->
+<div class="modal fade" id="schema-sync-modal" tabindex="-1"
+     aria-labelledby="schemaSyncModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="schemaSyncModalLabel">
+                    <i class="icon-code me-2" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+            </div>
+            <div class="modal-body">
+                <div class="schema-sync-choose text-center">
+                    <p class="mb-3"><?php echo Text::_('JBS_ADM_SCHEMA_SYNC_DESC'); ?></p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-schema-sync-run" data-mode="smart">
+                            <i class="icon-refresh me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_SMART'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-schema-sync-run" data-mode="new">
+                            <i class="icon-plus me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_NEW'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-schema-sync-run" data-mode="force">
+                            <i class="icon-warning me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_FORCE'); ?>
+                        </button>
+                    </div>
+                </div>
+                <div class="schema-sync-progress text-center" style="display: none;">
+                    <div class="schema-sync-spinner mb-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
+                        </div>
+                    </div>
+                    <p class="schema-sync-status-text fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_SCHEMA_SYNCING'); ?></p>
+                    <p class="schema-sync-result-text text-muted small mb-0"></p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="display: none;">
+                <button type="button" class="btn btn-success btn-close-schema-modal">
+                    <i class="icon-checkmark me-1" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap 5 Modal for Player Tools -->
 <div class="modal fade" id="player-tools-modal" tabindex="-1"
      aria-labelledby="playerToolsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -192,6 +241,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-location" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_LOCATION_WIZARD'); ?></span>
                         </a>
+                        <button type="button"
+                           class="cwmadmin-action-card"
+                           id="btn-schema-sync"
+                           data-schema-force="0"
+                           title="<?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>">
+                            <i class="icon-code" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -215,6 +272,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SEO_METADATA'); ?></h3>
                     <?php echo $this->form->renderField('metakey', 'params'); ?>
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                    <?php echo $this->form->renderField('org_name', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>
@@ -277,7 +335,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('location_id', 'params'); ?>
                     <?php echo $this->form->renderField('teacher_id', 'params'); ?>
                     <?php echo $this->form->renderField('series_id', 'params'); ?>
-                    <?php echo $this->form->renderField('booknumber', 'params'); ?>
                     <?php echo $this->form->renderField('messagetype', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">

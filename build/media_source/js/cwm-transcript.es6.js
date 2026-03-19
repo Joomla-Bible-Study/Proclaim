@@ -85,10 +85,15 @@
             const start = parseVttTime(tsParts[0]);
             const end = parseVttTime(endRaw);
 
-            // Text is everything after the timestamp line, strip VTT tags
-            const text = lines.slice(tsIndex + 1).join(' ')
-                .replace(/<[^>]+>/g, '')
-                .trim();
+            // Text is everything after the timestamp line, strip VTT tags.
+            // Loop until stable to handle malformed/nested tags like <scr<b>ipt>.
+            let text = lines.slice(tsIndex + 1).join(' ');
+            let prev;
+            do {
+                prev = text;
+                text = text.replace(/<[^>]+>/g, '');
+            } while (text !== prev);
+            text = text.trim();
 
             if (text) {
                 cues.push({ start, end, text });

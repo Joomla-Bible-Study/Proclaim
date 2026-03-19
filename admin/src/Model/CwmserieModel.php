@@ -18,15 +18,18 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmserieTable;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -549,9 +552,38 @@ class CwmserieModel extends AdminModel
     }
 
     /**
+     * Preprocess the form to import system plugins (needed for Schema.org tab).
+     *
+     * @param   Form    $form   The form to preprocess
+     * @param   mixed   $data   The form data
+     * @param   string  $group  Plugin group
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessForm(Form $form, $data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    /**
+     * @inheritDoc
+     * @since 10.3.0
+     */
+    protected function preprocessData($context, &$data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessData($context, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected into the form.
      *
-     * @return  array    The default data is an empty array.
+     * @return  mixed    The default data is an empty array.
      *
      * @throws \Exception
      * @since   7.0
@@ -565,6 +597,36 @@ class CwmserieModel extends AdminModel
         if (empty($data)) {
             $data = $this->getItem();
         }
+
+        // Auto-populate Schema.org defaults from series data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema               = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Series';
+
+                $series = ['@type' => 'CreativeWorkSeries'];
+
+                if (!empty($data->series_text)) {
+                    $series['name'] = $data->series_text;
+                }
+
+                if (!empty($data->description)) {
+                    $series['description'] = trim(strip_tags(html_entity_decode($data->description, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->series_thumbnail)) {
+                    $series['image'] = $data->series_thumbnail;
+                }
+
+                $data->schema['Series'] = $series;
+            }
+        }
+
+        $this->preprocessData('com_proclaim.serie', $data);
 
         return $data;
     }

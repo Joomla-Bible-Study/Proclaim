@@ -63,7 +63,7 @@ Full documentation is maintained in the [Proclaim Wiki](https://github.com/Jooml
 git clone https://github.com/YOUR-USERNAME/Proclaim.git
 cd Proclaim
 
-# Install dependencies
+# Install dependencies (auto-clones joomla-cms for testing — one-time ~500MB)
 composer install --dev
 npm install
 
@@ -76,6 +76,15 @@ composer setup
 # Or manually configure build.properties and set up symbolic links
 composer symlink
 ```
+
+> **Disk space:** `composer install --dev` automatically clones the [joomla-cms](https://github.com/joomla/joomla-cms)
+> repository as a sibling directory and installs its Composer dependencies. This provides real Joomla CMS classes
+> for unit testing instead of stubs. Approximate sizes:
+> - joomla-cms shallow clone: ~50MB
+> - joomla-cms Composer dependencies: ~96MB
+> - Proclaim Composer dependencies: ~42MB
+> - Proclaim npm dependencies: ~136MB
+> - **Total dev environment: ~1GB** (excluding git history)
 
 ### Common Commands
 

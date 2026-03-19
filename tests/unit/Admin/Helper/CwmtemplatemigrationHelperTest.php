@@ -62,12 +62,13 @@ class TemplateMigStore
  * Delegates loadObjectList() to the shared TemplateMigStore so that after
  * updateTemplateParams() mutates the store, subsequent reads get fresh data.
  */
-class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver implements \Joomla\Database\DatabaseInterface
+class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
 {
     private TemplateMigStore $store;
 
     public function __construct(TemplateMigStore $store)
     {
+        // Skip parent constructor — no real DB connection needed
         $this->store = $store;
     }
 
@@ -108,6 +109,98 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver implements \Joom
         }
 
         return '`' . (string) $name . '`';
+    }
+
+    // Abstract method implementations required by DatabaseDriver
+    public function getTableCreate($tables)
+    {
+        return [];
+    }
+
+    protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
+    {
+        throw new \RuntimeException('prepareStatement not implemented in test fake');
+    }
+
+    public function setUtf()
+    {
+        return false;
+    }
+    public function connect()
+    {
+    }
+    public function connected()
+    {
+        return true;
+    }
+    public function escape($text, $extra = false)
+    {
+        return addslashes((string) $text);
+    }
+    public function getCollation()
+    {
+        return 'utf8mb4_general_ci';
+    }
+    public function getConnectionCollation()
+    {
+        return 'utf8mb4_general_ci';
+    }
+    public function getConnectionEncryption(): string
+    {
+        return '';
+    }
+    public function isConnectionEncryptionSupported(): bool
+    {
+        return false;
+    }
+    public function getTableColumns($table, $typeOnly = true)
+    {
+        return [];
+    }
+    public function getTableKeys($tables)
+    {
+        return [];
+    }
+    public function getTableList()
+    {
+        return [];
+    }
+    public function getVersion()
+    {
+        return '8.0';
+    }
+    public function insertid()
+    {
+        return 0;
+    }
+    public static function isSupported()
+    {
+        return true;
+    }
+    public function lockTable($tableName)
+    {
+        return $this;
+    }
+    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null)
+    {
+        return $this;
+    }
+    public function select($database)
+    {
+        return true;
+    }
+    public function transactionCommit($toSavepoint = false)
+    {
+    }
+    public function transactionRollback($toSavepoint = false)
+    {
+    }
+    public function transactionStart($asSavepoint = false)
+    {
+    }
+    public function unlockTables()
+    {
+        return $this;
     }
 }
 

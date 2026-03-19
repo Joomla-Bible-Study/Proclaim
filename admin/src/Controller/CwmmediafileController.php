@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -28,7 +29,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Controller For MediaFile
@@ -38,6 +38,8 @@ use Joomla\Database\ParameterType;
  */
 class CwmmediafileController extends FormController
 {
+    use MultiCampusAccessTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -53,6 +55,14 @@ class CwmmediafileController extends FormController
      * @since  7.0.0
      */
     protected $option = 'com_proclaim';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_mediafiles';
 
     /**
      * Method to add a new record.
@@ -99,7 +109,7 @@ class CwmmediafileController extends FormController
             $app->setUserState('com_proclaim.edit.mediafile.server_id', null);
         }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -115,23 +125,9 @@ class CwmmediafileController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -166,7 +162,7 @@ class CwmmediafileController extends FormController
             $app = Factory::getApplication();
             $app->close();
         } else {
-            throw new \RuntimeException(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+            throw new \RuntimeException(Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')), 404);
         }
     }
 
@@ -248,8 +244,14 @@ class CwmmediafileController extends FormController
             }
         }
 
-        if ($this->input->getCmd('return') && parent::cancel($key)) {
-            $this->setRedirect(base64_decode($this->input->getCmd('return')));
+        $return = $this->input->getCmd('return');
+
+        if ($return && parent::cancel($key)) {
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                $this->setRedirect($decoded);
+            }
 
             return true;
         }
@@ -536,8 +538,12 @@ class CwmmediafileController extends FormController
         $task   = $this->input->get('task');
 
         if ($return && $task !== 'apply') {
-            Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
-            $this->setRedirect(base64_decode($return));
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
+                $this->setRedirect($decoded);
+            }
         }
     }
 

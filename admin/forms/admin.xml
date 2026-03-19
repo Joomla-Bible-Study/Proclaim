@@ -28,6 +28,9 @@
                description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
         <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
                description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
+        <field name="org_name" type="text" size="60" label="JBS_ADM_ORG_NAME"
+               description="JBS_ADM_ORG_NAME_DESC" filter="string"
+               hint="JBS_ADM_ORG_NAME_HINT"/>
         <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
                description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
                layout="joomla.form.field.radio.switcher">
@@ -147,9 +150,9 @@
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
         <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+        <field name="thumbnail_teacher_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
                description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+        <field name="thumbnail_series_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
                description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
         <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>
@@ -165,10 +168,6 @@
         <field name="series_id" type="Series" default="-1" label="JBS_CMN_SERIES"
                description="JBS_ADM_FILLIN_STUDY_DESC">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
-        </field>
-        <field name="booknumber" type="BookList" default="-1" label="JBS_CMN_BOOK"
-               description="JBS_ADM_FILLIN_STUDY_DESC">
-            <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
         <field name="messagetype" type="MessageTypeList" default="-1"
                label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">

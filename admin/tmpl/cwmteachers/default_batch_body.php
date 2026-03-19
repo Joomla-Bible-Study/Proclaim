@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmteachers\HtmlView $this */
@@ -28,6 +29,40 @@ use Joomla\CMS\Layout\LayoutHelper;
         <?php endif; ?>
         <div class="form-group col-md-6">
             <?php echo LayoutHelper::render('joomla.html.batch.access', []); ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label id="batch-landing-show-lbl" for="batch-landing-show">
+                <?php echo Text::_('JBS_CMN_LANDING_SHOW'); ?>
+            </label>
+            <select name="batch[landing_show]" id="batch-landing-show" class="form-select">
+                <option value=""><?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?></option>
+                <option value="0"><?php echo Text::_('JBS_CMN_NO_SHOW_LANDING'); ?></option>
+                <option value="1"><?php echo Text::_('JBS_CMN_SHOW_ABOVE_LANDING'); ?></option>
+                <option value="2"><?php echo Text::_('JBS_CMN_SHOW_BELOW_LANDING'); ?></option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label id="batch-list-show-lbl" for="batch-list-show">
+                <?php echo Text::_('JBS_TCH_SHOW_LIST_VIEW'); ?>
+            </label>
+            <select name="batch[list_show]" id="batch-list-show" class="form-select">
+                <option value=""><?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?></option>
+                <option value="0"><?php echo Text::_('JHIDE'); ?></option>
+                <option value="1"><?php echo Text::_('JSHOW'); ?></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label id="batch-move-position-lbl" for="batch-move-position">
+                <?php echo Text::_('JBS_TCH_BATCH_MOVE_POSITION'); ?>
+            </label>
+            <input type="number" name="batch[move_position]" id="batch-move-position"
+                   class="form-control" value="" min="1" step="1"
+                   placeholder="<?php echo Text::_('JBS_CMN_BATCH_NO_CHANGE'); ?>">
+            <div class="form-text"><?php echo Text::_('JBS_TCH_BATCH_MOVE_POSITION_DESC'); ?></div>
         </div>
     </div>
 </div>

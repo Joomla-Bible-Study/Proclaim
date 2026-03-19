@@ -802,7 +802,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="accordion" id="viewSettingsAccordion"></div>
+                            <div class="accordion options-form" id="viewSettingsAccordion"></div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>
@@ -1459,7 +1459,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${this.trans('JCLOSE') || 'Close'}"></button>
                         </div>
                         <div class="modal-body">
-                            <div id="sectionSettingsContent"></div>
+                            <div id="sectionSettingsContent" class="options-form"></div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${this.trans('JCANCEL') || 'Cancel'}</button>

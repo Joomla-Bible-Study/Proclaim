@@ -166,28 +166,9 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php echo $this->form->getInput('rules'); ?>
-            </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <?php
         echo HTMLHelper::_('uitab.endTabSet'); ?>

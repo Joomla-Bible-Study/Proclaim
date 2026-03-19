@@ -52,6 +52,7 @@ $coreXmlFiles = [
     '/modules/site/mod_proclaim_podcast/mod_proclaim_podcast.xml',
     '/modules/admin/mod_proclaimicon/mod_proclaimicon.xml',
     '/plugins/finder/proclaim/proclaim.xml',
+    '/plugins/schemaorg/proclaim/proclaim.xml',
     '/plugins/task/proclaim/proclaim.xml',
 ];
 

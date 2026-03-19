@@ -19,6 +19,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 $app   = Factory::getApplication();
 $input = $app->getInput();
@@ -39,8 +41,9 @@ $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 ?>
 
+<?php $currentLayout = Factory::getApplication()->getInput()->get('layout', 'edit'); ?>
 <form action="<?php
-echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item->id); ?>"
+echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
     <?php
     echo LayoutHelper::render('edit.seriestitle_alias', $this); ?>
@@ -69,16 +72,7 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
         <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
         <?php
@@ -142,20 +136,34 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
         <?php endif; ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-            <fieldset id="fieldset-rules" class="options-form">
-                <div>
-                <?php
-                echo $this->form->getInput('rules'); ?>
+        <?php // ===== Schema.org Tab =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.serie'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
                 </div>
-            </fieldset>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php

@@ -72,13 +72,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                 echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
-                    <div class="alert alert-info">
-                        <span class="icon-info-circle" aria-hidden="true"></span><span
-                                class="visually-hidden"><?php
-                                echo Text::_('INFO'); ?></span>
-                        <?php
-                        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-                    </div>
+                    <?php echo LayoutHelper::render('html.empty_state'); ?>
                     <?php else : ?>
                     <table class="table table-striped itemlist" id="comments">
                         <caption class="visually-hidden">

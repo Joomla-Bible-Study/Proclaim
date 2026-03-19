@@ -208,114 +208,23 @@ class TopicsFormField extends FormField
      */
     protected function addFreeTaggingScript(array $allTopics): void
     {
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-
-        $addItemText = Text::_('JBS_CMN_PRESS_ENTER_ADD', true);
+        $document = Factory::getApplication()->getDocument();
+        $wa       = $document->getWebAssetManager();
 
         // Create a map of existing topic names to IDs for duplicate detection
         $existingTopics = [];
+
         foreach ($allTopics as $topic) {
             $existingTopics[mb_strtolower($topic['text'])] = $topic['id'];
         }
-        $existingJson = json_encode($existingTopics, JSON_HEX_APOS | JSON_HEX_QUOT);
 
-        $script = "
-            document.addEventListener('DOMContentLoaded', function() {
-                const selectEl = document.getElementById('" . $this->id . "');
-                const hiddenInput = document.getElementById('" . $this->id . "_input');
-                if (!selectEl || !hiddenInput) return;
-
-                const fancySelect = selectEl.closest('joomla-field-fancy-select');
-                if (!fancySelect) return;
-
-                // Function to sync hidden input with current selections
-                function syncHiddenInput(choices) {
-                    // Get all selected items
-                    const items = choices.getValue();
-                    let values = [];
-
-                    if (Array.isArray(items)) {
-                        values = items.map(function(item) {
-                            return item.value || item;
-                        });
-                    } else if (items && items.value) {
-                        values = [items.value];
-                    }
-
-                    hiddenInput.value = values.join(',');
-                    console.log('Topics synced:', hiddenInput.value);
-                }
-
-                // Wait for Choices.js to initialize
-                const checkChoices = setInterval(function() {
-                    if (fancySelect.choicesInstance) {
-                        clearInterval(checkChoices);
-                        const choices = fancySelect.choicesInstance;
-                        const existingTopics = " . $existingJson . ";
-
-                        // Sync on any change event
-                        selectEl.addEventListener('change', function() {
-                            syncHiddenInput(choices);
-                        });
-
-                        // Also sync on addItem and removeItem events
-                        selectEl.addEventListener('addItem', function() {
-                            setTimeout(function() { syncHiddenInput(choices); }, 10);
-                        });
-                        selectEl.addEventListener('removeItem', function() {
-                            setTimeout(function() { syncHiddenInput(choices); }, 10);
-                        });
-
-                        // Sync before form submission
-                        const form = selectEl.closest('form');
-                        if (form) {
-                            form.addEventListener('submit', function() {
-                                syncHiddenInput(choices);
-                            });
-                        }
-
-                        // Listen for search/input to enable adding new items
-                        const inputEl = fancySelect.querySelector('input.choices__input');
-                        if (inputEl) {
-                            inputEl.addEventListener('keydown', function(e) {
-                                if (e.key === 'Enter') {
-                                    const value = this.value.trim();
-                                    if (value && !existingTopics[value.toLowerCase()]) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-
-                                        // Add as new choice and select it
-                                        choices.setChoices([{
-                                            value: value,
-                                            label: value,
-                                            selected: true
-                                        }], 'value', 'label', false);
-
-                                        // Clear input and sync
-                                        this.value = '';
-                                        choices.hideDropdown();
-                                        setTimeout(function() { syncHiddenInput(choices); }, 10);
-                                    }
-                                }
-                            });
-
-                            // Show hint for adding new items
-                            inputEl.setAttribute('placeholder', '" . $addItemText . "');
-                            // Fix width to show full placeholder
-                            inputEl.style.width = '150px';
-                            inputEl.style.minWidth = '150px';
-                        }
-
-                        // Initial sync
-                        syncHiddenInput(choices);
-                    }
-                }, 100);
-
-                // Clear interval after 5 seconds to prevent memory leak
-                setTimeout(function() { clearInterval(checkChoices); }, 5000);
-            });
-        ";
-
-        $wa->addInlineScript($script);
+        // Pass dynamic data via script options; logic lives in external JS
+        $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+        $wa->useScript('com_proclaim.topics-free-tagging');
+        $document->addScriptOptions('com_proclaim.topicsField', [
+            'fieldId'        => $this->id,
+            'existingTopics' => $existingTopics,
+            'addItemText'    => Text::_('JBS_CMN_PRESS_ENTER_ADD', true),
+        ]);
     }
 }

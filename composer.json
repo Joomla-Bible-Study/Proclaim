@@ -75,7 +75,17 @@
     "phan/phan": "^5.4",
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
-    "phpmd/phpmd": "^2.15"
+    "phpmd/phpmd": "^2.15",
+    "joomla/database": "^4.0",
+    "joomla/registry": "^4.0",
+    "joomla/di": "^4.0",
+    "joomla/event": "^4.0",
+    "joomla/input": "^4.0",
+    "joomla/filter": "^4.0",
+    "joomla/filesystem": "^4.0",
+    "joomla/uri": "^4.0",
+    "joomla/application": "^4.0",
+    "joomla/string": "^4.0"
   },
   "replace": {
     "paragonie/random_compat": "9.99.99",
@@ -114,7 +124,9 @@
     "vendor:check": "node build/check-vendor-versions.js",
     "vendor:update": "node build/update-vendors.js",
     "post-install-cmd": [
-      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""
-    ]
+      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
+      "@joomla-cms-deps"
+    ],
+    "joomla-cms-deps": "@php build/joomla-cms-deps.php"
   }
 }

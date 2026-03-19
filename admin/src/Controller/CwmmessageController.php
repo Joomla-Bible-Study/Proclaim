@@ -16,6 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
@@ -26,7 +28,6 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Controller for Message
@@ -36,6 +37,9 @@ use Joomla\Database\ParameterType;
  */
 class CwmmessageController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -43,6 +47,14 @@ class CwmmessageController extends FormController
      * @since 7.0
      */
     protected $view_list = 'cwmmessages';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_studies';
 
     /**
      * Reset Hits
@@ -358,15 +370,23 @@ class CwmmessageController extends FormController
     }
 
     /**
-     * Method to run after a successful save.
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
      *
-     * @param   BaseDatabaseModel  $model      The model.
-     * @param   array              $validData  The validated data.
+     * @param   string  $key  The name of the primary key of the URL variable.
      *
-     * @return  void
+     * @return  bool  True if access level checks pass, false otherwise.
      *
-     * @since   10.1.0
+     * @since   10.2.0
      */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+        $this->handleModalCancel($result);
+
+        return $result;
+    }
+
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
         $id    = (int) $model->getState('cwmmessage.id');
@@ -375,6 +395,18 @@ class CwmmessageController extends FormController
         $title = $validData['studytitle'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'message', $id);
+
+        if ($this->handleModalPostSave($id)) {
+            return;
+        }
+
+        // Wizard flow: redirect to the full edit form after save
+        if ($this->input->getInt('wizard_return', 0) === 1 && $id > 0) {
+            $this->setRedirect(
+                Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . $id, false),
+                Text::_('JLIB_APPLICATION_SAVE_SUCCESS')
+            );
+        }
     }
 
     /**
@@ -391,24 +423,14 @@ class CwmmessageController extends FormController
     protected function allowEdit($data = [], $key = 'id'): bool
     {
         $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-        $userId   = $user->id;
 
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_studies'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel($recordId);
+        if ($denied === false) {
+            return false;
         }
+
+        $user   = Factory::getApplication()->getIdentity();
+        $userId = $user->id;
 
         // Check general edit permission first.
         if ($user->authorise('core.edit', 'com_proclaim.message.' . $recordId)) {
@@ -419,7 +441,7 @@ class CwmmessageController extends FormController
         // First test if the permission is available.
         if ($user->authorise('core.edit.own', 'com_proclaim.message.' . $recordId)) {
             // Now test the owner is the user.
-            $ownerId = (int)isset($data['created_by']) ? $data['created_by'] : 0;
+            $ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
 
             if (empty($ownerId) && $recordId) {
                 // Need to do a lookup from the model.

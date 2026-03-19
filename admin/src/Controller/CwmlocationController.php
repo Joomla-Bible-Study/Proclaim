@@ -16,12 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
-use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Location controller class
@@ -31,6 +31,9 @@ use Joomla\Database\ParameterType;
  */
 class CwmlocationController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -38,6 +41,32 @@ class CwmlocationController extends FormController
      * @since 7.0
      */
     protected $view_list = 'cwmlocations';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_locations';
+
+    /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+        $this->handleModalCancel($result);
+
+        return $result;
+    }
 
     /**
      * Method override to check if you can edit an existing record.
@@ -52,23 +81,9 @@ class CwmlocationController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_locations'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -86,13 +101,30 @@ class CwmlocationController extends FormController
      */
     public function batch($model = null): bool
     {
-        $this->checkToken();
-
-        // Preset the redirect
         $this->setRedirect(
             Route::_('index.php?option=com_proclaim&view=cwmlocations' . $this->getRedirectToListAppend(), false)
         );
 
         return parent::batch($this->getModel());
+    }
+
+    /**
+     * Post-save hook — redirects to modalreturn when saving in modal layout.
+     *
+     * @param   BaseDatabaseModel  $model      The data model object.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id = (int) $model->getState('cwmlocation.id');
+
+        if ($this->handleModalPostSave($id)) {
+            return;
+        }
     }
 }

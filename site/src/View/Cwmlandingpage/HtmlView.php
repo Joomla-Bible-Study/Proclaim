@@ -127,31 +127,11 @@ class HtmlView extends BaseHtmlView
         // Fetch all landing data in a single query
         $this->landingData = $this->landing->getLandingData($this->params);
 
-        // Add the show/hide javascript
-        $js = <<<JS
-    function ReverseDisplay2(d) {
-        var el = document.getElementById(d);
-        if (el) {
-            // Legacy/Table layout support
-            if (el.style.display == "none") {
-                el.style.display = "contents";
-            } else {
-                el.style.display = "none";
-            }
-        } else {
-            // Grid layout support (class toggling)
-            var elements = document.getElementsByClassName('landing-hidden-' + d);
-            for (var i = 0; i < elements.length; i++) {
-                if (elements[i].style.display == "none") {
-                    elements[i].style.display = "";
-                } else {
-                    elements[i].style.display = "none";
-                }
-            }
-        }
-    }
-JS;
-        $document->getWebAssetManager()->addInlineScript($js);
+        // Load landing page assets
+        $wa = $document->getWebAssetManager();
+        $wa->useStyle('com_proclaim.cwm-landing');
+        $wa->useScript('com_proclaim.cwm-landing-toggle');
+        $wa->useScript('bootstrap.collapse');
 
         parent::display($tpl);
     }

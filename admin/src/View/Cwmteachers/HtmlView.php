@@ -198,6 +198,13 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(true);
         }
 
+        if ($canDo->get('core.edit.state')) {
+            $toolbar->confirmButton('resetOrdering', 'JBS_TCH_RESET_ORDERING', 'cwmteachers.resetOrdering')
+                ->message('JBS_TCH_RESET_ORDERING_CONFIRM')
+                ->icon('icon-menu-2')
+                ->listCheck(false);
+        }
+
         ToolbarHelper::help('teachers', true);
     }
 

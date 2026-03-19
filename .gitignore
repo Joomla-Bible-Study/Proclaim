@@ -58,6 +58,7 @@ test-results/
 /build/.translation_cache.json
 /build/.source_cache.json
 media/backup/*.sql
+media/youtube_cache/
 
 # OSX
 ._*
@@ -72,3 +73,4 @@ Desktop.ini
 # Only apply this rule to the main repository's gitignore files
 !/.gitignore
 !/build/.gitignore
+.claude/worktrees/

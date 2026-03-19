@@ -458,7 +458,7 @@ class CwmdescriptionHelper
             ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)
             ->where($db->quoteName('published') . ' = 1')
             ->order($db->quoteName('ordering') . ' ASC');
-        $db->setQuery($query);
+        $db->setQuery($query, 0, 50);
         $rows = $db->loadColumn();
 
         foreach ($rows as $paramsJson) {

@@ -137,7 +137,8 @@ class Cwmlisting
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
             'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
-            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone', 'teacherorgname',
+            'spacer1', 'spacer2', 'spacer3',
         ];
 
         foreach ($standardParams as $paramName) {
@@ -1144,6 +1145,21 @@ class Cwmlisting
                 } else {
                     (isset($item->phone) ? $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">' . $item->phone . '</a>' : $data);
                 }
+                break;
+
+            case $extra . 'teacherorgname':
+                if ($header === 1) {
+                    $data = Text::_('JBS_TCH_ORG_NAME');
+                } else {
+                    $data = trim($item->teacherorgname ?? $item->org_name ?? '');
+                }
+                break;
+
+            case $extra . 'spacer1':
+            case $extra . 'spacer2':
+            case $extra . 'spacer3':
+                // Empty element for layout spacing — renders as blank with the chosen HTML tag and custom class
+                $data = '&nbsp;';
                 break;
 
             case $extra . 'teacherfb':
@@ -2516,7 +2532,14 @@ class Cwmlisting
         $link  = '';
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select($db->quoteName('#__bsms_mediafiles') . '.*')
+        $query->select([
+                $db->quoteName('#__bsms_mediafiles.id'),
+                $db->quoteName('#__bsms_mediafiles.article_id'),
+                $db->quoteName('#__bsms_mediafiles.virtueMart_id'),
+                $db->quoteName('#__bsms_mediafiles.docMan_id'),
+                $db->quoteName('#__bsms_mediafiles.published'),
+                $db->quoteName('#__bsms_mediafiles.study_id'),
+            ])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('study_id') . ' = ' . $db->quote($id3));
 
@@ -2613,8 +2636,9 @@ class Cwmlisting
             '{{bookname}}'    => $row->bookname ?? '',
             '{{hits}}'        => $row->hits ?? '',
             '{{location}}'    => $row->location_text ?? '',
-            '{{plays}}'       => $row->totalplays ?? '',
-            '{{downloads}}'   => $row->totaldownloads ?? '',
+            '{{plays}}'            => $row->totalplays ?? '',
+            '{{downloads}}'        => $row->totaldownloads ?? '',
+            '{{teacherorgname}}'   => $row->teacherorgname ?? $row->org_name ?? '',
         ];
 
         $label = str_replace(array_keys($replacements), array_values($replacements), $label);
@@ -2853,24 +2877,18 @@ class Cwmlisting
 
         $doc = $app->getDocument();
 
-        // Note: ${link} and ${title} are AddToAny template placeholders (not PHP variables)
-        $escapedDesc = addslashes($data['description'] ?: 'Check out this message');
-        $config      = "var a2a_config = a2a_config || {};
-a2a_config.onclick = 1;
-a2a_config.num_services = 8;
-a2a_config.thanks = { postShare: true, ad: false };
-a2a_config.templates = a2a_config.templates || {};
-a2a_config.templates.email = {
-    subject: '\${title}',
-    body: '" . $escapedDesc . "\\n\\n\${link}'
-};";
+        $shareOptions = [
+            'description' => $data['description'] ?: 'Check out this message',
+        ];
 
         if ($data['imageUrl']) {
-            $config .= "\na2a_config.linkurl_default = '" . addslashes($data['link']) . "';";
+            $shareOptions['linkUrl'] = $data['link'];
         }
 
+        $doc->addScriptOptions('com_proclaim.socialShare', $shareOptions);
+
         $wa = $doc->getWebAssetManager();
-        $wa->addInlineScript($config);
+        $wa->useScript('com_proclaim.social-share');
 
         $wa->registerAndUseScript(
             'com_proclaim.addtoany',

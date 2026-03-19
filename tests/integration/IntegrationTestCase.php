@@ -41,8 +41,48 @@ abstract class IntegrationTestCase extends ProclaimTestCase
 
         // Set _tbl_key so delete() and other methods can reference it
         $prop = $ref->getProperty('_tbl_key');
-        $prop->setAccessible(true);
         $prop->setValue($instance, $tblKey);
+
+        // Provide a mock DatabaseInterface to satisfy non-nullable return types.
+        // Real CMS Table::getDatabase() throws if no DB is set.
+        $queryMock = $this->createMock(\Joomla\Database\QueryInterface::class);
+        $queryMock->method('select')->willReturnSelf();
+        $queryMock->method('from')->willReturnSelf();
+        $queryMock->method('where')->willReturnSelf();
+        $queryMock->method('whereIn')->willReturnSelf();
+
+        // Use DatabaseDriver (abstract class) as mock base — it has both
+        // getQuery() and createQuery() regardless of framework version.
+        $dbMock = $this->getMockBuilder(\Joomla\Database\DatabaseDriver::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $dbMock->method('getQuery')->willReturn($queryMock);
+        $dbMock->method('createQuery')->willReturn($queryMock);
+        $dbMock->method('quoteName')->willReturnCallback(
+            static fn ($name) => \is_array($name)
+                ? array_map(static fn ($n) => '`' . $n . '`', $name)
+                : '`' . $name . '`'
+        );
+        $dbMock->method('quote')->willReturnCallback(
+            static fn ($text) => "'" . $text . "'"
+        );
+        $dbMock->method('setQuery')->willReturnSelf();
+        $dbMock->method('loadObject')->willReturn(null);
+
+        // Inject DB via the real setter or reflection
+        if ($ref->hasMethod('setDatabase')) {
+            $instance->setDatabase($dbMock);
+        } elseif ($ref->hasProperty('_db')) {
+            $dbProp = $ref->getProperty('_db');
+            $dbProp->setValue($instance, $dbMock);
+        }
+
+        // Provide a mock event dispatcher (required by real CMS Table::store/check)
+        if ($ref->hasMethod('setDispatcher')) {
+            $dispatcher = $this->createMock(\Joomla\Event\DispatcherInterface::class);
+            $dispatcher->method('dispatch')->willReturn(new \Joomla\Event\Event('test'));
+            $instance->setDispatcher($dispatcher);
+        }
 
         return $instance;
     }

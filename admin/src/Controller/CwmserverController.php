@@ -13,6 +13,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
@@ -22,8 +24,6 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -37,6 +37,17 @@ use Joomla\Database\ParameterType;
  */
 class CwmserverController extends FormController
 {
+    use MultiCampusAccessTrait;
+    use ModalFormTrait;
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_servers';
+
     /**
      * Method to add a new record.
      *
@@ -62,7 +73,7 @@ class CwmserverController extends FormController
     /**
      * Resets the User state for the server type. Needed to allow the value from the DB to be used
      *
-     * @param   string  $key  The name of the primary key of the URL variable.
+     * @param   string  $key     The name of the primary key of the URL variable.
      * @param   string  $urlVar  The name of the URL variable if different from the primary key
      *                           (sometimes required to avoid router collisions).
      *
@@ -97,23 +108,9 @@ class CwmserverController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -145,7 +142,7 @@ class CwmserverController extends FormController
         $this->setRedirect(
             Route::_(
                 'index.php?option=' . $this->option . '&view=' . $this->view_item .
-                $this->getRedirectToItemAppend((int)$recordId),
+                $this->getRedirectToItemAppend((int) $recordId),
                 false
             )
         );
@@ -204,9 +201,6 @@ class CwmserverController extends FormController
      */
     public function batch($model = null): bool
     {
-        $this->checkToken();
-
-        // Preset the redirect
         $this->setRedirect(
             Route::_('index.php?option=com_proclaim&view=cwmservers' . $this->getRedirectToListAppend(), false)
         );
@@ -401,6 +395,24 @@ HTML;
     }
 
     /**
+     * Method to cancel an edit — redirects to modalreturn when in modal layout.
+     *
+     * @param   string  $key  The name of the primary key of the URL variable.
+     *
+     * @return  bool  True if access level checks pass, false otherwise.
+     *
+     * @since   10.2.0
+     */
+    #[\Override]
+    public function cancel($key = null): bool
+    {
+        $result = parent::cancel($key);
+        $this->handleModalCancel($result);
+
+        return $result;
+    }
+
+    /**
      * Method to run after a successful save.
      *
      * @param   BaseDatabaseModel  $model      The model.
@@ -418,5 +430,9 @@ HTML;
         $title = $validData['server_name'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'server', $id);
+
+        if ($this->handleModalPostSave($id)) {
+            return;
+        }
     }
 }

@@ -180,7 +180,7 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 ## Development Setup
 
-1. Run `composer install --dev` to install dependencies
+1. Run `composer install --dev` to install dependencies (auto-clones joomla-cms for testing)
 2. Run `npm install && npm run build` to generate `media/` assets (JS, CSS, images, vendor libs)
 3. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
 4. Run `composer symlink` to link component to your Joomla installation
