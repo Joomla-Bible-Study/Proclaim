@@ -15,3 +15,11 @@ UPDATE `#__bsms_teachers` AS t
 SET t.`ordering` = ranked.`new_ordering`;
 
 ALTER TABLE `#__bsms_teachers` DROP COLUMN IF EXISTS `landing_ordering`;
+
+-- Add organization name field to teachers for Schema.org worksFor override
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `org_name` VARCHAR(255) DEFAULT NULL AFTER `title`;
+
+-- Add Joomla user account linkage for teacher auto-access
+ALTER TABLE `#__bsms_teachers`
+    ADD COLUMN `user_id` INT(10) UNSIGNED DEFAULT NULL AFTER `contact`,
+    ADD KEY `idx_teacher_user` (`user_id`);
