@@ -543,6 +543,36 @@
             <field name="jbsmedialinktype" type="LinkOptions" default="0" label="JBS_TPL_TYPE_OF_LINK"
                    description="JBS_TPL_TYPE_OF_LINK_DESC"/>
             <field name="jbsmediaicon_size" type="hidden" default=""/>
+            <field name="spacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="spacer1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="spacer1colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="spacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="spacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="spacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="spacer2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="spacer2colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="spacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="spacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="spacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="spacer3col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="spacer3colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="spacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="spacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
         </fieldset>
         <fieldset name="DISPLAYELEMENTS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
             <field name="titlerow" type="RowOptions" size="1" default="1" label="JBS_CMN_TITLE"
@@ -1149,6 +1179,36 @@
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tsteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tsspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tsspacer1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tsspacer1colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tsspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tsspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tsspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tsspacer2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tsspacer2colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tsspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tsspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tsspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tsspacer3col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tsspacer3colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tsspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tsspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
         </fieldset>
         <fieldset name="TEACHERDETAILS" label="JBS_TPL_TEACHERDETAILS" layoutContext="teachers,teacherDetails"
@@ -1428,6 +1488,36 @@
             <field name="tdteacherallinoneelement" type="ElementOptions" default="1" translate="true" multiple="false"
                    label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
             <field name="tdteacherallinonecustom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tdspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tdspacer1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tdspacer1colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tdspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tdspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tdspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tdspacer2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tdspacer2colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tdspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tdspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="tdspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="tdspacer3col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="tdspacer3colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="tdspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="tdspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
         </fieldset>
         <fieldset name="SERIES" label="JBS_TPL_SERIESLIST" layoutContext="series"
@@ -1906,6 +1996,36 @@
                    description="JBS_TPL_CUSTOMCLASS_DESC"/>
             <field name="dcustomtext" type="text" size="100" default="" label="JBS_TPL_CUSTOM"
                    description="JBS_TPL_ROW_DESC"/>
+            <field name="dspacer1row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER1"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dspacer1col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dspacer1colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dspacer1element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dspacer1custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="dspacer2row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER2"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dspacer2col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dspacer2colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dspacer2element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dspacer2custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
+            <field name="dspacer3row" type="RowOptions" size="1" default="0" label="JBS_TPL_SPACER3"
+                   description="JBS_TPL_ROW_DESC"/>
+            <field name="dspacer3col" type="SpanOptions" default="1" label="JBS_TPL_COLUMN"
+                   description="JBS_TPL_COLUMN_DESC"/>
+            <field name="dspacer3colspan" type="SpanOptions" default="0" label="JBS_TPL_COLSPAN"
+                   description="JBS_TPL_COLSPAN_DESC"/>
+            <field name="dspacer3element" type="ElementOptions" default="8" translate="true" multiple="false"
+                   label="JBS_TPL_ELEMENT" description="JBS_TPL_ELEMENT_DESC"/>
+            <field name="dspacer3custom" type="text" size="100" label="JBS_TPL_CUSTOMCLASS"
+                   description="JBS_TPL_CUSTOMCLASS_DESC"/>
 
         </fieldset>
         <fieldset name="DDISPLAYELEMENTS2" addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
