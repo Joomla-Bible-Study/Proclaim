@@ -57,7 +57,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 if [[ "$VERSION" == *-dev* ]]; then
-    echo "Error: Development versions cannot be released. Use -beta or -rc for testing."
+    echo "Error: Development versions cannot be released. Use -alpha, -beta, or -rc for testing."
     exit 1
 fi
 
