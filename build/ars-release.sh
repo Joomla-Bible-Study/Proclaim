@@ -77,6 +77,9 @@ if [ "$HTTP_CODE" != "200" ]; then
     exit 1
 fi
 
+# --- Get release date from GitHub ---
+RELEASE_DATE=$(gh release view "$TAG" --repo Joomla-Bible-Study/Proclaim --json publishedAt --jq '.publishedAt' 2>/dev/null | sed 's/T/ /' | sed 's/Z//' || echo "")
+
 # --- Get file size and checksums from GitHub ---
 echo "Fetching release asset info from GitHub..."
 ASSET_INFO=$(gh release view "$TAG" --repo Joomla-Bible-Study/Proclaim --json assets --jq ".assets[] | select(.name==\"${ZIP_NAME}\")")
@@ -140,6 +143,7 @@ if [ -n "$EXISTING_ID" ]; then
             \"alias\": \"${ALIAS}\",
             \"maturity\": \"${ARS_MATURITY}\",
             \"notes\": $(echo "$RELEASE_NOTES" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))'),
+            \"created\": \"${RELEASE_DATE}\",
             \"published\": 1
         }" \
         "${API_BASE}/releases/${RELEASE_ID}" > /dev/null
@@ -157,6 +161,7 @@ else
             \"alias\": \"${ALIAS}\",
             \"maturity\": \"${ARS_MATURITY}\",
             \"notes\": $(echo "$RELEASE_NOTES" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))'),
+            \"created\": \"${RELEASE_DATE}\",
             \"published\": 1,
             \"access\": 1,
             \"show_unauth_links\": 0,
