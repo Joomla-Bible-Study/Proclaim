@@ -555,6 +555,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `link3`             VARCHAR(150)                                              DEFAULT NULL,
     `linklabel3`        VARCHAR(150)                                              DEFAULT NULL,
     `contact`           INT(11)                                                   DEFAULT NULL,
+    `user_id`           INT(10) UNSIGNED                                          DEFAULT NULL,
     `address`           MEDIUMTEXT,
     `social_links`      TEXT                                                      DEFAULT NULL,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
@@ -571,7 +572,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_createdby` (`created_by`),
-    KEY `idx_published_access` (`published`, `access`)
+    KEY `idx_published_access` (`published`, `access`),
+    KEY `idx_teacher_user` (`user_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
