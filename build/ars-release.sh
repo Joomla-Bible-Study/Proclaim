@@ -21,6 +21,10 @@ ARS_CATEGORY_ID=1
 ARS_UPDATE_STREAM_ID=2
 ZIP_PREFIX="com_proclaim"
 
+# ARS environment IDs for Proclaim 10.x
+# Joomla 5.x=45, 6.x=46, PHP 8.3=48, PHP 8.4=49
+ARS_ENVIRONMENTS='["45","46","48","49"]'
+
 # --- Resolve version ---
 if [ -n "${1:-}" ]; then
     VERSION="$1"
@@ -196,7 +200,8 @@ ITEM_PAYLOAD="{
     \"access\": 1,
     \"show_unauth_links\": 0,
     \"redirect_unauth\": \"\",
-    \"language\": \"*\"
+    \"language\": \"*\",
+    \"environments\": ${ARS_ENVIRONMENTS}
 }"
 
 if [ -n "$EXISTING_ITEM_ID" ]; then
