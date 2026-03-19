@@ -57,6 +57,9 @@ test-results/
 /build/.translation_cache.json
 /build/.source_cache.json
 media/backup/*.sql
+media/youtube_cache/
+build/__pycache__/
+.claude/worktrees/
 
 # OSX
 ._*
