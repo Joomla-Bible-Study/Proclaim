@@ -279,7 +279,10 @@ class CwmyoutubeQuota
      */
     private static function quotaFilePath(int $serverId): string
     {
-        return JPATH_ROOT . '/media/com_proclaim/youtube_cache/quota_' . $serverId . '.json';
+        // Namespace by site identity (matches CwmyoutubeFileCache::dir())
+        $siteId = substr(md5(JPATH_CACHE), 0, 8);
+
+        return JPATH_ROOT . '/media/com_proclaim/youtube_cache/' . $siteId . '/quota_' . $serverId . '.json';
     }
 
     /**
@@ -326,7 +329,8 @@ class CwmyoutubeQuota
      */
     private static function saveQuotaFile(int $serverId, array $data): void
     {
-        $dir = JPATH_ROOT . '/media/com_proclaim/youtube_cache';
+        $siteId = substr(md5(JPATH_CACHE), 0, 8);
+        $dir    = JPATH_ROOT . '/media/com_proclaim/youtube_cache/' . $siteId;
 
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);

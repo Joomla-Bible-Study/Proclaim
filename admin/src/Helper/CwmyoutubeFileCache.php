@@ -435,7 +435,17 @@ class CwmyoutubeFileCache
      */
     private static function dir(): string
     {
-        return JPATH_ROOT . self::CACHE_DIR;
+        // Namespace by site identity so symlinked dev installs don't
+        // share quota counters. In production each site has its own
+        // media directory, so the hash is just extra safety.
+        static $dir = null;
+
+        if ($dir === null) {
+            $siteId = substr(md5(JPATH_CACHE), 0, 8);
+            $dir    = JPATH_ROOT . self::CACHE_DIR . '/' . $siteId;
+        }
+
+        return $dir;
     }
 
     /**
