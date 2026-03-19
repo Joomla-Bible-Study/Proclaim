@@ -119,6 +119,9 @@ class CwmteacherTable extends Table
     /** @var int|null Contact ID @since 7.0.0 */
     public ?int $contact = null;
 
+    /** @var int|null Linked Joomla user ID @since 10.3.0 */
+    public ?int $user_id = null;
+
     /** @var string|null Mailing address @since 7.0.0 */
     public ?string $address = null;
 
@@ -277,7 +280,7 @@ class CwmteacherTable extends Table
 
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
         foreach ([
-            'id', 'list_show', 'published', 'asset_id', 'access', 'contact',
+            'id', 'list_show', 'published', 'asset_id', 'access', 'contact', 'user_id',
             'landing_show', 'created_by', 'modified_by', 'checked_out',
         ] as $field) {
             if (isset($src[$field])) {

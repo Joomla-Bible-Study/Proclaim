@@ -68,6 +68,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 <?php echo $this->form->renderField('email'); ?>
                 <?php echo $this->form->renderField('address'); ?>
                 <?php echo $this->form->renderField('contact'); ?>
+                <?php echo $this->form->renderField('user_id'); ?>
                 <?php if ($this->form->getValue('contact')) : ?>
                     <a href="<?php echo Route::_('index.php?option=com_contact&task=contact.edit&id=' . (int) $this->form->getValue('contact')); ?>"
                        target="_blank" class="btn btn-sm btn-secondary mb-3">
