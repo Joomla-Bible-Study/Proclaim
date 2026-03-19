@@ -237,6 +237,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `access`                  INT(10) UNSIGNED NOT NULL DEFAULT '1',
     `alternatelink`           VARCHAR(300)              DEFAULT NULL COMMENT 'replaces podcast file link on subscription',
     `alternateimage`          VARCHAR(150)              DEFAULT NULL COMMENT 'alternate image path for podcast',
+    `platform_links`          TEXT                      DEFAULT NULL,
     `podcast_subscribe_show`  INT(3)                    DEFAULT NULL,
     `podcast_image_subscribe` VARCHAR(255)              DEFAULT NULL COMMENT 'The image to use for the podcast subscription image',
     `podcast_subscribe_desc`  VARCHAR(150)              DEFAULT NULL COMMENT 'Words to go below podcast subscribe image',
