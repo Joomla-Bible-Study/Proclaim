@@ -183,10 +183,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Strip HTML tags for preview using regex (no DOM parsing needed)
         let introPreview = introText.replace(/<[^>]*>/g, '');
-        // Decode common HTML entities
-        introPreview = introPreview.replace(/&amp;/g, '&').replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'")
-            .replace(/&nbsp;/g, ' ');
+
+        // Decode HTML entities using DOM to avoid double-unescaping issues
+        const decodeHtml = (str) => {
+            const d = document.createElement('textarea');
+            d.innerHTML = str;
+
+            return d.value;
+        };
+
+        introPreview = decodeHtml(introPreview);
         introPreview = introPreview.substring(0, 200);
 
         const escHtml = (str) => {
