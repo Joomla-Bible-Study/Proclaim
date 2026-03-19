@@ -181,13 +181,16 @@ document.addEventListener('DOMContentLoaded', () => {
             introText = getValue('jform_studyintro');
         }
 
-        // Strip HTML tags for preview using regex (no DOM parsing needed)
-        let introPreview = introText.replace(/<[^>]*>/g, '');
-        // Decode common HTML entities
-        introPreview = introPreview.replace(/&amp;/g, '&').replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'")
-            .replace(/&nbsp;/g, ' ');
-        introPreview = introPreview.substring(0, 200);
+        // Strip HTML tags for plain-text preview.
+        // Loop until stable to handle malformed/nested tags.
+        // Then use the escHtml helper below when inserting into the preview.
+        let introStripped = introText;
+        let prevIntro;
+        do {
+            prevIntro = introStripped;
+            introStripped = introStripped.replace(/<[^>]*>/g, '');
+        } while (introStripped !== prevIntro);
+        const introPreview = introStripped.substring(0, 200);
 
         const escHtml = (str) => {
             const d = document.createElement('div');
