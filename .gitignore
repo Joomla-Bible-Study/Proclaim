@@ -58,6 +58,7 @@ test-results/
 /build/.translation_cache.json
 /build/.source_cache.json
 media/backup/*.sql
+media/youtube_cache/
 
 # OSX
 ._*
