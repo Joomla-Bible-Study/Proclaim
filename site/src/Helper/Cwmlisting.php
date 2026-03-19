@@ -137,7 +137,7 @@ class Cwmlisting
             'hits', 'downloads', 'studynumber', 'topic', 'locations', 'jbsmedia', 'messagetype',
             'thumbnail', 'teacherimage', 'teacheremail', 'teacherweb', 'teacherphone', 'teacherfb', 'teachertw',
             'teacherblog', 'teachershort', 'teacherlong', 'teacheraddress', 'teacherlink1',
-            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone',
+            'teacherlink2', 'teacherlink3', 'teacherlargeimage', 'teacherallinone', 'teacherorgname',
         ];
 
         foreach ($standardParams as $paramName) {
@@ -1143,6 +1143,14 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_PHONE');
                 } else {
                     (isset($item->phone) ? $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">' . $item->phone . '</a>' : $data);
+                }
+                break;
+
+            case $extra . 'teacherorgname':
+                if ($header === 1) {
+                    $data = Text::_('JBS_TCH_ORG_NAME');
+                } else {
+                    $data = trim($item->teacherorgname ?? $item->org_name ?? '');
                 }
                 break;
 
@@ -2620,8 +2628,9 @@ class Cwmlisting
             '{{bookname}}'    => $row->bookname ?? '',
             '{{hits}}'        => $row->hits ?? '',
             '{{location}}'    => $row->location_text ?? '',
-            '{{plays}}'       => $row->totalplays ?? '',
-            '{{downloads}}'   => $row->totaldownloads ?? '',
+            '{{plays}}'            => $row->totalplays ?? '',
+            '{{downloads}}'        => $row->totaldownloads ?? '',
+            '{{teacherorgname}}'   => $row->teacherorgname ?? $row->org_name ?? '',
         ];
 
         $label = str_replace(array_keys($replacements), array_values($replacements), $label);

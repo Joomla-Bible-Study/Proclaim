@@ -345,6 +345,7 @@ class Cwmpagebuilder
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', '
             . $db->quoteName('teacher.title', 'teachertitle') . ', '
+            . $db->quoteName('teacher.org_name', 'teacherorgname') . ', '
             . $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
         $query->join(

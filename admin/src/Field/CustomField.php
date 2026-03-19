@@ -89,6 +89,7 @@ class CustomField extends FormField
         '{{length}}'           => 'JBS_CMN_DURATION',
         '{{series}}'           => 'JBS_CMN_SERIES',
         '{{series_thumbnail}}' => 'JBS_CMN_SERIES_THUMBNAIL',
+        '{{teacherorgname}}'   => 'JBS_TCH_ORG_NAME',
     ];
 
     /**
