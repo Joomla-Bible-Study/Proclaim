@@ -364,6 +364,17 @@
             }
         },
         {
+            "name": "com_proclaim.cwmadmin-locations-merge",
+            "type": "script",
+            "uri": "com_proclaim/cwmadmin-locations-merge.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
+            }
+        },
+        {
             "name": "com_proclaim.cwmadmin-teachers-batch",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-teachers-batch.min.js",

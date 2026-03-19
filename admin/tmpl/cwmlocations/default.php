@@ -34,7 +34,7 @@ $listDirn  = $this->escape($this->state->get('list.direction', 'desc'));
 $archived  = $this->state->get('filter.published') == 2;
 $trashed   = $this->state->get('filter.published') == -2;
 $saveOrder = $listOrder === 'location.ordering';
-$columns   = 5;
+$columns   = 6;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmlocation.saveOrderAjax&tmpl=component';
@@ -92,6 +92,9 @@ if (empty($this->items)) : ?>
                     $listDirn,
                     $listOrder
                 ); ?>
+                        </th>
+                        <th width="15%" class="w-15 nowrap d-none d-md-table-cell">
+                            <?php echo Text::_('JBS_LOC_USAGE_COLUMN'); ?>
                         </th>
                         <th width="10%" class="w-10 nowrap d-none d-md-table-cell">
                             <?php
@@ -180,6 +183,41 @@ if (empty($this->items)) : ?>
                                 </div>
                             </td>
                             <td class="small d-none d-md-table-cell">
+                                <?php if ($item->usage_total > 0) : ?>
+                                    <?php
+                                    $badges = [];
+
+                                    if ($item->usage['messages'] > 0) {
+                                        $badges[] = '<span class="badge bg-info">' . $item->usage['messages'] . ' ' . Text::_('JBS_CMN_MESSAGES') . '</span>';
+                                    }
+
+                                    if ($item->usage['series'] > 0) {
+                                        $badges[] = '<span class="badge bg-info">' . $item->usage['series'] . ' ' . Text::_('JBS_CMN_SERIES') . '</span>';
+                                    }
+
+                                    if ($item->usage['podcasts'] > 0) {
+                                        $badges[] = '<span class="badge bg-info">' . $item->usage['podcasts'] . ' ' . Text::_('JBS_CMN_PODCASTS') . '</span>';
+                                    }
+
+                                    if ($item->usage['servers'] > 0) {
+                                        $badges[] = '<span class="badge bg-secondary">' . $item->usage['servers'] . ' ' . Text::_('JBS_CMN_SERVERS') . '</span>';
+                                    }
+
+                                    if ($item->usage['templates'] > 0) {
+                                        $badges[] = '<span class="badge bg-secondary">' . $item->usage['templates'] . ' ' . Text::_('JBS_CMN_TEMPLATES') . '</span>';
+                                    }
+
+                                    if ($item->usage['templatecodes'] > 0) {
+                                        $badges[] = '<span class="badge bg-secondary">' . $item->usage['templatecodes'] . ' ' . Text::_('JBS_CMN_TEMPLATECODE') . '</span>';
+                                    }
+
+                                    echo implode(' ', $badges);
+                                    ?>
+                                <?php else : ?>
+                                    <span class="text-muted">&mdash;</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="small d-none d-md-table-cell">
                                 <?php
                                 echo $this->escape($item->access_level); ?>
                             </td>
@@ -208,6 +246,22 @@ if (empty($this->items)) : ?>
                                 'footer' => $this->loadTemplate('batch_footer'),
                             ],
                         $this->loadTemplate('batch_body')
+                    ); ?>
+                <?php
+                endif; ?>
+                <?php
+                if ($user->authorise('core.delete', 'com_proclaim')
+                    && $user->authorise('core.edit', 'com_proclaim')
+                ) : ?>
+                    <?php
+                    echo HTMLHelper::_(
+                        'bootstrap.renderModal',
+                        'mergeModal',
+                        [
+                                'title'  => Text::_('JBS_LOC_MERGE_TITLE'),
+                                'footer' => $this->loadTemplate('merge_footer'),
+                            ],
+                        $this->loadTemplate('merge_body')
                     ); ?>
                 <?php
                 endif; ?>

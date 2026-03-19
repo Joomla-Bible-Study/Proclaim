@@ -24,9 +24,8 @@ use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareImageTrait;
@@ -300,10 +299,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $trackFields = ['headline', 'name', 'description', 'jobTitle', 'url'];
 
                     foreach ($trackFields as $field) {
-                        $submittedVal = $incoming[$field] ?? '';
-                        $freshVal     = $fresh[$field] ?? '';
-                        $freshHash    = $freshVal !== '' ? substr(md5($freshVal), 0, 8) : '';
-                        $prevHash     = $prevHashes[$field] ?? '';
+                        $submittedVal  = $incoming[$field] ?? '';
+                        $freshVal      = $fresh[$field] ?? '';
+                        $freshHash     = $freshVal !== '' ? substr(md5($freshVal), 0, 8) : '';
+                        $prevHash      = $prevHashes[$field] ?? '';
                         $submittedHash = $submittedVal !== '' ? substr(md5($submittedVal), 0, 8) : '';
 
                         // Store current auto-gen hash for next save
@@ -332,13 +331,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $fresh['_fieldHashes']  = !empty($newHashes) ? $newHashes : null;
                     $fresh['_customFields'] = !empty($customFields) ? $customFields : null;
                     $fresh['_autoHash']     = self::hashSchema($fresh);
-                    $finalSchema = json_encode(
+                    $finalSchema            = json_encode(
                         array_filter($fresh, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
                 } else {
                     $incoming['_autoHash'] = self::hashSchema($incoming);
-                    $finalSchema = json_encode(
+                    $finalSchema           = json_encode(
                         array_filter($incoming, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
@@ -369,7 +368,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         // Define recommended fields per schema type
         $recommended = match ($schemaType) {
-            'Sermon'  => [
+            'Sermon' => [
                 'headline'      => 'PLG_SCHEMAORG_PROCLAIM_FIELD_HEADLINE',
                 'description'   => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
                 'datePublished' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_PUBLISHED',
@@ -378,11 +377,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
                 'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
             ],
-            'Series'  => [
+            'Series' => [
                 'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
                 'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
             ],
-            default   => [],
+            default => [],
         };
 
         foreach ($recommended as $field => $langKey) {
@@ -859,10 +858,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function generateSchemaFromItem(\Joomla\CMS\Table\TableInterface $item, string $context): ?array
     {
         return match ($context) {
-            'com_proclaim.cwmmessage'                   => $this->buildSermonSchema($item),
+            'com_proclaim.cwmmessage' => $this->buildSermonSchema($item),
             'com_proclaim.teacher', 'com_proclaim.cwmteacher' => $this->buildTeacherSchema($item),
-            'com_proclaim.serie', 'com_proclaim.cwmserie'     => $this->buildSeriesSchema($item),
-            default                                     => null,
+            'com_proclaim.serie', 'com_proclaim.cwmserie' => $this->buildSeriesSchema($item),
+            default => null,
         };
     }
 
