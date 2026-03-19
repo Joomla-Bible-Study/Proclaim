@@ -312,9 +312,17 @@
                         updateCountdown();
                     }
 
-                    // Stop polling if daily quota is exhausted
-                    if (typeof data.quotaRemaining === 'number' && data.quotaRemaining <= 0) {
-                        return;
+                    // Stop polling when quota is low — reserve remaining units
+                    // for search.list calls (100 units each) on page loads.
+                    // < 100 = stop entirely, < 500 = slow down to max interval.
+                    if (typeof data.quotaRemaining === 'number') {
+                        if (data.quotaRemaining < 100) {
+                            return;
+                        }
+
+                        if (data.quotaRemaining < 500) {
+                            unchangedCount = 10; // Force max backoff interval
+                        }
                     }
 
                     const isLive = data.isLive;
@@ -403,11 +411,24 @@
         });
     }
 
-    // Initialize all module instances on the page
+    // Initialize module instances, deduplicating by server+video to avoid
+    // parallel polling when the same module config appears on multiple positions.
     document.addEventListener('DOMContentLoaded', function () {
         const allOptions = Joomla.getOptions('mod_proclaim_youtube') || [];
+        const seen = new Set();
 
         allOptions.forEach(function (config) {
+            // Deduplicate: only one polling timer per server+video combination.
+            // Multiple module instances sharing the same AJAX URL will display
+            // independently but only one will poll, reducing HTTP requests.
+            const badgeEl = document.getElementById('mod-proclaim-youtube-badge-' + config.moduleId);
+            const dedupeKey = badgeEl ? badgeEl.dataset.ajaxUrl : config.moduleId;
+
+            if (seen.has(dedupeKey)) {
+                return;
+            }
+
+            seen.add(dedupeKey);
             initInstance(config);
         });
     });

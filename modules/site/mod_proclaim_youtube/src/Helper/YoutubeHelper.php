@@ -399,7 +399,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             // Second search call — check quota again
             if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_SEARCH)) {
                 // Record throttle for the live search we already did
-                CwmyoutubeFileCache::setSearchThrottle($serverId, 900);
+                CwmyoutubeFileCache::setSearchThrottle($serverId);
 
                 return null;
             }
@@ -446,11 +446,11 @@ class YoutubeHelper implements DatabaseAwareInterface
 
         // Both searches returned empty — throttle future searches for 15 minutes.
         // This prevents burning 200 units every 5 minutes when no stream is active.
-        CwmyoutubeFileCache::setSearchThrottle($serverId, 900);
+        CwmyoutubeFileCache::setSearchThrottle($serverId);
 
         CwmyoutubeLogHelper::log(
             CwmyoutubeLogHelper::LEVEL_INFO,
-            'No live/upcoming stream found — throttling search.list for 15 min',
+            'No live/upcoming stream found — throttling search.list for 1 hour',
             ['server_id' => $serverId, 'used' => CwmyoutubeQuota::getUsedToday($serverId)]
         );
 
