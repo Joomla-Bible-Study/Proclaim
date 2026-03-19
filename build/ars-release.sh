@@ -22,8 +22,8 @@ ARS_UPDATE_STREAM_ID=2
 ZIP_PREFIX="com_proclaim"
 
 # ARS environment IDs for Proclaim 10.x
-# Joomla 5.x=45, 6.x=46, PHP 8.3=48, PHP 8.4=49
-ARS_ENVIRONMENTS='["45","46","48","49"]'
+# Joomla 5.x=45, 6.x=46, PHP 8.3=48, PHP 8.4=49, PHP 8.5=50
+ARS_ENVIRONMENTS='["45","46","48","49","50"]'
 
 # --- Resolve version ---
 if [ -n "${1:-}" ]; then
