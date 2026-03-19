@@ -38,10 +38,10 @@ $wa->useScript('core')
 
 $msg   = '';
 $input = Factory::getApplication()->getInput();
-$msg   = $input->get('msg');
+$msg   = $input->getString('msg', '');
 
 if ($msg) {
-    echo $msg;
+    echo htmlspecialchars($msg, ENT_QUOTES, 'UTF-8');
 }
 
 $simple = Cwmhelper::getSimpleView();

@@ -83,7 +83,7 @@ if (!$this->item->id) {
                                     </span>
                                 </div>
                                 <div class="comment-text">
-                                    <?php echo $comment->comment_text; ?>
+                                    <?php echo htmlspecialchars($comment->comment_text, ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>

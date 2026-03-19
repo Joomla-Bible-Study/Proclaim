@@ -162,7 +162,7 @@ class CwmmediafileController extends FormController
             $app = Factory::getApplication();
             $app->close();
         } else {
-            throw new \RuntimeException(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+            throw new \RuntimeException(Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')), 404);
         }
     }
 
@@ -244,8 +244,14 @@ class CwmmediafileController extends FormController
             }
         }
 
-        if ($this->input->getCmd('return') && parent::cancel($key)) {
-            $this->setRedirect(base64_decode($this->input->getCmd('return')));
+        $return = $this->input->getCmd('return');
+
+        if ($return && parent::cancel($key)) {
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                $this->setRedirect($decoded);
+            }
 
             return true;
         }
@@ -532,8 +538,12 @@ class CwmmediafileController extends FormController
         $task   = $this->input->get('task');
 
         if ($return && $task !== 'apply') {
-            Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
-            $this->setRedirect(base64_decode($return));
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
+                $this->setRedirect($decoded);
+            }
         }
     }
 

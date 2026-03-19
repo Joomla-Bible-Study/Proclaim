@@ -21,11 +21,11 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
-use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdescriptionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
@@ -42,6 +42,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -2153,10 +2154,10 @@ class CwmadminController extends FormController
             }
 
             echo json_encode([
-                'success'  => true,
-                'count'    => $total,
-                'counts'   => $counts,
-                'message'  => $message,
+                'success' => true,
+                'count'   => $total,
+                'counts'  => $counts,
+                'message' => $message,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
@@ -2194,7 +2195,8 @@ class CwmadminController extends FormController
             }
         }
 
-        $redirect = $return ? base64_decode($return) : 'index.php?option=com_proclaim';
+        $decoded  = $return ? base64_decode($return) : '';
+        $redirect = ($decoded && Uri::isInternal($decoded)) ? $decoded : 'index.php?option=com_proclaim';
         $app->redirect($redirect);
     }
 
