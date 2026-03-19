@@ -77,13 +77,22 @@ class Cwmdownload
                 $db->quoteName('#__bsms_servers') . ' ON ('
                 . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
             )
-            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid);
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
         $db->setQuery($query, 0, 1);
 
         $media = $db->loadObject();
 
         if (!$media) {
             $this->sendError($app, 404, 'Media not found');
+        }
+
+        // Verify the current user has the required access level
+        $user         = $app->getIdentity();
+        $accessLevels = $user->getAuthorisedViewLevels();
+
+        if (isset($media->access) && !\in_array((int) $media->access, $accessLevels, true)) {
+            $this->sendError($app, 403, 'Access denied');
         }
 
         // Increment download count after validation
@@ -145,7 +154,8 @@ class Cwmdownload
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($params->get('filename')) . '"');
+        $safeFilename = preg_replace('/[^\w.\-]/', '_', basename($params->get('filename')));
+        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
