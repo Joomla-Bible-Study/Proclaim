@@ -56,6 +56,11 @@ if [ -z "$VERSION" ]; then
     exit 1
 fi
 
+if [[ "$VERSION" == *-dev* ]]; then
+    echo "Error: Development versions cannot be released. Use -beta or -rc for testing."
+    exit 1
+fi
+
 TAG="v${VERSION}"
 ZIP_NAME="com_proclaim-${VERSION}.zip"
 
