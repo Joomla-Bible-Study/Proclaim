@@ -328,21 +328,159 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         $this->setDboFromAdapter($parent);
 
-        // Check if podcast table exists using a targeted query
-        if ($this->tableExists('#__bsms_podcast')) {
-            // Add field if missing Subtitle to series
-            $query = "SHOW COLUMNS FROM " . $this->dbo->quoteName('#__bsms_podcast') . " LIKE " . $this->dbo->quote('subtitle');
-            $this->dbo->setQuery($query);
-            $db = $this->dbo->loadResult();
-
-            if (empty($db)) {
-                $alter = "ALTER TABLE #__bsms_podcast ADD subtitle TEXT";
-                $this->dbo->setQuery($alter);
-                $this->dbo->execute();
-            }
+        if ($type === 'update') {
+            $this->ensureSchemaReady();
         }
 
         return parent::preflight($type, $parent);
+    }
+
+    /**
+     * Ensure database schema matches the currently installed version.
+     *
+     * Reads the OLD install.mysql.utf8.sql (still on disk from the
+     * installed version) and parses the expected columns per table.
+     * Compares against the live database and drops any columns that
+     * exist in the DB but NOT in the install SQL — these are leftovers
+     * from a failed partial upgrade that would cause "Duplicate column"
+     * errors when Joomla re-runs the migration SQL files.
+     *
+     * This restores the DB to the clean state of the installed version
+     * so Joomla's migration path can run without errors.
+     *
+     * @return  void
+     *
+     * @since   10.2.1
+     */
+    private function ensureSchemaReady(): void
+    {
+        // Read the CURRENTLY INSTALLED install SQL (old version, not the new package)
+        $installSqlPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/install.mysql.utf8.sql';
+
+        if (!file_exists($installSqlPath)) {
+            return;
+        }
+
+        $sql = @file_get_contents($installSqlPath);
+
+        if ($sql === false || $sql === '') {
+            return;
+        }
+
+        // Parse the install SQL to get expected columns per table
+        $expectedSchema = $this->parseInstallSql($sql);
+
+        if (empty($expectedSchema)) {
+            return;
+        }
+
+        $db = $this->dbo;
+
+        foreach ($expectedSchema as $table => $expectedColumns) {
+            if (!$this->tableExists($table)) {
+                continue;
+            }
+
+            $liveColumns = $this->getTableColumns($table);
+
+            // Find columns in the live DB that are NOT in the install SQL.
+            // These are leftovers from a failed partial upgrade — drop them
+            // so the migration SQL's ADD COLUMN won't hit "Duplicate column".
+            $extraColumns = array_diff($liveColumns, $expectedColumns);
+
+            foreach ($extraColumns as $column) {
+                try {
+                    $db->setQuery(
+                        'ALTER TABLE ' . $db->quoteName($table)
+                        . ' DROP COLUMN ' . $db->quoteName($column)
+                    );
+                    $db->execute();
+                } catch (\Exception $e) {
+                    // Ignore — column may have been dropped by concurrent request
+                }
+            }
+        }
+    }
+
+    /**
+     * Parse install.mysql.utf8.sql to extract expected columns per table.
+     *
+     * Reads CREATE TABLE statements and extracts column names (not keys,
+     * constraints, or other non-column definitions).
+     *
+     * @param   string  $sql  The full install SQL content
+     *
+     * @return  array<string, array<string>>  Map of table name => [column names]
+     *
+     * @since   10.2.1
+     */
+    private function parseInstallSql(string $sql): array
+    {
+        $schema = [];
+
+        // Match CREATE TABLE blocks: table name and body inside parentheses
+        if (!preg_match_all(
+            '/CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+`([^`]+)`\s*\((.*?)\)\s*ENGINE/si',
+            $sql,
+            $matches,
+            PREG_SET_ORDER
+        )) {
+            return [];
+        }
+
+        foreach ($matches as $match) {
+            $table = $match[1];
+
+            // Ensure #__ prefix for consistency
+            if (!str_starts_with($table, '#__')) {
+                $table = '#__' . $table;
+            }
+
+            $body = $match[2];
+
+            // Extract column names: lines starting with `column_name` followed by a type
+            // Skip PRIMARY KEY, KEY, INDEX, UNIQUE, CONSTRAINT lines
+            $columns = [];
+
+            foreach (explode("\n", $body) as $line) {
+                $line = trim($line);
+
+                if ($line === '' || str_starts_with($line, '--')) {
+                    continue;
+                }
+
+                // Column definitions start with `column_name` then a space and type keyword
+                if (preg_match('/^`([^`]+)`\s+\w/', $line)) {
+                    $columns[] = preg_replace('/^`([^`]+)`.*/', '$1', $line);
+                }
+            }
+
+            if (!empty($columns)) {
+                $schema[$table] = $columns;
+            }
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Get column names for a table.
+     *
+     * @param   string  $table  Table name with #__ prefix
+     *
+     * @return  array  List of column names
+     *
+     * @since   10.2.1
+     */
+    private function getTableColumns(string $table): array
+    {
+        try {
+            $columns = $this->dbo->getTableColumns($table);
+
+            return array_keys($columns);
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**
