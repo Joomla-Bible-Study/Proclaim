@@ -181,9 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
             introText = getValue('jform_studyintro');
         }
 
-        // Strip HTML for preview (DOMParser is safe — no script execution)
-        const parsed = new DOMParser().parseFromString(introText, 'text/html');
-        const introPreview = (parsed.body.textContent || '').substring(0, 200);
+        // Strip HTML tags for preview using regex (no DOM parsing needed)
+        let introPreview = introText.replace(/<[^>]*>/g, '');
+        // Decode common HTML entities
+        introPreview = introPreview.replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'")
+            .replace(/&nbsp;/g, ' ');
+        introPreview = introPreview.substring(0, 200);
 
         const escHtml = (str) => {
             const d = document.createElement('div');
