@@ -336,173 +336,131 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Ensure database schema is ready for migration SQL files.
+     * Ensure database schema matches the currently installed version.
      *
-     * MySQL's ALTER TABLE ADD COLUMN is not idempotent — it fails with
-     * "Duplicate column" if the column already exists. This happens when:
-     * - A previous upgrade attempt failed partway through
-     * - A database was imported/restored from a newer version
-     * - Joomla retries the schema update
+     * Reads the OLD install.mysql.utf8.sql (still on disk from the
+     * installed version) and parses the expected columns per table.
+     * Compares against the live database and drops any columns that
+     * exist in the DB but NOT in the install SQL — these are leftovers
+     * from a failed partial upgrade that would cause "Duplicate column"
+     * errors when Joomla re-runs the migration SQL files.
      *
-     * This method pre-checks every column, index, and table that our
-     * migration SQL files create, and silently adds anything missing.
-     * After this runs, the migration SQL files will succeed whether
-     * the columns already exist or not.
+     * This restores the DB to the clean state of the installed version
+     * so Joomla's migration path can run without errors.
      *
      * @return  void
      *
-     * @since   10.2.0
+     * @since   10.2.1
      */
     private function ensureSchemaReady(): void
     {
+        // Read the CURRENTLY INSTALLED install SQL (old version, not the new package)
+        $installSqlPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/install.mysql.utf8.sql';
+
+        if (!file_exists($installSqlPath)) {
+            return;
+        }
+
+        $sql = @file_get_contents($installSqlPath);
+
+        if ($sql === false || $sql === '') {
+            return;
+        }
+
+        // Parse the install SQL to get expected columns per table
+        $expectedSchema = $this->parseInstallSql($sql);
+
+        if (empty($expectedSchema)) {
+            return;
+        }
+
         $db = $this->dbo;
 
-        // Columns to ensure exist: [table => [column => definition]]
-        // Grouped by the migration file that originally added them.
-        $requiredColumns = [
-            // 10.1.0-20251225: created/modified audit columns
-            '#__bsms_message_type' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-            ],
-            '#__bsms_podcast' => [
-                'subtitle'         => 'TEXT NULL DEFAULT NULL',
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'location_id'      => 'INT(3) DEFAULT NULL',
-                'platform_links'   => 'TEXT NULL DEFAULT NULL',
-                'itunes_category'    => 'VARCHAR(100) NOT NULL DEFAULT \'Religion & Spirituality\'',
-                'itunes_subcategory' => 'VARCHAR(100) NOT NULL DEFAULT \'Christianity\'',
-                'itunes_explicit'    => 'VARCHAR(5) NOT NULL DEFAULT \'false\'',
-                'itunes_type'        => 'VARCHAR(10) NOT NULL DEFAULT \'episodic\'',
-            ],
-            '#__bsms_series' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'publish_up'       => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'publish_down'     => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'location_id'      => 'INT(3) DEFAULT NULL',
-                'image'            => 'TEXT DEFAULT NULL',
-            ],
-            '#__bsms_servers' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'location_id'      => 'INT(3) DEFAULT NULL',
-                'stats_synced_at'  => 'DATETIME NULL DEFAULT NULL',
-            ],
-            '#__bsms_studies' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'bible_version'    => 'VARCHAR(20) DEFAULT NULL',
-                'bible_version2'   => 'VARCHAR(20) DEFAULT NULL',
-                'image'            => 'TEXT DEFAULT NULL',
-            ],
-            '#__bsms_teachers' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'org_name'         => 'VARCHAR(255) DEFAULT NULL',
-            ],
-            '#__bsms_templatecode' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'location_id'      => 'INT(3) DEFAULT NULL',
-            ],
-            '#__bsms_templates' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-                'location_id'      => 'INT(3) DEFAULT NULL',
-            ],
-            '#__bsms_topics' => [
-                'created'          => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'created_by'       => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'created_by_alias' => 'VARCHAR(255) NOT NULL DEFAULT \'\'',
-                'modified'         => 'DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'',
-                'modified_by'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-            ],
-            '#__bsms_comments' => [
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-            ],
-            '#__bsms_message_type' => [
-                'checked_out'      => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'checked_out_time' => 'DATETIME DEFAULT NULL',
-            ],
-            '#__bsms_bible_translations' => [
-                'estimated_size' => 'INT(10) UNSIGNED NOT NULL DEFAULT 0',
-                'provider_id'    => 'VARCHAR(100) DEFAULT NULL',
-                'data_size'      => 'BIGINT UNSIGNED NOT NULL DEFAULT 0',
-                'downloaded_at'  => 'DATETIME NULL DEFAULT NULL',
-            ],
-            '#__bsms_mediafiles' => [
-                'content_origin' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
-            ],
-            '#__bsms_analytics_events' => [
-                'series_id' => 'INT UNSIGNED NULL DEFAULT NULL',
-            ],
-            '#__bsms_analytics_monthly' => [
-                'series_id' => 'INT UNSIGNED NULL DEFAULT NULL',
-            ],
-        ];
-
-        foreach ($requiredColumns as $table => $columns) {
+        foreach ($expectedSchema as $table => $expectedColumns) {
             if (!$this->tableExists($table)) {
                 continue;
             }
 
-            $existingColumns = $this->getTableColumns($table);
+            $liveColumns = $this->getTableColumns($table);
 
-            foreach ($columns as $column => $definition) {
-                if (!\in_array($column, $existingColumns, true)) {
-                    try {
-                        $db->setQuery(
-                            'ALTER TABLE ' . $db->quoteName($table) . ' ADD COLUMN '
-                            . $db->quoteName($column) . ' ' . $definition
-                        );
-                        $db->execute();
-                    } catch (\Exception $e) {
-                        // Column may have been added by a concurrent request — ignore
-                    }
+            // Find columns in the live DB that are NOT in the install SQL.
+            // These are leftovers from a failed partial upgrade — drop them
+            // so the migration SQL's ADD COLUMN won't hit "Duplicate column".
+            $extraColumns = array_diff($liveColumns, $expectedColumns);
+
+            foreach ($extraColumns as $column) {
+                try {
+                    $db->setQuery(
+                        'ALTER TABLE ' . $db->quoteName($table)
+                        . ' DROP COLUMN ' . $db->quoteName($column)
+                    );
+                    $db->execute();
+                } catch (\Exception $e) {
+                    // Ignore — column may have been dropped by concurrent request
                 }
             }
         }
+    }
+
+    /**
+     * Parse install.mysql.utf8.sql to extract expected columns per table.
+     *
+     * Reads CREATE TABLE statements and extracts column names (not keys,
+     * constraints, or other non-column definitions).
+     *
+     * @param   string  $sql  The full install SQL content
+     *
+     * @return  array<string, array<string>>  Map of table name => [column names]
+     *
+     * @since   10.2.1
+     */
+    private function parseInstallSql(string $sql): array
+    {
+        $schema = [];
+
+        // Match CREATE TABLE blocks: table name and body inside parentheses
+        if (!preg_match_all(
+            '/CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+`([^`]+)`\s*\((.*?)\)\s*ENGINE/si',
+            $sql,
+            $matches,
+            PREG_SET_ORDER
+        )) {
+            return [];
+        }
+
+        foreach ($matches as $match) {
+            $table = $match[1];
+
+            // Ensure #__ prefix for consistency
+            if (!str_starts_with($table, '#__')) {
+                $table = '#__' . $table;
+            }
+
+            $body = $match[2];
+
+            // Extract column names: lines starting with `column_name` followed by a type
+            // Skip PRIMARY KEY, KEY, INDEX, UNIQUE, CONSTRAINT lines
+            $columns = [];
+
+            foreach (explode("\n", $body) as $line) {
+                $line = trim($line);
+
+                if ($line === '' || str_starts_with($line, '--')) {
+                    continue;
+                }
+
+                // Column definitions start with `column_name` then a space and type keyword
+                if (preg_match('/^`([^`]+)`\s+\w/', $line)) {
+                    $columns[] = preg_replace('/^`([^`]+)`.*/', '$1', $line);
+                }
+            }
+
+            if (!empty($columns)) {
+                $schema[$table] = $columns;
+            }
+        }
+
+        return $schema;
     }
 
     /**
@@ -512,7 +470,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  array  List of column names
      *
-     * @since   10.2.0
+     * @since   10.2.1
      */
     private function getTableColumns(string $table): array
     {
