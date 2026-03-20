@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -126,10 +127,41 @@ class CwmadminModel extends AdminModel
      *
      * @since    1.6
      */
+    /**
+     * Scripture param keys that belong to the plugin, not the component.
+     * These are stripped from component params on save and written to plugin params.
+     *
+     * Note: gdpr_mode is NOT in this list — it's shared. Proclaim keeps its own
+     * copy for analytics/privacy, and also syncs it to the plugin for scripture.
+     *
+     * @var  string[]
+     * @since  10.3.0
+     */
+    private const SCRIPTURE_KEYS = [
+        'provider_getbible',
+        'provider_api_bible',
+        'api_bible_api_key',
+        'scripture_cache_days',
+        'default_bible_version',
+    ];
+
+    /**
+     * Keys that are synced to the plugin but also kept in component params.
+     *
+     * @var  string[]
+     * @since  10.3.0
+     */
+    private const SHARED_KEYS = [
+        'gdpr_mode',
+    ];
+
     public function save($data): bool
     {
         $params = new Registry();
         $params->loadArray($data['params']);
+
+        // Intercept scripture settings and redirect them to the plugin params
+        $this->saveScriptureParams($params);
 
         // Load the image, then turn it into an array because Joomla's mediafield
         // attaches metadata to the end. Then grab the URL from the array and save it.
@@ -155,6 +187,64 @@ class CwmadminModel extends AdminModel
         $data['params'] = $params->toArray();
 
         return parent::save($data);
+    }
+
+    /**
+     * Extract scripture-related params and save them to the plugin's row.
+     *
+     * Also strips them from the component Registry so they don't get
+     * persisted in `#__bsms_admin.params`.
+     *
+     * @param   Registry  $params  Component params (modified in place)
+     *
+     * @return  void
+     *
+     * @since  10.3.0
+     */
+    private function saveScriptureParams(Registry $params): void
+    {
+        try {
+            $pluginParams = ScriptureParamsHelper::getParams();
+            $changed      = false;
+
+            // Scripture-only keys: move to plugin, remove from component
+            foreach (self::SCRIPTURE_KEYS as $key) {
+                $value = $params->get($key);
+
+                if ($value === null) {
+                    continue;
+                }
+
+                $pluginKey = match ($key) {
+                    'scripture_cache_days'  => 'cache_days',
+                    'default_bible_version' => 'default_version',
+                    default                 => $key,
+                };
+
+                $pluginParams->set($pluginKey, $value);
+                $params->remove($key);
+                $changed = true;
+            }
+
+            // Shared keys: sync to plugin but keep in component params
+            foreach (self::SHARED_KEYS as $key) {
+                $value = $params->get($key);
+
+                if ($value === null) {
+                    continue;
+                }
+
+                $pluginParams->set($key, $value);
+                // Do NOT remove — Proclaim needs its own copy
+                $changed = true;
+            }
+
+            if ($changed) {
+                ScriptureParamsHelper::save($pluginParams);
+            }
+        } catch (\Exception $e) {
+            // Plugin may not be installed — silently skip
+        }
     }
 
     /**
@@ -668,6 +758,34 @@ class CwmadminModel extends AdminModel
 
         if (empty($data)) {
             $data = $this->getItem();
+        }
+
+        // Inject scripture plugin params into the form so the Scripture tab
+        // fields display the current plugin values (not stale component params).
+        try {
+            $pluginParams = ScriptureParamsHelper::getParams();
+            // gdpr_mode is NOT injected — Proclaim keeps its own copy in component params
+            $keyMap       = [
+                'provider_getbible'  => 'provider_getbible',
+                'provider_api_bible' => 'provider_api_bible',
+                'api_bible_api_key'  => 'api_bible_api_key',
+                'cache_days'         => 'scripture_cache_days',
+                'default_version'    => 'default_bible_version',
+            ];
+
+            if (\is_object($data) && isset($data->params)) {
+                $params = $data->params instanceof Registry
+                    ? $data->params
+                    : new Registry($data->params);
+
+                foreach ($keyMap as $pluginKey => $formKey) {
+                    $params->set($formKey, $pluginParams->get($pluginKey));
+                }
+
+                $data->params = $params;
+            }
+        } catch (\Exception $e) {
+            // Plugin not installed — fields will show defaults
         }
 
         return $data;

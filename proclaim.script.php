@@ -1000,6 +1000,9 @@ class com_proclaimInstallerScript extends InstallerScript
             // Match legacy podcastlink URLs to Joomla menu item IDs
             $this->migratePodcastLinkToMenuItem();
 
+            // Migrate scripture settings from component params to plugin params
+            $this->migrateScriptureParamsToPlugin();
+
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
             // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
@@ -2147,6 +2150,123 @@ class com_proclaimInstallerScript extends InstallerScript
         } catch (\Exception $e) {
             Factory::getApplication()->enqueueMessage(
                 'Podcast link migration notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Migrate scripture settings from #__bsms_admin.params to plg_content_scripturelinks params.
+     *
+     * Copies provider_getbible, gdpr_mode, provider_api_bible, api_bible_api_key,
+     * scripture_cache_days, and default_bible_version from the component admin row
+     * to the plugin's #__extensions.params, then removes them from the component.
+     *
+     * Idempotent — skips if plugin row doesn't exist or keys aren't present.
+     *
+     * @return  void
+     *
+     * @since  10.3.0
+     */
+    private function migrateScriptureParamsToPlugin(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Load component admin params
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $adminJson = $db->loadResult();
+
+            if (empty($adminJson)) {
+                return;
+            }
+
+            $adminParams = new \Joomla\Registry\Registry($adminJson);
+
+            // Check if any scripture keys exist in component params
+            $keyMap = [
+                'provider_getbible'    => 'provider_getbible',
+                'gdpr_mode'            => 'gdpr_mode',
+                'provider_api_bible'   => 'provider_api_bible',
+                'api_bible_api_key'    => 'api_bible_api_key',
+                'scripture_cache_days' => 'cache_days',
+                'default_bible_version' => 'default_version',
+            ];
+
+            $hasAny = false;
+
+            foreach (array_keys($keyMap) as $compKey) {
+                if ($adminParams->get($compKey) !== null) {
+                    $hasAny = true;
+                    break;
+                }
+            }
+
+            if (!$hasAny) {
+                return;
+            }
+
+            // Load plugin params
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote('content'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('scripturelinks'));
+            $db->setQuery($query);
+            $pluginJson = $db->loadResult();
+
+            if ($pluginJson === null) {
+                // Plugin not installed yet — migration will happen when it is
+                return;
+            }
+
+            $pluginParams = new \Joomla\Registry\Registry($pluginJson);
+
+            // Copy values from component to plugin.
+            // gdpr_mode is shared — copy to plugin but keep in component params
+            // (Proclaim uses it for analytics/privacy beyond just scripture).
+            foreach ($keyMap as $compKey => $pluginKey) {
+                $value = $adminParams->get($compKey);
+
+                if ($value !== null) {
+                    $pluginParams->set($pluginKey, $value);
+
+                    if ($compKey !== 'gdpr_mode') {
+                        $adminParams->remove($compKey);
+                    }
+                }
+            }
+
+            // Save plugin params
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__extensions'))
+                ->set($db->quoteName('params') . ' = ' . $db->quote($pluginParams->toString()))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote('content'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('scripturelinks'));
+            $db->setQuery($query);
+            $db->execute();
+
+            // Save cleaned component params
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_admin'))
+                ->set($db->quoteName('params') . ' = ' . $db->quote($adminParams->toString()))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $db->execute();
+
+            Factory::getApplication()->enqueueMessage(
+                'Scripture settings migrated to ScriptureLinks plugin.',
+                'message'
+            );
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Scripture settings migration notice: ' . $e->getMessage(),
                 'warning'
             );
         }

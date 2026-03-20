@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessageModel;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -159,7 +160,7 @@ class HtmlView extends BaseHtmlView
         $document->addScriptOptions('com_proclaim.bibleStructure', BibleStructure::getStructureForJs());
         $document->addScriptOptions(
             'com_proclaim.defaultBibleVersion',
-            $this->admin_params->get('default_bible_version', 'kjv')
+            ScriptureParamsHelper::getParams()->get('default_version', 'kjv')
         );
 
         // Push translatable strings to JS
