@@ -167,6 +167,10 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
+        // CWM Scripture Library (submodule)
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/src' => "$joomlaPath/libraries/cwmscripture/src",
+        BASE_DIR . '/libraries/cwmscripture_src/media/lib_cwmscripture' => "$joomlaPath/media/lib_cwmscripture",
+        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks' => "$joomlaPath/plugins/content/scripturelinks",
     ];
 }
 
@@ -399,8 +403,9 @@ function doLink(bool $quiet = false, bool $verbose = false): void
 
         if (!$quiet && !$verbose) {
             echo "  Component:  admin, site, media\n";
+            echo "  Libraries:  lib_cwmscripture (src + media)\n";
             echo "  Modules:    mod_proclaim, mod_proclaimicon, mod_proclaim_podcast, mod_proclaim_youtube\n";
-            echo "  Plugins:    finder, system, task\n";
+            echo "  Plugins:    content/scripturelinks, finder, system, task\n";
             echo "  Language:   en-GB.com_proclaim.ini, en-GB.com_proclaim.sys.ini\n";
         }
         $linked++;
@@ -562,6 +567,15 @@ function doBuild(bool $verbose = false): void
         'media/js/joomla.d.ts',
         // Exclude Composer vendor (dev-only)
         'libraries/vendor',
+        // Exclude submodule dev files (only lib + plugin + media are needed in the package)
+        'libraries/cwmscripture_src/.git',
+        'libraries/cwmscripture_src/.idea',
+        'libraries/cwmscripture_src/build',
+        'libraries/cwmscripture_src/tests',
+        'libraries/cwmscripture_src/Plugin',
+        'libraries/cwmscripture_src/CLAUDE.md',
+        'libraries/cwmscripture_src/README.md',
+        'libraries/cwmscripture_src/.gitignore',
     ];
 
     // File extensions to exclude (dev/debug files)
