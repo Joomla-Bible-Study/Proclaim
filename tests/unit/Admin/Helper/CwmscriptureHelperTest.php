@@ -12,7 +12,7 @@
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**

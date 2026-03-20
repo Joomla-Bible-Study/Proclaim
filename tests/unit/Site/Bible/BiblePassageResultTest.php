@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Bible;
 
-use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
+use CWM\Library\Scripture\Bible\BiblePassageResult;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**

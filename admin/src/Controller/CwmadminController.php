@@ -16,7 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
+use CWM\Library\Scripture\Importer\BibleImporter;
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmalias;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcsvimportHelper;

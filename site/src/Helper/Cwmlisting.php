@@ -16,7 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;

@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Bible\Provider;
 
-use CWM\Component\Proclaim\Site\Bible\Provider\ApiBibleProvider;
+use CWM\Library\Scripture\Bible\Provider\ApiBibleProvider;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**

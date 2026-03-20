@@ -12,11 +12,11 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
-use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
-use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Bible\AbstractBibleProvider;
+use CWM\Library\Scripture\Bible\BiblePassageResult;
+use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;

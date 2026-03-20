@@ -59,6 +59,11 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  9.0.18
      */
     private static array $installActionQueue = [
+        // -- libraries => { (element) => (lock) }*
+        // lock=1 means set #__extensions.locked=1 so the library can't be disabled while Proclaim depends on it
+        'libraries' => [
+            'cwmscripture' => 1,
+        ],
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
             'admin' => [
@@ -72,6 +77,7 @@ class com_proclaimInstallerScript extends InstallerScript
         ],
         // -- plugins => { (folder) => { (element) => (published) }* }*
         'plugins' => [
+            'content'   => ['scripturelinks' => 1],
             'finder'    => ['proclaim' => 1],
             'schemaorg' => ['proclaim' => 1],
             'system'    => ['proclaim' => 1],
@@ -209,6 +215,16 @@ class com_proclaimInstallerScript extends InstallerScript
         // Dead site form XMLs (no frontend models use them) removed in 10.1.0
         '/components/com_proclaim/forms/mediafile.xml',
         '/components/com_proclaim/forms/message.xml',
+        // Bible provider files moved to lib_cwmscripture in 10.3.0
+        '/components/com_proclaim/src/Bible/BibleProviderInterface.php',
+        '/components/com_proclaim/src/Bible/AbstractBibleProvider.php',
+        '/components/com_proclaim/src/Bible/BiblePassageResult.php',
+        '/components/com_proclaim/src/Bible/BibleProviderFactory.php',
+        '/components/com_proclaim/src/Bible/Provider/ApiBibleProvider.php',
+        '/components/com_proclaim/src/Bible/Provider/GetBibleProvider.php',
+        '/components/com_proclaim/src/Bible/Provider/LocalProvider.php',
+        '/administrator/components/com_proclaim/src/Bible/BibleImporter.php',
+        '/administrator/components/com_proclaim/src/Helper/ScriptureReference.php',
     ];
 
     /**
@@ -272,6 +288,10 @@ class com_proclaimInstallerScript extends InstallerScript
         '/plugins/search/biblestudysearch',
         '/plugins/system/proclaimbackup',
         '/plugins/system/proclaimpodcast',
+        // Bible provider folders moved to lib_cwmscripture in 10.3.0
+        '/components/com_proclaim/src/Bible/Provider',
+        '/components/com_proclaim/src/Bible',
+        '/administrator/components/com_proclaim/src/Bible',
     ];
 
     /**
@@ -634,9 +654,28 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function uninstallSubExtensions(): void
     {
-        $this->status          = new stdClass();
-        $this->status->modules = [];
-        $this->status->plugins = [];
+        $this->status            = new stdClass();
+        $this->status->libraries = [];
+        $this->status->modules   = [];
+        $this->status->plugins   = [];
+
+        // Unlock libraries (don't uninstall — they may be used standalone)
+        if (!empty(self::$installActionQueue['libraries'])) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            foreach (self::$installActionQueue['libraries'] as $element => $lock) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__extensions'))
+                    ->set($db->quoteName('locked') . ' = 0')
+                    ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
+                    ->where($db->quoteName('element') . ' = ' . $db->quote($element));
+                $db->setQuery($query);
+                $db->execute();
+
+                $this->status->libraries[] = ['name' => $element, 'result' => true];
+                Log::add('Library "' . $element . '" unlocked (Proclaim uninstalled).', Log::INFO, 'com_proclaim');
+            }
+        }
 
         // Modules uninstalling
         if (!empty(self::$installActionQueue['modules'])) {
@@ -1032,10 +1071,16 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function installSubExtensions(InstallerAdapter $parent): void
     {
-        $src                   = $parent->getParent()->getPath('source');
-        $this->status          = new stdClass();
-        $this->status->modules = [];
-        $this->status->plugins = [];
+        $src                     = $parent->getParent()->getPath('source');
+        $this->status            = new stdClass();
+        $this->status->libraries = [];
+        $this->status->modules   = [];
+        $this->status->plugins   = [];
+
+        // Libraries installation (must be first — other extensions may depend on them)
+        if (!empty(self::$installActionQueue['libraries'])) {
+            $this->installLibraries(self::$installActionQueue['libraries'], $src);
+        }
 
         // Modules installation
         if (!empty(self::$installActionQueue['modules'])) {
@@ -1100,6 +1145,60 @@ class com_proclaimInstallerScript extends InstallerScript
                 } catch (\Exception $e) {
                     Log::add('Exception copying language file: ' . $file . ' - ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
                 }
+            }
+        }
+    }
+
+    /**
+     * Install library extensions and optionally lock them.
+     *
+     * Libraries are installed from the submodule path within the package.
+     * When lock=1, the extension is marked as locked in #__extensions so
+     * it cannot be disabled while Proclaim depends on it.
+     *
+     * @param   array   $libraries  Map of element => lock flag
+     * @param   string  $src        Source path of the package
+     *
+     * @return  void
+     *
+     * @since  10.3.0
+     */
+    private function installLibraries(array $libraries, string $src): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        foreach ($libraries as $element => $lock) {
+            // Check submodule path first (libraries/cwmscripture_src/lib_cwmscripture/)
+            $path = $src . '/libraries/' . $element . '_src/lib_' . $element;
+
+            if (!is_dir($path)) {
+                // Fallback: direct path (for when built into the package)
+                $path = $src . '/libraries/' . $element;
+            }
+
+            if (!is_dir($path)) {
+                Log::add('Library path not found: ' . $path, Log::WARNING, 'com_proclaim');
+                $this->status->libraries[] = ['name' => $element, 'result' => false];
+
+                continue;
+            }
+
+            $installer = new Installer();
+            $result    = $installer->install($path);
+
+            $this->status->libraries[] = ['name' => $element, 'result' => $result];
+
+            if ($result && $lock) {
+                // Lock the library so it cannot be disabled from Extension Manager
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName('#__extensions'))
+                    ->set($db->quoteName('locked') . ' = 1')
+                    ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
+                    ->where($db->quoteName('element') . ' = ' . $db->quote($element));
+                $db->setQuery($query);
+                $db->execute();
+
+                Log::add('Library "' . $element . '" installed and locked.', Log::INFO, 'com_proclaim');
             }
         }
     }
