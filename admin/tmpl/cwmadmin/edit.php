@@ -15,7 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
-use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
+use CWM\Library\Scripture\Field\TranslationsmanagerField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -835,133 +835,12 @@ $wa->useScript('com_proclaim.admin-imagetools');
 echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-// Load scripture settings from the plugin's own params (not component params)
-$scriptureParams = ScriptureParamsHelper::getParams();
-echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
-        <div class="row" id="scripture-settings">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS'); ?></h3>
-                    <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB'));
 
-                    <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                    <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
-                    <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
-                    <div id="api-bible-key-row" class="mb-3" style="display:none;">
-                        <a href="https://api.bible/sign-in" target="_blank" rel="noopener noreferrer"
-                           class="btn btn-sm btn-outline-secondary">
-                            <i class="icon-key" aria-hidden="true"></i>
-                            <?php echo Text::_('JBS_ADM_API_BIBLE_GET_KEY'); ?>
-                        </a>
-                    </div>
-                    <div id="api-bible-sync-row" class="mb-3" style="display:none;">
-                        <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
-                            <i class="icon-refresh" aria-hidden="true"></i>
-                            <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
-                        </button>
-                        <span id="api-bible-sync-status" class="ms-2 small"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_SETTINGS'); ?></h3>
-                    <?php echo $this->form->renderField('default_bible_version', 'params'); ?>
-                    <?php echo $this->form->renderField('scripture_cache_days', 'params'); ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="cwmadmin-panel mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="tab-description mb-0" id="translations-card-header"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h3>
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-primary d-none" id="btn-update-all-translations"
-                                    title="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>">
-                                <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>
-                            </button>
-                            <button type="button" class="btn btn-danger d-none" id="btn-remove-all-translations"
-                                    title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
-                                <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" id="btn-refresh-translations"
-                                    title="<?php echo Text::_('JBS_ADM_REFRESH'); ?>">
-                                <i class="icon-refresh" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
-                    <div id="translations-list">
-                        <div class="text-center py-3">
-                            <span class="spinner-border spinner-border-sm" role="status"></span>
-                            <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bible-translations-config" class="d-none"
-             data-gdpr-mode="<?php echo (int) $scriptureParams->get('gdpr_mode', 0); ?>"
-             data-token="<?php echo Session::getFormToken(); ?>"
-             data-str-loading="<?php echo Text::_('JBS_ADM_LOADING'); ?>"
-             data-str-no-translations="<?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?>"
-             data-str-load-error="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
-             data-str-title="<?php echo Text::_('JGLOBAL_TITLE'); ?>"
-             data-str-abbreviation="<?php echo Text::_('JBS_ADM_ABBREVIATION'); ?>"
-             data-str-source="<?php echo Text::_('JBS_ADM_SOURCE'); ?>"
-             data-str-status="<?php echo Text::_('JSTATUS'); ?>"
-             data-str-verses="<?php echo Text::_('JBS_ADM_VERSES'); ?>"
-             data-str-installed="<?php echo Text::_('JBS_ADM_INSTALLED'); ?>"
-             data-str-not-installed="<?php echo Text::_('JBS_ADM_NOT_INSTALLED'); ?>"
-             data-str-download="<?php echo Text::_('JBS_ADM_DOWNLOAD'); ?>"
-             data-str-downloading="<?php echo Text::_('JBS_ADM_DOWNLOADING'); ?>"
-             data-str-remove="<?php echo Text::_('JBS_ADM_REMOVE'); ?>"
-             data-str-download-failed="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOAD_FAILED_GENERIC'); ?>"
-             data-str-confirm-remove="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_TRANSLATION'); ?>"
-             data-str-bundled-done="<?php echo Text::_('JBS_ADM_BUNDLED_AUTO_DOWNLOADED'); ?>"
-             data-str-status-ready="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?>"
-             data-str-status-installed="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_INSTALLED'); ?>"
-             data-str-status-none="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_NONE'); ?>"
-             data-str-status-unknown="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
-             data-str-remove-all="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>"
-             data-str-confirm-remove-all="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_ALL'); ?>"
-             data-str-size="<?php echo Text::_('JBS_ADM_SIZE'); ?>"
-             data-str-total-size="<?php echo Text::_('JBS_ADM_TOTAL_SIZE'); ?>"
-             data-str-syncing="<?php echo Text::_('JBS_ADM_SYNCING'); ?>"
-             data-str-sync-complete="<?php echo Text::_('JBS_ADM_SYNC_COMPLETE'); ?>"
-             data-str-sync-failed="<?php echo Text::_('JBS_ADM_SYNC_FAILED'); ?>"
-             data-str-gdpr-disabled="<?php echo Text::_('JBS_ADM_GDPR_PROVIDERS_DISABLED'); ?>"
-             data-str-online="<?php echo Text::_('JBS_ADM_ONLINE'); ?>"
-             data-str-language="<?php echo Text::_('JBS_ADM_LANGUAGE'); ?>"
-             data-str-all-languages="<?php echo Text::_('JBS_ADM_ALL_LANGUAGES'); ?>"
-             data-str-filter-all="<?php echo Text::_('JBS_ADM_FILTER_STATUS_ALL'); ?>"
-             data-str-filter-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_INSTALLED'); ?>"
-             data-str-filter-not-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_NOT_INSTALLED'); ?>"
-             data-str-filter-in-use="<?php echo Text::_('JBS_ADM_FILTER_STATUS_IN_USE'); ?>"
-             data-str-search-placeholder="<?php echo Text::_('JBS_ADM_SEARCH_TRANSLATIONS'); ?>"
-             data-str-usage-count="<?php echo Text::_('JBS_ADM_USAGE_COUNT'); ?>"
-             data-str-usage-badge="<?php echo Text::_('JBS_ADM_USAGE_BADGE'); ?>"
-             data-str-suggested="<?php echo Text::_('JBS_ADM_SUGGESTED'); ?>"
-             data-str-showing-count="<?php echo Text::_('JBS_ADM_SHOWING_COUNT'); ?>"
-             data-admin-language="<?php echo Factory::getApplication()->getLanguage()->getTag(); ?>"
-             data-str-core-translation="<?php echo Text::_('JBS_ADM_CORE_TRANSLATION'); ?>"
-             data-str-core-cannot-remove="<?php echo Text::_('JBS_ADM_CORE_CANNOT_REMOVE'); ?>"
-             data-str-suggested-desc="<?php echo Text::_('JBS_ADM_SUGGESTED_DESC'); ?>"
-             data-str-online-only="<?php echo Text::_('JBS_ADM_ONLINE_ONLY'); ?>"
-             data-str-online-only-desc="<?php echo Text::_('JBS_ADM_ONLINE_ONLY_DESC'); ?>"
-             data-str-provider-disable-confirm="<?php echo Text::_('JBS_ADM_PROVIDER_DISABLE_CONFIRM'); ?>"
-             data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
-             data-str-bible-refresh="<?php echo Text::_('JBS_ADM_BIBLE_REFRESH'); ?>"
-             data-str-bible-refreshing="<?php echo Text::_('JBS_ADM_BIBLE_REFRESHING'); ?>"
-             data-str-bible-update-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>"
-             data-str-bible-update-all-desc="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>"
-             data-str-bible-updating-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATING_ALL'); ?>"
-             data-str-bible-update-all-complete="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_COMPLETE'); ?>"
-             data-str-bible-downloaded-at="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOADED_AT'); ?>"
-        ></div>
+// Single shared renderer for the entire Scripture tab —
+// identical output on both the Proclaim Admin Center and the plugin settings page.
+echo TranslationsmanagerField::renderScriptureTab('jform[params]');
+?>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 
