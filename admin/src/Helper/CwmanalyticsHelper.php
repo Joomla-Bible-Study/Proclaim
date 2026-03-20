@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
@@ -354,8 +353,8 @@ class CwmanalyticsHelper
                 return false;
             }
 
-            // Scripture GDPR mode (now in plugin params) implies full opt-out
-            if (ScriptureParamsHelper::getParams()->get('gdpr_mode', '0')) {
+            // GDPR mode — Proclaim keeps its own copy in component params
+            if ($params->get('gdpr_mode', '0')) {
                 return true;
             }
         } catch (\Throwable $e) {

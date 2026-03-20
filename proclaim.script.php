@@ -2227,13 +2227,18 @@ class com_proclaimInstallerScript extends InstallerScript
 
             $pluginParams = new \Joomla\Registry\Registry($pluginJson);
 
-            // Copy values from component to plugin
+            // Copy values from component to plugin.
+            // gdpr_mode is shared — copy to plugin but keep in component params
+            // (Proclaim uses it for analytics/privacy beyond just scripture).
             foreach ($keyMap as $compKey => $pluginKey) {
                 $value = $adminParams->get($compKey);
 
                 if ($value !== null) {
                     $pluginParams->set($pluginKey, $value);
-                    $adminParams->remove($compKey);
+
+                    if ($compKey !== 'gdpr_mode') {
+                        $adminParams->remove($compKey);
+                    }
                 }
             }
 
