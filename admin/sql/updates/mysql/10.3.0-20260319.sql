@@ -23,3 +23,13 @@ ALTER TABLE `#__bsms_teachers` ADD COLUMN `org_name` VARCHAR(255) DEFAULT NULL A
 ALTER TABLE `#__bsms_teachers`
     ADD COLUMN `user_id` INT(10) UNSIGNED DEFAULT NULL AFTER `contact`,
     ADD KEY `idx_teacher_user` (`user_id`);
+
+-- Podcasting 2.0: optional channel-level fields
+ALTER TABLE `#__bsms_podcast`
+    ADD COLUMN `funding_url` VARCHAR(255) DEFAULT NULL,
+    ADD COLUMN `funding_text` VARCHAR(100) DEFAULT NULL,
+    ADD COLUMN `podcast_license` VARCHAR(255) DEFAULT NULL,
+    ADD COLUMN `podcast_license_url` VARCHAR(255) DEFAULT NULL,
+    ADD COLUMN `podcast_publisher` VARCHAR(150) DEFAULT NULL,
+    ADD COLUMN `podcast_txt_verify` VARCHAR(255) DEFAULT NULL,
+    ADD COLUMN `update_frequency` VARCHAR(20) DEFAULT NULL;
