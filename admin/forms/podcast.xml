@@ -247,6 +247,41 @@
         <!-- Legacy customsubtitle — hidden, itunes:subtitle deprecated by Apple in 2018 -->
         <field name="customsubtitle" type="hidden"/>
 
+        <!-- Podcasting 2.0 optional settings -->
+        <field name="funding_url" type="url" label="JBS_PDC_FUNDING_URL"
+               description="JBS_PDC_FUNDING_URL_DESC" size="80"
+               hint="https://www.example.com/donate" filter="url"/>
+
+        <field name="funding_text" type="text" label="JBS_PDC_FUNDING_TEXT"
+               description="JBS_PDC_FUNDING_TEXT_DESC" size="50"
+               hint="Support Our Ministry" filter="string"/>
+
+        <field name="podcast_license" type="text" label="JBS_PDC_LICENSE"
+               description="JBS_PDC_LICENSE_DESC" size="60"
+               hint="Creative Commons Attribution 4.0" filter="string"/>
+
+        <field name="podcast_license_url" type="url" label="JBS_PDC_LICENSE_URL"
+               description="JBS_PDC_LICENSE_URL_DESC" size="80"
+               hint="https://creativecommons.org/licenses/by/4.0/" filter="url"/>
+
+        <field name="podcast_publisher" type="text" label="JBS_PDC_PUBLISHER"
+               description="JBS_PDC_PUBLISHER_DESC" size="60"
+               filter="string"/>
+
+        <field name="podcast_txt_verify" type="text" label="JBS_PDC_TXT_VERIFY"
+               description="JBS_PDC_TXT_VERIFY_DESC" size="60"
+               filter="string"/>
+
+        <field name="update_frequency" type="list" label="JBS_PDC_UPDATE_FREQUENCY"
+               description="JBS_PDC_UPDATE_FREQUENCY_DESC" default="">
+            <option value="">JBS_PDC_FREQUENCY_NONE</option>
+            <option value="daily">JBS_PDC_FREQUENCY_DAILY</option>
+            <option value="weekly">JBS_PDC_FREQUENCY_WEEKLY</option>
+            <option value="biweekly">JBS_PDC_FREQUENCY_BIWEEKLY</option>
+            <option value="monthly">JBS_PDC_FREQUENCY_MONTHLY</option>
+            <option value="irregular">JBS_PDC_FREQUENCY_IRREGULAR</option>
+        </field>
+
         <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
                translate_label="true" filter="rules" component="com_proclaim"
                section="podcast" validate="rules"/>
