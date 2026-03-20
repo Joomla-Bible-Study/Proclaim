@@ -46,7 +46,7 @@
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
-      "CWM\\Library\\Scripture\\": "libraries/cwmscripture_src/lib_cwmscripture/src/"
+      "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
     }
   },
   "autoload-dev": {

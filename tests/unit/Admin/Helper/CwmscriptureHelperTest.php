@@ -12,8 +12,8 @@
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Library\Scripture\Helper\ScriptureReference;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 
 /**
  * Tests for the CwmscriptureHelper class.

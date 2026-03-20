@@ -171,11 +171,11 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
-        // CWM Scripture Library (nested submodule inside CWMScriptureLinks)
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
-        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks'                    => "$joomlaPath/plugins/content/scripturelinks",
+        // CWM Scripture Library (separate submodule)
+        BASE_DIR . '/libraries/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
+        BASE_DIR . '/libraries/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
+        BASE_DIR . '/libraries/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
+        // ScriptureLinks plugin (separate submodule, already at plugins/content/scripturelinks)
     ];
 }
 
@@ -664,7 +664,7 @@ function doVerifyExtensions(bool $verbose = false): void
                     }
 
                     // Run install SQL for tables
-                    $installSql = BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/sql/install.mysql.utf8.sql';
+                    $installSql = BASE_DIR . '/libraries/lib_cwmscripture/sql/install.mysql.utf8.sql';
 
                     if (file_exists($installSql)) {
                         $sql = file_get_contents($installSql);
@@ -816,15 +816,21 @@ function doBuild(bool $verbose = false): void
         'media/js/joomla.d.ts',
         // Exclude Composer vendor (dev-only)
         'libraries/vendor',
-        // Exclude submodule dev files (only lib + plugin + media are needed in the package)
-        'libraries/cwmscripture_src/.git',
-        'libraries/cwmscripture_src/.idea',
-        'libraries/cwmscripture_src/build',
-        'libraries/cwmscripture_src/tests',
-        'libraries/cwmscripture_src/Plugin',
-        'libraries/cwmscripture_src/CLAUDE.md',
-        'libraries/cwmscripture_src/README.md',
-        'libraries/cwmscripture_src/.gitignore',
+        // Exclude submodule dev files
+        'libraries/lib_cwmscripture/.git',
+        'libraries/lib_cwmscripture/.idea',
+        'libraries/lib_cwmscripture/build',
+        'libraries/lib_cwmscripture/tests',
+        'libraries/lib_cwmscripture/CLAUDE.md',
+        'libraries/lib_cwmscripture/README.md',
+        'libraries/lib_cwmscripture/.gitignore',
+        'plugins/content/scripturelinks/.git',
+        'plugins/content/scripturelinks/.idea',
+        'plugins/content/scripturelinks/build',
+        'plugins/content/scripturelinks/tests',
+        'plugins/content/scripturelinks/CLAUDE.md',
+        'plugins/content/scripturelinks/README.md',
+        'plugins/content/scripturelinks/.gitignore',
     ];
 
     // File extensions to exclude (dev/debug files)

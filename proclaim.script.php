@@ -1194,8 +1194,8 @@ class com_proclaimInstallerScript extends InstallerScript
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         foreach ($libraries as $element => $lock) {
-            // Check submodule path first (libraries/cwmscripture_src/lib_cwmscripture/)
-            $path = $src . '/libraries/' . $element . '_src/lib_' . $element;
+            // Check submodule path first (libraries/lib_cwmscripture/)
+            $path = $src . '/libraries/lib_' . $element;
 
             if (!is_dir($path)) {
                 // Fallback: direct path (for when built into the package)

@@ -11,12 +11,12 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Bible;
 
+use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Library\Scripture\Bible\BibleProviderFactory;
 use CWM\Library\Scripture\Bible\BibleProviderInterface;
 use CWM\Library\Scripture\Bible\Provider\ApiBibleProvider;
 use CWM\Library\Scripture\Bible\Provider\GetBibleProvider;
 use CWM\Library\Scripture\Bible\Provider\LocalProvider;
-use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\Registry\Registry;
 
 /**
