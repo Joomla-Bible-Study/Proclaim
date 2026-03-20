@@ -225,6 +225,29 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/Bible/Provider/LocalProvider.php',
         '/administrator/components/com_proclaim/src/Bible/BibleImporter.php',
         '/administrator/components/com_proclaim/src/Helper/ScriptureReference.php',
+        // Scripture JS/CSS moved to lib_cwmscripture in 10.3.0
+        // (cwm-fetch and scripture-autocomplete stay in com_proclaim)
+        '/media/com_proclaim/js/bible-translations.js',
+        '/media/com_proclaim/js/bible-translations.min.js',
+        '/media/com_proclaim/js/bible-translations.min.js.gz',
+        '/media/com_proclaim/js/bible-translations.min.js.map',
+        '/media/com_proclaim/js/scripture-switcher.js',
+        '/media/com_proclaim/js/scripture-switcher.min.js',
+        '/media/com_proclaim/js/scripture-switcher.min.js.gz',
+        '/media/com_proclaim/js/scripture-switcher.min.js.map',
+        '/media/com_proclaim/js/scripture-tooltip.js',
+        '/media/com_proclaim/js/scripture-tooltip.min.js',
+        '/media/com_proclaim/js/scripture-tooltip.min.js.gz',
+        '/media/com_proclaim/js/scripture-tooltip.min.js.map',
+        '/media/com_proclaim/css/scripture-text.css',
+        '/media/com_proclaim/css/scripture-text.min.css',
+        '/media/com_proclaim/css/scripture-text.min.css.map',
+        '/media/com_proclaim/css/scripture-switcher.css',
+        '/media/com_proclaim/css/scripture-switcher.min.css',
+        '/media/com_proclaim/css/scripture-switcher.min.css.map',
+        '/media/com_proclaim/css/scripture-tooltip.css',
+        '/media/com_proclaim/css/scripture-tooltip.min.css',
+        '/media/com_proclaim/css/scripture-tooltip.min.css.map',
     ];
 
     /**

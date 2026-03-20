@@ -511,7 +511,7 @@
         {
             "name": "com_proclaim.scripture-text",
             "type": "style",
-            "uri": "com_proclaim/scripture-text.css"
+            "uri": "lib_cwmscripture/css/scripture-text.css"
         },
         {
             "name": "com_proclaim.general",
@@ -651,12 +651,12 @@
         {
             "name": "com_proclaim.scripture-switcher-css",
             "type": "style",
-            "uri": "com_proclaim/scripture-switcher.css"
+            "uri": "lib_cwmscripture/css/scripture-switcher.css"
         },
         {
             "name": "com_proclaim.scripture-switcher",
             "type": "script",
-            "uri": "com_proclaim/scripture-switcher.js",
+            "uri": "lib_cwmscripture/js/scripture-switcher.js",
             "dependencies": [
                 "core",
                 "com_proclaim.cwm-fetch"
@@ -668,7 +668,7 @@
         {
             "name": "com_proclaim.bible-translations",
             "type": "script",
-            "uri": "com_proclaim/bible-translations.js",
+            "uri": "lib_cwmscripture/js/bible-translations.js",
             "dependencies": [
                 "core",
                 "com_proclaim.cwm-fetch"
@@ -680,7 +680,7 @@
         {
             "name": "com_proclaim.scripture-autocomplete",
             "type": "script",
-            "uri": "com_proclaim/scripture-autocomplete.js",
+            "uri": "com_proclaim/scripture-autocomplete.min.js",
             "dependencies": [
                 "core"
             ],
@@ -770,7 +770,7 @@
         {
             "name": "com_proclaim.scripture-tooltip",
             "type": "script",
-            "uri": "com_proclaim/scripture-tooltip.js",
+            "uri": "lib_cwmscripture/js/scripture-tooltip.js",
             "dependencies": [
                 "core",
                 "com_proclaim.cwm-fetch",
@@ -783,7 +783,7 @@
         {
             "name": "com_proclaim.scripture-tooltip-css",
             "type": "style",
-            "uri": "com_proclaim/scripture-tooltip.css"
+            "uri": "lib_cwmscripture/css/scripture-tooltip.css"
         },
         {
             "name": "com_proclaim.upgrade-wizard",
