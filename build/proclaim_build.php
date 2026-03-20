@@ -171,11 +171,11 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
-        // CWM Scripture Library (submodule)
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture'                  => "$joomlaPath/libraries/cwmscripture",
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/cwmscripture.xml' => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
-        BASE_DIR . '/libraries/cwmscripture_src/media/lib_cwmscripture'            => "$joomlaPath/media/lib_cwmscripture",
-        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks'        => "$joomlaPath/plugins/content/scripturelinks",
+        // CWM Scripture Library (nested submodule inside CWMScriptureLinks)
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
+        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks'                    => "$joomlaPath/plugins/content/scripturelinks",
     ];
 }
 
