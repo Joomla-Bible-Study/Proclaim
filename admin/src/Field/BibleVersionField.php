@@ -11,7 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Field;
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\Database\DatabaseInterface;
@@ -113,23 +113,18 @@ class BibleVersionField extends ListField
     {
         $result = parent::setup($element, $value, $group);
 
-        // If no value is set (new record), use the admin default
+        // If no value is set (new record), use the plugin default
         if ($result && ($this->value === null || $this->value === '')) {
             $default = 'kjv';
 
             try {
-                $admin  = Cwmparams::getAdmin();
-                $params = $admin->params ?? null;
+                $pluginDefault = ScriptureParamsHelper::getParams()->get('default_version', '');
 
-                if ($params) {
-                    $adminDefault = $params->get('default_bible_version', '');
-
-                    if (!empty($adminDefault)) {
-                        $default = $adminDefault;
-                    }
+                if (!empty($pluginDefault)) {
+                    $default = $pluginDefault;
                 }
             } catch (\Exception $e) {
-                // Ignore — no admin params available, use 'kjv' fallback
+                // Ignore — plugin params unavailable, use 'kjv' fallback
             }
 
             $this->value = $default;
@@ -172,20 +167,19 @@ class BibleVersionField extends ListField
 
         if ($servableOnly) {
             try {
-                $admin       = Cwmparams::getAdmin();
-                $adminParams = $admin->params ?? new Registry();
+                $pluginParams = ScriptureParamsHelper::getParams();
             } catch (\Exception $e) {
-                $adminParams = new Registry();
+                $pluginParams = new Registry();
             }
 
-            $gdprMode = (int) $adminParams->get('gdpr_mode', 0) === 1;
+            $gdprMode = (int) $pluginParams->get('gdpr_mode', 0) === 1;
 
-            if (!$gdprMode && (int) $adminParams->get('provider_getbible', 1) === 1) {
+            if (!$gdprMode && (int) $pluginParams->get('provider_getbible', 1) === 1) {
                 $enabledSources[] = 'getbible';
             }
 
-            if (!$gdprMode && (int) $adminParams->get('provider_api_bible', 0) === 1
-                && !empty($adminParams->get('api_bible_api_key', ''))) {
+            if (!$gdprMode && (int) $pluginParams->get('provider_api_bible', 0) === 1
+                && !empty($pluginParams->get('api_bible_api_key', ''))) {
                 $enabledSources[] = 'api_bible';
             }
         }

@@ -172,9 +172,10 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
         // CWM Scripture Library (submodule)
-        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/src' => "$joomlaPath/libraries/cwmscripture/src",
-        BASE_DIR . '/libraries/cwmscripture_src/media/lib_cwmscripture' => "$joomlaPath/media/lib_cwmscripture",
-        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks' => "$joomlaPath/plugins/content/scripturelinks",
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture'                  => "$joomlaPath/libraries/cwmscripture",
+        BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/cwmscripture.xml' => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
+        BASE_DIR . '/libraries/cwmscripture_src/media/lib_cwmscripture'            => "$joomlaPath/media/lib_cwmscripture",
+        BASE_DIR . '/libraries/cwmscripture_src/plg_content_scripturelinks'        => "$joomlaPath/plugins/content/scripturelinks",
     ];
 }
 
@@ -591,6 +592,10 @@ function doVerifyExtensions(bool $verbose = false): void
         $fixed   = 0;
         $errors  = 0;
 
+        // Check if the extensions table has a namespace column (Joomla 6+)
+        $nsCheck      = $pdo->query("SHOW COLUMNS FROM {$prefix}extensions LIKE 'namespace'");
+        $hasNamespace = $nsCheck && $nsCheck->rowCount() > 0;
+
         foreach ($expected as $ext) {
             $type    = $ext['type'];
             $element = $ext['element'];
@@ -598,7 +603,7 @@ function doVerifyExtensions(bool $verbose = false): void
             $name    = $ext['name'];
 
             // Check if extension exists in #__extensions
-            $sql = "SELECT extension_id, enabled, locked FROM {$prefix}extensions WHERE type = ? AND element = ?";
+            $sql    = "SELECT extension_id, enabled, locked FROM {$prefix}extensions WHERE type = ? AND element = ?";
             $params = [$type, $element];
 
             if ($type === 'plugin' && $folder !== '') {
@@ -640,14 +645,23 @@ function doVerifyExtensions(bool $verbose = false): void
             } else {
                 // Extension missing — register it
                 if ($type === 'library') {
-                    // Register library and run install SQL
-                    $namespace = 'CWM\\\\Library\\\\Scripture';
+                    // Register a library and run install SQL
                     $manifest  = '{"name":"lib_cwmscripture","libraryname":"cwmscripture","version":"1.0.0"}';
-                    $insertSql = "INSERT INTO {$prefix}extensions "
-                        . "(name, type, element, folder, enabled, access, locked, manifest_cache, params, namespace) "
-                        . "VALUES (?, 'library', ?, '', 1, 1, ?, ?, '{}', ?)";
-                    $stmt = $pdo->prepare($insertSql);
-                    $stmt->execute([$name, $element, $ext['locked'], $manifest, $namespace]);
+
+                    if ($hasNamespace) {
+                        $namespace = 'CWM\\\\Library\\\\Scripture';
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data, namespace) "
+                            . "VALUES (?, 'library', ?, '', 0, 1, 1, ?, ?, '{}', '', ?)";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $ext['locked'], $manifest, $namespace]);
+                    } else {
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data) "
+                            . "VALUES (?, 'library', ?, '', 0, 1, 1, ?, ?, '{}', '')";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $ext['locked'], $manifest]);
+                    }
 
                     // Run install SQL for tables
                     $installSql = BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/sql/install.mysql.utf8.sql';
@@ -675,19 +689,27 @@ function doVerifyExtensions(bool $verbose = false): void
                     echo "  ADDED:  $name (library) — registered + tables created\n";
                     $fixed++;
                 } elseif ($type === 'plugin') {
-                    $namespace = match ($folder) {
-                        'content' => 'CWM\\\\Plugin\\\\Content\\\\ScriptureLinks',
-                        'finder'  => 'CWM\\\\Plugin\\\\Finder\\\\Proclaim',
-                        'system'  => 'CWM\\\\Plugin\\\\System\\\\Proclaim',
-                        'task'    => 'CWM\\\\Plugin\\\\Task\\\\Proclaim',
-                        'schemaorg' => 'CWM\\\\Plugin\\\\Schemaorg\\\\Proclaim',
-                        default   => '',
-                    };
-                    $insertSql = "INSERT INTO {$prefix}extensions "
-                        . "(name, type, element, folder, enabled, access, locked, params, namespace) "
-                        . "VALUES (?, 'plugin', ?, ?, ?, 1, 0, '{}', ?)";
-                    $stmt = $pdo->prepare($insertSql);
-                    $stmt->execute([$name, $element, $folder, $ext['enabled'], $namespace]);
+                    if ($hasNamespace) {
+                        $namespace = match ($folder) {
+                            'content'   => 'CWM\\\\Plugin\\\\Content\\\\ScriptureLinks',
+                            'finder'    => 'CWM\\\\Plugin\\\\Finder\\\\Proclaim',
+                            'system'    => 'CWM\\\\Plugin\\\\System\\\\Proclaim',
+                            'task'      => 'CWM\\\\Plugin\\\\Task\\\\Proclaim',
+                            'schemaorg' => 'CWM\\\\Plugin\\\\Schemaorg\\\\Proclaim',
+                            default     => '',
+                        };
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data, namespace) "
+                            . "VALUES (?, 'plugin', ?, ?, 0, ?, 1, 0, '{}', '{}', '', ?)";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $folder, $ext['enabled'], $namespace]);
+                    } else {
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data) "
+                            . "VALUES (?, 'plugin', ?, ?, 0, ?, 1, 0, '{}', '{}', '')";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $folder, $ext['enabled']]);
+                    }
                     echo "  ADDED:  $name (plugin/$folder)\n";
                     $fixed++;
                 } elseif ($type === 'component') {
@@ -731,7 +753,7 @@ function doBuild(bool $verbose = false): void
         }
     }
 
-    // Generate date-based version
+    // Generate a date-based version
     $dateVersion = date('Ymd');
 
     // Check if running in a non-interactive environment

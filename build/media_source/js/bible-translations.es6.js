@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const { token } = config.dataset;
-    const baseUrl = 'index.php?option=com_proclaim&task=cwmadmin.';
+    const baseUrl = 'index.php?option=com_ajax&plugin=scripturelinks&group=content&format=json&action=';
 
     // Escape HTML to prevent XSS when interpolating external data into innerHTML
     const esc = (str) => {
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const cleanupProvider = (source) => {
         window.ProclaimFetch.fetchJson(
-            `${baseUrl}cleanupProviderXHR&${token}=1&source=${encodeURIComponent(source)}`,
+            `${baseUrl}cleanupProvider&${token}=1&source=${encodeURIComponent(source)}`,
             {},
             { timeout: 30000, retries: 1 },
         )
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const keyParam = liveKey ? `&api_key=${encodeURIComponent(liveKey)}` : '';
 
             window.ProclaimFetch.fetchJson(
-                `${baseUrl}syncApiBibleTranslationsXHR&${token}=1${keyParam}`,
+                `${baseUrl}syncApiBible&${token}=1${keyParam}`,
                 {},
                 { timeout: 30000, retries: 1 },
             )
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const refreshLocalBadge = () => {
         window.ProclaimFetch.fetchJson(
-            `${baseUrl}getScriptureStatusXHR&${token}=1`,
+            `${baseUrl}getStatus&${token}=1`,
             {},
             { timeout: 30000, retries: 1 },
         )
@@ -744,13 +744,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         window.ProclaimFetch.fetchJson(
-            `${baseUrl}getTranslationsXHR&${token}=1`,
+            `${baseUrl}getTranslations&${token}=1`,
             {},
             { timeout: 30000, retries: 1 },
         )
             .then((data) => {
                 if (!data.success) {
-                    console.error('[Proclaim] getTranslationsXHR:', data.message);
+                    console.error('[Proclaim] getTranslations:', data.message);
                     container.innerHTML = `<div class="alert alert-warning">${esc(data.message || strings.loadError)}</div>`;
                     container.style.minHeight = '';
 
@@ -1038,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.downloading}`;
 
                 window.ProclaimFetch.fetchJson(
-                    `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                    `${baseUrl}downloadTranslation&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
                     {},
                     { timeout: 60000, retries: 1 },
                 )
@@ -1067,7 +1067,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.bibleRefreshing}`;
 
                 window.ProclaimFetch.fetchJson(
-                    `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}&force=1`,
+                    `${baseUrl}downloadTranslation&${token}=1&abbreviation=${encodeURIComponent(abbr)}&force=1`,
                     {},
                     { timeout: 600000, retries: 0 },
                 )
@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.disabled = true;
 
                 window.ProclaimFetch.fetchJson(
-                    `${baseUrl}removeTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                    `${baseUrl}removeTranslation&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
                     {},
                     { timeout: 30000, retries: 1 },
                 )
@@ -1188,7 +1188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             index += 1;
 
             window.ProclaimFetch.fetchJson(
-                `${baseUrl}downloadTranslationXHR&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
+                `${baseUrl}downloadTranslation&${token}=1&abbreviation=${encodeURIComponent(abbr)}`,
                 {},
                 { timeout: 60000, retries: 1 },
             )
@@ -1226,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             removeAllBtn.disabled = true;
 
             window.ProclaimFetch.fetchJson(
-                `${baseUrl}removeAllTranslationsXHR&${token}=1`,
+                `${baseUrl}removeAllTranslations&${token}=1`,
                 {},
                 { timeout: 30000, retries: 1 },
             )
@@ -1261,7 +1261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateAllBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> ${strings.bibleUpdatingAll}`;
 
             window.ProclaimFetch.fetchJson(
-                `${baseUrl}updateAllTranslationsXHR&${token}=1`,
+                `${baseUrl}updateAllTranslations&${token}=1`,
                 {},
                 { timeout: 0, retries: 0 },
             )

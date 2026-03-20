@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -834,6 +835,8 @@ $wa->useScript('com_proclaim.admin-imagetools');
 echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
+// Load scripture settings from the plugin's own params (not component params)
+$scriptureParams = ScriptureParamsHelper::getParams();
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
         <div class="row" id="scripture-settings">
             <div class="col-12 col-lg-6">
@@ -901,7 +904,7 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPT
         </div>
 
         <div id="bible-translations-config" class="d-none"
-             data-gdpr-mode="<?php echo (int) ($this->item->params['gdpr_mode'] ?? 0); ?>"
+             data-gdpr-mode="<?php echo (int) $scriptureParams->get('gdpr_mode', 0); ?>"
              data-token="<?php echo Session::getFormToken(); ?>"
              data-str-loading="<?php echo Text::_('JBS_ADM_LOADING'); ?>"
              data-str-no-translations="<?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?>"
