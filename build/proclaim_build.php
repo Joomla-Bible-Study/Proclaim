@@ -34,6 +34,9 @@ try {
         case 'joomla-latest':
             doJoomlaLatest();
             break;
+        case 'verify':
+            doVerifyExtensions($verbose);
+            break;
         case 'lint-syntax':
             doLintSyntax($verbose);
             break;
@@ -64,6 +67,7 @@ function showHelp(): void
     echo "  build           Build component package (zip)\n";
     echo "  install-joomla  Download and install Joomla\n";
     echo "  joomla-latest   Show latest available Joomla version\n";
+    echo "  verify          Verify all sub-extensions are registered in dev Joomla DB(s)\n";
     echo "  lint-syntax     Check PHP syntax errors\n";
     echo "\nOptions:\n";
     echo "  -v, --verbose   Show detailed output (e.g., each symlink path)\n";
@@ -475,6 +479,229 @@ function symlink_force(string $target, string $link, bool $quiet = false): void
             echo '  Details: ' . $e['message'] . "\n";
         }
     }
+}
+
+/**
+ * Read Joomla configuration.php and return DB connection details + table prefix.
+ *
+ * @param   string  $joomlaPath  Path to Joomla installation root
+ *
+ * @return  array{host: string, user: string, password: string, db: string, dbprefix: string}|null
+ *
+ * @since  10.3.0
+ */
+function getJoomlaDbConfig(string $joomlaPath): ?array
+{
+    $configFile = $joomlaPath . '/configuration.php';
+
+    if (!file_exists($configFile)) {
+        return null;
+    }
+
+    // Load JConfig class from configuration.php
+    $content = file_get_contents($configFile);
+    // Avoid redeclaring JConfig if already loaded from another site
+    $content = str_replace('class JConfig', 'class JConfig_' . md5($joomlaPath), $content);
+    $content = str_replace('<?php', '', $content);
+    eval($content);
+
+    $className = 'JConfig_' . md5($joomlaPath);
+
+    if (!class_exists($className)) {
+        return null;
+    }
+
+    $config = new $className();
+
+    return [
+        'host'     => $config->host ?? 'localhost',
+        'user'     => $config->user ?? '',
+        'password' => $config->password ?? '',
+        'db'       => $config->db ?? '',
+        'dbprefix' => $config->dbprefix ?? 'jos_',
+    ];
+}
+
+/**
+ * Verify and register all Proclaim sub-extensions in each dev Joomla database.
+ *
+ * Checks libraries, plugins, and modules from the install action queue are
+ * registered in #__extensions. Inserts missing entries and runs install SQL
+ * for libraries. Also enables plugins that should be enabled.
+ *
+ * @param   bool  $verbose  Show detailed output
+ *
+ * @return  void
+ *
+ * @since  10.3.0
+ */
+function doVerifyExtensions(bool $verbose = false): void
+{
+    $props       = getProperties();
+    $joomlaPaths = getJoomlaPaths($props);
+
+    if (\count($joomlaPaths) === 0) {
+        throw new \RuntimeException('No Joomla paths configured. Run \'composer setup\' first.');
+    }
+
+    // Define all expected extensions
+    $expected = [
+        // Libraries
+        ['type' => 'library', 'element' => 'cwmscripture', 'name' => 'lib_cwmscripture', 'folder' => '', 'enabled' => 1, 'locked' => 1],
+        // Content plugin (from ScriptureLinks)
+        ['type' => 'plugin', 'element' => 'scripturelinks', 'name' => 'plg_content_scripturelinks', 'folder' => 'content', 'enabled' => 1, 'locked' => 0],
+        // Proclaim plugins
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_finder_proclaim', 'folder' => 'finder', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_schemaorg_proclaim', 'folder' => 'schemaorg', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_system_proclaim', 'folder' => 'system', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_task_proclaim', 'folder' => 'task', 'enabled' => 1, 'locked' => 0],
+        // Component
+        ['type' => 'component', 'element' => 'com_proclaim', 'name' => 'com_proclaim', 'folder' => '', 'enabled' => 1, 'locked' => 0],
+    ];
+
+    foreach ($joomlaPaths as $joomlaPath) {
+        if (!is_dir($joomlaPath)) {
+            echo "WARNING: Path not found, skipping: $joomlaPath\n";
+            continue;
+        }
+
+        echo "\n=== Verifying: $joomlaPath ===\n";
+
+        $dbConfig = getJoomlaDbConfig($joomlaPath);
+
+        if ($dbConfig === null) {
+            echo "  ERROR: Could not read configuration.php\n";
+            continue;
+        }
+
+        try {
+            $pdo = new PDO(
+                'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbConfig['db'] . ';charset=utf8mb4',
+                $dbConfig['user'],
+                $dbConfig['password'],
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        } catch (PDOException $e) {
+            echo "  ERROR: DB connection failed: " . $e->getMessage() . "\n";
+            continue;
+        }
+
+        $prefix  = $dbConfig['dbprefix'];
+        $ok      = 0;
+        $fixed   = 0;
+        $errors  = 0;
+
+        foreach ($expected as $ext) {
+            $type    = $ext['type'];
+            $element = $ext['element'];
+            $folder  = $ext['folder'];
+            $name    = $ext['name'];
+
+            // Check if extension exists in #__extensions
+            $sql = "SELECT extension_id, enabled, locked FROM {$prefix}extensions WHERE type = ? AND element = ?";
+            $params = [$type, $element];
+
+            if ($type === 'plugin' && $folder !== '') {
+                $sql .= ' AND folder = ?';
+                $params[] = $folder;
+            }
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                // Extension exists — check enabled/locked state
+                $needsUpdate = false;
+                $updates     = [];
+
+                if ((int) $row['enabled'] !== $ext['enabled']) {
+                    $updates[]   = "enabled = {$ext['enabled']}";
+                    $needsUpdate = true;
+                }
+
+                if ($ext['locked'] && (int) $row['locked'] !== 1) {
+                    $updates[]   = 'locked = 1';
+                    $needsUpdate = true;
+                }
+
+                if ($needsUpdate) {
+                    $updateSql = "UPDATE {$prefix}extensions SET " . implode(', ', $updates)
+                        . " WHERE extension_id = " . (int) $row['extension_id'];
+                    $pdo->exec($updateSql);
+                    echo "  FIXED:  $name ($type) — updated " . implode(', ', $updates) . "\n";
+                    $fixed++;
+                } else {
+                    if ($verbose) {
+                        echo "  OK:     $name ($type)\n";
+                    }
+                    $ok++;
+                }
+            } else {
+                // Extension missing — register it
+                if ($type === 'library') {
+                    // Register library and run install SQL
+                    $namespace = 'CWM\\\\Library\\\\Scripture';
+                    $manifest  = '{"name":"lib_cwmscripture","libraryname":"cwmscripture","version":"1.0.0"}';
+                    $insertSql = "INSERT INTO {$prefix}extensions "
+                        . "(name, type, element, folder, enabled, access, locked, manifest_cache, params, namespace) "
+                        . "VALUES (?, 'library', ?, '', 1, 1, ?, ?, '{}', ?)";
+                    $stmt = $pdo->prepare($insertSql);
+                    $stmt->execute([$name, $element, $ext['locked'], $manifest, $namespace]);
+
+                    // Run install SQL for tables
+                    $installSql = BASE_DIR . '/libraries/cwmscripture_src/lib_cwmscripture/sql/install.mysql.utf8.sql';
+
+                    if (file_exists($installSql)) {
+                        $sql = file_get_contents($installSql);
+                        $sql = str_replace('#__', $prefix, $sql);
+                        // Execute each statement separately
+                        $statements = array_filter(array_map('trim', explode(';', $sql)));
+
+                        foreach ($statements as $statement) {
+                            if ($statement !== '' && !str_starts_with($statement, '--')) {
+                                try {
+                                    $pdo->exec($statement);
+                                } catch (PDOException $e) {
+                                    // Table may already exist — that's fine
+                                    if ($verbose) {
+                                        echo "  NOTE:   SQL: " . substr($e->getMessage(), 0, 80) . "\n";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    echo "  ADDED:  $name (library) — registered + tables created\n";
+                    $fixed++;
+                } elseif ($type === 'plugin') {
+                    $namespace = match ($folder) {
+                        'content' => 'CWM\\\\Plugin\\\\Content\\\\ScriptureLinks',
+                        'finder'  => 'CWM\\\\Plugin\\\\Finder\\\\Proclaim',
+                        'system'  => 'CWM\\\\Plugin\\\\System\\\\Proclaim',
+                        'task'    => 'CWM\\\\Plugin\\\\Task\\\\Proclaim',
+                        'schemaorg' => 'CWM\\\\Plugin\\\\Schemaorg\\\\Proclaim',
+                        default   => '',
+                    };
+                    $insertSql = "INSERT INTO {$prefix}extensions "
+                        . "(name, type, element, folder, enabled, access, locked, params, namespace) "
+                        . "VALUES (?, 'plugin', ?, ?, ?, 1, 0, '{}', ?)";
+                    $stmt = $pdo->prepare($insertSql);
+                    $stmt->execute([$name, $element, $folder, $ext['enabled'], $namespace]);
+                    echo "  ADDED:  $name (plugin/$folder)\n";
+                    $fixed++;
+                } elseif ($type === 'component') {
+                    // Component should already exist if Proclaim is installed
+                    echo "  MISS:   $name (component) — install Proclaim via Extension Manager first\n";
+                    $errors++;
+                }
+            }
+        }
+
+        echo "  Summary: $ok OK, $fixed fixed, $errors errors\n";
+    }
+
+    echo "\nDone.\n";
 }
 
 /**
