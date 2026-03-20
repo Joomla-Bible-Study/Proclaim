@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
@@ -193,7 +194,7 @@ class Cwmpodcast
 	<podcast:license' . $licUrl . '>' . $this->escapeHTML($podinfo->podcast_license) . '</podcast:license>';
             }
 
-            $publisher = $podinfo->podcast_publisher ?? $podinfo->author ?? '';
+            $publisher = $podinfo->podcast_publisher ?: CwmschemaorgHelper::getOrgName() ?: ($podinfo->author ?? '');
 
             if (!empty($publisher)) {
                 $podhead .= '
