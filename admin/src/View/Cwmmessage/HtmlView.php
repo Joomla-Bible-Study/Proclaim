@@ -155,6 +155,7 @@ class HtmlView extends BaseHtmlView
         // Load scripture autocomplete assets
         $document = Factory::getApplication()->getDocument();
         $wa       = $document->getWebAssetManager();
+        $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
         $wa->useScript('lib_cwmscripture.scripture-autocomplete');
         $document->addScriptOptions('com_proclaim.books', CwmscriptureHelper::getAllBooks());
         $document->addScriptOptions('com_proclaim.bibleStructure', BibleStructure::getStructureForJs());

@@ -213,9 +213,11 @@ class CwmmessageController extends FormController
                     $topicId = (int) $db->loadResult();
 
                     if (!$topicId) {
-                        // Create the new topic
-                        $model->save(['topic_text' => $aTag, 'language' => $data['language'] ?? '*']);
-                        $topicId = (int) $model->getState('topic.id');
+                        // Create the new topic — pass id=0 to force INSERT
+                        // (without it, AdminModel reuses the previous state ID and UPDATEs instead)
+                        if ($model->save(['id' => 0, 'topic_text' => $aTag, 'language' => $data['language'] ?? '*'])) {
+                            $topicId = (int) $model->getState('cwmtopic.id');
+                        }
                     }
 
                     if ($topicId) {
