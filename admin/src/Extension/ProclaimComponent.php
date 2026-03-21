@@ -142,6 +142,7 @@ class ProclaimComponent extends MVCComponent implements
         }
 
         $this->getRegistry()->register('proclaimadministrator', new CWMAdministratorService());
+
     }
 
     /**

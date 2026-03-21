@@ -59,11 +59,9 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  9.0.18
      */
     private static array $installActionQueue = [
-        // -- libraries => { (element) => (lock) }*
-        // lock=1 means set #__extensions.locked=1 so the library can't be disabled while Proclaim depends on it
-        'libraries' => [
-            'cwmscripture' => 1,
-        ],
+        // Libraries and plg_content_scripturelinks are now installed by pkg_proclaim (Joomla package).
+        // Only plugins/modules still bundled inside com_proclaim.zip are listed here.
+
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
             'admin' => [
@@ -77,7 +75,6 @@ class com_proclaimInstallerScript extends InstallerScript
         ],
         // -- plugins => { (folder) => { (element) => (published) }* }*
         'plugins' => [
-            'content'   => ['scripturelinks' => 1],
             'finder'    => ['proclaim' => 1],
             'schemaorg' => ['proclaim' => 1],
             'system'    => ['proclaim' => 1],
@@ -677,28 +674,12 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function uninstallSubExtensions(): void
     {
-        $this->status            = new stdClass();
-        $this->status->libraries = [];
-        $this->status->modules   = [];
-        $this->status->plugins   = [];
+        $this->status          = new stdClass();
+        $this->status->modules = [];
+        $this->status->plugins = [];
 
-        // Unlock libraries (don't uninstall — they may be used standalone)
-        if (!empty(self::$installActionQueue['libraries'])) {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            foreach (self::$installActionQueue['libraries'] as $element => $lock) {
-                $query = $db->getQuery(true)
-                    ->update($db->quoteName('#__extensions'))
-                    ->set($db->quoteName('locked') . ' = 0')
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
-                    ->where($db->quoteName('element') . ' = ' . $db->quote($element));
-                $db->setQuery($query);
-                $db->execute();
-
-                $this->status->libraries[] = ['name' => $element, 'result' => true];
-                Log::add('Library "' . $element . '" unlocked (Proclaim uninstalled).', Log::INFO, 'com_proclaim');
-            }
-        }
+        // Libraries and plg_content_scripturelinks are managed by pkg_proclaim (Joomla package).
+        // Joomla's package uninstaller handles their cleanup.
 
         // Modules uninstalling
         if (!empty(self::$installActionQueue['modules'])) {
@@ -1099,14 +1080,10 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         $src                     = $parent->getParent()->getPath('source');
         $this->status            = new stdClass();
-        $this->status->libraries = [];
         $this->status->modules   = [];
         $this->status->plugins   = [];
 
-        // Libraries installation (must be first — other extensions may depend on them)
-        if (!empty(self::$installActionQueue['libraries'])) {
-            $this->installLibraries(self::$installActionQueue['libraries'], $src);
-        }
+        // Libraries and plg_content_scripturelinks are installed by pkg_proclaim (Joomla package installer).
 
         // Modules installation
         if (!empty(self::$installActionQueue['modules'])) {
@@ -1171,60 +1148,6 @@ class com_proclaimInstallerScript extends InstallerScript
                 } catch (\Exception $e) {
                     Log::add('Exception copying language file: ' . $file . ' - ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
                 }
-            }
-        }
-    }
-
-    /**
-     * Install library extensions and optionally lock them.
-     *
-     * Libraries are installed from the submodule path within the package.
-     * When lock=1, the extension is marked as locked in #__extensions so
-     * it cannot be disabled while Proclaim depends on it.
-     *
-     * @param   array   $libraries  Map of element => lock flag
-     * @param   string  $src        Source path of the package
-     *
-     * @return  void
-     *
-     * @since  10.3.0
-     */
-    private function installLibraries(array $libraries, string $src): void
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        foreach ($libraries as $element => $lock) {
-            // Check submodule path first (libraries/lib_cwmscripture/)
-            $path = $src . '/libraries/lib_' . $element;
-
-            if (!is_dir($path)) {
-                // Fallback: direct path (for when built into the package)
-                $path = $src . '/libraries/' . $element;
-            }
-
-            if (!is_dir($path)) {
-                Log::add('Library path not found: ' . $path, Log::WARNING, 'com_proclaim');
-                $this->status->libraries[] = ['name' => $element, 'result' => false];
-
-                continue;
-            }
-
-            $installer = new Installer();
-            $result    = $installer->install($path);
-
-            $this->status->libraries[] = ['name' => $element, 'result' => $result];
-
-            if ($result && $lock) {
-                // Lock the library so it cannot be disabled from Extension Manager
-                $query = $db->getQuery(true)
-                    ->update($db->quoteName('#__extensions'))
-                    ->set($db->quoteName('locked') . ' = 1')
-                    ->where($db->quoteName('type') . ' = ' . $db->quote('library'))
-                    ->where($db->quoteName('element') . ' = ' . $db->quote($element));
-                $db->setQuery($query);
-                $db->execute();
-
-                Log::add('Library "' . $element . '" installed and locked.', Log::INFO, 'com_proclaim');
             }
         }
     }

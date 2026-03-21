@@ -508,8 +508,8 @@ class HtmlView extends BaseHtmlView
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled). Skip in print mode.
         if (empty($this->print)) {
-            $wa->useScript('com_proclaim.scripture-tooltip');
-            $wa->useStyle('com_proclaim.scripture-tooltip-css');
+            $wa->useScript('lib_cwmscripture.scripture-tooltip');
+            $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
             $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
                 'ajaxUrl' => Route::_(

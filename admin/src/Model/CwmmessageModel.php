@@ -23,7 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
