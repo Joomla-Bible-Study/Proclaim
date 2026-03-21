@@ -97,8 +97,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled)
-        $wa->useScript('com_proclaim.scripture-tooltip');
-        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+        $wa->useScript('lib_cwmscripture.scripture-tooltip');
+        $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
         $this->app->getDocument()->addScriptOptions('com_proclaim.scripture', [
             'ajaxUrl' => Route::_(

@@ -209,7 +209,7 @@ class Cwmshowscripture
     public function renderTextPassage(BiblePassageResult $result, int $choice, Registry $params, string $switcherHtml = ''): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->useStyle('com_proclaim.scripture-text');
+        $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $copyrightHtml = '';
 
@@ -355,8 +355,8 @@ class Cwmshowscripture
     {
         $app = Factory::getApplication();
         $wa  = $app->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.scripture-switcher');
-        $wa->useStyle('com_proclaim.scripture-switcher-css');
+        $wa->useScript('lib_cwmscripture.scripture-switcher');
+        $wa->useStyle('lib_cwmscripture.scripture-switcher-css');
 
         // Provide the AJAX endpoint URL to JS (SEF-safe, avoids redirect)
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
@@ -590,8 +590,8 @@ class Cwmshowscripture
     private function renderUnavailableNotice(object $row, string $reference, string $version): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.scripture-switcher');
-        $wa->useStyle('com_proclaim.scripture-text');
+        $wa->useScript('lib_cwmscripture.scripture-switcher');
+        $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
         Factory::getApplication()->getDocument()->addScriptOptions('com_proclaim.scripture', [

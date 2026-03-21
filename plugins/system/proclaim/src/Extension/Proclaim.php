@@ -250,18 +250,25 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     public function onBeforeRender(): void
     {
-        // Only apply in the administrator application
-        if (!$this->getApplication()->isClient('administrator')) {
-            return;
-        }
-
         // Component must be functional (PHP >= 8.3)
         if (PHP_VERSION_ID < self::MIN_PHP_ID) {
             return;
         }
 
-        // Load keyboard shortcuts on any com_proclaim admin page
         $option = $this->getApplication()->getInput()->getCmd('option', '');
+
+        // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
+        if ($option === 'com_proclaim') {
+            $this->getApplication()->getDocument()
+                ->getWebAssetManager()
+                ->getRegistry()
+                ->addExtensionRegistryFile('lib_cwmscripture');
+        }
+
+        // Admin-only features below
+        if (!$this->getApplication()->isClient('administrator')) {
+            return;
+        }
 
         if ($option === 'com_proclaim') {
             $this->getApplication()->getDocument()

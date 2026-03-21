@@ -28,6 +28,9 @@ try {
         case 'build':
             doBuild($verbose);
             break;
+        case 'package':
+            doPackage($verbose);
+            break;
         case 'install-joomla':
             doInstallJoomla();
             break;
@@ -65,6 +68,7 @@ function showHelp(): void
     echo "  link            Setup symbolic links to local Joomla installation(s)\n";
     echo "  clean           Remove symbolic links (clean dev state)\n";
     echo "  build           Build component package (zip)\n";
+    echo "  package         Build pkg_proclaim (library + plugin + component zips)\n";
     echo "  install-joomla  Download and install Joomla\n";
     echo "  joomla-latest   Show latest available Joomla version\n";
     echo "  verify          Verify all sub-extensions are registered in dev Joomla DB(s)\n";
@@ -175,7 +179,8 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/libraries/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
         BASE_DIR . '/libraries/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
         BASE_DIR . '/libraries/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
-        // ScriptureLinks plugin (separate submodule, already at plugins/content/scripturelinks)
+        // ScriptureLinks plugin (separate submodule)
+        BASE_DIR . '/plugins/content/scripturelinks' => "$joomlaPath/plugins/content/scripturelinks",
     ];
 }
 
@@ -816,21 +821,9 @@ function doBuild(bool $verbose = false): void
         'media/js/joomla.d.ts',
         // Exclude Composer vendor (dev-only)
         'libraries/vendor',
-        // Exclude submodule dev files
-        'libraries/lib_cwmscripture/.git',
-        'libraries/lib_cwmscripture/.idea',
-        'libraries/lib_cwmscripture/build',
-        'libraries/lib_cwmscripture/tests',
-        'libraries/lib_cwmscripture/CLAUDE.md',
-        'libraries/lib_cwmscripture/README.md',
-        'libraries/lib_cwmscripture/.gitignore',
-        'plugins/content/scripturelinks/.git',
-        'plugins/content/scripturelinks/.idea',
-        'plugins/content/scripturelinks/build',
-        'plugins/content/scripturelinks/tests',
-        'plugins/content/scripturelinks/CLAUDE.md',
-        'plugins/content/scripturelinks/README.md',
-        'plugins/content/scripturelinks/.gitignore',
+        // Exclude submodules — installed as separate zips by pkg_proclaim
+        'libraries/lib_cwmscripture',
+        'plugins/content/scripturelinks',
     ];
 
     // File extensions to exclude (dev/debug files)
@@ -946,6 +939,140 @@ function doBuild(bool $verbose = false): void
 
     echo "\nBuild complete: com_proclaim-$version.zip ($fileCount files)\n";
     echo "Location: $zipFile\n";
+}
+
+/**
+ * Builds pkg_proclaim package containing lib_cwmscripture.zip, plg_content_scripturelinks.zip, and com_proclaim.zip.
+ *
+ * @param   bool  $verbose  Show detailed output
+ *
+ * @return void
+ * @throws Exception
+ * @since 10.3.0
+ */
+function doPackage(bool $verbose = false): void
+{
+    // Get version from proclaim.xml
+    $version = '10.3.0';
+
+    if (file_exists(BASE_DIR . '/proclaim.xml')) {
+        $xml = simplexml_load_string(file_get_contents(BASE_DIR . '/proclaim.xml'));
+
+        if ($xml && isset($xml->version)) {
+            $version = (string) $xml->version;
+        }
+    }
+
+    echo "Building pkg_proclaim v$version\n\n";
+
+    $packageDir = BUILD_DIR . '/package';
+
+    if (is_dir($packageDir)) {
+        exec('rm -rf ' . escapeshellarg($packageDir));
+    }
+
+    mkdir($packageDir, 0777, true);
+
+    // Step 1: Build lib_cwmscripture.zip from submodule
+    echo "Step 1: Building lib_cwmscripture.zip...\n";
+    $libBuildScript = BASE_DIR . '/libraries/lib_cwmscripture/build/build-package.php';
+
+    if (!file_exists($libBuildScript)) {
+        throw new \RuntimeException('Library build script not found: ' . $libBuildScript);
+    }
+
+    $libDistDir = BASE_DIR . '/libraries/lib_cwmscripture/build/dist';
+    passthru('php ' . escapeshellarg($libBuildScript), $returnVar);
+
+    if ($returnVar !== 0) {
+        throw new \RuntimeException('Library build failed');
+    }
+
+    // Find the built zip
+    $libZipSource = null;
+
+    if (is_dir($libDistDir)) {
+        foreach (glob($libDistDir . '/lib_cwmscripture-*.zip') as $candidate) {
+            $libZipSource = $candidate;
+            break;
+        }
+    }
+
+    if (!$libZipSource || !file_exists($libZipSource)) {
+        throw new \RuntimeException('lib_cwmscripture ZIP not found after build');
+    }
+
+    copy($libZipSource, $packageDir . '/lib_cwmscripture.zip');
+    echo "  Done: " . basename($libZipSource) . "\n";
+
+    // Step 2: Build plg_content_scripturelinks.zip using --plugin-only flag
+    echo "Step 2: Building plg_content_scripturelinks.zip...\n";
+    $plgBuildScript = BASE_DIR . '/plugins/content/scripturelinks/build/build-package.php';
+
+    if (!file_exists($plgBuildScript)) {
+        throw new \RuntimeException('Plugin build script not found: ' . $plgBuildScript);
+    }
+
+    passthru('php ' . escapeshellarg($plgBuildScript) . ' --plugin-only', $returnVar);
+
+    if ($returnVar !== 0) {
+        throw new \RuntimeException('Plugin build failed');
+    }
+
+    $plgDistDir   = BASE_DIR . '/plugins/content/scripturelinks/build/dist';
+    $plgZipSource = $plgDistDir . '/plg_content_scripturelinks.zip';
+
+    if (!file_exists($plgZipSource)) {
+        throw new \RuntimeException('plg_content_scripturelinks.zip not found after build');
+    }
+
+    copy($plgZipSource, $packageDir . '/plg_content_scripturelinks.zip');
+    echo "  Done.\n";
+
+    // Step 3: Build com_proclaim.zip (calls existing doBuild)
+    echo "Step 3: Building com_proclaim.zip...\n";
+    doBuild($verbose);
+
+    // Find the com_proclaim zip that doBuild created
+    $comZipSource = null;
+
+    foreach (glob(BUILD_DIR . '/com_proclaim-*.zip') as $candidate) {
+        $comZipSource = $candidate;
+        break;
+    }
+
+    if (!$comZipSource || !file_exists($comZipSource)) {
+        throw new \RuntimeException('com_proclaim ZIP not found after build');
+    }
+
+    copy($comZipSource, $packageDir . '/com_proclaim.zip');
+    echo "  Done.\n";
+
+    // Step 4: Assemble pkg_proclaim zip
+    echo "\nAssembling pkg_proclaim-$version.zip...\n";
+    $pkgZipPath = BUILD_DIR . '/pkg_proclaim-' . $version . '.zip';
+
+    if (file_exists($pkgZipPath)) {
+        unlink($pkgZipPath);
+    }
+
+    $pkgZip = new ZipArchive();
+
+    if ($pkgZip->open($pkgZipPath, ZipArchive::CREATE) !== true) {
+        throw new \RuntimeException("Cannot create $pkgZipPath");
+    }
+
+    $pkgZip->addFile(BASE_DIR . '/pkg_proclaim.xml', 'pkg_proclaim.xml');
+    $pkgZip->addFile($packageDir . '/lib_cwmscripture.zip', 'lib_cwmscripture.zip');
+    $pkgZip->addFile($packageDir . '/plg_content_scripturelinks.zip', 'plg_content_scripturelinks.zip');
+    $pkgZip->addFile($packageDir . '/com_proclaim.zip', 'com_proclaim.zip');
+    $pkgZip->close();
+
+    // Cleanup temp package dir
+    exec('rm -rf ' . escapeshellarg($packageDir));
+
+    echo "\nPackage complete: pkg_proclaim-$version.zip\n";
+    echo "Location: $pkgZipPath\n";
 }
 
 /**

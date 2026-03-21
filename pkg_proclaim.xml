@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade">
+    <name>pkg_proclaim</name>
+    <packagename>proclaim</packagename>
+    <author>CWM Team</author>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <copyright>(C) 2026 CWM Team All rights reserved</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>10.3.0</version>
+    <creationDate>2026-03</creationDate>
+    <description>CWM Proclaim - Bible Study Management</description>
+
+    <files>
+        <!-- Install order: library first, then plugin, then component -->
+        <file type="library" id="cwmscripture">lib_cwmscripture.zip</file>
+        <file type="plugin" group="content" id="scripturelinks">plg_content_scripturelinks.zip</file>
+        <file type="component" id="com_proclaim">com_proclaim.zip</file>
+    </files>
+</extension>

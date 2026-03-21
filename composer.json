@@ -119,6 +119,7 @@
     "verify": "php build/proclaim_build.php verify",
     "clean": "php build/proclaim_build.php clean",
     "build": "php build/proclaim_build.php build",
+    "package": "php build/proclaim_build.php package",
     "version": "php build/bump.php",
     "sync-languages": "python3 build/sync_languages.py",
     "sync-languages-force": "python3 build/sync_languages.py --force",

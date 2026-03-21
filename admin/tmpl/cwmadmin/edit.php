@@ -26,10 +26,11 @@ use Joomla\CMS\Session\Session;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmadmin\HtmlView $this */
 
 $wa = $this->getDocument()->getWebAssetManager();
+$wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('com_proclaim.cwmadmin')
-    ->useScript('com_proclaim.bible-translations')
+    ->useScript('lib_cwmscripture.bible-translations')
     ->useScript('com_proclaim.csv-import')
     ->useScript('com_proclaim.server-migration')
     ->useScript('com_proclaim.admin-youtube-log')
@@ -179,7 +180,7 @@ $this->useCoreUI = true;
 echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
       method="post" name="adminForm" id="item-admin"
       aria-label="<?php
-        echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
+        echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate">
     <?php
     echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
