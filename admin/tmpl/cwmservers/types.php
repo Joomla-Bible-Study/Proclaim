@@ -56,21 +56,21 @@ $this->recordId = $app->getInput()->getInt('recordId');
 
 // Icon and brand color per server type key (lowercase addon directory name)
 $typeIcons = [
-    'local'   => ['icon' => 'fas fa-server',      'color' => '#555555'],
-    'direct'  => ['icon' => 'fas fa-link',        'color' => '#2E7D32'],
-    'youtube' => ['icon' => 'fab fa-youtube',      'color' => '#FF0000'],
-    'vimeo'   => ['icon' => 'fab fa-vimeo',        'color' => '#1AB7EA'],
-    'wistia'  => ['icon' => 'fas fa-play-circle',  'color' => '#54BBFF'],
-    'resi'        => ['icon' => 'fas fa-signal',       'color' => '#00AEEF'],
-    'soundcloud'  => ['icon' => 'fab fa-soundcloud',  'color' => '#FF5500'],
-    'dailymotion' => ['icon' => 'fas fa-play-circle', 'color' => '#00D2F3'],
-    'rumble'      => ['icon' => 'fas fa-play-circle', 'color' => '#85C742'],
-    'facebook'    => ['icon' => 'fab fa-facebook',    'color' => '#1877F2'],
-    'embed'       => ['icon' => 'fas fa-code',        'color' => '#666666'],
-    'article'     => ['icon' => 'fas fa-newspaper',  'color' => '#1C3D5C'],
-    'virtuemart'  => ['icon' => 'fas fa-shopping-cart', 'color' => '#2B71B8'],
-    'docman'      => ['icon' => 'fas fa-file-alt',   'color' => '#5C6BC0'],
-    'legacy'      => ['icon' => 'fas fa-archive',     'color' => '#888888'],
+    'local'   => ['icon' => 'fa-solid fa-server',      'color' => '#555555'],
+    'direct'  => ['icon' => 'fa-solid fa-link',        'color' => '#2E7D32'],
+    'youtube' => ['icon' => 'fa-brands fa-youtube',      'color' => '#FF0000'],
+    'vimeo'   => ['icon' => 'fa-brands fa-vimeo',        'color' => '#1AB7EA'],
+    'wistia'  => ['icon' => 'fa-solid fa-circle-play',  'color' => '#54BBFF'],
+    'resi'        => ['icon' => 'fa-solid fa-signal',       'color' => '#00AEEF'],
+    'soundcloud'  => ['icon' => 'fa-brands fa-soundcloud',  'color' => '#FF5500'],
+    'dailymotion' => ['icon' => 'fa-solid fa-circle-play', 'color' => '#00D2F3'],
+    'rumble'      => ['icon' => 'fa-solid fa-circle-play', 'color' => '#85C742'],
+    'facebook'    => ['icon' => 'fa-brands fa-facebook',    'color' => '#1877F2'],
+    'embed'       => ['icon' => 'fa-solid fa-code',        'color' => '#666666'],
+    'article'     => ['icon' => 'fa-solid fa-newspaper',  'color' => '#1C3D5C'],
+    'virtuemart'  => ['icon' => 'fa-solid fa-cart-shopping', 'color' => '#2B71B8'],
+    'docman'      => ['icon' => 'fa-solid fa-file-lines',   'color' => '#5C6BC0'],
+    'legacy'      => ['icon' => 'fa-solid fa-box-archive',     'color' => '#888888'],
 ];
 ?>
 <div class="container-fluid p-3">
@@ -81,7 +81,7 @@ $typeIcons = [
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
             <?php foreach ($this->types as $item) :
                 $typeKey  = strtolower($item->name);
-                $iconData = $typeIcons[$typeKey] ?? ['icon' => 'fas fa-plug', 'color' => '#555555'];
+                $iconData = $typeIcons[$typeKey] ?? ['icon' => 'fa-solid fa-plug', 'color' => '#555555'];
                 $encoded  = base64_encode(json_encode(['id' => $this->recordId, 'name' => $item->name]));
             ?>
                 <div class="col">

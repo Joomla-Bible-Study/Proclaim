@@ -33,7 +33,7 @@ use Joomla\CMS\Language\Text;
             echo $this->item->teachername; ?></span></dd>
 
     <dd class="category-name">
-        <i class="fas fa-bible" aria-hidden="true"></i>
+        <i class="fa-solid fa-book-bible" aria-hidden="true"></i>
         <?php
         echo Text::_('JBS_CMN_SCRIPTURE'); ?>: <?php
         echo !empty($this->item->allScriptures) ? $this->item->allScriptures : $this->item->scripture1; ?>    </dd>

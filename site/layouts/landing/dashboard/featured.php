@@ -42,8 +42,8 @@ if (empty($featuredTeachers) && empty($featuredSeries)) {
 }
 
 $iconMap = [
-    'teachers' => 'fas fa-user-tie',
-    'series'   => 'fas fa-layer-group',
+    'teachers' => 'fa-solid fa-user-tie',
+    'series'   => 'fa-solid fa-layer-group',
 ];
 
 $tagMap = [

@@ -89,7 +89,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         }
 
         $routeUrl      = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templateID);
-        $data['link']  = '<a href="' . $routeUrl . '"><button class="btn btn-primary"><span class="fas fa-bible" aria-hidden="true"></span> ' . $link_text . '</button></a>';
+        $data['link']  = '<a href="' . $routeUrl . '"><button class="btn btn-primary"><span class="fa-solid fa-book-bible" aria-hidden="true"></span> ' . $link_text . '</button></a>';
 
         $wa = $this->app->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.cwmcore');

@@ -31,13 +31,13 @@ $hideMode = (int) $params->get('landing_hide', 0);
                  title="<?php echo htmlspecialchars($showIt_phrase, ENT_QUOTES, 'UTF-8'); ?>"
                  width="<?php echo $image->width; ?>"
                  height="<?php echo $image->height; ?>" />
-            <i class="fas fa-arrow-down" title="x"></i>
+            <i class="fa-solid fa-arrow-down" title="x"></i>
         </a>
 
         <?php // Case 1: Image and Label?>
     <?php elseif ($hideMode === 1) : ?>
         <a class="showhideheadingbutton" href="<?php echo $link; ?>">
-            <i class="fas fa-arrow-down" title="x"></i>
+            <i class="fa-solid fa-arrow-down" title="x"></i>
         </a>
         <a class="showhideheadinglabel" href="<?php echo $link; ?>">
             <span id="landing_label"><?php echo $params->get('landing_hidelabel'); ?></span>

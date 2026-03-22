@@ -32,12 +32,12 @@ if (empty($items)) {
 [$visibleItems, $hiddenItems] = Cwmlanding::splitItems($items, $limit, $useLimit);
 
 $iconClass = match ($section['sectionType']) {
-    'topics'       => 'fas fa-tags',
-    'books'        => 'fas fa-bible',
-    'locations'    => 'fas fa-map-marker-alt',
-    'messagetypes' => 'fas fa-comment-alt',
-    'years'        => 'fas fa-calendar-alt',
-    default        => 'fas fa-list',
+    'topics'       => 'fa-solid fa-tags',
+    'books'        => 'fa-solid fa-bible',
+    'locations'    => 'fa-solid fa-location-dot',
+    'messagetypes' => 'fa-solid fa-comment-dots',
+    'years'        => 'fa-solid fa-calendar-days',
+    default        => 'fa-solid fa-list',
 };
 ?>
 <div class="proclaim-landing__section" data-section="<?php echo $section['sectionType']; ?>">

@@ -54,8 +54,8 @@ Text::script('JCLOSE');
         <div class="row align-items-center">
             <div class="col-auto d-none d-md-block" aria-hidden="true">
                 <span class="fa-stack fa-2x text-primary">
-                    <i class="fas fa-circle fa-stack-2x" style="opacity: 0.2;"></i>
-                    <i class="fas fa-shield-alt fa-stack-1x"></i>
+                    <i class="fa-solid fa-circle fa-stack-2x" style="opacity: 0.2;"></i>
+                    <i class="fa-solid fa-shield-halved fa-stack-1x"></i>
                 </span>
             </div>
             <div class="col">
@@ -71,14 +71,14 @@ Text::script('JCLOSE');
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 id="status-heading" class="card-title h5 mb-0">
-                <i class="fas fa-table me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_STATUS'); ?>
+                <i class="fa-solid fa-table me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_STATUS'); ?>
             </h2>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-proclaim-action="refresh">
-                    <i class="fas fa-sync-alt me-1" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_REFRESH'); ?>
+                    <i class="fa-solid fa-arrows-rotate me-1" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_REFRESH'); ?>
                 </button>
                 <button type="button" class="btn btn-primary btn-sm" data-proclaim-action="fix">
-                    <i class="fas fa-wrench me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
+                    <i class="fa-solid fa-wrench me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
                 </button>
             </div>
         </div>
@@ -144,7 +144,7 @@ Text::script('JCLOSE');
 <section class="card border-info mb-4">
     <div class="card-header bg-info text-white">
         <h2 class="card-title h6 mb-0">
-            <i class="fas fa-info-circle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_LEGEND'); ?>
+            <i class="fa-solid fa-circle-info me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_LEGEND'); ?>
         </h2>
     </div>
     <div class="card-body">
@@ -174,12 +174,12 @@ Text::script('JCLOSE');
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="fixAssetsModalLabel">
-                    <i class="fas fa-wrench me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
+                    <i class="fa-solid fa-wrench me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
                 </h5>
             </div>
             <div class="modal-body">
                 <div id="fix-status-message" class="mb-3 text-center">
-                    <i class="fas fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                    <i class="fa-solid fa-spinner fa-spin me-2" aria-hidden="true"></i>
                     <span id="fix-status-text"><?php echo Text::_('JBS_CMN_PROCESSING'); ?></span>
                 </div>
                 <div class="progress mb-3" style="height: 25px;">
@@ -191,7 +191,7 @@ Text::script('JCLOSE');
             </div>
             <div class="modal-footer" id="fix-modal-footer" style="display: none;">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                    <i class="fas fa-check me-2" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                    <i class="fa-solid fa-check me-2" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
                 </button>
             </div>
         </div>

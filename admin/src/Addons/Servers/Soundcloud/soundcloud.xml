@@ -60,7 +60,7 @@
             </field>
             <field name="media_button_color" type="ColorPicker" default="#FF5500"
                    description="JBS_ADDON_SOUNDCLOUD_BUTTON_COLOR_DESC" label="JBS_ADDON_SOUNDCLOUD_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="fab fa-soundcloud"
+            <field name="media_icon_type" type="IconType" class="inputbox" default="fa-brands fa-soundcloud"
                    label="JBS_ADDON_SOUNDCLOUD_ICON_TYPE"
                    description="JBS_ADDON_SOUNDCLOUD_ICON_TYPE_DESC">
             </field>

@@ -161,7 +161,7 @@
 
         if (mappedGroupIds.size === 0) {
             container.innerHTML = `<div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle me-2"></i>
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
                 ${txt('JBS_WIZARD_NO_MAPPED_GROUPS')}
             </div>`;
             return;
@@ -362,7 +362,7 @@
                             'beforeend',
                             `<div class="alert alert-danger mt-3">${escHtml(response.message)}</div>
                              <button type="button" class="btn btn-secondary mt-2" id="wizard-back-from-error">
-                                 <i class="fas fa-arrow-left me-1"></i>${txt('JPREV')}
+                                 <i class="fa-solid fa-arrow-left me-1"></i>${txt('JPREV')}
                              </button>`,
                         );
                         const backBtn = el('wizard-back-from-error');
