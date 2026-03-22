@@ -22,38 +22,50 @@ try {
     throw new \RuntimeException('Could not load Factory');
 }
 
-// Component debugging
-try {
-    if (CwmproclaimHelper::debug() === 1 || $app->getInput()->getInt('jbsmdbg', '0') === 1) {
-        \define('JBSMDEBUG', 1);
-    } else {
+// Component debugging — defer DB query to first use on the front end.
+// On admin pages the debug check runs immediately; on the site side we
+// default to off and let Cwmdownload (the only front-end consumer) check
+// on demand, avoiding a DB query on every module/page load.
+if ($app->isClient('administrator') || $app->getInput()->getInt('jbsmdbg', 0) === 1) {
+    try {
+        if (CwmproclaimHelper::debug() === 1 || $app->getInput()->getInt('jbsmdbg', 0) === 1) {
+            \define('JBSMDEBUG', 1);
+        } else {
+            \define('JBSMDEBUG', 0);
+        }
+    } catch (\RuntimeException $e) {
         \define('JBSMDEBUG', 0);
     }
-} catch (\RuntimeException $e) {
-    throw new \RuntimeException('Could not find Debug setting.');
+} else {
+    \define('JBSMDEBUG', 0);
 }
 
-// Version information - read from manifest XML
-$manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
-$manifestVersion = '0.0.0';
+// Version information — defer XML parsing to admin only (the only consumer
+// is CwminstallModel). On the front end, set a placeholder to avoid the
+// cost of file_get_contents + simplexml on every page load.
+if ($app->isClient('administrator')) {
+    $manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
+    $manifestVersion = '0.0.0';
 
-if (is_file($manifestFile) && is_readable($manifestFile)) {
-    libxml_use_internal_errors(true);
-    $xml = simplexml_load_string(file_get_contents($manifestFile));
+    if (is_file($manifestFile) && is_readable($manifestFile)) {
+        libxml_use_internal_errors(true);
+        $xml = simplexml_load_string(file_get_contents($manifestFile));
 
-    if ($xml instanceof \SimpleXMLElement && isset($xml->version)) {
-        $manifestVersion = trim((string) $xml->version);
-    } else {
-        // Log XML parsing errors, if any
-        foreach (libxml_get_errors() as $error) {
-            Log::add('XML Error in proclaim.xml: ' . trim($error->message), Log::WARNING, 'com_proclaim');
+        if ($xml instanceof \SimpleXMLElement && isset($xml->version)) {
+            $manifestVersion = trim((string) $xml->version);
+        } else {
+            foreach (libxml_get_errors() as $error) {
+                Log::add('XML Error in proclaim.xml: ' . trim($error->message), Log::WARNING, 'com_proclaim');
+            }
         }
+
+        libxml_clear_errors();
     }
 
-    libxml_clear_errors();
+    \define('BIBLESTUDY_VERSION', $manifestVersion);
+} else {
+    \define('BIBLESTUDY_VERSION', '');
 }
-
-\define('BIBLESTUDY_VERSION', $manifestVersion);
 
 // Default values
 const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
@@ -71,6 +83,7 @@ const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEP
 
 // If a phrase is not found in a specific language file, load the English language file:
 $language = $app->getLanguage();
+
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
@@ -81,13 +94,15 @@ if (is_dir($modProclaimPath)) {
 }
 
 // Add to the API to load the component's core CSS and JS for proper functionality.
-/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $app->getDocument()->getWebAssetManager();
 
 // We register the extension registry because in modules and plugins, the registry is not automatically loaded
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 $wa->useStyle('com_proclaim.cwmcore')
     ->useScript('com_proclaim.cwmcorejs');
+
+// Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
+$wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 
 // Include the JLog class.
 Log::addLogger(

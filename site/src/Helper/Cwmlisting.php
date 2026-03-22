@@ -510,18 +510,35 @@ class Cwmlisting
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select(
-            $db->quoteName('#__bsms_mediafiles') . '.*, '
-            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', '
-            . $db->quoteName('#__bsms_servers.params', 'sparams') . ', '
-            . $db->quoteName('#__bsms_servers.media', 'smedia') . ','
-            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
-            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.teacher_id') . ','
-            . $db->quoteName('s.booknumber') . ', ' . $db->quoteName('s.chapter_begin') . ', '
-            . $db->quoteName('s.chapter_end') . ', ' . $db->quoteName('s.verse_begin') . ', '
-            . $db->quoteName('s.verse_end') . ', ' . $db->quoteName('t.teachername') . ', '
-            . $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('s.id', 'sid')
-        );
+        // Select only needed mediafile columns (avoids loading metadata TEXT blob)
+        $mf = '#__bsms_mediafiles';
+        $query->select(implode(', ', [
+            $db->quoteName($mf . '.id'),
+            $db->quoteName($mf . '.study_id'),
+            $db->quoteName($mf . '.server_id'),
+            $db->quoteName($mf . '.podcast_id'),
+            $db->quoteName($mf . '.ordering'),
+            $db->quoteName($mf . '.published'),
+            $db->quoteName($mf . '.comment'),
+            $db->quoteName($mf . '.params'),
+            $db->quoteName($mf . '.access'),
+            $db->quoteName($mf . '.language'),
+            $db->quoteName('#__bsms_servers.id', 'ssid'),
+            $db->quoteName('#__bsms_servers.params', 'sparams'),
+            $db->quoteName('#__bsms_servers.media', 'smedia'),
+            $db->quoteName('s.studytitle'),
+            $db->quoteName('s.studydate'),
+            $db->quoteName('s.studyintro'),
+            $db->quoteName('s.teacher_id'),
+            $db->quoteName('s.booknumber'),
+            $db->quoteName('s.chapter_begin'),
+            $db->quoteName('s.chapter_end'),
+            $db->quoteName('s.verse_begin'),
+            $db->quoteName('s.verse_end'),
+            $db->quoteName('t.teachername'),
+            $db->quoteName('t.id', 'tid'),
+            $db->quoteName('s.id', 'sid'),
+        ]));
         $query->from($db->quoteName('#__bsms_mediafiles'));
         $query->leftJoin(
             $db->quoteName('#__bsms_servers') . ' ON ('

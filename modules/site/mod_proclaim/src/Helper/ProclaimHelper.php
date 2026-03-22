@@ -55,6 +55,19 @@ class ProclaimHelper
         // Configure model state from module params
         $model->setModuleState($params);
 
+        // Exclude studytext (full HTML body) — modules display titles,
+        // scriptures, and media links, not the full sermon text.
+        // Saves significant memory per sermon loaded.
+        $db = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        $model->setState('list.select', implode(', ', $db->quoteName([
+            'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+            'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+            'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+            'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+            'study.booknumber2', 'study.location_id', 'study.params',
+            'study.bible_version', 'study.bible_version2',
+        ])));
+
         return $model->getItems();
     }
 }

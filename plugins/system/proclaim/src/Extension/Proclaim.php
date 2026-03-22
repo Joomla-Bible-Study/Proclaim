@@ -41,7 +41,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var int
      * @since 10.1.0
      */
-    private const MIN_PHP_ID = 80300;
+    private const int MIN_PHP_ID = 80300;
 
     /**
      * Minimum PHP version as a display string for error messages.
@@ -49,7 +49,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string
      * @since 10.1.0
      */
-    private const MIN_PHP = '8.3.0';
+    private const string MIN_PHP = '8.3.0';
 
     /**
      * Default maximum POST submissions per window.
@@ -57,7 +57,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var int
      * @since 10.1.0
      */
-    private const DEFAULT_RATE_LIMIT_MAX = 10;
+    private const int DEFAULT_RATE_LIMIT_MAX = 10;
 
     /**
      * Default rate limit window in seconds.
@@ -65,7 +65,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var int
      * @since 10.1.0
      */
-    private const DEFAULT_RATE_LIMIT_WINDOW = 60;
+    private const int DEFAULT_RATE_LIMIT_WINDOW = 60;
 
     /**
      * Views hidden from the admin submenu when Simple Mode is enabled.
@@ -73,7 +73,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string[]
      * @since 10.1.0
      */
-    private const SIMPLE_MODE_HIDDEN_VIEWS = [
+    private const array SIMPLE_MODE_HIDDEN_VIEWS = [
         'cwmmessagetypes',
         'cwmlocations',
         'cwmtopics',
@@ -91,7 +91,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var array<string, string>
      * @since 10.2.0
      */
-    private const LEGACY_VIEW_MAP = [
+    private const array LEGACY_VIEW_MAP = [
         'sermon'               => 'cwmsermon',
         'sermons'              => 'cwmsermons',
         'teacher'              => 'cwmteacher',
@@ -113,7 +113,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string[]
      * @since 10.2.0
      */
-    private const LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
+    private const array LEGACY_CARRY_PARAMS = ['id', 't', 'mid', 'Itemid', 'filter', 'limit', 'start'];
 
     /**
      * Task names allowed to carry over from old com_biblestudy URLs.
@@ -124,7 +124,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string[]
      * @since 10.2.0
      */
-    private const LEGACY_ALLOWED_TASKS = ['download'];
+    private const array LEGACY_ALLOWED_TASKS = ['download'];
 
     /**
      * Views hidden from the admin submenu for non-admin users (require core.admin).
@@ -132,7 +132,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @var string[]
      * @since 10.1.0
      */
-    private const ADMIN_ONLY_VIEWS = [
+    private const array ADMIN_ONLY_VIEWS = [
         'cwmadmin',
         'cwmservers',
         'cwmlocations',
@@ -175,10 +175,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'onAfterInitialise' => 'onAfterInitialise',
-            'onAfterRoute'      => 'onAfterRoute',
-            'onBeforeRender'    => 'onBeforeRender',
-            'onAfterRender'     => 'onAfterRender',
+            'onAfterInitialise'  => 'onAfterInitialise',
+            'onAfterRoute'       => 'onAfterRoute',
+            'onBeforeRender'     => 'onBeforeRender',
+            'onAfterRender'      => 'onAfterRender',
+            'onContentCleanCache' => 'onContentCleanCache',
         ];
     }
 
@@ -256,14 +257,6 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         $option = $this->getApplication()->getInput()->getCmd('option', '');
-
-        // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
-        if ($option === 'com_proclaim') {
-            $this->getApplication()->getDocument()
-                ->getWebAssetManager()
-                ->getRegistry()
-                ->addExtensionRegistryFile('lib_cwmscripture');
-        }
 
         // Admin-only features below
         if (!$this->getApplication()->isClient('administrator')) {
@@ -367,6 +360,43 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         ]);
 
         $app->setHeader('Content-Security-Policy', $csp, true);
+    }
+
+    /**
+     * Clear file-based YouTube video cache when Joomla cache is cleared.
+     *
+     * Triggered by System → Clear Cache and by component cache clear events.
+     * Only clears the short-lived video cache (vcache_*) files — preserves
+     * quota counters, throttle data, and last-known-video files which are
+     * critical for API quota protection.
+     *
+     * @param   \Joomla\Event\Event  $event  The cache clean event
+     *
+     * @return  void
+     *
+     * @since   10.2.2
+     */
+    public function onContentCleanCache(\Joomla\Event\Event $event): void
+    {
+        $args  = $event->getArguments();
+        $group = (string) ($args['group'] ?? ($args[0] ?? ''));
+
+        // Clear on any Proclaim-related group, or when clearing all cache (empty group)
+        if ($group === '' || str_contains($group, 'proclaim') || str_contains($group, 'mod_proclaim')) {
+            $cacheClass = 'CWM\\Component\\Proclaim\\Administrator\\Helper\\CwmyoutubeFileCache';
+
+            if (!class_exists($cacheClass)) {
+                $file = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmyoutubeFileCache.php';
+
+                if (is_file($file)) {
+                    require_once $file;
+                }
+            }
+
+            if (class_exists($cacheClass)) {
+                \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache::clearVideoCache();
+            }
+        }
     }
 
     /**
