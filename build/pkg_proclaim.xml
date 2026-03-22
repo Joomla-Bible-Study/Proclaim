@@ -11,7 +11,7 @@
     <creationDate>2026-03</creationDate>
     <description>CWM Proclaim - Bible Study Management</description>
 
-    <files>
+    <files folder="packages">
         <!-- Install order: library first, then plugin, then component -->
         <file type="library" id="cwmscripture">lib_cwmscripture.zip</file>
         <file type="plugin" group="content" id="scripturelinks">plg_content_scripturelinks.zip</file>

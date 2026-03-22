@@ -1062,10 +1062,10 @@ function doPackage(bool $verbose = false): void
         throw new \RuntimeException("Cannot create $pkgZipPath");
     }
 
-    $pkgZip->addFile(BASE_DIR . '/pkg_proclaim.xml', 'pkg_proclaim.xml');
-    $pkgZip->addFile($packageDir . '/lib_cwmscripture.zip', 'lib_cwmscripture.zip');
-    $pkgZip->addFile($packageDir . '/plg_content_scripturelinks.zip', 'plg_content_scripturelinks.zip');
-    $pkgZip->addFile($packageDir . '/com_proclaim.zip', 'com_proclaim.zip');
+    $pkgZip->addFile(BUILD_DIR . '/pkg_proclaim.xml', 'pkg_proclaim.xml');
+    $pkgZip->addFile($packageDir . '/lib_cwmscripture.zip', 'packages/lib_cwmscripture.zip');
+    $pkgZip->addFile($packageDir . '/plg_content_scripturelinks.zip', 'packages/plg_content_scripturelinks.zip');
+    $pkgZip->addFile($packageDir . '/com_proclaim.zip', 'packages/com_proclaim.zip');
     $pkgZip->close();
 
     // Cleanup temp package dir
