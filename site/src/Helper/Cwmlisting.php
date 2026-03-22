@@ -2150,22 +2150,22 @@ class Cwmlisting
             return '';
         }
 
-        if (isset(self::$bookNameCache[$booknumber])) {
-            return self::$bookNameCache[$booknumber];
+        // Preload all book names on first call (66 rows, tiny table)
+        if (empty(self::$bookNameCache)) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('booknumber'), $db->quoteName('bookname')])
+                ->from($db->quoteName('#__bsms_books'));
+            $db->setQuery($query);
+            $books = $db->loadObjectList();
+
+            foreach ($books as $book) {
+                $name = $book->bookname ? Text::_($book->bookname) : '';
+                self::$bookNameCache[(int) $book->booknumber] = $name;
+            }
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('bookname'))
-            ->from($db->quoteName('#__bsms_books'))
-            ->where($db->quoteName('booknumber') . ' = ' . $booknumber);
-        $db->setQuery($query);
-        $bookname = $db->loadResult();
-
-        $result                           = $bookname ? Text::_($bookname) : '';
-        self::$bookNameCache[$booknumber] = $result;
-
-        return $result;
+        return self::$bookNameCache[$booknumber] ?? '';
     }
 
     /**
