@@ -26,7 +26,6 @@ use Joomla\CMS\Session\Session;
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmadmin\HtmlView $this */
 
 $wa = $this->getDocument()->getWebAssetManager();
-$wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('com_proclaim.cwmadmin')

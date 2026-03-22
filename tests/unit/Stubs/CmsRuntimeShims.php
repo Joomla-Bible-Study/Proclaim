@@ -189,7 +189,7 @@ namespace Joomla\CMS\Language {
         {
             return 'en-GB';
         }
-        public function load($extension = '', $basePath = ''): bool
+        public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false, $default = true)
         {
             return true;
         }
