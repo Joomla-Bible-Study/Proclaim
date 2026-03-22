@@ -292,6 +292,11 @@ class HtmlView extends BaseHtmlView
 
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
+
+            // Disable Joomla's searchtools — it auto-submits the form on keystroke,
+            // conflicting with Proclaim's AJAX-based filtering which handles the
+            // same form without page reloads.
+            $wa->disableScript('searchtools');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
