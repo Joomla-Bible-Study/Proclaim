@@ -93,13 +93,17 @@ if (is_dir($modProclaimPath)) {
     $language->load('mod_proclaim', $modProclaimPath, null, true);
 }
 
-// Add to the API to load the component's core CSS and JS for proper functionality.
+// Register web asset registries so assets are available when views/modules request them.
+// Actual useStyle/useScript calls are made by individual views and module dispatchers.
 $wa = $app->getDocument()->getWebAssetManager();
-
-// We register the extension registry because in modules and plugins, the registry is not automatically loaded
 $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
-$wa->useStyle('com_proclaim.cwmcore')
-    ->useScript('com_proclaim.cwmcorejs');
+
+// Admin pages load core assets globally; front-end views load them on demand
+// to avoid render-blocking CSS/JS on pages that don't need them.
+if ($app->isClient('administrator')) {
+    $wa->useStyle('com_proclaim.cwmcore')
+        ->useScript('com_proclaim.cwmcorejs');
+}
 
 // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
 $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
