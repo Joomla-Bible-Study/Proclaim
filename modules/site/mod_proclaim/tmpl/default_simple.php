@@ -48,7 +48,7 @@ foreach ($list as $study) {
                 echo $study->teachername; ?></span></dd>
 
         <dd class="category-name">
-            <span class="fas fa-bible" aria-hidden="true"></span>
+            <span class="fa-solid fa-book-bible" aria-hidden="true"></span>
             <?php
             echo $study->scripture1; ?>    </dd>
 

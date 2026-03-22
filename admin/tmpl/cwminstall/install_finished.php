@@ -39,7 +39,7 @@ $finishedKey = match ($this->installType) {
         <!-- Error State -->
         <div class="alert alert-danger">
             <h4 class="alert-heading">
-                <i class="fas fa-exclamation-triangle me-2"></i>
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
                 <?php echo Text::_('JBS_MIG_MYSQL_ERRORS'); ?>
             </h4>
             <p><?php echo Text::_('JBS_MIG_MYSQL_ERRORS_DESC'); ?></p>
@@ -52,7 +52,7 @@ $finishedKey = match ($this->installType) {
         <!-- Success State -->
         <div class="card bg-success text-white">
             <div class="card-body text-center py-4">
-                <i class="fas fa-check-circle mb-3" style="font-size: 4rem;"></i>
+                <i class="fa-solid fa-circle-check mb-3" style="font-size: 4rem;"></i>
                 <h2 class="card-title mb-2">
                     <?php echo Text::sprintf('JBS_INS_INSTALLATION_RESULTS', Text::_($finishedKey)); ?>
                 </h2>
@@ -69,7 +69,7 @@ $finishedKey = match ($this->installType) {
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-puzzle-piece me-2"></i>
+                    <i class="fa-solid fa-puzzle-piece me-2"></i>
                     <?php echo Text::_('JBS_MIG_EXTENSION_STATUS'); ?>
                 </h5>
             </div>
@@ -86,13 +86,13 @@ $finishedKey = match ($this->installType) {
                         <!-- Component -->
                         <tr>
                             <td>
-                                <i class="fas fa-cube me-2 text-primary"></i>
+                                <i class="fa-solid fa-cube me-2 text-primary"></i>
                                 Proclaim Component
                             </td>
                             <td><span class="badge bg-primary">Component</span></td>
                             <td class="text-center">
                                 <span class="badge bg-success">
-                                    <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                    <i class="fa-solid fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
                                 </span>
                             </td>
                         </tr>
@@ -102,7 +102,7 @@ $finishedKey = match ($this->installType) {
                             <?php foreach ($this->status->cwmmodules as $module): ?>
                             <tr>
                                 <td>
-                                    <i class="fas fa-th-large me-2 text-info"></i>
+                                    <i class="fa-solid fa-table-cells-large me-2 text-info"></i>
                                     <?php echo Text::_(strtoupper($module['name'])); ?>
                                 </td>
                                 <td>
@@ -112,11 +112,11 @@ $finishedKey = match ($this->installType) {
                                 <td class="text-center">
                                     <?php if ($module['result']): ?>
                                     <span class="badge bg-success">
-                                        <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                        <i class="fa-solid fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
                                     </span>
                                     <?php else: ?>
                                     <span class="badge bg-danger">
-                                        <i class="fas fa-times me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
+                                        <i class="fa-solid fa-xmark me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
                                     </span>
                                     <?php endif; ?>
                                 </td>
@@ -129,7 +129,7 @@ $finishedKey = match ($this->installType) {
                             <?php foreach ($this->status->cwmplugins as $plugin): ?>
                             <tr>
                                 <td>
-                                    <i class="fas fa-plug me-2 text-warning"></i>
+                                    <i class="fa-solid fa-plug me-2 text-warning"></i>
                                     <?php echo Text::_(strtoupper($plugin['name'])); ?>
                                 </td>
                                 <td>
@@ -139,11 +139,11 @@ $finishedKey = match ($this->installType) {
                                 <td class="text-center">
                                     <?php if ($plugin['result']): ?>
                                     <span class="badge bg-success">
-                                        <i class="fas fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
+                                        <i class="fa-solid fa-check me-1"></i><?php echo Text::_('JBS_MIG_INSTALLED'); ?>
                                     </span>
                                     <?php else: ?>
                                     <span class="badge bg-danger">
-                                        <i class="fas fa-times me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
+                                        <i class="fa-solid fa-xmark me-1"></i><?php echo Text::_('JBS_MIG_NOT_INSTALLED'); ?>
                                     </span>
                                     <?php endif; ?>
                                 </td>
@@ -159,7 +159,7 @@ $finishedKey = match ($this->installType) {
         <div class="card mb-4">
             <div class="card-header bg-info text-white">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-tasks me-2"></i>
+                    <i class="fa-solid fa-list-check me-2"></i>
                     <?php echo Text::_('JBS_MIG_NEXT_STEPS'); ?>
                 </h5>
             </div>
@@ -176,7 +176,7 @@ $finishedKey = match ($this->installType) {
         <!-- Action Button -->
         <div class="d-grid gap-2 mb-4">
             <a href="<?php echo Route::_('index.php?option=com_proclaim'); ?>" class="btn btn-primary btn-lg">
-                <i class="fas fa-home me-2"></i>
+                <i class="fa-solid fa-house me-2"></i>
                 <?php echo Text::_('JBS_INS_CLICK_TO_FINISH'); ?>
             </a>
         </div>
@@ -188,7 +188,7 @@ $finishedKey = match ($this->installType) {
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-life-ring me-2"></i>
+                    <i class="fa-solid fa-life-ring me-2"></i>
                     <?php echo Text::_('JBS_MIG_SUPPORT'); ?>
                 </h5>
             </div>
@@ -198,27 +198,27 @@ $finishedKey = match ($this->installType) {
                         <a href="https://www.christianwebministries.org/support/user-help-forum.html"
                            target="_blank"
                            class="text-decoration-none">
-                            <i class="fas fa-comments me-2 text-primary"></i>
+                            <i class="fa-solid fa-comments me-2 text-primary"></i>
                             <?php echo Text::_('JBS_INS_VISIT_FORUM'); ?>
-                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                            <i class="fa-solid fa-up-right-from-square ms-1 small"></i>
                         </a>
                     </li>
                     <li class="mb-3">
                         <a href="https://www.christianwebministries.org/documentation.html"
                            target="_blank"
                            class="text-decoration-none">
-                            <i class="fas fa-book me-2 text-success"></i>
+                            <i class="fa-solid fa-book me-2 text-success"></i>
                             <?php echo Text::_('JBS_INS_VISIT_DOCUMENTATION'); ?>
-                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                            <i class="fa-solid fa-up-right-from-square ms-1 small"></i>
                         </a>
                     </li>
                     <li>
                         <a href="https://www.christianwebministries.org"
                            target="_blank"
                            class="text-decoration-none">
-                            <i class="fas fa-globe me-2 text-info"></i>
+                            <i class="fa-solid fa-globe me-2 text-info"></i>
                             <?php echo Text::_('JBS_INS_GET_MORE_HELP'); ?>
-                            <i class="fas fa-external-link-alt ms-1 small"></i>
+                            <i class="fa-solid fa-up-right-from-square ms-1 small"></i>
                         </a>
                     </li>
                 </ul>
@@ -229,7 +229,7 @@ $finishedKey = match ($this->installType) {
         <div class="card border-warning">
             <div class="card-header bg-warning">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-bell me-2"></i>
+                    <i class="fa-solid fa-bell me-2"></i>
                     <?php echo Text::_('JBS_MIG_POST_INSTALL_NOTICE'); ?>
                 </h5>
             </div>

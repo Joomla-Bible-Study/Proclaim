@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -149,6 +150,13 @@ class CwmmediafileModel extends AdminModel
 
             if ($path->get('path')) {
                 $set_path = $path->get('path') . '/';
+            }
+
+            // Normalize FA5 icon classes to FA6 canonical on save
+            $iconType = $params->get('media_icon_type', '');
+
+            if ($iconType !== '' && $iconType !== '1') {
+                $params->set('media_icon_type', Cwmmedia::normalizeIconClass($iconType));
             }
 
             // Normalize URLs to canonical embed format on save

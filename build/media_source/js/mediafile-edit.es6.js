@@ -53,14 +53,14 @@
      */
     function getTypeIcon(type) {
         const icons = {
-            local:   'fas fa-server',
-            youtube: 'fab fa-youtube',
-            vimeo:   'fab fa-vimeo',
-            wistia:  'fas fa-play-circle',
-            resi:    'fas fa-signal',
-            legacy:  'fas fa-archive',
+            local:   'fa-solid fa-server',
+            youtube: 'fa-brands fa-youtube',
+            vimeo:   'fa-brands fa-vimeo',
+            wistia:  'fa-solid fa-circle-play',
+            resi:    'fa-solid fa-signal',
+            legacy:  'fa-solid fa-box-archive',
         };
-        return icons[(type || '').toLowerCase()] || 'fas fa-cloud';
+        return icons[(type || '').toLowerCase()] || 'fa-solid fa-cloud';
     }
 
     /**

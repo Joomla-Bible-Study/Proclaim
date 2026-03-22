@@ -789,7 +789,7 @@ class CwmpIconvert
                     $filename          = $path . $pi->video_link;
                     $filename          = $db->escape($filename);
                     $media             = new \stdClass();
-                    $media->params     = '{"size":"' . $filesize . ',"filename":"' . $filename . ',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = '{"size":"' . $filesize . ',"filename":"' . $filename . ',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-solid fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
                     $media->study_id   = $newid;
                     $media->server_id  = $this->legacyvideo;
                     $media->podcast_id = $this->insertPodcast($pi);
@@ -811,7 +811,7 @@ class CwmpIconvert
                     $media             = new \stdClass();
                     $mediacode         = '<iframe src="https://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0" loading="lazy"></iframe> ';
                     $mediacode         = $db->escape($mediacode);
-                    $media->params     = '{"filename":"' . $pi->video_link . '","link_type":"","player":"5","popup":"1","mediacode":"' . $mediacode . '","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = '{"filename":"' . $pi->video_link . '","link_type":"","player":"5","popup":"1","mediacode":"' . $mediacode . '","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-solid fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
                     $media->study_id   = $newid;
                     $media->server_id  = $this->legacyvideo;
                     $media->podcast_id = $this->insertPodcast($pi);
@@ -834,7 +834,7 @@ class CwmpIconvert
                         . '" allowfullscreen loading="lazy"></iframe>';
                     $media             = new \stdClass();
                     $mediacode         = $db->escape($mediacode);
-                    $media->params     = '{"filename":"https:\/\/youtu.be\/' . $pi->video_link . '","link_type":"","player":"1","popup":"3","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Watch","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fas fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = '{"filename":"https:\/\/youtu.be\/' . $pi->video_link . '","link_type":"","player":"1","popup":"3","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Watch","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-brands fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
                     $media->study_id   = $newid;
                     $media->server_id  = $this->youtube;
                     $media->podcast_id = $this->insertPodcast($pi);
@@ -865,7 +865,7 @@ class CwmpIconvert
                 '","special":"","player":"7","popup":"3","link_type":"1","media_hours":"' .
                 $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs .
                 '","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Listen",' .
-                '"media_button_color":"","media_icon_type":"fas fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3",' .
+                '"media_button_color":"","media_icon_type":"fa-solid fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3",' .
                 '"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"1"}';
             $media->study_id   = $newid;
             $media->server_id  = 1;
@@ -900,7 +900,7 @@ class CwmpIconvert
             $media->params    = '{"filename":"' . $filename . '","mediacode":"","size":"' . $filesize .
                 '","special":"","player":"0","popup":"3","link_type":"0","media_hours":"","media_minutes":"","media_seconds":"",' .
                 '"docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3",' .
-                '"media_button_text":"Text","media_button_color":"","media_icon_type":"fas fa-sticky-note","media_custom_icon":"",' .
+                '"media_button_text":"Text","media_button_color":"","media_icon_type":"fa-solid fa-note-sticky","media_custom_icon":"",' .
                 '"media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"",' .
                 '"popupmargin":"50","autostart":"false"}';
             $media->study_id   = $newid;
@@ -932,7 +932,7 @@ class CwmpIconvert
                 '","special":"","player":"0","popup":"3","link_type":"0","media_hours":"' . $pi->dur_hrs .
                 '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs .
                 '","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png",' .
-                '"media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fas fa-file-powerpoint",' .
+                '"media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fa-solid fa-file-powerpoint",' .
                 '"media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"",' .
                 '"itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
             $media->study_id   = $newid;

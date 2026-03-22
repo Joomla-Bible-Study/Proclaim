@@ -69,12 +69,12 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                      data-label-upcoming="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'), ENT_QUOTES, 'UTF-8'); ?>">
                     <?php if ($isLive) : ?>
                         <span class="badge bg-danger">
-                            <span class="fas fa-circle me-1" aria-hidden="true"></span>
+                            <span class="fa-solid fa-circle me-1" aria-hidden="true"></span>
                             <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_LIVE_NOW'); ?>
                         </span>
                     <?php elseif ($isUpcoming) : ?>
                         <span class="badge bg-warning text-dark">
-                            <span class="fas fa-clock me-1" aria-hidden="true"></span>
+                            <span class="fa-solid fa-clock me-1" aria-hidden="true"></span>
                             <?php echo Text::_('MOD_PROCLAIM_YOUTUBE_UPCOMING'); ?>
                         </span>
                     <?php endif; ?>
@@ -103,7 +103,7 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                          data-label-live-title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_TITLE'), ENT_QUOTES, 'UTF-8'); ?>"
                          data-label-live-body="<?php echo htmlspecialchars(Text::sprintf('MOD_PROCLAIM_YOUTUBE_NOTIFY_LIVE_BODY', $video['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                         <span role="button" class="mod-proclaim-youtube__notify-btn text-muted small">
-                            <span class="fas fa-bell me-1" aria-hidden="true"></span>
+                            <span class="fa-solid fa-bell me-1" aria-hidden="true"></span>
                             <span class="mod-proclaim-youtube__notify-label"><?php echo Text::_('MOD_PROCLAIM_YOUTUBE_NOTIFY_ME'); ?></span>
                         </span>
                     </div>
@@ -148,12 +148,12 @@ $showLiveBadge   = (bool) $params->get('show_live_badge', 1);
                     <button type="button" class="mod-proclaim-youtube__miniplayer-expand btn btn-sm btn-light"
                             aria-label="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_EXPAND'), ENT_QUOTES, 'UTF-8'); ?>"
                             title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_EXPAND'), ENT_QUOTES, 'UTF-8'); ?>">
-                        <span class="fas fa-expand" aria-hidden="true"></span>
+                        <span class="fa-solid fa-expand" aria-hidden="true"></span>
                     </button>
                     <button type="button" class="mod-proclaim-youtube__miniplayer-close btn btn-sm btn-light"
                             aria-label="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_CLOSE'), ENT_QUOTES, 'UTF-8'); ?>"
                             title="<?php echo htmlspecialchars(Text::_('MOD_PROCLAIM_YOUTUBE_MINI_PLAYER_CLOSE'), ENT_QUOTES, 'UTF-8'); ?>">
-                        <span class="fas fa-times" aria-hidden="true"></span>
+                        <span class="fa-solid fa-xmark" aria-hidden="true"></span>
                     </button>
                 </div>
                 <div class="mod-proclaim-youtube__miniplayer-frame"></div>

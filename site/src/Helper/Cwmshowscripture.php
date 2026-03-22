@@ -233,7 +233,7 @@ class Cwmshowscripture
                     . 'this.setAttribute(\'aria-expanded\', isHidden); return false;">';
 
                 if ((int) $params->get('showpassage_icon', 1) === 1) {
-                    $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
+                    $passage .= '<i class="fa-solid fa-book-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 }
 
@@ -273,7 +273,7 @@ class Cwmshowscripture
                     . 'title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
                 if ((int) $params->get('showpassage_icon', 1) === 1) {
-                    $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
+                    $passage .= '<i class="fa-solid fa-book-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 } else {
                     $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
@@ -610,7 +610,7 @@ class Cwmshowscripture
         $html .= '<p class="text-muted"><em>' . Text::_('JBS_CMN_SCRIPTURE_UNAVAILABLE') . '</em></p>';
         $html .= '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn" '
             . 'id="' . $uid . '">'
-            . '<i class="fas fa-redo" aria-hidden="true"></i> '
+            . '<i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i> '
             . Text::_('JBS_CMN_SCRIPTURE_RETRY') . '</button>';
         $html .= '</div></div></div>';
 

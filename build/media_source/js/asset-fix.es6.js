@@ -172,7 +172,7 @@ class ProclaimAssetFix {
         tbody.innerHTML = `
             <tr>
                 <td colspan="6" class="text-center py-4 text-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
                     ${this.escapeHtml(message)}
                 </td>
             </tr>
@@ -312,7 +312,7 @@ class ProclaimAssetFix {
         const statusMsg = document.getElementById('fix-status-message');
         if (statusMsg) {
             statusMsg.innerHTML = `
-                <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>
                 <span class="text-danger">${Joomla.Text._('JBS_CMN_ERROR')}: ${this.escapeHtml(message)}</span>
             `;
         }

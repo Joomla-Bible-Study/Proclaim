@@ -68,7 +68,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="proclaim-modal-title">
-                  <i class="fas fa-database me-2" aria-hidden="true"></i>
+                  <i class="fa-solid fa-database me-2" aria-hidden="true"></i>
                   <span class="title-text">${Joomla.Text._('JBS_IBM_PROCESSING')}</span>
                 </h5>
               </div>
@@ -86,10 +86,10 @@
               </div>
               <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-danger btn-cancel" aria-label="${Joomla.Text._('JCANCEL')}">
-                  <i class="fas fa-times me-1" aria-hidden="true"></i>${Joomla.Text._('JCANCEL')}
+                  <i class="fa-solid fa-xmark me-1" aria-hidden="true"></i>${Joomla.Text._('JCANCEL')}
                 </button>
                 <button type="button" class="btn btn-success btn-close-modal" style="display: none;" aria-label="${Joomla.Text._('JCLOSE')}">
-                  <i class="fas fa-check me-1" aria-hidden="true"></i>${Joomla.Text._('JCLOSE')}
+                  <i class="fa-solid fa-check me-1" aria-hidden="true"></i>${Joomla.Text._('JCLOSE')}
                 </button>
               </div>
             </div>

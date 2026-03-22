@@ -156,13 +156,13 @@ class HtmlView extends BaseHtmlView
         // Add home button to cpanel
         $toolbar->linkButton('home', 'JBS_CMN_HOME')
             ->url('index.php?option=com_proclaim&view=cwmcpanel')
-            ->icon('fas fa-home')
+            ->icon('fa-solid fa-house')
             ->listCheck(false);
 
         // Add back to admin tools button
         $toolbar->linkButton('back', 'JTOOLBAR_BACK')
             ->url('index.php?option=com_proclaim&view=cwmadmin')
-            ->icon('fas fa-arrow-left')
+            ->icon('fa-solid fa-arrow-left')
             ->listCheck(false);
 
         ToolbarHelper::help('cwmbackup', true);

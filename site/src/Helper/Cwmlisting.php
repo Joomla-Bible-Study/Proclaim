@@ -1057,26 +1057,26 @@ class Cwmlisting
                 } else {
                     if (isset($item->email)) {
                         ($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
+				<span class="fa-solid fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
                             $data .= '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
-						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						<span class="fa-solid fa-globe" style="font-size:20px;" title="Website"></span></a>';
                         }
 
                         if ($item->facebooklink) {
                             $data .= '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
-						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						<span class="fa-brands fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
                         }
 
                         if ($item->twitterlink) {
                             $data .= '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
-						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						<span class="fa-brands fa-x-twitter" style="font-size:20px;" title="Twitter"></span></a>';
                         }
 
                         if ($item->bloglink) {
                             $data .= '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
-						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						<span class="fa-solid fa-note-sticky" style="font-size:20px;" title="Blog"></span></a>';
                         }
 
                         if ($item->link1) {
@@ -1143,7 +1143,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_EMAIL');
                 } else {
                     ($item->email ? $data                                                     = '<a href="mailto:' . $item->email . '">
-					<span class="fas fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
+					<span class="fa-solid fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
                 }
                 break;
 
@@ -1152,7 +1152,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_WEBSITE');
                 } elseif ($item->website) {
                     $data = '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
-                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+                        <span class="fa-solid fa-globe" style="font-size:20px;" title="Website"></span></a>';
                 }
                 break;
 
@@ -1184,7 +1184,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_FACEBOOK');
                 } elseif ($item->facebooklink) {
                     $data = '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
-							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+							<span class="fa-brands fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
                 }
                 break;
 
@@ -1193,7 +1193,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_TWITTER');
                 } elseif ($item->twitterlink) {
                     $data = '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
-							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+							<span class="fa-brands fa-x-twitter" style="font-size:20px;" title="Twitter"></span></a>';
                 }
                 break;
 
@@ -1202,7 +1202,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_BLOG');
                 } elseif ($item->bloglink) {
                     $data = '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
-							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+							<span class="fa-solid fa-note-sticky" style="font-size:20px;" title="Blog"></span></a>';
                 }
                 break;
 
