@@ -438,14 +438,25 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         if ($oldView === '') {
             $path = Uri::getInstance()->getPath();
 
-            // Match /component/biblestudy/ or /component/biblestudy (with optional trailing segments)
-            if (preg_match('#/component/biblestudy(?:/([a-z]+))?#i', $path, $matches)) {
+            // Match /component/biblestudy/view/id/template patterns
+            // e.g., /component/biblestudy/teacher/46/1
+            if (preg_match('#/component/biblestudy(?:/([a-z]+))?(?:/(\d+))?(?:/(\d+))?#i', $path, $matches)) {
                 $oldView = !empty($matches[1]) ? strtolower($matches[1]) : 'sermons';
+
+                // Extract ID and template from path segments
+                if (!empty($matches[2])) {
+                    $params['id'] = $matches[2];
+                }
+
+                if (!empty($matches[3])) {
+                    $params['t'] = $matches[3];
+                }
 
                 // Parse query string params since Joomla may not have populated input
                 $rawQuery = Uri::getInstance()->getQuery();
-                parse_str($rawQuery, $params);
-                $oldTask = strtolower($params['task'] ?? '');
+                parse_str($rawQuery, $queryParams);
+                $params   = array_merge($params, $queryParams);
+                $oldTask  = strtolower($params['task'] ?? '');
             }
         }
 
