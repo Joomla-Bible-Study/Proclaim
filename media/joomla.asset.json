@@ -485,6 +485,17 @@
             ]
         },
         {
+            "name": "com_proclaim.cwmcorejs-admin",
+            "type": "script",
+            "uri": "com_proclaim/cwmcore-admin.min.js",
+            "attributes": {
+                "defer": true
+            },
+            "dependencies": [
+                "core"
+            ]
+        },
+        {
             "name": "com_proclaim.fancybox-vendor-css",
             "type": "style",
             "uri": "media/com_proclaim/vendor/fancybox/fancybox.min.css"

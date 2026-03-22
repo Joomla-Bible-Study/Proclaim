@@ -176,8 +176,8 @@ class HtmlView extends BaseHtmlView
         // Needed to load the article field type for the article selector
         FormHelper::addFieldPath(JPATH_ADMINISTRATOR . '/components/com_content/models/fields/modal');
 
-        // Load the cwmcore script for file size converter
-        $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.cwmcorejs');
+        // Load the admin script for file size converter
+        $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.cwmcorejs-admin');
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {

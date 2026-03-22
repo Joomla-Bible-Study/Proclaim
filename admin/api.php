@@ -102,7 +102,8 @@ $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 // to avoid render-blocking CSS/JS on pages that don't need them.
 if ($app->isClient('administrator')) {
     $wa->useStyle('com_proclaim.cwmcore')
-        ->useScript('com_proclaim.cwmcorejs');
+        ->useScript('com_proclaim.cwmcorejs')
+        ->useScript('com_proclaim.cwmcorejs-admin');
 }
 
 // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
