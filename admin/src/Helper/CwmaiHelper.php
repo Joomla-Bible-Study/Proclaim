@@ -452,11 +452,18 @@ class CwmaiHelper
         }
 
         if (!empty($fields['text'])) {
-            $textInstruction = $index . '. **Study Text** (studytext) — a rich, substantive 3-5 paragraph writeup of '
-                . 'what the teacher actually preached. Cover the main scripture passage, the key points and arguments made, '
-                . 'practical application for the listener, and any memorable illustrations or stories used. '
-                . 'This should read like a detailed sermon recap that someone who missed the message could learn from. '
-                . 'Use simple HTML for paragraphs (<p> tags only). Do not use markdown.';
+            $textInstruction = $index . '. **Study Text** (studytext) — a thorough, detailed writeup of what the teacher '
+                . 'actually preached. This is the primary content piece and should be **substantial** — aim for 6-10 '
+                . 'paragraphs (800-1500 words). Structure it as a comprehensive sermon recap covering:'
+                . "\n   - Opening context and why this scripture matters today"
+                . "\n   - Each major point the teacher made, with supporting scripture"
+                . "\n   - Key illustrations, stories, or real-world examples used"
+                . "\n   - Practical application — what should the listener do differently?"
+                . "\n   - Closing challenge or call to action"
+                . "\n   Someone who missed the sermon should be able to read this and walk away with "
+                . 'the same core understanding and conviction as someone who was there. '
+                . 'Use simple HTML for paragraphs (<p> tags only). Use <strong> for emphasis on key phrases. '
+                . 'Do not use markdown.';
 
             if ($hasChapters) {
                 $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
