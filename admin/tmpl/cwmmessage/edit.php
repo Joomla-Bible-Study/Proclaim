@@ -301,7 +301,7 @@ echo Route::_(
                                 <label class="form-check-label" for="ai-gen-intro"><?php echo Text::_('JBS_CMN_AI_GEN_INTRO'); ?></label>
                             </div>
                             <div class="form-check form-check-inline mb-0">
-                                <input class="form-check-input" type="checkbox" id="ai-gen-text" checked>
+                                <input class="form-check-input" type="checkbox" id="ai-gen-text">
                                 <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?></label>
                             </div>
                             <div class="form-check form-check-inline mb-0">
