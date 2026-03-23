@@ -312,7 +312,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('show_location_media', 'params'); ?>
                     <?php echo $this->form->renderField('popular_limit', 'params'); ?>
                     <?php echo $this->form->renderField('format_popular', 'params'); ?>
-                    <?php echo $this->form->renderField('character_filter', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_PRIVACY_MAINTENANCE'); ?></h3>

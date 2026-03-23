@@ -49,12 +49,7 @@
         </field>
         <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
                description="JBS_ADM_POPULAR_LIMIT_DESC"/>
-        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER"
-               description="JBS_ADM_CHARACTER_FILTER_DESC">
-            <option value="0">JBS_ADM_NO_FILTER</option>
-            <option value="1">JBS_ADM_FILTER</option>
-        </field>
-        <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
+<field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
                description="JBS_ADM_FORMAT_POPULAR_DESC">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
