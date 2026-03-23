@@ -462,8 +462,10 @@ class CwmaiHelper
                 . "\n   - Closing challenge or call to action"
                 . "\n   Someone who missed the sermon should be able to read this and walk away with "
                 . 'the same core understanding and conviction as someone who was there. '
-                . 'Use simple HTML for paragraphs (<p> tags only). Use <strong> for emphasis on key phrases. '
-                . 'Do not use markdown.';
+                . 'Format with clean HTML for comfortable reading. Allowed tags: '
+                . '<p>, <strong>, <em>, <blockquote> (for scripture quotes), '
+                . '<h3> (for section headings within the text), <ul>/<ol>/<li> (for lists of points), '
+                . 'and <br>. Do not use markdown, <h1>, <h2>, or inline styles.';
 
             if ($hasChapters) {
                 $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
