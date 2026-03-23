@@ -410,11 +410,17 @@
         }
 
         if (text) {
-            steps.push([delay, pct, 'Writing study text (this may take a moment)...']);
-            delay += 8000;
-            pct   += 15;
-            steps.push([delay, pct, 'Expanding key points and application...']);
-            delay += 6000;
+            steps.push([delay, pct, 'Writing detailed study text — this takes 1-2 minutes...']);
+            delay += 10000;
+            pct   += 10;
+            steps.push([delay, pct, 'Covering scripture passages and key points...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Adding practical application and illustrations...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Formatting with scripture links...']);
+            delay += 10000;
             pct   += 5;
         }
 
