@@ -314,6 +314,10 @@ class HtmlView extends BaseHtmlView
         // Register language strings used by infinite scroll / load more JS
         Text::script('JBS_CMN_LOAD_MORE');
         Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_LOADING_SLOW');
+        Text::script('JBS_CMN_LOADING_TIMEOUT');
+        Text::script('JBS_CMN_LOADING_ERROR');
+        Text::script('JBS_CMN_RETRY');
         Text::script('JBS_CMN_SHOWING_X_OF_Y');
         Text::script('JBS_CMN_ALL_ITEMS_LOADED');
 
