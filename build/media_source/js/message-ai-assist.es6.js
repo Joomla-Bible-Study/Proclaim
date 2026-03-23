@@ -462,6 +462,7 @@
         const bar       = document.getElementById('ai-progress-bar');
         const text      = document.getElementById('ai-progress-text');
         const container = document.getElementById('ai-progress-steps');
+        let stopped     = false;
 
         if (bar) {
             bar.style.transition = 'width 0.6s ease';
@@ -476,6 +477,10 @@
 
         steps.forEach(([delay, pct, msg]) => {
             const tid = setTimeout(() => {
+                if (stopped) {
+                    return;
+                }
+
                 if (bar) {
                     bar.style.width = `${pct}%`;
                 }
@@ -491,8 +496,53 @@
             timers.push(tid);
         });
 
+        // After all scripted steps finish, start a repeating "pulse" so the
+        // UI never looks frozen — the bar creeps toward 99% and the message
+        // cycles through reassuring phrases.
+        const lastDelay = steps.length > 0 ? steps[steps.length - 1][0] : 0;
+        const pulseMessages = [
+            'AI is composing a detailed response...',
+            'Reviewing scripture references...',
+            'Crafting key points and application...',
+            'Polishing the final text...',
+            'Almost there, just a moment longer...',
+        ];
+        let pulseIndex = 0;
+        let pulsePct   = 96;
+
+        // Start the pulse loop after all scripted steps are done
+        let pulseInterval = null;
+        const pulseStart = setTimeout(() => {
+            if (stopped) {
+                return;
+            }
+
+            pulseInterval = setInterval(() => {
+                if (stopped) {
+                    clearInterval(pulseInterval);
+
+                    return;
+                }
+
+                pulsePct = Math.min(pulsePct + 0.5, 99);
+
+                if (bar) {
+                    bar.style.width = `${pulsePct}%`;
+                }
+
+                if (text) {
+                    text.textContent = pulseMessages[pulseIndex % pulseMessages.length];
+                }
+
+                pulseIndex++;
+            }, 8000);
+        }, lastDelay + 5000);
+        timers.push(pulseStart);
+
         return function stop() {
+            stopped = true;
             timers.forEach(clearTimeout);
+            clearInterval(pulseInterval);
 
             if (bar) {
                 bar.style.width = '100%';
@@ -621,9 +671,20 @@
                     });
                 }
 
-                // Populate AI description and study text
+                // Populate AI description and study text (hidden inputs + rendered previews)
                 document.getElementById('ai-studyintro').value = data.studyintro || '';
                 document.getElementById('ai-studytext').value  = data.studytext || '';
+
+                const introPreview = document.getElementById('ai-studyintro-preview');
+                const textPreview  = document.getElementById('ai-studytext-preview');
+
+                if (introPreview) {
+                    introPreview.innerHTML = data.studyintro || '';
+                }
+
+                if (textPreview) {
+                    textPreview.innerHTML = data.studytext || '';
+                }
 
                 // Handle suggested chapters (only show if user opted in)
                 if (chaptersSection) {
