@@ -467,9 +467,11 @@ class CwmaiHelper
                 . '<h3> (for section headings within the text), <ul>/<ol>/<li> (for lists of points), '
                 . 'and <br>. Do not use markdown, <h1>, <h2>, or inline styles. '
                 . 'IMPORTANT: When referencing Bible verses, wrap them with the scripture plugin tag '
-                . 'so they become interactive links. Use the format: {scripture}Book Chapter:Verse{/scripture}. '
-                . 'Examples: {scripture}John 3:16{/scripture}, {scripture}Ephesians 4:14-16{/scripture}, '
-                . '{scripture}Romans 8:28-30{/scripture}. Do NOT use plain text or HTML links for scripture references.';
+                . 'so they become interactive tooltip links. Use the format: '
+                . '{scripture display="tooltip"}Book Chapter:Verse{/scripture}. '
+                . 'Examples: {scripture display="tooltip"}John 3:16{/scripture}, '
+                . '{scripture display="tooltip"}Ephesians 4:14-16{/scripture}. '
+                . 'Do NOT use plain text or HTML links for scripture references.';
 
             if ($hasChapters) {
                 $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
