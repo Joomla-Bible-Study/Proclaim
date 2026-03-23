@@ -377,19 +377,60 @@
     // ---- AI Assist ----
 
     /**
-     * Animated progress steps shown while the API call is in flight.
+     * Build progress steps based on which fields are being generated.
      * Each entry is [delay_ms, progress_percent, message].
+     *
+     * @param {boolean} topics    Generating topics
+     * @param {boolean} intro     Generating intro
+     * @param {boolean} text      Generating study text
+     * @param {boolean} chapters  Generating chapters
+     * @returns {Array}
      */
-    const progressSteps = [
-        [0,     5,  'Gathering sermon context...'],
-        [1200,  15, 'Reading title and scripture references...'],
-        [2500,  30, 'Analyzing attached media...'],
-        [4000,  45, 'Sending to AI provider...'],
-        [6000,  60, 'Generating topics...'],
-        [8500,  75, 'Writing description and study text...'],
-        [11000, 85, 'Formatting response...'],
-        [14000, 90, 'Almost done...'],
-    ];
+    function buildProgressSteps(topics, intro, text, chapters) {
+        const steps = [
+            [0,    5,  'Gathering sermon context...'],
+            [1200, 15, 'Reading title and scripture references...'],
+            [2500, 25, 'Analyzing attached media...'],
+            [4000, 35, 'Sending to AI provider...'],
+        ];
+
+        let delay = 6000;
+        let pct   = 40;
+
+        if (topics) {
+            steps.push([delay, pct, 'Generating topics...']);
+            delay += 2500;
+            pct   += 10;
+        }
+
+        if (intro) {
+            steps.push([delay, pct, 'Writing description...']);
+            delay += 3000;
+            pct   += 10;
+        }
+
+        if (text) {
+            steps.push([delay, pct, 'Writing study text (this may take a moment)...']);
+            delay += 8000;
+            pct   += 15;
+            steps.push([delay, pct, 'Expanding key points and application...']);
+            delay += 6000;
+            pct   += 5;
+        }
+
+        if (chapters) {
+            steps.push([delay, pct, 'Suggesting chapter timestamps...']);
+            delay += 3000;
+            pct   += 5;
+        }
+
+        steps.push([delay, Math.min(pct + 5, 90), 'Formatting response...']);
+        steps.push([delay + 4000, 92, 'Almost done...']);
+        steps.push([delay + 10000, 94, 'Still working...']);
+        steps.push([delay + 18000, 96, 'Wrapping up...']);
+
+        return steps;
+    }
 
     /**
      * Add a completed step to the progress list.
@@ -414,9 +455,10 @@
     /**
      * Start the progress animation. Returns a stop function.
      *
+     * @param {Array} steps  Progress steps from buildProgressSteps()
      * @returns {Function}  Call to stop and clean up timers.
      */
-    function startProgress() {
+    function startProgress(steps) {
         const bar       = document.getElementById('ai-progress-bar');
         const text      = document.getElementById('ai-progress-text');
         const container = document.getElementById('ai-progress-steps');
@@ -432,7 +474,7 @@
 
         const timers = [];
 
-        progressSteps.forEach(([delay, pct, msg]) => {
+        steps.forEach(([delay, pct, msg]) => {
             const tid = setTimeout(() => {
                 if (bar) {
                     bar.style.width = `${pct}%`;
@@ -490,7 +532,9 @@
             aiRes.style.display  = 'none';
             modal.show();
 
-            const stopProgress = startProgress();
+            const stopProgress = startProgress(
+                buildProgressSteps(wantTopics, wantIntro, wantText, wantChapters),
+            );
 
             const titleEl  = document.getElementById('jform_studytitle');
             const formData = new FormData();
