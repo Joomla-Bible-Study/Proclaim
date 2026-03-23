@@ -36,12 +36,30 @@
     function getEditorValue(fieldName) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        // Joomla 6+: JoomlaEditor API
         if (typeof JoomlaEditor !== 'undefined') {
             const editor = JoomlaEditor.get(editorId);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
+            }
+        }
+
+        // Joomla 5: Joomla.editors registry
+        if (typeof Joomla !== 'undefined' && Joomla.editors && Joomla.editors.instances) {
+            const instance = Joomla.editors.instances[editorId];
+
+            if (instance && typeof instance.getValue === 'function') {
+                return instance.getValue();
+            }
+        }
+
+        // TinyMCE direct access
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                return editor.getContent();
             }
         }
 
@@ -59,7 +77,7 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        // Joomla 6+: JoomlaEditor API
         if (typeof JoomlaEditor !== 'undefined') {
             const editor = JoomlaEditor.get(editorId);
 
@@ -70,6 +88,30 @@
             }
         }
 
+        // Joomla 5: Joomla.editors registry (covers TinyMCE, JCE, etc.)
+        if (typeof Joomla !== 'undefined' && Joomla.editors && Joomla.editors.instances) {
+            const instance = Joomla.editors.instances[editorId];
+
+            if (instance && typeof instance.setValue === 'function') {
+                instance.setValue(value);
+
+                return;
+            }
+        }
+
+        // TinyMCE direct access (fallback if not registered in Joomla.editors)
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                editor.setContent(value);
+                editor.save();
+
+                return;
+            }
+        }
+
+        // Raw textarea fallback (CodeMirror, none editor)
         const el = document.getElementById(editorId);
 
         if (el) {
