@@ -36,25 +36,17 @@
     function getEditorValue(fieldName) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API
+        // JoomlaEditor API (J5.1+ / J6+)
         if (typeof JoomlaEditor !== 'undefined') {
-            const editor = JoomlaEditor.get(editorId);
+            // Try exact ID first, then with jform_ prefix variations
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
             }
         }
 
-        // Joomla 5: Joomla.editors registry
-        if (typeof Joomla !== 'undefined' && Joomla.editors && Joomla.editors.instances) {
-            const instance = Joomla.editors.instances[editorId];
-
-            if (instance && typeof instance.getValue === 'function') {
-                return instance.getValue();
-            }
-        }
-
-        // TinyMCE direct access
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
         if (typeof tinyMCE !== 'undefined') {
             const editor = tinyMCE.get(editorId);
 
@@ -63,6 +55,7 @@
             }
         }
 
+        // Raw textarea fallback (CodeMirror, none editor)
         const el = document.getElementById(editorId);
 
         return el ? el.value : '';
@@ -77,9 +70,9 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API
+        // JoomlaEditor API (J5.1+ / J6+)
         if (typeof JoomlaEditor !== 'undefined') {
-            const editor = JoomlaEditor.get(editorId);
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.setValue === 'function') {
                 editor.setValue(value);
@@ -88,18 +81,7 @@
             }
         }
 
-        // Joomla 5: Joomla.editors registry (covers TinyMCE, JCE, etc.)
-        if (typeof Joomla !== 'undefined' && Joomla.editors && Joomla.editors.instances) {
-            const instance = Joomla.editors.instances[editorId];
-
-            if (instance && typeof instance.setValue === 'function') {
-                instance.setValue(value);
-
-                return;
-            }
-        }
-
-        // TinyMCE direct access (fallback if not registered in Joomla.editors)
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
         if (typeof tinyMCE !== 'undefined') {
             const editor = tinyMCE.get(editorId);
 
