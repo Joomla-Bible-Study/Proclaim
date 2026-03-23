@@ -27,11 +27,8 @@
         </sql>
     </install>
 
-    <uninstall>
-        <sql>
-            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-        </sql>
-    </uninstall>
+    <!-- Uninstall SQL is handled conditionally by proclaim.script.php
+         based on the drop_tables admin setting. -->
 
     <update>
         <schemas>

@@ -317,7 +317,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_PRIVACY_MAINTENANCE'); ?></h3>
                     <?php echo $this->form->renderField('gdpr_mode', 'params'); ?>
-                    <?php echo $this->form->renderField('compat_mode', 'params'); ?>
+
                     <?php echo $this->form->renderField('filestokeep'); ?>
                     <?php echo $this->form->renderField('drop_tables'); ?>
                     <?php echo $this->form->renderField('debug'); ?>

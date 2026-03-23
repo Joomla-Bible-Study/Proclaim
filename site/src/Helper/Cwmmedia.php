@@ -977,26 +977,8 @@ class Cwmmedia
         }
 
         if ($link_type > 0) {
-            $compat_mode = (int)$params->get('compat_mode');
-
-            if ($compat_mode === 0) {
-                $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
-                    $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
-            } else {
-                $url = Cwmhelper::mediaBuildUrl(
-                    $media->sparams->get('path'),
-                    $media->params->get('filename'),
-                    $params,
-                    true
-                );
-
-                $size = $media->params->get('size', 0);
-
-                $url = Cwmhelper::removeHttp($url);
-
-                $downloadLink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
-                    $url . '&amp;size=' . $size . '">';
-            }
+            $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
+                $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
 
             // Check to see if they want to use a popup
             $app   = Factory::getApplication();

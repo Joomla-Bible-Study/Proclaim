@@ -656,13 +656,127 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function uninstall($parent): bool
     {
+        // Drop tables if the admin setting is enabled
+        $this->dropTablesIfRequested();
+
         // Uninstall sub-extensions
         $this->uninstallSubExtensions();
+
+        // Clean up post-install messages
+        $this->cleanupPostInstallMessages();
 
         // Show the post-uninstalling page
         $this->renderPostUninstallation($this->status, $parent);
 
         return true;
+    }
+
+    /**
+     * Drop all Proclaim database tables if the admin setting is enabled.
+     *
+     * Reads the drop_tables flag from #__bsms_admin. When enabled,
+     * removes all component assets and drops tables using the uninstall SQL.
+     *
+     * @return void
+     *
+     * @since 10.3.0
+     */
+    private function dropTablesIfRequested(): void
+    {
+        try {
+            // Check if the admin table exists
+            $table = $this->dbo->getPrefix() . 'bsms_admin';
+            $this->dbo->setQuery("SHOW TABLES LIKE " . $this->dbo->quote($table));
+
+            if (!$this->dbo->loadResult()) {
+                return;
+            }
+
+            $query = $this->dbo->getQuery(true)
+                ->select($this->dbo->quoteName('drop_tables'))
+                ->from($this->dbo->quoteName('#__bsms_admin'))
+                ->where($this->dbo->quoteName('id') . ' = 1');
+            $this->dbo->setQuery($query);
+            $dropTables = (int) $this->dbo->loadResult();
+
+            if ($dropTables < 1) {
+                return;
+            }
+
+            // Remove component assets
+            $query = $this->dbo->getQuery(true)
+                ->select($this->dbo->quoteName('id'))
+                ->from($this->dbo->quoteName('#__assets'))
+                ->where($this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $parentId = (int) $this->dbo->loadResult();
+
+            if ($parentId > 0) {
+                $query = $this->dbo->getQuery(true)
+                    ->delete($this->dbo->quoteName('#__assets'))
+                    ->where($this->dbo->quoteName('parent_id') . ' = ' . (int) $parentId)
+                    ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+                $this->dbo->setQuery($query);
+                $this->dbo->execute();
+            }
+
+            $query = $this->dbo->getQuery(true)
+                ->delete($this->dbo->quoteName('#__assets'))
+                ->where($this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim%'))
+                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+            $this->dbo->setQuery($query);
+            $this->dbo->execute();
+
+            // Run the uninstall SQL
+            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
+
+            if (!file_exists($sqlFile)) {
+                return;
+            }
+
+            $buffer = file_get_contents($sqlFile);
+
+            if ($buffer === false) {
+                return;
+            }
+
+            $queries = DatabaseDriver::splitSql($buffer);
+
+            foreach ($queries as $singleQuery) {
+                $singleQuery = trim($singleQuery);
+
+                if ($singleQuery !== '' && $singleQuery[0] !== '#') {
+                    try {
+                        $this->dbo->setQuery($singleQuery);
+                        $this->dbo->execute();
+                    } catch (\Exception $e) {
+                        // Continue dropping remaining tables
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // If anything fails, don't block uninstall
+        }
+    }
+
+    /**
+     * Clean up post-install messages for the component.
+     *
+     * @return void
+     *
+     * @since 10.3.0
+     */
+    private function cleanupPostInstallMessages(): void
+    {
+        try {
+            $query = $this->dbo->getQuery(true)
+                ->delete($this->dbo->quoteName('#__postinstall_messages'))
+                ->where($this->dbo->quoteName('language_extension') . ' = ' . $this->dbo->quote('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $this->dbo->execute();
+        } catch (\Exception $e) {
+            // Don't block uninstall
+        }
     }
 
     /**
