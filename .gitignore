@@ -26,9 +26,11 @@ bin/
 out/
 gen/
 
-# Build reports
+# Build reports and output
 build/reports/
 build/__pycache__/
+build/patches/
+build/pkg_proclaim*/
 
 # Generated files
 /admin/proclaim.xml
