@@ -112,7 +112,9 @@ class CwmaiHelper
         // the AI can infer logical structure from sermon content alone.
         $suggestChapters = $wantChapters && !$hasChapters;
 
-        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
+        $voice        = $params->get('ai_voice', 'third_person');
+        $teacherName  = $context['teacher_name'] ?? '';
+        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters, $voice, $teacherName);
         $userMessage  = self::buildUserMessage($context);
 
         $result = match ($provider) {
@@ -406,13 +408,31 @@ class CwmaiHelper
     private static function buildSystemPrompt(
         array $fields = ['topics' => true, 'intro' => true, 'text' => true],
         bool $hasChapters = false,
-        bool $suggestChapters = false
+        bool $suggestChapters = false,
+        string $voice = 'third_person',
+        string $teacherName = ''
     ): string {
         $instructions = [];
         $jsonKeys     = [];
 
+        $voiceGuide = match ($voice) {
+            'first_person'   => 'Write from the teacher\'s perspective in first person'
+                . ($teacherName ? ' (as ' . $teacherName . ')' : '')
+                . '. Use "I", "we", and "us". Sound warm, personal, and pastoral — '
+                . 'as if the teacher is describing their own message to a friend.',
+            'conversational' => 'Write in a warm, conversational tone that speaks directly to the listener. '
+                . 'Use "you" and "we". Ask engaging questions. Sound like a trusted friend '
+                . 'inviting someone to listen, not a catalog description.',
+            'summary'        => 'Write in a concise, factual style with no narrative voice. '
+                . 'Focus on the scripture references, key themes, and practical takeaways. '
+                . 'Keep sentences short and informative.',
+            default          => 'Write in third person.'
+                . ($teacherName ? ' Refer to the teacher as ' . $teacherName . '.' : ''),
+        };
+
         $instructions[] = 'You are a ministry content assistant helping organize sermon and Bible study records. '
-            . 'Your task is to analyze sermon information and generate the requested content.';
+            . 'Your task is to analyze sermon information and generate the requested content. '
+            . $voiceGuide;
 
         $index = 1;
 
@@ -426,14 +446,16 @@ class CwmaiHelper
 
         if (!empty($fields['intro'])) {
             $instructions[] = $index . '. **Study Introduction** (studyintro) — a compelling 2-3 sentence summary suitable '
-                . 'for display in sermon listings and search results. Write in third person. Do not use markdown formatting.';
+                . 'for display in sermon listings and search results. Do not use markdown formatting.';
             $jsonKeys[] = '"studyintro":"Brief summary..."';
             $index++;
         }
 
         if (!empty($fields['text'])) {
-            $textInstruction = $index . '. **Study Text** (studytext) — a more detailed 2-4 paragraph description that '
-                . 'expands on the sermon\'s themes, key points, and application. Write in third person. '
+            $textInstruction = $index . '. **Study Text** (studytext) — a rich, substantive 3-5 paragraph writeup of '
+                . 'what the teacher actually preached. Cover the main scripture passage, the key points and arguments made, '
+                . 'practical application for the listener, and any memorable illustrations or stories used. '
+                . 'This should read like a detailed sermon recap that someone who missed the message could learn from. '
                 . 'Use simple HTML for paragraphs (<p> tags only). Do not use markdown.';
 
             if ($hasChapters) {

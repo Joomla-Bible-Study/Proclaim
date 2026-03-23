@@ -500,6 +500,10 @@
             // Prefer YouTube media file for video context (chapters, tags, description)
             formData.append('media_file_id', youtubeMediaId || mediaId);
 
+            // Send teacher ID so the server can look up the teacher name for AI voice
+            const teacherEl = document.getElementById('jform_teacher_id');
+            formData.append('teacher_id', teacherEl ? teacherEl.value : '0');
+
             // Append toggle flags
             formData.append('generate_topics', wantTopics ? '1' : '0');
             formData.append('generate_intro', wantIntro ? '1' : '0');
