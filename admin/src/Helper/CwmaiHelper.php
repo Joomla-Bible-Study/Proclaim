@@ -600,7 +600,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'      => $model,
-            'max_tokens' => 2048,
+            'max_tokens' => 8192,
             'system'     => $systemPrompt,
             'messages'   => [
                 ['role' => 'user', 'content' => $userMessage],
@@ -675,7 +675,7 @@ class CwmaiHelper
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 4096,
+                'maxOutputTokens'  => 8192,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -733,7 +733,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'       => $model,
-            'max_tokens'  => 2048,
+            'max_tokens'  => 8192,
             'temperature' => 0.7,
             'messages'    => [
                 ['role' => 'system', 'content' => $systemPrompt],
