@@ -1184,8 +1184,8 @@ class com_proclaimInstallerScript extends InstallerScript
                 'result' => $result,
             ];
 
-            if ($isNewInstall && $result) {
-                $this->configureModule($module, $client, $preferences);
+            if ($result) {
+                $this->configureModule($module, $client, $preferences, $isNewInstall);
             }
         }
     }
@@ -1193,17 +1193,34 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Configure a module after installation
      *
-     * @param   string  $module       Module name
-     * @param   string  $client       Client
-     * @param   array   $preferences  Preferences
+     * @param   string  $module        Module name
+     * @param   string  $client        Client
+     * @param   array   $preferences   Preferences
+     * @param   bool    $isNewInstall  True on first install, false on update
      *
      * @return void
      * @since 10.1.0
      */
-    private function configureModule(string $module, string $client, array $preferences): void
+    private function configureModule(string $module, string $client, array $preferences, bool $isNewInstall = true): void
     {
         [$position, $published] = (array) $preferences;
         $element                = 'mod_' . $module;
+
+        // On update, only set defaults if the module has no params yet.
+        // This avoids overwriting user customizations.
+        if (!$isNewInstall && $module === 'proclaimicon') {
+            $check = $this->dbo->getQuery(true)
+                ->select($this->dbo->qn('params'))
+                ->from($this->dbo->qn('#__modules'))
+                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
+            $this->dbo->setQuery($check);
+            $existing = (string) $this->dbo->loadResult();
+
+            // If params are already populated, skip reconfiguration
+            if ($existing !== '' && $existing !== '{}') {
+                return;
+            }
+        }
 
         $query = $this->dbo->getQuery(true)
             ->update($this->dbo->qn('#__modules'))

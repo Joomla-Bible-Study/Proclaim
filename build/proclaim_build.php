@@ -1062,7 +1062,28 @@ function doPackage(bool $verbose = false): void
         throw new \RuntimeException("Cannot create $pkgZipPath");
     }
 
+    // Package manifest
     $pkgZip->addFile(BUILD_DIR . '/pkg_proclaim.xml', 'pkg_proclaim.xml');
+
+    // Install script
+    $scriptFile = BUILD_DIR . '/script.install.php';
+
+    if (!file_exists($scriptFile)) {
+        throw new \RuntimeException('Package install script not found: ' . $scriptFile);
+    }
+
+    $pkgZip->addFile($scriptFile, 'script.install.php');
+
+    // Language file
+    $langFile = BUILD_DIR . '/language/en-GB/en-GB.pkg_proclaim.sys.ini';
+
+    if (!file_exists($langFile)) {
+        throw new \RuntimeException('Package language file not found: ' . $langFile);
+    }
+
+    $pkgZip->addFile($langFile, 'language/en-GB/en-GB.pkg_proclaim.sys.ini');
+
+    // Child extension packages
     $pkgZip->addFile($packageDir . '/lib_cwmscripture.zip', 'packages/lib_cwmscripture.zip');
     $pkgZip->addFile($packageDir . '/plg_content_scripturelinks.zip', 'packages/plg_content_scripturelinks.zip');
     $pkgZip->addFile($packageDir . '/com_proclaim.zip', 'packages/com_proclaim.zip');
