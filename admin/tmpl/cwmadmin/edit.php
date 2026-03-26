@@ -303,6 +303,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <span id="ai-models-status" class="ms-2 small text-body-secondary"></span>
                         </div>
                     </div>
+                    <?php echo $this->form->renderField('ai_voice', 'params'); ?>
                 </div>
             </div>
             <div class="col-12 col-lg-6">

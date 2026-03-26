@@ -320,6 +320,14 @@
                description="JBS_ADM_AI_MODEL_DESC">
             <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
         </field>
+        <field name="ai_voice" type="list" default="third_person"
+               label="JBS_ADM_AI_VOICE"
+               description="JBS_ADM_AI_VOICE_DESC">
+            <option value="third_person">JBS_ADM_AI_VOICE_THIRD_PERSON</option>
+            <option value="first_person">JBS_ADM_AI_VOICE_FIRST_PERSON</option>
+            <option value="conversational">JBS_ADM_AI_VOICE_CONVERSATIONAL</option>
+            <option value="summary">JBS_ADM_AI_VOICE_SUMMARY</option>
+        </field>
         <field name="yt_auto_import_topics" type="radio" default="0"
                label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"
                description="JBS_ADM_YT_AUTO_IMPORT_TOPICS_DESC"

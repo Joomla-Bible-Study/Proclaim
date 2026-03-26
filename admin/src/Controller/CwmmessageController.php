@@ -319,6 +319,19 @@ class CwmmessageController extends FormController
             'generate_chapters' => (bool) $input->post->getInt('generate_chapters', 1),
         ];
 
+        // Look up teacher name for AI voice context
+        $teacherId = $input->post->getInt('teacher_id', 0);
+
+        if ($teacherId > 0) {
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('teachername'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('id') . ' = ' . (int) $teacherId);
+            $db->setQuery($query);
+            $context['teacher_name'] = (string) $db->loadResult();
+        }
+
         // Attempt to get video metadata from attached media file
         $mediaFileId = $input->post->getInt('media_file_id', 0);
 

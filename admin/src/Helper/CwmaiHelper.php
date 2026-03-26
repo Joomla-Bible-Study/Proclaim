@@ -112,7 +112,9 @@ class CwmaiHelper
         // the AI can infer logical structure from sermon content alone.
         $suggestChapters = $wantChapters && !$hasChapters;
 
-        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
+        $voice        = $params->get('ai_voice', 'third_person');
+        $teacherName  = $context['teacher_name'] ?? '';
+        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters, $voice, $teacherName);
         $userMessage  = self::buildUserMessage($context);
 
         $result = match ($provider) {
@@ -406,13 +408,31 @@ class CwmaiHelper
     private static function buildSystemPrompt(
         array $fields = ['topics' => true, 'intro' => true, 'text' => true],
         bool $hasChapters = false,
-        bool $suggestChapters = false
+        bool $suggestChapters = false,
+        string $voice = 'third_person',
+        string $teacherName = ''
     ): string {
         $instructions = [];
         $jsonKeys     = [];
 
+        $voiceGuide = match ($voice) {
+            'first_person'   => 'Write from the teacher\'s perspective in first person'
+                . ($teacherName ? ' (as ' . $teacherName . ')' : '')
+                . '. Use "I", "we", and "us". Sound warm, personal, and pastoral — '
+                . 'as if the teacher is describing their own message to a friend.',
+            'conversational' => 'Write in a warm, conversational tone that speaks directly to the listener. '
+                . 'Use "you" and "we". Ask engaging questions. Sound like a trusted friend '
+                . 'inviting someone to listen, not a catalog description.',
+            'summary'        => 'Write in a concise, factual style with no narrative voice. '
+                . 'Focus on the scripture references, key themes, and practical takeaways. '
+                . 'Keep sentences short and informative.',
+            default          => 'Write in third person.'
+                . ($teacherName ? ' Refer to the teacher as ' . $teacherName . '.' : ''),
+        };
+
         $instructions[] = 'You are a ministry content assistant helping organize sermon and Bible study records. '
-            . 'Your task is to analyze sermon information and generate the requested content.';
+            . 'Your task is to analyze sermon information and generate the requested content. '
+            . $voiceGuide;
 
         $index = 1;
 
@@ -426,15 +446,32 @@ class CwmaiHelper
 
         if (!empty($fields['intro'])) {
             $instructions[] = $index . '. **Study Introduction** (studyintro) — a compelling 2-3 sentence summary suitable '
-                . 'for display in sermon listings and search results. Write in third person. Do not use markdown formatting.';
+                . 'for display in sermon listings and search results. Do not use markdown formatting.';
             $jsonKeys[] = '"studyintro":"Brief summary..."';
             $index++;
         }
 
         if (!empty($fields['text'])) {
-            $textInstruction = $index . '. **Study Text** (studytext) — a more detailed 2-4 paragraph description that '
-                . 'expands on the sermon\'s themes, key points, and application. Write in third person. '
-                . 'Use simple HTML for paragraphs (<p> tags only). Do not use markdown.';
+            $textInstruction = $index . '. **Study Text** (studytext) — a thorough, detailed writeup of what the teacher '
+                . 'actually preached. This is the primary content piece and should be **substantial** — aim for 6-10 '
+                . 'paragraphs (800-1500 words). Structure it as a comprehensive sermon recap covering:'
+                . "\n   - Opening context and why this scripture matters today"
+                . "\n   - Each major point the teacher made, with supporting scripture"
+                . "\n   - Key illustrations, stories, or real-world examples used"
+                . "\n   - Practical application — what should the listener do differently?"
+                . "\n   - Closing challenge or call to action"
+                . "\n   Someone who missed the sermon should be able to read this and walk away with "
+                . 'the same core understanding and conviction as someone who was there. '
+                . 'Format with clean HTML for comfortable reading. Allowed tags: '
+                . '<p>, <strong>, <em>, <blockquote> (for scripture quotes), '
+                . '<h3> (for section headings within the text), <ul>/<ol>/<li> (for lists of points), '
+                . 'and <br>. Do not use markdown, <h1>, <h2>, or inline styles. '
+                . 'IMPORTANT: When referencing Bible verses, wrap them with the scripture plugin tag '
+                . 'so they become interactive tooltip links. Use the format: '
+                . '{scripture display="tooltip"}Book Chapter:Verse{/scripture}. '
+                . 'Examples: {scripture display="tooltip"}John 3:16{/scripture}, '
+                . '{scripture display="tooltip"}Ephesians 4:14-16{/scripture}. '
+                . 'Do NOT use plain text or HTML links for scripture references.';
 
             if ($hasChapters) {
                 $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
@@ -563,7 +600,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'      => $model,
-            'max_tokens' => 2048,
+            'max_tokens' => 8192,
             'system'     => $systemPrompt,
             'messages'   => [
                 ['role' => 'user', 'content' => $userMessage],
@@ -638,7 +675,7 @@ class CwmaiHelper
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 4096,
+                'maxOutputTokens'  => 8192,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -696,7 +733,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'       => $model,
-            'max_tokens'  => 2048,
+            'max_tokens'  => 8192,
             'temperature' => 0.7,
             'messages'    => [
                 ['role' => 'system', 'content' => $systemPrompt],
