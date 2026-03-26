@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
@@ -121,6 +122,8 @@ class CwmsermonsController extends BaseController
         $app = Factory::getApplication();
         header('Content-Type: application/json; charset=utf-8');
 
+        CwmDebug::startTimer('filterAjax');
+
         try {
             // Flatten bracket-format params (filter[teacher] → filter_teacher) so
             // the model's getUserStateFromRequest() finds them by their flat keys.
@@ -151,15 +154,19 @@ class CwmsermonsController extends BaseController
             $template = $state->get('template');
             $params   = $state->get('params');
 
+            CwmDebug::startTimer('filterAjax.query');
             $items      = $model->getItems();
             $pagination = $model->getPagination();
+            CwmDebug::stopTimer('filterAjax.query', 'items=' . \count($items ?? []));
 
             // Render the listing HTML using the same helper the template uses.
             $listing = new Cwmlisting();
             $html    = '';
 
             if ($items) {
+                CwmDebug::startTimer('filterAjax.render');
                 $html = $listing->getFluidListing($items, $params, $template, 'sermons');
+                CwmDebug::stopTimer('filterAjax.render');
             }
 
             // Build cross-filtered dropdown options so the client can
@@ -194,7 +201,9 @@ class CwmsermonsController extends BaseController
                 $filterOptions[$fieldName] = $options;
             }
 
-            echo json_encode([
+            CwmDebug::stopTimer('filterAjax', 'total=' . $pagination->total);
+
+            $response = [
                 'success'        => true,
                 'html'           => $html,
                 'pagination'     => $pagination->getPagesLinks(),
@@ -203,7 +212,15 @@ class CwmsermonsController extends BaseController
                 'pagesTotal'     => $pagination->pagesTotal,
                 'showPagination' => (string) $params->get('show_pagination', '2'),
                 'filterOptions'  => $filterOptions,
-            ], JSON_THROW_ON_ERROR);
+            ];
+
+            $debugBuffer = CwmDebug::getBuffer();
+
+            if (!empty($debugBuffer)) {
+                $response['_debug'] = $debugBuffer;
+            }
+
+            echo json_encode($response, JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
                 'success' => false,

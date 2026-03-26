@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
@@ -631,15 +632,10 @@ class CwmadminModel extends AdminModel
             if ($search && !empty($from)) {
                 $account++;
 
-                if (JBSMDEBUG) {
-                    $msg .= ' From: ' . $from . '<br />';
-
-                    if ($reg->get('mime_type', 0) == $from) {
-                        $msg .= ' MimeType: ' . $reg->get('mime_type') . '<br />';
-                    }
-
-                    $msg .= ' Search found FileName: ' . $filename . '<br />';
-                }
+                CwmDebug::log(
+                    'MIME from=' . $from . ' mime=' . $reg->get('mime_type', '') . ' file=' . $filename,
+                    'mime'
+                );
 
                 $reg->set('player', $to);
 

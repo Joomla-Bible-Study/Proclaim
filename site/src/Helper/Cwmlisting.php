@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\CMSApplicationInterface;
@@ -64,6 +65,8 @@ class Cwmlisting
      */
     public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
+        CwmDebug::startTimer('getFluidListing');
+
         // Ensure listing CSS is loaded for all frontend views that use this helper
         Factory::getApplication()->getDocument()->getWebAssetManager()
             ->useStyle('com_proclaim.cwmcore');
@@ -471,6 +474,8 @@ class Cwmlisting
         }
 
         $list .= '</div>' . "\n";
+
+        CwmDebug::stopTimer('getFluidListing', 'type=' . $type . ' items=' . \count($items));
 
         return $list;
     }
@@ -1142,7 +1147,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_EMAIL');
                 } else {
-                    ($item->email ? $data                                                     = '<a href="mailto:' . $item->email . '">
+                    ($item->email ? $data                                                          = '<a href="mailto:' . $item->email . '">
 					<span class="fa-solid fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
                 }
                 break;
@@ -2160,7 +2165,7 @@ class Cwmlisting
             $books = $db->loadObjectList();
 
             foreach ($books as $book) {
-                $name = $book->bookname ? Text::_($book->bookname) : '';
+                $name                                         = $book->bookname ? Text::_($book->bookname) : '';
                 self::$bookNameCache[(int) $book->booknumber] = $name;
             }
         }

@@ -14,6 +14,7 @@ namespace CWM\Plugin\System\Proclaim\Extension;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -175,10 +176,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'onAfterInitialise'  => 'onAfterInitialise',
-            'onAfterRoute'       => 'onAfterRoute',
-            'onBeforeRender'     => 'onBeforeRender',
-            'onAfterRender'      => 'onAfterRender',
+            'onAfterInitialise'   => 'onAfterInitialise',
+            'onAfterRoute'        => 'onAfterRoute',
+            'onBeforeRender'      => 'onBeforeRender',
+            'onAfterRender'       => 'onAfterRender',
             'onContentCleanCache' => 'onContentCleanCache',
         ];
     }
@@ -261,6 +262,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         // Admin-only features below
         if (!$this->getApplication()->isClient('administrator')) {
             return;
+        }
+
+        // Flush debug messages to the Joomla message queue for admin pages
+        if ($option === 'com_proclaim') {
+            CwmDebug::showToAdmin();
         }
 
         if ($option === 'com_proclaim') {

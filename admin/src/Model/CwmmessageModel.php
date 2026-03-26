@@ -16,14 +16,15 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
@@ -1053,7 +1054,8 @@ class CwmmessageModel extends AdminModel
                             ->order($db->quoteName('st.ordering') . ' ASC');
                         $db->setQuery($query);
                         $teacherNames = $db->loadColumn() ?: [];
-                    } catch (\Throwable) {
+                    } catch (\Throwable $e) {
+                        CwmDebug::error('Schema teacher lookup failed', $e, 'schemaorg');
                         $teacherNames = [];
                     }
 
@@ -1090,8 +1092,8 @@ class CwmmessageModel extends AdminModel
                         if ($seriesName) {
                             $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
                         }
-                    } catch (\Throwable) {
-                        // DB not available
+                    } catch (\Throwable $e) {
+                        CwmDebug::error('Schema DB lookup failed', $e, 'schemaorg');
                     }
                 }
 
@@ -1115,8 +1117,8 @@ class CwmmessageModel extends AdminModel
                             $translated     = array_map(static fn ($t) => Text::_($t), $topics);
                             $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
                         }
-                    } catch (\Throwable) {
-                        // DB not available
+                    } catch (\Throwable $e) {
+                        CwmDebug::error('Schema DB lookup failed', $e, 'schemaorg');
                     }
                 }
 
@@ -1134,8 +1136,8 @@ class CwmmessageModel extends AdminModel
                         if ($messageType) {
                             $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($messageType)];
                         }
-                    } catch (\Throwable) {
-                        // DB not available
+                    } catch (\Throwable $e) {
+                        CwmDebug::error('Schema DB lookup failed', $e, 'schemaorg');
                     }
                 }
 
@@ -1153,8 +1155,8 @@ class CwmmessageModel extends AdminModel
                         if ($location) {
                             $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
                         }
-                    } catch (\Throwable) {
-                        // DB not available
+                    } catch (\Throwable $e) {
+                        CwmDebug::error('Schema DB lookup failed', $e, 'schemaorg');
                     }
                 }
 

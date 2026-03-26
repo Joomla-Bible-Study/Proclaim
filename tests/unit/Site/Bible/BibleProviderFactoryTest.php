@@ -116,7 +116,8 @@ class BibleProviderFactoryTest extends ProclaimTestCase
         $this->assertContains('local', $names);
         $this->assertContains('getbible', $names);
         $this->assertContains('api_bible', $names);
-        $this->assertCount(3, $names);
+        $this->assertContains('biblebrain', $names);
+        $this->assertCount(4, $names);
     }
 
     /**
