@@ -116,6 +116,7 @@
     "joomla-install": "php build/proclaim_build.php install-joomla",
     "joomla-latest": "php build/proclaim_build.php joomla-latest",
     "symlink": "php build/proclaim_build.php link",
+    "symlink:check": "php build/proclaim_build.php check",
     "verify": "php build/proclaim_build.php verify",
     "clean": "php build/proclaim_build.php clean",
     "build": "php build/proclaim_build.php build",

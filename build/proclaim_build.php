@@ -7,7 +7,7 @@
  * Replaces Phing build.xml
  */
 
-const BASE_DIR        = __DIR__ . '/..';
+define('BASE_DIR', realpath(__DIR__ . '/..'));
 const BUILD_DIR       = BASE_DIR . '/build';
 const PROPERTIES_FILE = BASE_DIR . '/build.properties';
 
@@ -21,6 +21,9 @@ try {
             break;
         case 'link':
             doLink(verbose: $verbose);
+            break;
+        case 'check':
+            doCheckLinks($verbose);
             break;
         case 'clean':
             doClean($verbose);
@@ -66,6 +69,7 @@ function showHelp(): void
     echo "Commands:\n";
     echo "  setup           Interactive setup wizard for build.properties\n";
     echo "  link            Setup symbolic links to local Joomla installation(s)\n";
+    echo "  check           Verify symlinks are healthy (no recreate)\n";
     echo "  clean           Remove symbolic links (clean dev state)\n";
     echo "  build           Build component package (zip)\n";
     echo "  package         Build pkg_proclaim (library + plugin + component zips)\n";
@@ -380,16 +384,6 @@ function doLink(bool $quiet = false, bool $verbose = false): void
     $silent = !$verbose;
     symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $silent);
     symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $silent);
-    if (
-        !is_dir(BASE_DIR . '/media/css/site') && !mkdir(
-            $concurrentDirectory = BASE_DIR . '/media/css/site',
-            0777,
-            true
-        ) && !is_dir($concurrentDirectory)
-    ) {
-        throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
-    }
-    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $silent);
 
     if (!$quiet) {
         echo "Internal links created.\n";
@@ -438,6 +432,11 @@ function doLink(bool $quiet = false, bool $verbose = false): void
  */
 function symlink_force(string $target, string $link, bool $quiet = false): void
 {
+    // Warn if the target does not exist (e.g. submodule not initialized)
+    if (!file_exists($target)) {
+        echo "WARNING: Target does not exist, symlink will be broken: $target\n";
+    }
+
     // Clear the file status cache to ensure we get fresh results
     clearstatcache(true, $link);
 
@@ -816,7 +815,6 @@ function doBuild(bool $verbose = false): void
         // Exclude internal symlinks created by doLink
         'admin/proclaim.xml',
         'admin/proclaim.script.php',
-        'media/css/site/cwmcore.css',
         // Exclude dev files
         'media/js/joomla.d.ts',
         // Exclude Composer vendor (dev-only)
@@ -1174,7 +1172,6 @@ function doClean(bool $verbose = false): void
     $internalLinks = [
         BASE_DIR . '/admin/proclaim.xml',
         BASE_DIR . '/admin/proclaim.script.php',
-        BASE_DIR . '/media/css/site/cwmcore.css',
     ];
 
     $removed = 0;
@@ -1218,6 +1215,109 @@ function doClean(bool $verbose = false): void
     }
 
     echo "\nClean complete.\n";
+}
+
+/**
+ * Verifies all symlinks are healthy without recreating them.
+ *
+ * Reports missing, broken, or stale symlinks for both internal and external links.
+ *
+ * @param   bool  $verbose  If true, also prints healthy symlinks.
+ *
+ * @return void
+ * @throws Exception If no Joomla paths are configured.
+ * @since 10.3.0
+ */
+function doCheckLinks(bool $verbose = false): void
+{
+    $props       = getProperties();
+    $joomlaPaths = getJoomlaPaths($props);
+
+    if (\count($joomlaPaths) === 0) {
+        throw new \RuntimeException('No Joomla paths configured. Run \'composer setup\' first.');
+    }
+
+    $issues = 0;
+
+    // Check internal links
+    $internalLinks = [
+        BASE_DIR . '/proclaim.xml'        => BASE_DIR . '/admin/proclaim.xml',
+        BASE_DIR . '/proclaim.script.php'  => BASE_DIR . '/admin/proclaim.script.php',
+    ];
+
+    echo "Internal links:\n";
+    foreach ($internalLinks as $target => $link) {
+        $issues += checkOneLink($target, $link, $verbose);
+    }
+
+    // Check external links for each Joomla path
+    foreach ($joomlaPaths as $joomlaPath) {
+        echo "\nJoomla: $joomlaPath\n";
+
+        if (!is_dir($joomlaPath)) {
+            echo "  MISSING: Joomla path does not exist\n";
+            $issues++;
+            continue;
+        }
+
+        foreach (getExternalLinks($joomlaPath) as $target => $link) {
+            $issues += checkOneLink($target, $link, $verbose);
+        }
+    }
+
+    echo "\n" . ($issues === 0
+        ? "All symlinks are healthy.\n"
+        : "$issues issue(s) found. Run 'composer symlink' to fix.\n");
+
+    if ($issues > 0) {
+        exit(1);
+    }
+}
+
+/**
+ * Checks a single symlink and reports its status.
+ *
+ * @param   string  $target   Expected target path.
+ * @param   string  $link     Symlink path to check.
+ * @param   bool    $verbose  If true, prints healthy links too.
+ *
+ * @return int Number of issues found (0 or 1).
+ * @since 10.3.0
+ */
+function checkOneLink(string $target, string $link, bool $verbose): int
+{
+    clearstatcache(true, $link);
+
+    if (!is_link($link)) {
+        if (file_exists($link)) {
+            echo "  STALE:   $link (real file/dir, not a symlink)\n";
+        } else {
+            echo "  MISSING: $link\n";
+        }
+        return 1;
+    }
+
+    $actual = readlink($link);
+
+    // Resolve to real path for comparison (handles relative vs absolute)
+    $resolvedActual = realpath($actual) ?: $actual;
+    $resolvedTarget = realpath($target) ?: $target;
+
+    if ($resolvedActual !== $resolvedTarget) {
+        echo "  WRONG:   $link -> $actual (expected $target)\n";
+        return 1;
+    }
+
+    if (!file_exists($link)) {
+        echo "  BROKEN:  $link -> $target (target does not exist)\n";
+        return 1;
+    }
+
+    if ($verbose) {
+        echo "  OK:      $link\n";
+    }
+
+    return 0;
 }
 
 /**
