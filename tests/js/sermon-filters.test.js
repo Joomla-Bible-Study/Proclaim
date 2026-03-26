@@ -559,12 +559,8 @@ describe('sermon-filters.es6.js', () => {
     });
 
     describe('Error fallback', () => {
-        test('should fallback to native form submit on fetch error', async () => {
+        test('should show inline error with retry button on fetch error', async () => {
             jest.spyOn(console, 'warn').mockImplementation(function () {});
-
-            // Spy on the native submit that the error fallback uses
-            const nativeSpy = jest.spyOn(HTMLFormElement.prototype, 'submit')
-                .mockImplementation(function () {});
 
             // All fetch calls fail (no fetch happens during init)
             const mockFetch = jest.fn()
@@ -580,8 +576,9 @@ describe('sermon-filters.es6.js', () => {
                 await new Promise(function (r) { setTimeout(r, 10); });
             }
 
-            expect(nativeSpy).toHaveBeenCalled();
-            nativeSpy.mockRestore();
+            const errorDiv = document.querySelector('.proclaim-ajax-error');
+            expect(errorDiv).not.toBeNull();
+            expect(errorDiv.querySelector('.proclaim-retry-btn')).not.toBeNull();
         }, 10000);
     });
 });

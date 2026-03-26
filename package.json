@@ -72,6 +72,7 @@
     "intl-tel-input": "^26.5.1"
   },
   "overrides": {
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.3",
+    "brace-expansion": "^5.0.5"
   }
 }
