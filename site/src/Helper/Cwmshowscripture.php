@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Helper;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Library\Scripture\Bible\AbstractBibleProvider;
 use CWM\Library\Scripture\Bible\BiblePassageResult;
@@ -57,6 +58,8 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
+        CwmDebug::startTimer('buildPassage');
+
         $choice    = (int) $params->get('show_passage_view', 3);
 
         // Read Bible version from message row (new), fallback to template params (legacy compat)
@@ -166,6 +169,8 @@ class Cwmshowscripture
             Log::add('No text returned for "' . $reference . '" (' . $requestedVersion . ') — all fallbacks exhausted', Log::WARNING, 'com_proclaim.bible');
 
             // Return "temporarily unavailable" notice with retry button
+            CwmDebug::stopTimer('buildPassage', 'ref=' . $reference . ' version=' . $requestedVersion . ' result=unavailable');
+
             if ($choice > 0) {
                 return $this->renderUnavailableNotice($row, $reference, $requestedVersion);
             }
@@ -190,6 +195,10 @@ class Cwmshowscripture
         }
 
         $output .= $this->renderTextPassage($result, $choice, $params, $switcherHtml);
+
+        $providerName = $provider ? $provider->getName() : 'unknown';
+        $fallback     = $version !== $requestedVersion ? ' fallback=' . $version : '';
+        CwmDebug::stopTimer('buildPassage', 'ref=' . $reference . ' provider=' . $providerName . $fallback);
 
         return $output;
     }

@@ -482,7 +482,9 @@ class CwmschemaorgHelper
             }
 
             return Factory::getApplication()->get('sitename', '');
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('getOrganizationName failed', $e, 'schemaorg');
+
             return '';
         }
     }
@@ -503,7 +505,9 @@ class CwmschemaorgHelper
             $db->setQuery($query);
 
             return (int) $db->loadResult() > 0;
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('hasJoomlaSchema query failed', $e, 'schemaorg');
+
             return false;
         }
     }

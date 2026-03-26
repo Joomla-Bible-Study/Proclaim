@@ -115,8 +115,20 @@ Log::addLogger(
         'text_file' => 'com_proclaim.errors.php',
     ],
     Log::ALL,
-    'com_proclaim'
+    ['com_proclaim']
 );
+
+// Dedicated debug log — only registered when debug mode is active to avoid
+// creating an empty log file in production.
+if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+    Log::addLogger(
+        [
+            'text_file' => 'com_proclaim.debug.php',
+        ],
+        Log::ALL,
+        ['com_proclaim.debug']
+    );
+}
 
 // CWM has been initialized
 const CWM_LOADED = 1;

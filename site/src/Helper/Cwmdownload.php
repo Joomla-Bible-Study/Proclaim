@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
@@ -111,6 +112,11 @@ class Cwmdownload
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
         $isLocal       = false;
 
+        CwmDebug::log(
+            'mid=' . $mid . ' file=' . ($params->get('filename') ?: '(none)') . ' template=' . $templateId,
+            'download'
+        );
+
         // Optimization: Check if a file is local to avoid HTTP loopback and get an accurate size
         if ($download_file) {
             $root = Uri::root();
@@ -178,9 +184,7 @@ class Cwmdownload
             $fh = @fopen($download_file, 'rb');
 
             if (!$fh) {
-                if (\defined('JBSMDEBUG') && JBSMDEBUG) {
-                    echo '<pre>' . $download_file . '</pre>';
-                }
+                CwmDebug::log('download fopen failed path=' . $download_file, 'download');
 
                 // We cannot send a 500 error cleanly if headers are already sent, but we can try
                 exit;
