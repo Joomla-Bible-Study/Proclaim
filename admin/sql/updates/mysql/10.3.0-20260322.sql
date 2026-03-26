@@ -111,3 +111,6 @@ WHERE `params` LIKE '%"fab %';
 UPDATE `#__bsms_templates`
 SET `params` = REPLACE(`params`, '"far ', '"fa-regular ')
 WHERE `params` LIKE '%"far %';
+
+-- Add organization name column to teachers table (issue #1198)
+ALTER TABLE `#__bsms_teachers` ADD COLUMN `org_name` VARCHAR(255) DEFAULT NULL AFTER `title`;
