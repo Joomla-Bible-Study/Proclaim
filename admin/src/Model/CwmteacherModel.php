@@ -835,12 +835,14 @@ class CwmteacherModel extends AdminModel
         $db       = Factory::getContainer()->get(DatabaseInterface::class);
         $position = max(1, $value);
 
-        // Get all teacher IDs in current ordering, excluding the selected ones
+        // Get all teacher IDs in current ordering, excluding the selected ones.
+        // Tiebreaker on teachername prevents random shuffling when multiple
+        // teachers share the same ordering value (e.g. all at 0).
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->whereNotIn($db->quoteName('id'), $pks)
-            ->order($db->quoteName('ordering') . ' ASC');
+            ->order($db->quoteName('ordering') . ' ASC, ' . $db->quoteName('teachername') . ' ASC');
         $db->setQuery($query);
         $otherIds = $db->loadColumn();
 

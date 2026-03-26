@@ -23,7 +23,6 @@ use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Utilities\ArrayHelper;
 
 /**
  * Teachers list controller class.
@@ -33,37 +32,6 @@ use Joomla\Utilities\ArrayHelper;
  */
 class CwmteachersController extends AdminController
 {
-    /**
-     * Method to save the submitted ordering values for records via AJAX.
-     *
-     * @return    void
-     *
-     * @throws \Exception
-     * @since   7.0.0
-     */
-    public function saveOrderAjax(): void
-    {
-        $pks   = $this->input->post->get('cid', [], 'array');
-        $order = $this->input->post->get('order', [], 'array');
-
-        // Sanitize the input
-        ArrayHelper::toInteger($pks);
-        ArrayHelper::toInteger($order);
-
-        // Get the model
-        $model = $this->getModel();
-
-        // Save the ordering
-        $return = $model->saveorder($pks, $order);
-
-        if ($return) {
-            echo "1";
-        }
-
-        // Close the application
-        Factory::getApplication()->close();
-    }
-
     /**
      * Proxy for getModel.
      *
