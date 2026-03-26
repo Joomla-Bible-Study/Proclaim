@@ -15,8 +15,9 @@ namespace CWM\Component\Proclaim\Site\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -64,6 +65,8 @@ class Cwmlisting
      */
     public function getFluidListing($items, Registry $params, \stdClass $template, string $type): string
     {
+        CwmDebug::startTimer('getFluidListing');
+
         // Ensure listing CSS is loaded for all frontend views that use this helper
         Factory::getApplication()->getDocument()->getWebAssetManager()
             ->useStyle('com_proclaim.cwmcore');
@@ -472,6 +475,8 @@ class Cwmlisting
 
         $list .= '</div>' . "\n";
 
+        CwmDebug::stopTimer('getFluidListing', 'type=' . $type . ' items=' . \count($items));
+
         return $list;
     }
 
@@ -510,18 +515,35 @@ class Cwmlisting
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true);
-        $query->select(
-            $db->quoteName('#__bsms_mediafiles') . '.*, '
-            . $db->quoteName('#__bsms_servers.id', 'ssid') . ', '
-            . $db->quoteName('#__bsms_servers.params', 'sparams') . ', '
-            . $db->quoteName('#__bsms_servers.media', 'smedia') . ','
-            . $db->quoteName('s.studytitle') . ', ' . $db->quoteName('s.studydate') . ', '
-            . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.teacher_id') . ','
-            . $db->quoteName('s.booknumber') . ', ' . $db->quoteName('s.chapter_begin') . ', '
-            . $db->quoteName('s.chapter_end') . ', ' . $db->quoteName('s.verse_begin') . ', '
-            . $db->quoteName('s.verse_end') . ', ' . $db->quoteName('t.teachername') . ', '
-            . $db->quoteName('t.id', 'tid') . ', ' . $db->quoteName('s.id', 'sid')
-        );
+        // Select only needed mediafile columns (avoids loading metadata TEXT blob)
+        $mf = '#__bsms_mediafiles';
+        $query->select(implode(', ', [
+            $db->quoteName($mf . '.id'),
+            $db->quoteName($mf . '.study_id'),
+            $db->quoteName($mf . '.server_id'),
+            $db->quoteName($mf . '.podcast_id'),
+            $db->quoteName($mf . '.ordering'),
+            $db->quoteName($mf . '.published'),
+            $db->quoteName($mf . '.comment'),
+            $db->quoteName($mf . '.params'),
+            $db->quoteName($mf . '.access'),
+            $db->quoteName($mf . '.language'),
+            $db->quoteName('#__bsms_servers.id', 'ssid'),
+            $db->quoteName('#__bsms_servers.params', 'sparams'),
+            $db->quoteName('#__bsms_servers.media', 'smedia'),
+            $db->quoteName('s.studytitle'),
+            $db->quoteName('s.studydate'),
+            $db->quoteName('s.studyintro'),
+            $db->quoteName('s.teacher_id'),
+            $db->quoteName('s.booknumber'),
+            $db->quoteName('s.chapter_begin'),
+            $db->quoteName('s.chapter_end'),
+            $db->quoteName('s.verse_begin'),
+            $db->quoteName('s.verse_end'),
+            $db->quoteName('t.teachername'),
+            $db->quoteName('t.id', 'tid'),
+            $db->quoteName('s.id', 'sid'),
+        ]));
         $query->from($db->quoteName('#__bsms_mediafiles'));
         $query->leftJoin(
             $db->quoteName('#__bsms_servers') . ' ON ('
@@ -1040,26 +1062,26 @@ class Cwmlisting
                 } else {
                     if (isset($item->email)) {
                         ($item->email ? $data = '<a href="mailto:' . $item->email . '">
-				<span class="fas fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
+				<span class="fa-solid fa-envelope" style="font-size:20px;" title="Website"></span></a>' : $data);
 
                         if ($item->website) {
                             $data .= '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
-						<span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+						<span class="fa-solid fa-globe" style="font-size:20px;" title="Website"></span></a>';
                         }
 
                         if ($item->facebooklink) {
                             $data .= '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
-						<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+						<span class="fa-brands fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
                         }
 
                         if ($item->twitterlink) {
                             $data .= '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
-						<span class="fab fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+						<span class="fa-brands fa-x-twitter" style="font-size:20px;" title="Twitter"></span></a>';
                         }
 
                         if ($item->bloglink) {
                             $data .= '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
-						<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+						<span class="fa-solid fa-note-sticky" style="font-size:20px;" title="Blog"></span></a>';
                         }
 
                         if ($item->link1) {
@@ -1125,8 +1147,8 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_EMAIL');
                 } else {
-                    ($item->email ? $data                                                     = '<a href="mailto:' . $item->email . '">
-					<span class="fas fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
+                    ($item->email ? $data                                                          = '<a href="mailto:' . $item->email . '">
+					<span class="fa-solid fa-envelope" style="font-size:20px;" title="Email"></span></a>' : $data = '');
                 }
                 break;
 
@@ -1135,7 +1157,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_WEBSITE');
                 } elseif ($item->website) {
                     $data = '<a href="' . $this->ensureScheme($item->website) . '" target="_blank">
-                        <span class="fas fa-globe" style="font-size:20px;" title="Website"></span></a>';
+                        <span class="fa-solid fa-globe" style="font-size:20px;" title="Website"></span></a>';
                 }
                 break;
 
@@ -1167,7 +1189,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_FACEBOOK');
                 } elseif ($item->facebooklink) {
                     $data = '<a href="' . $this->ensureScheme($item->facebooklink) . '" target="_blank">
-							<span class="fab fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
+							<span class="fa-brands fa-facebook" style="font-size:20px;" title="Facebook"></span></a>';
                 }
                 break;
 
@@ -1176,7 +1198,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_TWITTER');
                 } elseif ($item->twitterlink) {
                     $data = '<a href="' . $this->ensureScheme($item->twitterlink) . '" target="_blank">
-							<span class="fas fa-twitter" style="font-size:20px;" title="Twitter"></span></a>';
+							<span class="fa-brands fa-x-twitter" style="font-size:20px;" title="Twitter"></span></a>';
                 }
                 break;
 
@@ -1185,7 +1207,7 @@ class Cwmlisting
                     $data = Text::_('JBS_TCH_BLOG');
                 } elseif ($item->bloglink) {
                     $data = '<a href="' . $this->ensureScheme($item->bloglink) . '" target="_blank">
-							<span class="fas fa-sticky-note" style="font-size:20px;" title="Blog"></span></a>';
+							<span class="fa-solid fa-note-sticky" style="font-size:20px;" title="Blog"></span></a>';
                 }
                 break;
 
@@ -2133,22 +2155,22 @@ class Cwmlisting
             return '';
         }
 
-        if (isset(self::$bookNameCache[$booknumber])) {
-            return self::$bookNameCache[$booknumber];
+        // Preload all book names on first call (66 rows, tiny table)
+        if (empty(self::$bookNameCache)) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select([$db->quoteName('booknumber'), $db->quoteName('bookname')])
+                ->from($db->quoteName('#__bsms_books'));
+            $db->setQuery($query);
+            $books = $db->loadObjectList();
+
+            foreach ($books as $book) {
+                $name                                         = $book->bookname ? Text::_($book->bookname) : '';
+                self::$bookNameCache[(int) $book->booknumber] = $name;
+            }
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('bookname'))
-            ->from($db->quoteName('#__bsms_books'))
-            ->where($db->quoteName('booknumber') . ' = ' . $booknumber);
-        $db->setQuery($query);
-        $bookname = $db->loadResult();
-
-        $result                           = $bookname ? Text::_($bookname) : '';
-        self::$bookNameCache[$booknumber] = $result;
-
-        return $result;
+        return self::$bookNameCache[$booknumber] ?? '';
     }
 
     /**
@@ -2623,22 +2645,22 @@ class Cwmlisting
 
         // Build replacements array for single str_replace call
         $replacements = [
-            '{{teacher}}'     => $row->teachername ?? '',
-            '{{title}}'       => $row->studytitle ?? '',
-            '{{date}}'        => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
-            '{{studyintro}}'  => $row->studyintro ?? '',
-            '{{scripture}}'   => $this->getScripture($params, $row, 0, 1),
-            '{{topics}}'      => $row->topic_text ?? '',
-            '{{url}}'         => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
-            '{{thumbnail}}'   => $thumbnail,
-            '{{seriestext}}'  => $row->series_text ?? '',
-            '{{messagetype}}' => $row->message_type ?? '',
-            '{{bookname}}'    => $row->bookname ?? '',
-            '{{hits}}'        => $row->hits ?? '',
-            '{{location}}'    => $row->location_text ?? '',
-            '{{plays}}'            => $row->totalplays ?? '',
-            '{{downloads}}'        => $row->totaldownloads ?? '',
-            '{{teacherorgname}}'   => $row->teacherorgname ?? $row->org_name ?? '',
+            '{{teacher}}'        => $row->teachername ?? '',
+            '{{title}}'          => $row->studytitle ?? '',
+            '{{date}}'           => isset($row->studydate) ? $this->getStudyDate($params, $row->studydate) : '',
+            '{{studyintro}}'     => $row->studyintro ?? '',
+            '{{scripture}}'      => $this->getScripture($params, $row, 0, 1),
+            '{{topics}}'         => $row->topic_text ?? '',
+            '{{url}}'            => Route::_('index.php?option=com_proclaim&view=Cwmsermon&id=' . $row->id . '&t=' . $template->id),
+            '{{thumbnail}}'      => $thumbnail,
+            '{{seriestext}}'     => $row->series_text ?? '',
+            '{{messagetype}}'    => $row->message_type ?? '',
+            '{{bookname}}'       => $row->bookname ?? '',
+            '{{hits}}'           => $row->hits ?? '',
+            '{{location}}'       => $row->location_text ?? '',
+            '{{plays}}'          => $row->totalplays ?? '',
+            '{{downloads}}'      => $row->totaldownloads ?? '',
+            '{{teacherorgname}}' => $row->teacherorgname ?? $row->org_name ?? '',
         ];
 
         $label = str_replace(array_keys($replacements), array_values($replacements), $label);

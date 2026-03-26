@@ -17,6 +17,7 @@ namespace CWM\Plugin\Schemaorg\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\BeforeCompileHeadEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareDataEvent;
 use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareFormEvent;
@@ -24,9 +25,8 @@ use Joomla\CMS\Event\Plugin\System\Schemaorg\PrepareSaveEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Session\Session;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Schemaorg\SchemaorgPluginTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareDateTrait;
 use Joomla\CMS\Schemaorg\SchemaorgPrepareImageTrait;
@@ -150,7 +150,17 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $form->loadFile($formFile);
         }
 
-        // No JS needed — field edit detection is fully server-side via _fieldHashes.
+        // Register JS for custom field indicators
+        try {
+            $app = Factory::getApplication();
+            $app->getDocument()->getWebAssetManager()->useScript('com_proclaim.schema-indicators');
+
+            // Make language strings available to JS
+            Text::script('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM');
+            Text::script('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM_DESC');
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: document not available', $e, 'schemaorg');
+        }
     }
 
     /**
@@ -205,6 +215,20 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             $data->schema[$schemaType] = $existing;
+
+            // Pass custom field indicators to JS
+            $customFields = $existing['_customFields'] ?? [];
+
+            if (!empty($customFields)) {
+                try {
+                    Factory::getApplication()->getDocument()->addScriptOptions(
+                        'com_proclaim.schemaCustomFields',
+                        $customFields
+                    );
+                } catch (\Throwable $e) {
+                    CwmDebug::error('schemaorg: document not available', $e, 'schemaorg');
+                }
+            }
 
             return;
         }
@@ -276,10 +300,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $trackFields = ['headline', 'name', 'description', 'jobTitle', 'url'];
 
                     foreach ($trackFields as $field) {
-                        $submittedVal = $incoming[$field] ?? '';
-                        $freshVal     = $fresh[$field] ?? '';
-                        $freshHash    = $freshVal !== '' ? substr(md5($freshVal), 0, 8) : '';
-                        $prevHash     = $prevHashes[$field] ?? '';
+                        $submittedVal  = $incoming[$field] ?? '';
+                        $freshVal      = $fresh[$field] ?? '';
+                        $freshHash     = $freshVal !== '' ? substr(md5($freshVal), 0, 8) : '';
+                        $prevHash      = $prevHashes[$field] ?? '';
                         $submittedHash = $submittedVal !== '' ? substr(md5($submittedVal), 0, 8) : '';
 
                         // Store current auto-gen hash for next save
@@ -308,13 +332,13 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $fresh['_fieldHashes']  = !empty($newHashes) ? $newHashes : null;
                     $fresh['_customFields'] = !empty($customFields) ? $customFields : null;
                     $fresh['_autoHash']     = self::hashSchema($fresh);
-                    $finalSchema = json_encode(
+                    $finalSchema            = json_encode(
                         array_filter($fresh, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
                 } else {
                     $incoming['_autoHash'] = self::hashSchema($incoming);
-                    $finalSchema = json_encode(
+                    $finalSchema           = json_encode(
                         array_filter($incoming, static fn ($v) => $v !== null),
                         JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE
                     );
@@ -328,8 +352,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
                 // Tell system plugin to skip its own DB write
                 unset($entry->schemaType);
-            } catch (\Throwable) {
-                // JSON error — skip
+            } catch (\Throwable $e) {
+                CwmDebug::error('schemaorg: JSON error in save', $e, 'schemaorg');
             }
         }
 
@@ -345,7 +369,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         // Define recommended fields per schema type
         $recommended = match ($schemaType) {
-            'Sermon'  => [
+            'Sermon' => [
                 'headline'      => 'PLG_SCHEMAORG_PROCLAIM_FIELD_HEADLINE',
                 'description'   => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
                 'datePublished' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DATE_PUBLISHED',
@@ -354,11 +378,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
                 'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
             ],
-            'Series'  => [
+            'Series' => [
                 'name'        => 'PLG_SCHEMAORG_PROCLAIM_FIELD_NAME',
                 'description' => 'PLG_SCHEMAORG_PROCLAIM_FIELD_DESCRIPTION',
             ],
-            default   => [],
+            default => [],
         };
 
         foreach ($recommended as $field => $langKey) {
@@ -376,8 +400,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     ),
                     'notice'
                 );
-            } catch (\Throwable) {
-                // App not available
+            } catch (\Throwable $e) {
+                CwmDebug::error('schemaorg: app not available', $e, 'schemaorg');
             }
         }
     }
@@ -490,8 +514,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($orgName !== '') {
                 $sermon['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
             }
-        } catch (\Throwable) {
-            // Helper not available
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
         }
 
         $data->schema['Sermon'] = $sermon;
@@ -604,8 +628,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($orgName !== '') {
                 $series['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
             }
-        } catch (\Throwable) {
-            // Helper not available
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
         }
 
         $data->schema['Series'] = $series;
@@ -636,8 +660,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                         $sameAs[] = $link['url'];
                     }
                 }
-            } catch (\Throwable) {
-                // Malformed JSON
+            } catch (\Throwable $e) {
+                CwmDebug::error('schemaorg: malformed JSON', $e, 'schemaorg');
             }
         }
 
@@ -700,7 +724,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             return json_decode($stored, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: failed to load stored schema', $e, 'schemaorg');
+
             return null;
         }
     }
@@ -769,8 +795,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         } catch (\Throwable $e) {
             try {
                 Factory::getApplication()->enqueueMessage('Schema DB write error: ' . $e->getMessage(), 'error');
-            } catch (\Throwable) {
-                // skip
+            } catch (\Throwable $e) {
+                CwmDebug::error('schemaorg: DB write error notification failed', $e, 'schemaorg');
             }
         }
     }
@@ -835,10 +861,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function generateSchemaFromItem(\Joomla\CMS\Table\TableInterface $item, string $context): ?array
     {
         return match ($context) {
-            'com_proclaim.cwmmessage'                   => $this->buildSermonSchema($item),
+            'com_proclaim.cwmmessage' => $this->buildSermonSchema($item),
             'com_proclaim.teacher', 'com_proclaim.cwmteacher' => $this->buildTeacherSchema($item),
-            'com_proclaim.serie', 'com_proclaim.cwmserie'     => $this->buildSeriesSchema($item),
-            default                                     => null,
+            'com_proclaim.serie', 'com_proclaim.cwmserie' => $this->buildSeriesSchema($item),
+            default => null,
         };
     }
 
@@ -881,8 +907,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($orgName !== '') {
                 $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
             }
-        } catch (\Throwable) {
-            // Helper not available
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
         }
 
         return $schema;
@@ -934,8 +960,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($orgName !== '') {
                 $schema['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];
             }
-        } catch (\Throwable) {
-            // Helper not available
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
         }
 
         return $schema;
@@ -991,8 +1017,8 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($orgName !== '') {
                 $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
             }
-        } catch (\Throwable) {
-            // Helper not available
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
         }
 
         return $schema;
@@ -1040,7 +1066,9 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             $rawRoute = 'index.php?option=com_proclaim&view=' . $itemView . '&id=' . $itemId;
 
             return Route::link('site', $rawRoute, true, Route::TLS_IGNORE, true);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: route generation failed', $e, 'schemaorg');
+
             return '';
         }
     }

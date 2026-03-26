@@ -424,30 +424,26 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        // Process the prepare content plugins
+        // Always run content prepare on the study text so that inline
+        // {scripture} tags (e.g. from AI-generated content) are processed
+        // regardless of the template's show_scripture_link setting.
         $article->text = $this->item->studytext;
-        $linkit        = $this->item->params->get('show_scripture_link');
+        $linkit        = (int) $this->item->params->get('show_scripture_link', 0);
 
-        if ($linkit) {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    PluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    PluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-
-            $limitstart = (int)$app->getInput()->get('limitstart', 0, 'int');
-            $app->triggerEvent(
-                'onContentPrepare',
-                ['com_proclaim.sermon', &$article, &$this->item->params, $limitstart]
-            );
-            $article->studytext    = $article->text;
-            $this->item->studytext = $article->text;
+        if ($linkit === 1) {
+            PluginHelper::importPlugin('content');
+        } else {
+            // Always load at least the scripture links plugin for inline tags
+            PluginHelper::importPlugin('content', 'scripturelinks');
         }
+
+        $limitstart = (int) $app->getInput()->get('limitstart', 0, 'int');
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermon', &$article, &$this->item->params, $limitstart]
+        );
+        $article->studytext    = $article->text;
+        $this->item->studytext = $article->text;
 
         // Prepares a link string for use in social networking
         $u                 = Uri::getInstance();
@@ -508,8 +504,8 @@ class HtmlView extends BaseHtmlView
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled). Skip in print mode.
         if (empty($this->print)) {
-            $wa->useScript('com_proclaim.scripture-tooltip');
-            $wa->useStyle('com_proclaim.scripture-tooltip-css');
+            $wa->useScript('lib_cwmscripture.scripture-tooltip');
+            $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
             $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
                 'ajaxUrl' => Route::_(

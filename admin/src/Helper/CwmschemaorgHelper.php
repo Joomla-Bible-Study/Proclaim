@@ -482,7 +482,9 @@ class CwmschemaorgHelper
             }
 
             return Factory::getApplication()->get('sitename', '');
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('getOrganizationName failed', $e, 'schemaorg');
+
             return '';
         }
     }
@@ -503,7 +505,9 @@ class CwmschemaorgHelper
             $db->setQuery($query);
 
             return (int) $db->loadResult() > 0;
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            CwmDebug::error('hasJoomlaSchema query failed', $e, 'schemaorg');
+
             return false;
         }
     }
@@ -748,15 +752,15 @@ class CwmschemaorgHelper
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $counts  = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
 
-        $result = self::syncMessages($db, $mode);
+        $result             = self::syncMessages($db, $mode);
         $counts['messages'] = $result['synced'];
         $counts['skipped'] += $result['skipped'];
 
-        $result = self::syncTeachers($db, $mode);
+        $result             = self::syncTeachers($db, $mode);
         $counts['teachers'] = $result['synced'];
         $counts['skipped'] += $result['skipped'];
 
-        $result = self::syncSeries($db, $mode);
+        $result           = self::syncSeries($db, $mode);
         $counts['series'] = $result['synced'];
         $counts['skipped'] += $result['skipped'];
 

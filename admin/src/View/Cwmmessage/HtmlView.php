@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessageModel;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -154,12 +155,12 @@ class HtmlView extends BaseHtmlView
         // Load scripture autocomplete assets
         $document = Factory::getApplication()->getDocument();
         $wa       = $document->getWebAssetManager();
-        $wa->useScript('com_proclaim.scripture-autocomplete');
+        $wa->useScript('lib_cwmscripture.scripture-autocomplete');
         $document->addScriptOptions('com_proclaim.books', CwmscriptureHelper::getAllBooks());
         $document->addScriptOptions('com_proclaim.bibleStructure', BibleStructure::getStructureForJs());
         $document->addScriptOptions(
             'com_proclaim.defaultBibleVersion',
-            $this->admin_params->get('default_bible_version', 'kjv')
+            ScriptureParamsHelper::getParams()->get('default_version', 'kjv')
         );
 
         // Push translatable strings to JS

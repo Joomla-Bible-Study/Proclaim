@@ -41,25 +41,25 @@ if (empty($items)) {
 [$visibleItems, $hiddenItems] = Cwmlanding::splitItems($items, $limit, $useLimit);
 
 $iconClass = match ($section['sectionType']) {
-    'teachers'     => 'fas fa-user-tie',
-    'series'       => 'fas fa-layer-group',
-    'topics'       => 'fas fa-tags',
-    'books'        => 'fas fa-bible',
-    'locations'    => 'fas fa-map-marker-alt',
-    'messagetypes' => 'fas fa-comment-alt',
-    'years'        => 'fas fa-calendar-alt',
-    default        => 'fas fa-list',
+    'teachers'     => 'fa-solid fa-user-tie',
+    'series'       => 'fa-solid fa-layer-group',
+    'topics'       => 'fa-solid fa-tags',
+    'books'        => 'fa-solid fa-bible',
+    'locations'    => 'fa-solid fa-location-dot',
+    'messagetypes' => 'fa-solid fa-comment-dots',
+    'years'        => 'fa-solid fa-calendar-days',
+    default        => 'fa-solid fa-list',
 };
 
 $itemIcon = match ($section['sectionType']) {
-    'teachers'     => 'fas fa-user',
-    'series'       => 'fas fa-book-open',
-    'topics'       => 'fas fa-tag',
-    'books'        => 'fas fa-book',
-    'locations'    => 'fas fa-church',
-    'messagetypes' => 'fas fa-comment',
-    'years'        => 'fas fa-calendar',
-    default        => 'fas fa-circle',
+    'teachers'     => 'fa-solid fa-user',
+    'series'       => 'fa-solid fa-book-open',
+    'topics'       => 'fa-solid fa-tag',
+    'books'        => 'fa-solid fa-book',
+    'locations'    => 'fa-solid fa-church',
+    'messagetypes' => 'fa-solid fa-comment',
+    'years'        => 'fa-solid fa-calendar',
+    default        => 'fa-solid fa-circle',
 };
 ?>
 <div class="accordion-item proclaim-landing-accordion__item">

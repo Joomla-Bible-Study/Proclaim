@@ -80,6 +80,18 @@ class YoutubeHelper implements DatabaseAwareInterface
         $cacheKey    = 'mod_proclaim_youtube_' . $serverId . '_' . $priorityMode . '_' . ($showUpcoming ? '1' : '0') . '_' . $excludeHash;
         $cacheTime   = (int) $params->get('cache_time', 300);
 
+        // Primary cache: file-based (works even with Joomla caching disabled)
+        $fileCached = CwmyoutubeFileCache::getVideoCache($cacheKey);
+
+        if ($fileCached !== null) {
+            if (!empty($fileCached['_noVideo'])) {
+                return null;
+            }
+
+            return $fileCached;
+        }
+
+        // Secondary cache: Joomla output cache (when enabled)
         try {
             $cache = Factory::getContainer()->get('cache.output');
             $cache->setLifeTime((int) ceil($cacheTime / 60));
@@ -197,10 +209,15 @@ class YoutubeHelper implements DatabaseAwareInterface
         // Use the full cache_time for null results too — the old 60s TTL caused
         // ~200 quota units/minute when no stream was active (search.list x 2 per miss).
         // Live transitions are detected by JS polling (getStatusAjax), not page loads.
+        $cacheData = $video ?? ['_noVideo' => true];
+
+        // Primary: file-based cache (always works, even with Joomla caching off)
+        CwmyoutubeFileCache::storeVideoCache($cacheKey, $cacheData, $cacheTime);
+
+        // Secondary: Joomla output cache (when enabled)
         try {
             $cache = Factory::getContainer()->get('cache.output');
             $cache->setLifeTime((int) ceil($cacheTime / 60));
-            $cacheData = $video ?? ['_noVideo' => true];
             $cache->store(json_encode($cacheData, JSON_THROW_ON_ERROR), $cacheKey, 'mod_proclaim_youtube');
         } catch (\Exception $e) {
             // Cache not available, continue without it
@@ -549,6 +566,21 @@ class YoutubeHelper implements DatabaseAwareInterface
             $params->set('moduleitems', $limit);
             $model->setModuleState($params);
 
+            // Exclude studytext (full HTML body) — not needed for fallback cards
+            // and can be very large, saving significant memory per sermon.
+            // This replaces the default list.select in getListQuery() which
+            // includes studytext; other selects (series_id, thumbnailm, etc.)
+            // are added separately and still run.
+            $db = $this->getDatabase();
+            $model->setState('list.select', implode(', ', $db->quoteName([
+                'study.id', 'study.published', 'study.studydate', 'study.studytitle',
+                'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
+                'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+                'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+                'study.booknumber2', 'study.location_id', 'study.params',
+                'study.bible_version', 'study.bible_version2',
+            ])));
+
             return $model->getItems();
         } catch (\Exception $e) {
             return [];
@@ -558,7 +590,8 @@ class YoutubeHelper implements DatabaseAwareInterface
     /**
      * Get YouTube embed URL for a video.
      *
-     * Delegates to the YouTube server addon's buildSimpleEmbedUrl().
+     * Built inline to avoid autoloading CWMAddonYoutube (and its 7MB Google
+     * SDK vendor tree) on cache-hit requests that don't need the API.
      *
      * @param   string  $videoId  YouTube video ID
      * @param   bool    $autoplay Whether to autoplay
@@ -570,7 +603,15 @@ class YoutubeHelper implements DatabaseAwareInterface
      */
     public function getEmbedUrl(string $videoId, bool $autoplay = false, bool $isLive = false): string
     {
-        return CWMAddonYoutube::buildSimpleEmbedUrl($videoId, $autoplay, $isLive);
+        $url    = 'https://www.youtube.com/embed/' . htmlspecialchars($videoId, ENT_QUOTES, 'UTF-8');
+        $params = ['rel' => '0', 'enablejsapi' => '1'];
+
+        if ($autoplay && $isLive) {
+            $params['autoplay'] = '1';
+            $params['mute']     = '1';
+        }
+
+        return $url . '?' . http_build_query($params);
     }
 
     /**

@@ -208,6 +208,22 @@ $wa->addInlineScript(
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'podcasting2', Text::_('JBS_PDC_PODCASTING2_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('funding_url'); ?>
+                <?php echo $this->form->renderField('funding_text'); ?>
+                <hr>
+                <?php echo $this->form->renderField('podcast_license'); ?>
+                <?php echo $this->form->renderField('podcast_license_url'); ?>
+                <hr>
+                <?php echo $this->form->renderField('podcast_publisher'); ?>
+                <?php echo $this->form->renderField('podcast_txt_verify'); ?>
+                <?php echo $this->form->renderField('update_frequency'); ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'episode', Text::_('JBS_PDC_EPISODE_OPTIONS')); ?>
         <div class="row">
             <div class="col-lg-9">

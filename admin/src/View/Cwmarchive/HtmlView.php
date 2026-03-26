@@ -81,7 +81,7 @@ class HtmlView extends BaseHtmlView
         // Add back to admin tools button
         $toolbar->linkButton('back', 'JTOOLBAR_BACK')
             ->url('index.php?option=com_proclaim&view=cwmadmin')
-            ->icon('fas fa-arrow-left')
+            ->icon('fa-solid fa-arrow-left')
             ->listCheck(false);
 
         ToolbarHelper::help('cwmarchive', true);

@@ -213,9 +213,11 @@ class CwmmessageController extends FormController
                     $topicId = (int) $db->loadResult();
 
                     if (!$topicId) {
-                        // Create the new topic
-                        $model->save(['topic_text' => $aTag, 'language' => $data['language'] ?? '*']);
-                        $topicId = (int) $model->getState('topic.id');
+                        // Create the new topic — pass id=0 to force INSERT
+                        // (without it, AdminModel reuses the previous state ID and UPDATEs instead)
+                        if ($model->save(['id' => 0, 'topic_text' => $aTag, 'language' => $data['language'] ?? '*'])) {
+                            $topicId = (int) $model->getState('cwmtopic.id');
+                        }
                     }
 
                     if ($topicId) {
@@ -316,6 +318,19 @@ class CwmmessageController extends FormController
             'generate_text'     => (bool) $input->post->getInt('generate_text', 1),
             'generate_chapters' => (bool) $input->post->getInt('generate_chapters', 1),
         ];
+
+        // Look up teacher name for AI voice context
+        $teacherId = $input->post->getInt('teacher_id', 0);
+
+        if ($teacherId > 0) {
+            $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('teachername'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('id') . ' = ' . (int) $teacherId);
+            $db->setQuery($query);
+            $context['teacher_name'] = (string) $db->loadResult();
+        }
 
         // Attempt to get video metadata from attached media file
         $mediaFileId = $input->post->getInt('media_file_id', 0);

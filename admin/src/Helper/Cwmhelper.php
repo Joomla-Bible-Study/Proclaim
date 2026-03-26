@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -289,6 +290,9 @@ class Cwmhelper
             );
             $cache->clean();
         }
+
+        // Also clear the file-based YouTube video cache
+        CwmyoutubeFileCache::clearVideoCache();
     }
 
     /**

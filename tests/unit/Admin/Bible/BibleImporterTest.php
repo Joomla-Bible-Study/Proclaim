@@ -11,8 +11,8 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Bible;
 
-use CWM\Component\Proclaim\Administrator\Bible\BibleImporter;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use CWM\Library\Scripture\Importer\BibleImporter;
 
 /**
  * Test class for BibleImporter

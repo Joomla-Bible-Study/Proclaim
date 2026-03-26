@@ -44,6 +44,54 @@ class Cwmmedia
     private int $fsize = 0;
 
     /**
+     * Normalize a Font Awesome icon class from FA5 shorthand to FA6 canonical.
+     *
+     * Converts legacy DB values like "fas fa-play" or "fab fa-youtube" to
+     * their FA6 equivalents ("fa-solid fa-play", "fa-brands fa-youtube").
+     * Safe to call on values that are already FA6 — returns them unchanged.
+     *
+     * @param   string  $class  Icon CSS class string
+     *
+     * @return  string  Normalized FA6 class
+     *
+     * @since   10.3.0
+     */
+    public static function normalizeIconClass(string $class): string
+    {
+        // Prefix upgrades
+        $class = str_replace(['fas ', 'far ', 'fab ', 'fa fa-'], ['fa-solid ', 'fa-regular ', 'fa-brands ', 'fa-solid fa-'], $class);
+
+        // Common icon renames (FA5 → FA6 canonical)
+        static $renames = [
+            'fa-play-circle'          => 'fa-circle-play',
+            'fa-check-circle'         => 'fa-circle-check',
+            'fa-info-circle'          => 'fa-circle-info',
+            'fa-exclamation-triangle'  => 'fa-triangle-exclamation',
+            'fa-times-circle'         => 'fa-circle-xmark',
+            'fa-times'                => 'fa-xmark',
+            'fa-external-link-alt'    => 'fa-up-right-from-square',
+            'fa-map-marker-alt'       => 'fa-location-dot',
+            'fa-file-alt'             => 'fa-file-lines',
+            'fa-comment-alt'          => 'fa-comment-dots',
+            'fa-calendar-alt'         => 'fa-calendar-days',
+            'fa-shield-alt'           => 'fa-shield-halved',
+            'fa-sync-alt'             => 'fa-arrows-rotate',
+            'fa-cog'                  => 'fa-gear',
+            'fa-home'                 => 'fa-house',
+            'fa-shopping-cart'        => 'fa-cart-shopping',
+            'fa-television'           => 'fa-tv',
+            'fa-hdd'                  => 'fa-hard-drive',
+            'fa-file-upload'          => 'fa-file-arrow-up',
+            'fa-archive'              => 'fa-box-archive',
+            'fa-bible'                => 'fa-book-bible',
+            'fa-sticky-note'          => 'fa-note-sticky',
+            'fa-word'                 => 'fa-file-word',
+        ];
+
+        return strtr($class, $renames);
+    }
+
+    /**
      *
      * @param   string  $url  url to process
      *
@@ -171,7 +219,7 @@ class Cwmmedia
                     . '&amp;mediaid=' . (int) $media->id
                     . "&amp;tmpl=component', 'newwindow', 'width="
                     . $popoutWidth . ',height=' . $popoutHeight . "'); return false\">"
-                    . '<span class="fas fa-external-link-alt" aria-hidden="true"></span>'
+                    . '<span class="fa-solid fa-up-right-from-square" aria-hidden="true"></span>'
                     . '</a>';
             }
         }
@@ -197,18 +245,6 @@ class Cwmmedia
 
         if ($link_type < 2 && $params->get('show_filesize') > 0) {
             $file_size = (int)$media->params->get('size', 0);
-
-            if (!$file_size && $link_type !== 0) {
-                $file_size = Cwmhelper::getRemoteFileSize(
-                    Cwmhelper::mediaBuildUrl(
-                        $media->sparams->get('path'),
-                        $media->params->get('filename'),
-                        $params,
-                        true
-                    )
-                );
-                Cwmhelper::setFileSize($media->id, $file_size);
-            }
 
             if ($file_size > 1) {
                 $file_size = $this->convertFileSize($file_size, $params, $media);
@@ -282,10 +318,7 @@ class Cwmmedia
                 if ($imageparams->get('media_icon_type') === '1') {
                     $icon = $imageparams->get('media_custom_icon');
                 } else {
-                    $icon = $imageparams->get('media_icon_type', 'fas fa-play');
-
-                    // Check for far YouTube tag, change to fab
-                    $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
+                    $icon = self::normalizeIconClass($imageparams->get('media_icon_type', 'fa-solid fa-play'));
                 }
 
                 $mediaimage = '<span class="btn ' . $button . '" title="' . $buttontext . '" ' . $color . '>' .
@@ -296,10 +329,7 @@ class Cwmmedia
                 if ($imageparams->get('media_icon_type') === '1') {
                     $icon = $imageparams->get('media_custom_icon');
                 } else {
-                    $icon = $imageparams->get('media_icon_type', 'fas fa-play');
-
-                    // Check for fa-youtube tag, change to fab
-                    $icon = str_replace('fa fa-youtube', 'fab fa-youtube', $icon);
+                    $icon = self::normalizeIconClass($imageparams->get('media_icon_type', 'fa-solid fa-play'));
                 }
 
                 $mediaimage = '<span class="' . $icon . '" title="' . $buttontext . '"></span>';
@@ -311,42 +341,42 @@ class Cwmmedia
 
             switch ($filename) {
                 case preg_match('/(youtube.com|youtu.be)/', $filename) === 1:
-                    $mediaimage = '<span class="fab fa-youtube" title="YouTube"></span>';
+                    $mediaimage = '<span class="fa-brands fa-youtube" title="YouTube"></span>';
                     break;
 
                 case preg_match('/(vimeo.com)/', $filename) === 1:
-                    $mediaimage = '<span class="fab fa-vimeo" title="Vimeo"></span>';
+                    $mediaimage = '<span class="fa-brands fa-vimeo-v" title="Vimeo"></span>';
                     break;
 
                 case preg_match('/(wistia.com|wistia.net)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-play-circle" title="Wistia"></span>';
+                    $mediaimage = '<span class="fa-solid fa-circle-play" title="Wistia"></span>';
                     break;
 
                 case preg_match('/(resi.io)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-video" title="Resi"></span>';
+                    $mediaimage = '<span class="fa-solid fa-video" title="Resi"></span>';
                     break;
 
                 case preg_match('/(pdf|PDF)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-pdf" title="PDF"></span>';
+                    $mediaimage = '<span class="fa-solid fa-file-pdf" title="PDF"></span>';
                     break;
 
                 case preg_match('/(mp3|MP3)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-play" title="Audio"></span>';
+                    $mediaimage = '<span class="fa-solid fa-play" title="Audio"></span>';
                     break;
 
                 case preg_match('/(mp4|MP4)/', $filename) === 1:
                 case preg_match('/(m4v|M4V)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-television" title="Video"></span>';
+                    $mediaimage = '<span class="fa-solid fa-tv" title="Video"></span>';
                     break;
 
                 case preg_match('/(pptx|ppt|PPTX|PPT)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-file-powerpoint" title="Powerpoint"></span>';
+                    $mediaimage = '<span class="fa-solid fa-file-powerpoint" title="Powerpoint"></span>';
                     break;
                 case preg_match('/(docx|DOCX)/', $filename) === 1:
-                    $mediaimage = '<span class="fas fa-word" title="Word"></span>';
+                    $mediaimage = '<span class="fa-solid fa-file-word" title="Word"></span>';
                     break;
                 default:
-                    $mediaimage = '<span class="fas fa-file" title="' . $filename . '"></span>';
+                    $mediaimage = '<span class="fa-solid fa-file" title="' . $filename . '"></span>';
                     break;
             }
         }
@@ -666,18 +696,6 @@ class Cwmmedia
 
         $file_size = (int) $media->params->get('size', '0');
 
-        if ($file_size === 0) {
-            $file_size = Cwmhelper::getRemoteFileSize(
-                Cwmhelper::mediaBuildUrl(
-                    $media->sparams->get('path'),
-                    $params->get('filename'),
-                    $params,
-                    true
-                )
-            );
-            Cwmhelper::setFileSize($media->id, $file_size);
-        }
-
         if ($file_size > 1) {
             $file_size = $this->convertFileSize($file_size, $params, $media);
         }
@@ -959,31 +977,8 @@ class Cwmmedia
         }
 
         if ($link_type > 0) {
-            $compat_mode = (int)$params->get('compat_mode');
-
-            if ($compat_mode === 0) {
-                $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
-                    $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
-            } else {
-                $url = Cwmhelper::mediaBuildUrl(
-                    $media->sparams->get('path'),
-                    $media->params->get('filename'),
-                    $params,
-                    true
-                );
-
-                if ($media->params->get('size') === '0') {
-                    $size = Cwmhelper::getRemoteFileSize($url);
-                    Cwmhelper::setFileSize($media->id, $size);
-                } else {
-                    $size = $media->params->get('size');
-                }
-
-                $url = Cwmhelper::removeHttp($url);
-
-                $downloadLink = '<a style="color: #5F5A58;" href="https://christianwebministries.org/router.php?file=' .
-                    $url . '&amp;size=' . $size . '">';
-            }
+            $downloadLink = '<a style="color: #5F5A58;" href="index.php?option=com_proclaim&amp;view=Cwmsermon&amp;id=' .
+                $media->study_id . '&amp;mid=' . $media->id . '&amp;task=Cwmsermon.download">' . $download_image . '</a>';
 
             // Check to see if they want to use a popup
             $app   = Factory::getApplication();
@@ -1069,7 +1064,7 @@ class Cwmmedia
         }
 
         if ($download->get('simple_mode') === '1' || $download->get('sermonstemplate') === 'easy') {
-            $downloadImage = '<span class="fas fa-chevron-circle-down" title="download" style="font-size: 24px;"></span>';
+            $downloadImage = '<span class="fa-solid fa-circle-chevron-down" title="download" style="font-size: 24px;"></span>';
         }
 
         return $downloadImage;
@@ -1392,13 +1387,13 @@ class Cwmmedia
     public function getIcons(): array
     {
         return [
-            'JBS_MED_PLAY'      => 'fas fa-play',
-            'JBS_MED_YOUTUBE'   => 'fab fa-youtube',
-            'JBS_MED_VIDEO'     => 'fas fa-video',
-            'JBS_MED_BROADCAST' => 'fas fa-tv',
-            'JBS_MED_FILE'      => 'fas fa-file',
-            'JBS_MED_FILE_PDF'  => 'fas fa-file-pdf',
-            'JBS_MED_VIMEO'     => 'fab fa-vimeo',
+            'JBS_MED_PLAY'      => 'fa-solid fa-play',
+            'JBS_MED_YOUTUBE'   => 'fa-brands fa-youtube',
+            'JBS_MED_VIDEO'     => 'fa-solid fa-video',
+            'JBS_MED_BROADCAST' => 'fa-solid fa-tv',
+            'JBS_MED_FILE'      => 'fa-solid fa-file',
+            'JBS_MED_FILE_PDF'  => 'fa-solid fa-file-pdf',
+            'JBS_MED_VIMEO'     => 'fa-brands fa-vimeo',
             'JBS_MED_CUSTOM'    => '1',
         ];
     }

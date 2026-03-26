@@ -12,8 +12,8 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Bible\AbstractBibleProvider;
+use CWM\Library\Scripture\Bible\BibleProviderFactory;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;

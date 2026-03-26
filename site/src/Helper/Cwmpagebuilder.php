@@ -55,7 +55,7 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 7.0
      */
-    public function buildPage($item, $params, $template): object
+    public function buildPage($item, $params, $template, array $mediaIndex = [], array $topicMap = []): object
     {
         $item->tp_id = '1';
 
@@ -65,9 +65,23 @@ class Cwmpagebuilder
         $CWMElements = new Cwmlisting();
 
         if ($mids) {
-            // Build media files inline (was mediaBuilder)
-            $mediaIDs         = $CWMElements->getFluidMediaids($item);
-            $media            = $CWMElements->getMediaFiles($mediaIDs);
+            $mediaIDs = $CWMElements->getFluidMediaids($item);
+
+            // Use pre-loaded media files if available, otherwise query individually
+            if (!empty($mediaIndex)) {
+                $media = [];
+
+                foreach ($mediaIDs as $mid) {
+                    $mid = (int) (is_array($mid) ? reset($mid) : $mid);
+
+                    if (isset($mediaIndex[$mid])) {
+                        $media[] = $mediaIndex[$mid];
+                    }
+                }
+            } else {
+                $media = $CWMElements->getMediaFiles($mediaIDs);
+            }
+
             $item->mediafiles = $media;
             $page->media      = $CWMElements->getFluidMediaFiles($item, $params, $template);
         } else {
@@ -100,8 +114,12 @@ class Cwmpagebuilder
         // Study Date
         $page->studydate = $CWMElements->getStudyDate($params, $item->studydate);
 
-        // Translate Topics.
-        $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
+        // Translate Topics — use batch-loaded data when available
+        if (!empty($topicMap) && isset($topicMap[(int) $item->id])) {
+            $item->topics_text = $topicMap[(int) $item->id];
+        } else {
+            $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
+        }
 
         if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0)) {
             $topics = explode(',', $item->topics_text);
@@ -227,8 +245,54 @@ class Cwmpagebuilder
      */
     public function enrichStudies(array $studies, Registry $params, object $template): array
     {
+        if (empty($studies)) {
+            return $studies;
+        }
+
+        // Batch-load media files for all studies in one query (eliminates N+1)
+        $listing    = new Cwmlisting();
+        $allMediaIds = [];
+
         foreach ($studies as $study) {
-            $this->enrichStudy($study, $params, $template);
+            if (!empty($study->mids)) {
+                $ids = $listing->getFluidMediaids($study);
+
+                foreach ($ids as $id) {
+                    $allMediaIds[] = (int) $id;
+                }
+            }
+        }
+
+        $allMediaFiles = [];
+
+        if (!empty($allMediaIds)) {
+            $allMediaFiles = $listing->getMediaFiles($allMediaIds);
+        }
+
+        // Index media files by ID for fast lookup
+        $mediaIndex = [];
+
+        foreach ($allMediaFiles as $mf) {
+            $mediaIndex[(int) $mf->id] = $mf;
+        }
+
+        // Batch-load topic translations for all studies in one query
+        $studyIds = [];
+
+        foreach ($studies as $study) {
+            if (!empty($study->id)) {
+                $studyIds[] = (int) $study->id;
+            }
+        }
+
+        $topicMap = [];
+
+        if (!empty($studyIds)) {
+            $topicMap = Cwmtranslated::batchGetTopicsForStudies($studyIds);
+        }
+
+        foreach ($studies as $study) {
+            $this->enrichStudy($study, $params, $template, $mediaIndex, $topicMap);
         }
 
         return $studies;
@@ -246,9 +310,9 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 10.1.0
      */
-    public function enrichStudy(object $study, Registry $params, object $template): void
+    public function enrichStudy(object $study, Registry $params, object $template, array $mediaIndex = [], array $topicMap = []): void
     {
-        $page = $this->buildPage($study, $params, $template);
+        $page = $this->buildPage($study, $params, $template, $mediaIndex, $topicMap);
 
         $study->scripture1          = $page->scripture1;
         $study->scripture2          = $page->scripture2;

@@ -301,8 +301,8 @@ echo Route::_(
                                 <label class="form-check-label" for="ai-gen-intro"><?php echo Text::_('JBS_CMN_AI_GEN_INTRO'); ?></label>
                             </div>
                             <div class="form-check form-check-inline mb-0">
-                                <input class="form-check-input" type="checkbox" id="ai-gen-text" checked>
-                                <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?></label>
+                                <input class="form-check-input" type="checkbox" id="ai-gen-text">
+                                <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?> <span class="text-body-secondary small">(<?php echo Text::_('JBS_CMN_AI_GEN_TEXT_TIME'); ?>)</span></label>
                             </div>
                             <div class="form-check form-check-inline mb-0">
                                 <input class="form-check-input" type="checkbox" id="ai-gen-chapters" checked>
@@ -508,7 +508,8 @@ echo Route::_(
                             <div class="alert alert-info small mb-1">
                                 <?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?>
                             </div>
-                            <textarea id="ai-studyintro" class="form-control" rows="3"></textarea>
+                            <div id="ai-studyintro-preview" class="form-control bg-body-tertiary" style="min-height:4rem;max-height:12rem;overflow-y:auto"></div>
+                            <input type="hidden" id="ai-studyintro" value="">
                             <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-intro">
                                 <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
                                 &rarr; <?php echo Text::_('JBS_CMN_DESCRIPTION'); ?>
@@ -517,7 +518,8 @@ echo Route::_(
                         <!-- AI Study Text -->
                         <div class="mb-3" id="ai-text-section">
                             <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_STUDY_TEXT'); ?></label>
-                            <textarea id="ai-studytext" class="form-control" rows="6"></textarea>
+                            <div id="ai-studytext-preview" class="form-control bg-body-tertiary" style="min-height:6rem;max-height:20rem;overflow-y:auto"></div>
+                            <input type="hidden" id="ai-studytext" value="">
                             <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-text">
                                 <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
                                 &rarr; <?php echo Text::_('JBS_STY_STUDY_TEXT'); ?>

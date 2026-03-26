@@ -53,7 +53,7 @@
             </field>
             <field name="media_button_color" type="ColorPicker" default="#2B71B8"
                    description="JBS_ADDON_VIRTUEMART_BUTTON_COLOR_DESC" label="JBS_ADDON_VIRTUEMART_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="fas fa-shopping-cart"
+            <field name="media_icon_type" type="IconType" class="inputbox" default="fa-solid fa-cart-shopping"
                    label="JBS_ADDON_VIRTUEMART_ICON_TYPE"
                    description="JBS_ADDON_VIRTUEMART_ICON_TYPE_DESC">
             </field>

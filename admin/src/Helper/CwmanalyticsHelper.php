@@ -353,6 +353,7 @@ class CwmanalyticsHelper
                 return false;
             }
 
+            // GDPR mode — Proclaim keeps its own copy in component params
             if ($params->get('gdpr_mode', '0')) {
                 return true;
             }

@@ -36,15 +36,26 @@
     function getEditorValue(fieldName) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        // JoomlaEditor API (J5.1+ / J6+)
         if (typeof JoomlaEditor !== 'undefined') {
-            const editor = JoomlaEditor.get(editorId);
+            // Try exact ID first, then with jform_ prefix variations
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
             }
         }
 
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                return editor.getContent();
+            }
+        }
+
+        // Raw textarea fallback (CodeMirror, none editor)
         const el = document.getElementById(editorId);
 
         return el ? el.value : '';
@@ -59,9 +70,9 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        // Joomla 6+: JoomlaEditor API (non-deprecated)
+        // JoomlaEditor API (J5.1+ / J6+)
         if (typeof JoomlaEditor !== 'undefined') {
-            const editor = JoomlaEditor.get(editorId);
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.setValue === 'function') {
                 editor.setValue(value);
@@ -70,6 +81,19 @@
             }
         }
 
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                editor.setContent(value);
+                editor.save();
+
+                return;
+            }
+        }
+
+        // Raw textarea fallback (CodeMirror, none editor)
         const el = document.getElementById(editorId);
 
         if (el) {
@@ -377,19 +401,66 @@
     // ---- AI Assist ----
 
     /**
-     * Animated progress steps shown while the API call is in flight.
+     * Build progress steps based on which fields are being generated.
      * Each entry is [delay_ms, progress_percent, message].
+     *
+     * @param {boolean} topics    Generating topics
+     * @param {boolean} intro     Generating intro
+     * @param {boolean} text      Generating study text
+     * @param {boolean} chapters  Generating chapters
+     * @returns {Array}
      */
-    const progressSteps = [
-        [0,     5,  'Gathering sermon context...'],
-        [1200,  15, 'Reading title and scripture references...'],
-        [2500,  30, 'Analyzing attached media...'],
-        [4000,  45, 'Sending to AI provider...'],
-        [6000,  60, 'Generating topics...'],
-        [8500,  75, 'Writing description and study text...'],
-        [11000, 85, 'Formatting response...'],
-        [14000, 90, 'Almost done...'],
-    ];
+    function buildProgressSteps(topics, intro, text, chapters) {
+        const steps = [
+            [0,    5,  'Gathering sermon context...'],
+            [1200, 15, 'Reading title and scripture references...'],
+            [2500, 25, 'Analyzing attached media...'],
+            [4000, 35, 'Sending to AI provider...'],
+        ];
+
+        let delay = 6000;
+        let pct   = 40;
+
+        if (topics) {
+            steps.push([delay, pct, 'Generating topics...']);
+            delay += 2500;
+            pct   += 10;
+        }
+
+        if (intro) {
+            steps.push([delay, pct, 'Writing description...']);
+            delay += 3000;
+            pct   += 10;
+        }
+
+        if (text) {
+            steps.push([delay, pct, 'Writing detailed study text — this takes 1-2 minutes...']);
+            delay += 10000;
+            pct   += 10;
+            steps.push([delay, pct, 'Covering scripture passages and key points...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Adding practical application and illustrations...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Formatting with scripture links...']);
+            delay += 10000;
+            pct   += 5;
+        }
+
+        if (chapters) {
+            steps.push([delay, pct, 'Suggesting chapter timestamps...']);
+            delay += 3000;
+            pct   += 5;
+        }
+
+        steps.push([delay, Math.min(pct + 5, 90), 'Formatting response...']);
+        steps.push([delay + 4000, 92, 'Almost done...']);
+        steps.push([delay + 10000, 94, 'Still working...']);
+        steps.push([delay + 18000, 96, 'Wrapping up...']);
+
+        return steps;
+    }
 
     /**
      * Add a completed step to the progress list.
@@ -414,12 +485,14 @@
     /**
      * Start the progress animation. Returns a stop function.
      *
+     * @param {Array} steps  Progress steps from buildProgressSteps()
      * @returns {Function}  Call to stop and clean up timers.
      */
-    function startProgress() {
+    function startProgress(steps) {
         const bar       = document.getElementById('ai-progress-bar');
         const text      = document.getElementById('ai-progress-text');
         const container = document.getElementById('ai-progress-steps');
+        let stopped     = false;
 
         if (bar) {
             bar.style.transition = 'width 0.6s ease';
@@ -432,8 +505,12 @@
 
         const timers = [];
 
-        progressSteps.forEach(([delay, pct, msg]) => {
+        steps.forEach(([delay, pct, msg]) => {
             const tid = setTimeout(() => {
+                if (stopped) {
+                    return;
+                }
+
                 if (bar) {
                     bar.style.width = `${pct}%`;
                 }
@@ -449,8 +526,53 @@
             timers.push(tid);
         });
 
+        // After all scripted steps finish, start a repeating "pulse" so the
+        // UI never looks frozen — the bar creeps toward 99% and the message
+        // cycles through reassuring phrases.
+        const lastDelay = steps.length > 0 ? steps[steps.length - 1][0] : 0;
+        const pulseMessages = [
+            'AI is composing a detailed response...',
+            'Reviewing scripture references...',
+            'Crafting key points and application...',
+            'Polishing the final text...',
+            'Almost there, just a moment longer...',
+        ];
+        let pulseIndex = 0;
+        let pulsePct   = 96;
+
+        // Start the pulse loop after all scripted steps are done
+        let pulseInterval = null;
+        const pulseStart = setTimeout(() => {
+            if (stopped) {
+                return;
+            }
+
+            pulseInterval = setInterval(() => {
+                if (stopped) {
+                    clearInterval(pulseInterval);
+
+                    return;
+                }
+
+                pulsePct = Math.min(pulsePct + 0.5, 99);
+
+                if (bar) {
+                    bar.style.width = `${pulsePct}%`;
+                }
+
+                if (text) {
+                    text.textContent = pulseMessages[pulseIndex % pulseMessages.length];
+                }
+
+                pulseIndex++;
+            }, 8000);
+        }, lastDelay + 5000);
+        timers.push(pulseStart);
+
         return function stop() {
+            stopped = true;
             timers.forEach(clearTimeout);
+            clearInterval(pulseInterval);
 
             if (bar) {
                 bar.style.width = '100%';
@@ -490,7 +612,9 @@
             aiRes.style.display  = 'none';
             modal.show();
 
-            const stopProgress = startProgress();
+            const stopProgress = startProgress(
+                buildProgressSteps(wantTopics, wantIntro, wantText, wantChapters),
+            );
 
             const titleEl  = document.getElementById('jform_studytitle');
             const formData = new FormData();
@@ -499,6 +623,10 @@
             formData.append('studytext', getEditorValue('studytext'));
             // Prefer YouTube media file for video context (chapters, tags, description)
             formData.append('media_file_id', youtubeMediaId || mediaId);
+
+            // Send teacher ID so the server can look up the teacher name for AI voice
+            const teacherEl = document.getElementById('jform_teacher_id');
+            formData.append('teacher_id', teacherEl ? teacherEl.value : '0');
 
             // Append toggle flags
             formData.append('generate_topics', wantTopics ? '1' : '0');
@@ -573,9 +701,20 @@
                     });
                 }
 
-                // Populate AI description and study text
+                // Populate AI description and study text (hidden inputs + rendered previews)
                 document.getElementById('ai-studyintro').value = data.studyintro || '';
                 document.getElementById('ai-studytext').value  = data.studytext || '';
+
+                const introPreview = document.getElementById('ai-studyintro-preview');
+                const textPreview  = document.getElementById('ai-studytext-preview');
+
+                if (introPreview) {
+                    introPreview.innerHTML = data.studyintro || '';
+                }
+
+                if (textPreview) {
+                    textPreview.innerHTML = data.studytext || '';
+                }
 
                 // Handle suggested chapters (only show if user opted in)
                 if (chaptersSection) {

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
@@ -238,6 +239,8 @@ class Cwmstats
      */
     public static function getTopStudies(): string
     {
+        CwmDebug::startTimer('Cwmstats::getTopStudies');
+
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
@@ -247,6 +250,8 @@ class Cwmstats
         $cacheKey = 'topStudies:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
+            CwmDebug::stopTimer('Cwmstats::getTopStudies', 'hit=static_cache');
+
             return self::$cache[$cacheKey];
         }
 
@@ -279,6 +284,7 @@ class Cwmstats
         }, [], md5($cacheKey));
 
         self::$cache[$cacheKey] = $result;
+        CwmDebug::stopTimer('Cwmstats::getTopStudies', 'hit=persistent_cache_or_db');
 
         return $result;
     }
@@ -535,6 +541,8 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
+        CwmDebug::startTimer('Cwmstats::getTopScore');
+
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
@@ -544,6 +552,8 @@ class Cwmstats
         $cacheKey = 'topScore:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
+            CwmDebug::stopTimer('Cwmstats::getTopScore', 'hit=static_cache');
+
             return self::$cache[$cacheKey];
         }
 
@@ -618,6 +628,7 @@ class Cwmstats
         }, [], md5($cacheKey));
 
         self::$cache[$cacheKey] = $result;
+        CwmDebug::stopTimer('Cwmstats::getTopScore', 'hit=persistent_cache_or_db');
 
         return $result;
     }

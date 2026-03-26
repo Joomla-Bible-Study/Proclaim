@@ -107,6 +107,120 @@ class CwmyoutubeFileCache
     }
 
     /**
+     * Store video data with a TTL-aware file cache.
+     *
+     * Unlike storeLastKnownVideo (which persists indefinitely as a fallback),
+     * this cache entry expires after the given TTL and is used as the primary
+     * cache layer in getVideo(). This works even when Joomla's global cache
+     * is disabled.
+     *
+     * @param   string  $cacheKey  Unique cache key
+     * @param   array   $video     Video data (or ['_noVideo' => true] sentinel)
+     * @param   int     $ttl       Cache lifetime in seconds
+     *
+     * @return  void
+     *
+     * @since   10.2.2
+     */
+    public static function storeVideoCache(string $cacheKey, array $video, int $ttl = 300): void
+    {
+        self::ensureDir();
+
+        $file = self::dir() . '/vcache_' . md5($cacheKey) . '.json';
+        $data = [
+            'video'    => $video,
+            'storedAt' => time(),
+            'ttl'      => $ttl,
+        ];
+
+        try {
+            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), LOCK_EX);
+        } catch (\JsonException $e) {
+            // Skip caching
+        }
+    }
+
+    /**
+     * Retrieve cached video data if still within TTL.
+     *
+     * @param   string  $cacheKey  Unique cache key (same as used in storeVideoCache)
+     *
+     * @return  array|null  Video data array, ['_noVideo' => true] sentinel, or null if expired/missing
+     *
+     * @since   10.2.2
+     */
+    public static function getVideoCache(string $cacheKey): ?array
+    {
+        $file = self::dir() . '/vcache_' . md5($cacheKey) . '.json';
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $raw = @file_get_contents($file);
+
+        if ($raw === false) {
+            return null;
+        }
+
+        try {
+            $data = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            @unlink($file);
+
+            return null;
+        }
+
+        // Check TTL
+        $age = time() - ($data['storedAt'] ?? 0);
+        $ttl = (int) ($data['ttl'] ?? 300);
+
+        if ($age > $ttl) {
+            @unlink($file);
+
+            return null;
+        }
+
+        return $data['video'] ?? null;
+    }
+
+    /**
+     * Clear all video cache files (vcache_*).
+     *
+     * Called when Joomla cache is cleared or Proclaim admin clears cache.
+     * Preserves quota, throttle, schedule, and last-known-video files
+     * which are critical for API quota protection.
+     *
+     * @return  int  Number of files removed
+     *
+     * @since   10.2.2
+     */
+    public static function clearVideoCache(): int
+    {
+        $dir = self::dir();
+
+        if (!is_dir($dir)) {
+            return 0;
+        }
+
+        $files   = @scandir($dir);
+        $removed = 0;
+
+        if ($files === false) {
+            return 0;
+        }
+
+        foreach ($files as $file) {
+            if (str_starts_with($file, 'vcache_') && is_file($dir . '/' . $file)) {
+                @unlink($dir . '/' . $file);
+                $removed++;
+            }
+        }
+
+        return $removed;
+    }
+
+    /**
      * Store a scheduled start time in a persistent file cache.
      *
      * Joomla's output cache can be flushed at any time, and there may not be
@@ -400,6 +514,16 @@ class CwmyoutubeFileCache
                                 $shouldRemove = true;
                             }
                         } catch (\Exception $e) {
+                            $shouldRemove = true;
+                        }
+                    }
+
+                    // Video cache: remove if past TTL (checked on read too, this is cleanup)
+                    if (str_starts_with($file, 'vcache_')) {
+                        $age = $now - ($data['storedAt'] ?? 0);
+                        $ttl = (int) ($data['ttl'] ?? 300);
+
+                        if ($age > $ttl * 2) {
                             $shouldRemove = true;
                         }
                     }

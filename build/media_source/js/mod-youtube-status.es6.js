@@ -233,9 +233,9 @@
             let html = '';
 
             if (isLive) {
-                html = '<span class="badge bg-danger"><span class="fas fa-circle me-1" aria-hidden="true"></span>' + labelLive + '</span>';
+                html = '<span class="badge bg-danger"><span class="fa-solid fa-circle me-1" aria-hidden="true"></span>' + labelLive + '</span>';
             } else if (isUpcoming) {
-                html = '<span class="badge bg-warning text-dark"><span class="fas fa-clock me-1" aria-hidden="true"></span>' + labelUpcoming + '</span>';
+                html = '<span class="badge bg-warning text-dark"><span class="fa-solid fa-clock me-1" aria-hidden="true"></span>' + labelUpcoming + '</span>';
             }
 
             badgeEl.innerHTML = html;

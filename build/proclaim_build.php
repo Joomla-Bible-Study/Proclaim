@@ -7,7 +7,7 @@
  * Replaces Phing build.xml
  */
 
-const BASE_DIR        = __DIR__ . '/..';
+define('BASE_DIR', realpath(__DIR__ . '/..'));
 const BUILD_DIR       = BASE_DIR . '/build';
 const PROPERTIES_FILE = BASE_DIR . '/build.properties';
 
@@ -22,17 +22,26 @@ try {
         case 'link':
             doLink(verbose: $verbose);
             break;
+        case 'check':
+            doCheckLinks($verbose);
+            break;
         case 'clean':
             doClean($verbose);
             break;
         case 'build':
             doBuild($verbose);
             break;
+        case 'package':
+            doPackage($verbose);
+            break;
         case 'install-joomla':
             doInstallJoomla();
             break;
         case 'joomla-latest':
             doJoomlaLatest();
+            break;
+        case 'verify':
+            doVerifyExtensions($verbose);
             break;
         case 'lint-syntax':
             doLintSyntax($verbose);
@@ -60,10 +69,13 @@ function showHelp(): void
     echo "Commands:\n";
     echo "  setup           Interactive setup wizard for build.properties\n";
     echo "  link            Setup symbolic links to local Joomla installation(s)\n";
+    echo "  check           Verify symlinks are healthy (no recreate)\n";
     echo "  clean           Remove symbolic links (clean dev state)\n";
     echo "  build           Build component package (zip)\n";
+    echo "  package         Build pkg_proclaim (library + plugin + component zips)\n";
     echo "  install-joomla  Download and install Joomla\n";
     echo "  joomla-latest   Show latest available Joomla version\n";
+    echo "  verify          Verify all sub-extensions are registered in dev Joomla DB(s)\n";
     echo "  lint-syntax     Check PHP syntax errors\n";
     echo "\nOptions:\n";
     echo "  -v, --verbose   Show detailed output (e.g., each symlink path)\n";
@@ -167,6 +179,12 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
+        // CWM Scripture Library (separate submodule)
+        BASE_DIR . '/libraries/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
+        BASE_DIR . '/libraries/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
+        BASE_DIR . '/libraries/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
+        // ScriptureLinks plugin (separate submodule)
+        BASE_DIR . '/plugins/content/scripturelinks' => "$joomlaPath/plugins/content/scripturelinks",
     ];
 }
 
@@ -366,16 +384,6 @@ function doLink(bool $quiet = false, bool $verbose = false): void
     $silent = !$verbose;
     symlink_force(BASE_DIR . '/proclaim.xml', BASE_DIR . '/admin/proclaim.xml', $silent);
     symlink_force(BASE_DIR . '/proclaim.script.php', BASE_DIR . '/admin/proclaim.script.php', $silent);
-    if (
-        !is_dir(BASE_DIR . '/media/css/site') && !mkdir(
-            $concurrentDirectory = BASE_DIR . '/media/css/site',
-            0777,
-            true
-        ) && !is_dir($concurrentDirectory)
-    ) {
-        throw new \RuntimeException(\sprintf('Directory "%s" was not created', $concurrentDirectory));
-    }
-    symlink_force(BASE_DIR . '/media/css/cwmcore.css', BASE_DIR . '/media/css/site/cwmcore.css', $silent);
 
     if (!$quiet) {
         echo "Internal links created.\n";
@@ -399,8 +407,9 @@ function doLink(bool $quiet = false, bool $verbose = false): void
 
         if (!$quiet && !$verbose) {
             echo "  Component:  admin, site, media\n";
+            echo "  Libraries:  lib_cwmscripture (src + media)\n";
             echo "  Modules:    mod_proclaim, mod_proclaimicon, mod_proclaim_podcast, mod_proclaim_youtube\n";
-            echo "  Plugins:    finder, system, task\n";
+            echo "  Plugins:    content/scripturelinks, finder, system, task\n";
             echo "  Language:   en-GB.com_proclaim.ini, en-GB.com_proclaim.sys.ini\n";
         }
         $linked++;
@@ -423,6 +432,11 @@ function doLink(bool $quiet = false, bool $verbose = false): void
  */
 function symlink_force(string $target, string $link, bool $quiet = false): void
 {
+    // Warn if the target does not exist (e.g. submodule not initialized)
+    if (!file_exists($target)) {
+        echo "WARNING: Target does not exist, symlink will be broken: $target\n";
+    }
+
     // Clear the file status cache to ensure we get fresh results
     clearstatcache(true, $link);
 
@@ -473,6 +487,250 @@ function symlink_force(string $target, string $link, bool $quiet = false): void
 }
 
 /**
+ * Read Joomla configuration.php and return DB connection details + table prefix.
+ *
+ * @param   string  $joomlaPath  Path to Joomla installation root
+ *
+ * @return  array{host: string, user: string, password: string, db: string, dbprefix: string}|null
+ *
+ * @since  10.3.0
+ */
+function getJoomlaDbConfig(string $joomlaPath): ?array
+{
+    $configFile = $joomlaPath . '/configuration.php';
+
+    if (!file_exists($configFile)) {
+        return null;
+    }
+
+    // Load JConfig class from configuration.php
+    $content = file_get_contents($configFile);
+    // Avoid redeclaring JConfig if already loaded from another site
+    $content = str_replace('class JConfig', 'class JConfig_' . md5($joomlaPath), $content);
+    $content = str_replace('<?php', '', $content);
+    eval($content);
+
+    $className = 'JConfig_' . md5($joomlaPath);
+
+    if (!class_exists($className)) {
+        return null;
+    }
+
+    $config = new $className();
+
+    return [
+        'host'     => $config->host ?? 'localhost',
+        'user'     => $config->user ?? '',
+        'password' => $config->password ?? '',
+        'db'       => $config->db ?? '',
+        'dbprefix' => $config->dbprefix ?? 'jos_',
+    ];
+}
+
+/**
+ * Verify and register all Proclaim sub-extensions in each dev Joomla database.
+ *
+ * Checks libraries, plugins, and modules from the install action queue are
+ * registered in #__extensions. Inserts missing entries and runs install SQL
+ * for libraries. Also enables plugins that should be enabled.
+ *
+ * @param   bool  $verbose  Show detailed output
+ *
+ * @return  void
+ *
+ * @since  10.3.0
+ */
+function doVerifyExtensions(bool $verbose = false): void
+{
+    $props       = getProperties();
+    $joomlaPaths = getJoomlaPaths($props);
+
+    if (\count($joomlaPaths) === 0) {
+        throw new \RuntimeException('No Joomla paths configured. Run \'composer setup\' first.');
+    }
+
+    // Define all expected extensions
+    $expected = [
+        // Libraries
+        ['type' => 'library', 'element' => 'cwmscripture', 'name' => 'lib_cwmscripture', 'folder' => '', 'enabled' => 1, 'locked' => 1],
+        // Content plugin (from ScriptureLinks)
+        ['type' => 'plugin', 'element' => 'scripturelinks', 'name' => 'plg_content_scripturelinks', 'folder' => 'content', 'enabled' => 1, 'locked' => 0],
+        // Proclaim plugins
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_finder_proclaim', 'folder' => 'finder', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_schemaorg_proclaim', 'folder' => 'schemaorg', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_system_proclaim', 'folder' => 'system', 'enabled' => 1, 'locked' => 0],
+        ['type' => 'plugin', 'element' => 'proclaim', 'name' => 'plg_task_proclaim', 'folder' => 'task', 'enabled' => 1, 'locked' => 0],
+        // Component
+        ['type' => 'component', 'element' => 'com_proclaim', 'name' => 'com_proclaim', 'folder' => '', 'enabled' => 1, 'locked' => 0],
+    ];
+
+    foreach ($joomlaPaths as $joomlaPath) {
+        if (!is_dir($joomlaPath)) {
+            echo "WARNING: Path not found, skipping: $joomlaPath\n";
+            continue;
+        }
+
+        echo "\n=== Verifying: $joomlaPath ===\n";
+
+        $dbConfig = getJoomlaDbConfig($joomlaPath);
+
+        if ($dbConfig === null) {
+            echo "  ERROR: Could not read configuration.php\n";
+            continue;
+        }
+
+        try {
+            $pdo = new PDO(
+                'mysql:host=' . $dbConfig['host'] . ';dbname=' . $dbConfig['db'] . ';charset=utf8mb4',
+                $dbConfig['user'],
+                $dbConfig['password'],
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        } catch (PDOException $e) {
+            echo "  ERROR: DB connection failed: " . $e->getMessage() . "\n";
+            continue;
+        }
+
+        $prefix  = $dbConfig['dbprefix'];
+        $ok      = 0;
+        $fixed   = 0;
+        $errors  = 0;
+
+        // Check if the extensions table has a namespace column (Joomla 6+)
+        $nsCheck      = $pdo->query("SHOW COLUMNS FROM {$prefix}extensions LIKE 'namespace'");
+        $hasNamespace = $nsCheck && $nsCheck->rowCount() > 0;
+
+        foreach ($expected as $ext) {
+            $type    = $ext['type'];
+            $element = $ext['element'];
+            $folder  = $ext['folder'];
+            $name    = $ext['name'];
+
+            // Check if extension exists in #__extensions
+            $sql    = "SELECT extension_id, enabled, locked FROM {$prefix}extensions WHERE type = ? AND element = ?";
+            $params = [$type, $element];
+
+            if ($type === 'plugin' && $folder !== '') {
+                $sql .= ' AND folder = ?';
+                $params[] = $folder;
+            }
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                // Extension exists — check enabled/locked state
+                $needsUpdate = false;
+                $updates     = [];
+
+                if ((int) $row['enabled'] !== $ext['enabled']) {
+                    $updates[]   = "enabled = {$ext['enabled']}";
+                    $needsUpdate = true;
+                }
+
+                if ($ext['locked'] && (int) $row['locked'] !== 1) {
+                    $updates[]   = 'locked = 1';
+                    $needsUpdate = true;
+                }
+
+                if ($needsUpdate) {
+                    $updateSql = "UPDATE {$prefix}extensions SET " . implode(', ', $updates)
+                        . " WHERE extension_id = " . (int) $row['extension_id'];
+                    $pdo->exec($updateSql);
+                    echo "  FIXED:  $name ($type) — updated " . implode(', ', $updates) . "\n";
+                    $fixed++;
+                } else {
+                    if ($verbose) {
+                        echo "  OK:     $name ($type)\n";
+                    }
+                    $ok++;
+                }
+            } else {
+                // Extension missing — register it
+                if ($type === 'library') {
+                    // Register a library and run install SQL
+                    $manifest  = '{"name":"lib_cwmscripture","libraryname":"cwmscripture","version":"1.0.0"}';
+
+                    if ($hasNamespace) {
+                        $namespace = 'CWM\\\\Library\\\\Scripture';
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data, namespace) "
+                            . "VALUES (?, 'library', ?, '', 0, 1, 1, ?, ?, '{}', '', ?)";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $ext['locked'], $manifest, $namespace]);
+                    } else {
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data) "
+                            . "VALUES (?, 'library', ?, '', 0, 1, 1, ?, ?, '{}', '')";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $ext['locked'], $manifest]);
+                    }
+
+                    // Run install SQL for tables
+                    $installSql = BASE_DIR . '/libraries/lib_cwmscripture/sql/install.mysql.utf8.sql';
+
+                    if (file_exists($installSql)) {
+                        $sql = file_get_contents($installSql);
+                        $sql = str_replace('#__', $prefix, $sql);
+                        // Execute each statement separately
+                        $statements = array_filter(array_map('trim', explode(';', $sql)));
+
+                        foreach ($statements as $statement) {
+                            if ($statement !== '' && !str_starts_with($statement, '--')) {
+                                try {
+                                    $pdo->exec($statement);
+                                } catch (PDOException $e) {
+                                    // Table may already exist — that's fine
+                                    if ($verbose) {
+                                        echo "  NOTE:   SQL: " . substr($e->getMessage(), 0, 80) . "\n";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    echo "  ADDED:  $name (library) — registered + tables created\n";
+                    $fixed++;
+                } elseif ($type === 'plugin') {
+                    if ($hasNamespace) {
+                        $namespace = match ($folder) {
+                            'content'   => 'CWM\\\\Plugin\\\\Content\\\\ScriptureLinks',
+                            'finder'    => 'CWM\\\\Plugin\\\\Finder\\\\Proclaim',
+                            'system'    => 'CWM\\\\Plugin\\\\System\\\\Proclaim',
+                            'task'      => 'CWM\\\\Plugin\\\\Task\\\\Proclaim',
+                            'schemaorg' => 'CWM\\\\Plugin\\\\Schemaorg\\\\Proclaim',
+                            default     => '',
+                        };
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data, namespace) "
+                            . "VALUES (?, 'plugin', ?, ?, 0, ?, 1, 0, '{}', '{}', '', ?)";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $folder, $ext['enabled'], $namespace]);
+                    } else {
+                        $insertSql = "INSERT INTO {$prefix}extensions "
+                            . "(name, type, element, folder, client_id, enabled, access, locked, manifest_cache, params, custom_data) "
+                            . "VALUES (?, 'plugin', ?, ?, 0, ?, 1, 0, '{}', '{}', '')";
+                        $stmt = $pdo->prepare($insertSql);
+                        $stmt->execute([$name, $element, $folder, $ext['enabled']]);
+                    }
+                    echo "  ADDED:  $name (plugin/$folder)\n";
+                    $fixed++;
+                } elseif ($type === 'component') {
+                    // Component should already exist if Proclaim is installed
+                    echo "  MISS:   $name (component) — install Proclaim via Extension Manager first\n";
+                    $errors++;
+                }
+            }
+        }
+
+        echo "  Summary: $ok OK, $fixed fixed, $errors errors\n";
+    }
+
+    echo "\nDone.\n";
+}
+
+/**
  * Builds the component package (ZIP file).
  *
  * @param   bool  $verbose  If true, lists each file added to the package.
@@ -499,7 +757,7 @@ function doBuild(bool $verbose = false): void
         }
     }
 
-    // Generate date-based version
+    // Generate a date-based version
     $dateVersion = date('Ymd');
 
     // Check if running in a non-interactive environment
@@ -557,11 +815,13 @@ function doBuild(bool $verbose = false): void
         // Exclude internal symlinks created by doLink
         'admin/proclaim.xml',
         'admin/proclaim.script.php',
-        'media/css/site/cwmcore.css',
         // Exclude dev files
         'media/js/joomla.d.ts',
         // Exclude Composer vendor (dev-only)
         'libraries/vendor',
+        // Exclude submodules — installed as separate zips by pkg_proclaim
+        'libraries/lib_cwmscripture',
+        'plugins/content/scripturelinks',
     ];
 
     // File extensions to exclude (dev/debug files)
@@ -680,6 +940,161 @@ function doBuild(bool $verbose = false): void
 }
 
 /**
+ * Builds pkg_proclaim package containing lib_cwmscripture.zip, plg_content_scripturelinks.zip, and com_proclaim.zip.
+ *
+ * @param   bool  $verbose  Show detailed output
+ *
+ * @return void
+ * @throws Exception
+ * @since 10.3.0
+ */
+function doPackage(bool $verbose = false): void
+{
+    // Get version from proclaim.xml
+    $version = '10.3.0';
+
+    if (file_exists(BASE_DIR . '/proclaim.xml')) {
+        $xml = simplexml_load_string(file_get_contents(BASE_DIR . '/proclaim.xml'));
+
+        if ($xml && isset($xml->version)) {
+            $version = (string) $xml->version;
+        }
+    }
+
+    echo "Building pkg_proclaim v$version\n\n";
+
+    $packageDir = BUILD_DIR . '/package';
+
+    if (is_dir($packageDir)) {
+        exec('rm -rf ' . escapeshellarg($packageDir));
+    }
+
+    mkdir($packageDir, 0777, true);
+
+    // Step 1: Build lib_cwmscripture.zip from submodule
+    echo "Step 1: Building lib_cwmscripture.zip...\n";
+    $libBuildScript = BASE_DIR . '/libraries/lib_cwmscripture/build/build-package.php';
+
+    if (!file_exists($libBuildScript)) {
+        throw new \RuntimeException('Library build script not found: ' . $libBuildScript);
+    }
+
+    $libDistDir = BASE_DIR . '/libraries/lib_cwmscripture/build/dist';
+    passthru('php ' . escapeshellarg($libBuildScript), $returnVar);
+
+    if ($returnVar !== 0) {
+        throw new \RuntimeException('Library build failed');
+    }
+
+    // Find the built zip
+    $libZipSource = null;
+
+    if (is_dir($libDistDir)) {
+        foreach (glob($libDistDir . '/lib_cwmscripture-*.zip') as $candidate) {
+            $libZipSource = $candidate;
+            break;
+        }
+    }
+
+    if (!$libZipSource || !file_exists($libZipSource)) {
+        throw new \RuntimeException('lib_cwmscripture ZIP not found after build');
+    }
+
+    copy($libZipSource, $packageDir . '/lib_cwmscripture.zip');
+    echo "  Done: " . basename($libZipSource) . "\n";
+
+    // Step 2: Build plg_content_scripturelinks.zip using --plugin-only flag
+    echo "Step 2: Building plg_content_scripturelinks.zip...\n";
+    $plgBuildScript = BASE_DIR . '/plugins/content/scripturelinks/build/build-package.php';
+
+    if (!file_exists($plgBuildScript)) {
+        throw new \RuntimeException('Plugin build script not found: ' . $plgBuildScript);
+    }
+
+    passthru('php ' . escapeshellarg($plgBuildScript) . ' --plugin-only', $returnVar);
+
+    if ($returnVar !== 0) {
+        throw new \RuntimeException('Plugin build failed');
+    }
+
+    $plgDistDir   = BASE_DIR . '/plugins/content/scripturelinks/build/dist';
+    $plgZipSource = $plgDistDir . '/plg_content_scripturelinks.zip';
+
+    if (!file_exists($plgZipSource)) {
+        throw new \RuntimeException('plg_content_scripturelinks.zip not found after build');
+    }
+
+    copy($plgZipSource, $packageDir . '/plg_content_scripturelinks.zip');
+    echo "  Done.\n";
+
+    // Step 3: Build com_proclaim.zip (calls existing doBuild)
+    echo "Step 3: Building com_proclaim.zip...\n";
+    doBuild($verbose);
+
+    // Find the com_proclaim zip that doBuild created
+    $comZipSource = null;
+
+    foreach (glob(BUILD_DIR . '/com_proclaim-*.zip') as $candidate) {
+        $comZipSource = $candidate;
+        break;
+    }
+
+    if (!$comZipSource || !file_exists($comZipSource)) {
+        throw new \RuntimeException('com_proclaim ZIP not found after build');
+    }
+
+    copy($comZipSource, $packageDir . '/com_proclaim.zip');
+    echo "  Done.\n";
+
+    // Step 4: Assemble pkg_proclaim zip
+    echo "\nAssembling pkg_proclaim-$version.zip...\n";
+    $pkgZipPath = BUILD_DIR . '/pkg_proclaim-' . $version . '.zip';
+
+    if (file_exists($pkgZipPath)) {
+        unlink($pkgZipPath);
+    }
+
+    $pkgZip = new ZipArchive();
+
+    if ($pkgZip->open($pkgZipPath, ZipArchive::CREATE) !== true) {
+        throw new \RuntimeException("Cannot create $pkgZipPath");
+    }
+
+    // Package manifest
+    $pkgZip->addFile(BUILD_DIR . '/pkg_proclaim.xml', 'pkg_proclaim.xml');
+
+    // Install script
+    $scriptFile = BUILD_DIR . '/script.install.php';
+
+    if (!file_exists($scriptFile)) {
+        throw new \RuntimeException('Package install script not found: ' . $scriptFile);
+    }
+
+    $pkgZip->addFile($scriptFile, 'script.install.php');
+
+    // Language file
+    $langFile = BUILD_DIR . '/language/en-GB/en-GB.pkg_proclaim.sys.ini';
+
+    if (!file_exists($langFile)) {
+        throw new \RuntimeException('Package language file not found: ' . $langFile);
+    }
+
+    $pkgZip->addFile($langFile, 'language/en-GB/en-GB.pkg_proclaim.sys.ini');
+
+    // Child extension packages
+    $pkgZip->addFile($packageDir . '/lib_cwmscripture.zip', 'packages/lib_cwmscripture.zip');
+    $pkgZip->addFile($packageDir . '/plg_content_scripturelinks.zip', 'packages/plg_content_scripturelinks.zip');
+    $pkgZip->addFile($packageDir . '/com_proclaim.zip', 'packages/com_proclaim.zip');
+    $pkgZip->close();
+
+    // Cleanup temp package dir
+    exec('rm -rf ' . escapeshellarg($packageDir));
+
+    echo "\nPackage complete: pkg_proclaim-$version.zip\n";
+    echo "Location: $pkgZipPath\n";
+}
+
+/**
  * Downloads and installs a specific version of Joomla.
  *
  * @return void
@@ -757,7 +1172,6 @@ function doClean(bool $verbose = false): void
     $internalLinks = [
         BASE_DIR . '/admin/proclaim.xml',
         BASE_DIR . '/admin/proclaim.script.php',
-        BASE_DIR . '/media/css/site/cwmcore.css',
     ];
 
     $removed = 0;
@@ -801,6 +1215,109 @@ function doClean(bool $verbose = false): void
     }
 
     echo "\nClean complete.\n";
+}
+
+/**
+ * Verifies all symlinks are healthy without recreating them.
+ *
+ * Reports missing, broken, or stale symlinks for both internal and external links.
+ *
+ * @param   bool  $verbose  If true, also prints healthy symlinks.
+ *
+ * @return void
+ * @throws Exception If no Joomla paths are configured.
+ * @since 10.3.0
+ */
+function doCheckLinks(bool $verbose = false): void
+{
+    $props       = getProperties();
+    $joomlaPaths = getJoomlaPaths($props);
+
+    if (\count($joomlaPaths) === 0) {
+        throw new \RuntimeException('No Joomla paths configured. Run \'composer setup\' first.');
+    }
+
+    $issues = 0;
+
+    // Check internal links
+    $internalLinks = [
+        BASE_DIR . '/proclaim.xml'        => BASE_DIR . '/admin/proclaim.xml',
+        BASE_DIR . '/proclaim.script.php'  => BASE_DIR . '/admin/proclaim.script.php',
+    ];
+
+    echo "Internal links:\n";
+    foreach ($internalLinks as $target => $link) {
+        $issues += checkOneLink($target, $link, $verbose);
+    }
+
+    // Check external links for each Joomla path
+    foreach ($joomlaPaths as $joomlaPath) {
+        echo "\nJoomla: $joomlaPath\n";
+
+        if (!is_dir($joomlaPath)) {
+            echo "  MISSING: Joomla path does not exist\n";
+            $issues++;
+            continue;
+        }
+
+        foreach (getExternalLinks($joomlaPath) as $target => $link) {
+            $issues += checkOneLink($target, $link, $verbose);
+        }
+    }
+
+    echo "\n" . ($issues === 0
+        ? "All symlinks are healthy.\n"
+        : "$issues issue(s) found. Run 'composer symlink' to fix.\n");
+
+    if ($issues > 0) {
+        exit(1);
+    }
+}
+
+/**
+ * Checks a single symlink and reports its status.
+ *
+ * @param   string  $target   Expected target path.
+ * @param   string  $link     Symlink path to check.
+ * @param   bool    $verbose  If true, prints healthy links too.
+ *
+ * @return int Number of issues found (0 or 1).
+ * @since 10.3.0
+ */
+function checkOneLink(string $target, string $link, bool $verbose): int
+{
+    clearstatcache(true, $link);
+
+    if (!is_link($link)) {
+        if (file_exists($link)) {
+            echo "  STALE:   $link (real file/dir, not a symlink)\n";
+        } else {
+            echo "  MISSING: $link\n";
+        }
+        return 1;
+    }
+
+    $actual = readlink($link);
+
+    // Resolve to real path for comparison (handles relative vs absolute)
+    $resolvedActual = realpath($actual) ?: $actual;
+    $resolvedTarget = realpath($target) ?: $target;
+
+    if ($resolvedActual !== $resolvedTarget) {
+        echo "  WRONG:   $link -> $actual (expected $target)\n";
+        return 1;
+    }
+
+    if (!file_exists($link)) {
+        echo "  BROKEN:  $link -> $target (target does not exist)\n";
+        return 1;
+    }
+
+    if ($verbose) {
+        echo "  OK:      $link\n";
+    }
+
+    return 0;
 }
 
 /**

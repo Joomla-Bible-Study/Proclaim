@@ -292,12 +292,17 @@ class HtmlView extends BaseHtmlView
 
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
+
+            // Disable Joomla's searchtools — it auto-submits the form on keystroke,
+            // conflicting with Proclaim's AJAX-based filtering which handles the
+            // same form without page reloads.
+            $wa->disableScript('searchtools');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled)
-        $wa->useScript('com_proclaim.scripture-tooltip');
-        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+        $wa->useScript('lib_cwmscripture.scripture-tooltip');
+        $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
         $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
             'ajaxUrl' => Route::_(
@@ -309,6 +314,10 @@ class HtmlView extends BaseHtmlView
         // Register language strings used by infinite scroll / load more JS
         Text::script('JBS_CMN_LOAD_MORE');
         Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_LOADING_SLOW');
+        Text::script('JBS_CMN_LOADING_TIMEOUT');
+        Text::script('JBS_CMN_LOADING_ERROR');
+        Text::script('JBS_CMN_RETRY');
         Text::script('JBS_CMN_SHOWING_X_OF_Y');
         Text::script('JBS_CMN_ALL_ITEMS_LOADED');
 

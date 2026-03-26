@@ -39,9 +39,9 @@ if (empty($items)) {
 [$visibleItems, $hiddenItems] = Cwmlanding::splitItems($items, $limit, $useLimit);
 
 $iconClass = match ($section['sectionType']) {
-    'teachers' => 'fas fa-user-tie',
-    'series'   => 'fas fa-layer-group',
-    default    => 'fas fa-folder',
+    'teachers' => 'fa-solid fa-user-tie',
+    'series'   => 'fa-solid fa-layer-group',
+    default    => 'fa-solid fa-folder',
 };
 ?>
 <div class="proclaim-landing__section" data-section="<?php echo $section['sectionType']; ?>">

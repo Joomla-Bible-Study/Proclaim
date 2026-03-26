@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 
 /**
@@ -204,37 +205,114 @@ class CwmlocationHelper
     /**
      * Return location IDs where the user has an associated teacher record.
      *
+     * Joins through both the many-to-many study_teachers table and the legacy
+     * teacher_id column on studies to cover all assignment paths.
+     *
      * @param   int  $userId  Joomla user ID.
      *
      * @return  int[]  Location IDs.
      *
-     * @since   10.1.0
-     * @todo    Implement once a user_id column is added to #__bsms_teachers.
-     *          When available, join: teachers.user_id = $userId
-     *          → study_teachers.teacher_id → studies.location_id.
+     * @since   10.3.0
      */
     public static function getTeacherLocations(int $userId): array
     {
-        // Stub: teacher-to-user linkage requires a user_id field on #__bsms_teachers
-        // which is not present in the current schema. Return empty until Phase 2.
-        return [];
+        if ($userId <= 0) {
+            return [];
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Many-to-many path: teachers → study_teachers → studies
+        $query1 = $db->getQuery(true)
+            ->select('DISTINCT ' . $db->quoteName('s.location_id'))
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st')
+                . ' ON ' . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id')
+            )
+            ->where($db->quoteName('t.user_id') . ' = :userId1')
+            ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
+            ->where($db->quoteName('s.location_id') . ' > 0')
+            ->bind(':userId1', $userId, ParameterType::INTEGER);
+
+        // Legacy path: teachers → studies.teacher_id
+        $query2 = $db->getQuery(true)
+            ->select('DISTINCT ' . $db->quoteName('s.location_id'))
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('t.user_id') . ' = :userId2')
+            ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
+            ->where($db->quoteName('s.location_id') . ' > 0')
+            ->bind(':userId2', $userId, ParameterType::INTEGER);
+
+        $db->setQuery('(' . $query1 . ') UNION (' . $query2 . ')');
+
+        return array_map('intval', $db->loadColumn() ?: []);
     }
 
     /**
      * Determine whether a user is a teacher of a specific message.
+     *
+     * Checks both the many-to-many study_teachers table and the legacy
+     * teacher_id column on the study record.
      *
      * @param   int  $userId     Joomla user ID.
      * @param   int  $messageId  Message (study) ID.
      *
      * @return  bool
      *
-     * @since   10.1.0
-     * @todo    Implement once a user_id column is added to #__bsms_teachers.
+     * @since   10.3.0
      */
     public static function userIsTeacher(int $userId, int $messageId): bool
     {
-        // Stub: see getTeacherLocations() note.
-        return false;
+        if ($userId <= 0 || $messageId <= 0) {
+            return false;
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check many-to-many path
+        $query = $db->getQuery(true)
+            ->select('1')
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st')
+                . ' ON ' . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('t.user_id') . ' = :userId')
+            ->where($db->quoteName('st.study_id') . ' = :studyId')
+            ->bind(':userId', $userId, ParameterType::INTEGER)
+            ->bind(':studyId', $messageId, ParameterType::INTEGER);
+
+        $db->setQuery($query, 0, 1);
+
+        if ($db->loadResult()) {
+            return true;
+        }
+
+        // Check legacy teacher_id path
+        $query2 = $db->getQuery(true)
+            ->select('1')
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studies', 's')
+                . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('t.user_id') . ' = :userId2')
+            ->where($db->quoteName('s.id') . ' = :studyId2')
+            ->bind(':userId2', $userId, ParameterType::INTEGER)
+            ->bind(':studyId2', $messageId, ParameterType::INTEGER);
+
+        $db->setQuery($query2, 0, 1);
+
+        return (bool) $db->loadResult();
     }
 
     /**

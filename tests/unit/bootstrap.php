@@ -41,6 +41,7 @@ $propsFile = $componentRoot . '/build.properties';
 
 if (file_exists($propsFile)) {
     $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $props = [];
 
     foreach ($lines as $line) {
         $trimmed = trim($line);
@@ -55,13 +56,20 @@ if (file_exists($propsFile)) {
             continue;
         }
 
-        $key   = trim(substr($trimmed, 0, $eq));
-        $value = trim(substr($trimmed, $eq + 1));
+        $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
+    }
 
-        if ($key === 'builder.joomla_dir' && $value !== '' && is_dir($value)) {
-            $joomlaCmsPath = $value;
-            break;
+    // Prefer builder.joomla_dir, fall back to first entry in builder.joomla_paths
+    if (!empty($props['builder.joomla_dir']) && is_dir($props['builder.joomla_dir'])) {
+        $joomlaCmsPath = $props['builder.joomla_dir'];
+    } elseif (!empty($props['builder.joomla_paths'])) {
+        $candidate = trim(explode(',', $props['builder.joomla_paths'])[0]);
+
+        if ($candidate !== '' && is_dir($candidate)) {
+            $joomlaCmsPath = $candidate;
         }
+    } elseif (!empty($props['builder.joomla_path']) && is_dir($props['builder.joomla_path'])) {
+        $joomlaCmsPath = $props['builder.joomla_path'];
     }
 }
 

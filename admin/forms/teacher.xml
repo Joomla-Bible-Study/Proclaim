@@ -27,6 +27,10 @@
                addfieldprefix="Joomla\Component\Contact\Administrator\Field"
                description="JBS_TCH_SELECT_CONTACT_DESC"
                label="JBS_TCH_SELECT_CONTACT_LABEL"/>
+        <field name="user_id"
+               type="user"
+               label="JBS_TCH_USER_ACCOUNT"
+               description="JBS_TCH_USER_ACCOUNT_DESC"/>
     </fieldset>
 
     <fieldset name="sidebar" label="JGLOBAL_FIELDSET_OPTIONS">

@@ -31,13 +31,7 @@
         <field name="org_name" type="text" size="60" label="JBS_ADM_ORG_NAME"
                description="JBS_ADM_ORG_NAME_DESC" filter="string"
                hint="JBS_ADM_ORG_NAME_HINT"/>
-        <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
-               description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
-               layout="joomla.form.field.radio.switcher">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        <field name="jbsmigrationshow" type="radio" default="0"
+<field name="jbsmigrationshow" type="radio" default="0"
                label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
@@ -55,12 +49,7 @@
         </field>
         <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
                description="JBS_ADM_POPULAR_LIMIT_DESC"/>
-        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER"
-               description="JBS_ADM_CHARACTER_FILTER_DESC">
-            <option value="0">JBS_ADM_NO_FILTER</option>
-            <option value="1">JBS_ADM_FILTER</option>
-        </field>
-        <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
+<field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
                description="JBS_ADM_FORMAT_POPULAR_DESC">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
@@ -122,10 +111,10 @@
         <field name="download_icon_type" type="list" default=""
                label="JBS_ADDON_ICON_TYPE"
                description="JBS_ADDON_ICON_TYPE_DESC">
-            <option value="fas fa-download">JBS_DOWNLOAD_1</option>
-            <option value="fas fa-arrow-down">JBS_DOWNLOAD_2</option>
-            <option value="fas fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
-            <option value="fas fa-long-arrow-down">JBS_DOWNLOAD_4</option>
+            <option value="fa-solid fa-download">JBS_DOWNLOAD_1</option>
+            <option value="fa-solid fa-arrow-down">JBS_DOWNLOAD_2</option>
+            <option value="fa-solid fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
+            <option value="fa-solid fa-long-arrow-down">JBS_DOWNLOAD_4</option>
             <option value="1">JBS_MED_CUSTOM</option>
         </field>
         <field name="download_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
@@ -330,6 +319,14 @@
                label="JBS_ADM_AI_MODEL"
                description="JBS_ADM_AI_MODEL_DESC">
             <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
+        </field>
+        <field name="ai_voice" type="list" default="third_person"
+               label="JBS_ADM_AI_VOICE"
+               description="JBS_ADM_AI_VOICE_DESC">
+            <option value="third_person">JBS_ADM_AI_VOICE_THIRD_PERSON</option>
+            <option value="first_person">JBS_ADM_AI_VOICE_FIRST_PERSON</option>
+            <option value="conversational">JBS_ADM_AI_VOICE_CONVERSATIONAL</option>
+            <option value="summary">JBS_ADM_AI_VOICE_SUMMARY</option>
         </field>
         <field name="yt_auto_import_topics" type="radio" default="0"
                label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"

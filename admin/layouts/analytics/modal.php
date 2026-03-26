@@ -31,7 +31,7 @@ use Joomla\CMS\Language\Text;
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                         aria-label="<?php echo Text::_('JBS_ANA_MODAL_CLOSE'); ?>"></button>
             </div>
-            <div class="modal-body" id="cwm-analytics-modal-body">
+            <div class="modal-body p-4" id="cwm-analytics-modal-body">
                 <div class="text-center py-5">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden"><?php echo Text::_('JBS_ANA_MODAL_LOADING'); ?></span>

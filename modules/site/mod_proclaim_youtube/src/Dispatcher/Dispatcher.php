@@ -56,14 +56,15 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         /** @var YoutubeHelper $helper */
         $helper = $this->getHelperFactory()->getHelper('YoutubeHelper');
 
-        // Get video data
+        // Get video data (served from cache when available)
         $video    = $helper->getVideo($data['params'], $this->getApplication());
         $serverId = (int) $data['params']->get('server_id', 0);
 
-        // Verify live status — skip if getVideo() already fetched fresh data from API
-        if ($video && $serverId && !$helper->wasFreshFetch()) {
-            $video = $helper->verifyLiveStatus($video, $serverId);
-        }
+        // Live/upcoming status verification is handled by JavaScript polling
+        // (mod-youtube-status.js) which calls getStatusAjax every 2 minutes.
+        // This avoids autoloading the 7MB Google API SDK on every page render.
+        // The cached isLive/isUpcoming flags from getVideo() are accurate
+        // enough for the initial render — JS corrects within one poll cycle.
 
         // Build embed URL if video found
         $embedUrl = null;

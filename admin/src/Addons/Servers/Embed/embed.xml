@@ -56,7 +56,7 @@
             </field>
             <field name="media_button_color" type="ColorPicker" default="#666666"
                    description="JBS_ADDON_EMBED_BUTTON_COLOR_DESC" label="JBS_ADDON_EMBED_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="fas fa-code"
+            <field name="media_icon_type" type="IconType" class="inputbox" default="fa-solid fa-code"
                    label="JBS_ADDON_EMBED_ICON_TYPE"
                    description="JBS_ADDON_EMBED_ICON_TYPE_DESC">
             </field>

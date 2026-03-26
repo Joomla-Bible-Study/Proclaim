@@ -59,6 +59,9 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  9.0.18
      */
     private static array $installActionQueue = [
+        // Libraries and plg_content_scripturelinks are now installed by pkg_proclaim (Joomla package).
+        // Only plugins/modules still bundled inside com_proclaim.zip are listed here.
+
         // -- modules => { (folder) => { (module) => { (position), (published) } }* }*
         'modules' => [
             'admin' => [
@@ -209,6 +212,39 @@ class com_proclaimInstallerScript extends InstallerScript
         // Dead site form XMLs (no frontend models use them) removed in 10.1.0
         '/components/com_proclaim/forms/mediafile.xml',
         '/components/com_proclaim/forms/message.xml',
+        // Bible provider files moved to lib_cwmscripture in 10.3.0
+        '/components/com_proclaim/src/Bible/BibleProviderInterface.php',
+        '/components/com_proclaim/src/Bible/AbstractBibleProvider.php',
+        '/components/com_proclaim/src/Bible/BiblePassageResult.php',
+        '/components/com_proclaim/src/Bible/BibleProviderFactory.php',
+        '/components/com_proclaim/src/Bible/Provider/ApiBibleProvider.php',
+        '/components/com_proclaim/src/Bible/Provider/GetBibleProvider.php',
+        '/components/com_proclaim/src/Bible/Provider/LocalProvider.php',
+        '/administrator/components/com_proclaim/src/Bible/BibleImporter.php',
+        '/administrator/components/com_proclaim/src/Helper/ScriptureReference.php',
+        // Scripture JS/CSS moved to lib_cwmscripture in 10.3.0
+        // (cwm-fetch and scripture-autocomplete stay in com_proclaim)
+        '/media/com_proclaim/js/bible-translations.js',
+        '/media/com_proclaim/js/bible-translations.min.js',
+        '/media/com_proclaim/js/bible-translations.min.js.gz',
+        '/media/com_proclaim/js/bible-translations.min.js.map',
+        '/media/com_proclaim/js/scripture-switcher.js',
+        '/media/com_proclaim/js/scripture-switcher.min.js',
+        '/media/com_proclaim/js/scripture-switcher.min.js.gz',
+        '/media/com_proclaim/js/scripture-switcher.min.js.map',
+        '/media/com_proclaim/js/scripture-tooltip.js',
+        '/media/com_proclaim/js/scripture-tooltip.min.js',
+        '/media/com_proclaim/js/scripture-tooltip.min.js.gz',
+        '/media/com_proclaim/js/scripture-tooltip.min.js.map',
+        '/media/com_proclaim/css/scripture-text.css',
+        '/media/com_proclaim/css/scripture-text.min.css',
+        '/media/com_proclaim/css/scripture-text.min.css.map',
+        '/media/com_proclaim/css/scripture-switcher.css',
+        '/media/com_proclaim/css/scripture-switcher.min.css',
+        '/media/com_proclaim/css/scripture-switcher.min.css.map',
+        '/media/com_proclaim/css/scripture-tooltip.css',
+        '/media/com_proclaim/css/scripture-tooltip.min.css',
+        '/media/com_proclaim/css/scripture-tooltip.min.css.map',
     ];
 
     /**
@@ -272,6 +308,10 @@ class com_proclaimInstallerScript extends InstallerScript
         '/plugins/search/biblestudysearch',
         '/plugins/system/proclaimbackup',
         '/plugins/system/proclaimpodcast',
+        // Bible provider folders moved to lib_cwmscripture in 10.3.0
+        '/components/com_proclaim/src/Bible/Provider',
+        '/components/com_proclaim/src/Bible',
+        '/administrator/components/com_proclaim/src/Bible',
     ];
 
     /**
@@ -397,6 +437,37 @@ class com_proclaimInstallerScript extends InstallerScript
                     $db->execute();
                 } catch (\Exception $e) {
                     // Ignore — column may have been dropped by concurrent request
+                }
+            }
+        }
+
+        // Second pass: fix columns that SHOULD exist but are missing.
+        // This catches bugs where a migration's schema version advanced
+        // but the column was never added (e.g., missing from install SQL).
+        $requiredFixes = [
+            '#__bsms_podcast' => [
+                'platform_links' => 'TEXT DEFAULT NULL',
+            ],
+        ];
+
+        foreach ($requiredFixes as $table => $columns) {
+            if (!$this->tableExists($table)) {
+                continue;
+            }
+
+            $liveColumns = $this->getTableColumns($table);
+
+            foreach ($columns as $column => $definition) {
+                if (!\in_array($column, $liveColumns, true)) {
+                    try {
+                        $db->setQuery(
+                            'ALTER TABLE ' . $db->quoteName($table)
+                            . ' ADD COLUMN ' . $db->quoteName($column) . ' ' . $definition
+                        );
+                        $db->execute();
+                    } catch (\Exception $e) {
+                        // Ignore
+                    }
                 }
             }
         }
@@ -585,13 +656,127 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function uninstall($parent): bool
     {
+        // Drop tables if the admin setting is enabled
+        $this->dropTablesIfRequested();
+
         // Uninstall sub-extensions
         $this->uninstallSubExtensions();
+
+        // Clean up post-install messages
+        $this->cleanupPostInstallMessages();
 
         // Show the post-uninstalling page
         $this->renderPostUninstallation($this->status, $parent);
 
         return true;
+    }
+
+    /**
+     * Drop all Proclaim database tables if the admin setting is enabled.
+     *
+     * Reads the drop_tables flag from #__bsms_admin. When enabled,
+     * removes all component assets and drops tables using the uninstall SQL.
+     *
+     * @return void
+     *
+     * @since 10.3.0
+     */
+    private function dropTablesIfRequested(): void
+    {
+        try {
+            // Check if the admin table exists
+            $table = $this->dbo->getPrefix() . 'bsms_admin';
+            $this->dbo->setQuery("SHOW TABLES LIKE " . $this->dbo->quote($table));
+
+            if (!$this->dbo->loadResult()) {
+                return;
+            }
+
+            $query = $this->dbo->getQuery(true)
+                ->select($this->dbo->quoteName('drop_tables'))
+                ->from($this->dbo->quoteName('#__bsms_admin'))
+                ->where($this->dbo->quoteName('id') . ' = 1');
+            $this->dbo->setQuery($query);
+            $dropTables = (int) $this->dbo->loadResult();
+
+            if ($dropTables < 1) {
+                return;
+            }
+
+            // Remove component assets
+            $query = $this->dbo->getQuery(true)
+                ->select($this->dbo->quoteName('id'))
+                ->from($this->dbo->quoteName('#__assets'))
+                ->where($this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $parentId = (int) $this->dbo->loadResult();
+
+            if ($parentId > 0) {
+                $query = $this->dbo->getQuery(true)
+                    ->delete($this->dbo->quoteName('#__assets'))
+                    ->where($this->dbo->quoteName('parent_id') . ' = ' . (int) $parentId)
+                    ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+                $this->dbo->setQuery($query);
+                $this->dbo->execute();
+            }
+
+            $query = $this->dbo->getQuery(true)
+                ->delete($this->dbo->quoteName('#__assets'))
+                ->where($this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim%'))
+                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+            $this->dbo->setQuery($query);
+            $this->dbo->execute();
+
+            // Run the uninstall SQL
+            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
+
+            if (!file_exists($sqlFile)) {
+                return;
+            }
+
+            $buffer = file_get_contents($sqlFile);
+
+            if ($buffer === false) {
+                return;
+            }
+
+            $queries = DatabaseDriver::splitSql($buffer);
+
+            foreach ($queries as $singleQuery) {
+                $singleQuery = trim($singleQuery);
+
+                if ($singleQuery !== '' && $singleQuery[0] !== '#') {
+                    try {
+                        $this->dbo->setQuery($singleQuery);
+                        $this->dbo->execute();
+                    } catch (\Exception $e) {
+                        // Continue dropping remaining tables
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // If anything fails, don't block uninstall
+        }
+    }
+
+    /**
+     * Clean up post-install messages for the component.
+     *
+     * @return void
+     *
+     * @since 10.3.0
+     */
+    private function cleanupPostInstallMessages(): void
+    {
+        try {
+            $query = $this->dbo->getQuery(true)
+                ->delete($this->dbo->quoteName('#__postinstall_messages'))
+                ->where($this->dbo->quoteName('language_extension') . ' = ' . $this->dbo->quote('com_proclaim'));
+            $this->dbo->setQuery($query);
+            $this->dbo->execute();
+        } catch (\Exception $e) {
+            // Don't block uninstall
+        }
     }
 
     /**
@@ -606,6 +791,9 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->status          = new stdClass();
         $this->status->modules = [];
         $this->status->plugins = [];
+
+        // Libraries and plg_content_scripturelinks are managed by pkg_proclaim (Joomla package).
+        // Joomla's package uninstaller handles their cleanup.
 
         // Modules uninstalling
         if (!empty(self::$installActionQueue['modules'])) {
@@ -930,6 +1118,9 @@ class com_proclaimInstallerScript extends InstallerScript
             // Match legacy podcastlink URLs to Joomla menu item IDs
             $this->migratePodcastLinkToMenuItem();
 
+            // Migrate scripture settings from component params to plugin params
+            $this->migrateScriptureParamsToPlugin();
+
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
             // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
@@ -1001,10 +1192,12 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private function installSubExtensions(InstallerAdapter $parent): void
     {
-        $src                   = $parent->getParent()->getPath('source');
-        $this->status          = new stdClass();
-        $this->status->modules = [];
-        $this->status->plugins = [];
+        $src                     = $parent->getParent()->getPath('source');
+        $this->status            = new stdClass();
+        $this->status->modules   = [];
+        $this->status->plugins   = [];
+
+        // Libraries and plg_content_scripturelinks are installed by pkg_proclaim (Joomla package installer).
 
         // Modules installation
         if (!empty(self::$installActionQueue['modules'])) {
@@ -1105,8 +1298,8 @@ class com_proclaimInstallerScript extends InstallerScript
                 'result' => $result,
             ];
 
-            if ($isNewInstall && $result) {
-                $this->configureModule($module, $client, $preferences);
+            if ($result) {
+                $this->configureModule($module, $client, $preferences, $isNewInstall);
             }
         }
     }
@@ -1114,17 +1307,34 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Configure a module after installation
      *
-     * @param   string  $module       Module name
-     * @param   string  $client       Client
-     * @param   array   $preferences  Preferences
+     * @param   string  $module        Module name
+     * @param   string  $client        Client
+     * @param   array   $preferences   Preferences
+     * @param   bool    $isNewInstall  True on first install, false on update
      *
      * @return void
      * @since 10.1.0
      */
-    private function configureModule(string $module, string $client, array $preferences): void
+    private function configureModule(string $module, string $client, array $preferences, bool $isNewInstall = true): void
     {
         [$position, $published] = (array) $preferences;
         $element                = 'mod_' . $module;
+
+        // On update, only set defaults if the module has no params yet.
+        // This avoids overwriting user customizations.
+        if (!$isNewInstall && $module === 'proclaimicon') {
+            $check = $this->dbo->getQuery(true)
+                ->select($this->dbo->qn('params'))
+                ->from($this->dbo->qn('#__modules'))
+                ->where($this->dbo->qn('module') . ' = ' . $this->dbo->q($element));
+            $this->dbo->setQuery($check);
+            $existing = (string) $this->dbo->loadResult();
+
+            // If params are already populated, skip reconfiguration
+            if ($existing !== '' && $existing !== '{}') {
+                return;
+            }
+        }
 
         $query = $this->dbo->getQuery(true)
             ->update($this->dbo->qn('#__modules'))
@@ -2017,6 +2227,123 @@ class com_proclaimInstallerScript extends InstallerScript
         } catch (\Exception $e) {
             Factory::getApplication()->enqueueMessage(
                 'Podcast link migration notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * Migrate scripture settings from #__bsms_admin.params to plg_content_scripturelinks params.
+     *
+     * Copies provider_getbible, gdpr_mode, provider_api_bible, api_bible_api_key,
+     * scripture_cache_days, and default_bible_version from the component admin row
+     * to the plugin's #__extensions.params, then removes them from the component.
+     *
+     * Idempotent — skips if plugin row doesn't exist or keys aren't present.
+     *
+     * @return  void
+     *
+     * @since  10.3.0
+     */
+    private function migrateScriptureParamsToPlugin(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Load component admin params
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $adminJson = $db->loadResult();
+
+            if (empty($adminJson)) {
+                return;
+            }
+
+            $adminParams = new \Joomla\Registry\Registry($adminJson);
+
+            // Check if any scripture keys exist in component params
+            $keyMap = [
+                'provider_getbible'    => 'provider_getbible',
+                'gdpr_mode'            => 'gdpr_mode',
+                'provider_api_bible'   => 'provider_api_bible',
+                'api_bible_api_key'    => 'api_bible_api_key',
+                'scripture_cache_days' => 'cache_days',
+                'default_bible_version' => 'default_version',
+            ];
+
+            $hasAny = false;
+
+            foreach (array_keys($keyMap) as $compKey) {
+                if ($adminParams->get($compKey) !== null) {
+                    $hasAny = true;
+                    break;
+                }
+            }
+
+            if (!$hasAny) {
+                return;
+            }
+
+            // Load plugin params
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote('content'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('scripturelinks'));
+            $db->setQuery($query);
+            $pluginJson = $db->loadResult();
+
+            if ($pluginJson === null) {
+                // Plugin not installed yet — migration will happen when it is
+                return;
+            }
+
+            $pluginParams = new \Joomla\Registry\Registry($pluginJson);
+
+            // Copy values from component to plugin.
+            // gdpr_mode is shared — copy to plugin but keep in component params
+            // (Proclaim uses it for analytics/privacy beyond just scripture).
+            foreach ($keyMap as $compKey => $pluginKey) {
+                $value = $adminParams->get($compKey);
+
+                if ($value !== null) {
+                    $pluginParams->set($pluginKey, $value);
+
+                    if ($compKey !== 'gdpr_mode') {
+                        $adminParams->remove($compKey);
+                    }
+                }
+            }
+
+            // Save plugin params
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__extensions'))
+                ->set($db->quoteName('params') . ' = ' . $db->quote($pluginParams->toString()))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote('content'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('scripturelinks'));
+            $db->setQuery($query);
+            $db->execute();
+
+            // Save cleaned component params
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_admin'))
+                ->set($db->quoteName('params') . ' = ' . $db->quote($adminParams->toString()))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $db->execute();
+
+            Factory::getApplication()->enqueueMessage(
+                'Scripture settings migrated to ScriptureLinks plugin.',
+                'message'
+            );
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Scripture settings migration notice: ' . $e->getMessage(),
                 'warning'
             );
         }

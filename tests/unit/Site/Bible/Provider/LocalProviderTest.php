@@ -11,9 +11,9 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Bible\Provider;
 
-use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use CWM\Library\Scripture\Bible\AbstractBibleProvider;
+use CWM\Library\Scripture\Bible\Provider\LocalProvider;
 
 /**
  * Test class for LocalProvider
