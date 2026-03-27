@@ -14,18 +14,23 @@ namespace CWM\Plugin\WebServices\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\ApiRouter;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Registry\Registry;
 use Joomla\Router\Route;
 
 /**
  * Web Services plugin for Proclaim — read-only REST API.
  *
- * Registers GET routes for sermons, teachers, series, and podcasts.
- * All endpoints respect Joomla access levels (multi-campus isolation).
+ * Controlled by the `api_access` admin setting:
+ *   0 = Disabled (no routes registered)
+ *   1 = Public (read-only, no authentication required)
+ *   2 = API Key Required (Joomla user API token via Bearer header)
  *
- * Endpoints:
+ * Endpoints (when enabled):
  *   GET /api/index.php/v1/proclaim/sermons          — Sermon list
  *   GET /api/index.php/v1/proclaim/sermons/:id       — Sermon detail
  *   GET /api/index.php/v1/proclaim/teachers          — Teacher list
@@ -42,10 +47,6 @@ use Joomla\Router\Route;
 class Proclaim extends CMSPlugin implements SubscriberInterface
 {
     /**
-     * Returns the events this subscriber listens to.
-     *
-     * @return  array
-     *
      * @since   10.3.0
      */
     public static function getSubscribedEvents(): array
@@ -56,9 +57,9 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Register Proclaim API routes.
+     * Register Proclaim API routes based on the admin api_access setting.
      *
-     * @param   \Joomla\CMS\Event\WebAsset\BeforeApiRouteEvent|mixed  $event  The API route event
+     * @param   mixed  $event  The API route event
      *
      * @return  void
      *
@@ -66,31 +67,45 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     public function onBeforeApiRoute($event): void
     {
-        $router = $event->getRouter();
+        $apiAccess = $this->getApiAccessSetting();
 
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/sermons', 'sermons');
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/teachers', 'teachers');
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/series', 'series');
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/podcasts', 'podcasts');
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/media', 'media');
+        // 0 = Disabled — do not register any routes
+        if ($apiAccess === 0) {
+            return;
+        }
+
+        // 1 = Public (no auth), 2 = API key required
+        $isPublic = ($apiAccess === 1);
+        $router   = $event->getRouter();
+
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/sermons', 'sermons', $isPublic);
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/teachers', 'teachers', $isPublic);
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/series', 'series', $isPublic);
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/podcasts', 'podcasts', $isPublic);
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/media', 'media', $isPublic);
     }
 
     /**
      * Register read-only (GET) routes for a resource.
      *
      * @param   ApiRouter  $router      The API router
-     * @param   string     $baseName    Route base path (e.g. 'v1/proclaim/sermons')
-     * @param   string     $controller  Controller name (maps to displayList/displayItem tasks)
+     * @param   string     $baseName    Route base path
+     * @param   string     $controller  Controller name
+     * @param   bool       $isPublic    Whether routes are publicly accessible
      *
      * @return  void
      *
      * @since   10.3.0
      */
-    private function createReadOnlyRoutes(ApiRouter $router, string $baseName, string $controller): void
-    {
+    private function createReadOnlyRoutes(
+        ApiRouter $router,
+        string $baseName,
+        string $controller,
+        bool $isPublic
+    ): void {
         $defaults = [
             'component' => 'com_proclaim',
-            'public'    => true,
+            'public'    => $isPublic,
         ];
 
         $routes = [
@@ -99,5 +114,35 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         ];
 
         $router->addRoutes($routes);
+    }
+
+    /**
+     * Read the api_access setting from the Proclaim admin params.
+     *
+     * @return  int  0 = disabled, 1 = public, 2 = API key required
+     *
+     * @since   10.3.0
+     */
+    private function getApiAccessSetting(): int
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('params'))
+                ->from($db->quoteName('#__bsms_admin'))
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query, 0, 1);
+            $json = $db->loadResult();
+
+            if ($json) {
+                $params = new Registry($json);
+
+                return (int) $params->get('api_access', 0);
+            }
+        } catch (\Throwable) {
+            // Table may not exist yet (fresh install before migration)
+        }
+
+        return 0;
     }
 }
