@@ -1,26 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" bootstrap="tests/unit/bootstrap.php" executionOrder="depends,defects" beStrictAboutOutputDuringTests="true" failOnRisky="true" failOnWarning="true" colors="true" cacheDirectory=".phpunit.cache" requireCoverageMetadata="false" beStrictAboutCoverageMetadata="false">
-  <testsuites>
-    <testsuite name="Proclaim Unit Tests">
-      <directory suffix="Test.php">tests/unit</directory>
-    </testsuite>
-    <testsuite name="Proclaim Integration Tests">
-      <directory suffix="Test.php">tests/integration</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <const name="JPATH_BASE" value="."/>
-    <const name="JPATH_ROOT" value="."/>
-  </php>
-  <source>
-    <include>
-      <directory suffix=".php">admin/src</directory>
-      <directory suffix=".php">site/src</directory>
-    </include>
-    <exclude>
-      <directory suffix=".php">admin/src/View</directory>
-      <directory suffix=".php">site/src/View</directory>
-      <directory suffix=".php">admin/src/Field</directory>
-    </exclude>
-  </source>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+	bootstrap="tests/unit/bootstrap.php"
+	executionOrder="depends,defects"
+	beStrictAboutOutputDuringTests="true"
+	failOnRisky="true"
+	failOnWarning="true"
+	colors="true"
+	cacheDirectory=".phpunit.cache"
+	requireCoverageMetadata="false"
+	beStrictAboutCoverageMetadata="false">
+
+	<testsuites>
+		<!-- Broad suites -->
+		<testsuite name="Proclaim Unit Tests">
+			<directory>tests/unit</directory>
+		</testsuite>
+		<testsuite name="Proclaim Integration Tests">
+			<directory>tests/integration</directory>
+		</testsuite>
+
+		<!-- Granular unit suites -->
+		<testsuite name="Admin Helper Tests">
+			<directory>tests/unit/Admin/Helper</directory>
+		</testsuite>
+		<testsuite name="Admin Lib Tests">
+			<directory>tests/unit/Admin/Lib</directory>
+		</testsuite>
+		<testsuite name="Admin Bible Tests">
+			<directory>tests/unit/Admin/Bible</directory>
+		</testsuite>
+		<testsuite name="Site Helper Tests">
+			<directory>tests/unit/Site/Helper</directory>
+		</testsuite>
+		<testsuite name="Site Controller Tests">
+			<directory>tests/unit/Site/Controller</directory>
+		</testsuite>
+		<testsuite name="Site Model Tests">
+			<directory>tests/unit/Site/Model</directory>
+		</testsuite>
+		<testsuite name="Site Bible Tests">
+			<directory>tests/unit/Site/Bible</directory>
+		</testsuite>
+
+		<!-- Granular integration suites -->
+		<testsuite name="Integration Admin Helper Tests">
+			<directory>tests/integration/Admin/Helper</directory>
+		</testsuite>
+		<testsuite name="Integration Admin Lib Tests">
+			<directory>tests/integration/Admin/Lib</directory>
+		</testsuite>
+		<testsuite name="Integration Admin Table Tests">
+			<directory>tests/integration/Admin/Table</directory>
+		</testsuite>
+	</testsuites>
+
+	<php>
+		<const name="JPATH_BASE" value="."/>
+		<const name="JPATH_ROOT" value="."/>
+	</php>
+
+	<source>
+		<include>
+			<directory>admin/src</directory>
+			<directory>site/src</directory>
+		</include>
+		<exclude>
+			<directory>admin/src/View</directory>
+			<directory>site/src/View</directory>
+			<directory>admin/src/Field</directory>
+		</exclude>
+	</source>
 </phpunit>
