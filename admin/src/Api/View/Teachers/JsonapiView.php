@@ -6,7 +6,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace CWM\Component\Proclaim\Administrator\Api\View\Teachers;
+namespace CWM\Component\Proclaim\Api\View\Teachers;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

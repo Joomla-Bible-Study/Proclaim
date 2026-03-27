@@ -91,7 +91,6 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $defaults = [
             'component' => 'com_proclaim',
             'public'    => true,
-            'format'    => ['application/json'],
         ];
 
         $routes = [

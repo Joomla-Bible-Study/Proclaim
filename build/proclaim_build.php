@@ -177,6 +177,7 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/plugins/schemaorg/proclaim'                      => "$joomlaPath/plugins/schemaorg/proclaim",
         BASE_DIR . '/plugins/system/proclaim'                         => "$joomlaPath/plugins/system/proclaim",
         BASE_DIR . '/plugins/task/proclaim'                           => "$joomlaPath/plugins/task/proclaim",
+        BASE_DIR . '/plugins/webservices/proclaim'                    => "$joomlaPath/plugins/webservices/proclaim",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
         // CWM Scripture Library (separate submodule)
