@@ -25,19 +25,48 @@ use Joomla\CMS\MVC\Controller\ApiController;
  */
 class SeriesController extends ApiController
 {
-    /**
-     * The content type for serialization.
-     *
-     * @var    string
-     * @since  10.3.0
-     */
     protected $contentType = 'series';
 
+    protected $default_view = 'series';
+
     /**
-     * The default view for the display method.
+     * Map API model names to Cwm-prefixed Proclaim classes.
      *
-     * @var    string
+     * Series is special: Doctrine singularize('series') === 'series', so
+     * both list and item requests pass 'series'. We track which context
+     * we're in via $itemModelRequested (set by displayItem override).
+     *
      * @since  10.3.0
      */
-    protected $default_view = 'series';
+    private bool $itemModelRequested = false;
+
+    /**
+     * @since  10.3.0
+     */
+    public function displayItem($id = null)
+    {
+        $this->itemModelRequested = true;
+
+        return parent::displayItem($id);
+    }
+
+    /**
+     * @since  10.3.0
+     */
+    public function getModel($name = '', $prefix = '', $config = [])
+    {
+        if (strtolower($name) === 'series') {
+            $name = $this->itemModelRequested ? 'Cwmserie' : 'Cwmseries';
+
+            return parent::getModel($name, $prefix, $config);
+        }
+
+        $map = [
+            'serie' => 'Cwmserie',
+        ];
+
+        $name = $map[strtolower($name)] ?? $name;
+
+        return parent::getModel($name, $prefix, $config);
+    }
 }

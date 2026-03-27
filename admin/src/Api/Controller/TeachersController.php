@@ -25,19 +25,22 @@ use Joomla\CMS\MVC\Controller\ApiController;
  */
 class TeachersController extends ApiController
 {
-    /**
-     * The content type for serialization.
-     *
-     * @var    string
-     * @since  10.3.0
-     */
     protected $contentType = 'teachers';
 
+    protected $default_view = 'teachers';
+
     /**
-     * The default view for the display method.
-     *
-     * @var    string
      * @since  10.3.0
      */
-    protected $default_view = 'teachers';
+    public function getModel($name = '', $prefix = '', $config = [])
+    {
+        $map = [
+            'teachers' => 'Cwmteachers',
+            'teacher'  => 'Cwmteacher',
+        ];
+
+        $name = $map[strtolower($name)] ?? $name;
+
+        return parent::getModel($name, $prefix, $config);
+    }
 }

@@ -16,18 +16,18 @@ namespace CWM\Component\Proclaim\Administrator\Api\Controller;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Read-only API controller for podcasts.
+ * Read-only API controller for media files.
  *
- * GET /api/index.php/v1/proclaim/podcasts       — list
- * GET /api/index.php/v1/proclaim/podcasts/:id   — detail
+ * GET /api/index.php/v1/proclaim/media       — list
+ * GET /api/index.php/v1/proclaim/media/:id   — detail
  *
  * @since  10.3.0
  */
-class PodcastsController extends ApiController
+class MediaController extends ApiController
 {
-    protected $contentType = 'podcasts';
+    protected $contentType = 'media';
 
-    protected $default_view = 'podcasts';
+    protected $default_view = 'media';
 
     /**
      * @since  10.3.0
@@ -35,8 +35,10 @@ class PodcastsController extends ApiController
     public function getModel($name = '', $prefix = '', $config = [])
     {
         $map = [
-            'podcasts' => 'Cwmpodcasts',
-            'podcast'  => 'Cwmpodcast',
+            'media'      => 'Cwmmediafiles',
+            'medium'     => 'Cwmmediafile',
+            'mediafile'  => 'Cwmmediafile',
+            'mediafiles' => 'Cwmmediafiles',
         ];
 
         $name = $map[strtolower($name)] ?? $name;

@@ -34,6 +34,8 @@ use Joomla\Router\Route;
  *   GET /api/index.php/v1/proclaim/series/:id         — Series detail
  *   GET /api/index.php/v1/proclaim/podcasts           — Podcast list
  *   GET /api/index.php/v1/proclaim/podcasts/:id       — Podcast detail
+ *   GET /api/index.php/v1/proclaim/media              — Media file list
+ *   GET /api/index.php/v1/proclaim/media/:id          — Media file detail
  *
  * @since  10.3.0
  */
@@ -70,6 +72,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $this->createReadOnlyRoutes($router, 'v1/proclaim/teachers', 'teachers');
         $this->createReadOnlyRoutes($router, 'v1/proclaim/series', 'series');
         $this->createReadOnlyRoutes($router, 'v1/proclaim/podcasts', 'podcasts');
+        $this->createReadOnlyRoutes($router, 'v1/proclaim/media', 'media');
     }
 
     /**

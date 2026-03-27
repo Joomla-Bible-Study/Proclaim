@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\MVC\Controller\ApiController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
  * Read-only API controller for sermons (messages/studies).
@@ -40,4 +41,31 @@ class SermonsController extends ApiController
      * @since  10.3.0
      */
     protected $default_view = 'sermons';
+
+    /**
+     * Get the model, mapping API names to Cwm-prefixed model classes.
+     *
+     * Joomla's MVCFactory expects Model\SermonsModel but Proclaim uses
+     * Model\CwmmessagesModel (Cwm prefix + "messages" entity name).
+     *
+     * @param   string  $name    Model name
+     * @param   string  $prefix  Model prefix
+     * @param   array   $config  Configuration
+     *
+     * @return  BaseDatabaseModel|false
+     *
+     * @since   10.3.0
+     */
+    public function getModel($name = '', $prefix = '', $config = [])
+    {
+        // Map API names to Cwm-prefixed Proclaim model names
+        $map = [
+            'sermons' => 'Cwmmessages',
+            'sermon'  => 'Cwmmessage',
+        ];
+
+        $name = $map[strtolower($name)] ?? $name;
+
+        return parent::getModel($name, $prefix, $config);
+    }
 }
