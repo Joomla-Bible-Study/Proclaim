@@ -295,9 +295,11 @@ class CwmmediafilesModel extends ListModel
             );
 
         // Filter by published state
-        $published = (string) $this->getState('filter.published');
+        $published = $this->getState('filter.published');
 
-        if (is_numeric($published)) {
+        if (\is_array($published)) {
+            $query->whereIn($db->quoteName('mediafile.published'), array_map('intval', $published));
+        } elseif (is_numeric($published = (string) $published)) {
             $state = (int) $published;
             $query->where($db->quoteName('mediafile.published') . ' = :state')
                 ->bind(':state', $state, ParameterType::INTEGER);

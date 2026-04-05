@@ -22,10 +22,26 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * GET /api/index.php/v1/proclaim/sermons       — list
  * GET /api/index.php/v1/proclaim/sermons/:id   — detail
  *
+ * Returns published and archived items only (excludes unpublished and trashed).
+ *
  * @since  10.3.0
  */
 class SermonsController extends ApiController
 {
+    /**
+     * List sermons — published and archived only.
+     *
+     * @return  static
+     *
+     * @since   10.3.0
+     */
+    public function displayList()
+    {
+        $this->modelState->set('filter.published', [1, 2]);
+
+        return parent::displayList();
+    }
+
     /**
      * The content type for serialization.
      *

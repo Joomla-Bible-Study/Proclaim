@@ -240,6 +240,7 @@ if (!\defined('JPATH_TESTS')) {
 spl_autoload_register(function ($class) use ($componentRoot) {
     $mappings = [
         'CWM\\Component\\Proclaim\\Administrator\\'      => $componentRoot . '/admin/src/',
+        'CWM\\Component\\Proclaim\\Api\\'               => $componentRoot . '/admin/src/Api/',
         'CWM\\Component\\Proclaim\\Site\\'               => $componentRoot . '/site/src/',
         'CWM\\Component\\Proclaim\\Tests\\'              => $componentRoot . '/tests/unit/',
         'CWM\\Component\\Proclaim\\Tests\\Integration\\' => $componentRoot . '/tests/integration/',

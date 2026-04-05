@@ -7,7 +7,7 @@
  * Replaces Phing build.xml
  */
 
-define('BASE_DIR', realpath(__DIR__ . '/..'));
+\define('BASE_DIR', realpath(__DIR__ . '/..'));
 const BUILD_DIR       = BASE_DIR . '/build';
 const PROPERTIES_FILE = BASE_DIR . '/build.properties';
 
@@ -181,9 +181,9 @@ function getExternalLinks(string $joomlaPath): array
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.ini'     => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.ini",
         BASE_DIR . '/admin/language/en-GB/en-GB.com_proclaim.sys.ini' => "$joomlaPath/administrator/language/en-GB/en-GB.com_proclaim.sys.ini",
         // CWM Scripture Library (separate submodule)
-        BASE_DIR . '/libraries/lib_cwmscripture'                              => "$joomlaPath/libraries/cwmscripture",
-        BASE_DIR . '/libraries/lib_cwmscripture/cwmscripture.xml'             => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
-        BASE_DIR . '/libraries/lib_cwmscripture/media/lib_cwmscripture'       => "$joomlaPath/media/lib_cwmscripture",
+        BASE_DIR . '/libraries/lib_cwmscripture'                        => "$joomlaPath/libraries/cwmscripture",
+        BASE_DIR . '/libraries/lib_cwmscripture/cwmscripture.xml'       => "$joomlaPath/administrator/manifests/libraries/cwmscripture.xml",
+        BASE_DIR . '/libraries/lib_cwmscripture/media/lib_cwmscripture' => "$joomlaPath/media/lib_cwmscripture",
         // ScriptureLinks plugin (separate submodule)
         BASE_DIR . '/plugins/content/scripturelinks' => "$joomlaPath/plugins/content/scripturelinks",
     ];
@@ -1243,7 +1243,7 @@ function doCheckLinks(bool $verbose = false): void
     // Check internal links
     $internalLinks = [
         BASE_DIR . '/proclaim.xml'        => BASE_DIR . '/admin/proclaim.xml',
-        BASE_DIR . '/proclaim.script.php'  => BASE_DIR . '/admin/proclaim.script.php',
+        BASE_DIR . '/proclaim.script.php' => BASE_DIR . '/admin/proclaim.script.php',
     ];
 
     echo "Internal links:\n";

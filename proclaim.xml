@@ -36,6 +36,8 @@
         </schemas>
     </update>
 
+    <changelogurl>https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml</changelogurl>
+
     <updateservers>
         <server type="extension" priority="1" name="CWM Proclaim Package">
             https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=1&amp;dummy=extension.xml

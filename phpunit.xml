@@ -27,6 +27,9 @@
 		<testsuite name="Admin Lib Tests">
 			<directory>tests/unit/Admin/Lib</directory>
 		</testsuite>
+		<testsuite name="Admin Api Controller Tests">
+			<directory>tests/unit/Admin/Api/Controller</directory>
+		</testsuite>
 		<testsuite name="Admin Bible Tests">
 			<directory>tests/unit/Admin/Bible</directory>
 		</testsuite>

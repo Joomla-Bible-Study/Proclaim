@@ -41,6 +41,20 @@ class SeriesController extends ApiController
     private bool $itemModelRequested = false;
 
     /**
+     * List series — published and archived only.
+     *
+     * @return  static
+     *
+     * @since   10.3.0
+     */
+    public function displayList()
+    {
+        $this->modelState->set('filter.published', [1, 2]);
+
+        return parent::displayList();
+    }
+
+    /**
      * @since  10.3.0
      */
     public function displayItem($id = null)

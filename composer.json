@@ -132,6 +132,7 @@
       "@joomla-cms-deps"
     ],
     "joomla-cms-deps": "@php build/joomla-cms-deps.php",
+    "changelog": "bash build/generate-changelog-entry.sh",
     "ars-publish": "bash build/ars-release.sh",
     "release": "bash build/release.sh",
     "jed-prep": "bash build/jed-prep.sh"

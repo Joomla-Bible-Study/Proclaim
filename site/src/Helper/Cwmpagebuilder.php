@@ -72,7 +72,7 @@ class Cwmpagebuilder
                 $media = [];
 
                 foreach ($mediaIDs as $mid) {
-                    $mid = (int) (is_array($mid) ? reset($mid) : $mid);
+                    $mid = (int) (\is_array($mid) ? reset($mid) : $mid);
 
                     if (isset($mediaIndex[$mid])) {
                         $media[] = $mediaIndex[$mid];
@@ -250,7 +250,7 @@ class Cwmpagebuilder
         }
 
         // Batch-load media files for all studies in one query (eliminates N+1)
-        $listing    = new Cwmlisting();
+        $listing     = new Cwmlisting();
         $allMediaIds = [];
 
         foreach ($studies as $study) {

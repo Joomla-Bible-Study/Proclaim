@@ -32,6 +32,23 @@ class MediaController extends ApiController
     /**
      * @since  10.3.0
      */
+    /**
+     * List media files — published and archived only.
+     *
+     * @return  static
+     *
+     * @since   10.3.0
+     */
+    public function displayList()
+    {
+        $this->modelState->set('filter.published', [1, 2]);
+
+        return parent::displayList();
+    }
+
+    /**
+     * @since  10.3.0
+     */
     public function getModel($name = '', $prefix = '', $config = [])
     {
         $map = [

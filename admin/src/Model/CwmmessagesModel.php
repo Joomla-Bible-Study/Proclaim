@@ -334,7 +334,9 @@ class CwmmessagesModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (is_numeric($published)) {
+        if (\is_array($published)) {
+            $query->whereIn($db->quoteName('study.published'), array_map('intval', $published));
+        } elseif (is_numeric($published)) {
             $query->where($db->quoteName('study.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
             $query->where('(' . $db->quoteName('study.published') . ' = 0 OR ' . $db->quoteName('study.published') . ' = 1 OR ' . $db->quoteName('study.published') . ' = 2)');
