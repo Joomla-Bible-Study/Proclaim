@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmsetupwizard;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\ToolbarHelper;
