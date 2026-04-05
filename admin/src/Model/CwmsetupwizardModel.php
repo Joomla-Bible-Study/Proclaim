@@ -82,7 +82,8 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         return [
             'setup_wizard_complete' => (int) $params->get('setup_wizard_complete', 0),
             'simple_mode'           => (int) $params->get('simple_mode', 0),
-            'org_name'              => $params->get('org_name', ''),
+            'org_name'              => $params->get('org_name', '')
+                ?: Factory::getApplication()->get('sitename', ''),
             'default_bible_version' => $params->get('default_bible_version', 'kjv'),
             'provider_getbible'     => (int) $params->get('provider_getbible', 1),
             'provider_api_bible'    => (int) $params->get('provider_api_bible', 0),
