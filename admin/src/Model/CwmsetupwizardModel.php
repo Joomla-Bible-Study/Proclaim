@@ -131,11 +131,18 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $params->set('uploadpath', trim($data['uploadpath']));
         }
 
-        // Step 3: Content structure (informational — used for sample content)
+        // Step 3: Simple mode template choice
+        if (($data['ministry_style'] ?? '') === 'simple') {
+            if (!empty($data['simple_mode_template'])) {
+                $params->set('simple_mode_template', $data['simple_mode_template']);
+            }
+
+            $params->set('simplegridtextoverlay', (int) ($data['simplegridtextoverlay'] ?? 1));
+        }
 
         // Step 4: Media & integrations
         if (!empty($data['primary_media'])) {
-            $serversCreated             = $this->createDefaultServers($data['primary_media']);
+            $serversCreated             = $this->createDefaultServers($data['primary_media'], $data);
             $summary['servers_created'] = $serversCreated;
 
             // Set the first created server as default
@@ -195,12 +202,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
      * Only creates servers that don't already exist (checks by type).
      *
      * @param   string  $primaryMedia  Primary media type: local, youtube, vimeo, direct
+     * @param   array   $wizardData    Full wizard data (for API keys, channel IDs, etc.)
      *
      * @return  array  Array of created server info [{id, name, type}, ...]
      *
      * @since   10.3.0
      */
-    private function createDefaultServers(string $primaryMedia): array
+    private function createDefaultServers(string $primaryMedia, array $wizardData = []): array
     {
         $serverMap = [
             'local'   => ['Local Uploads', 'local'],
@@ -236,12 +244,29 @@ class CwmsetupwizardModel extends BaseDatabaseModel
 
             [$name, $serverType] = $serverMap[$type];
 
+            // Build platform-specific server params from wizard data
+            $serverParams = [];
+
+            if ($type === 'youtube') {
+                if (!empty($wizardData['youtube_api_key'])) {
+                    $serverParams['api_key'] = $wizardData['youtube_api_key'];
+                }
+
+                if (!empty($wizardData['youtube_channel_id'])) {
+                    $serverParams['channel_id'] = $wizardData['youtube_channel_id'];
+                }
+            }
+
+            if ($type === 'vimeo' && !empty($wizardData['vimeo_access_token'])) {
+                $serverParams['access_token'] = $wizardData['vimeo_access_token'];
+            }
+
             $row = (object) [
                 'server_name' => $name,
                 'type'        => $serverType,
                 'published'   => 1,
                 'access'      => 1,
-                'params'      => '{}',
+                'params'      => json_encode($serverParams) ?: '{}',
                 'media'       => '{}',
                 'created'     => $now,
                 'created_by'  => $userId,

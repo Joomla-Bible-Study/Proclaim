@@ -110,6 +110,27 @@
     if (seriesEl) seriesEl.checked = preset.use_series !== false;
     if (topicsEl) topicsEl.checked = preset.use_topics === true;
     if (locationsEl) locationsEl.checked = preset.use_locations === true;
+
+    // Show/hide conditional sections based on style
+    const simpleOpts = document.getElementById('wizard-simple-options');
+    const campusNote = document.getElementById('wizard-campus-note');
+    const podcastSection = document.getElementById('wizard-podcast-section');
+
+    if (simpleOpts) simpleOpts.classList.toggle('d-none', styleKey !== 'simple');
+    if (campusNote) campusNote.classList.toggle('d-none', styleKey !== 'multi_campus');
+    if (podcastSection) podcastSection.classList.toggle('d-none', styleKey === 'simple');
+  }
+
+  /**
+   * Show/hide media-specific config panels based on radio selection.
+   */
+  function updateMediaConfig() {
+    const selected = document.querySelector('input[name="wizard-media"]:checked')?.value || 'local';
+    const ytConfig = document.getElementById('wizard-youtube-config');
+    const vimeoConfig = document.getElementById('wizard-vimeo-config');
+
+    if (ytConfig) ytConfig.classList.toggle('d-none', selected !== 'youtube');
+    if (vimeoConfig) vimeoConfig.classList.toggle('d-none', selected !== 'vimeo');
   }
 
   /**
@@ -118,17 +139,40 @@
    * @returns {Object}  Wizard data payload.
    */
   function collectData() {
-    return {
-      ministry_style: document.getElementById('wizard-ministry-style').value,
+    const style = document.getElementById('wizard-ministry-style').value;
+    const media = document.querySelector('input[name="wizard-media"]:checked')?.value || 'local';
+
+    const data = {
+      ministry_style: style,
       org_name: document.getElementById('wizard-org-name').value.trim(),
       default_bible_version: document.getElementById('wizard-bible-version').value,
       uploadpath: document.getElementById('wizard-upload-path').value.trim(),
       provider_getbible: 1,
-      primary_media: document.querySelector('input[name="wizard-media"]:checked')?.value || 'local',
+      primary_media: media,
       create_sample_content: document.getElementById('wizard-sample-content').checked,
       enable_ai: document.getElementById('wizard-enable-ai').checked,
+      enable_podcast: document.getElementById('wizard-enable-podcast')?.checked || false,
       analytics_enabled: 1,
     };
+
+    // Simple mode template choice
+    if (style === 'simple') {
+      data.simple_mode_template = document.querySelector('input[name="wizard-simple-template"]:checked')?.value || 'simple_mode1';
+      data.simplegridtextoverlay = document.getElementById('wizard-text-overlay')?.checked ? 1 : 0;
+    }
+
+    // YouTube config
+    if (media === 'youtube') {
+      data.youtube_api_key = document.getElementById('wizard-yt-api-key')?.value.trim() || '';
+      data.youtube_channel_id = document.getElementById('wizard-yt-channel')?.value.trim() || '';
+    }
+
+    // Vimeo config
+    if (media === 'vimeo') {
+      data.vimeo_access_token = document.getElementById('wizard-vimeo-token')?.value.trim() || '';
+    }
+
+    return data;
   }
 
   /**
@@ -152,6 +196,17 @@
     html += `<tr><th>Bible Version</th><td>${data.default_bible_version.toUpperCase()}</td></tr>`;
     html += `<tr><th>Upload Path</th><td><code>${data.uploadpath}</code></td></tr>`;
     html += `<tr><th>Primary Media</th><td>${mediaLabels[data.primary_media] || data.primary_media}</td></tr>`;
+
+    if (data.primary_media === 'youtube' && data.youtube_api_key) {
+      html += `<tr><th>YouTube API Key</th><td><code>${data.youtube_api_key.substring(0, 8)}...</code></td></tr>`;
+    }
+    if (data.primary_media === 'vimeo' && data.vimeo_access_token) {
+      html += `<tr><th>Vimeo Token</th><td><code>${data.vimeo_access_token.substring(0, 8)}...</code></td></tr>`;
+    }
+    if (data.enable_podcast) {
+      html += `<tr><th>Podcasting</th><td>Enabled</td></tr>`;
+    }
+
     html += `<tr><th>Sample Content</th><td>${data.create_sample_content ? 'Yes' : 'No'}</td></tr>`;
     html += `<tr><th>AI Assistant</th><td>${data.enable_ai ? 'Enabled' : 'Disabled'}</td></tr>`;
     html += '</table>';
@@ -242,6 +297,11 @@
 
   // Org name validation (Step 2)
   document.getElementById('wizard-org-name')?.addEventListener('input', updateNextButton);
+
+  // Media source radio — show/hide platform config panels (Step 4)
+  document.querySelectorAll('input[name="wizard-media"]').forEach(radio => {
+    radio.addEventListener('change', updateMediaConfig);
+  });
 
   // Navigation
   nextBtn.addEventListener('click', () => goToStep(currentStep + 1));

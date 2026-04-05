@@ -129,7 +129,16 @@ class CwmsetupwizardController extends BaseController
             'enable_ai'             => !empty($data['enable_ai']),
             'ai_provider'           => \in_array($data['ai_provider'] ?? '', ['claude', 'openai', 'gemini'], true)
                 ? $data['ai_provider'] : 'claude',
+            'enable_podcast'    => !empty($data['enable_podcast']),
             'analytics_enabled' => (int) ($data['analytics_enabled'] ?? 1),
+            // Simple mode template
+            'simple_mode_template' => \in_array($data['simple_mode_template'] ?? '', ['simple_mode1', 'simple_mode2'], true)
+                ? $data['simple_mode_template'] : 'simple_mode1',
+            'simplegridtextoverlay' => (int) ($data['simplegridtextoverlay'] ?? 1),
+            // Platform API keys (stored on server record, not component params)
+            'youtube_api_key'    => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['youtube_api_key'] ?? '')),
+            'youtube_channel_id' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['youtube_channel_id'] ?? '')),
+            'vimeo_access_token' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['vimeo_access_token'] ?? '')),
         ];
 
         /** @var CwmsetupwizardModel $model */

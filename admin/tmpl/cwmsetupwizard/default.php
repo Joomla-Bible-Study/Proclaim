@@ -133,6 +133,36 @@ use Joomla\CMS\Language\Text;
                     </div>
                 </div>
 
+                <!-- Simple Mode: template choice (shown when Simple Ministry selected) -->
+                <div class="mb-4 d-none" id="wizard-simple-options">
+                    <hr>
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_TEMPLATE_CHOICE'); ?></label>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-simple-template" id="simple-tpl1" value="simple_mode1" checked>
+                        <label class="form-check-label" for="simple-tpl1">
+                            <?php echo Text::_('JBS_WIZARD_TEMPLATE_LIST'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-simple-template" id="simple-tpl2" value="simple_mode2">
+                        <label class="form-check-label" for="simple-tpl2">
+                            <?php echo Text::_('JBS_WIZARD_TEMPLATE_GRID'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input" type="checkbox" id="wizard-text-overlay" checked>
+                        <label class="form-check-label" for="wizard-text-overlay">
+                            <?php echo Text::_('JBS_WIZARD_TEXT_OVERLAY'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Multi-Campus note (shown when Multi-Campus selected) -->
+                <div class="alert alert-primary d-none" id="wizard-campus-note">
+                    <i class="fa-solid fa-church me-2"></i>
+                    <?php echo Text::_('JBS_WIZARD_CAMPUS_NOTE'); ?>
+                </div>
+
                 <hr>
 
                 <div class="form-check mb-3">
@@ -180,6 +210,52 @@ use Joomla\CMS\Language\Text;
                         </label>
                     </div>
                 </div>
+
+                <!-- YouTube config (shown when YouTube selected) -->
+                <div class="card mb-3 d-none" id="wizard-youtube-config">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-brands fa-youtube text-danger me-1"></i> <?php echo Text::_('JBS_WIZARD_YOUTUBE_CONFIG'); ?></h5>
+                        <div class="mb-2">
+                            <label for="wizard-yt-api-key" class="form-label"><?php echo Text::_('JBS_WIZARD_YOUTUBE_API_KEY'); ?></label>
+                            <input type="text" class="form-control" id="wizard-yt-api-key" placeholder="AIza...">
+                            <div class="form-text"><?php echo Text::_('JBS_WIZARD_YOUTUBE_API_KEY_DESC'); ?></div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="wizard-yt-channel" class="form-label"><?php echo Text::_('JBS_WIZARD_YOUTUBE_CHANNEL'); ?></label>
+                            <input type="text" class="form-control" id="wizard-yt-channel" placeholder="UC...">
+                        </div>
+                        <div class="form-text text-muted">
+                            <i class="fa-solid fa-circle-info me-1"></i>
+                            <?php echo Text::_('JBS_WIZARD_YOUTUBE_SKIP_NOTE'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vimeo config (shown when Vimeo selected) -->
+                <div class="card mb-3 d-none" id="wizard-vimeo-config">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-brands fa-vimeo text-info me-1"></i> <?php echo Text::_('JBS_WIZARD_VIMEO_CONFIG'); ?></h5>
+                        <div class="mb-2">
+                            <label for="wizard-vimeo-token" class="form-label"><?php echo Text::_('JBS_WIZARD_VIMEO_TOKEN'); ?></label>
+                            <input type="text" class="form-control" id="wizard-vimeo-token">
+                            <div class="form-text"><?php echo Text::_('JBS_WIZARD_VIMEO_TOKEN_DESC'); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Podcast toggle (shown for Full Media and Multi-Campus) -->
+                <div class="mb-3 d-none" id="wizard-podcast-section">
+                    <hr>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="wizard-enable-podcast">
+                        <label class="form-check-label" for="wizard-enable-podcast">
+                            <strong><?php echo Text::_('JBS_WIZARD_ENABLE_PODCAST'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_PODCAST_DESC'); ?></small>
+                        </label>
+                    </div>
+                </div>
+
+                <hr>
 
                 <div class="mb-3">
                     <div class="form-check form-switch">
