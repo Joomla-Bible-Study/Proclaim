@@ -918,12 +918,12 @@ def scan_and_process(root_dir):
     known_locales = discover_project_locales(root_dir)
     print(f"Project locales: {', '.join(known_locales)}")
 
+    # Submodule directories that have their own language files — skip them
+    skip_dirs = {'vendor', 'node_modules', 'lib_cwmscripture', 'scripturelinks'}
+
     for dirpath, dirnames, filenames in os.walk(root_dir):
         # Modify dirnames in-place to skip ignored directories
-        if 'vendor' in dirnames:
-            dirnames.remove('vendor')
-        if 'node_modules' in dirnames:
-            dirnames.remove('node_modules')
+        dirnames[:] = [d for d in dirnames if d not in skip_dirs]
 
         if 'language' in dirnames:
             lang_path = os.path.join(dirpath, 'language')
