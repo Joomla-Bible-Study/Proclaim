@@ -157,9 +157,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
 
         $params->set('analytics_enabled', (int) ($data['analytics_enabled'] ?? 1));
 
-        // Sample content
+        // Create essential defaults (teacher, location) so users can start immediately
+        $defaults                = $this->createEssentialDefaults($data, $params);
+        $summary['defaults']     = $defaults;
+
+        // Sample content (uses the defaults created above)
         if (!empty($data['create_sample_content'])) {
-            $sampleIds                 = $this->createSampleContent($data);
+            $sampleIds                 = $this->createSampleContent($data, $defaults);
             $summary['sample_content'] = $sampleIds;
         }
 
@@ -287,41 +291,123 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     }
 
     /**
+     * Create essential default records so the system is immediately usable.
+     *
+     * Creates a default teacher and (for full/multi-campus) a default location
+     * if none exist yet. Sets the admin params to reference these defaults.
+     *
+     * @param   array     $data    Wizard data
+     * @param   Registry  $params  Admin params (modified in place)
+     *
+     * @return  array  IDs of created defaults.
+     *
+     * @since   10.3.0
+     */
+    private function createEssentialDefaults(array $data, Registry $params): array
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $now     = (new Date())->toSql();
+        $userId  = Factory::getApplication()->getIdentity()->id ?? 0;
+        $ids     = [];
+        $orgName = trim($data['org_name'] ?? 'My Church');
+
+        // Create default teacher if none exist
+        $query = $db->getQuery(true)->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
+        $db->setQuery($query);
+
+        if ((int) $db->loadResult() === 0) {
+            $teacher = (object) [
+                'teachername' => 'Pastor',
+                'alias'       => 'pastor',
+                'title'       => '',
+                'short'       => '',
+                'published'   => 1,
+                'access'      => 1,
+                'language'    => '*',
+                'ordering'    => 1,
+                'address'     => '',
+                'list_show'   => 1,
+                'created'     => $now,
+                'created_by'  => $userId,
+                'modified'    => $now,
+                'modified_by' => $userId,
+                'checked_out' => 0,
+            ];
+            $db->insertObject('#__bsms_teachers', $teacher);
+            $ids['teacher_id'] = (int) $db->insertid();
+            $params->set('teacher_id', $ids['teacher_id']);
+        }
+
+        // Create default location for full_media and multi_campus styles
+        $style = $data['ministry_style'] ?? 'simple';
+
+        if ($style !== 'simple') {
+            $query = $db->getQuery(true)->select('COUNT(*)')->from($db->quoteName('#__bsms_locations'));
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() === 0) {
+                $location = (object) [
+                    'location_text' => $orgName,
+                    'published'     => 1,
+                    'access'        => 1,
+                    'language'      => '*',
+                    'ordering'      => 1,
+                    'params'        => '{}',
+                    'metakey'       => '',
+                    'metadesc'      => '',
+                    'metadata'      => '{}',
+                    'xreference'    => '',
+                    'sortname1'     => '',
+                    'sortname2'     => '',
+                    'sortname3'     => '',
+                    'mobile'        => '',
+                    'webpage'       => '',
+                    'created'       => $now,
+                    'created_by'    => $userId,
+                    'modified'      => $now,
+                    'modified_by'   => $userId,
+                    'checked_out'   => 0,
+                ];
+                $db->insertObject('#__bsms_locations', $location);
+                $ids['location_id'] = (int) $db->insertid();
+                $params->set('location_id', $ids['location_id']);
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
      * Create sample content: one teacher, one series, one message.
      *
-     * @param   array  $data  Wizard data (for org_name, defaults)
+     * @param   array  $data      Wizard data (for org_name, defaults)
+     * @param   array  $defaults  IDs from createEssentialDefaults
      *
      * @return  array  IDs of created content.
      *
      * @since   10.3.0
      */
-    private function createSampleContent(array $data): array
+    private function createSampleContent(array $data, array $defaults = []): array
     {
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $now    = (new Date())->toSql();
         $userId = Factory::getApplication()->getIdentity()->id ?? 0;
         $ids    = [];
 
-        // Create sample teacher
-        $teacher = (object) [
-            'teachername' => 'Sample Teacher',
-            'alias'       => 'sample-teacher',
-            'title'       => 'Pastor',
-            'short'       => '<p>This is a sample teacher created by the setup wizard. Edit or replace with your real teacher.</p>',
-            'published'   => 1,
-            'access'      => 1,
-            'language'    => '*',
-            'ordering'    => 1,
-            'address'     => '',
-            'list_show'   => 1,
-            'created'     => $now,
-            'created_by'  => $userId,
-            'modified'    => $now,
-            'modified_by' => $userId,
-            'checked_out' => 0,
-        ];
-        $db->insertObject('#__bsms_teachers', $teacher);
-        $ids['teacher_id'] = (int) $db->insertid();
+        // Use the default teacher created by createEssentialDefaults, or find existing
+        $teacherId = $defaults['teacher_id'] ?? 0;
+
+        if ($teacherId === 0) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_teachers'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->order($db->quoteName('id') . ' ASC');
+            $db->setQuery($query, 0, 1);
+            $teacherId = (int) $db->loadResult();
+        }
+
+        $ids['teacher_id'] = $teacherId;
 
         // Create sample series
         $series = (object) [
@@ -344,14 +430,16 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $db->insertObject('#__bsms_series', $series);
         $ids['series_id'] = (int) $db->insertid();
 
-        // Create sample message
-        $message = (object) [
+        // Create sample message using the default teacher
+        $locationId = $defaults['location_id'] ?? 0;
+        $message    = (object) [
             'studytitle'  => 'Welcome to Proclaim',
             'alias'       => 'welcome-to-proclaim',
             'studydate'   => $now,
             'studyintro'  => '<p>This is a sample message created by the setup wizard to help you see how content appears on your site.</p>',
-            'teacher_id'  => $ids['teacher_id'],
+            'teacher_id'  => $teacherId,
             'series_id'   => $ids['series_id'],
+            'location_id' => $locationId,
             'messagetype' => 1,
             'booknumber'  => 101,
             'published'   => 1,
