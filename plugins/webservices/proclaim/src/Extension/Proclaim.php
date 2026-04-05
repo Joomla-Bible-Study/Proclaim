@@ -23,24 +23,21 @@ use Joomla\Registry\Registry;
 use Joomla\Router\Route;
 
 /**
- * Web Services plugin for Proclaim — read-only REST API.
+ * Web Services plugin for Proclaim REST API.
  *
  * Controlled by the `api_access` admin setting:
  *   0 = Disabled (no routes registered)
- *   1 = Public (read-only, no authentication required)
- *   2 = API Key Required (Joomla user API token via Bearer header)
+ *   1 = Public reads (GET open, writes require API key)
+ *   2 = API Key Required (all operations require Bearer token)
  *
- * Endpoints (when enabled):
- *   GET /api/index.php/v1/proclaim/sermons          — Sermon list
- *   GET /api/index.php/v1/proclaim/sermons/:id       — Sermon detail
- *   GET /api/index.php/v1/proclaim/teachers          — Teacher list
- *   GET /api/index.php/v1/proclaim/teachers/:id      — Teacher detail
- *   GET /api/index.php/v1/proclaim/series             — Series list
- *   GET /api/index.php/v1/proclaim/series/:id         — Series detail
- *   GET /api/index.php/v1/proclaim/podcasts           — Podcast list
- *   GET /api/index.php/v1/proclaim/podcasts/:id       — Podcast detail
- *   GET /api/index.php/v1/proclaim/media              — Media file list
- *   GET /api/index.php/v1/proclaim/media/:id          — Media file detail
+ * Read endpoints (GET):
+ *   /api/index.php/v1/proclaim/{sermons|teachers|series|podcasts|media}
+ *   /api/index.php/v1/proclaim/{resource}/:id
+ *
+ * Write endpoints (always require API key):
+ *   POST   /api/index.php/v1/proclaim/{resource}      — Create
+ *   PATCH  /api/index.php/v1/proclaim/{resource}/:id  — Update
+ *   DELETE /api/index.php/v1/proclaim/{resource}/:id  — Delete
  *
  * @since  10.3.0
  */
@@ -78,11 +75,12 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $isPublic = ($apiAccess === 1);
         $router   = $event->getRouter();
 
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/sermons', 'sermons', $isPublic);
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/teachers', 'teachers', $isPublic);
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/series', 'series', $isPublic);
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/podcasts', 'podcasts', $isPublic);
-        $this->createReadOnlyRoutes($router, 'v1/proclaim/media', 'media', $isPublic);
+        $resources = ['sermons', 'teachers', 'series', 'podcasts', 'media'];
+
+        foreach ($resources as $resource) {
+            $this->createReadOnlyRoutes($router, "v1/proclaim/$resource", $resource, $isPublic);
+            $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
+        }
     }
 
     /**
@@ -111,6 +109,36 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $routes = [
             new Route(['GET'], $baseName, $controller . '.displayList', [], $defaults),
             new Route(['GET'], $baseName . '/:id', $controller . '.displayItem', ['id' => '(\d+)'], $defaults),
+        ];
+
+        $router->addRoutes($routes);
+    }
+
+    /**
+     * Register write (POST/PATCH/DELETE) routes for a resource.
+     *
+     * Write routes always require authentication (public=false),
+     * even when read routes are set to public access.
+     *
+     * @param   ApiRouter  $router      The API router
+     * @param   string     $baseName    Route base path
+     * @param   string     $controller  Controller name
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function createWriteRoutes(ApiRouter $router, string $baseName, string $controller): void
+    {
+        $defaults = [
+            'component' => 'com_proclaim',
+            'public'    => false,
+        ];
+
+        $routes = [
+            new Route(['POST'], $baseName, $controller . '.add', [], $defaults),
+            new Route(['PATCH'], $baseName . '/:id', $controller . '.edit', ['id' => '(\d+)'], $defaults),
+            new Route(['DELETE'], $baseName . '/:id', $controller . '.delete', ['id' => '(\d+)'], $defaults),
         ];
 
         $router->addRoutes($routes);

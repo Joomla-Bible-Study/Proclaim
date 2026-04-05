@@ -30,9 +30,6 @@ class PodcastsController extends ApiController
     protected $default_view = 'podcasts';
 
     /**
-     * @since  10.3.0
-     */
-    /**
      * List podcasts — published and archived only.
      *
      * @return  static

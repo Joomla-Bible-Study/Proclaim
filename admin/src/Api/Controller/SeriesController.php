@@ -16,10 +16,11 @@ namespace CWM\Component\Proclaim\Api\Controller;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Read-only API controller for series.
+ * API controller for series.
  *
- * GET /api/index.php/v1/proclaim/series       — list
- * GET /api/index.php/v1/proclaim/series/:id   — detail
+ * Series is special: Doctrine singularize('series') === 'series', so
+ * write operations (add/edit/delete) must set $itemModelRequested to
+ * get the singular CwmserieModel instead of the list model.
  *
  * @since  10.3.0
  */
@@ -62,6 +63,36 @@ class SeriesController extends ApiController
         $this->itemModelRequested = true;
 
         return parent::displayItem($id);
+    }
+
+    /**
+     * @since  10.3.0
+     */
+    public function add()
+    {
+        $this->itemModelRequested = true;
+
+        return parent::add();
+    }
+
+    /**
+     * @since  10.3.0
+     */
+    public function edit()
+    {
+        $this->itemModelRequested = true;
+
+        return parent::edit();
+    }
+
+    /**
+     * @since  10.3.0
+     */
+    public function delete($id = null)
+    {
+        $this->itemModelRequested = true;
+
+        return parent::delete($id);
     }
 
     /**

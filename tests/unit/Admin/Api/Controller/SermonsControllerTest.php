@@ -41,7 +41,7 @@ class SermonsControllerTest extends ProclaimTestCase
      */
     public function testContentType(): void
     {
-        $ref = new \ReflectionClass(SermonsController::class);
+        $ref  = new \ReflectionClass(SermonsController::class);
         $prop = $ref->getProperty('contentType');
         $this->assertEquals('sermons', $prop->getDefaultValue());
     }
@@ -53,7 +53,7 @@ class SermonsControllerTest extends ProclaimTestCase
      */
     public function testDefaultView(): void
     {
-        $ref = new \ReflectionClass(SermonsController::class);
+        $ref  = new \ReflectionClass(SermonsController::class);
         $prop = $ref->getProperty('default_view');
         $this->assertEquals('sermons', $prop->getDefaultValue());
     }
@@ -88,7 +88,7 @@ class SermonsControllerTest extends ProclaimTestCase
     public function testGetModelNameMapping(): void
     {
         // Read the source to verify the mapping array
-        $ref = new \ReflectionMethod(SermonsController::class, 'getModel');
+        $ref    = new \ReflectionMethod(SermonsController::class, 'getModel');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'sermons' => 'Cwmmessages'", $source);
@@ -102,10 +102,58 @@ class SermonsControllerTest extends ProclaimTestCase
      */
     public function testDisplayListSetsPublishedFilter(): void
     {
-        $ref = new \ReflectionMethod(SermonsController::class, 'displayList');
+        $ref    = new \ReflectionMethod(SermonsController::class, 'displayList');
         $source = file_get_contents($ref->getFileName());
 
         // Verify the filter sets published to [1, 2] (published + archived)
         $this->assertStringContainsString("'filter.published', [1, 2]", $source);
+    }
+
+    /**
+     * Test preprocessSaveData method exists and is protected
+     *
+     * @return void
+     */
+    public function testPreprocessSaveDataExists(): void
+    {
+        $ref = new \ReflectionMethod(SermonsController::class, 'preprocessSaveData');
+        $this->assertTrue($ref->isProtected(), 'preprocessSaveData() should be protected');
+    }
+
+    /**
+     * Test preprocessSaveData normalizes scriptures array to keyed format
+     *
+     * @return void
+     */
+    public function testPreprocessNormalizesScriptures(): void
+    {
+        $source = file_get_contents((new \ReflectionClass(SermonsController::class))->getFileName());
+
+        $this->assertStringContainsString("'scriptures' . \$i", $source);
+        $this->assertStringContainsString('array_is_list', $source);
+    }
+
+    /**
+     * Test preprocessSaveData normalizes teachers array to keyed format
+     *
+     * @return void
+     */
+    public function testPreprocessNormalizesTeachers(): void
+    {
+        $source = file_get_contents((new \ReflectionClass(SermonsController::class))->getFileName());
+
+        $this->assertStringContainsString("'teachers' . \$i", $source);
+    }
+
+    /**
+     * Test preprocessSaveData defaults image to empty string
+     *
+     * @return void
+     */
+    public function testPreprocessDefaultsImage(): void
+    {
+        $source = file_get_contents((new \ReflectionClass(SermonsController::class))->getFileName());
+
+        $this->assertStringContainsString("\$data['image'] = ''", $source);
     }
 }

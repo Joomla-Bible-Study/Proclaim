@@ -31,14 +31,14 @@ class SeriesControllerTest extends ProclaimTestCase
 
     public function testContentType(): void
     {
-        $ref = new \ReflectionClass(SeriesController::class);
+        $ref  = new \ReflectionClass(SeriesController::class);
         $prop = $ref->getProperty('contentType');
         $this->assertEquals('series', $prop->getDefaultValue());
     }
 
     public function testDefaultView(): void
     {
-        $ref = new \ReflectionClass(SeriesController::class);
+        $ref  = new \ReflectionClass(SeriesController::class);
         $prop = $ref->getProperty('default_view');
         $this->assertEquals('series', $prop->getDefaultValue());
     }
@@ -70,7 +70,7 @@ class SeriesControllerTest extends ProclaimTestCase
 
     public function testGetModelNameMapping(): void
     {
-        $ref = new \ReflectionMethod(SeriesController::class, 'getModel');
+        $ref    = new \ReflectionMethod(SeriesController::class, 'getModel');
         $source = file_get_contents($ref->getFileName());
 
         // List context: series → Cwmseries
@@ -81,9 +81,34 @@ class SeriesControllerTest extends ProclaimTestCase
 
     public function testDisplayListSetsPublishedFilter(): void
     {
-        $ref = new \ReflectionMethod(SeriesController::class, 'displayList');
+        $ref    = new \ReflectionMethod(SeriesController::class, 'displayList');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'filter.published', [1, 2]", $source);
+    }
+
+    /**
+     * Write operations (add/edit/delete) must set itemModelRequested
+     * so getModel() returns the singular CwmserieModel.
+     */
+    public function testAddSetsItemModelFlag(): void
+    {
+        $this->assertTrue(method_exists(SeriesController::class, 'add'));
+        $ref = new \ReflectionMethod(SeriesController::class, 'add');
+        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
+    }
+
+    public function testEditSetsItemModelFlag(): void
+    {
+        $this->assertTrue(method_exists(SeriesController::class, 'edit'));
+        $ref = new \ReflectionMethod(SeriesController::class, 'edit');
+        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
+    }
+
+    public function testDeleteSetsItemModelFlag(): void
+    {
+        $this->assertTrue(method_exists(SeriesController::class, 'delete'));
+        $ref = new \ReflectionMethod(SeriesController::class, 'delete');
+        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
     }
 }

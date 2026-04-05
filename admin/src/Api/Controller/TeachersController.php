@@ -30,9 +30,6 @@ class TeachersController extends ApiController
     protected $default_view = 'teachers';
 
     /**
-     * @since  10.3.0
-     */
-    /**
      * List teachers — published and archived only.
      *
      * @return  static
@@ -59,5 +56,23 @@ class TeachersController extends ApiController
         $name = $map[strtolower($name)] ?? $name;
 
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Normalize API JSON input for the teacher model.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The processed data
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessSaveData(array $data): array
+    {
+        if (!isset($data['image'])) {
+            $data['image'] = '';
+        }
+
+        return $data;
     }
 }

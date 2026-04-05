@@ -31,14 +31,14 @@ class PodcastsControllerTest extends ProclaimTestCase
 
     public function testContentType(): void
     {
-        $ref = new \ReflectionClass(PodcastsController::class);
+        $ref  = new \ReflectionClass(PodcastsController::class);
         $prop = $ref->getProperty('contentType');
         $this->assertEquals('podcasts', $prop->getDefaultValue());
     }
 
     public function testDefaultView(): void
     {
-        $ref = new \ReflectionClass(PodcastsController::class);
+        $ref  = new \ReflectionClass(PodcastsController::class);
         $prop = $ref->getProperty('default_view');
         $this->assertEquals('podcasts', $prop->getDefaultValue());
     }
@@ -51,7 +51,7 @@ class PodcastsControllerTest extends ProclaimTestCase
 
     public function testGetModelNameMapping(): void
     {
-        $ref = new \ReflectionMethod(PodcastsController::class, 'getModel');
+        $ref    = new \ReflectionMethod(PodcastsController::class, 'getModel');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'podcasts' => 'Cwmpodcasts'", $source);
@@ -60,7 +60,7 @@ class PodcastsControllerTest extends ProclaimTestCase
 
     public function testDisplayListSetsPublishedFilter(): void
     {
-        $ref = new \ReflectionMethod(PodcastsController::class, 'displayList');
+        $ref    = new \ReflectionMethod(PodcastsController::class, 'displayList');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'filter.published', [1, 2]", $source);

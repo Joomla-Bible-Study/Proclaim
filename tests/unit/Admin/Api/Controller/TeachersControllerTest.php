@@ -31,14 +31,14 @@ class TeachersControllerTest extends ProclaimTestCase
 
     public function testContentType(): void
     {
-        $ref = new \ReflectionClass(TeachersController::class);
+        $ref  = new \ReflectionClass(TeachersController::class);
         $prop = $ref->getProperty('contentType');
         $this->assertEquals('teachers', $prop->getDefaultValue());
     }
 
     public function testDefaultView(): void
     {
-        $ref = new \ReflectionClass(TeachersController::class);
+        $ref  = new \ReflectionClass(TeachersController::class);
         $prop = $ref->getProperty('default_view');
         $this->assertEquals('teachers', $prop->getDefaultValue());
     }
@@ -51,7 +51,7 @@ class TeachersControllerTest extends ProclaimTestCase
 
     public function testGetModelNameMapping(): void
     {
-        $ref = new \ReflectionMethod(TeachersController::class, 'getModel');
+        $ref    = new \ReflectionMethod(TeachersController::class, 'getModel');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'teachers' => 'Cwmteachers'", $source);
@@ -60,9 +60,22 @@ class TeachersControllerTest extends ProclaimTestCase
 
     public function testDisplayListSetsPublishedFilter(): void
     {
-        $ref = new \ReflectionMethod(TeachersController::class, 'displayList');
+        $ref    = new \ReflectionMethod(TeachersController::class, 'displayList');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'filter.published', [1, 2]", $source);
+    }
+
+    public function testPreprocessSaveDataExists(): void
+    {
+        $ref = new \ReflectionMethod(TeachersController::class, 'preprocessSaveData');
+        $this->assertTrue($ref->isProtected());
+    }
+
+    public function testPreprocessDefaultsImage(): void
+    {
+        $source = file_get_contents((new \ReflectionClass(TeachersController::class))->getFileName());
+
+        $this->assertStringContainsString("\$data['image'] = ''", $source);
     }
 }

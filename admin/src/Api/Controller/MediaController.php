@@ -30,9 +30,6 @@ class MediaController extends ApiController
     protected $default_view = 'media';
 
     /**
-     * @since  10.3.0
-     */
-    /**
      * List media files — published and archived only.
      *
      * @return  static
@@ -61,5 +58,24 @@ class MediaController extends ApiController
         $name = $map[strtolower($name)] ?? $name;
 
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Normalize API JSON input for the media file model.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The processed data
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessSaveData(array $data): array
+    {
+        // Model expects podcast_id as array for implode to CSV
+        if (isset($data['podcast_id']) && \is_string($data['podcast_id'])) {
+            $data['podcast_id'] = explode(',', $data['podcast_id']);
+        }
+
+        return $data;
     }
 }

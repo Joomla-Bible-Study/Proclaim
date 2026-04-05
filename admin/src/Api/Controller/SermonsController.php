@@ -84,4 +84,48 @@ class SermonsController extends ApiController
 
         return parent::getModel($name, $prefix, $config);
     }
+
+    /**
+     * Normalize API JSON input for the sermon model.
+     *
+     * Converts clean JSON arrays for scriptures/teachers into the keyed
+     * subform format that Joomla's form processing expects.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The processed data
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessSaveData(array $data): array
+    {
+        // Normalize scriptures: [{...}, {...}] → {"scriptures0": {...}, "scriptures1": {...}}
+        if (isset($data['scriptures']) && array_is_list($data['scriptures'])) {
+            $keyed = [];
+
+            foreach ($data['scriptures'] as $i => $row) {
+                $keyed['scriptures' . $i] = $row;
+            }
+
+            $data['scriptures'] = $keyed;
+        }
+
+        // Normalize teachers: [{...}, {...}] → {"teachers0": {...}, "teachers1": {...}}
+        if (isset($data['teachers']) && array_is_list($data['teachers'])) {
+            $keyed = [];
+
+            foreach ($data['teachers'] as $i => $row) {
+                $keyed['teachers' . $i] = $row;
+            }
+
+            $data['teachers'] = $keyed;
+        }
+
+        // Default image to empty string to prevent null error in model save
+        if (!isset($data['image'])) {
+            $data['image'] = '';
+        }
+
+        return $data;
+    }
 }

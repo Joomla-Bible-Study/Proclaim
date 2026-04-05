@@ -31,14 +31,14 @@ class MediaControllerTest extends ProclaimTestCase
 
     public function testContentType(): void
     {
-        $ref = new \ReflectionClass(MediaController::class);
+        $ref  = new \ReflectionClass(MediaController::class);
         $prop = $ref->getProperty('contentType');
         $this->assertEquals('media', $prop->getDefaultValue());
     }
 
     public function testDefaultView(): void
     {
-        $ref = new \ReflectionClass(MediaController::class);
+        $ref  = new \ReflectionClass(MediaController::class);
         $prop = $ref->getProperty('default_view');
         $this->assertEquals('media', $prop->getDefaultValue());
     }
@@ -51,7 +51,7 @@ class MediaControllerTest extends ProclaimTestCase
 
     public function testGetModelNameMapping(): void
     {
-        $ref = new \ReflectionMethod(MediaController::class, 'getModel');
+        $ref    = new \ReflectionMethod(MediaController::class, 'getModel');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'media'      => 'Cwmmediafiles'", $source);
@@ -62,9 +62,22 @@ class MediaControllerTest extends ProclaimTestCase
 
     public function testDisplayListSetsPublishedFilter(): void
     {
-        $ref = new \ReflectionMethod(MediaController::class, 'displayList');
+        $ref    = new \ReflectionMethod(MediaController::class, 'displayList');
         $source = file_get_contents($ref->getFileName());
 
         $this->assertStringContainsString("'filter.published', [1, 2]", $source);
+    }
+
+    public function testPreprocessSaveDataExists(): void
+    {
+        $ref = new \ReflectionMethod(MediaController::class, 'preprocessSaveData');
+        $this->assertTrue($ref->isProtected());
+    }
+
+    public function testPreprocessNormalizesPodcastId(): void
+    {
+        $source = file_get_contents((new \ReflectionClass(MediaController::class))->getFileName());
+
+        $this->assertStringContainsString("explode(',', \$data['podcast_id'])", $source);
     }
 }
