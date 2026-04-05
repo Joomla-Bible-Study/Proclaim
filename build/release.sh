@@ -75,12 +75,12 @@ echo "=== Proclaim Release ${VERSION} ==="
 echo ""
 
 # --- Step 1: Version bump ---
-echo "[1/6] Bumping version to ${VERSION}..."
+echo "[1/7] Bumping version to ${VERSION}..."
 composer version -- -v "$VERSION"
 echo ""
 
 # --- Step 2: Build ---
-echo "[2/6] Building package..."
+echo "[2/7] Building package..."
 composer build
 echo ""
 
@@ -90,14 +90,14 @@ if [ ! -f "build/${ZIP_NAME}" ]; then
 fi
 
 # --- Step 3: Commit and push ---
-echo "[3/6] Committing version bump..."
+echo "[3/7] Committing version bump..."
 git add -A
 git commit -m "chore: bump version to ${VERSION}"
 git push
 echo ""
 
 # --- Step 4: GitHub release ---
-echo "[4/6] Creating GitHub release ${TAG}..."
+echo "[4/7] Creating GitHub release ${TAG}..."
 
 # Get release notes from the latest commits since last tag
 PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
@@ -118,13 +118,28 @@ gh release create "$TAG" "build/${ZIP_NAME}" \
 
 echo ""
 
-# --- Step 5: Publish to ARS ---
-echo "[5/6] Publishing to ARS..."
+# --- Step 5: Generate changelog entry ---
+echo "[5/7] Updating changelog..."
+bash build/generate-changelog-entry.sh "$VERSION"
+if git diff --quiet build/proclaim-changelog.xml 2>/dev/null; then
+    echo "  (no changes — entry already existed)"
+else
+    git add build/proclaim-changelog.xml
+    git commit -m "chore: add changelog entry for ${VERSION}"
+    git push
+    # Update the tag to include the changelog commit
+    git tag -f "$TAG"
+    git push origin "$TAG" --force
+fi
+echo ""
+
+# --- Step 6: Publish to ARS ---
+echo "[6/7] Publishing to ARS..."
 bash build/ars-release.sh "$VERSION"
 echo ""
 
-# --- Step 6: Update development versions.json ---
-echo "[6/6] Updating development branch..."
+# --- Step 7: Update development versions.json ---
+echo "[7/7] Updating development branch..."
 
 # Parse version parts for next patch
 IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION%%-*}"

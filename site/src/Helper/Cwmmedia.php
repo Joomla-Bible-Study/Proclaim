@@ -66,7 +66,7 @@ class Cwmmedia
             'fa-play-circle'          => 'fa-circle-play',
             'fa-check-circle'         => 'fa-circle-check',
             'fa-info-circle'          => 'fa-circle-info',
-            'fa-exclamation-triangle'  => 'fa-triangle-exclamation',
+            'fa-exclamation-triangle' => 'fa-triangle-exclamation',
             'fa-times-circle'         => 'fa-circle-xmark',
             'fa-times'                => 'fa-xmark',
             'fa-external-link-alt'    => 'fa-up-right-from-square',

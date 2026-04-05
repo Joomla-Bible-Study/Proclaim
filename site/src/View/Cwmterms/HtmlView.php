@@ -73,8 +73,8 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $input             = Factory::getApplication()->getInput();
-        $mid               = $input->get('mid', '', 'int');
+        $input              = Factory::getApplication()->getInput();
+        $mid                = $input->get('mid', '', 'int');
         $template           = Cwmparams::getTemplateparams();
         $this->params       = $template->params;
         $this->termstext    = $this->params->get('terms');

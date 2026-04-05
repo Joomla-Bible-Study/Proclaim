@@ -230,7 +230,9 @@ class CwmpodcastsModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (is_numeric($published)) {
+        if (\is_array($published)) {
+            $query->whereIn($db->quoteName('podcast.published'), array_map('intval', $published));
+        } elseif (is_numeric($published)) {
             $query->where($db->quoteName('podcast.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
             $query->where('(' . $db->quoteName('podcast.published') . ' = 0 OR ' . $db->quoteName('podcast.published') . ' = 1)');

@@ -360,6 +360,13 @@
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
         </field>
+        <!-- REST API Settings -->
+        <field name="api_access" type="list" default="2"
+               label="JBS_ADM_API_ACCESS_LABEL" description="JBS_ADM_API_ACCESS_DESC">
+            <option value="0">JBS_ADM_API_DISABLED</option>
+            <option value="1">JBS_ADM_API_PUBLIC</option>
+            <option value="2">JBS_ADM_API_KEY_REQUIRED</option>
+        </field>
         <!-- Auto Archive Settings -->
         <field name="archive_auto" type="radio" default="0"
                label="PLG_TASK_PROCLAIM_ARCHIVE_AUTO_LABEL"

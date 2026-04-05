@@ -61,7 +61,7 @@ return new class () implements InstallerScriptInterface {
     {
         if (version_compare(PHP_VERSION, $this->minimumPhp, '<')) {
             Factory::getApplication()->enqueueMessage(
-                sprintf(
+                \sprintf(
                     'CWM Proclaim requires PHP %s or later. You are running PHP %s.',
                     $this->minimumPhp,
                     PHP_VERSION
@@ -74,7 +74,7 @@ return new class () implements InstallerScriptInterface {
 
         if (version_compare(JVERSION, $this->minimumJoomla, '<')) {
             Factory::getApplication()->enqueueMessage(
-                sprintf(
+                \sprintf(
                     'CWM Proclaim requires Joomla %s or later. You are running Joomla %s.',
                     $this->minimumJoomla,
                     JVERSION

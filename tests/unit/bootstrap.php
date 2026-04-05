@@ -239,11 +239,13 @@ if (!\defined('JPATH_TESTS')) {
 
 spl_autoload_register(function ($class) use ($componentRoot) {
     $mappings = [
-        'CWM\\Component\\Proclaim\\Administrator\\'      => $componentRoot . '/admin/src/',
-        'CWM\\Component\\Proclaim\\Site\\'               => $componentRoot . '/site/src/',
-        'CWM\\Component\\Proclaim\\Tests\\'              => $componentRoot . '/tests/unit/',
-        'CWM\\Component\\Proclaim\\Tests\\Integration\\' => $componentRoot . '/tests/integration/',
-        'CWM\\Module\\Proclaim\\Site\\'                  => $componentRoot . '/modules/site/mod_proclaim/src/',
+        'CWM\\Component\\Proclaim\\Administrator\\'       => $componentRoot . '/admin/src/',
+        'CWM\\Component\\Proclaim\\Api\\'                 => $componentRoot . '/admin/src/Api/',
+        'CWM\\Component\\Proclaim\\Site\\'                => $componentRoot . '/site/src/',
+        'CWM\\Component\\Proclaim\\Tests\\'               => $componentRoot . '/tests/unit/',
+        'CWM\\Component\\Proclaim\\Tests\\Integration\\'  => $componentRoot . '/tests/integration/',
+        'CWM\\Module\\Proclaim\\Site\\'                   => $componentRoot . '/modules/site/mod_proclaim/src/',
+        'CWM\\Plugin\\WebServices\\Proclaim\\Extension\\' => $componentRoot . '/plugins/webservices/proclaim/src/Extension/',
     ];
 
     foreach ($mappings as $prefix => $baseDir) {
@@ -361,6 +363,9 @@ require_once __DIR__ . '/ProclaimTestCase.php';
             'prefix'   => $prefix,
         ]);
         $db->connect();
+
+        // Store the connection for integration tests
+        $GLOBALS['__proclaim_test_db'] = $db;
 
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 

@@ -249,6 +249,21 @@ else
     echo "Download item created (ID: ${ITEM_ID})."
 fi
 
+# --- Ensure update stream has changelogurl ---
+CHANGELOG_URL="https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml"
+echo "Ensuring update stream has changelog URL..."
+curl -s -X PATCH \
+    -H "X-Joomla-Token: ${TOKEN}" \
+    -H "Accept: application/vnd.api+json" \
+    -H "Content-Type: application/json" \
+    -d "{
+        \"id\": ${ARS_UPDATE_STREAM_ID},
+        \"changelogurl\": \"${CHANGELOG_URL}\"
+    }" \
+    "${API_BASE}/updatestreams/${ARS_UPDATE_STREAM_ID}" > /dev/null 2>&1 \
+    && echo "  Update stream changelog URL set." \
+    || echo "  Warning: Could not update stream changelog URL. Set it manually in ARS admin."
+
 echo ""
 echo "Done! Proclaim ${VERSION} published to ARS."
 echo "  ARS Release: ${SITE_URL}/index.php?option=com_ars&view=items&release_id=${RELEASE_ID}"

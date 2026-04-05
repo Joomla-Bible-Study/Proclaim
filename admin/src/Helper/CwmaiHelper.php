@@ -416,17 +416,17 @@ class CwmaiHelper
         $jsonKeys     = [];
 
         $voiceGuide = match ($voice) {
-            'first_person'   => 'Write from the teacher\'s perspective in first person'
+            'first_person' => 'Write from the teacher\'s perspective in first person'
                 . ($teacherName ? ' (as ' . $teacherName . ')' : '')
                 . '. Use "I", "we", and "us". Sound warm, personal, and pastoral — '
                 . 'as if the teacher is describing their own message to a friend.',
             'conversational' => 'Write in a warm, conversational tone that speaks directly to the listener. '
                 . 'Use "you" and "we". Ask engaging questions. Sound like a trusted friend '
                 . 'inviting someone to listen, not a catalog description.',
-            'summary'        => 'Write in a concise, factual style with no narrative voice. '
+            'summary' => 'Write in a concise, factual style with no narrative voice. '
                 . 'Focus on the scripture references, key themes, and practical takeaways. '
                 . 'Keep sentences short and informative.',
-            default          => 'Write in third person.'
+            default => 'Write in third person.'
                 . ($teacherName ? ' Refer to the teacher as ' . $teacherName . '.' : ''),
         };
 

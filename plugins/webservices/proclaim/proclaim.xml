@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="webservices" method="upgrade">
+    <name>plg_webservices_proclaim</name>
+    <author>CWM Team</author>
+    <creationDate>2026-03-15</creationDate>
+    <copyright>(C) 2026 CWM Team All rights reserved</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>support@christianwebministries.org</authorEmail>
+    <authorUrl>https://www.christianwebministries.org</authorUrl>
+    <version>10.3.0</version>
+    <description>PLG_WEBSERVICES_PROCLAIM_DESCRIPTION</description>
+    <namespace path="src">CWM\Plugin\WebServices\Proclaim</namespace>
+    <files>
+        <folder plugin="proclaim">services</folder>
+        <folder>src</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/plg_webservices_proclaim.ini</language>
+        <language tag="en-GB">language/en-GB/plg_webservices_proclaim.sys.ini</language>
+    </languages>
+</extension>

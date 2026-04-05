@@ -247,9 +247,11 @@ class CwmseriesModel extends ListModel
         }
 
         // Filter by published state
-        $published = (string) $this->getState('filter.published');
+        $published = $this->getState('filter.published');
 
-        if (($published !== '*') && is_numeric($published)) {
+        if (\is_array($published)) {
+            $query->whereIn($db->quoteName('series.published'), array_map('intval', $published));
+        } elseif (($published = (string) $published) !== '*' && is_numeric($published)) {
             $state = (int) $published;
             $query->where($db->quoteName('series.published') . ' = :state')
                 ->bind(':state', $state, ParameterType::INTEGER);
