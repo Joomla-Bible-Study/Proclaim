@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
@@ -36,9 +37,31 @@ class MediaController extends ApiController
      *
      * @since   10.3.0
      */
+    /**
+     * Supports query filters: ?filter[study_id]=42&filter[search]=keyword&filter[language]=en-GB
+     *
+     * @return  static
+     *
+     * @since   10.3.0
+     */
     public function displayList()
     {
         $this->modelState->set('filter.published', [1, 2]);
+
+        $apiFilter = $this->input->get('filter', [], 'array');
+        $clean     = InputFilter::getInstance();
+
+        if (\array_key_exists('search', $apiFilter)) {
+            $this->modelState->set('filter.search', $clean->clean($apiFilter['search'], 'STRING'));
+        }
+
+        if (\array_key_exists('study_id', $apiFilter)) {
+            $this->modelState->set('filter.study_id', $clean->clean($apiFilter['study_id'], 'INT'));
+        }
+
+        if (\array_key_exists('language', $apiFilter)) {
+            $this->modelState->set('filter.language', $clean->clean($apiFilter['language'], 'CMD'));
+        }
 
         return parent::displayList();
     }

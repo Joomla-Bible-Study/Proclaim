@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
@@ -31,6 +32,8 @@ class SermonsController extends ApiController
     /**
      * List sermons — published and archived only.
      *
+     * Supports query filters: ?filter[teacher]=5&filter[series]=3&filter[search]=keyword
+     *
      * @return  static
      *
      * @since   10.3.0
@@ -38,6 +41,37 @@ class SermonsController extends ApiController
     public function displayList()
     {
         $this->modelState->set('filter.published', [1, 2]);
+
+        $apiFilter = $this->input->get('filter', [], 'array');
+        $clean     = InputFilter::getInstance();
+
+        if (\array_key_exists('search', $apiFilter)) {
+            $this->modelState->set('filter.search', $clean->clean($apiFilter['search'], 'STRING'));
+        }
+
+        if (\array_key_exists('teacher', $apiFilter)) {
+            $this->modelState->set('filter.teacher', $clean->clean($apiFilter['teacher'], 'INT'));
+        }
+
+        if (\array_key_exists('series', $apiFilter)) {
+            $this->modelState->set('filter.series', $clean->clean($apiFilter['series'], 'INT'));
+        }
+
+        if (\array_key_exists('messagetype', $apiFilter)) {
+            $this->modelState->set('filter.messagetype', $clean->clean($apiFilter['messagetype'], 'INT'));
+        }
+
+        if (\array_key_exists('location', $apiFilter)) {
+            $this->modelState->set('filter.location', $clean->clean($apiFilter['location'], 'INT'));
+        }
+
+        if (\array_key_exists('year', $apiFilter)) {
+            $this->modelState->set('filter.year', $clean->clean($apiFilter['year'], 'INT'));
+        }
+
+        if (\array_key_exists('language', $apiFilter)) {
+            $this->modelState->set('filter.language', $clean->clean($apiFilter['language'], 'CMD'));
+        }
 
         return parent::displayList();
     }

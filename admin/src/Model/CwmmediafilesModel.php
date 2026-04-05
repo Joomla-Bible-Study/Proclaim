@@ -328,12 +328,12 @@ class CwmmediafilesModel extends ListModel
         // Restrict by parent study's location + access (multi-campus security)
         CwmlocationHelper::applySecurityFilter($query, 'study');
 
-        // Filter by study title
-        //        $study = $this->getState('filter.study_id');
-        //
-        //        if (!empty($study)) {
-        //            $query->where('mediafile.study_id LIKE "%' . $study . '%"');
-        //        }
+        // Filter by study (sermon) ID
+        $studyId = $this->getState('filter.study_id');
+
+        if (is_numeric($studyId)) {
+            $query->where($db->quoteName('mediafile.study_id') . ' = ' . (int) $studyId);
+        }
 
         // Filter by media years
         $mediaYears = $this->getState('filter.mediaYears');
