@@ -87,7 +87,9 @@ class CwmsetupwizardHelper
                 return false;
             }
 
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Check if wizard was already completed or dismissed
             $query = $db->getQuery(true)
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
@@ -98,7 +100,21 @@ class CwmsetupwizardHelper
             if ($json) {
                 $params = new Registry($json);
 
-                return (int) $params->get('setup_wizard_complete', 0) === 0;
+                // Explicitly completed — never show again
+                if ((int) $params->get('setup_wizard_complete', 0) === 1) {
+                    return false;
+                }
+            }
+
+            // Distinguish fresh install from upgrade: if studies exist,
+            // this is an upgrade and the wizard should not auto-show.
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__bsms_studies'));
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                return false;
             }
 
             // No admin record yet — show wizard
