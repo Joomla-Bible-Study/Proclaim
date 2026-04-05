@@ -18,12 +18,16 @@ use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
- * Read-only API controller for sermons (messages/studies).
+ * API controller for sermons (messages/studies).
  *
- * GET /api/index.php/v1/proclaim/sermons       — list
- * GET /api/index.php/v1/proclaim/sermons/:id   — detail
+ * GET    /api/index.php/v1/proclaim/sermons       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/sermons/:id   — detail
+ * POST   /api/index.php/v1/proclaim/sermons       — create
+ * PATCH  /api/index.php/v1/proclaim/sermons/:id   — update
+ * DELETE /api/index.php/v1/proclaim/sermons/:id   — delete
  *
- * Returns published and archived items only (excludes unpublished and trashed).
+ * Filters: ?filter[teacher]=&filter[series]=&filter[messagetype]=
+ *          &filter[location]=&filter[year]=&filter[search]=&filter[language]=
  *
  * @since  10.3.0
  */

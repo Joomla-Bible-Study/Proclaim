@@ -17,10 +17,15 @@ use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Read-only API controller for media files.
+ * API controller for media files.
  *
- * GET /api/index.php/v1/proclaim/media       — list
- * GET /api/index.php/v1/proclaim/media/:id   — detail
+ * GET    /api/index.php/v1/proclaim/media       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/media/:id   — detail
+ * POST   /api/index.php/v1/proclaim/media       — create
+ * PATCH  /api/index.php/v1/proclaim/media/:id   — update
+ * DELETE /api/index.php/v1/proclaim/media/:id   — delete
+ *
+ * Filters: ?filter[search]=&filter[study_id]=&filter[language]=
  *
  * @since  10.3.0
  */
@@ -94,7 +99,7 @@ class MediaController extends ApiController
      */
     protected function preprocessSaveData(array $data): array
     {
-        // Model expects podcast_id as array for implode to CSV
+        // Model expects podcast_id as an array for implode to CSV
         if (isset($data['podcast_id']) && \is_string($data['podcast_id'])) {
             $data['podcast_id'] = explode(',', $data['podcast_id']);
         }

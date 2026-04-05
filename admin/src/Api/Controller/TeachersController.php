@@ -17,10 +17,15 @@ use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Read-only API controller for teachers.
+ * API controller for teachers.
  *
- * GET /api/index.php/v1/proclaim/teachers       — list
- * GET /api/index.php/v1/proclaim/teachers/:id   — detail
+ * GET    /api/index.php/v1/proclaim/teachers       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/teachers/:id   — detail
+ * POST   /api/index.php/v1/proclaim/teachers       — create
+ * PATCH  /api/index.php/v1/proclaim/teachers/:id   — update
+ * DELETE /api/index.php/v1/proclaim/teachers/:id   — delete
+ *
+ * Filters: ?filter[search]=&filter[language]=
  *
  * @since  10.3.0
  */

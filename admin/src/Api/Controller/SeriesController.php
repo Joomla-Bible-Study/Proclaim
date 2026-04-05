@@ -19,9 +19,16 @@ use Joomla\CMS\MVC\Controller\ApiController;
 /**
  * API controller for series.
  *
- * Series is special: Doctrine singularize('series') === 'series', so
- * write operations (add/edit/delete) must set $itemModelRequested to
- * get the singular CwmserieModel instead of the list model.
+ * GET    /api/index.php/v1/proclaim/series       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/series/:id   — detail
+ * POST   /api/index.php/v1/proclaim/series       — create
+ * PATCH  /api/index.php/v1/proclaim/series/:id   — update
+ * DELETE /api/index.php/v1/proclaim/series/:id   — delete
+ *
+ * Filters: ?filter[search]=&filter[location]=&filter[language]=
+ *
+ * Note: Doctrine singularize('series') === 'series', so write operations
+ * override add/edit/delete to set $itemModelRequested for the singular model.
  *
  * @since  10.3.0
  */

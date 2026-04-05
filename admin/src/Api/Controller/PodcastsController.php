@@ -17,10 +17,15 @@ use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Read-only API controller for podcasts.
+ * API controller for podcasts.
  *
- * GET /api/index.php/v1/proclaim/podcasts       — list
- * GET /api/index.php/v1/proclaim/podcasts/:id   — detail
+ * GET    /api/index.php/v1/proclaim/podcasts       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/podcasts/:id   — detail
+ * POST   /api/index.php/v1/proclaim/podcasts       — create
+ * PATCH  /api/index.php/v1/proclaim/podcasts/:id   — update
+ * DELETE /api/index.php/v1/proclaim/podcasts/:id   — delete
+ *
+ * Filters: ?filter[search]=&filter[location]=&filter[language]=
  *
  * @since  10.3.0
  */
