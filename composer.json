@@ -45,6 +45,7 @@
   "autoload": {
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
+      "CWM\\Component\\Proclaim\\Api\\": "admin/src/Api/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
       "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
     }
