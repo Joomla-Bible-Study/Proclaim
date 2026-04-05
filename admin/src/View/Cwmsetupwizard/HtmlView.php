@@ -73,6 +73,11 @@ class HtmlView extends BaseHtmlView
         Text::script('JBS_WIZARD_STEP_APPLY');
         Text::script('JERROR_AN_ERROR_HAS_OCCURRED');
 
+        // Register preset labels for JS review summary
+        foreach ($this->presets as $preset) {
+            Text::script($preset['label']);
+        }
+
         // Pass data to JavaScript
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa->useScript('com_proclaim.setup-wizard');
