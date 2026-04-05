@@ -20,7 +20,7 @@ AUTO_TRANSLATE = True
 FORCE_RETRANSLATE = False
 
 # 1Password configuration - standard item name for the API key
-OP_ITEM_NAME = "Google Translate API - Proclaim"
+OP_ITEM_NAME = os.environ.get('OP_ITEM_NAME', 'Google Translate API - CWM')
 OP_VAULT = os.environ.get('OP_VAULT', 'CWM')  # Default vault, can override with env var
 
 # Google Translate API key - loaded in order of priority:
@@ -79,6 +79,12 @@ def get_api_key_from_op(item_ref=None):
         # If vault-specific lookup failed, retry across all vaults
         if result.returncode != 0 and not item_ref:
             cmd = ['op', 'item', 'get', OP_ITEM_NAME,
+                   '--fields', 'credential', '--format', 'json', '--reveal'] + account_args
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+
+        # Backward compat: try legacy "Google Translate API - Proclaim" name
+        if result.returncode != 0 and not item_ref and OP_ITEM_NAME != 'Google Translate API - Proclaim':
+            cmd = ['op', 'item', 'get', 'Google Translate API - Proclaim', '--vault', OP_VAULT,
                    '--fields', 'credential', '--format', 'json', '--reveal'] + account_args
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
 
@@ -839,10 +845,17 @@ def process_directory(base_path, file_patterns, known_locales=None):
     target_langs = [lang for lang in lang_dirs if lang != source_lang]
 
     for file_pattern in file_patterns:
-        source_file_name = f"{source_lang}.{file_pattern}"
-        source_file_path = os.path.join(base_path, source_lang, source_file_name)
+        # Detect naming convention: prefixed (en-GB.foo.ini) or bare (foo.ini)
+        prefixed_path = os.path.join(base_path, source_lang, f"{source_lang}.{file_pattern}")
+        bare_path = os.path.join(base_path, source_lang, file_pattern)
 
-        if not os.path.exists(source_file_path):
+        if os.path.exists(prefixed_path):
+            source_file_path = prefixed_path
+            use_prefix = True
+        elif os.path.exists(bare_path):
+            source_file_path = bare_path
+            use_prefix = False
+        else:
             continue
 
         print(f"\n  Processing {file_pattern}...")
@@ -865,7 +878,7 @@ def process_directory(base_path, file_patterns, known_locales=None):
             print(f"    Source values changed for {len(changed_keys)} keys: {', '.join(sorted(changed_keys)[:5])}{'...' if len(changed_keys) > 5 else ''}")
 
         for target_lang in target_langs:
-            target_file_name = f"{target_lang}.{file_pattern}"
+            target_file_name = f"{target_lang}.{file_pattern}" if use_prefix else file_pattern
             target_file_path = os.path.join(base_path, target_lang, target_file_name)
 
             # 3. Remove duplicates from target
@@ -895,14 +908,25 @@ def process_directory(base_path, file_patterns, known_locales=None):
 
 def discover_project_locales(root_dir):
     """
-    Discover all project locales from the main admin/language/ directory.
+    Discover all project locales from the first language/ directory found.
+
+    Checks (in order): admin/language/, site/language/, language/
+    Falls back to LANG_CODE_MAP keys if none found.
+
     Returns a sorted list of locale codes (e.g., ['cs-CZ', 'de-DE', 'en-GB', ...]).
     """
-    admin_lang_dir = os.path.join(root_dir, 'admin', 'language')
-    if os.path.exists(admin_lang_dir):
-        locales = get_language_dirs(admin_lang_dir)
-        if locales:
-            return sorted(locales)
+    candidates = [
+        os.path.join(root_dir, 'admin', 'language'),
+        os.path.join(root_dir, 'site', 'language'),
+        os.path.join(root_dir, 'language'),
+    ]
+
+    for lang_dir in candidates:
+        if os.path.exists(lang_dir):
+            locales = get_language_dirs(lang_dir)
+            # If only en-GB exists, use full locale list to create all targets
+            if locales and locales != ['en-GB']:
+                return sorted(locales)
 
     # Fallback: use all locales from LANG_CODE_MAP
     return sorted(LANG_CODE_MAP.keys())
@@ -918,8 +942,18 @@ def scan_and_process(root_dir):
     known_locales = discover_project_locales(root_dir)
     print(f"Project locales: {', '.join(known_locales)}")
 
-    # Submodule directories that have their own language files — skip them
-    skip_dirs = {'vendor', 'node_modules', 'lib_cwmscripture', 'scripturelinks'}
+    # Always skip these directories
+    skip_dirs = {'vendor', 'node_modules', '.git'}
+
+    # Also skip git submodule directories (they have their own language sync)
+    gitmodules = os.path.join(root_dir, '.gitmodules')
+    if os.path.exists(gitmodules):
+        with open(gitmodules) as f:
+            for line in f:
+                m = re.match(r'\s*path\s*=\s*(.+)', line)
+                if m:
+                    # Add the leaf directory name (e.g., 'lib_cwmscripture' from 'libraries/lib_cwmscripture')
+                    skip_dirs.add(os.path.basename(m.group(1).strip()))
 
     for dirpath, dirnames, filenames in os.walk(root_dir):
         # Modify dirnames in-place to skip ignored directories
@@ -932,9 +966,12 @@ def scan_and_process(root_dir):
             if os.path.exists(en_gb_path):
                 patterns = []
                 for f in os.listdir(en_gb_path):
+                    # Old convention: en-GB.com_proclaim.ini (prefixed)
                     if f.startswith('en-GB.') and (f.endswith('.ini') or f.endswith('.sys.ini')):
-                        pattern = f[6:]
-                        patterns.append(pattern)
+                        patterns.append(f[6:])
+                    # New convention: com_livingword.ini (no prefix, Joomla 4+)
+                    elif not f.startswith('en-GB.') and (f.endswith('.ini') or f.endswith('.sys.ini')):
+                        patterns.append(f)
 
                 if patterns:
                     print(f"\nProcessing languages in {lang_path}")
