@@ -114,4 +114,31 @@ class SeriesController extends ApiController
 
         return parent::getModel($name, $prefix, $config);
     }
+
+    /**
+     * Strip protected fields from API input.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The cleaned data
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessSaveData(array $data): array
+    {
+        $user = $this->app->getIdentity();
+
+        // Strip internal system fields — prevent mass assignment
+        unset($data['asset_id'], $data['checked_out'], $data['checked_out_time'], $data['modified_by']);
+
+        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
+            unset($data['created_by']);
+        }
+
+        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
+            $data['published'] = 0;
+        }
+
+        return $data;
+    }
 }
