@@ -144,6 +144,22 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $params->set('default_study_image', 'media/com_proclaim/images/proclaim.jpg');
             $params->set('default_series_image', 'media/com_proclaim/images/proclaim.jpg');
             $params->set('default_teacher_image', 'media/com_proclaim/images/speaker24.png');
+            $params->set('default_main_image', 'media/com_proclaim/images/proclaim.jpg');
+        }
+
+        // Download/media button defaults — ensure media is actually playable
+        if (!$params->get('download_show')) {
+            $params->set('download_show', 1);
+            $params->set('download_use_button_icon', '3');
+            $params->set('download_button_text', 'Listen');
+            $params->set('download_button_type', 'btn-primary');
+            $params->set('download_icon_type', 'fa-solid fa-download');
+            $params->set('download_icon_text_size', '24');
+        }
+
+        // Study list limit
+        if (!$params->get('studylistlimit')) {
+            $params->set('studylistlimit', 20);
         }
 
         // Step 3: Simple mode template choice
@@ -356,9 +372,10 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $db->setQuery($query);
 
         if ((int) $db->loadResult() === 0) {
-            $teacher = (object) [
-                'teachername' => 'Pastor',
-                'alias'       => 'pastor',
+            $teacherName = !empty($data['teacher_name']) ? $data['teacher_name'] : 'Pastor';
+            $teacher     = (object) [
+                'teachername' => $teacherName,
+                'alias'       => strtolower(preg_replace('/[^a-z0-9]+/i', '-', $teacherName)),
                 'title'       => '',
                 'short'       => '',
                 'published'   => 1,

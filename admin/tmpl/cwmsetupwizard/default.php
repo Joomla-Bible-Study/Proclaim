@@ -89,6 +89,15 @@ use Joomla\CMS\Language\Text;
                 </div>
 
                 <div class="mb-3">
+                    <label for="wizard-teacher-name" class="form-label fw-bold">
+                        <?php echo Text::_('JBS_WIZARD_TEACHER_NAME'); ?>
+                    </label>
+                    <input type="text" class="form-control" id="wizard-teacher-name"
+                           placeholder="<?php echo Text::_('JBS_WIZARD_TEACHER_NAME_PLACEHOLDER'); ?>">
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_TEACHER_NAME_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_BIBLE_PROVIDER'); ?></label>
                     <div class="form-check mb-1">
                         <input class="form-check-input" type="radio" name="wizard-bible-provider" id="provider-getbible" value="getbible" checked>

@@ -119,6 +119,7 @@ class CwmsetupwizardController extends BaseController
             'ministry_style' => \in_array($data['ministry_style'] ?? '', ['simple', 'full_media', 'multi_campus'], true)
                 ? $data['ministry_style'] : 'simple',
             'org_name'              => trim((string) ($data['org_name'] ?? '')),
+            'teacher_name'          => trim((string) ($data['teacher_name'] ?? '')),
             'default_bible_version' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['default_bible_version'] ?? 'kjv')),
             'provider_getbible'     => (int) ($data['provider_getbible'] ?? 1),
             'provider_api_bible'    => (int) ($data['provider_api_bible'] ?? 0),

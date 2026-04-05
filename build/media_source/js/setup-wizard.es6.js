@@ -150,6 +150,7 @@
     const data = {
       ministry_style: style,
       org_name: document.getElementById('wizard-org-name').value.trim(),
+      teacher_name: document.getElementById('wizard-teacher-name')?.value.trim() || '',
       default_bible_version: document.getElementById('wizard-bible-version').value,
       uploadpath: document.getElementById('wizard-upload-path').value.trim(),
       provider_getbible: bibleProvider === 'getbible' ? 1 : 0,
@@ -209,6 +210,9 @@
     let html = '<table class="table table-striped mb-0">';
     html += `<tr><th style="width:40%">Ministry Style</th><td>${styleLabel}</td></tr>`;
     html += `<tr><th>Organization</th><td>${data.org_name || '<em>Not set</em>'}</td></tr>`;
+    if (data.teacher_name) {
+      html += `<tr><th>Default Teacher</th><td>${data.teacher_name}</td></tr>`;
+    }
     html += `<tr><th>Bible Version</th><td>${data.default_bible_version.toUpperCase()}</td></tr>`;
     html += `<tr><th>Upload Path</th><td><code>${data.uploadpath}</code></td></tr>`;
     html += `<tr><th>Primary Media</th><td>${mediaLabels[data.primary_media] || data.primary_media}</td></tr>`;
