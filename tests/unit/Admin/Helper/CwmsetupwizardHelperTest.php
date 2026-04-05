@@ -95,13 +95,13 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
     }
 
     /**
-     * Test that simple preset has no auto-tasks (backup/podcast are optional).
+     * Test that simple preset auto-creates analytics only (backup/podcast optional).
      */
-    public function testSimplePresetTasksEmpty(): void
+    public function testSimplePresetTasksAnalyticsOnly(): void
     {
         $preset = CwmsetupwizardHelper::PRESETS['simple'];
 
-        $this->assertEmpty($preset['tasks']);
+        $this->assertEquals(['analytics'], $preset['tasks']);
     }
 
     /**

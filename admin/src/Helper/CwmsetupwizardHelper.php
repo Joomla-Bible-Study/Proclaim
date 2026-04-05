@@ -43,7 +43,7 @@ class CwmsetupwizardHelper
             'use_topics'    => false,
             'use_locations' => false,
             'servers'       => ['Local'],
-            'tasks'         => [],
+            'tasks'         => ['analytics'],
         ],
         'full_media' => [
             'label'         => 'JBS_WIZARD_STYLE_FULL',
