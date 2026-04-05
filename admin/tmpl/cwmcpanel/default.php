@@ -170,6 +170,50 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
         <?php endif; ?>
         <?php
+            // Post-wizard "Getting Started" checklist — shown after wizard completes
+            if (CwmsetupwizardHelper::shouldShowChecklist()) :
+                $checklistItems = CwmsetupwizardHelper::getChecklistItems();
+                $completedCount = count(array_filter($checklistItems, fn($item) => $item['done']));
+                $totalCount = count($checklistItems);
+        ?>
+            <div class="col-12">
+                <div class="card border-success mb-3">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fa-solid fa-list-check me-2"></i>
+                            <strong><?php echo Text::_('JBS_CHECKLIST_TITLE'); ?></strong>
+                            <span class="badge bg-white text-success ms-2"><?php echo $completedCount; ?>/<?php echo $totalCount; ?></span>
+                        </span>
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmsetupwizard.dismissChecklist'); ?>"
+                           class="btn btn-sm btn-outline-light"
+                           onclick="return confirm('<?php echo Text::_('JBS_CHECKLIST_DISMISS_CONFIRM'); ?>')">
+                            <?php echo Text::_('JBS_CHECKLIST_DISMISS'); ?>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-3"><?php echo Text::_('JBS_CHECKLIST_DESC'); ?></p>
+                        <div class="list-group list-group-flush">
+                            <?php foreach ($checklistItems as $item) : ?>
+                                <div class="list-group-item d-flex align-items-center px-0 <?php echo $item['done'] ? 'text-muted' : ''; ?>">
+                                    <i class="fa-solid <?php echo $item['done'] ? 'fa-circle-check text-success' : 'fa-circle text-secondary'; ?> me-3 fa-lg"></i>
+                                    <?php if ($item['done']) : ?>
+                                        <span class="text-decoration-line-through"><?php echo Text::_($item['label']); ?></span>
+                                    <?php else : ?>
+                                        <a href="<?php echo Route::_($item['link']); ?>"
+                                           <?php echo !empty($item['external']) ? 'target="_blank"' : ''; ?>
+                                           class="text-decoration-none fw-semibold">
+                                            <?php echo Text::_($item['label']); ?>
+                                            <i class="fa-solid fa-arrow-right ms-1 small"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php
             // Location system wizard opt-in card — shown to super admins when wizard has not been configured
             $cpanelUser = Factory::getApplication()->getIdentity();
             if ($cpanelUser->authorise('core.admin') && CwmlocationHelper::shouldShowWizard()) :

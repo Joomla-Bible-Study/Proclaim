@@ -294,6 +294,20 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     }
 
     /**
+     * Dismiss the post-wizard checklist.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public function dismissChecklist(): void
+    {
+        $params = $this->loadAdminParams();
+        $params->set('setup_checklist_dismissed', 1);
+        $this->saveAdminParams($params);
+    }
+
+    /**
      * Create default server entries based on media source selection.
      *
      * Only creates servers that don't already exist (checks by type).

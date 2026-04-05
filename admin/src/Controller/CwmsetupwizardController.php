@@ -51,7 +51,7 @@ class CwmsetupwizardController extends BaseController
      */
     public function execute($task): mixed
     {
-        $allowed = ['display', 'apply', 'dismiss', 'getStepData'];
+        $allowed = ['display', 'apply', 'dismiss', 'dismissChecklist', 'getStepData'];
 
         if (!\in_array($task, $allowed, true)) {
             $task = 'display';
@@ -203,6 +203,27 @@ class CwmsetupwizardController extends BaseController
         } catch (\RuntimeException $e) {
             $this->sendJsonResponse(false, $e->getMessage() ?: Text::_('JERROR_AN_ERROR_HAS_OCCURRED'));
         }
+    }
+
+    /**
+     * Dismiss the post-wizard checklist (non-AJAX, redirects to cpanel).
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.3.0
+     */
+    public function dismissChecklist(): void
+    {
+        if (!Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+            throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'));
+        }
+
+        /** @var CwmsetupwizardModel $model */
+        $model = $this->getModel('Cwmsetupwizard');
+        $model->dismissChecklist();
+
+        $this->setRedirect('index.php?option=com_proclaim&view=cwmcpanel');
     }
 
     /**
