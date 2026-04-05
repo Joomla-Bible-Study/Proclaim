@@ -12,15 +12,13 @@
 	beStrictAboutCoverageMetadata="false">
 
 	<testsuites>
-		<!-- Broad suites -->
-		<testsuite name="Proclaim Unit Tests">
+		<!-- Default suite: runs ALL tests (unit + integration) -->
+		<testsuite name="Proclaim All Tests">
 			<directory>tests/unit</directory>
-		</testsuite>
-		<testsuite name="Proclaim Integration Tests">
 			<directory>tests/integration</directory>
 		</testsuite>
 
-		<!-- Granular unit suites -->
+		<!-- Granular unit suites (for running a subset) -->
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
 		</testsuite>
