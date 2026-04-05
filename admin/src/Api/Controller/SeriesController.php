@@ -81,7 +81,13 @@ class SeriesController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Display a single series item.
+     *
+     * @param   int|null  $id  The item ID
+     *
+     * @return  static
+     *
+     * @since   10.3.0
      */
     public function displayItem($id = null)
     {
@@ -91,7 +97,11 @@ class SeriesController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Create a new series — sets singular model context.
+     *
+     * @return  static
+     *
+     * @since   10.3.0
      */
     public function add()
     {
@@ -101,7 +111,11 @@ class SeriesController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Update an existing series — sets singular model context.
+     *
+     * @return  static
+     *
+     * @since   10.3.0
      */
     public function edit()
     {
@@ -111,7 +125,13 @@ class SeriesController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Delete a series — sets singular model context.
+     *
+     * @param   int|null  $id  The item ID
+     *
+     * @return  void
+     *
+     * @since   10.3.0
      */
     public function delete($id = null)
     {
@@ -121,7 +141,15 @@ class SeriesController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Get the model, mapping API names to Cwm-prefixed Proclaim classes.
+     *
+     * @param   string  $name    Model name
+     * @param   string  $prefix  Model prefix
+     * @param   array   $config  Configuration
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel|false
+     *
+     * @since   10.3.0
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

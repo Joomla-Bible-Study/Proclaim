@@ -67,7 +67,15 @@ class MediaController extends ApiController
     }
 
     /**
-     * @since  10.3.0
+     * Get the model, mapping API names to Cwm-prefixed Proclaim classes.
+     *
+     * @param   string  $name    Model name
+     * @param   string  $prefix  Model prefix
+     * @param   array   $config  Configuration
+     *
+     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel|false
+     *
+     * @since   10.3.0
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
