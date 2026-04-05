@@ -183,6 +183,21 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $summary['tasks_registered'] = $tasksRegistered;
         }
 
+        // Multi-campus: enable location filtering
+        if (($data['ministry_style'] ?? '') === 'multi_campus') {
+            $params->set('enable_location_filtering', 1);
+        }
+
+        // Ensure default template is published and has working params
+        $this->ensureDefaultTemplate();
+
+        // Create frontend menu items so the site has entry points
+        $menuItems                 = $this->createMenuItems($data);
+        $summary['menu_items']     = $menuItems;
+
+        // Update template filter visibility based on ministry style
+        $this->updateTemplateFilters($data);
+
         // Mark wizard complete
         $params->set('setup_wizard_complete', 1);
 
@@ -558,5 +573,219 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         }
 
         return $registered;
+    }
+
+    /**
+     * Ensure the default template (ID 1) exists and is published.
+     *
+     * The install SQL creates it, but this is a safety check.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function ensureDefaultTemplate(): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_templates'))
+            ->where($db->quoteName('id') . ' = 1');
+        $db->setQuery($query);
+
+        if ((int) $db->loadResult() > 0) {
+            // Ensure it's published
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_templates'))
+                ->set($db->quoteName('published') . ' = 1')
+                ->where($db->quoteName('id') . ' = 1');
+            $db->setQuery($query);
+            $db->execute();
+
+            return;
+        }
+
+        // Create a minimal default template
+        $row = (object) [
+            'id'          => 1,
+            'type'        => 'tmplList',
+            'title'       => 'Default',
+            'tmpl'        => '',
+            'published'   => 1,
+            'params'      => '{}',
+            'access'      => 1,
+            'created'     => (new Date())->toSql(),
+            'created_by'  => Factory::getApplication()->getIdentity()->id ?? 0,
+            'checked_out' => 0,
+        ];
+        $db->insertObject('#__bsms_templates', $row);
+    }
+
+    /**
+     * Create frontend menu items so the site has entry points.
+     *
+     * Creates items in the site's main menu. Only creates if no Proclaim
+     * menu items exist yet.
+     *
+     * @param   array  $data  Wizard data (ministry_style determines which views)
+     *
+     * @return  array  List of created menu item titles.
+     *
+     * @since   10.3.0
+     */
+    private function createMenuItems(array $data): array
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check if any Proclaim menu items already exist
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__menu'))
+            ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim%'))
+            ->where($db->quoteName('client_id') . ' = 0');
+        $db->setQuery($query);
+
+        if ((int) $db->loadResult() > 0) {
+            return [];
+        }
+
+        // Find the main menu type
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('menutype'))
+            ->from($db->quoteName('#__menu_types'))
+            ->order($db->quoteName('id') . ' ASC');
+        $db->setQuery($query, 0, 1);
+        $menuType = $db->loadResult() ?: 'mainmenu';
+
+        // Get component ID for com_proclaim
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('extension_id'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $db->setQuery($query, 0, 1);
+        $componentId = (int) $db->loadResult();
+
+        if ($componentId === 0) {
+            return [];
+        }
+
+        // Find the root menu item for parent_id
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__menu'))
+            ->where($db->quoteName('menutype') . ' = ' . $db->quote($menuType))
+            ->where($db->quoteName('level') . ' = 0');
+        $db->setQuery($query, 0, 1);
+        $parentId = (int) $db->loadResult() ?: 1;
+
+        $style = $data['ministry_style'] ?? 'simple';
+
+        // Define menu items per style
+        $items = [
+            [
+                'title' => 'Sermons',
+                'alias' => 'sermons',
+                'link'  => 'index.php?option=com_proclaim&view=cwmsermons&t=1',
+            ],
+        ];
+
+        if ($style !== 'simple') {
+            $items[] = [
+                'title' => 'Teachers',
+                'alias' => 'teachers',
+                'link'  => 'index.php?option=com_proclaim&view=cwmteachers&t=1',
+            ];
+            $items[] = [
+                'title' => 'Series',
+                'alias' => 'series',
+                'link'  => 'index.php?option=com_proclaim&view=cwmseriesdisplays&t=1',
+            ];
+        }
+
+        $created  = [];
+        $ordering = 0;
+
+        foreach ($items as $item) {
+            $ordering++;
+
+            try {
+                // Use Joomla's Table class for proper nested set handling
+                $table               = new \Joomla\CMS\Table\Menu($db);
+                $table->menutype     = $menuType;
+                $table->title        = $item['title'];
+                $table->alias        = $item['alias'];
+                $table->link         = $item['link'];
+                $table->type         = 'component';
+                $table->published    = 1;
+                $table->parent_id    = $parentId;
+                $table->component_id = $componentId;
+                $table->access       = 1;
+                $table->language     = '*';
+                $table->params       = '{}';
+                $table->img          = '';
+                $table->home         = 0;
+                $table->ordering     = $ordering;
+
+                $table->setLocation($parentId, 'last-child');
+
+                if ($table->check() && $table->store()) {
+                    $created[] = $item['title'];
+                }
+            } catch (\Throwable) {
+                // Menu creation failed — non-fatal, user can create manually
+            }
+        }
+
+        return $created;
+    }
+
+    /**
+     * Update the default template's filter visibility based on ministry style.
+     *
+     * Simple mode hides topic, message type, and location filters.
+     * Full/Multi-Campus shows everything.
+     *
+     * @param   array  $data  Wizard data
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function updateTemplateFilters(array $data): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Load current template params
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_templates'))
+            ->where($db->quoteName('id') . ' = 1');
+        $db->setQuery($query, 0, 1);
+        $json = $db->loadResult();
+
+        $params = new Registry($json ?: '{}');
+        $style  = $data['ministry_style'] ?? 'simple';
+
+        // Common filters for all styles
+        $params->set('show_book_search', 1);
+        $params->set('show_teacher_search', 1);
+        $params->set('show_series_search', 1);
+        $params->set('show_year_search', 1);
+        $params->set('show_limit_search', 1);
+        $params->set('show_fullordering_search', 1);
+
+        // Style-specific filters
+        $params->set('show_topic_search', $style !== 'simple' ? 1 : 0);
+        $params->set('show_messagetype_search', $style !== 'simple' ? 1 : 0);
+        $params->set('show_location_search', $style === 'multi_campus' ? 1 : 0);
+
+        // Save
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_templates'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = 1');
+        $db->setQuery($query);
+        $db->execute();
     }
 }
