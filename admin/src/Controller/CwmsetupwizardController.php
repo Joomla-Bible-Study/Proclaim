@@ -122,23 +122,33 @@ class CwmsetupwizardController extends BaseController
             'default_bible_version' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['default_bible_version'] ?? 'kjv')),
             'provider_getbible'     => (int) ($data['provider_getbible'] ?? 1),
             'provider_api_bible'    => (int) ($data['provider_api_bible'] ?? 0),
+            'api_bible_api_key'     => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['api_bible_api_key'] ?? '')),
             'uploadpath'            => trim((string) ($data['uploadpath'] ?? '/images/biblestudy/media/')),
+            'metadesc'              => trim((string) ($data['metadesc'] ?? '')),
             'primary_media'         => \in_array($data['primary_media'] ?? '', ['local', 'youtube', 'vimeo', 'direct'], true)
                 ? $data['primary_media'] : 'local',
             'create_sample_content' => !empty($data['create_sample_content']),
+            'use_default_images'    => !empty($data['use_default_images']),
             'enable_ai'             => !empty($data['enable_ai']),
             'ai_provider'           => \in_array($data['ai_provider'] ?? '', ['claude', 'openai', 'gemini'], true)
                 ? $data['ai_provider'] : 'claude',
             'enable_podcast'    => !empty($data['enable_podcast']),
+            'enable_backup'     => !empty($data['enable_backup']),
             'analytics_enabled' => (int) ($data['analytics_enabled'] ?? 1),
             // Simple mode template
             'simple_mode_template' => \in_array($data['simple_mode_template'] ?? '', ['simple_mode1', 'simple_mode2'], true)
                 ? $data['simple_mode_template'] : 'simple_mode1',
             'simplegridtextoverlay' => (int) ($data['simplegridtextoverlay'] ?? 1),
-            // Platform API keys (stored on server record, not component params)
+            // Platform API keys
             'youtube_api_key'    => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['youtube_api_key'] ?? '')),
             'youtube_channel_id' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['youtube_channel_id'] ?? '')),
             'vimeo_access_token' => preg_replace('/[^a-zA-Z0-9_-]/', '', (string) ($data['vimeo_access_token'] ?? '')),
+            // Location details
+            'location_address'  => trim((string) ($data['location_address'] ?? '')),
+            'location_city'     => trim((string) ($data['location_city'] ?? '')),
+            'location_state'    => trim((string) ($data['location_state'] ?? '')),
+            'location_postcode' => trim((string) ($data['location_postcode'] ?? '')),
+            'location_phone'    => trim((string) ($data['location_phone'] ?? '')),
         ];
 
         /** @var CwmsetupwizardModel $model */

@@ -89,12 +89,41 @@ use Joomla\CMS\Language\Text;
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_BIBLE_PROVIDER'); ?></label>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-bible-provider" id="provider-getbible" value="getbible" checked>
+                        <label class="form-check-label" for="provider-getbible">
+                            <?php echo Text::_('JBS_WIZARD_PROVIDER_GETBIBLE'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-bible-provider" id="provider-apibible" value="apibible">
+                        <label class="form-check-label" for="provider-apibible">
+                            <?php echo Text::_('JBS_WIZARD_PROVIDER_APIBIBLE'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- API.Bible key (shown when API.Bible selected) -->
+                <div class="mb-3 d-none" id="wizard-apibible-config">
+                    <label for="wizard-apibible-key" class="form-label"><?php echo Text::_('JBS_WIZARD_APIBIBLE_KEY'); ?></label>
+                    <input type="text" class="form-control" id="wizard-apibible-key" placeholder="">
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_APIBIBLE_KEY_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
                     <label for="wizard-upload-path" class="form-label fw-bold">
                         <?php echo Text::_('JBS_WIZARD_UPLOAD_PATH'); ?>
                     </label>
                     <input type="text" class="form-control" id="wizard-upload-path"
                            value="<?php echo $this->escape($this->currentState['uploadpath'] ?? '/images/biblestudy/media/'); ?>">
                     <div class="form-text"><?php echo Text::_('JBS_WIZARD_UPLOAD_PATH_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="wizard-metadesc" class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_METADESC'); ?></label>
+                    <textarea class="form-control" id="wizard-metadesc" rows="2"
+                              placeholder="<?php echo Text::_('JBS_WIZARD_METADESC_PLACEHOLDER'); ?>"></textarea>
                 </div>
             </div>
         </div>
@@ -157,13 +186,50 @@ use Joomla\CMS\Language\Text;
                     </div>
                 </div>
 
+                <!-- Location details (shown for Full Media and Multi-Campus) -->
+                <div class="d-none" id="wizard-location-details">
+                    <hr>
+                    <h5><?php echo Text::_('JBS_WIZARD_LOCATION_HEADING'); ?></h5>
+                    <p class="text-muted"><?php echo Text::_('JBS_WIZARD_LOCATION_DESC'); ?></p>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label for="wizard-loc-address" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_ADDRESS'); ?></label>
+                            <input type="text" class="form-control" id="wizard-loc-address" placeholder="123 Main Street">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="wizard-loc-city" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_CITY'); ?></label>
+                            <input type="text" class="form-control" id="wizard-loc-city">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="wizard-loc-state" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_STATE'); ?></label>
+                            <input type="text" class="form-control" id="wizard-loc-state">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="wizard-loc-postcode" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_POSTCODE'); ?></label>
+                            <input type="text" class="form-control" id="wizard-loc-postcode">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="wizard-loc-phone" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_PHONE'); ?></label>
+                            <input type="text" class="form-control" id="wizard-loc-phone">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Multi-Campus note (shown when Multi-Campus selected) -->
                 <div class="alert alert-primary d-none" id="wizard-campus-note">
                     <i class="fa-solid fa-church me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_CAMPUS_NOTE'); ?>
                 </div>
 
+                <!-- Default images toggle -->
                 <hr>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-default-images" checked>
+                    <label class="form-check-label" for="wizard-default-images">
+                        <strong><?php echo Text::_('JBS_WIZARD_DEFAULT_IMAGES'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_DEFAULT_IMAGES_DESC'); ?></small>
+                    </label>
+                </div>
 
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" id="wizard-sample-content">

@@ -116,9 +116,12 @@
     const campusNote = document.getElementById('wizard-campus-note');
     const podcastSection = document.getElementById('wizard-podcast-section');
 
+    const locationDetails = document.getElementById('wizard-location-details');
+
     if (simpleOpts) simpleOpts.classList.toggle('d-none', styleKey !== 'simple');
     if (campusNote) campusNote.classList.toggle('d-none', styleKey !== 'multi_campus');
     if (podcastSection) podcastSection.classList.toggle('d-none', styleKey === 'simple');
+    if (locationDetails) locationDetails.classList.toggle('d-none', styleKey === 'simple');
   }
 
   /**
@@ -142,18 +145,30 @@
     const style = document.getElementById('wizard-ministry-style').value;
     const media = document.querySelector('input[name="wizard-media"]:checked')?.value || 'local';
 
+    const bibleProvider = document.querySelector('input[name="wizard-bible-provider"]:checked')?.value || 'getbible';
+
     const data = {
       ministry_style: style,
       org_name: document.getElementById('wizard-org-name').value.trim(),
       default_bible_version: document.getElementById('wizard-bible-version').value,
       uploadpath: document.getElementById('wizard-upload-path').value.trim(),
-      provider_getbible: 1,
+      provider_getbible: bibleProvider === 'getbible' ? 1 : 0,
+      provider_api_bible: bibleProvider === 'apibible' ? 1 : 0,
+      api_bible_api_key: document.getElementById('wizard-apibible-key')?.value.trim() || '',
+      metadesc: document.getElementById('wizard-metadesc')?.value.trim() || '',
       primary_media: media,
       create_sample_content: document.getElementById('wizard-sample-content').checked,
+      use_default_images: document.getElementById('wizard-default-images')?.checked || false,
       enable_ai: document.getElementById('wizard-enable-ai').checked,
       enable_podcast: document.getElementById('wizard-enable-podcast')?.checked || false,
       enable_backup: document.getElementById('wizard-enable-backup')?.checked || false,
       analytics_enabled: 1,
+      // Location details
+      location_address: document.getElementById('wizard-loc-address')?.value.trim() || '',
+      location_city: document.getElementById('wizard-loc-city')?.value.trim() || '',
+      location_state: document.getElementById('wizard-loc-state')?.value.trim() || '',
+      location_postcode: document.getElementById('wizard-loc-postcode')?.value.trim() || '',
+      location_phone: document.getElementById('wizard-loc-phone')?.value.trim() || '',
     };
 
     // Simple mode template choice
@@ -298,6 +313,16 @@
 
   // Org name validation (Step 2)
   document.getElementById('wizard-org-name')?.addEventListener('input', updateNextButton);
+
+  // Bible provider radio — show/hide API.Bible key field (Step 2)
+  document.querySelectorAll('input[name="wizard-bible-provider"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const apiConfig = document.getElementById('wizard-apibible-config');
+      if (apiConfig) {
+        apiConfig.classList.toggle('d-none', radio.value !== 'apibible' || !radio.checked);
+      }
+    });
+  });
 
   // Media source radio — show/hide platform config panels (Step 4)
   document.querySelectorAll('input[name="wizard-media"]').forEach(radio => {

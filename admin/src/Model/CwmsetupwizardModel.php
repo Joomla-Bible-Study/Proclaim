@@ -127,8 +127,23 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params->set('provider_getbible', (int) ($data['provider_getbible'] ?? 1));
         $params->set('provider_api_bible', (int) ($data['provider_api_bible'] ?? 0));
 
+        if (!empty($data['api_bible_api_key'])) {
+            $params->set('api_bible_api_key', $data['api_bible_api_key']);
+        }
+
         if (!empty($data['uploadpath'])) {
             $params->set('uploadpath', trim($data['uploadpath']));
+        }
+
+        if (!empty($data['metadesc'])) {
+            $params->set('metadesc', trim($data['metadesc']));
+        }
+
+        // Default placeholder images
+        if (!empty($data['use_default_images'])) {
+            $params->set('default_study_image', 'media/com_proclaim/images/proclaim.jpg');
+            $params->set('default_series_image', 'media/com_proclaim/images/proclaim.jpg');
+            $params->set('default_teacher_image', 'media/com_proclaim/images/speaker24.png');
         }
 
         // Step 3: Simple mode template choice
@@ -373,6 +388,11 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             if ((int) $db->loadResult() === 0) {
                 $location = (object) [
                     'location_text' => $orgName,
+                    'address'       => trim($data['location_address'] ?? ''),
+                    'suburb'        => trim($data['location_city'] ?? ''),
+                    'state'         => trim($data['location_state'] ?? ''),
+                    'postcode'      => trim($data['location_postcode'] ?? ''),
+                    'telephone'     => trim($data['location_phone'] ?? ''),
                     'published'     => 1,
                     'access'        => 1,
                     'language'      => '*',
