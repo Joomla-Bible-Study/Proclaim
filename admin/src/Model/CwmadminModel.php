@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
@@ -800,5 +801,12 @@ class CwmadminModel extends AdminModel
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
+        parent::cleanCache('mod_proclaim_youtube');
+        parent::cleanCache('mod_proclaim_podcast');
+
+        // Also clear the YouTube module's file-based cache
+        if (class_exists(CwmyoutubeFileCache::class)) {
+            CwmyoutubeFileCache::clearVideoCache();
+        }
     }
 }

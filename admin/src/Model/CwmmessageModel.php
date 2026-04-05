@@ -25,6 +25,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Date\Date;
@@ -590,6 +591,13 @@ class CwmmessageModel extends AdminModel
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
+        parent::cleanCache('mod_proclaim_youtube');
+        parent::cleanCache('mod_proclaim_podcast');
+
+        // Also clear the YouTube module's file-based cache (survives Joomla cache clears)
+        if (class_exists(CwmyoutubeFileCache::class)) {
+            CwmyoutubeFileCache::clearVideoCache();
+        }
     }
 
     /**

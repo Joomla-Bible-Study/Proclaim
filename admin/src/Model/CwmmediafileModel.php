@@ -583,6 +583,8 @@ class CwmmediafileModel extends AdminModel
     {
         parent::cleanCache('com_proclaim');
         parent::cleanCache('mod_proclaim');
+        parent::cleanCache('mod_proclaim_youtube');
+        parent::cleanCache('mod_proclaim_podcast');
     }
 
     /**
