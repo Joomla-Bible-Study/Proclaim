@@ -13,9 +13,9 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmsetupwizard;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -63,20 +63,8 @@ class HtmlView extends BaseHtmlView
         $this->currentState = $model->getCurrentState();
         $this->presets      = CwmsetupwizardHelper::PRESETS;
 
-        // Register JS translation keys
-        Text::script('JBS_WIZARD_SETUP_SUCCESS');
-        Text::script('JBS_WIZARD_CONFIRM_APPLY');
-        Text::script('JBS_WIZARD_CONFIRM_DISMISS');
-        Text::script('JBS_WIZARD_PROCESSING');
-        Text::script('JBS_WIZARD_STEP_NEXT');
-        Text::script('JBS_WIZARD_STEP_PREV');
-        Text::script('JBS_WIZARD_STEP_APPLY');
-        Text::script('JERROR_AN_ERROR_HAS_OCCURRED');
-
-        // Register preset labels for JS review summary
-        foreach ($this->presets as $preset) {
-            Text::script($preset['label']);
-        }
+        // Bulk-register all JBS_* language keys for JavaScript
+        CwmlangHelper::registerAllForJs();
 
         // Pass data to JavaScript
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
