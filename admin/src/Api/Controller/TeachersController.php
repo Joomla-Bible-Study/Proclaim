@@ -38,11 +38,6 @@ class TeachersController extends ApiController
     /**
      * List teachers — published and archived only.
      *
-     * @return  static
-     *
-     * @since   10.3.0
-     */
-    /**
      * Supports query filters: ?filter[search]=keyword&filter[language]=en-GB
      *
      * @return  static

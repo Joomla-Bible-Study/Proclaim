@@ -38,11 +38,6 @@ class PodcastsController extends ApiController
     /**
      * List podcasts — published and archived only.
      *
-     * @return  static
-     *
-     * @since   10.3.0
-     */
-    /**
      * Supports query filters: ?filter[search]=keyword&filter[location]=1&filter[language]=en-GB
      *
      * @return  static

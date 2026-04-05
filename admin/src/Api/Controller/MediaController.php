@@ -38,11 +38,6 @@ class MediaController extends ApiController
     /**
      * List media files — published and archived only.
      *
-     * @return  static
-     *
-     * @since   10.3.0
-     */
-    /**
      * Supports query filters: ?filter[study_id]=42&filter[search]=keyword&filter[language]=en-GB
      *
      * @return  static
