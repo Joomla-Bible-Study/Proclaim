@@ -152,6 +152,7 @@
       create_sample_content: document.getElementById('wizard-sample-content').checked,
       enable_ai: document.getElementById('wizard-enable-ai').checked,
       enable_podcast: document.getElementById('wizard-enable-podcast')?.checked || false,
+      enable_backup: document.getElementById('wizard-enable-backup')?.checked || false,
       analytics_enabled: 1,
     };
 

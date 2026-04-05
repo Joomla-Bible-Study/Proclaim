@@ -43,7 +43,7 @@ class CwmsetupwizardHelper
             'use_topics'    => false,
             'use_locations' => false,
             'servers'       => ['Local'],
-            'tasks'         => ['backup'],
+            'tasks'         => [],
         ],
         'full_media' => [
             'label'         => 'JBS_WIZARD_STYLE_FULL',
@@ -54,7 +54,7 @@ class CwmsetupwizardHelper
             'use_topics'    => true,
             'use_locations' => false,
             'servers'       => ['Local', 'Youtube', 'Vimeo', 'Direct'],
-            'tasks'         => ['backup', 'podcast', 'analytics'],
+            'tasks'         => ['analytics'],
         ],
         'multi_campus' => [
             'label'         => 'JBS_WIZARD_STYLE_CAMPUS',
@@ -65,7 +65,7 @@ class CwmsetupwizardHelper
             'use_topics'    => true,
             'use_locations' => true,
             'servers'       => ['Local', 'Youtube', 'Vimeo', 'Direct'],
-            'tasks'         => ['backup', 'podcast', 'analytics'],
+            'tasks'         => ['analytics'],
         ],
     ];
 

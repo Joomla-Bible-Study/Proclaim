@@ -95,25 +95,25 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
     }
 
     /**
-     * Test that simple preset only includes backup task.
+     * Test that simple preset has no auto-tasks (backup/podcast are optional).
      */
-    public function testSimplePresetTasksMinimal(): void
+    public function testSimplePresetTasksEmpty(): void
     {
         $preset = CwmsetupwizardHelper::PRESETS['simple'];
 
-        $this->assertEquals(['backup'], $preset['tasks']);
+        $this->assertEmpty($preset['tasks']);
     }
 
     /**
-     * Test that full_media preset includes podcast and analytics tasks.
+     * Test that full_media preset includes analytics (podcast/backup are optional toggles).
      */
-    public function testFullMediaPresetTasksComplete(): void
+    public function testFullMediaPresetTasksIncludeAnalytics(): void
     {
         $preset = CwmsetupwizardHelper::PRESETS['full_media'];
 
-        $this->assertContains('backup', $preset['tasks']);
-        $this->assertContains('podcast', $preset['tasks']);
         $this->assertContains('analytics', $preset['tasks']);
+        $this->assertNotContains('backup', $preset['tasks']);
+        $this->assertNotContains('podcast', $preset['tasks']);
     }
 
     /**

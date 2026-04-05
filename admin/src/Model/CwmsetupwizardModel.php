@@ -167,9 +167,19 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $summary['sample_content'] = $sampleIds;
         }
 
-        // Scheduled tasks
-        if ($preset) {
-            $tasksRegistered             = $this->registerScheduledTasks($preset['tasks']);
+        // Scheduled tasks — start with preset tasks, add optional ones if toggled
+        $tasks = $preset ? $preset['tasks'] : [];
+
+        if (!empty($data['enable_podcast'])) {
+            $tasks[] = 'podcast';
+        }
+
+        if (!empty($data['enable_backup'])) {
+            $tasks[] = 'backup';
+        }
+
+        if (!empty($tasks)) {
+            $tasksRegistered             = $this->registerScheduledTasks($tasks);
             $summary['tasks_registered'] = $tasksRegistered;
         }
 

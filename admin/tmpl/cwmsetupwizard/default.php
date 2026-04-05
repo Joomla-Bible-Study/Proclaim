@@ -258,6 +258,16 @@ use Joomla\CMS\Language\Text;
                 <hr>
 
                 <div class="mb-3">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="wizard-enable-backup">
+                        <label class="form-check-label" for="wizard-enable-backup">
+                            <strong><?php echo Text::_('JBS_WIZARD_ENABLE_BACKUP'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_BACKUP_DESC'); ?></small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="wizard-enable-ai">
                         <label class="form-check-label" for="wizard-enable-ai">
