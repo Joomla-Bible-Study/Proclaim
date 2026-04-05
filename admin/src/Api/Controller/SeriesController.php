@@ -99,7 +99,7 @@ class SeriesController extends ApiController
     /**
      * Create a new series — sets singular model context.
      *
-     * @return  static
+     * @return  void
      *
      * @since   10.3.0
      */
@@ -107,13 +107,13 @@ class SeriesController extends ApiController
     {
         $this->itemModelRequested = true;
 
-        return parent::add();
+        parent::add();
     }
 
     /**
      * Update an existing series — sets singular model context.
      *
-     * @return  static
+     * @return  void
      *
      * @since   10.3.0
      */
@@ -121,7 +121,7 @@ class SeriesController extends ApiController
     {
         $this->itemModelRequested = true;
 
-        return parent::edit();
+        parent::edit();
     }
 
     /**
@@ -137,7 +137,7 @@ class SeriesController extends ApiController
     {
         $this->itemModelRequested = true;
 
-        return parent::delete($id);
+        parent::delete($id);
     }
 
     /**
