@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
@@ -151,6 +152,23 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 </div>
             </div>
             <?php endif; ?>
+        <?php
+            // Setup wizard — shown on first install until completed or dismissed
+            if (CwmsetupwizardHelper::shouldShowWizard()) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <span class="icon-cog" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_SETUP_WIZARD_TITLE'); ?></strong>
+                    <p class="mb-1"><?php echo Text::_('JBS_CPL_SETUP_WIZARD_DESC'); ?></p>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmsetupwizard'); ?>"
+                       class="btn btn-success btn-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i>
+                        <?php echo Text::_('JBS_CPL_SETUP_WIZARD_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
         <?php
             // Location system wizard opt-in card — shown to super admins when wizard has not been configured
             $cpanelUser = Factory::getApplication()->getIdentity();
