@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\MVC\Controller\ApiController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
  * API controller for teachers.
@@ -69,7 +70,7 @@ class TeachersController extends ApiController
      * @param   string  $prefix  Model prefix
      * @param   array   $config  Configuration
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel|false
+     * @return  BaseDatabaseModel|false
      *
      * @since   10.3.0
      */
