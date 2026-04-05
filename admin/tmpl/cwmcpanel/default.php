@@ -175,7 +175,23 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 $checklistItems = CwmsetupwizardHelper::getChecklistItems();
                 $completedCount = count(array_filter($checklistItems, fn($item) => $item['done']));
                 $totalCount = count($checklistItems);
+
+                // Auto-dismiss when all actionable items are complete (exclude "view site" which is always unchecked)
+                $actionableItems = array_filter($checklistItems, fn($item) => ($item['key'] ?? '') !== 'view_site');
+                $actionableDone  = count(array_filter($actionableItems, fn($item) => $item['done']));
+
+                if ($actionableDone === count($actionableItems) && count($actionableItems) > 0) :
         ?>
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <i class="fa-solid fa-circle-check me-2"></i>
+                    <strong><?php echo Text::_('JBS_CHECKLIST_ALL_DONE'); ?></strong>
+                    <?php echo Text::_('JBS_CHECKLIST_ALL_DONE_DESC'); ?>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmsetupwizard.dismissChecklist'); ?>"
+                       class="btn btn-success btn-sm ms-2"><?php echo Text::_('JBS_CHECKLIST_DISMISS'); ?></a>
+                </div>
+            </div>
+        <?php else : ?>
             <div class="col-12">
                 <div class="card border-success mb-3">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -212,6 +228,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     </div>
                 </div>
             </div>
+        <?php endif; ?>
         <?php endif; ?>
         <?php
             // Location system wizard opt-in card — shown to super admins when wizard has not been configured
