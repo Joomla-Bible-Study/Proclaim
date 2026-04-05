@@ -53,6 +53,9 @@
 		<testsuite name="Integration Admin Lib Tests">
 			<directory>tests/integration/Admin/Lib</directory>
 		</testsuite>
+		<testsuite name="Integration Admin Api Tests">
+			<directory>tests/integration/Admin/Api</directory>
+		</testsuite>
 		<testsuite name="Integration Admin Table Tests">
 			<directory>tests/integration/Admin/Table</directory>
 		</testsuite>

@@ -364,6 +364,9 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         ]);
         $db->connect();
 
+        // Store the connection for integration tests
+        $GLOBALS['__proclaim_test_db'] = $db;
+
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 
         fwrite(STDERR, "Database connected: $dbName@$host:$port" . PHP_EOL);
