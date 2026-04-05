@@ -157,9 +157,19 @@ class CwmsetupwizardController extends BaseController
 
         try {
             $summary = $model->applyWizard($sanitized);
-            $this->sendJsonResponse(true, Text::_('JBS_WIZARD_SETUP_SUCCESS'), [
+
+            // Multi-Campus: redirect to Location Access Wizard for group mapping
+            $redirect = ($sanitized['ministry_style'] === 'multi_campus')
+                ? 'index.php?option=com_proclaim&view=cwmlocationwizard'
+                : 'index.php?option=com_proclaim&view=cwmcpanel';
+
+            $message = ($sanitized['ministry_style'] === 'multi_campus')
+                ? Text::_('JBS_WIZARD_SETUP_SUCCESS_CAMPUS')
+                : Text::_('JBS_WIZARD_SETUP_SUCCESS');
+
+            $this->sendJsonResponse(true, $message, [
                 'summary'  => $summary,
-                'redirect' => 'index.php?option=com_proclaim&view=cwmcpanel',
+                'redirect' => $redirect,
             ]);
         } catch (\RuntimeException $e) {
             $this->sendJsonResponse(false, $e->getMessage() ?: Text::_('JERROR_AN_ERROR_HAS_OCCURRED'));

@@ -69,6 +69,42 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     }
 
     /**
+     * Set a value in the Joomla component params (#__extensions).
+     *
+     * Some settings (like enable_location_filtering) are read from
+     * ComponentHelper::getParams() which uses #__extensions, not #__bsms_admin.
+     *
+     * @param   string  $key    Parameter key
+     * @param   mixed   $value  Parameter value
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function setComponentParam(string $key, mixed $value): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__extensions'))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $db->setQuery($query, 0, 1);
+        $json = $db->loadResult();
+
+        $params = new Registry($json ?: '{}');
+        $params->set($key, $value);
+
+        $query = $db->getQuery(true)
+            ->update($db->quoteName('#__extensions'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+        $db->setQuery($query);
+        $db->execute();
+    }
+
+    /**
      * Get the current wizard state for pre-filling steps.
      *
      * @return  array  Current settings relevant to the wizard.
@@ -214,9 +250,10 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $summary['tasks_registered'] = $tasksRegistered;
         }
 
-        // Multi-campus: enable location filtering
+        // Multi-campus: enable location filtering in both admin and component params
         if (($data['ministry_style'] ?? '') === 'multi_campus') {
             $params->set('enable_location_filtering', 1);
+            $this->setComponentParam('enable_location_filtering', 1);
         }
 
         // Ensure default template is published and has working params
