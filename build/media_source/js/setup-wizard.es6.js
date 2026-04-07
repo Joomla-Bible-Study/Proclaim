@@ -115,13 +115,16 @@
     const simpleOpts = document.getElementById('wizard-simple-options');
     const campusNote = document.getElementById('wizard-campus-note');
     const podcastSection = document.getElementById('wizard-podcast-section');
-
     const locationDetails = document.getElementById('wizard-location-details');
 
     if (simpleOpts) simpleOpts.classList.toggle('d-none', styleKey !== 'simple');
     if (campusNote) campusNote.classList.toggle('d-none', styleKey !== 'multi_campus');
     if (podcastSection) podcastSection.classList.toggle('d-none', styleKey === 'simple');
     if (locationDetails) locationDetails.classList.toggle('d-none', styleKey === 'simple');
+
+    // Comments default: off for simple, on for full/multi
+    const commentsEl = document.getElementById('wizard-enable-comments');
+    if (commentsEl) commentsEl.checked = styleKey !== 'simple';
   }
 
   /**
@@ -161,8 +164,14 @@
       create_sample_content: document.getElementById('wizard-sample-content').checked,
       use_default_images: document.getElementById('wizard-default-images')?.checked || false,
       enable_ai: document.getElementById('wizard-enable-ai').checked,
+      ai_voice: document.getElementById('wizard-ai-voice')?.value || 'third_person',
       enable_podcast: document.getElementById('wizard-enable-podcast')?.checked || false,
       enable_backup: document.getElementById('wizard-enable-backup')?.checked || false,
+      enable_comments: document.getElementById('wizard-enable-comments')?.checked || false,
+      social_sharing: document.getElementById('wizard-social-sharing')?.checked || false,
+      studylistlimit: document.getElementById('wizard-items-per-page')?.value || '20',
+      download_button_text: document.querySelector('input[name="wizard-download-text"]:checked')?.value || 'Listen',
+      gdpr_mode: document.getElementById('wizard-gdpr-mode')?.checked ? 1 : 0,
       analytics_enabled: 1,
       // Location details
       location_address: document.getElementById('wizard-loc-address')?.value.trim() || '',
@@ -187,6 +196,14 @@
     // Vimeo config
     if (media === 'vimeo') {
       data.vimeo_access_token = document.getElementById('wizard-vimeo-token')?.value.trim() || '';
+    }
+
+    // Podcast details
+    if (data.enable_podcast) {
+      data.podcast_title = document.getElementById('wizard-podcast-title')?.value.trim() || '';
+      data.podcast_description = document.getElementById('wizard-podcast-description')?.value.trim() || '';
+      data.podcast_author = document.getElementById('wizard-podcast-author')?.value.trim() || '';
+      data.podcast_email = document.getElementById('wizard-podcast-email')?.value.trim() || '';
     }
 
     return data;
@@ -223,12 +240,35 @@
     if (data.primary_media === 'vimeo' && data.vimeo_access_token) {
       html += `<tr><th>Vimeo Token</th><td><code>${data.vimeo_access_token.substring(0, 8)}...</code></td></tr>`;
     }
+    html += `<tr><th>Download Button</th><td>${data.download_button_text}</td></tr>`;
+
     if (data.enable_podcast) {
       html += `<tr><th>Podcasting</th><td>Enabled</td></tr>`;
+      if (data.podcast_title) {
+        html += `<tr><th>Podcast Title</th><td>${data.podcast_title}</td></tr>`;
+      }
     }
 
+    html += `<tr><th>Social Sharing</th><td>${data.social_sharing ? 'Enabled' : 'Disabled'}</td></tr>`;
+    html += `<tr><th>Comments</th><td>${data.enable_comments ? 'Enabled' : 'Disabled'}</td></tr>`;
+    html += `<tr><th>Items Per Page</th><td>${data.studylistlimit}</td></tr>`;
     html += `<tr><th>Sample Content</th><td>${data.create_sample_content ? 'Yes' : 'No'}</td></tr>`;
     html += `<tr><th>AI Assistant</th><td>${data.enable_ai ? 'Enabled' : 'Disabled'}</td></tr>`;
+
+    if (data.enable_ai) {
+      const voiceLabels = {
+        third_person: 'Third Person',
+        first_person: 'First Person',
+        conversational: 'Conversational',
+        summary: 'Summary',
+      };
+      html += `<tr><th>AI Writing Voice</th><td>${voiceLabels[data.ai_voice] || data.ai_voice}</td></tr>`;
+    }
+
+    if (data.gdpr_mode) {
+      html += `<tr><th>GDPR Privacy Mode</th><td>Enabled</td></tr>`;
+    }
+
     html += '</table>';
 
     reviewSummary.innerHTML = html;
@@ -331,6 +371,18 @@
   // Media source radio — show/hide platform config panels (Step 4)
   document.querySelectorAll('input[name="wizard-media"]').forEach(radio => {
     radio.addEventListener('change', updateMediaConfig);
+  });
+
+  // Podcast toggle — show/hide podcast details (Step 4)
+  document.getElementById('wizard-enable-podcast')?.addEventListener('change', (e) => {
+    const podcastConfig = document.getElementById('wizard-podcast-config');
+    if (podcastConfig) podcastConfig.classList.toggle('d-none', !e.target.checked);
+  });
+
+  // AI toggle — show/hide voice selection (Step 4)
+  document.getElementById('wizard-enable-ai')?.addEventListener('change', (e) => {
+    const voiceSection = document.getElementById('wizard-ai-voice-section');
+    if (voiceSection) voiceSection.classList.toggle('d-none', !e.target.checked);
   });
 
   // Navigation

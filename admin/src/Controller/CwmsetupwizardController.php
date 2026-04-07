@@ -133,9 +133,21 @@ class CwmsetupwizardController extends BaseController
             'enable_ai'             => !empty($data['enable_ai']),
             'ai_provider'           => \in_array($data['ai_provider'] ?? '', ['claude', 'openai', 'gemini'], true)
                 ? $data['ai_provider'] : 'claude',
-            'enable_podcast'    => !empty($data['enable_podcast']),
-            'enable_backup'     => !empty($data['enable_backup']),
-            'analytics_enabled' => (int) ($data['analytics_enabled'] ?? 1),
+            'enable_podcast'       => !empty($data['enable_podcast']),
+            'enable_backup'        => !empty($data['enable_backup']),
+            'enable_comments'      => !empty($data['enable_comments']),
+            'social_sharing'       => !empty($data['social_sharing']),
+            'analytics_enabled'    => (int) ($data['analytics_enabled'] ?? 1),
+            'studylistlimit'       => (int) ($data['studylistlimit'] ?? 20),
+            'download_button_text' => trim((string) ($data['download_button_text'] ?? 'Listen')),
+            'gdpr_mode'            => (int) ($data['gdpr_mode'] ?? 0),
+            'ai_voice'             => \in_array($data['ai_voice'] ?? '', ['third_person', 'first_person', 'conversational', 'summary'], true)
+                ? $data['ai_voice'] : 'third_person',
+            // Podcast details
+            'podcast_title'       => trim((string) ($data['podcast_title'] ?? '')),
+            'podcast_description' => trim((string) ($data['podcast_description'] ?? '')),
+            'podcast_author'      => trim((string) ($data['podcast_author'] ?? '')),
+            'podcast_email'       => filter_var(trim((string) ($data['podcast_email'] ?? '')), FILTER_SANITIZE_EMAIL),
             // Simple mode template
             'simple_mode_template' => \in_array($data['simple_mode_template'] ?? '', ['simple_mode1', 'simple_mode2'], true)
                 ? $data['simple_mode_template'] : 'simple_mode1',

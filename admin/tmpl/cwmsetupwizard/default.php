@@ -230,6 +230,37 @@ use Joomla\CMS\Language\Text;
                     <?php echo Text::_('JBS_WIZARD_CAMPUS_NOTE'); ?>
                 </div>
 
+                <!-- Social sharing toggle -->
+                <hr>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-social-sharing" checked>
+                    <label class="form-check-label" for="wizard-social-sharing">
+                        <strong><?php echo Text::_('JBS_WIZARD_SOCIAL_SHARING'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_SOCIAL_SHARING_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <!-- Comments toggle -->
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-enable-comments">
+                    <label class="form-check-label" for="wizard-enable-comments">
+                        <strong><?php echo Text::_('JBS_WIZARD_ENABLE_COMMENTS'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_COMMENTS_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <!-- Items per page -->
+                <div class="mb-3">
+                    <label for="wizard-items-per-page" class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_ITEMS_PER_PAGE'); ?></label>
+                    <select class="form-select" id="wizard-items-per-page" style="max-width: 200px;">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_ITEMS_PER_PAGE_DESC'); ?></div>
+                </div>
+
                 <!-- Default images toggle -->
                 <hr>
                 <div class="form-check form-switch mb-3">
@@ -328,6 +359,64 @@ use Joomla\CMS\Language\Text;
                             <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_PODCAST_DESC'); ?></small>
                         </label>
                     </div>
+
+                    <!-- Podcast details (shown when podcast enabled) -->
+                    <div class="card mt-3 d-none" id="wizard-podcast-config">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa-solid fa-podcast me-1"></i> <?php echo Text::_('JBS_WIZARD_PODCAST_CONFIG'); ?></h5>
+                            <div class="mb-2">
+                                <label for="wizard-podcast-title" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_TITLE'); ?></label>
+                                <input type="text" class="form-control" id="wizard-podcast-title"
+                                       placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_TITLE_PLACEHOLDER'); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label for="wizard-podcast-description" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_DESCRIPTION'); ?></label>
+                                <textarea class="form-control" id="wizard-podcast-description" rows="2"
+                                          placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_DESCRIPTION_PLACEHOLDER'); ?>"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-podcast-author" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_AUTHOR'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-podcast-author"
+                                           placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_AUTHOR_PLACEHOLDER'); ?>">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-podcast-email" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_EMAIL'); ?></label>
+                                    <input type="email" class="form-control" id="wizard-podcast-email"
+                                           placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_EMAIL_PLACEHOLDER'); ?>">
+                                </div>
+                            </div>
+                            <div class="form-text text-muted">
+                                <i class="fa-solid fa-circle-info me-1"></i>
+                                <?php echo Text::_('JBS_WIZARD_PODCAST_SKIP_NOTE'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download button text -->
+                <hr>
+                <div class="mb-3">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_DOWNLOAD_TEXT'); ?></label>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-listen" value="Listen" checked>
+                        <label class="form-check-label" for="download-listen">
+                            <i class="fa-solid fa-headphones me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_LISTEN'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-download" value="Download">
+                        <label class="form-check-label" for="download-download">
+                            <i class="fa-solid fa-download me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_DOWNLOAD'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-watch" value="Watch">
+                        <label class="form-check-label" for="download-watch">
+                            <i class="fa-solid fa-play me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_WATCH'); ?>
+                        </label>
+                    </div>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_DOWNLOAD_TEXT_DESC'); ?></div>
                 </div>
 
                 <hr>
@@ -347,6 +436,30 @@ use Joomla\CMS\Language\Text;
                         <input class="form-check-input" type="checkbox" id="wizard-enable-ai">
                         <label class="form-check-label" for="wizard-enable-ai">
                             <?php echo Text::_('JBS_WIZARD_ENABLE_AI'); ?>
+                        </label>
+                    </div>
+
+                    <!-- AI voice selection (shown when AI enabled) -->
+                    <div class="mt-2 ms-4 d-none" id="wizard-ai-voice-section">
+                        <label for="wizard-ai-voice" class="form-label"><?php echo Text::_('JBS_WIZARD_AI_VOICE'); ?></label>
+                        <select class="form-select" id="wizard-ai-voice" style="max-width: 300px;">
+                            <option value="third_person"><?php echo Text::_('JBS_WIZARD_AI_VOICE_THIRD'); ?></option>
+                            <option value="first_person"><?php echo Text::_('JBS_WIZARD_AI_VOICE_FIRST'); ?></option>
+                            <option value="conversational"><?php echo Text::_('JBS_WIZARD_AI_VOICE_CONVERSATIONAL'); ?></option>
+                            <option value="summary"><?php echo Text::_('JBS_WIZARD_AI_VOICE_SUMMARY'); ?></option>
+                        </select>
+                        <div class="form-text"><?php echo Text::_('JBS_WIZARD_AI_VOICE_DESC'); ?></div>
+                    </div>
+                </div>
+
+                <!-- GDPR / Privacy -->
+                <hr>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="wizard-gdpr-mode">
+                        <label class="form-check-label" for="wizard-gdpr-mode">
+                            <strong><?php echo Text::_('JBS_WIZARD_GDPR_MODE'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_GDPR_MODE_DESC'); ?></small>
                         </label>
                     </div>
                 </div>

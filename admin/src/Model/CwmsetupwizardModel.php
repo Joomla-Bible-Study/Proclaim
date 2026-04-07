@@ -187,16 +187,24 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         if (!$params->get('download_show')) {
             $params->set('download_show', 1);
             $params->set('download_use_button_icon', '3');
-            $params->set('download_button_text', 'Listen');
             $params->set('download_button_type', 'btn-primary');
             $params->set('download_icon_type', 'fa-solid fa-download');
             $params->set('download_icon_text_size', '24');
         }
 
-        // Study list limit
-        if (!$params->get('studylistlimit')) {
-            $params->set('studylistlimit', 20);
+        // Download button text from wizard choice
+        $buttonText = trim($data['download_button_text'] ?? 'Listen');
+
+        if (\in_array($buttonText, ['Listen', 'Download', 'Watch'], true)) {
+            $params->set('download_button_text', $buttonText);
         }
+
+        // Study list limit
+        $limit = (int) ($data['studylistlimit'] ?? 20);
+        $params->set('studylistlimit', \in_array($limit, [10, 20, 30, 50], true) ? $limit : 20);
+
+        // GDPR privacy mode
+        $params->set('gdpr_mode', (int) ($data['gdpr_mode'] ?? 0));
 
         // Step 3: Simple mode template choice
         if (($data['ministry_style'] ?? '') === 'simple') {
@@ -218,8 +226,16 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             }
         }
 
-        if (!empty($data['enable_ai']) && !empty($data['ai_provider'])) {
-            $params->set('ai_provider', $data['ai_provider']);
+        if (!empty($data['enable_ai'])) {
+            if (!empty($data['ai_provider'])) {
+                $params->set('ai_provider', $data['ai_provider']);
+            }
+
+            $voice = $data['ai_voice'] ?? 'third_person';
+
+            if (\in_array($voice, ['third_person', 'first_person', 'conversational', 'summary'], true)) {
+                $params->set('ai_voice', $voice);
+            }
         }
 
         $params->set('analytics_enabled', (int) ($data['analytics_enabled'] ?? 1));
@@ -232,6 +248,12 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         if (!empty($data['create_sample_content'])) {
             $sampleIds                 = $this->createSampleContent($data, $defaults);
             $summary['sample_content'] = $sampleIds;
+        }
+
+        // Create podcast record if podcast is enabled and details were provided
+        if (!empty($data['enable_podcast'])) {
+            $podcastId                = $this->createPodcastRecord($data);
+            $summary['podcast_id']    = $podcastId;
         }
 
         // Scheduled tasks — start with preset tasks, add optional ones if toggled
@@ -829,6 +851,70 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     }
 
     /**
+     * Create a podcast record from wizard data.
+     *
+     * Only creates if no podcast exists yet and at least a title was provided.
+     *
+     * @param   array  $data  Wizard data
+     *
+     * @return  int  Created podcast ID, or 0 if skipped
+     *
+     * @since   10.3.0
+     */
+    private function createPodcastRecord(array $data): int
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Check if a podcast already exists
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_podcast'));
+        $db->setQuery($query);
+
+        if ((int) $db->loadResult() > 0) {
+            return 0;
+        }
+
+        $orgName = trim($data['org_name'] ?? 'My Church');
+        $title   = trim($data['podcast_title'] ?? '') ?: $orgName . ' Podcast';
+        $author  = trim($data['podcast_author'] ?? '') ?: $orgName;
+        $now     = (new Date())->toSql();
+        $userId  = Factory::getApplication()->getIdentity()->id ?? 0;
+
+        $row = (object) [
+            'title'                  => $title,
+            'description'            => trim($data['podcast_description'] ?? '') ?: '<p>Sermons from ' . $orgName . '</p>',
+            'website'                => Factory::getApplication()->get('live_site', '') ?: Factory::getUri()->root(),
+            'author'                 => $author,
+            'editor_name'            => $author,
+            'editor_email'           => trim($data['podcast_email'] ?? ''),
+            'filename'               => 'podcast',
+            'podcastlimit'           => 50,
+            'published'              => 1,
+            'access'                 => 1,
+            'language'               => '*',
+            'itunes_category'        => 'Religion & Spirituality',
+            'itunes_subcategory'     => 'Christianity',
+            'itunes_explicit'        => 'false',
+            'itunes_type'            => 'episodic',
+            'episodetitle'           => 0,
+            'linktype'               => 0,
+            'podcast_subscribe_show' => 1,
+            'asset_id'               => 0,
+            'created'                => $now,
+            'created_by'             => $userId,
+        ];
+
+        try {
+            $db->insertObject('#__bsms_podcast', $row);
+
+            return (int) $db->insertid();
+        } catch (\Throwable) {
+            return 0;
+        }
+    }
+
+    /**
      * Update the default template's filter visibility based on ministry style.
      *
      * Simple mode hides topic, message type, and location filters.
@@ -867,6 +953,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params->set('show_topic_search', $style !== 'simple' ? 1 : 0);
         $params->set('show_messagetype_search', $style !== 'simple' ? 1 : 0);
         $params->set('show_location_search', $style === 'multi_campus' ? 1 : 0);
+
+        // Social sharing: 0=hidden, 1=AddToAny, 2=local
+        $params->set('socialnetworking', !empty($data['social_sharing']) ? 1 : 0);
+        $params->set('embedshare', !empty($data['social_sharing']) ? 1 : 0);
+
+        // Comments: set show_comments access level (1=Public when enabled, empty when disabled)
+        $params->set('show_comments', !empty($data['enable_comments']) ? '1' : '');
 
         // Save
         $query = $db->getQuery(true)
