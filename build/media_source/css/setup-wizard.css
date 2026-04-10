@@ -1,0 +1,62 @@
+/**
+ * Proclaim Setup Wizard styles
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @since      10.3.0
+ */
+
+/* Style selection cards */
+.style-card {
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+.style-card:hover {
+    border-color: var(--bs-primary) !important;
+    transform: translateY(-2px);
+}
+
+.style-card:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+.style-card.border-primary {
+    background-color: var(--bs-primary-bg-subtle, rgba(13, 110, 253, 0.05));
+}
+
+/* Progress step labels */
+.wizard-step-label {
+    font-size: 0.75rem;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Step transitions */
+.wizard-step {
+    animation: wizardFadeIn 0.25s ease-in-out;
+}
+
+@keyframes wizardFadeIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Review table */
+#wizard-review-summary th {
+    color: var(--bs-secondary-color, #6c757d);
+    font-weight: 600;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .style-card.border-primary {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+}
+
+[data-bs-theme="dark"] .style-card.border-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+}

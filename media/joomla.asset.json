@@ -77,6 +77,17 @@
             }
         },
         {
+            "name": "com_proclaim.setup-wizard",
+            "type": "script",
+            "uri": "com_proclaim/setup-wizard.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.csv-import",
             "type": "script",
             "uri": "com_proclaim/csv-import.min.js",
@@ -870,6 +881,11 @@
             "name": "com_proclaim.location-wizard",
             "type": "style",
             "uri": "com_proclaim/location-wizard.min.css"
+        },
+        {
+            "name": "com_proclaim.setup-wizard",
+            "type": "style",
+            "uri": "com_proclaim/setup-wizard.min.css"
         },
         {
             "name": "com_proclaim.topics-field",
