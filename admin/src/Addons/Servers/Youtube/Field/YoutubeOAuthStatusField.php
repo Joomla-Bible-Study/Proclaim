@@ -175,11 +175,10 @@ class YoutubeOAuthStatusField extends FormField
 
             disconnectBtn.disabled = true;
 
-            fetch('{$disconnectUrl}', {
+            window.ProclaimFetch.fetchJson('{$disconnectUrl}', {
                 method: 'GET',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
-            .then(r => r.json())
             .then(data => {
                 if (data.success) {
                     showMessage(true, '{$disconnectOk}');
