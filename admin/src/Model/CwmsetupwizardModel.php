@@ -267,6 +267,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $tasks[] = 'backup';
         }
 
+        // Auto-register platform stats sync when using YouTube or Vimeo
+        $media = $data['primary_media'] ?? 'local';
+
+        if (\in_array($media, ['youtube', 'vimeo'], true)) {
+            $tasks[] = 'platformstats';
+        }
+
         if (!empty($tasks)) {
             $tasksRegistered             = $this->registerScheduledTasks($tasks);
             $summary['tasks_registered'] = $tasksRegistered;
@@ -615,19 +622,25 @@ class CwmsetupwizardModel extends BaseDatabaseModel
                 'title'  => 'Proclaim Backup',
                 'type'   => 'proclaim.backup',
                 'params' => '{}',
-                'cron'   => '0 2 * * 0',
+                'rules'  => ['rule-type' => 'interval-days', 'interval-days' => '7', 'exec-day' => '01', 'exec-time' => '02:00'],
             ],
             'podcast' => [
                 'title'  => 'Proclaim Podcast Feed',
                 'type'   => 'proclaim.podcast',
                 'params' => '{}',
-                'cron'   => '0 */6 * * *',
+                'rules'  => ['rule-type' => 'interval-hours', 'interval-hours' => '6', 'exec-day' => '01', 'exec-time' => '00:00'],
             ],
             'analytics' => [
                 'title'  => 'Proclaim Analytics',
                 'type'   => 'proclaim.analytics',
                 'params' => '{}',
-                'cron'   => '0 3 * * *',
+                'rules'  => ['rule-type' => 'interval-hours', 'interval-hours' => '24', 'exec-day' => '01', 'exec-time' => '03:00'],
+            ],
+            'platformstats' => [
+                'title'  => 'Proclaim Platform Stats Sync',
+                'type'   => 'proclaim.platformstats',
+                'params' => '{"batch_limit":500}',
+                'rules'  => ['rule-type' => 'interval-hours', 'interval-hours' => '24', 'exec-day' => '01', 'exec-time' => '04:00'],
             ],
         ];
 
@@ -656,16 +669,13 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $row = (object) [
                 'title'           => $task['title'],
                 'type'            => $task['type'],
-                'execution_rules' => json_encode([
-                    'rule-type'       => 'cron-expression',
-                    'cron-expression' => $task['cron'],
-                ]),
+                'execution_rules' => json_encode($task['rules']),
                 'params'         => $task['params'],
                 'state'          => 1,
                 'created'        => $now,
                 'created_by'     => Factory::getApplication()->getIdentity()->id ?? 0,
-                'last_execution' => null,
-                'next_execution' => null,
+                'last_execution' => $now,
+                'next_execution' => (new Date('tomorrow 03:00:00'))->toSql(),
                 'times_executed' => 0,
                 'times_failed'   => 0,
                 'locked'         => null,

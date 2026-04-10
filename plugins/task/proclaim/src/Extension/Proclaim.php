@@ -39,7 +39,9 @@ use Joomla\Event\SubscriberInterface;
  */
 final class Proclaim extends CMSPlugin implements SubscriberInterface
 {
-    use TaskPluginTrait;
+    use TaskPluginTrait {
+        standardRoutineHandler as traitStandardRoutineHandler;
+    }
 
     /**
      * @var string[]
@@ -93,6 +95,31 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'onExecuteTask'        => 'standardRoutineHandler',
             'onContentPrepareForm' => 'enhanceTaskItemForm',
         ];
+    }
+
+    /**
+     * Wrap the trait's standardRoutineHandler to suppress PHP 8.3+ deprecation
+     * warnings from Joomla core's Date class (passes null to DateTime::__construct).
+     *
+     * Without this, the deprecation warning is output before the JSON response
+     * when running tasks via the admin "Run" button, breaking the response.
+     *
+     * @param   ExecuteTaskEvent  $event  The task event
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public function standardRoutineHandler(ExecuteTaskEvent $event): void
+    {
+        $prev = error_reporting();
+        error_reporting($prev & ~\E_DEPRECATED);
+
+        try {
+            $this->traitStandardRoutineHandler($event);
+        } finally {
+            error_reporting($prev);
+        }
     }
 
     /**
@@ -428,7 +455,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
 
         $params     = $event->getArgument('params') ?? new \stdClass();
-        $batchLimit = (int) ($params->batch_limit ?? 50);
+        $batchLimit = (int) ($params->batch_limit ?? 500);
 
         try {
             $servers = CWMAddon::getStatsCapableServers();

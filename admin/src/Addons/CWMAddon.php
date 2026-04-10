@@ -317,7 +317,7 @@ abstract class CWMAddon
 
             $app        = Factory::getApplication();
             $serverId   = $app->getInput()->getInt('server_id', 0);
-            $batchLimit = $app->getInput()->getInt('batch_limit', 50);
+            $batchLimit = $app->getInput()->getInt('batch_limit', 500);
 
             if (!$serverId) {
                 return ['success' => false, 'error' => 'No server ID provided'];

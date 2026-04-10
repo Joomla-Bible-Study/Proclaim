@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmserverTable;
 use Joomla\CMS\Date\Date;
@@ -264,11 +265,86 @@ class CwmserverModel extends AdminModel
             }
         }
 
-        if (parent::save($data)) {
-            return true;
+        if (!parent::save($data)) {
+            return false;
         }
 
-        return false;
+        // When saving a stats-capable server (YouTube, Vimeo, Wistia),
+        // ensure the platform stats scheduled task exists so view counts
+        // are synced automatically — even if the wizard was skipped or
+        // the server was added after initial setup.
+        $serverType = $data['type'] ?? '';
+
+        if ($serverType !== '') {
+            try {
+                $addon = CWMAddon::getInstance($serverType);
+
+                if ($addon->supportsStats()) {
+                    $this->ensurePlatformStatsTask();
+                }
+            } catch (\Throwable) {
+                // Addon not found or not instantiable — skip silently
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Ensure the proclaim.platformstats scheduled task exists.
+     *
+     * Creates the task if it doesn't already exist. This is called when
+     * saving a stats-capable server so users don't have to manually
+     * create the task in Joomla's Task Scheduler.
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    private function ensurePlatformStatsTask(): void
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__scheduler_tasks'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.platformstats'));
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                return;
+            }
+
+            $now = (new Date())->toSql();
+
+            $row = (object) [
+                'title'           => 'Proclaim Platform Stats Sync',
+                'type'            => 'proclaim.platformstats',
+                'execution_rules' => json_encode([
+                    'rule-type'      => 'interval-hours',
+                    'interval-hours' => '24',
+                    'exec-day'       => '01',
+                    'exec-time'      => '04:00',
+                ]),
+                'params'         => '{"batch_limit":500}',
+                'state'          => 1,
+                'created'        => $now,
+                'created_by'     => Factory::getApplication()->getIdentity()->id ?? 0,
+                'last_execution' => $now,
+                'next_execution' => (new Date('tomorrow 04:00:00'))->toSql(),
+                'times_executed' => 0,
+                'times_failed'   => 0,
+                'locked'         => null,
+                'priority'       => 0,
+                'ordering'       => 0,
+                'note'           => 'Auto-created when a stats-capable server was saved',
+            ];
+
+            $db->insertObject('#__scheduler_tasks', $row);
+        } catch (\Throwable) {
+            // Task scheduler table may not exist — fail silently
+        }
     }
 
     /**
