@@ -677,6 +677,149 @@ class Cwmassets
         return $result;
     }
 
+    /**
+     * Collect per-table asset status counts using a small number of
+     * aggregate queries. The shape is the new-model status used by the
+     * admin Assets tool, not the legacy "needs fix" metrics.
+     *
+     * Returned per table:
+     *   - numrows       Total records in the source table
+     *   - inherited     Records with asset_id = 0 (inherit from com_proclaim parent, desired)
+     *   - custom_rules  Records linked to an asset with real, non-default rules
+     *   - needs_cleanup Records linked to an asset with empty/default rules (legacy rows to prune)
+     *   - drifted       Records linked to an asset whose parent_id is not com_proclaim
+     *   - orphans       Asset rows whose source record no longer exists
+     *
+     * @return  array<int, array<string, mixed>>
+     *
+     * @since   10.3.0
+     */
+    public static function getAssetStatus(): array
+    {
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
+        $parentId = self::parentId();
+        $status   = [];
+
+        $emptyQuoted = implode(
+            ',',
+            array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
+        );
+
+        foreach (self::getAssetObjects() as $info) {
+            $sourceTbl = $info['name'];
+            $assetName = $info['assetname'];
+
+            // Total source rows.
+            try {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName($sourceTbl))
+                );
+                $numrows = (int) $db->loadResult();
+            } catch (\Exception) {
+                $numrows = 0;
+            }
+
+            // Inherited (asset_id = 0 — the new default for uncustomised records).
+            try {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName($sourceTbl))
+                        ->where($db->quoteName('asset_id') . ' = 0')
+                );
+                $inherited = (int) $db->loadResult();
+            } catch (\Exception) {
+                $inherited = 0;
+            }
+
+            // Custom rules — real per-record ACL configured.
+            try {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName($sourceTbl, 's'))
+                        ->innerJoin(
+                            $db->quoteName('#__assets', 'a') . ' ON '
+                            . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
+                        )
+                        ->where($db->quoteName('a.rules') . ' NOT IN (' . $emptyQuoted . ')')
+                );
+                $customRules = (int) $db->loadResult();
+            } catch (\Exception) {
+                $customRules = 0;
+            }
+
+            // Needs cleanup — linked to an empty-rules asset.
+            try {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName($sourceTbl, 's'))
+                        ->innerJoin(
+                            $db->quoteName('#__assets', 'a') . ' ON '
+                            . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
+                        )
+                        ->where($db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ')')
+                );
+                $needsCleanup = (int) $db->loadResult();
+            } catch (\Exception) {
+                $needsCleanup = 0;
+            }
+
+            // Drifted parent — row exists but parented outside com_proclaim.
+            try {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from($db->quoteName($sourceTbl, 's'))
+                        ->innerJoin(
+                            $db->quoteName('#__assets', 'a') . ' ON '
+                            . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
+                        )
+                        ->where($db->quoteName('a.parent_id') . ' <> ' . (int) $parentId)
+                );
+                $drifted = (int) $db->loadResult();
+            } catch (\Exception) {
+                $drifted = 0;
+            }
+
+            // Orphans — asset row exists but the source record is gone.
+            $prefix    = 'com_proclaim.' . $assetName . '.';
+            $prefixLen = \strlen($prefix) + 1;
+
+            try {
+                $db->setQuery(
+                    'SELECT COUNT(*) FROM ' . $db->quoteName('#__assets', 'a')
+                    . ' LEFT JOIN ' . $db->quoteName($sourceTbl, 's')
+                    . ' ON ' . $db->quoteName('s.id')
+                    . ' = CAST(SUBSTRING(' . $db->quoteName('a.name') . ', ' . $prefixLen . ') AS UNSIGNED)'
+                    . ' WHERE ' . $db->quoteName('a.name') . ' LIKE ' . $db->quote($prefix . '%')
+                    . ' AND ' . $db->quoteName('s.id') . ' IS NULL'
+                );
+                $orphans = (int) $db->loadResult();
+            } catch (\Exception) {
+                $orphans = 0;
+            }
+
+            $status[] = [
+                'realname'      => $info['realname'],
+                'tablename'     => $sourceTbl,
+                'assetname'     => $assetName,
+                'numrows'       => $numrows,
+                'inherited'     => $inherited,
+                'custom_rules'  => $customRules,
+                'needs_cleanup' => $needsCleanup,
+                'drifted'       => $drifted,
+                'orphans'       => $orphans,
+                'parent_id'     => $parentId,
+            ];
+        }
+
+        return $status;
+    }
+
     // =========================================================================
     // Asset Table Definitions
     // =========================================================================

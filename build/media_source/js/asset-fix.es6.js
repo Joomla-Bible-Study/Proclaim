@@ -87,8 +87,12 @@ class ProclaimAssetFix {
             case 'refresh':
                 this.refreshAssetStatus();
                 break;
+            case 'cleanup':
+                this.startCleanup();
+                break;
             case 'fix':
-                this.startFix();
+                // Legacy alias — forward to the new cleanup flow.
+                this.startCleanup();
                 break;
             default:
                 break;
@@ -128,7 +132,17 @@ class ProclaimAssetFix {
     }
 
     /**
-     * Render asset status table
+     * Render asset status table (new model).
+     *
+     * Columns:
+     *  - inherited:      records with asset_id = 0, inheriting from the
+     *                    com_proclaim parent. This is the desired state,
+     *                    so the count is rendered as plain muted text.
+     *  - custom_rules:   records with genuine per-record ACL configured.
+     *                    Green when > 0.
+     *  - needs_cleanup:  legacy empty-rules rows waiting to be pruned.
+     *  - drifted:        asset row whose parent_id is not com_proclaim.
+     *  - orphans:        asset row whose source record is gone.
      * @param {Array} assets Asset status data
      */
     renderAssetTable(assets) {
@@ -138,21 +152,27 @@ class ProclaimAssetFix {
         let html = '';
 
         assets.forEach((asset) => {
+            const custom = asset.custom_rules || 0;
+            const needs = asset.needs_cleanup || 0;
+            const drifted = asset.drifted || 0;
+            const orphans = asset.orphans || 0;
+
             html += `
                 <tr>
                     <td>${this.escapeHtml(asset.realname)}</td>
                     <td class="text-center">${asset.numrows}</td>
+                    <td class="text-center text-muted">${asset.inherited || 0}</td>
                     <td class="text-center">
-                        <span class="${asset.nullrows > 0 ? 'text-danger fw-bold' : ''}">${asset.nullrows}</span>
+                        <span class="${custom > 0 ? 'text-success fw-bold' : 'text-muted'}">${custom}</span>
                     </td>
                     <td class="text-center">
-                        <span class="${asset.matchrows > 0 ? 'text-success' : ''}">${asset.matchrows}</span>
+                        <span class="${needs > 0 ? 'text-warning fw-bold' : 'text-muted'}">${needs}</span>
                     </td>
                     <td class="text-center">
-                        <span class="${asset.arulesrows > 0 ? 'text-danger fw-bold' : ''}">${asset.arulesrows}</span>
+                        <span class="${drifted > 0 ? 'text-warning fw-bold' : 'text-muted'}">${drifted}</span>
                     </td>
                     <td class="text-center">
-                        <span class="${asset.nomatchrows > 0 ? 'text-danger fw-bold' : ''}">${asset.nomatchrows}</span>
+                        <span class="${orphans > 0 ? 'text-warning fw-bold' : 'text-muted'}">${orphans}</span>
                     </td>
                 </tr>
             `;
@@ -171,7 +191,7 @@ class ProclaimAssetFix {
 
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" class="text-center py-4 text-danger">
+                <td colspan="7" class="text-center py-4 text-danger">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i>
                     ${this.escapeHtml(message)}
                 </td>
@@ -180,110 +200,48 @@ class ProclaimAssetFix {
     }
 
     /**
-     * Start the asset fix process
+     * Run the one-shot asset cleanup: delegates to
+     * `cwmassets.cleanupAssetsXHR` which calls `Cwmassets::fixAllAssets()`
+     * server-side. Fast because the new-model cleanup is a handful of
+     * bulk SQL statements, not a per-record loop.
      */
-    async startFix() {
-        // Reset state
-        this.tables = [];
-        this.totalRecords = 0;
-        this.processedRecords = 0;
-
-        // Show modal
+    async startCleanup() {
+        // Show modal.
         const modalEl = document.getElementById('fixAssetsModal');
         if (this.modal) {
             this.modal.show();
         } else if (modalEl) {
-            // Fallback: try to create modal instance now
             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                 this.modal = new bootstrap.Modal(modalEl);
                 this.modal.show();
             } else {
-                // Last resort: just show the element with CSS
                 modalEl.classList.add('show');
                 modalEl.style.display = 'block';
                 document.body.classList.add('modal-open');
             }
         }
 
-        this.updateProgress(0, Joomla.Text._('JBS_ADM_CHECKING_ASSETS'));
+        this.updateProgress(10, Joomla.Text._('JBS_ADM_ASSET_CLEANING'));
         this.footerEl.style.display = 'none';
 
         try {
-            // Step 1: Get list of tables
-            const tablesResponse = await this.fetchJson('getAssetTablesXHR');
+            const response = await this.fetchJson('cleanupAssetsXHR');
 
-            if (!tablesResponse.success) {
-                throw new Error(tablesResponse.message || 'Failed to get asset tables');
+            if (!response.success) {
+                throw new Error(response.message || 'Cleanup failed');
             }
 
-            this.tables = tablesResponse.data.tables;
-            this.totalRecords = tablesResponse.data.totalRecords;
-
-            // Step 2: Fix each table
-            await this.fixAllTables();
-
-            // Step 3: Rebuild asset tree
-            this.updateProgress(95, Joomla.Text._('JBS_ADM_REBUILDING_TREE'));
-            await this.fetchJson('rebuildAssetTreeXHR');
-
-            // Complete
-            this.updateProgress(100, Joomla.Text._('JBS_ADM_FIX_COMPLETE'));
+            this.updateProgress(100, Joomla.Text._('JBS_ADM_ASSET_CLEANUP_COMPLETE'));
             this.progressBar.classList.remove('progress-bar-animated');
             this.progressBar.classList.add('bg-success');
             this.footerEl.style.display = 'flex';
 
-            // Refresh the status table
             this.refreshAssetStatus();
 
-            // Auto-close modal after 3 seconds on success
-            setTimeout(() => {
-                this.closeModal();
-            }, 3000);
+            setTimeout(() => this.closeModal(), 2000);
         } catch (error) {
             this.showError(error.message);
         }
-    }
-
-    /**
-     * Fix all tables sequentially
-     */
-    async fixAllTables() {
-        for (const table of this.tables) {
-            if (table.count === 0) continue;
-
-            let offset = 0;
-
-            while (offset < table.count) {
-                const statusMsg = `${Joomla.Text._('JBS_ADM_FIXING_ASSETS')}: ${Joomla.Text._(table.realname) || table.realname}`;
-                this.updateProgress(this.calculateProgress(), statusMsg);
-                this.detailsEl.textContent = `${offset} / ${table.count}`;
-
-                const response = await this.fetchJson('fixAssetBatchXHR', {
-                    table: table.name,
-                    assetname: table.assetname,
-                    offset,
-                    batchSize: this.batchSize,
-                });
-
-                if (!response.success) {
-                    throw new Error(response.message || `Failed to fix ${table.name}`);
-                }
-
-                this.processedRecords += response.data.processed;
-                offset += this.batchSize;
-
-                this.updateProgress(this.calculateProgress(), statusMsg);
-            }
-        }
-    }
-
-    /**
-     * Calculate current progress percentage
-     * @returns {number} Progress percentage (0-90, leaving room for tree rebuild)
-     */
-    calculateProgress() {
-        if (this.totalRecords === 0) return 0;
-        return Math.min(Math.round((this.processedRecords / this.totalRecords) * 90), 90);
     }
 
     /**
