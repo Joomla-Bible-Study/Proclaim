@@ -105,23 +105,29 @@ class Cwmbackup
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Get com_proclaim row from extensions
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['extension_id', 'params']))
-            ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
-        $db->setQuery($query);
-        $result = $db->loadObject();
-
-        if (!$result || empty($result->params)) {
-            return "\n-- No component configuration found\n";
-        }
-
-        // Build UPDATE statement (not INSERT - we update existing row)
-        $export = "\n-- --------------------------------------------------------\n";
+        // Always emit the section header so backup dumps stay self-documenting
+        // even on systems where com_proclaim isn't yet registered.
+        $export  = "\n-- --------------------------------------------------------\n";
         $export .= "-- Component Configuration (com_proclaim)\n";
         $export .= "-- --------------------------------------------------------\n\n";
+
+        try {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['extension_id', 'params']))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->q('component'));
+            $db->setQuery($query);
+            $result = $db->loadObject();
+        } catch (\Throwable $e) {
+            return $export . "-- Extensions table not available: " . $e->getMessage() . "\n\n";
+        }
+
+        if (!$result || empty($result->params)) {
+            return $export . "-- No component configuration found\n\n";
+        }
+
+        // UPDATE statement (not INSERT — we overwrite an existing row).
         $export .= "UPDATE " . $db->quoteName('#__extensions') . " SET ";
         $export .= $db->quoteName('params') . " = " . $db->q($result->params);
         $export .= " WHERE " . $db->quoteName('element') . " = " . $db->q('com_proclaim');
@@ -280,13 +286,18 @@ class Cwmbackup
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Check if scheduler_tasks table exists (Joomla 4+)
+        // Always emit the section header so backup dumps stay self-documenting
+        // even on systems that don't have #__scheduler_tasks yet.
+        $export  = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Scheduled Tasks (proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
         $tables         = $db->getTableList();
         $prefix         = $db->getPrefix();
         $schedulerTable = $prefix . 'scheduler_tasks';
 
         if (!\in_array($schedulerTable, $tables, true)) {
-            return "\n-- Scheduler tasks table not found (Joomla 4+ required)\n";
+            return $export . "-- Scheduler tasks table not found (Joomla 4+ required)\n\n";
         }
 
         // Get all Proclaim tasks
@@ -298,12 +309,8 @@ class Cwmbackup
         $results = $db->loadObjectList();
 
         if (empty($results)) {
-            return "\n-- No scheduled tasks found\n";
+            return $export . "-- No scheduled tasks found\n\n";
         }
-
-        $export = "\n-- --------------------------------------------------------\n";
-        $export .= "-- Scheduled Tasks (proclaim)\n";
-        $export .= "-- --------------------------------------------------------\n\n";
 
         // DELETE existing Proclaim tasks (clean slate on restore)
         $export .= "DELETE FROM " . $db->quoteName('#__scheduler_tasks');
