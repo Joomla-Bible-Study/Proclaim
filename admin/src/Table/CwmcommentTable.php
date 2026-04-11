@@ -280,9 +280,12 @@ class CwmcommentTable extends Table
     #[\Override]
     public function check(): bool
     {
-        // We check for null specifically to allow 0 (Guest) as a valid user_id
+        // We check for null specifically to allow 0 (Guest) as a valid user_id.
+        // Factory::getApplication()->getIdentity() can also be null in CLI or
+        // pre-auth contexts, which is fine — the comment falls back to Guest.
         if ($this->user_id === null) {
-            $this->user_id = (int) Factory::getApplication()->getIdentity()->id;
+            $identity      = Factory::getApplication()->getIdentity();
+            $this->user_id = (int) ($identity?->id ?? 0);
         }
 
         return parent::check();

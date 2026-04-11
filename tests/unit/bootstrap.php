@@ -145,65 +145,38 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JDEBUG', false);
         }
 
-        // Load our Composer autoloader FIRST — provides PHPUnit and framework
-        // packages (joomla/database, joomla/registry, etc.) without conflicts.
+        // Load the real Joomla CMS framework exactly the way cli/joomla.php
+        // and includes/framework.php do. The point of this test harness is
+        // that tests validate against real Joomla classes, not stubs — no
+        // more shim files declaring fake Factory / Text / Uri / etc.
+        //
+        // Order is:
+        //
+        //   1. libraries/bootstrap.php — sets up JLoader, registers the
+        //      decorated Composer class loader against the CMS's own
+        //      vendor/, installs the error handler, defines JVERSION.
+        //      After this, any Joomla\CMS\*, Joomla\Database\*,
+        //      Joomla\Registry\*, Joomla\Event\* etc. resolves to the
+        //      exact versions the CMS was built against.
+        //
+        //   2. configuration.php — gives us JConfig, which the Config
+        //      service provider reads during Factory::createContainer().
+        //
+        //   3. Our own vendor/autoload.php — registered *after* the CMS
+        //      loader so it's a secondary lookup for classes the CMS
+        //      doesn't ship (PHPUnit, prophecy, test tooling). The CMS
+        //      loader has already declared the framework classes, so
+        //      any duplicate copies in our vendor are never required.
+        require_once JPATH_LIBRARIES . '/bootstrap.php';
+
+        if (is_file(JPATH_CONFIGURATION . '/configuration.php')) {
+            require_once JPATH_CONFIGURATION . '/configuration.php';
+        }
+
         $ourAutoload = $componentRoot . '/libraries/vendor/autoload.php';
         if (is_file($ourAutoload)) {
             require_once $ourAutoload;
         }
-
-        // Load runtime shims for classes that tests call (Factory, Text, Uri, Route).
-        // These must load BEFORE the CMS source autoloader so they take priority
-        // over the real CMS classes which have heavy dependency chains.
-        require_once $componentRoot . '/tests/unit/Stubs/CmsRuntimeShims.php';
-
-        // Register a PSR-4 autoloader for Joomla CMS source classes.
-        // We do NOT use JLoader (intercepts PHPUnit lookups) or joomla-cms's
-        // vendor/autoload.php (PSR package version conflicts).
-        // Our Composer provides framework packages; joomla-cms provides CMS classes.
-        //
-        // IMPORTANT: This autoloader is appended (not prepended) so our Composer
-        // autoloader always wins for framework classes like Joomla\Database\*.
-        spl_autoload_register(function ($class) use ($rootDir) {
-
-            // Joomla\CMS\ → libraries/src/
-            $cmsPrefix = 'Joomla\\CMS\\';
-
-            if (str_starts_with($class, $cmsPrefix)) {
-                $file = $rootDir . '/libraries/src/' . str_replace('\\', '/', substr($class, \strlen($cmsPrefix))) . '.php';
-
-                if (is_file($file)) {
-                    require_once $file;
-
-                    return true;
-                }
-            }
-
-            // Joomla\Component\ → administrator/components/
-            $compPrefix = 'Joomla\\Component\\';
-
-            if (str_starts_with($class, $compPrefix)) {
-                $relative = substr($class, \strlen($compPrefix));
-                $parts    = explode('\\', $relative, 3);
-
-                if (\count($parts) >= 3) {
-                    $component = strtolower($parts[0]);
-                    $file      = $rootDir . '/administrator/components/com_' . $component . '/src/'
-                        . str_replace('\\', '/', $parts[2]) . '.php';
-
-                    if (is_file($file)) {
-                        require_once $file;
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        });
-
-        // Define Joomla version
-        \defined('JVERSION') or \define('JVERSION', '5.4.0');
 
         $joomlaLoaded = true;
 
@@ -353,37 +326,35 @@ require_once __DIR__ . '/ProclaimTestCase.php';
     }
 
     try {
-        $db = \Joomla\Database\DatabaseDriver::getInstance([
-            'driver'   => 'mysqli',
-            'host'     => $host,
-            'port'     => $port,
-            'user'     => $user,
-            'password' => $pass,
-            'database' => $dbName,
-            'prefix'   => $prefix,
-        ]);
-        $db->connect();
+        // We don't manually construct a DatabaseDriver. Factory::getContainer()
+        // registers the real Database service provider which reads JConfig
+        // and hands out a live driver. Asking for it here is enough to
+        // verify the connection is reachable. Integration tests then get
+        // the same driver from Factory::getContainer()->get(...).
+        $container = \Joomla\CMS\Factory::getContainer();
 
-        // Store the connection for integration tests
+        // The Application service provider (registered by createContainer)
+        // expects SessionInterface to be resolvable. The Session provider
+        // registers concrete implementations (session.web.*, session.cli)
+        // but leaves the generic aliasing to the caller — cli/joomla.php
+        // does this for CLI context, so we do the same here.
+        $container->alias('session', 'session.cli')
+            ->alias('JSession', 'session.cli')
+            ->alias(\Joomla\CMS\Session\Session::class, 'session.cli')
+            ->alias(\Joomla\Session\Session::class, 'session.cli')
+            ->alias(\Joomla\Session\SessionInterface::class, 'session.cli');
+
+        // Pull the live DB driver from the container to verify the
+        // connection works and stash it for legacy $GLOBALS consumers.
+        $db = $container->get(\Joomla\Database\DatabaseInterface::class);
+        $db->connect();
         $GLOBALS['__proclaim_test_db'] = $db;
 
-        // Populate the CMS Factory shim's DI container with the live DB
-        // connection so integration tests that call
-        // `Factory::getContainer()->get(DatabaseInterface::class)` resolve
-        // to the real driver instead of hitting the null container. Without
-        // this, Cwmbackup::getExportTableData() et al. would fail under
-        // the test harness even though the DB is reachable.
-        if (class_exists(\Joomla\DI\Container::class)) {
-            $container = new \Joomla\DI\Container();
-            $container->set(
-                \Joomla\Database\DatabaseInterface::class,
-                static fn () => $db
-            );
-            $container->alias('DatabaseDriver', \Joomla\Database\DatabaseInterface::class);
-            $container->alias(\Joomla\Database\DatabaseDriver::class, \Joomla\Database\DatabaseInterface::class);
-
-            \Joomla\CMS\Factory::setContainer($container);
-        }
+        // Populate Factory::$application with the real CLI Console
+        // Application so code paths that call Factory::getApplication()
+        // (Route::_, CwmcommentTable::check, Cwmparams::getAdmin, etc.)
+        // don't throw "Failed to start application".
+        \Joomla\CMS\Factory::$application = $container->get(\Joomla\Console\Application::class);
 
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 

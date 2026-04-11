@@ -622,7 +622,13 @@ class CwmschemaorgHelper
      */
     private static function buildAbsoluteUrl(string $route): string
     {
-        return rtrim(Uri::root(), '/') . '/' . ltrim(Route::_($route), '/');
+        // Route::_() can return null for unroutable input (missing
+        // application, unknown component, etc.). Treat that as an empty
+        // path rather than passing null to ltrim(), which is deprecated
+        // in PHP 8.1+.
+        $path = Route::_($route) ?? '';
+
+        return rtrim(Uri::root(), '/') . '/' . ltrim($path, '/');
     }
 
     /**
