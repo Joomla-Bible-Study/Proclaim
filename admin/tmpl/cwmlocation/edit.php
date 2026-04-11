@@ -52,7 +52,6 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
                 <?php echo $this->form->renderField('landing_show'); ?>
             </div>
             <div class="col-lg-3">
-                <?php echo $this->form->renderField('id'); ?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('access'); ?>
                 <?php echo $this->form->renderField('language'); ?>

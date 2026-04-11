@@ -171,6 +171,10 @@
         <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL"
                description="JBS_FLD_ACCESS_VS_LOCATION_DESC"/>
         <field name="asset_id" type="hidden" filter="unset"/>
+
+        <field name="hits" type="text" label="JBS_STY_HITS"
+               description="JBS_STY_HITS_DESC" class="readonly" size="6"
+               default="0" readonly="true" filter="unset"/>
     </fieldset>
 
     <fields name="params">

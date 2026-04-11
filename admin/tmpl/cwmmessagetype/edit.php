@@ -51,7 +51,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php echo $this->form->renderField('landing_show'); ?>
             </div>
             <div class="col-lg-3">
-                <?php echo $this->form->renderField('id'); ?>
                 <?php echo $this->form->renderField('published'); ?>
             </div>
         </div>

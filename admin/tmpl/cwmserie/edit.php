@@ -172,8 +172,7 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
         echo $input->get('forcedLanguage', '', 'cmd'); ?>">
         <?php
         echo $this->form->getInput('series_thumbnail'); ?>
-        <?php
-        echo $this->form->getInput('id'); ?>
+        <?php // id now rendered as a read-only field by the shared publish_tab layout.?>
         <?php
         echo HTMLHelper::_('form.token'); ?>
     </div>

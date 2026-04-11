@@ -70,7 +70,6 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
             <!-- Begin Sidebar -->
             <div class="col-lg-3">
                 <div style="position: sticky; top: 70px;">
-                    <?php echo $this->form->renderField('id'); ?>
                     <?php echo $this->form->renderField('published'); ?>
 
                     <!-- Code Snippet Insertion Panel -->

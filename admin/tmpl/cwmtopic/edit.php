@@ -86,8 +86,7 @@ if (str_starts_with($string, 'JBS')) { ?>
         <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
         <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
-        <?php
-        echo $this->form->getInput('id'); ?>
+        <?php // id now rendered as a read-only field by the shared publish_tab layout.?>
         <?php
         echo $this->form->getInput('asset_id'); ?>
         <input type="hidden" name="task" value=""/>

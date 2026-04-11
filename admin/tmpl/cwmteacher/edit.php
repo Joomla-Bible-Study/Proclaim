@@ -257,7 +257,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>"/>
         <input type="hidden" name="forcedLanguage" value="<?php echo $input->get('forcedLanguage', '', 'cmd'); ?>"/>
-        <?php echo $this->form->getInput('id'); ?>
+        <?php // id now rendered as a read-only field by the shared publish_tab layout.?>
         <?php echo $this->form->getInput('teacher_image'); ?>
         <?php echo HTMLHelper::_('form.token'); ?>
     </div>

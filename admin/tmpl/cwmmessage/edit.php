@@ -323,13 +323,7 @@ echo Route::_(
                 <?php
             } ?>
             <div class="col-lg-5">
-                <div class="mb-3">
-                    <label id="jform_hits-lbl" for="jform_hits" class="form-label">
-                        <?php echo Text::_('JBS_STY_HITS'); ?>
-                    </label>
-                    <input type="text" id="jform_hits" value="<?php echo $this->item->hits; ?>"
-                           class="form-control" size="10" readonly aria-invalid="false">
-                </div>
+                <?php // Hits moved to the Publishing tab via the form's new "hits" field.?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('studydate'); ?>
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
@@ -407,22 +401,7 @@ echo Route::_(
             <?php
         } ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-            <div class="col-6">
-                <?php echo $this->form->renderField('metakey', 'params'); ?>
-                <?php echo $this->form->renderField('metadesc', 'params'); ?>
-                <?php
-                echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
         <?php // ===== Schema.org Tab (injected by system plugin when enabled) =====?>
         <?php if ($this->form->getFieldset('schema')) : ?>

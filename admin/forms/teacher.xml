@@ -2,7 +2,7 @@
 <form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
 
     <fieldset name="details" label="JBS_CMN_DETAILS">
-        <field name="id" type="hidden" label="JGLOBAL_FIELD_ID_LABEL"
+        <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
                description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
         <field name="teachername" type="text" size="60"
                label="JBS_CMN_TEACHER" required="true" filter="trim"/>
