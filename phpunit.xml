@@ -12,13 +12,16 @@
 	beStrictAboutCoverageMetadata="false">
 
 	<testsuites>
-		<!-- Default suite: runs ALL tests (unit + integration) -->
-		<testsuite name="Proclaim All Tests">
-			<directory>tests/unit</directory>
-			<directory>tests/integration</directory>
-		</testsuite>
+		<!--
+		    Each test file must appear in exactly one suite. PHPUnit 11 emits
+		    deprecation warnings when a file matches multiple suites, so the
+		    previous "Proclaim All Tests" catch-all was removed; the granular
+		    suites below collectively cover every directory under tests/unit
+		    and tests/integration. With no testsuite flag, PHPUnit runs all
+		    declared suites, which is equivalent to the old "All" behavior.
+		-->
 
-		<!-- Granular unit suites (for running a subset) -->
+		<!-- Unit suites: one per tests/unit subtree -->
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
 		</testsuite>
@@ -30,6 +33,12 @@
 		</testsuite>
 		<testsuite name="Admin Bible Tests">
 			<directory>tests/unit/Admin/Bible</directory>
+		</testsuite>
+		<testsuite name="Admin Controller Tests">
+			<directory>tests/unit/Admin/Controller</directory>
+		</testsuite>
+		<testsuite name="Admin Model Tests">
+			<directory>tests/unit/Admin/Model</directory>
 		</testsuite>
 		<testsuite name="Site Helper Tests">
 			<directory>tests/unit/Site/Helper</directory>
@@ -44,7 +53,7 @@
 			<directory>tests/unit/Site/Bible</directory>
 		</testsuite>
 
-		<!-- Granular integration suites -->
+		<!-- Integration suites: one per tests/integration subtree -->
 		<testsuite name="Integration Admin Helper Tests">
 			<directory>tests/integration/Admin/Helper</directory>
 		</testsuite>

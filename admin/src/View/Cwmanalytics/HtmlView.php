@@ -305,7 +305,7 @@ class HtmlView extends BaseHtmlView
             // Overview
             $this->kpi                = $model->getKpiTotals($s, $e, $l);
             $this->timeSeries         = $model->getTimeSeries($s, $e, $l);
-            $this->topStudies = $model->getTopStudies($s, $e, 10, $l);
+            $this->topStudies         = $model->getTopStudies($s, $e, 10, $l);
 
             // Combined (local + platform) only makes sense over all-time:
             // platform play counters are lifetime totals pulled from external

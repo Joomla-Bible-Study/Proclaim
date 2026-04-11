@@ -100,8 +100,8 @@
     }
   },
   "scripts": {
-    "test": "phpunit --testsuite 'Proclaim All Tests'",
-    "test:unit": "phpunit --testsuite 'Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Bible Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests'",
+    "test": "phpunit",
+    "test:unit": "phpunit --testsuite 'Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests'",
     "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Api Tests,Integration Admin Table Tests'",
     "test:js": "npm test",
     "test:all": ["@test", "@test:js"],

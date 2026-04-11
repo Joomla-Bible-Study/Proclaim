@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
-use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;

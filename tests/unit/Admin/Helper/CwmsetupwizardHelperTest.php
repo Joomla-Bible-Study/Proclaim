@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for CwmsetupwizardHelper
@@ -40,9 +41,8 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that each preset has all required fields.
-     *
-     * @dataProvider presetKeyProvider
      */
+    #[DataProvider('presetKeyProvider')]
     public function testPresetHasRequiredFields(string $key): void
     {
         $preset = CwmsetupwizardHelper::PRESETS[$key];
@@ -118,9 +118,8 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that all preset labels are language string keys.
-     *
-     * @dataProvider presetKeyProvider
      */
+    #[DataProvider('presetKeyProvider')]
     public function testPresetLabelsAreLangKeys(string $key): void
     {
         $preset = CwmsetupwizardHelper::PRESETS[$key];
@@ -131,9 +130,8 @@ class CwmsetupwizardHelperTest extends ProclaimTestCase
 
     /**
      * Test that all preset icons are FontAwesome classes.
-     *
-     * @dataProvider presetKeyProvider
      */
+    #[DataProvider('presetKeyProvider')]
     public function testPresetIconsAreFontAwesome(string $key): void
     {
         $preset = CwmsetupwizardHelper::PRESETS[$key];
