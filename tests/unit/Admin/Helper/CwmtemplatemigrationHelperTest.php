@@ -498,9 +498,9 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     #[DataProvider('provideExpectedColorFields')]
     public function testColorConversionListHasAllDocumentedFields(string $field): void
     {
-        $h    = makeMigHelper([]);
-        $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
-        $prop = $ref->getProperty('colorConversions');
+        $h      = makeMigHelper([]);
+        $ref    = new \ReflectionClass(CwmtemplatemigrationHelper::class);
+        $prop   = $ref->getProperty('colorConversions');
         $colors = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $colors);
@@ -527,9 +527,9 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
 
     public function testPathConversionHasBibleStudyToProclaimMapping(): void
     {
-        $h    = makeMigHelper([]);
-        $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
-        $prop = $ref->getProperty('pathConversions');
+        $h     = makeMigHelper([]);
+        $ref   = new \ReflectionClass(CwmtemplatemigrationHelper::class);
+        $prop  = $ref->getProperty('pathConversions');
         $paths = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $paths);
