@@ -10,7 +10,6 @@ namespace CWM\Component\Proclaim\Tests\Integration\Admin\Lib;
 
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
-use Joomla\CMS\Factory;
 
 /**
  * Test class for enhanced Cwmbackup functionality
@@ -24,7 +23,11 @@ class CwmbackupEnhancedTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        if (Factory::getContainer() === null) {
+        // The bootstrap in tests/unit/bootstrap.php defines PROCLAIM_TEST_DB_AVAILABLE
+        // after a successful DatabaseDriver::getInstance() + connect(). When it's
+        // false the component's getComponentConfigExport() / getScheduledTasksExport()
+        // / getExportTableData() methods cannot run because they query real tables.
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
             $this->markTestSkipped('Database not available — configure build.properties with a Joomla path.');
         }
     }

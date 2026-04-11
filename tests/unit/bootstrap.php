@@ -367,6 +367,24 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         // Store the connection for integration tests
         $GLOBALS['__proclaim_test_db'] = $db;
 
+        // Populate the CMS Factory shim's DI container with the live DB
+        // connection so integration tests that call
+        // `Factory::getContainer()->get(DatabaseInterface::class)` resolve
+        // to the real driver instead of hitting the null container. Without
+        // this, Cwmbackup::getExportTableData() et al. would fail under
+        // the test harness even though the DB is reachable.
+        if (class_exists(\Joomla\DI\Container::class)) {
+            $container = new \Joomla\DI\Container();
+            $container->set(
+                \Joomla\Database\DatabaseInterface::class,
+                static fn () => $db
+            );
+            $container->alias('DatabaseDriver', \Joomla\Database\DatabaseInterface::class);
+            $container->alias(\Joomla\Database\DatabaseDriver::class, \Joomla\Database\DatabaseInterface::class);
+
+            \Joomla\CMS\Factory::setContainer($container);
+        }
+
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 
         fwrite(STDERR, "Database connected: $dbName@$host:$port" . PHP_EOL);
