@@ -19,7 +19,9 @@
             <field name="media_seconds" type="text" label="JBS_CMN_SECONDS" description="" default="00" size="2">
             </field>
         </fieldset>
-        <fieldset name="parameters1">
+        <fieldset name="parameters1"
+                  label="JBS_ADDON_LOCAL_PLAYBACK"
+                  description="JBS_ADDON_LOCAL_PLAYBACK_DESC">
             <field name="special" type="list" label="JBS_MED_LINK_TARGET"
                    description="JBS_MED_LINK_TARGET_DESC"
                    class="form-select-color-state"
@@ -66,7 +68,9 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
         </fieldset>
-        <fieldset name="parameters2" label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS">
+        <fieldset name="parameters2"
+                  label="JBS_ADDON_LOCAL_MEDIA_PARAMETERS"
+                  description="JBS_ADDON_LOCAL_MEDIA_PARAMETERS_DESC">
             <field name="media_image" type="media" directory="biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox col-6">

@@ -237,29 +237,58 @@ abstract class CWMAddon
      */
     public function renderOptionsFields(object $media_form, bool $new): string
     {
-        $html = '<div class="row">';
+        $html = '';
 
         foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
-            if ($name !== 'general') {
-                $html .= '<div class="col-6">';
+            if ($name === 'general') {
+                continue;
+            }
 
-                foreach ($media_form->getFieldset($name) as $field) {
-                    if ($new) {
-                        $s_name = $field->fieldname;
+            $fields = $media_form->getFieldset($name);
 
-                        if (isset($media_form->s_params[$s_name])) {
-                            $field->setValue($media_form->s_params[$s_name]);
-                        }
+            if (empty($fields)) {
+                continue;
+            }
+
+            // Fall back to a humanised fieldset name when the XML omits a label,
+            // so every section still has a recognisable header.
+            $label = !empty($fieldset->label)
+                ? Text::_($fieldset->label)
+                : ucwords(str_replace(['_', '-'], ' ', $name));
+
+            $description = !empty($fieldset->description)
+                ? Text::_($fieldset->description)
+                : '';
+
+            $html .= '<div class="card shadow-sm mb-4 border-start border-4 border-primary proclaim-addon-section">';
+            $html .= '<div class="card-header bg-body-tertiary fw-semibold d-flex align-items-center">';
+            $html .= '<i class="icon-cog text-primary me-2" aria-hidden="true"></i>';
+            $html .= '<span class="fs-5">'
+                . htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</span>';
+            $html .= '</div>';
+            $html .= '<div class="card-body">';
+
+            if ($description !== '') {
+                $html .= '<p class="text-muted small mb-4 border-bottom pb-3">'
+                    . htmlspecialchars($description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                    . '</p>';
+            }
+
+            foreach ($fields as $field) {
+                if ($new) {
+                    $s_name = $field->fieldname;
+
+                    if (isset($media_form->s_params[$s_name])) {
+                        $field->setValue($media_form->s_params[$s_name]);
                     }
-
-                    $html .= $field->renderField();
                 }
 
-                $html .= '</div>';
+                $html .= $field->renderField();
             }
-        }
 
-        $html .= '</div>';
+            $html .= '</div></div>';
+        }
 
         return $html;
     }
