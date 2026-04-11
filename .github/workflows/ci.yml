@@ -64,6 +64,79 @@ jobs:
       - name: Clone joomla-cms for test framework
         run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
 
+      - name: Cache joomla-cms composer dependencies
+        id: joomla-cms-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}
+
+      - name: Install joomla-cms composer dependencies
+        if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/../joomla-cms
+          composer install --no-dev --no-interaction --prefer-dist
+        # The test harness boots the real Joomla framework via
+        # libraries/bootstrap.php, which requires libraries/vendor/autoload.php.
+        # A fresh git clone of joomla-cms does not include the vendor directory
+        # so we install it here once and cache for subsequent runs.
+
+      - name: Generate minimal configuration.php for tests
+        run: |
+          cat > $GITHUB_WORKSPACE/../joomla-cms/configuration.php <<'PHP'
+          <?php
+          class JConfig
+          {
+              public $dbtype          = 'mysqli';
+              public $host            = '127.0.0.1';
+              public $user            = 'proclaim_test';
+              public $password        = 'proclaim_test';
+              public $db              = 'proclaim_test';
+              public $dbprefix        = 'proclaim_';
+              public $secret          = 'proclaim-test-secret-key-0123456789abcdef';
+              public $sitename        = 'Proclaim Test';
+              public $editor          = 'none';
+              public $captcha         = '0';
+              public $language        = 'en-GB';
+              public $mailer          = 'smtp';
+              public $mailfrom        = 'test@example.com';
+              public $fromname        = 'Proclaim Test';
+              public $sendmail        = '/usr/sbin/sendmail';
+              public $smtpauth        = '0';
+              public $smtpuser        = '';
+              public $smtppass        = '';
+              public $smtphost        = 'localhost';
+              public $smtpsecure      = 'none';
+              public $smtpport        = '25';
+              public $caching         = '0';
+              public $cache_handler   = 'file';
+              public $cachetime       = '15';
+              public $MetaDesc        = '';
+              public $MetaAuthor      = '1';
+              public $sef             = '1';
+              public $sef_rewrite     = '0';
+              public $sef_suffix      = '0';
+              public $unicodeslugs    = '0';
+              public $tmp_path        = '/tmp';
+              public $log_path        = '/tmp';
+              public $offline         = '0';
+              public $debug           = '0';
+              public $debug_lang      = '0';
+              public $error_reporting = 'default';
+              public $cookie_domain   = '';
+              public $cookie_path     = '';
+              public $lifetime        = '15';
+              public $session_handler = 'database';
+              public $session_metadata = '1';
+              public $force_ssl       = '0';
+              public $log_deprecated  = '0';
+          }
+          PHP
+        # The real Factory::createContainer() registers the Config service
+        # provider which reads JConfig. Without a configuration.php, the
+        # Database and Session providers cannot resolve and every test that
+        # goes through Factory::getContainer() fails to bootstrap.
+
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
 
