@@ -185,10 +185,37 @@ class Cwmassets
     // =========================================================================
 
     /**
-     * Fix ALL Proclaim assets: clean orphans, fix/create per record, rebuild tree.
+     * JSON rule shapes we treat as "no real permissions" — a row with any
+     * of these values contributes nothing to permission decisions because
+     * Joomla will walk up to the `com_proclaim` parent asset. Keeping them
+     * around is pure load-time waste: `Access::preload('com_proclaim')`
+     * has to fetch and JSON-decode every single one on every request.
      *
-     * This is the ONE method that all callers (restore, install, upgrade,
-     * manual fix) must use for a full asset repair cycle.
+     * @since 10.3.0
+     */
+    private const EMPTY_RULE_VARIANTS = [
+        '',
+        '{}',
+        '[]',
+        '{"core.delete":[],"core.edit":[],"core.edit.state":[]}',
+        '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}',
+    ];
+
+    /**
+     * Clean ALL Proclaim assets: clean orphans, delete empty-rules rows,
+     * fix parent_id on surviving rows, rebuild the nested-set tree.
+     *
+     * **Inverted from the pre-10.3.0 behavior**: this method no longer
+     * creates an asset row for every Proclaim record with default rules.
+     * On mature sites that produced thousands of `com_proclaim.*` rows
+     * whose `rules` column was the empty template — Joomla still had to
+     * load them all during `Access::preload()`, accounting for ~72% of
+     * the admin page-load time on some installs.
+     *
+     * Net effect: Proclaim's asset tree now contains only the com_proclaim
+     * parent plus any records where an admin has genuinely customised the
+     * rules. Permission checks still work for everything else because
+     * Joomla walks the ancestor chain up to the parent.
      *
      * @return void
      *
@@ -198,7 +225,7 @@ class Cwmassets
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Step 1: Ensure the com_proclaim parent asset exists
+        // Step 1: Ensure the com_proclaim parent asset exists.
         $parentId = self::ensureParentAsset();
 
         if (!$parentId) {
@@ -207,47 +234,20 @@ class Cwmassets
             return;
         }
 
-        // Step 2: Remove orphaned Proclaim assets (stale from previous state)
+        // Step 2: Remove orphaned Proclaim assets (rows whose record is gone).
         self::cleanOrphanedAssets($db);
 
-        // Step 3: Fix/create assets for every content record
-        $assetTables = self::getAssetObjects();
+        // Step 3: Delete every per-record asset whose rules are empty/default,
+        // and null out the asset_id on the record that referenced it.
+        self::pruneEmptyAssetRows($db);
 
-        foreach ($assetTables as $tableInfo) {
-            try {
-                $offset = 0;
+        // Step 4: Fix parent_id on any surviving per-record asset rows. These
+        // are the ones with real, customised rules — keep them, just make
+        // sure they're linked to the Proclaim parent.
+        self::reparentSurvivingAssets($db, $parentId);
 
-                while (true) {
-                    $query = $db->getQuery(true);
-                    $query->select(
-                        $db->quoteName('j.id') . ', ' . $db->quoteName('j.asset_id') . ', '
-                        . $db->quoteName('a.id', 'aid') . ', ' . $db->quoteName('a.parent_id') . ', ' . $db->quoteName('a.rules')
-                    )
-                        ->from($db->quoteName($tableInfo['name'], 'j'))
-                        ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')')
-                        ->setLimit(100, $offset);
-                    $db->setQuery($query);
-                    $results = $db->loadObjectList();
-
-                    if (empty($results)) {
-                        break;
-                    }
-
-                    foreach ($results as $item) {
-                        self::fixSingleRecord($db, $tableInfo['name'], $tableInfo['assetname'], $item, $parentId);
-                    }
-
-                    unset($results);
-                    $offset += 100;
-                }
-
-                Log::add('Fixed assets for ' . $tableInfo['name'], Log::INFO, 'com_proclaim');
-            } catch (\Exception $e) {
-                Log::add('Asset fix error for ' . $tableInfo['name'] . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
-            }
-        }
-
-        // Step 4: Rebuild the entire nested-set tree
+        // Step 5: Rebuild the nested-set tree so lft/rgt are consistent
+        // after the deletions.
         try {
             $assetTable = new \Joomla\CMS\Table\Asset($db);
             $assetTable->rebuild();
@@ -258,10 +258,205 @@ class Cwmassets
     }
 
     /**
-     * Fix the asset for a single content record.
+     * Delete `#__assets` rows whose `rules` column is empty/default and
+     * null the corresponding `asset_id` on the source record so it no
+     * longer points at a now-missing row.
      *
-     * Uses Joomla's Asset Table ORM for inserts (proper lft/rgt positioning)
-     * and direct SQL for lightweight updates.
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return  int  Rows deleted
+     *
+     * @since   10.3.0
+     */
+    public static function pruneEmptyAssetRows(DatabaseInterface $db): int
+    {
+        $deleted     = 0;
+        $emptyQuoted = implode(
+            ',',
+            array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
+        );
+
+        // First, null out asset_id on source records that point at rows
+        // we're about to delete. Doing this before the DELETE means we
+        // don't leave dangling asset_id values behind.
+        foreach (self::getAssetObjects() as $info) {
+            $assetName = $info['assetname'];
+            $sourceTbl = $info['name'];
+
+            try {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName($sourceTbl, 's'))
+                    ->innerJoin(
+                        $db->quoteName('#__assets', 'a') . ' ON '
+                        . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
+                    )
+                    ->set($db->quoteName('s.asset_id') . ' = 0')
+                    ->where($db->quoteName('a.name') . ' LIKE '
+                        . $db->quote('com_proclaim.' . $assetName . '.%'))
+                    ->where($db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ')');
+                $db->setQuery($query);
+                $db->execute();
+            } catch (\Exception $e) {
+                Log::add(
+                    'Null asset_id error for ' . $sourceTbl . ': ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+        }
+
+        // Now delete the asset rows themselves.
+        try {
+            $query = $db->getQuery(true)
+                ->delete($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('rules') . ' IN (' . $emptyQuoted . ')');
+            $db->setQuery($query);
+            $db->execute();
+            $deleted = $db->getAffectedRows();
+
+            if ($deleted > 0) {
+                Log::add(
+                    'Pruned ' . $deleted . ' empty-rules Proclaim assets',
+                    Log::INFO,
+                    'com_proclaim'
+                );
+            }
+        } catch (\Exception $e) {
+            Log::add(
+                'Prune empty assets error: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+
+        return $deleted;
+    }
+
+    /**
+     * Ensure any surviving per-record asset rows (those with real,
+     * customised rules) are parented to the com_proclaim component
+     * asset. No-ops for rows already correctly linked.
+     *
+     * @param   DatabaseInterface  $db        Database driver
+     * @param   int                $parentId  com_proclaim asset id
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public static function reparentSurvivingAssets(DatabaseInterface $db, int $parentId): void
+    {
+        if ($parentId <= 0) {
+            return;
+        }
+
+        try {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__assets'))
+                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('parent_id') . ' <> ' . (int) $parentId);
+            $db->setQuery($query);
+            $db->execute();
+        } catch (\Exception $e) {
+            Log::add(
+                'Reparent surviving assets error: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
+     * Post-store hook: if Joomla auto-created an empty-rules asset row
+     * for this record, delete it and null the record's asset_id. Called
+     * from every Proclaim Table's `store()` override so empty rows never
+     * accumulate in the first place.
+     *
+     * Safe to call whether the table tracks assets or not — if there's
+     * no asset_id or the linked row has non-default rules, this is a
+     * no-op.
+     *
+     * @param   \Joomla\CMS\Table\Table  $table  Just-stored Proclaim table instance
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public static function stripEmptyAssetRow(\Joomla\CMS\Table\Table $table): void
+    {
+        $assetId = (int) ($table->asset_id ?? 0);
+
+        if ($assetId <= 0) {
+            return;
+        }
+
+        try {
+            $db = $table->getDbo();
+
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('rules'))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('id') . ' = ' . $assetId);
+            $db->setQuery($query);
+            $rules = (string) $db->loadResult();
+
+            if (!\in_array($rules, self::EMPTY_RULE_VARIANTS, true)) {
+                return;
+            }
+
+            $query = $db->getQuery(true)
+                ->delete($db->quoteName('#__assets'))
+                ->where($db->quoteName('id') . ' = ' . $assetId);
+            $db->setQuery($query);
+            $db->execute();
+
+            // Null the record's asset_id so it stops pointing at the
+            // row we just deleted. Use the table's own name/key so we
+            // don't need a hard-coded table list here.
+            $tableName = $table->getTableName();
+            $keyName   = $table->getKeyName();
+
+            if ($tableName && $keyName && !empty($table->$keyName)) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName($tableName))
+                    ->set($db->quoteName('asset_id') . ' = 0')
+                    ->where($db->quoteName($keyName) . ' = ' . (int) $table->$keyName);
+                $db->setQuery($query);
+                $db->execute();
+
+                // Keep the in-memory table instance consistent with the DB.
+                $table->asset_id = 0;
+            }
+        } catch (\Exception $e) {
+            Log::add(
+                'stripEmptyAssetRow error: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
+     * Repair a single record's asset link.
+     *
+     * **Behavior changed in 10.3.0**: this no longer creates a new asset
+     * row for records that lack one. If a record has no `asset_id` (or
+     * points at a missing row) and the only thing we could create would
+     * be an empty-rules placeholder, we leave it alone — permission
+     * checks fall through to the `com_proclaim` parent asset, which is
+     * what we want. The old behavior accumulated thousands of empty rows
+     * that slowed down `Access::preload('com_proclaim')` for no benefit.
+     *
+     * What it still does:
+     *   - Relink a record to an existing, real-rules asset row by name.
+     *   - Delete the record's asset row if the rules turned out to be
+     *     empty/default, and null `asset_id` on the record.
+     *   - Fix the parent_id on a surviving per-record row whose parent
+     *     has drifted away from `com_proclaim`.
      *
      * @param   DatabaseInterface  $db         Database driver
      * @param   string             $tableName  Content table name (e.g. '#__bsms_studies')
@@ -269,88 +464,72 @@ class Cwmassets
      * @param   object             $item       Record with id, asset_id, aid, parent_id, rules
      * @param   int                $parentId   com_proclaim parent asset ID
      *
-     * @return bool True if asset was fixed/created, false if already OK
+     * @return  bool  True if a repair was applied, false if no change was needed
      *
-     * @since 10.1.0
+     * @since   10.1.0
      */
     public static function fixSingleRecord(DatabaseInterface $db, string $tableName, string $assetName, object $item, int $parentId): bool
     {
         $assetFullName = 'com_proclaim.' . $assetName . '.' . $item->id;
-        $defaultRules  = '{"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+        $assetExists   = !empty($item->aid);
 
-        // Check if asset actually exists (aid comes from LEFT JOIN)
-        $assetExists = !empty($item->aid);
-
-        // Case 1: No asset_id OR asset_id points to a non-existent asset
-        if (empty($item->asset_id) || $item->asset_id == 0 || !$assetExists) {
-            // Check if asset already exists by name
-            $query = $db->getQuery(true);
-            $query->select($db->quoteName('id'))
+        // Case 1 — record has no asset link. If a real-rules asset row
+        // exists by name, relink; otherwise do nothing.
+        if (empty($item->asset_id) || (int) $item->asset_id === 0 || !$assetExists) {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'rules']))
                 ->from($db->quoteName('#__assets'))
                 ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
             $db->setQuery($query);
-            $existingAssetId = $db->loadResult();
+            $existing = $db->loadObject();
 
-            if ($existingAssetId) {
-                // Asset exists by name — just link the record to it
-                $query = $db->getQuery(true);
-                $query->update($db->quoteName($tableName))
-                    ->set($db->quoteName('asset_id') . ' = ' . (int) $existingAssetId)
+            if ($existing && !\in_array((string) $existing->rules, self::EMPTY_RULE_VARIANTS, true)) {
+                $query = $db->getQuery(true)
+                    ->update($db->quoteName($tableName))
+                    ->set($db->quoteName('asset_id') . ' = ' . (int) $existing->id)
                     ->where($db->quoteName('id') . ' = ' . (int) $item->id);
                 $db->setQuery($query);
                 $db->execute();
-            } else {
-                // Create a new asset via Joomla's nested-set API (NOT raw SQL)
-                // to ensure correct lft/rgt positioning in the asset tree.
-                // Raw INSERT with lft=0, rgt=0 creates a corruption bomb:
-                // deleting such an asset runs DELETE WHERE lft BETWEEN 0 AND 0
-                // which also deletes the root asset and destroys all permissions.
-                $asset = new \Joomla\CMS\Table\Asset($db);
-                $asset->setLocation($parentId, 'last-child');
-                $asset->parent_id = $parentId;
-                $asset->name      = $assetFullName;
-                $asset->title     = $assetName . ' ' . $item->id;
-                $asset->rules     = $defaultRules;
 
-                if (!$asset->store()) {
-                    Log::add('Failed to create asset: ' . $assetFullName, Log::WARNING, 'com_proclaim');
-
-                    return false;
-                }
-
-                $newAssetId = (int) $asset->id;
-
-                // Update the record with new asset_id
-                $query = $db->getQuery(true);
-                $query->update($db->quoteName($tableName))
-                    ->set($db->quoteName('asset_id') . ' = ' . $newAssetId)
-                    ->where($db->quoteName('id') . ' = ' . (int) $item->id);
-                $db->setQuery($query);
-                $db->execute();
+                return true;
             }
 
-            return true;
+            return false;
         }
 
-        // Case 2: Has valid asset_id with existing asset but parent_id mismatch or empty rules
-        if ($item->parent_id != $parentId || empty($item->rules)) {
-            $query = $db->getQuery(true);
-            $query->update($db->quoteName('#__assets'))
-                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
-                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
+        // Case 2 — record links to a real asset row whose rules are empty.
+        // Delete the row and null the link; subsequent permission checks
+        // inherit from the com_proclaim parent.
+        if (\in_array((string) ($item->rules ?? ''), self::EMPTY_RULE_VARIANTS, true)) {
+            $query = $db->getQuery(true)
+                ->delete($db->quoteName('#__assets'))
+                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+            $db->setQuery($query);
+            $db->execute();
 
-            if (empty($item->rules)) {
-                $query->set($db->quoteName('rules') . ' = ' . $db->quote($defaultRules));
-            }
-
-            $query->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+            $query = $db->getQuery(true)
+                ->update($db->quoteName($tableName))
+                ->set($db->quoteName('asset_id') . ' = 0')
+                ->where($db->quoteName('id') . ' = ' . (int) $item->id);
             $db->setQuery($query);
             $db->execute();
 
             return true;
         }
 
-        // Asset is already OK
+        // Case 3 — real custom rules, but parent has drifted.
+        if ((int) ($item->parent_id ?? 0) !== (int) $parentId) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__assets'))
+                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
+                ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName))
+                ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
+            $db->setQuery($query);
+            $db->execute();
+
+            return true;
+        }
+
         return false;
     }
 

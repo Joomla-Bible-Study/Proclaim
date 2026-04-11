@@ -266,12 +266,6 @@ class CwmserverTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->getRules()) {
-            $this->setRules(
-                '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
-            );
-        }
-
         if ($this->params === null && $this->media) {
             $this->params = '';
         }
@@ -280,7 +274,13 @@ class CwmserverTable extends Table
             $this->media = '';
         }
 
-        return parent::store($updateNulls);
+        $result = parent::store($updateNulls);
+
+        if ($result) {
+            Cwmassets::stripEmptyAssetRow($this);
+        }
+
+        return $result;
     }
 
     /**
