@@ -75,12 +75,13 @@ class HtmlView extends BaseHtmlView
     protected Registry $admin_params;
 
     /**
-     * Messages belonging to this teacher
+     * Count of messages belonging to this teacher. The table rows are
+     * lazy-loaded via AJAX when the Messages tab is first shown.
      *
-     * @var array
-     * @since 10.1.0
+     * @var int
+     * @since 10.3.0
      */
-    protected array $messages = [];
+    protected int $messagesCount = 0;
 
     /**
      * Execute and display a template script.
@@ -112,15 +113,14 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        // Load the Admin settings as Registry
-        $admin    = Cwmparams::getAdmin();
-        $registry = new Registry();
-        $registry->loadString($admin->params);
-        $this->admin_params = $registry;
+        // Cwmparams::getAdmin() already memoizes the result and returns
+        // $admin->params as a Joomla Registry — no need to rebuild it here.
+        $this->admin_params = Cwmparams::getAdmin()->params;
 
-        // Load messages belonging to this teacher (only for existing records)
+        // Lightweight count for the Messages tab badge — the table rows are
+        // fetched lazily by the browser when the tab is first opened.
         if (!empty($this->item->id) && $this->item->id > 0) {
-            $this->messages = $model->getMessages();
+            $this->messagesCount = $model->getMessagesCount();
         }
 
         // Check for errors.

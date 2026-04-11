@@ -237,7 +237,32 @@ class CwmanalyticsModel extends BaseDatabaseModel
     }
 
     /**
-     * Get daily or weekly time-series data for chart rendering.
+     * Resolve the MySQL DATE_FORMAT string used to bucket time-series rows
+     * based on the width of the requested range. Keeps the chart readable
+     * whether the caller asked for a week or for "all time":
+     *   <= 90 days  → daily
+     *   <= 365 days → weekly (ISO year-week)
+     *   > 365 days  → monthly (year-month)
+     *
+     * @since 10.3.0
+     */
+    private function resolveTimeSeriesBucket(string $start, string $end): string
+    {
+        $days = (int) ((strtotime($end) - strtotime($start)) / 86400);
+
+        if ($days <= 90) {
+            return '%Y-%m-%d';
+        }
+
+        if ($days <= 365) {
+            return '%Y-%u';
+        }
+
+        return '%Y-%m';
+    }
+
+    /**
+     * Get daily, weekly, or monthly time-series data for chart rendering.
      *
      * @param   string  $start       Start date (Y-m-d).
      * @param   string  $end         End date (Y-m-d).
@@ -250,8 +275,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     public function getTimeSeries(string $start, string $end, int $locationId = 0): array
     {
         try {
-            $days   = (int) ((strtotime($end) - strtotime($start)) / 86400);
-            $format = $days <= 90 ? '%Y-%m-%d' : '%Y-%u';
+            $format = $this->resolveTimeSeriesBucket($start, $end);
             $db     = $this->getDatabase();
 
             $query = $db->getQuery(true)
@@ -334,6 +358,14 @@ class CwmanalyticsModel extends BaseDatabaseModel
      * Merges local event counts with platform play counts (for ministry-created
      * media only) to provide a comprehensive engagement ranking.  Each row
      * includes `local_total`, `platform_plays`, and the combined `total`.
+     *
+     * CAVEAT — platform scope is all-time: platform_plays comes from
+     * `#__bsms_platform_stats`, which stores cumulative lifetime counters
+     * pulled from YouTube / Vimeo / Wistia APIs. It cannot be bucketed to
+     * a sub-range, so the `$start` / `$end` parameters only narrow the
+     * local sub-query. Callers should therefore only use this method when
+     * the requested range is effectively all-time, otherwise the combined
+     * `total` mixes a bounded local sum with a lifetime platform sum.
      *
      * @param   string  $start       Start date (Y-m-d).
      * @param   string  $end         End date (Y-m-d).
@@ -1067,8 +1099,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     public function getStudyTimeSeries(int $studyId, string $start, string $end): array
     {
         try {
-            $days   = (int) ((strtotime($end) - strtotime($start)) / 86400);
-            $format = $days <= 90 ? '%Y-%m-%d' : '%Y-%u';
+            $format = $this->resolveTimeSeriesBucket($start, $end);
             $db     = $this->getDatabase();
             $query  = $db->getQuery(true)
                 ->select([

@@ -40,6 +40,7 @@ Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit')
     ->useScript('com_proclaim.phone-input')
+    ->useScript('com_proclaim.template-lazyload')
     ->useStyle('com_proclaim.intl-tel-input-css')
     ->useStyle('com_proclaim.phone-input-css');
 
@@ -88,12 +89,35 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Biography Tab =====?>
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY')); ?>
+        <?php // ===== Biography Tab (lazy-loaded — TinyMCE editors are heavy) =====?>
+        <?php
+            echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY'));
+            $biographyLoadUrl = Route::_(
+                'index.php?option=com_proclaim&task=cwmteacher.loadBiography'
+                . '&id=' . (int) $this->item->id
+                . '&' . Session::getFormToken() . '=1'
+            );
+        ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php echo $this->form->renderField('short'); ?>
-                <?php echo $this->form->renderField('information'); ?>
+                <?php // Hidden placeholders so values still POST when the tab is never opened.?>
+                <?php // Once the lazy loader injects the editor fields, their inputs share the same?>
+                <?php // name and PHP keeps the later (real-editor) value on submit.?>
+                <input type="hidden" name="jform[short]"
+                       value="<?php echo $this->escape($this->form->getValue('short') ?? ''); ?>"
+                       data-bio-placeholder="short">
+                <input type="hidden" name="jform[information]"
+                       value="<?php echo $this->escape($this->form->getValue('information') ?? ''); ?>"
+                       data-bio-placeholder="information">
+                <div id="teacher-biography-ajax-container"
+                     class="proclaim-lazy-tab-content"
+                     data-load-url="<?php echo $biographyLoadUrl; ?>"
+                     data-removes-placeholders="bio">
+                    <div class="text-center p-4 text-muted">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JLOADING'); ?>
+                    </div>
+                </div>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
@@ -168,64 +192,31 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Messages Tab (existing records only) =====?>
+        <?php // ===== Messages Tab (existing records only, lazy-loaded) =====?>
         <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
         <?php
-        $msgCount = \count($this->messages);
             echo HTMLHelper::_(
                 'uitab.addTab',
                 'myTab',
                 'messages',
-                Text::sprintf('JBS_TCH_MESSAGES_COUNT', $msgCount)
-            ); ?>
+                Text::sprintf('JBS_TCH_MESSAGES_COUNT', $this->messagesCount)
+            );
+            $messagesLoadUrl = Route::_(
+                'index.php?option=com_proclaim&task=cwmteacher.loadMessages'
+                . '&id=' . (int) $this->item->id
+                . '&' . Session::getFormToken() . '=1'
+            );
+        ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php if ($msgCount > 0) : ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="w-5 text-center"><?php echo Text::_('JSTATUS'); ?></th>
-                            <th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_DATE'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_SERIES'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_LOCATION'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($this->messages as $i => $msg) : ?>
-                        <tr>
-                            <td class="text-center">
-                                <?php echo HTMLHelper::_('jgrid.published', $msg->published, $i, '', false); ?>
-                            </td>
-                            <td>
-                                <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $msg->id); ?>">
-                                    <?php echo $this->escape($msg->studytitle); ?>
-                                </a>
-                            </td>
-                            <td>
-                                <?php echo HTMLHelper::_('date', $msg->studydate, Text::_('DATE_FORMAT_LC4')); ?>
-                            </td>
-                            <td>
-                                <?php echo $this->escape($msg->series_text ?? ''); ?>
-                            </td>
-                            <td>
-                                <?php echo $this->escape($msg->location_text ?? ''); ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <div class="mt-2">
-                    <a class="btn btn-secondary btn-sm"
-                       href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[teacher]=' . (int) $this->item->id); ?>">
-                        <?php echo Text::_('JBS_TCH_VIEW_ALL_MESSAGES'); ?>
-                    </a>
+                <div id="teacher-messages-ajax-container"
+                     class="proclaim-lazy-tab-content"
+                     data-load-url="<?php echo $messagesLoadUrl; ?>">
+                    <div class="text-center p-4 text-muted">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JLOADING'); ?>
+                    </div>
                 </div>
-                <?php else : ?>
-                <div class="alert alert-info">
-                    <?php echo Text::_('JBS_TCH_NO_MESSAGES'); ?>
-                </div>
-                <?php endif; ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>

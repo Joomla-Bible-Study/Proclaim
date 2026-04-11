@@ -259,6 +259,11 @@
                     oldScript.parentNode.replaceChild(newScript, oldScript);
                 });
 
+                // Notify Joomla that new dynamic content was loaded so the
+                // Joomla 6 TinyMCE plugin (and other field initialisers) can
+                // hook the freshly inserted DOM nodes.
+                container.dispatchEvent(new CustomEvent('joomla:updated', { bubbles: true }));
+
                 // Dispatch a custom event to signal that layout editor content is loaded
                 container.dispatchEvent(new CustomEvent('layoutEditorLoaded', {
                     bubbles: true,
@@ -342,12 +347,86 @@
         joomlaTab.addEventListener('joomla.tab.shown', loadOnShow);
     }
 
+    /**
+     * Initialize generic lazy-loading for any tab container marked with
+     * `.proclaim-lazy-tab-content` and a `data-load-url` attribute. The
+     * container is populated with raw HTML (fetched via ProclaimFetch) the
+     * first time its enclosing tab is shown.
+     *
+     * Used by the Teachers edit view (Messages tab) and can be reused for
+     * any future tab that wants server-rendered lazy content.
+     */
+    function initGenericLazyTabContent() {
+        /**
+         * After the container is populated, drop any hidden form placeholders
+         * that were rendered as a save-time fallback. The placeholder elements
+         * carry `data-bio-placeholder` (or whatever marker the consumer set
+         * via `data-removes-placeholders`) and share their `name` with the
+         * real form field that just got injected.
+         */
+        const cleanupPlaceholders = function (container) {
+            const marker = container.dataset.removesPlaceholders;
+            if (!marker) {
+                return;
+            }
+            const attr = `data-${marker}-placeholder`;
+            document.querySelectorAll(`[${attr}]`).forEach((el) => el.remove());
+        };
+
+        const triggerLoad = function (container, loadUrl) {
+            loadLayoutEditorContent(container, loadUrl);
+            // loadLayoutEditorContent fetches asynchronously — wait for the
+            // joomla:updated event it dispatches once the DOM is populated.
+            container.addEventListener('joomla:updated', () => cleanupPlaceholders(container), { once: true });
+        };
+
+        document.querySelectorAll('.proclaim-lazy-tab-content[data-load-url]').forEach((container) => {
+            if (container.dataset.loaded === 'true') {
+                return;
+            }
+
+            const { loadUrl } = container.dataset;
+            if (!loadUrl) {
+                return;
+            }
+
+            const tabElement = container.closest('joomla-tab-element');
+
+            // Not inside a Joomla tab — load straight away.
+            if (!tabElement) {
+                triggerLoad(container, loadUrl);
+                return;
+            }
+
+            // Already the active tab on initial render — load immediately.
+            if (tabElement.hasAttribute('active')) {
+                triggerLoad(container, loadUrl);
+                return;
+            }
+
+            const joomlaTab = tabElement.closest('joomla-tab');
+            if (!joomlaTab) {
+                triggerLoad(container, loadUrl);
+                return;
+            }
+
+            const loadOnShow = function (event) {
+                if (event.target === tabElement || tabElement.hasAttribute('active')) {
+                    triggerLoad(container, loadUrl);
+                    joomlaTab.removeEventListener('joomla.tab.shown', loadOnShow);
+                }
+            };
+            joomlaTab.addEventListener('joomla.tab.shown', loadOnShow);
+        });
+    }
+
     // Export functions for use by other modules (e.g., layout editor)
     window.ProclaimLazyLoad = {
         loadFieldset,
         isFieldsetLoaded,
         isFieldsetLoading,
         loadLayoutEditorContent,
+        initGenericLazyTabContent,
     };
 
     // Initialize lazy loading on DOMContentLoaded
@@ -356,10 +435,12 @@
             initAccordionLazyLoad();
             initTabLazyLoad();
             initLayoutEditorLazyLoad();
+            initGenericLazyTabContent();
         });
     } else {
         initAccordionLazyLoad();
         initTabLazyLoad();
         initLayoutEditorLazyLoad();
+        initGenericLazyTabContent();
     }
 }());

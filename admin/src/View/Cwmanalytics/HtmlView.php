@@ -33,7 +33,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  */
 class HtmlView extends BaseHtmlView
 {
-    /** @var string Active date preset key ('7d', '30d', '90d', '1y', or 'custom') @since 10.1.0 */
+    /** @var string Active date preset key ('7d', '30d', '90d', '1y', 'all', or 'custom') @since 10.1.0 */
     public string $preset = '30d';
 
     /** @var string Date range start (Y-m-d) @since 10.1.0 */
@@ -203,11 +203,19 @@ class HtmlView extends BaseHtmlView
                 $this->dateStart = date('Y-m-d', strtotime('-364 days'));
                 $this->dateEnd   = $today;
                 break;
+            case 'all':
+                // Fixed epoch lower bound — queries use >= so this captures
+                // every row. The template shows the friendly "since
+                // firstEventDate" label instead of the raw 1970 value.
+                $this->dateStart = '1970-01-01';
+                $this->dateEnd   = $today;
+                break;
             case 'custom':
                 $this->dateStart = $input->getString('date_start', date('Y-m-d', strtotime('-29 days')));
                 $this->dateEnd   = $input->getString('date_end', $today);
                 break;
             default: // 30d
+                $this->preset    = '30d';
                 $this->dateStart = date('Y-m-d', strtotime('-29 days'));
                 $this->dateEnd   = $today;
                 break;
@@ -297,8 +305,16 @@ class HtmlView extends BaseHtmlView
             // Overview
             $this->kpi                = $model->getKpiTotals($s, $e, $l);
             $this->timeSeries         = $model->getTimeSeries($s, $e, $l);
-            $this->topStudies         = $model->getTopStudies($s, $e, 10, $l);
-            $this->topStudiesCombined = $model->getTopStudiesCombined($s, $e, 10, $l);
+            $this->topStudies = $model->getTopStudies($s, $e, 10, $l);
+
+            // Combined (local + platform) only makes sense over all-time:
+            // platform play counters are lifetime totals pulled from external
+            // APIs and can't be bucketed per-day, so mixing them with a
+            // time-bounded local sum produces a misleading "total". When the
+            // user picks any time preset, fall back to the local-only table.
+            $this->topStudiesCombined = $this->preset === 'all'
+                ? $model->getTopStudiesCombined($s, $e, 10, $l)
+                : [];
             $this->referrerBreakdown  = $model->getReferrerBreakdown($s, $e, $l);
             $this->deviceBreakdown    = $model->getDeviceBreakdown($s, $e, $l);
             $this->browserBreakdown   = $model->getBrowserBreakdown($s, $e, $l);

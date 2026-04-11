@@ -714,9 +714,53 @@ class CwmteacherModel extends AdminModel
 
         $query->order($db->quoteName('study.studydate') . ' DESC');
 
-        $db->setQuery($query, 0, 20);
+        $db->setQuery($query, 0, 50);
 
         return $db->loadObjectList() ?: [];
+    }
+
+    /**
+     * Get the count of messages (sermons) by this teacher.
+     *
+     * Lightweight counterpart to getMessages() used for the tab badge when
+     * the Messages tab contents are lazy-loaded.
+     *
+     * @return  int
+     *
+     * @since   10.3.0
+     */
+    public function getMessagesCount(): int
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return 0;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        $query->select('COUNT(DISTINCT ' . $db->quoteName('study.id') . ')')
+            ->from($db->quoteName('#__bsms_studies', 'study'));
+
+        $query->where(
+            '(' . $db->quoteName('study.id') . ' IN ('
+            . $db->getQuery(true)
+                ->select($db->quoteName('st.study_id'))
+                ->from($db->quoteName('#__bsms_study_teachers', 'st'))
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
+            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
+        );
+
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 
     /**
