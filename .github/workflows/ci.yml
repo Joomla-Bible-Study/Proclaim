@@ -140,7 +140,16 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
 
-      - name: Import database schema
+      - name: Import Joomla core database schema
+        run: |
+          # Seed Joomla's base schema first so integration tests that
+          # query #__extensions, #__scheduler_tasks, #__users, etc.
+          # (CwmbackupEnhancedTest, for example) have the core tables
+          # they need. Proclaim's schema loads afterwards.
+          sed 's/#__/proclaim_/g' $GITHUB_WORKSPACE/../joomla-cms/installation/sql/mysql/base.sql > /tmp/joomla-base.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/joomla-base.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Import Proclaim database schema
         run: |
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
