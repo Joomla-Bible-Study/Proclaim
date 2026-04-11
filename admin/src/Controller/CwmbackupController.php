@@ -77,9 +77,12 @@ class CwmbackupController extends FormController
         $tables     = CwmdbHelper::getObjects();
         $tableNames = array_column($tables, 'name');
 
-        // Add virtual "tables" for component config and scheduled tasks
+        // Add virtual "tables" for component config, scheduled tasks, and
+        // per-record/component-level asset permissions. Virtual tables are
+        // chunk-exempt and always dumped in one pass.
         $tableNames[] = '_component_config';
         $tableNames[] = '_scheduled_tasks';
+        $tableNames[] = '_proclaim_assets';
 
         // Build table info with row counts for chunked export
         $backup    = new Cwmbackup();

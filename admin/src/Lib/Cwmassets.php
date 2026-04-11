@@ -191,9 +191,12 @@ class Cwmassets
      * around is pure load-time waste: `Access::preload('com_proclaim')`
      * has to fetch and JSON-decode every single one on every request.
      *
+     * Public so backup / diagnostic tools can filter on the same set of
+     * rule shapes we consider "empty".
+     *
      * @since 10.3.0
      */
-    private const EMPTY_RULE_VARIANTS = [
+    public const EMPTY_RULE_VARIANTS = [
         '',
         '{}',
         '[]',

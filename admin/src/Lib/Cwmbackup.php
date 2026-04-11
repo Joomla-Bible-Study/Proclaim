@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
@@ -131,6 +132,142 @@ class Cwmbackup
     }
 
     /**
+     * Export Proclaim asset permissions from `#__assets`.
+     *
+     * Dumps two things in one block:
+     *   1. The component-level ACL — the `rules` column on the row where
+     *      `name = 'com_proclaim'`. That's the Permissions tab shown in
+     *      the component Options dialog (who can core.edit / core.create /
+     *      etc. at the component level).
+     *   2. Per-record ACL — any `com_proclaim.<type>.<id>` row whose rules
+     *      column is NOT in `Cwmassets::EMPTY_RULE_VARIANTS`. The empty
+     *      variants contribute nothing to permission decisions and are
+     *      intentionally skipped to keep backups lean.
+     *
+     * Replay strategy (the SQL is written to be idempotent and
+     * id-insensitive, since `#__assets.id` is auto-increment and will
+     * differ between source and destination):
+     *
+     *   - Parent: `UPDATE #__assets SET rules=... WHERE name='com_proclaim'`
+     *     assumes the destination has Proclaim installed so the parent
+     *     row already exists.
+     *   - Per-record: `DELETE ... WHERE name=<full name>` followed by an
+     *     `INSERT ... SELECT p.id, ...` that looks up the destination's
+     *     com_proclaim asset id via its name, plus an `UPDATE #__bsms_<type>
+     *     SET asset_id = (SELECT id FROM #__assets WHERE name=<full name>)
+     *     WHERE id=<record id>` that re-links the source record.
+     *   - `lft`, `rgt`, `level` are seeded to 0/0/2; the restore flow
+     *     calls `Cwmassets::fixAllAssets()` afterward, which rebuilds the
+     *     nested-set tree and assigns correct positions.
+     *
+     * @return string SQL statements (may be empty if nothing to export)
+     *
+     * @throws \Exception
+     * @since 10.3.0
+     */
+    public function getProclaimAssetsExport(): string
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $export  = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Proclaim Asset Permissions (component-level + per-record ACL)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
+        // 1. Component-level ACL (rules on the `com_proclaim` parent row).
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('rules'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $parentRules = (string) $db->loadResult();
+
+        if ($parentRules !== '' && $parentRules !== '{}' && $parentRules !== '[]') {
+            $export .= "-- Component-level ACL (the Permissions tab in Options)\n";
+            $export .= 'UPDATE ' . $db->quoteName('#__assets') . ' SET '
+                . $db->quoteName('rules') . ' = ' . $db->quote($parentRules)
+                . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote('com_proclaim') . ";\n\n";
+        } else {
+            $export .= "-- Component-level ACL inherits from Joomla root (nothing to export)\n\n";
+        }
+
+        // 2. Per-record ACL rows with genuine non-default rules.
+        $emptyQuoted = implode(
+            ',',
+            array_map(static fn ($v) => $db->quote($v), Cwmassets::EMPTY_RULE_VARIANTS)
+        );
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['name', 'title', 'rules']))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+            ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('rules') . ' NOT IN (' . $emptyQuoted . ')');
+        $db->setQuery($query);
+        $customRules = $db->loadObjectList() ?: [];
+
+        if (empty($customRules)) {
+            $export .= "-- No per-record ACL rows with custom permissions\n\n";
+
+            return $export;
+        }
+
+        // Map `com_proclaim.<type>.<id>` → source table so we can relink
+        // the record's asset_id after the new asset row is inserted.
+        $typeToTable = array_column(Cwmassets::getAssetObjects(), 'name', 'assetname');
+
+        $export .= '-- ' . \count($customRules) . " per-record ACL row(s) with custom permissions\n";
+
+        foreach ($customRules as $row) {
+            // Idempotent: delete any row with this name on the destination
+            // before we re-insert. Raw DELETE is safe because the restore
+            // flow calls Cwmassets::fixAllAssets() afterward, which runs
+            // Asset::rebuild() to repair lft/rgt.
+            $export .= 'DELETE FROM ' . $db->quoteName('#__assets')
+                . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote($row->name) . ";\n";
+
+            // Resolve the destination's com_proclaim asset id by name and
+            // insert the new row as its child. lft/rgt seeded to 0; the
+            // nested-set rebuild fixes positions.
+            $export .= 'INSERT INTO ' . $db->quoteName('#__assets') . ' ('
+                . $db->quoteName('parent_id') . ', '
+                . $db->quoteName('lft') . ', '
+                . $db->quoteName('rgt') . ', '
+                . $db->quoteName('level') . ', '
+                . $db->quoteName('name') . ', '
+                . $db->quoteName('title') . ', '
+                . $db->quoteName('rules') . ') '
+                . 'SELECT p.' . $db->quoteName('id') . ', 0, 0, 2, '
+                . $db->quote($row->name) . ', '
+                . $db->quote((string) ($row->title ?? $row->name)) . ', '
+                . $db->quote((string) $row->rules) . ' '
+                . 'FROM ' . $db->quoteName('#__assets') . ' p '
+                . 'WHERE p.' . $db->quoteName('name') . ' = ' . $db->quote('com_proclaim') . ";\n";
+
+            // Reconnect the source record's asset_id by name. Name format
+            // is `com_proclaim.<type>.<id>`.
+            $parts = explode('.', $row->name, 3);
+
+            if (\count($parts) === 3) {
+                $assetType = $parts[1];
+                $recordId  = (int) $parts[2];
+                $sourceTbl = $typeToTable[$assetType] ?? '';
+
+                if ($sourceTbl !== '' && $recordId > 0) {
+                    $export .= 'UPDATE ' . $db->quoteName($sourceTbl) . ' SET '
+                        . $db->quoteName('asset_id') . ' = ('
+                        . 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__assets')
+                        . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote($row->name) . ') '
+                        . 'WHERE ' . $db->quoteName('id') . ' = ' . $recordId . ";\n";
+                }
+            }
+        }
+
+        $export .= "\n";
+
+        return $export;
+    }
+
+    /**
      * Export Proclaim scheduled tasks from #__scheduler_tasks table.
      *
      * Returns SQL DELETE + INSERT statements to restore tasks.
@@ -221,9 +358,10 @@ class Cwmbackup
             $this->getExportTable($object['name']);
         }
 
-        // Append component configuration and scheduled tasks
+        // Append component configuration, scheduled tasks, and asset ACLs.
         $this->data_cache .= $this->getComponentConfigExport();
         $this->data_cache .= $this->getScheduledTasksExport();
+        $this->data_cache .= $this->getProclaimAssetsExport();
 
         switch ($run) {
             case 1:
@@ -314,6 +452,10 @@ class Cwmbackup
 
         if ($table === '_scheduled_tasks') {
             return $this->getScheduledTasksExport();
+        }
+
+        if ($table === '_proclaim_assets') {
+            return $this->getProclaimAssetsExport();
         }
 
         // Reset the execution time limit for long-running exports
