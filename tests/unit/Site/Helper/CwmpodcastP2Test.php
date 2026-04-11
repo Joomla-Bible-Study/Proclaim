@@ -48,7 +48,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testUuidv5ProducesValidFormat(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'uuidv5');
-        $ref->setAccessible(true);
 
         // Podcasting 2.0 namespace UUID
         $namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
@@ -71,7 +70,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testUuidv5IsDeterministic(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'uuidv5');
-        $ref->setAccessible(true);
 
         $namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
         $result1   = $ref->invoke(null, $namespace, 'mychurch.org/podcast.xml');
@@ -89,7 +87,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testUuidv5DiffersForDifferentInputs(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'uuidv5');
-        $ref->setAccessible(true);
 
         $namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
         $result1   = $ref->invoke(null, $namespace, 'site-a.org/podcast.xml');
@@ -112,7 +109,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testNormalizeTime(string $input, string $expected): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'normalizeTime');
-        $ref->setAccessible(true);
 
         $this->assertSame($expected, $ref->invoke($this->podcast, $input));
     }
@@ -145,7 +141,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGeneratePodcastGuidNormalizesUrl(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'generatePodcastGuid');
-        $ref->setAccessible(true);
 
         // Same feed with/without protocol should produce same GUID
         $guid1 = $ref->invoke($this->podcast, 'https://example.com', 'podcast.xml');
@@ -163,7 +158,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGeneratePodcastGuidIsValidUuid(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'generatePodcastGuid');
-        $ref->setAccessible(true);
 
         $guid = $ref->invoke($this->podcast, 'https://mychurch.org', 'sermons.xml');
 
@@ -186,7 +180,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGetChapterTimecodesEmptyWhenNoChapters(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'getChapterTimecodes');
-        $ref->setAccessible(true);
 
         $episode = (object) ['params' => new \Joomla\Registry\Registry()];
         $result  = $ref->invoke($this->podcast, $episode);
@@ -203,7 +196,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGetChapterTimecodesFormatsCorrectly(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'getChapterTimecodes');
-        $ref->setAccessible(true);
 
         $params = new \Joomla\Registry\Registry([
             'chapters' => [
@@ -234,7 +226,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGetTranscriptXmlEmptyWhenNoTracks(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'getTranscriptXml');
-        $ref->setAccessible(true);
 
         $episode = (object) ['params' => new \Joomla\Registry\Registry()];
         $result  = $ref->invoke($this->podcast, $episode, 'https://example.com', 'https://');
@@ -251,7 +242,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
     public function testGetTranscriptXmlCorrectMimeTypes(): void
     {
         $ref = new \ReflectionMethod(Cwmpodcast::class, 'getTranscriptXml');
-        $ref->setAccessible(true);
 
         $params = new \Joomla\Registry\Registry([
             'subtitle_tracks' => [
@@ -286,7 +276,6 @@ class CwmpodcastP2Test extends ProclaimTestCase
             \CWM\Component\Proclaim\Site\Controller\CwmpodcastController::class,
             'timeToSeconds'
         );
-        $ref->setAccessible(true);
 
         $this->assertSame($expected, $ref->invoke(null, $input));
     }

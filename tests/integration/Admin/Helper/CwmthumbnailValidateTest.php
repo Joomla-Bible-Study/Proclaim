@@ -41,7 +41,6 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $img  = imagecreatetruecolor($width, $height);
         $path = sys_get_temp_dir() . '/proclaim_test_' . uniqid() . '.png';
         imagepng($img, $path);
-        imagedestroy($img);
         $this->tempFiles[] = $path;
 
         return $path;
@@ -91,7 +90,6 @@ class CwmthumbnailValidateTest extends IntegrationTestCase
         $img  = imagecreatetruecolor(10, 10);
         $path = sys_get_temp_dir() . '/proclaim_test_' . uniqid() . '.jpg';
         imagepng($img, $path);
-        imagedestroy($img);
         $this->tempFiles[] = $path;
 
         $result = Cwmthumbnail::validate($path);

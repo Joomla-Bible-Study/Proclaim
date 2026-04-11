@@ -133,7 +133,6 @@ abstract class ProclaimTestCase extends TestCase
     {
         $reflection = new \ReflectionClass($object);
         $prop       = $reflection->getProperty($property);
-        $prop->setAccessible(true);
 
         return $prop->getValue($object);
     }
@@ -151,7 +150,6 @@ abstract class ProclaimTestCase extends TestCase
     {
         $reflection = new \ReflectionClass($object);
         $prop       = $reflection->getProperty($property);
-        $prop->setAccessible(true);
         $prop->setValue($object, $value);
     }
 
@@ -168,7 +166,6 @@ abstract class ProclaimTestCase extends TestCase
     {
         $reflection = new \ReflectionClass($object);
         $method     = $reflection->getMethod($method);
-        $method->setAccessible(true);
 
         return $method->invokeArgs($object, $args);
     }

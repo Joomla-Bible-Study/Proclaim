@@ -453,7 +453,6 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('renames');
-        $prop->setAccessible(true);
         $map  = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $map, '10.1.0 renames must exist');
@@ -487,7 +486,6 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('renames');
-        $prop->setAccessible(true);
         $map  = $prop->getValue($h);
 
         $this->assertCount(14, $map['10.1.0'], 'Exactly 14 renames documented for 10.1.0');
@@ -503,7 +501,6 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('colorConversions');
-        $prop->setAccessible(true);
         $colors = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $colors);
@@ -533,7 +530,6 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('pathConversions');
-        $prop->setAccessible(true);
         $paths = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $paths);

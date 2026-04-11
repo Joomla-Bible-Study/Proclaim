@@ -102,7 +102,6 @@ class LocalProviderTest extends ProclaimTestCase
     public function testParseReference(): void
     {
         $method = new \ReflectionMethod(LocalProvider::class, 'parseReference');
-        $method->setAccessible(true);
 
         // Single verse
         $parsed = $method->invoke($this->provider, 'John+3:16');
@@ -151,7 +150,6 @@ class LocalProviderTest extends ProclaimTestCase
     public function testResolveBookNumber(): void
     {
         $method = new \ReflectionMethod(LocalProvider::class, 'resolveBookNumber');
-        $method->setAccessible(true);
 
         $this->assertSame(1, $method->invoke($this->provider, 'Genesis'));
         $this->assertSame(1, $method->invoke($this->provider, 'genesis'));

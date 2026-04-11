@@ -167,7 +167,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('getWavDuration');
-        $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $tempFile);
         $this->assertEquals(0, $result);
@@ -186,7 +185,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('getM4aDuration');
-        $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $m4aFile);
 
@@ -208,7 +206,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
         // Use reflection to test protected method directly
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('getOggDuration');
-        $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, $tempFile);
         $this->assertEquals(0, $result);
@@ -237,7 +234,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     {
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('findFFprobe');
-        $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast);
 
@@ -257,7 +253,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
     {
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('getDurationWithFFprobe');
-        $method->setAccessible(true);
 
         $result = $method->invoke($this->podcast, '/non/existent/file.mp3');
         $this->assertEquals(0, $result);
@@ -275,7 +270,6 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         $reflection = new \ReflectionClass($this->podcast);
         $method     = $reflection->getMethod('getDurationWithGetID3');
-        $method->setAccessible(true);
 
         $tempFile = $this->fixturesPath . 'test.mp3';
         file_put_contents($tempFile, 'test data');
