@@ -20,6 +20,12 @@
   let currentStep = 1;
   const totalSteps = 5;
 
+  function esc(str) {
+    const el = document.createElement('span');
+    el.textContent = String(str);
+    return el.innerHTML;
+  }
+
   // DOM references
   const progressBar = document.getElementById('wizard-progress-bar');
   const prevBtn = document.getElementById('wizard-prev-btn');
@@ -225,33 +231,33 @@
     };
 
     let html = '<table class="table table-striped mb-0">';
-    html += `<tr><th style="width:40%">Ministry Style</th><td>${styleLabel}</td></tr>`;
-    html += `<tr><th>Organization</th><td>${data.org_name || '<em>Not set</em>'}</td></tr>`;
+    html += `<tr><th style="width:40%">Ministry Style</th><td>${esc(styleLabel)}</td></tr>`;
+    html += `<tr><th>Organization</th><td>${data.org_name ? esc(data.org_name) : '<em>Not set</em>'}</td></tr>`;
     if (data.teacher_name) {
-      html += `<tr><th>Default Teacher</th><td>${data.teacher_name}</td></tr>`;
+      html += `<tr><th>Default Teacher</th><td>${esc(data.teacher_name)}</td></tr>`;
     }
-    html += `<tr><th>Bible Version</th><td>${data.default_bible_version.toUpperCase()}</td></tr>`;
-    html += `<tr><th>Upload Path</th><td><code>${data.uploadpath}</code></td></tr>`;
-    html += `<tr><th>Primary Media</th><td>${mediaLabels[data.primary_media] || data.primary_media}</td></tr>`;
+    html += `<tr><th>Bible Version</th><td>${esc(data.default_bible_version.toUpperCase())}</td></tr>`;
+    html += `<tr><th>Upload Path</th><td><code>${esc(data.uploadpath)}</code></td></tr>`;
+    html += `<tr><th>Primary Media</th><td>${esc(mediaLabels[data.primary_media] || data.primary_media)}</td></tr>`;
 
     if (data.primary_media === 'youtube' && data.youtube_api_key) {
-      html += `<tr><th>YouTube API Key</th><td><code>${data.youtube_api_key.substring(0, 8)}...</code></td></tr>`;
+      html += `<tr><th>YouTube API Key</th><td><code>${esc(data.youtube_api_key.substring(0, 8))}...</code></td></tr>`;
     }
     if (data.primary_media === 'vimeo' && data.vimeo_access_token) {
-      html += `<tr><th>Vimeo Token</th><td><code>${data.vimeo_access_token.substring(0, 8)}...</code></td></tr>`;
+      html += `<tr><th>Vimeo Token</th><td><code>${esc(data.vimeo_access_token.substring(0, 8))}...</code></td></tr>`;
     }
-    html += `<tr><th>Download Button</th><td>${data.download_button_text}</td></tr>`;
+    html += `<tr><th>Download Button</th><td>${esc(data.download_button_text)}</td></tr>`;
 
     if (data.enable_podcast) {
       html += `<tr><th>Podcasting</th><td>Enabled</td></tr>`;
       if (data.podcast_title) {
-        html += `<tr><th>Podcast Title</th><td>${data.podcast_title}</td></tr>`;
+        html += `<tr><th>Podcast Title</th><td>${esc(data.podcast_title)}</td></tr>`;
       }
     }
 
     html += `<tr><th>Social Sharing</th><td>${data.social_sharing ? 'Enabled' : 'Disabled'}</td></tr>`;
     html += `<tr><th>Comments</th><td>${data.enable_comments ? 'Enabled' : 'Disabled'}</td></tr>`;
-    html += `<tr><th>Items Per Page</th><td>${data.studylistlimit}</td></tr>`;
+    html += `<tr><th>Items Per Page</th><td>${esc(data.studylistlimit)}</td></tr>`;
     html += `<tr><th>Sample Content</th><td>${data.create_sample_content ? 'Yes' : 'No'}</td></tr>`;
     html += `<tr><th>AI Assistant</th><td>${data.enable_ai ? 'Enabled' : 'Disabled'}</td></tr>`;
 
@@ -262,7 +268,7 @@
         conversational: 'Conversational',
         summary: 'Summary',
       };
-      html += `<tr><th>AI Writing Voice</th><td>${voiceLabels[data.ai_voice] || data.ai_voice}</td></tr>`;
+      html += `<tr><th>AI Writing Voice</th><td>${esc(voiceLabels[data.ai_voice] || data.ai_voice)}</td></tr>`;
     }
 
     if (data.gdpr_mode) {
