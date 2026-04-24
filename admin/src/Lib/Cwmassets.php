@@ -237,27 +237,137 @@ class Cwmassets
             return;
         }
 
+        // Fast path: if nothing is drifted, skip the whole flow. Avoids a
+        // full `Asset::rebuild()` on every call, which walks the entire
+        // #__assets table and can take 10-30s on mature sites with many
+        // third-party extensions.
+        if (!self::hasAnyDrift($db, $parentId)) {
+            Log::add('Proclaim assets already clean, skipping fix pass', Log::INFO, 'com_proclaim');
+
+            return;
+        }
+
         // Step 2: Remove orphaned Proclaim assets (rows whose record is gone).
-        self::cleanOrphanedAssets($db);
+        $orphanedRemoved = self::cleanOrphanedAssets($db);
 
         // Step 3: Delete every per-record asset whose rules are empty/default,
         // and null out the asset_id on the record that referenced it.
-        self::pruneEmptyAssetRows($db);
+        $emptyPruned = self::pruneEmptyAssetRows($db);
 
         // Step 4: Fix parent_id on any surviving per-record asset rows. These
         // are the ones with real, customised rules — keep them, just make
         // sure they're linked to the Proclaim parent.
-        self::reparentSurvivingAssets($db, $parentId);
+        $reparented = self::reparentSurvivingAssets($db, $parentId);
 
-        // Step 5: Rebuild the nested-set tree so lft/rgt are consistent
-        // after the deletions.
-        try {
-            $assetTable = new \Joomla\CMS\Table\Asset($db);
-            $assetTable->rebuild();
-            Log::add('Asset tree rebuilt successfully', Log::INFO, 'com_proclaim');
-        } catch (\Exception $e) {
-            Log::add('Asset tree rebuild failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        // Step 5: Only rebuild the nested-set tree if we actually changed
+        // structure. Deletions shift lft/rgt; reparenting moves rows under
+        // a new parent which also invalidates the traversal ordering.
+        // Access::getAssetRules() queries walk via lft/rgt, so a stale
+        // tree produces wrong permission checks.
+        if ($orphanedRemoved > 0 || $emptyPruned > 0 || $reparented > 0) {
+            try {
+                $assetTable = new \Joomla\CMS\Table\Asset($db);
+                $assetTable->rebuild();
+                Log::add('Asset tree rebuilt successfully', Log::INFO, 'com_proclaim');
+            } catch (\Exception $e) {
+                Log::add('Asset tree rebuild failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            }
         }
+    }
+
+    /**
+     * Detect whether any Proclaim asset row has drifted state worth fixing.
+     *
+     * Returns true when at least one of these conditions is met:
+     *  - A `com_proclaim.*` asset has empty/default rules (prune candidate)
+     *  - A `com_proclaim.*` asset's parent_id is not the com_proclaim parent
+     *    (reparent candidate)
+     *  - An orphan exists: asset row for a source record that no longer exists
+     *
+     * The orphan check does one COUNT per content table; bails at the first
+     * hit so the common clean-site case returns after one query.
+     *
+     * @param   DatabaseInterface  $db        Database driver
+     * @param   int                $parentId  com_proclaim parent asset id
+     *
+     * @return  bool  True when at least one drift condition is present
+     *
+     * @since   10.3.0
+     */
+    public static function hasAnyDrift(DatabaseInterface $db, int $parentId): bool
+    {
+        $emptyQuoted = implode(
+            ',',
+            array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
+        );
+
+        try {
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+                ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+                ->where(
+                    '(' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
+                    . ' OR ' . $db->quoteName('parent_id') . ' <> ' . (int) $parentId . ')'
+                );
+            $db->setQuery($query);
+
+            if ((int) $db->loadResult() > 0) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            // If the drift probe fails, fall through to the full fix path
+            // rather than silently skipping it.
+            Log::add('hasAnyDrift probe failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+
+            return true;
+        }
+
+        // Orphan probe — one COUNT per content table, bail at first hit.
+        $orphanMap = [
+            'com_proclaim.message.'      => '#__bsms_studies',
+            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
+            'com_proclaim.serie.'        => '#__bsms_series',
+            'com_proclaim.teacher.'      => '#__bsms_teachers',
+            'com_proclaim.server.'       => '#__bsms_servers',
+            'com_proclaim.comment.'      => '#__bsms_comments',
+            'com_proclaim.location.'     => '#__bsms_locations',
+            'com_proclaim.messagetype.'  => '#__bsms_message_type',
+            'com_proclaim.podcast.'      => '#__bsms_podcast',
+            'com_proclaim.template.'     => '#__bsms_templates',
+            'com_proclaim.templatecode.' => '#__bsms_templatecode',
+            'com_proclaim.topic.'        => '#__bsms_topics',
+            'com_proclaim.admin.'        => '#__bsms_admin',
+        ];
+
+        foreach ($orphanMap as $prefix => $sourceTable) {
+            try {
+                $query = $db->getQuery(true)
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
+                    ->where(
+                        'CAST(SUBSTRING(' . $db->quoteName('name') . ', ' . (\strlen($prefix) + 1) . ') AS UNSIGNED)'
+                        . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName($sourceTable) . ')'
+                    );
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                Log::add(
+                    'hasAnyDrift orphan probe failed for ' . $prefix . ': ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -345,14 +455,14 @@ class Cwmassets
      * @param   DatabaseInterface  $db        Database driver
      * @param   int                $parentId  com_proclaim asset id
      *
-     * @return  void
+     * @return  int  Rows reparented
      *
      * @since   10.3.0
      */
-    public static function reparentSurvivingAssets(DatabaseInterface $db, int $parentId): void
+    public static function reparentSurvivingAssets(DatabaseInterface $db, int $parentId): int
     {
         if ($parentId <= 0) {
-            return;
+            return 0;
         }
 
         try {
@@ -364,12 +474,16 @@ class Cwmassets
                 ->where($db->quoteName('parent_id') . ' <> ' . (int) $parentId);
             $db->setQuery($query);
             $db->execute();
+
+            return (int) $db->getAffectedRows();
         } catch (\Exception $e) {
             Log::add(
                 'Reparent surviving assets error: ' . $e->getMessage(),
                 Log::WARNING,
                 'com_proclaim'
             );
+
+            return 0;
         }
     }
 
