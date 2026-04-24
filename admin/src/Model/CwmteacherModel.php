@@ -32,6 +32,7 @@ use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Teacher model class
@@ -61,6 +62,72 @@ class CwmteacherModel extends AdminModel
         'list_show'     => 'batchListShow',
         'move_position' => 'batchMovePosition',
     ];
+
+    /**
+     * Run a batch operation against a set of teachers.
+     *
+     * Overrides Joomla's AdminModel::batch() because the parent uses
+     * `!empty($commands[$identifier])` to decide whether a command was
+     * submitted. In PHP, `!empty("0")` is false — so a legitimate
+     * `landing_show = 0` ("Don't show on landing") or `list_show = 0`
+     * ("Hide") value is silently dropped, and if it was the only change
+     * selected the user gets "Insufficient information to perform the
+     * batch operation."
+     *
+     * Uses a strict `isset() && $value !== ''` check so "0" is a valid
+     * batch value. Proclaim doesn't use Joomla's copy/move or tag batch
+     * features, so those branches are intentionally omitted.
+     *
+     * @param   array  $commands  Batch command key/value pairs from the form
+     * @param   array  $pks       Row IDs to operate on
+     * @param   array  $contexts  Per-row asset contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    #[\Override]
+    public function batch($commands, $pks, $contexts)
+    {
+        $pks = array_unique(ArrayHelper::toInteger($pks));
+
+        if (($zeroKey = array_search(0, $pks, true)) !== false) {
+            unset($pks[$zeroKey]);
+        }
+
+        if (empty($pks)) {
+            $this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
+
+            return false;
+        }
+
+        PluginHelper::importPlugin($this->events_map['batch']);
+        $this->initBatch();
+
+        $done = false;
+
+        foreach ($this->batch_commands as $identifier => $command) {
+            if (!isset($commands[$identifier]) || $commands[$identifier] === '') {
+                continue;
+            }
+
+            if (!$this->$command($commands[$identifier], $pks, $contexts)) {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (!$done) {
+            $this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+
+            return false;
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
 
     /**
      * Controller Prefix
