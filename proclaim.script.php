@@ -1320,9 +1320,19 @@ class com_proclaimInstallerScript extends InstallerScript
         [$position, $published] = (array) $preferences;
         $element                = 'mod_' . $module;
 
-        // On update, only set defaults if the module has no params yet.
-        // This avoids overwriting user customizations.
-        if (!$isNewInstall && $module === 'proclaimicon') {
+        // On upgrade, leave user-placed instances alone. The legacy flow
+        // UPDATE-matched by `module` only (no client_id, no id filter),
+        // which reset position='' and published=0 on every existing instance
+        // the admin had configured. Only run the bootstrap config on fresh
+        // install.
+        if (!$isNewInstall) {
+            // Exception: proclaimicon has a params payload we want to seed
+            // the first time the user upgrades from a version that didn't
+            // ship default params. Skip if params are already populated.
+            if ($module !== 'proclaimicon') {
+                return;
+            }
+
             $check = $this->dbo->getQuery(true)
                 ->select($this->dbo->qn('params'))
                 ->from($this->dbo->qn('#__modules'))
@@ -1330,7 +1340,6 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->dbo->setQuery($check);
             $existing = (string) $this->dbo->loadResult();
 
-            // If params are already populated, skip reconfiguration
             if ($existing !== '' && $existing !== '{}') {
                 return;
             }
