@@ -320,31 +320,19 @@ class CwmassetsModel extends ListModel
      */
     private function realRun(): bool
     {
+        /**
+         * Batch path: `fixAllAssets()` runs orphan cleanup, empty-rules
+         * prune, reparent, and nested-set rebuild as ~4 bulk SQL queries.
+         * Replaces the legacy per-record loop that could take minutes on
+         * large sites.
+         */
         if (!empty($this->versionStack)) {
-            krsort($this->versionStack);
-
-            while (!empty($this->versionStack) && $this->haveEnoughTime()) {
-                $this->step = key($this->versionStack);
-
-                if (isset($this->versionStack[$this->step]) && @!empty($this->versionStack[$this->step])) {
-                    $version = (object)array_pop($this->versionStack[$this->step]);
-                    $this->doneSteps++;
-                    Cwmassets::fixAssets($this->step, $version);
-                } else {
-                    unset($this->versionStack[$this->step]);
-                }
-            }
-        }
-
-        if (empty($this->versionStack)) {
-            // Just finished
+            Cwmassets::fixAllAssets();
+            $this->doneSteps += \count($this->versionStack, COUNT_RECURSIVE) - \count($this->versionStack);
             $this->resetStack();
-
-            return false;
         }
 
-        // If we have more Versions or SQL files, continue in the next step
-        return true;
+        return false;
     }
 
     /**
