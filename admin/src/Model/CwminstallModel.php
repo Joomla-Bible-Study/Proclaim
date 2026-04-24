@@ -774,7 +774,13 @@ class CwminstallModel extends ListModel
             }
         }
 
-        /** We are going to walk through the assets that need to be fixed that were found from the finish lookup. */
+        /**
+         * Asset fixes run as a single batch: one bulk pass handles orphan
+         * cleanup, empty-rules pruning, parent reparenting, and nested-set
+         * rebuild in ~4 SQL queries, instead of 2–3 queries per record.
+         * On sites with thousands of records the legacy per-record loop
+         * could take 5–15 minutes; this completes in seconds.
+         */
         if (
             !empty($this->installQuery)
             && empty($this->finish)
@@ -782,20 +788,10 @@ class CwminstallModel extends ListModel
             && empty($this->allupdates)
             && empty($this->subFiles)
         ) {
-            krsort($this->installQuery);
-
-            while (!empty($this->installQuery) && $this->haveEnoughTime()) {
-                $this->versionSwitch = (string)key($this->installQuery);
-
-                if (isset($this->installQuery[$this->versionSwitch]) && @!empty($this->installQuery[$this->versionSwitch])) {
-                    $version = (object)array_pop($this->installQuery[$this->versionSwitch]);
-                    $this->doneSteps++;
-                    $this->running = 'Fixing Assets that are not right';
-                    Cwmassets::fixAssets($this->versionSwitch, $version);
-                } else {
-                    unset($this->installQuery[$this->versionSwitch]);
-                }
-            }
+            $this->running = 'Fixing Assets (batch)';
+            Cwmassets::fixAllAssets();
+            $this->doneSteps += \count($this->installQuery, COUNT_RECURSIVE) - \count($this->installQuery);
+            $this->installQuery = [];
         }
 
         if (
