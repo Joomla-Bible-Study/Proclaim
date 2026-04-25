@@ -514,13 +514,17 @@ class Cwmpagebuilder
 
         if ($wherefield && $whereitem) {
             if ($wherefield === 'teacher') {
-                // Use junction table EXISTS subquery for multi-teacher support
+                // Junction table EXISTS subquery for multi-teacher support, with legacy
+                // study.teacher_id fallback to mirror CwmsermonsModel's COALESCE behavior
+                // and tolerate rows where the junction backfill has not run.
                 $tSubquery = $db->getQuery(true)
                     ->select('1')
                     ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                     ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
                     ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $whereitem);
-                $query->where('EXISTS (' . $tSubquery . ')');
+                $query->where(
+                    '(EXISTS (' . $tSubquery . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $whereitem . ')'
+                );
             } else {
                 $query->where($wherefield . ' = ' . $whereitem);
             }
@@ -545,10 +549,11 @@ class Cwmpagebuilder
                 '((' . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         }
 
         // Filter by language
@@ -565,7 +570,7 @@ class Cwmpagebuilder
         $query->order($db->quoteName('studydate') . ' ' . $order);
 
         // Filter only for authorized view
-        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         $query->where($db->quoteName('study.access') . ' IN (' . $groups . ')');
 
         $db->setQuery($query, 0, $limit);
