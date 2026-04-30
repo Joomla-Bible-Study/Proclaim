@@ -17,7 +17,6 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -151,7 +150,7 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
 
-        $toolbar = Toolbar::getInstance();
+        $toolbar = $this->getDocument()->getToolbar();
 
         // Add home button to cpanel
         $toolbar->linkButton('home', 'JBS_CMN_HOME')

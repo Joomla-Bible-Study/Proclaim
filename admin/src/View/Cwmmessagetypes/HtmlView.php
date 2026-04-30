@@ -21,7 +21,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
@@ -142,7 +141,7 @@ class HtmlView extends BaseHtmlView
         $user  = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        $toolbar = $this->getDocument()->getToolbar('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_MESSAGETYPES'), 'list-2 list-2');
 

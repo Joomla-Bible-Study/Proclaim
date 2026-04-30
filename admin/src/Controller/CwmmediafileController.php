@@ -18,10 +18,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
@@ -580,24 +579,20 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Validate file extension
-        $allowedExt = ['vtt', 'srt'];
-        $ext        = strtolower(pathinfo($userfile['name'], PATHINFO_EXTENSION));
+        $validator = new CwmcaptionValidator();
+        $ext       = strtolower(pathinfo($userfile['name'], PATHINFO_EXTENSION));
 
-        if (!\in_array($ext, $allowedExt, true)) {
+        if (!$validator->isAllowedExtension($ext)) {
             echo json_encode([
                 'success' => false,
-                'error'   => Text::sprintf('JBS_MED_VTT_INVALID_TYPE', implode(', ', $allowedExt)),
+                'error'   => Text::sprintf('JBS_MED_VTT_INVALID_TYPE', implode(', ', CwmcaptionValidator::ALLOWED_EXTENSIONS)),
             ]);
             Factory::getApplication()->close();
 
             return;
         }
 
-        // Max 2 MB for caption files
-        $maxSize = 2 * 1024 * 1024;
-
-        if ($userfile['size'] > $maxSize) {
+        if (!$validator->isAllowedSize((int) $userfile['size'])) {
             echo json_encode([
                 'success' => false,
                 'error'   => Text::sprintf('JBS_MED_VTT_FILE_TOO_LARGE', '2 MB'),
@@ -607,53 +602,39 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Validate content — must start with WEBVTT header or SRT numeric cue index
+        // Sniff the first 64 bytes to confirm WEBVTT or SRT magic — defends
+        // against a renamed binary slipping past the extension whitelist.
         $head = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
 
-        if ($head === false) {
-            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
-            Factory::getApplication()->close();
-
-            return;
-        }
-
-        // Strip BOM if present
-        $head  = ltrim($head, "\xEF\xBB\xBF");
-        $isVtt = str_starts_with(trim($head), 'WEBVTT');
-        $isSrt = (bool) preg_match('/^\d+\s*\r?\n\d{2}:\d{2}/', trim($head));
-
-        if (!$isVtt && !$isSrt) {
+        if ($head === false || $validator->detectFormat($head) === null) {
             echo json_encode([
                 'success' => false,
-                'error'   => Text::_('JBS_MED_VTT_INVALID_CONTENT'),
+                'error'   => Text::_($head === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
             ]);
             Factory::getApplication()->close();
 
             return;
         }
 
-        // Ensure destination directory exists
         $destDir = JPATH_ROOT . '/media/com_proclaim/captions';
 
-        if (!is_dir($destDir)) {
-            Folder::create($destDir);
-        }
-
-        // Build safe filename: caption_{timestamp}_{sanitised-original}.ext
-        $baseName = File::makeSafe(pathinfo($userfile['name'], PATHINFO_FILENAME));
-        $baseName = preg_replace('/[^a-zA-Z0-9_-]/', '', $baseName) ?: 'caption';
-        $fileName = 'caption_' . time() . '_' . mb_substr($baseName, 0, 50) . '.' . $ext;
-
-        $destPath = $destDir . '/' . $fileName;
-
-        if (!File::upload($userfile['tmp_name'], $destPath, false, true)) {
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
             Factory::getApplication()->close();
 
             return;
         }
 
-        // Return the public URL
+        $fileName = $validator->buildFilename($userfile['name'], $ext);
+        $destPath = $destDir . '/' . $fileName;
+
+        if (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
         $url = Uri::root() . 'media/com_proclaim/captions/' . $fileName;
 
         echo json_encode(['success' => true, 'url' => $url, 'filename' => $fileName]);
