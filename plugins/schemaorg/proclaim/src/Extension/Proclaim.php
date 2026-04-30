@@ -861,10 +861,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     private function generateSchemaFromItem(\Joomla\CMS\Table\TableInterface $item, string $context): ?array
     {
         return match ($context) {
-            'com_proclaim.cwmmessage' => $this->buildSermonSchema($item),
+            'com_proclaim.cwmmessage'                         => $this->buildSermonSchema($item),
             'com_proclaim.teacher', 'com_proclaim.cwmteacher' => $this->buildTeacherSchema($item),
-            'com_proclaim.serie', 'com_proclaim.cwmserie' => $this->buildSeriesSchema($item),
-            default => null,
+            'com_proclaim.serie', 'com_proclaim.cwmserie'     => $this->buildSeriesSchema($item),
+            default                                           => null,
         };
     }
 
