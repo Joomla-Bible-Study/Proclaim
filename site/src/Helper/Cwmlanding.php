@@ -411,7 +411,7 @@ class Cwmlanding
 
             $sortCol = match ($type) {
                 'books', 'years' => 'id',
-                default => 'text',
+                default          => 'text',
             };
 
             $order = $this->getSortOrder($params, $orderKey);
