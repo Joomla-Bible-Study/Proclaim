@@ -512,7 +512,7 @@ class Cwmassets
         }
 
         try {
-            $db = $table->getDbo();
+            $db = $table->getDatabase();
 
             $query = $db->getQuery(true)
                 ->select($db->quoteName('rules'))

@@ -20,8 +20,6 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
@@ -635,18 +633,21 @@ class CwmmediafileController extends FormController
         // Ensure destination directory exists
         $destDir = JPATH_ROOT . '/media/com_proclaim/captions';
 
-        if (!is_dir($destDir)) {
-            Folder::create($destDir);
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+            Factory::getApplication()->close();
+
+            return;
         }
 
         // Build safe filename: caption_{timestamp}_{sanitised-original}.ext
-        $baseName = File::makeSafe(pathinfo($userfile['name'], PATHINFO_FILENAME));
+        $baseName = pathinfo($userfile['name'], PATHINFO_FILENAME);
         $baseName = preg_replace('/[^a-zA-Z0-9_-]/', '', $baseName) ?: 'caption';
         $fileName = 'caption_' . time() . '_' . mb_substr($baseName, 0, 50) . '.' . $ext;
 
         $destPath = $destDir . '/' . $fileName;
 
-        if (!File::upload($userfile['tmp_name'], $destPath, false, true)) {
+        if (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
             Factory::getApplication()->close();
 

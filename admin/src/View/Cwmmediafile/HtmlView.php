@@ -208,7 +208,7 @@ class HtmlView extends BaseHtmlView
         $isNew      = ($this->item->id === 0);
         $checkedOut = !($this->item->checked_out === null || $this->item->checked_out == $userId);
         $title      = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
-        $toolbar    = Toolbar::getInstance();
+        $toolbar    = $this->getDocument()->getToolbar();
 
         ToolbarHelper::title(
             Text::_('JBS_CMN_MEDIA_FILES') . ': <small><small>[' . $title . ']</small></small>',
