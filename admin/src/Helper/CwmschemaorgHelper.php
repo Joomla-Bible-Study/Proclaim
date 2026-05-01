@@ -690,6 +690,82 @@ class CwmschemaorgHelper
     public const SYNC_FORCE = 'force';
 
     /**
+     * Backfill the `author` field on a sermon's schema row from the
+     * teacher junction. Used after `saveTeachers()` because the schemaorg
+     * system plugin fires `onContentAfterSave` *during* `parent::save()`,
+     * before the junction has been written — so the auto-generated
+     * schema never had a chance to query teacher names.
+     *
+     * Only fills `author` when it's missing/empty, so a user-customized
+     * value entered on the Schema tab is preserved across saves. To
+     * fully refresh from current teachers, the user can click Reset
+     * Schema (which calls `syncOne()`).
+     *
+     * @param   int  $sermonId  Sermon (study) primary key
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    public static function ensureSermonAuthor(int $sermonId): void
+    {
+        if ($sermonId <= 0) {
+            return;
+        }
+
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $context = 'com_proclaim.cwmmessage';
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['id', 'schema']))
+            ->from($db->quoteName('#__schemaorg'))
+            ->where($db->quoteName('itemId') . ' = ' . $sermonId)
+            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+        $row = $db->setQuery($query)->loadObject();
+
+        if (!$row) {
+            return;
+        }
+
+        try {
+            $schema = json_decode((string) $row->schema, true, 512, JSON_THROW_ON_ERROR) ?: [];
+        } catch (\JsonException) {
+            return;
+        }
+
+        // Author already set — preserve it (user may have customized).
+        if (!empty($schema['author']['name'])) {
+            return;
+        }
+
+        $tQuery = $db->getQuery(true)
+            ->select($db->quoteName('t.teachername'))
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('st.study_id') . ' = ' . $sermonId)
+            ->order($db->quoteName('st.ordering') . ' ASC');
+        $names = $db->setQuery($tQuery)->loadColumn() ?: [];
+
+        if (empty($names)) {
+            return;
+        }
+
+        $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
+
+        try {
+            $entry         = new \stdClass();
+            $entry->id     = (int) $row->id;
+            $entry->schema = json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $db->updateObject('#__schemaorg', $entry, 'id');
+        } catch (\JsonException) {
+            // Re-encode failed — leave the row alone.
+        }
+    }
+
+    /**
      * Force-sync schema.org data for a single item by ID and context.
      *
      * @param   int     $itemId   Item ID

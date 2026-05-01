@@ -448,6 +448,9 @@ class com_proclaimInstallerScript extends InstallerScript
             '#__bsms_podcast' => [
                 'platform_links' => 'TEXT DEFAULT NULL',
             ],
+            '#__bsms_teachers' => [
+                'social_links' => 'TEXT DEFAULT NULL',
+            ],
         ];
 
         foreach ($requiredFixes as $table => $columns) {

@@ -572,6 +572,22 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             );
         }
 
+        // worksFor: teacher org_name → admin setting → site name. Mirrors
+        // buildTeacherSchema/buildTeacherSchemaFromRow so the form field
+        // is pre-populated; otherwise an empty submitted subform overrides
+        // the auto value during onSchemaPrepareSave's preserve loop.
+        try {
+            $orgName = !empty($data->org_name)
+                ? $data->org_name
+                : \CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper::getOrgName();
+
+            if ($orgName !== '') {
+                $teacher['worksFor'] = ['@type' => 'Organization', 'name' => $orgName];
+            }
+        } catch (\Throwable $e) {
+            CwmDebug::error('schemaorg: helper not available', $e, 'schemaorg');
+        }
+
         $data->schema['Teacher'] = $teacher;
     }
 

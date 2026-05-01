@@ -89,35 +89,12 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Biography Tab (lazy-loaded — TinyMCE editors are heavy) =====?>
-        <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY'));
-            $biographyLoadUrl = Route::_(
-                'index.php?option=com_proclaim&task=cwmteacher.loadBiography'
-                . '&id=' . (int) $this->item->id
-                . '&' . Session::getFormToken() . '=1'
-            );
-        ?>
+        <?php // ===== Biography Tab =====?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY')); ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php // Hidden placeholders so values still POST when the tab is never opened.?>
-                <?php // Once the lazy loader injects the editor fields, their inputs share the same?>
-                <?php // name and PHP keeps the later (real-editor) value on submit.?>
-                <input type="hidden" name="jform[short]"
-                       value="<?php echo $this->escape($this->form->getValue('short') ?? ''); ?>"
-                       data-bio-placeholder="short">
-                <input type="hidden" name="jform[information]"
-                       value="<?php echo $this->escape($this->form->getValue('information') ?? ''); ?>"
-                       data-bio-placeholder="information">
-                <div id="teacher-biography-ajax-container"
-                     class="proclaim-lazy-tab-content"
-                     data-load-url="<?php echo $biographyLoadUrl; ?>"
-                     data-removes-placeholders="bio">
-                    <div class="text-center p-4 text-muted">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <?php echo Text::_('JLOADING'); ?>
-                    </div>
-                </div>
+                <?php echo $this->form->renderField('short'); ?>
+                <?php echo $this->form->renderField('information'); ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
