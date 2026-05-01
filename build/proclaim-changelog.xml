@@ -19,6 +19,19 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.3.0</version>
+        <date>2026-05-01</date>
+        <note>
+            <item>Release 10.3.0: development → main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1213</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.2.2                                                        -->
     <!-- ============================================================ -->
     <changelog>
