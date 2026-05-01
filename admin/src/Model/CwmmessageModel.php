@@ -576,6 +576,11 @@ class CwmmessageModel extends AdminModel
 
         CwmstudyteacherHelper::saveTeachers($studyId, $teachersData);
         CwmstudyteacherHelper::syncLegacyColumn($studyId, $teachersData);
+
+        // schemaorg's onContentAfterSave fires inside parent::save(), before the
+        // junction is written here, so the auto-built schema has no author.
+        // Backfill it now that teachers are persisted (no-op if user customized).
+        CwmschemaorgHelper::ensureSermonAuthor($studyId);
     }
 
     /**
