@@ -80,12 +80,19 @@ composer version -- -v "$VERSION"
 echo ""
 
 # --- Step 2: Build ---
-echo "[2/7] Building package..."
-composer build
+echo "[2/7] Building package (component + bundled pkg_proclaim)..."
+composer package
 echo ""
+
+PKG_NAME="pkg_proclaim-${VERSION}.zip"
 
 if [ ! -f "build/${ZIP_NAME}" ]; then
     echo "Error: Build failed — build/${ZIP_NAME} not found."
+    exit 1
+fi
+
+if [ ! -f "build/${PKG_NAME}" ]; then
+    echo "Error: Bundle build failed — build/${PKG_NAME} not found."
     exit 1
 fi
 
@@ -109,7 +116,7 @@ else
     NOTES="Release ${VERSION}"
 fi
 
-gh release create "$TAG" "build/${ZIP_NAME}" \
+gh release create "$TAG" "build/${PKG_NAME}" "build/${ZIP_NAME}" \
     --repo Joomla-Bible-Study/Proclaim \
     --target main \
     --title "${TAG}" \
