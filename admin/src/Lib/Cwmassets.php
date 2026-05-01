@@ -512,7 +512,7 @@ class Cwmassets
         }
 
         try {
-            $db = $table->getDatabase();
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query = $db->getQuery(true)
                 ->select($db->quoteName('rules'))
