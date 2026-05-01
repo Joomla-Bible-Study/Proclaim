@@ -1,0 +1,11 @@
+**Schema.org structured data** for sermons, teachers, and series — JSON-LD on every detail page so search engines treat your content as first-class
+**Setup Wizard** for guided first-run configuration — pick a style (Simple / Full Media / Multi-Campus) and have a sensible config in five short steps
+**REST API with full CRUD** for sermons, teachers, series, media, and podcasts — disabled / public / API-key access tiers in admin settings
+**Multi-campus access controls** — campus-aware filters with view-level security
+Unlimited social/web links per teacher with 42 platform types and FA6 brand icons
+International phone input on the teacher form (country picker, auto-format, dark-mode skin)
+**Layout Editor** lazy-loaded for faster template-edit page loads
+**pkg_proclaim** package installer bundling lib_cwmscripture, plg_content_scripturelinks, and com_proclaim
+AI writing voice + Bible Brain provider for the scripture pipeline
+Asset model rework — no more empty-rules `#__assets` rows accumulating on save
+Hotfix: lib_cwmscripture autoload race during pkg_proclaim install (10.3.1)
