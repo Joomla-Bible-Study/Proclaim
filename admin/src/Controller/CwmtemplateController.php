@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -157,7 +158,7 @@ class CwmtemplateController extends FormController
         }
 
         try {
-            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel $model */
+            /** @var CwmtemplateModel $model */
             $model = $this->getModel('Cwmtemplate');
 
             // Load the form
@@ -222,7 +223,7 @@ class CwmtemplateController extends FormController
         $id    = $input->getInt('id', 0);
 
         try {
-            /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtemplateModel $model */
+            /** @var CwmtemplateModel $model */
             $model = $this->getModel('Cwmtemplate');
 
             // Load the form
