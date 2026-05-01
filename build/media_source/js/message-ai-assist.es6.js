@@ -20,9 +20,10 @@
         return;
     }
 
-    const token      = config.dataset.token || '';
-    const mediaId    = parseInt(config.dataset.mediaId, 10) || 0;
-    const ajaxBase   = `index.php?option=com_proclaim&format=raw&${token}=1`;
+    const token          = config.dataset.token || '';
+    const mediaId        = parseInt(config.dataset.mediaId, 10) || 0;
+    const youtubeMediaId = parseInt(config.dataset.youtubeMediaId, 10) || 0;
+    const ajaxBase       = `index.php?option=com_proclaim&format=raw&${token}=1`;
 
     // ---- Helpers ----
 
@@ -33,16 +34,29 @@
      * @returns {string}
      */
     function getEditorValue(fieldName) {
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editorId = `jform_${fieldName}`;
-            const editor   = Joomla.editors.instances[editorId];
+        const editorId = `jform_${fieldName}`;
+
+        // JoomlaEditor API (J5.1+ / J6+)
+        if (typeof JoomlaEditor !== 'undefined') {
+            // Try exact ID first, then with jform_ prefix variations
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.getValue === 'function') {
                 return editor.getValue();
             }
         }
 
-        const el = document.getElementById(`jform_${fieldName}`);
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                return editor.getContent();
+            }
+        }
+
+        // Raw textarea fallback (CodeMirror, none editor)
+        const el = document.getElementById(editorId);
 
         return el ? el.value : '';
     }
@@ -56,8 +70,9 @@
     function setEditorValue(fieldName, value) {
         const editorId = `jform_${fieldName}`;
 
-        if (window.Joomla && Joomla.editors && Joomla.editors.instances) {
-            const editor = Joomla.editors.instances[editorId];
+        // JoomlaEditor API (J5.1+ / J6+)
+        if (typeof JoomlaEditor !== 'undefined') {
+            const editor = JoomlaEditor.get(editorId) || JoomlaEditor.get(fieldName);
 
             if (editor && typeof editor.setValue === 'function') {
                 editor.setValue(value);
@@ -66,6 +81,19 @@
             }
         }
 
+        // TinyMCE direct access (fallback for older Joomla or custom editors)
+        if (typeof tinyMCE !== 'undefined') {
+            const editor = tinyMCE.get(editorId);
+
+            if (editor) {
+                editor.setContent(value);
+                editor.save();
+
+                return;
+            }
+        }
+
+        // Raw textarea fallback (CodeMirror, none editor)
         const el = document.getElementById(editorId);
 
         if (el) {
@@ -79,6 +107,32 @@
      * @param {string|number} value  Topic ID or new topic text
      * @param {string} label         Display label
      */
+    /**
+     * Sync the hidden topics input from current Choices.js selections.
+     */
+    function syncTopicsHiddenInput() {
+        const selectEl = document.getElementById('jform_topics');
+
+        if (!selectEl) {
+            return;
+        }
+
+        const fancySelect = selectEl.closest('joomla-field-fancy-select');
+
+        if (!fancySelect || !fancySelect.choicesInstance) {
+            return;
+        }
+
+        const hiddenInput = document.getElementById('jform_topics_input');
+
+        if (hiddenInput) {
+            const items = fancySelect.choicesInstance.getValue();
+            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+
+            hiddenInput.value = vals.join(',');
+        }
+    }
+
     function addTopicToField(value, label) {
         const selectEl = document.getElementById('jform_topics');
 
@@ -93,28 +147,47 @@
         }
 
         const choices  = fancySelect.choicesInstance;
+
+        // Try to match by label against existing options (case-insensitive)
+        // so we use the numeric topic ID instead of the text name
+        const allChoices   = choices._store.choices || [];
+        const labelLower   = String(label).toLowerCase();
+        const matchedChoice = allChoices.find(
+            (c) => c.label && c.label.toLowerCase() === labelLower,
+        );
+
+        const resolvedValue = matchedChoice ? String(matchedChoice.value) : String(value);
+
+        // Check if already selected
         const existing = choices.getValue();
         const ids      = Array.isArray(existing) ? existing.map((i) => String(i.value)) : [];
 
-        if (ids.indexOf(String(value)) !== -1) {
+        if (ids.indexOf(resolvedValue) !== -1) {
             return;
         }
 
-        choices.setChoices(
-            [{ value: String(value), label, selected: true }],
-            'value',
-            'label',
-            false,
-        );
+        if (matchedChoice) {
+            // Select the existing option by its numeric ID
+            choices.setValue([{ value: resolvedValue, label: matchedChoice.label }]);
+        } else {
+            // New topic — add as text value (backend will create it)
+            choices.setChoices(
+                [{ value: resolvedValue, label, selected: true }],
+                'value',
+                'label',
+                false,
+            );
+        }
+    }
 
-        // Sync hidden input
-        const hiddenInput = document.getElementById('jform_topics_input');
+    // Safety net: sync hidden input before form submission
+    const topicsSelect = document.getElementById('jform_topics');
 
-        if (hiddenInput) {
-            const items = choices.getValue();
-            const vals  = Array.isArray(items) ? items.map((i) => i.value) : [];
+    if (topicsSelect) {
+        const form = topicsSelect.closest('form');
 
-            hiddenInput.value = vals.join(',');
+        if (form) {
+            form.addEventListener('submit', () => syncTopicsHiddenInput(), true);
         }
     }
 
@@ -147,6 +220,83 @@
         btn.insertAdjacentElement('afterend', badge);
 
         setTimeout(() => badge.remove(), 3000);
+    }
+
+    /**
+     * Parse chapter text lines (e.g. "0:00 Introduction") into structured array.
+     *
+     * @param {string} text  Multi-line chapter text
+     * @returns {Array<{time: string, label: string}>}
+     */
+    function parseChaptersText(text) {
+        if (!text) {
+            return [];
+        }
+
+        const chapters = [];
+
+        text.split('\n').forEach((line) => {
+            const match = line.trim().match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s+(.+)$/);
+
+            if (match) {
+                chapters.push({ time: match[1], label: match[2].trim() });
+            }
+        });
+
+        return chapters;
+    }
+
+    /**
+     * Save chapters to the media file via AJAX and show feedback.
+     *
+     * @param {HTMLElement} btn       The button that was clicked
+     * @param {HTMLTextAreaElement} textarea  The chapters textarea
+     */
+    function applyChaptersToMedia(btn, textarea) {
+        // Use YouTube media ID when available (chapters from YouTube apply to that file)
+        const targetMediaId = youtubeMediaId || mediaId;
+
+        if (!textarea || !textarea.value || !targetMediaId) {
+            return;
+        }
+
+        const chapters = parseChaptersText(textarea.value);
+
+        if (!chapters.length) {
+            return;
+        }
+
+        btn.disabled = true;
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+        fetch(`${ajaxBase}&task=cwmmediafile.saveChapters&media_id=${targetMediaId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ chapters }),
+        })
+            .then((r) => r.json())
+            .then((data) => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+
+                if (data.success) {
+                    showAppliedFeedback(
+                        btn,
+                        (Joomla.Text._('JBS_CMN_AI_CHAPTERS_APPLIED') || '{count} chapters saved')
+                            .replace('{count}', data.count),
+                    );
+                } else {
+                    showAppliedFeedback(btn, data.error || 'Error');
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
     }
 
     // ---- Suggest Topics ----
@@ -251,19 +401,66 @@
     // ---- AI Assist ----
 
     /**
-     * Animated progress steps shown while the API call is in flight.
+     * Build progress steps based on which fields are being generated.
      * Each entry is [delay_ms, progress_percent, message].
+     *
+     * @param {boolean} topics    Generating topics
+     * @param {boolean} intro     Generating intro
+     * @param {boolean} text      Generating study text
+     * @param {boolean} chapters  Generating chapters
+     * @returns {Array}
      */
-    const progressSteps = [
-        [0,     5,  'Gathering sermon context...'],
-        [1200,  15, 'Reading title and scripture references...'],
-        [2500,  30, 'Analyzing attached media...'],
-        [4000,  45, 'Sending to AI provider...'],
-        [6000,  60, 'Generating topics...'],
-        [8500,  75, 'Writing description and study text...'],
-        [11000, 85, 'Formatting response...'],
-        [14000, 90, 'Almost done...'],
-    ];
+    function buildProgressSteps(topics, intro, text, chapters) {
+        const steps = [
+            [0,    5,  'Gathering sermon context...'],
+            [1200, 15, 'Reading title and scripture references...'],
+            [2500, 25, 'Analyzing attached media...'],
+            [4000, 35, 'Sending to AI provider...'],
+        ];
+
+        let delay = 6000;
+        let pct   = 40;
+
+        if (topics) {
+            steps.push([delay, pct, 'Generating topics...']);
+            delay += 2500;
+            pct   += 10;
+        }
+
+        if (intro) {
+            steps.push([delay, pct, 'Writing description...']);
+            delay += 3000;
+            pct   += 10;
+        }
+
+        if (text) {
+            steps.push([delay, pct, 'Writing detailed study text — this takes 1-2 minutes...']);
+            delay += 10000;
+            pct   += 10;
+            steps.push([delay, pct, 'Covering scripture passages and key points...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Adding practical application and illustrations...']);
+            delay += 10000;
+            pct   += 5;
+            steps.push([delay, pct, 'Formatting with scripture links...']);
+            delay += 10000;
+            pct   += 5;
+        }
+
+        if (chapters) {
+            steps.push([delay, pct, 'Suggesting chapter timestamps...']);
+            delay += 3000;
+            pct   += 5;
+        }
+
+        steps.push([delay, Math.min(pct + 5, 90), 'Formatting response...']);
+        steps.push([delay + 4000, 92, 'Almost done...']);
+        steps.push([delay + 10000, 94, 'Still working...']);
+        steps.push([delay + 18000, 96, 'Wrapping up...']);
+
+        return steps;
+    }
 
     /**
      * Add a completed step to the progress list.
@@ -288,12 +485,14 @@
     /**
      * Start the progress animation. Returns a stop function.
      *
+     * @param {Array} steps  Progress steps from buildProgressSteps()
      * @returns {Function}  Call to stop and clean up timers.
      */
-    function startProgress() {
+    function startProgress(steps) {
         const bar       = document.getElementById('ai-progress-bar');
         const text      = document.getElementById('ai-progress-text');
         const container = document.getElementById('ai-progress-steps');
+        let stopped     = false;
 
         if (bar) {
             bar.style.transition = 'width 0.6s ease';
@@ -306,8 +505,12 @@
 
         const timers = [];
 
-        progressSteps.forEach(([delay, pct, msg]) => {
+        steps.forEach(([delay, pct, msg]) => {
             const tid = setTimeout(() => {
+                if (stopped) {
+                    return;
+                }
+
                 if (bar) {
                     bar.style.width = `${pct}%`;
                 }
@@ -323,8 +526,53 @@
             timers.push(tid);
         });
 
+        // After all scripted steps finish, start a repeating "pulse" so the
+        // UI never looks frozen — the bar creeps toward 99% and the message
+        // cycles through reassuring phrases.
+        const lastDelay = steps.length > 0 ? steps[steps.length - 1][0] : 0;
+        const pulseMessages = [
+            'AI is composing a detailed response...',
+            'Reviewing scripture references...',
+            'Crafting key points and application...',
+            'Polishing the final text...',
+            'Almost there, just a moment longer...',
+        ];
+        let pulseIndex = 0;
+        let pulsePct   = 96;
+
+        // Start the pulse loop after all scripted steps are done
+        let pulseInterval = null;
+        const pulseStart = setTimeout(() => {
+            if (stopped) {
+                return;
+            }
+
+            pulseInterval = setInterval(() => {
+                if (stopped) {
+                    clearInterval(pulseInterval);
+
+                    return;
+                }
+
+                pulsePct = Math.min(pulsePct + 0.5, 99);
+
+                if (bar) {
+                    bar.style.width = `${pulsePct}%`;
+                }
+
+                if (text) {
+                    text.textContent = pulseMessages[pulseIndex % pulseMessages.length];
+                }
+
+                pulseIndex++;
+            }, 8000);
+        }, lastDelay + 5000);
+        timers.push(pulseStart);
+
         return function stop() {
+            stopped = true;
             timers.forEach(clearTimeout);
+            clearInterval(pulseInterval);
 
             if (bar) {
                 bar.style.width = '100%';
@@ -337,15 +585,17 @@
     if (btnAiAssist) {
         btnAiAssist.addEventListener('click', async () => {
             // Read toggle checkbox states
-            const genTopics = document.getElementById('ai-gen-topics');
-            const genIntro  = document.getElementById('ai-gen-intro');
-            const genText   = document.getElementById('ai-gen-text');
-            const wantTopics = genTopics ? genTopics.checked : true;
-            const wantIntro  = genIntro ? genIntro.checked : true;
-            const wantText   = genText ? genText.checked : true;
+            const genTopics   = document.getElementById('ai-gen-topics');
+            const genIntro    = document.getElementById('ai-gen-intro');
+            const genText     = document.getElementById('ai-gen-text');
+            const genChapters = document.getElementById('ai-gen-chapters');
+            const wantTopics   = genTopics ? genTopics.checked : true;
+            const wantIntro    = genIntro ? genIntro.checked : true;
+            const wantText     = genText ? genText.checked : true;
+            const wantChapters = genChapters ? genChapters.checked : true;
 
             // Validate at least one checked
-            if (!wantTopics && !wantIntro && !wantText) {
+            if (!wantTopics && !wantIntro && !wantText && !wantChapters) {
                 alert(Joomla.Text._('JBS_CMN_AI_SELECT_ONE') || 'Select at least one field to generate.');
 
                 return;
@@ -362,19 +612,27 @@
             aiRes.style.display  = 'none';
             modal.show();
 
-            const stopProgress = startProgress();
+            const stopProgress = startProgress(
+                buildProgressSteps(wantTopics, wantIntro, wantText, wantChapters),
+            );
 
             const titleEl  = document.getElementById('jform_studytitle');
             const formData = new FormData();
             formData.append('title', titleEl ? titleEl.value : '');
             formData.append('studyintro', getEditorValue('studyintro'));
             formData.append('studytext', getEditorValue('studytext'));
-            formData.append('media_file_id', mediaId);
+            // Prefer YouTube media file for video context (chapters, tags, description)
+            formData.append('media_file_id', youtubeMediaId || mediaId);
+
+            // Send teacher ID so the server can look up the teacher name for AI voice
+            const teacherEl = document.getElementById('jform_teacher_id');
+            formData.append('teacher_id', teacherEl ? teacherEl.value : '0');
 
             // Append toggle flags
             formData.append('generate_topics', wantTopics ? '1' : '0');
             formData.append('generate_intro', wantIntro ? '1' : '0');
             formData.append('generate_text', wantText ? '1' : '0');
+            formData.append('generate_chapters', wantChapters ? '1' : '0');
 
             // Gather scripture text
             const scriptureEls = document.querySelectorAll('[id^="jform_scripture"]');
@@ -443,13 +701,24 @@
                     });
                 }
 
-                // Populate AI description and study text
+                // Populate AI description and study text (hidden inputs + rendered previews)
                 document.getElementById('ai-studyintro').value = data.studyintro || '';
                 document.getElementById('ai-studytext').value  = data.studytext || '';
 
-                // Handle suggested chapters
+                const introPreview = document.getElementById('ai-studyintro-preview');
+                const textPreview  = document.getElementById('ai-studytext-preview');
+
+                if (introPreview) {
+                    introPreview.innerHTML = data.studyintro || '';
+                }
+
+                if (textPreview) {
+                    textPreview.innerHTML = data.studytext || '';
+                }
+
+                // Handle suggested chapters (only show if user opted in)
                 if (chaptersSection) {
-                    if (data.chapters && data.chapters.length > 0) {
+                    if (wantChapters && data.chapters && data.chapters.length > 0) {
                         const chapterLines = data.chapters.map(
                             (ch) => `${ch.time} ${ch.label}`,
                         );
@@ -484,6 +753,8 @@
             });
 
             if (count > 0) {
+                // Allow Choices.js addItem events to settle, then sync hidden input
+                setTimeout(() => syncTopicsHiddenInput(), 150);
                 showAppliedFeedback(btnAddTopics, `${count} topic${count > 1 ? 's' : ''} added`);
             }
         });
@@ -509,6 +780,16 @@
                 showAppliedFeedback(btnApplyText, 'Applied');
             }
         });
+
+        // Apply chapters to media file
+        const btnApplyChapters = document.getElementById('btn-apply-chapters');
+
+        if (btnApplyChapters) {
+            btnApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('ai-chapters-text');
+                applyChaptersToMedia(btnApplyChapters, textarea);
+            });
+        }
 
         // Copy chapters to clipboard
         const btnCopyChapters = document.getElementById('btn-copy-chapters');
@@ -696,6 +977,16 @@
             });
         }
 
+        // Apply YouTube chapters to media file
+        const btnYtApplyChapters = document.getElementById('btn-yt-apply-chapters');
+
+        if (btnYtApplyChapters) {
+            btnYtApplyChapters.addEventListener('click', () => {
+                const textarea = document.getElementById('yt-chapters-text');
+                applyChaptersToMedia(btnYtApplyChapters, textarea);
+            });
+        }
+
         // Copy chapters to clipboard
         const btnYtCopyChapters = document.getElementById('btn-yt-copy-chapters');
 
@@ -740,5 +1031,121 @@
                 args: [seconds, true],
             }), '*');
         }
+    });
+
+    // ---- Per-media Copy Description modal ----
+
+    // Lazily initialise the modal on first use to avoid bootstrap timing issues
+    let copyDescModal   = null;
+    let copyDescText    = null;
+    let copyDescLoading = null;
+    let copyDescCopyBtn = null;
+
+    function ensureCopyDescModal() {
+        if (copyDescModal) {
+            return;
+        }
+
+        const T = (key, fb) => {
+            const v = Joomla.Text._(key);
+
+            return (v && v !== key) ? v : fb;
+        };
+
+        const html = '<div class="modal fade" id="copyDescModal" tabindex="-1" aria-hidden="true">'
+            + '<div class="modal-dialog modal-lg"><div class="modal-content">'
+            + '<div class="modal-header"><h5 class="modal-title">'
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>'
+            + '<div class="modal-body">'
+            + '<p class="text-muted small mb-2">'
+            + T('JBS_MED_COPY_DESC_TIP', 'Copy this description and paste it into your video platform.')
+            + '</p>'
+            + '<div id="copyDescLoading" class="text-center py-4" style="display:none;">'
+            + '<span class="spinner-border"></span></div>'
+            + '<textarea id="copyDescText" class="form-control" rows="12" readonly'
+            + ' style="display:none; font-family:monospace; font-size:0.85rem;"></textarea>'
+            + '</div>'
+            + '<div class="modal-footer">'
+            + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+            + T('JCLOSE', 'Close') + '</button>'
+            + '<button type="button" class="btn btn-primary" id="copyDescCopyBtn" disabled>'
+            + '<span class="icon-copy" aria-hidden="true"></span> '
+            + T('JBS_MED_COPY_DESC', 'Copy Description')
+            + '</button></div></div></div></div>';
+
+        document.body.insertAdjacentHTML('beforeend', html);
+
+        const modalEl = document.getElementById('copyDescModal');
+        copyDescModal   = new bootstrap.Modal(modalEl);
+        copyDescText    = document.getElementById('copyDescText');
+        copyDescLoading = document.getElementById('copyDescLoading');
+        copyDescCopyBtn = document.getElementById('copyDescCopyBtn');
+
+        copyDescCopyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(copyDescText.value);
+                copyDescCopyBtn.classList.remove('btn-primary');
+                copyDescCopyBtn.classList.add('btn-success');
+                copyDescCopyBtn.innerHTML = '<span class="icon-checkmark" aria-hidden="true"></span> '
+                    + T('JBS_MED_COPY_DESC_COPIED', 'Copied!');
+                setTimeout(() => {
+                    copyDescCopyBtn.classList.remove('btn-success');
+                    copyDescCopyBtn.classList.add('btn-primary');
+                    copyDescCopyBtn.innerHTML = '<span class="icon-copy" aria-hidden="true"></span> '
+                        + T('JBS_MED_COPY_DESC', 'Copy Description');
+                }, 2000);
+            } catch {
+                copyDescText.select();
+            }
+        });
+    }
+
+    document.querySelectorAll('.cwm-copy-desc-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const descMediaId = parseInt(btn.dataset.mediaId, 10) || 0;
+            const studyId     = parseInt(btn.dataset.studyId, 10) || 0;
+
+            if (!studyId) {
+                return;
+            }
+
+            // Initialise modal on first click
+            ensureCopyDescModal();
+
+            // Reset modal state and show
+            copyDescText.value            = '';
+            copyDescText.style.display    = 'none';
+            copyDescLoading.style.display = 'block';
+            copyDescCopyBtn.disabled      = true;
+            copyDescModal.show();
+
+            try {
+                const url = `${ajaxBase}&task=cwmadmin.getVideoDescriptionXHR`
+                    + `&study_id=${studyId}&media_id=${descMediaId}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-CSRF-Token': '1' },
+                });
+                const data = await response.json();
+
+                copyDescLoading.style.display = 'none';
+
+                if (!data.success || !data.description) {
+                    copyDescText.value        = data.error || 'Failed to generate description';
+                    copyDescText.style.display = 'block';
+
+                    return;
+                }
+
+                copyDescText.value        = data.description;
+                copyDescText.style.display = 'block';
+                copyDescCopyBtn.disabled  = false;
+            } catch (e) {
+                copyDescLoading.style.display = 'none';
+                copyDescText.value        = e.message;
+                copyDescText.style.display = 'block';
+            }
+        });
     });
 })();

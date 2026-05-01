@@ -32,9 +32,8 @@ $wa->useScript('keepalive')
 // Add language strings for JavaScript
 Text::script('JBS_CMN_PROCESSING');
 Text::script('JBS_ADM_CHECKING_ASSETS');
-Text::script('JBS_ADM_FIXING_ASSETS');
-Text::script('JBS_ADM_FIX_COMPLETE');
-Text::script('JBS_ADM_REBUILDING_TREE');
+Text::script('JBS_ADM_ASSET_CLEANING');
+Text::script('JBS_ADM_ASSET_CLEANUP_COMPLETE');
 Text::script('JBS_CMN_OPERATION_SUCCESSFUL');
 Text::script('JBS_CMN_ERROR');
 Text::script('JCANCEL');
@@ -54,8 +53,8 @@ Text::script('JCLOSE');
         <div class="row align-items-center">
             <div class="col-auto d-none d-md-block" aria-hidden="true">
                 <span class="fa-stack fa-2x text-primary">
-                    <i class="fas fa-circle fa-stack-2x" style="opacity: 0.2;"></i>
-                    <i class="fas fa-shield-alt fa-stack-1x"></i>
+                    <i class="fa-solid fa-circle fa-stack-2x" style="opacity: 0.2;"></i>
+                    <i class="fa-solid fa-shield-halved fa-stack-1x"></i>
                 </span>
             </div>
             <div class="col">
@@ -71,14 +70,14 @@ Text::script('JCLOSE');
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 id="status-heading" class="card-title h5 mb-0">
-                <i class="fas fa-table me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_STATUS'); ?>
+                <i class="fa-solid fa-table me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_STATUS'); ?>
             </h2>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-proclaim-action="refresh">
-                    <i class="fas fa-sync-alt me-1" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_REFRESH'); ?>
+                    <i class="fa-solid fa-arrows-rotate me-1" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_REFRESH'); ?>
                 </button>
-                <button type="button" class="btn btn-primary btn-sm" data-proclaim-action="fix">
-                    <i class="fas fa-wrench me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
+                <button type="button" class="btn btn-primary btn-sm" data-proclaim-action="cleanup">
+                    <i class="fa-solid fa-broom me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_CLEANUP'); ?>
                 </button>
             </div>
         </div>
@@ -88,12 +87,13 @@ Text::script('JCLOSE');
             <table class="table table-hover table-striped mb-0" id="asset-status-table">
                 <thead class="table-primary">
                     <tr>
-                        <th style="width: 25%;"><?php echo Text::_('JBS_ADM_TABLENAMES'); ?></th>
+                        <th style="width: 22%;"><?php echo Text::_('JBS_ADM_TABLENAMES'); ?></th>
                         <th class="text-center"><?php echo Text::_('JBS_ADM_ROWCOUNT'); ?></th>
-                        <th class="text-center"><?php echo Text::_('JBS_ADM_NULLROWS'); ?></th>
-                        <th class="text-center"><?php echo Text::_('JBS_ADM_MATCHROWS'); ?></th>
-                        <th class="text-center"><?php echo Text::_('JBS_ADM_ARULESROWS'); ?></th>
-                        <th class="text-center"><?php echo Text::_('JBS_ADM_NOMATCHROWS'); ?></th>
+                        <th class="text-center"><?php echo Text::_('JBS_ADM_ASSET_INHERITED'); ?></th>
+                        <th class="text-center"><?php echo Text::_('JBS_ADM_ASSET_CUSTOM_RULES'); ?></th>
+                        <th class="text-center"><?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP'); ?></th>
+                        <th class="text-center"><?php echo Text::_('JBS_ADM_ASSET_DRIFTED'); ?></th>
+                        <th class="text-center"><?php echo Text::_('JBS_ADM_ASSET_ORPHANS'); ?></th>
                     </tr>
                 </thead>
                 <tbody id="asset-status-body">
@@ -102,31 +102,34 @@ Text::script('JCLOSE');
                             <tr>
                                 <td><?php echo Text::_($asset['realname']); ?></td>
                                 <td class="text-center"><?php echo $asset['numrows']; ?></td>
+                                <td class="text-center text-muted">
+                                    <?php echo $asset['inherited']; ?>
+                                </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['nullrows'] > 0 ? 'text-danger fw-bold' : ''; ?>">
-                                        <?php echo $asset['nullrows']; ?>
+                                    <span class="<?php echo $asset['custom_rules'] > 0 ? 'text-success fw-bold' : 'text-muted'; ?>">
+                                        <?php echo $asset['custom_rules']; ?>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['matchrows'] > 0 ? 'text-success' : ''; ?>">
-                                        <?php echo $asset['matchrows']; ?>
+                                    <span class="<?php echo $asset['needs_cleanup'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                        <?php echo $asset['needs_cleanup']; ?>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['arulesrows'] > 0 ? 'text-danger fw-bold' : ''; ?>">
-                                        <?php echo $asset['arulesrows']; ?>
+                                    <span class="<?php echo $asset['drifted'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                        <?php echo $asset['drifted']; ?>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['nomatchrows'] > 0 ? 'text-danger fw-bold' : ''; ?>">
-                                        <?php echo $asset['nomatchrows']; ?>
+                                    <span class="<?php echo $asset['orphans'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                        <?php echo $asset['orphans']; ?>
                                     </span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <tr>
-                            <td colspan="6" class="text-center py-4">
+                            <td colspan="7" class="text-center py-4">
                                 <div class="spinner-border spinner-border-sm" role="status">
                                     <span class="visually-hidden"><?php echo Text::_('JBS_CMN_LOADING'); ?></span>
                                 </div>
@@ -144,22 +147,24 @@ Text::script('JCLOSE');
 <section class="card border-info mb-4">
     <div class="card-header bg-info text-white">
         <h2 class="card-title h6 mb-0">
-            <i class="fas fa-info-circle me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_LEGEND'); ?>
+            <i class="fa-solid fa-circle-info me-2" aria-hidden="true"></i><?php echo Text::_('JBS_CMN_LEGEND'); ?>
         </h2>
     </div>
     <div class="card-body">
+        <p class="small text-muted mb-3"><?php echo Text::_('JBS_ADM_ASSET_LEGEND_INTRO'); ?></p>
         <div class="row">
             <div class="col-md-6">
                 <ul class="list-unstyled mb-0">
                     <li><strong><?php echo Text::_('JBS_ADM_ROWCOUNT'); ?>:</strong> <?php echo Text::_('JBS_ADM_ROWCOUNT_DESC'); ?></li>
-                    <li><span class="text-danger"><?php echo Text::_('JBS_ADM_NULLROWS'); ?>:</span> <?php echo Text::_('JBS_ADM_NULLROWS_DESC'); ?></li>
-                    <li><span class="text-success"><?php echo Text::_('JBS_ADM_MATCHROWS'); ?>:</span> <?php echo Text::_('JBS_ADM_MATCHROWS_DESC'); ?></li>
+                    <li><span class="text-muted"><?php echo Text::_('JBS_ADM_ASSET_INHERITED'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_INHERITED_DESC'); ?></li>
+                    <li><span class="text-success"><?php echo Text::_('JBS_ADM_ASSET_CUSTOM_RULES'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_CUSTOM_RULES_DESC'); ?></li>
                 </ul>
             </div>
             <div class="col-md-6">
                 <ul class="list-unstyled mb-0">
-                    <li><span class="text-danger"><?php echo Text::_('JBS_ADM_ARULESROWS'); ?>:</span> <?php echo Text::_('JBS_ADM_ARULESROWS_DESC'); ?></li>
-                    <li><span class="text-danger"><?php echo Text::_('JBS_ADM_NOMATCHROWS'); ?>:</span> <?php echo Text::_('JBS_ADM_NOMATCHROWS_DESC'); ?></li>
+                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP_DESC'); ?></li>
+                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_DRIFTED'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_DRIFTED_DESC'); ?></li>
+                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_ORPHANS'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_ORPHANS_DESC'); ?></li>
                 </ul>
             </div>
         </div>
@@ -168,18 +173,18 @@ Text::script('JCLOSE');
 
 </main>
 
-<!-- Fix Assets Modal -->
+<!-- Cleanup Assets Modal -->
 <div class="modal fade" id="fixAssetsModal" tabindex="-1" aria-labelledby="fixAssetsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="fixAssetsModalLabel">
-                    <i class="fas fa-wrench me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_FIX'); ?>
+                    <i class="fa-solid fa-broom me-2" aria-hidden="true"></i><?php echo Text::_('JBS_ADM_ASSET_CLEANUP'); ?>
                 </h5>
             </div>
             <div class="modal-body">
                 <div id="fix-status-message" class="mb-3 text-center">
-                    <i class="fas fa-spinner fa-spin me-2" aria-hidden="true"></i>
+                    <i class="fa-solid fa-spinner fa-spin me-2" aria-hidden="true"></i>
                     <span id="fix-status-text"><?php echo Text::_('JBS_CMN_PROCESSING'); ?></span>
                 </div>
                 <div class="progress mb-3" style="height: 25px;">
@@ -191,7 +196,7 @@ Text::script('JCLOSE');
             </div>
             <div class="modal-footer" id="fix-modal-footer" style="display: none;">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                    <i class="fas fa-check me-2" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                    <i class="fa-solid fa-check me-2" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
                 </button>
             </div>
         </div>

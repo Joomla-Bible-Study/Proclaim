@@ -15,20 +15,14 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\CalendarField as JoomlaCalendarField;
 
 /**
- * Calendar field that hides seconds from the displayed value.
+ * Calendar field subclass for Proclaim date fields.
  *
- * The DB stores DATETIME with seconds, and Joomla's CalendarField always
- * renders them. The calendar JS also rewrites the input value on init
- * using its format string (which includes %S). This subclass intercepts
- * the input element's value setter via Object.defineProperty so that
- * every write — PHP, JS init, date pick — has seconds stripped.
- *
- * Pair with timeformat="12" in XML for 12-hour AM/PM display in the
- * calendar popup.
+ * Extends Joomla's CalendarField to handle the case where seconds
+ * may be absent from the submitted value (e.g., browser autofill or
+ * copy-paste without seconds). Re-appends :00 before validation.
  *
  * Usage in XML: type="cwmcalendar" (with addfieldprefix set)
  *
@@ -45,59 +39,32 @@ class CwmcalendarField extends JoomlaCalendarField
     protected $type = 'Cwmcalendar';
 
     /**
-     * Get the field input markup.
+     * Filter the input value — re-append seconds if missing.
      *
-     * Delegates to the core CalendarField, adds a data marker, and
-     * registers JS that intercepts the value property setter on the
-     * input element to strip :SS from every value assignment.
+     * Joomla's CalendarField::filter() expects seconds when showtime is
+     * enabled. If the submitted value has no seconds (H:i without :ss),
+     * append :00 before passing to parent::filter().
      *
-     * @return  string  The field input markup.
+     * @param   mixed                       $value  The input value
+     * @param   string                      $group  The field group
+     * @param   ?\Joomla\Registry\Registry  $input  Input registry
      *
-     * @since  10.1.0
+     * @return  mixed  The filtered value
+     *
+     * @since   10.3.0
      */
-    #[\Override]
-    protected function getInput(): string
+    public function filter($value, $group = null, ?\Joomla\Registry\Registry $input = null)
     {
-        $html = parent::getInput();
+        if (\is_string($value)) {
+            // Append :00 if seconds are missing (H:i without :ss)
+            if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $value)) {
+                $value .= ':00';
+            }
 
-        // Mark the wrapper so JS can target these fields
-        $html = str_replace(
-            'class="field-calendar"',
-            'class="field-calendar" data-cwm-no-seconds="1"',
-            $html
-        );
+            // Reset any non-zero seconds to :00 — sermon dates don't need second precision
+            $value = preg_replace('/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}):\d{2}$/', '$1:00', $value);
+        }
 
-        // Register the value-interceptor JS once per page
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->addInlineScript(
-            <<<'JS'
-            (function() {
-                if (window._cwmCalNoSec) return;
-                window._cwmCalNoSec = true;
-
-                var desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
-
-                document.querySelectorAll('[data-cwm-no-seconds] input[type="text"]').forEach(function(input) {
-                    Object.defineProperty(input, 'value', {
-                        get: function() {
-                            return desc.get.call(this);
-                        },
-                        set: function(v) {
-                            if (typeof v === 'string') {
-                                v = v.replace(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}):\d{2}$/, '$1');
-                            }
-                            desc.set.call(this, v);
-                        },
-                        configurable: true
-                    });
-                });
-            })();
-            JS,
-            ['position' => 'after'],
-            [],
-            ['core']
-        );
-
-        return $html;
+        return parent::filter($value, $group, $input);
     }
 }

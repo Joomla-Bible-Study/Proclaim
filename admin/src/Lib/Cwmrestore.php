@@ -477,7 +477,8 @@ class Cwmrestore
 
         // Build the appropriate paths
         $config   = Factory::getApplication()->getConfig();
-        $tmp_dest = $config->get('tmp_path') . '/' . $userFile['name'];
+        $safeName = File::makeSafe($userFile['name']);
+        $tmp_dest = $config->get('tmp_path') . '/' . basename($safeName);
         $tmp_src  = $userFile['tmp_name'];
 
         // Move an uploaded file.

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="package" method="upgrade">
+    <packagename>proclaim</packagename>
+    <name>PKG_PROCLAIM</name>
+    <version>10.3.0</version>
+    <creationDate>2026-03</creationDate>
+    <author>CWM Team</author>
+    <authorEmail>info@christianwebministries.org</authorEmail>
+    <authorUrl>www.christianwebministries.org</authorUrl>
+    <copyright>(C) 2026 CWM Team All rights reserved</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <description>PKG_PROCLAIM_DESCRIPTION</description>
+
+    <scriptfile>script.install.php</scriptfile>
+    <blockChildUninstall>true</blockChildUninstall>
+
+    <files folder="packages">
+        <!-- Install order: library first, then plugin, then component -->
+        <file type="library" id="cwmscripture" required="true">lib_cwmscripture.zip</file>
+        <file type="plugin" group="content" id="scripturelinks" required="true">plg_content_scripturelinks.zip</file>
+        <file type="component" id="com_proclaim" required="true">com_proclaim.zip</file>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/en-GB.pkg_proclaim.sys.ini</language>
+    </languages>
+</extension>

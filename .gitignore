@@ -26,8 +26,11 @@ bin/
 out/
 gen/
 
-# Build reports
+# Build reports and output
 build/reports/
+build/__pycache__/
+build/patches/
+build/pkg_proclaim*/
 
 # Generated files
 /admin/proclaim.xml
@@ -58,8 +61,6 @@ test-results/
 /build/.source_cache.json
 media/backup/*.sql
 media/youtube_cache/
-build/__pycache__/
-.claude/worktrees/
 
 # OSX
 ._*
@@ -74,3 +75,4 @@ Desktop.ini
 # Only apply this rule to the main repository's gitignore files
 !/.gitignore
 !/build/.gitignore
+.claude/worktrees/

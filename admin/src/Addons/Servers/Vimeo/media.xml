@@ -63,7 +63,7 @@
             <field name="media_button_color" type="ColorPicker" default="#1ab7ea"
                    description="JBS_ADDON_VIMEO_BUTTON_COLOR_DESC" label="JBS_ADDON_VIMEO_BUTTON_COLOR"/>
             <field name="media_icon_type" type="IconType" class="form-select-color-state" size="1"
-                   default="fab fa-vimeo"
+                   default="fa-brands fa-vimeo-v"
                    label="JBS_ADDON_VIMEO_ICON_TYPE"
                    description="JBS_ADDON_VIMEO_ICON_TYPE_DESC">
             </field>

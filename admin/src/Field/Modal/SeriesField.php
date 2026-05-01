@@ -92,8 +92,10 @@ class SeriesField extends ModalSelectField
 
         $urlSelect = $linkSeries;
         $urlEdit   = clone $linkSerie;
+        $urlEdit->setVar('layout', 'modal');
         $urlEdit->setVar('task', 'cwmserie.edit');
         $urlNew    = clone $linkSerie;
+        $urlNew->setVar('layout', 'modal');
         $urlNew->setVar('task', 'cwmserie.add');
 
         $this->urls['select'] = (string) $urlSelect;

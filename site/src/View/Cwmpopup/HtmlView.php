@@ -101,48 +101,6 @@ class HtmlView extends BaseHtmlView
      */
     public string $playerheight = '';
 
-    /** @var  string Flash Vars
-     *
-     * @since 7.0
-     */
-    public string $flashvars = '';
-
-    /** @var  string Back Color
-     *
-     * @since 7.0
-     */
-    public string $backcolor = '';
-
-    /** @var  string Front Color
-     *
-     * @since 7.0
-     */
-    public string $frontcolor = '';
-
-    /** @var  string Light Color
-     *
-     * @since 7.0
-     */
-    public string $lightcolor = '';
-
-    /** @var  string Screen Color
-     *
-     * @since 7.0
-     */
-    public string $screencolor = '';
-
-    /** @var  string Auto Start
-     *
-     * @since 7.0
-     */
-    public string $autostart = '';
-
-    /** @var  string Player Idle Hide
-     *
-     * @since 7.0
-     */
-    public string $playeridlehide = '';
-
     /** @var  string Header Text
      *
      * @since 7.0
@@ -167,11 +125,6 @@ class HtmlView extends BaseHtmlView
      */
     protected Registry $state;
 
-    /** @var  Registry Extra Params
-     *
-     * @since 7.0
-     */
-    protected Registry $extraparams;
 
     /** @var  CwmtemplateTable Template
      *
@@ -195,7 +148,6 @@ class HtmlView extends BaseHtmlView
         $app   = Factory::getApplication();
         $input = $app->getInput();
 
-        $input->get('tmpl', 'component', 'string');
         $mediaid      = $input->get('mediaid', '', 'int');
         $close        = $input->get('close', '0', 'int');
         $this->player = $input->get('player', '1', 'int');
@@ -211,39 +163,17 @@ class HtmlView extends BaseHtmlView
         $this->getMedia = new Cwmmedia();
         $this->media    = $this->getMedia->getMediaRows2($mediaid);
 
-        $model = $this->getModel();
-        $state = $model ? $model->getState() : null;
+        $this->state    = $this->getModel()->getState();
+        $this->template = $this->state->get('template');
 
-        if ($state instanceof Registry) {
-            $this->state = $state;
-        } else {
-            $this->state = new Registry();
-        }
+        // Template params already a Registry (merged with app + admin params in model)
+        $this->params = clone $this->template->params;
 
-        $template = $this->state->get('template');
-        if ($template instanceof CwmtemplateTable) {
-            $this->template = $template;
-        } else {
-            // Handle case where template is not of expected type, maybe create a default or throw error
-            $this->template = Factory::getApplication()->bootComponent('com_proclaim')
-                ->getMVCFactory()->createTable('Cwmtemplate', 'Administrator');
-        }
-
-
-        /*
-         *  Convert parameter fields to objects.
-         */
-        $registry = new Registry();
-        $registry->loadString($this->template->params ?? '');
-        $this->params = $registry;
-
-        $registry = new Registry();
-        $registry->loadString($this->media->sparams ?? '');
-        $this->params->merge($registry);
-        $this->media->sparams = $registry;
-        $registry             = new Registry();
-        $registry->loadString($this->media->params ?? '');
-        $this->params->merge($registry);
+        // Merge server and media params on top
+        $this->media->sparams = new Registry($this->media->sparams ?? '');
+        $this->params->merge($this->media->sparams);
+        $mediaParams = new Registry($this->media->params ?? '');
+        $this->params->merge($mediaParams);
         $saveid          = $this->media->id;
         $this->media->id = $this->media->study_id;
         $JBSMListing     = new Cwmlisting();
@@ -276,54 +206,8 @@ class HtmlView extends BaseHtmlView
         $this->playerwidth  = (string) ($this->params->get('player_width') ?? '');
         $this->playerheight = (string) ($this->params->get('player_height') ?? '');
 
-        if ($this->params->get('playerheight') < 55 && $this->params->get('playerheight')) {
-            $this->playerheight = '55';
-        } elseif ($this->params->get('playerheight')) {
-            $this->playerheight = (string) $this->params->get('playerheight');
-        }
-
-        if ($this->params->get('playerwidth')) {
-            $this->playerwidth = (string) $this->params->get('playerwidth');
-        }
-
-        if ($this->params->get('playervars')) {
-            $playervars = $this->params->get('playervars');
-            if ($playervars instanceof Registry) {
-                $this->extraparams = $playervars;
-            } else {
-                $this->extraparams = new Registry($playervars);
-            }
-        }
-
-        if ($this->params->get('altflashvars')) {
-            $this->flashvars = (string) $this->params->get('altflashvars');
-        }
-
         if ($this->player === 100) {
             $this->player = (int) $this->params->get('player', '0');
-        }
-
-        $this->backcolor   = $this->params->get('backcolor', '0x287585');
-        $this->frontcolor  = $this->params->get('frontcolor', '0xFFFFFF');
-        $this->lightcolor  = $this->params->get('lightcolor', '0x000000');
-        $this->screencolor = $this->params->get('screencolor', '0xFFFFFF');
-
-        if ($this->params->get('autostart', '1') === '1') {
-            $this->autostart = 'true';
-        } else {
-            $this->autostart = 'false';
-        }
-
-        if ($this->params->get('playeridlehide')) {
-            $this->playeridlehide = 'true';
-        } else {
-            $this->playeridlehide = 'false';
-        }
-
-        if ($this->params->get('autostart') === '1') {
-            $this->autostart = 'true';
-        } elseif ($this->params->get('autostart') === '2') {
-            $this->autostart = 'false';
         }
 
         $this->headertext = $this->titles(

@@ -37,7 +37,6 @@ class CwmstatsCacheTest extends IntegrationTestCase
     {
         $ref  = new \ReflectionClass(Cwmstats::class);
         $prop = $ref->getProperty('cache');
-        $prop->setAccessible(true);
 
         $this->assertIsArray($prop->getValue());
     }
@@ -47,7 +46,6 @@ class CwmstatsCacheTest extends IntegrationTestCase
         // Seed the cache with a value
         $ref  = new \ReflectionClass(Cwmstats::class);
         $prop = $ref->getProperty('cache');
-        $prop->setAccessible(true);
         $prop->setValue(null, ['topStudies' => 'cached-html']);
 
         // Verify it was set

@@ -8,10 +8,10 @@
             <field name="batch_limit" type="number"
                    label="PLG_TASK_PROCLAIM_PLATFORMSTATS_BATCH_LABEL"
                    description="PLG_TASK_PROCLAIM_PLATFORMSTATS_BATCH_DESC"
-                   default="50"
-                   min="5"
-                   max="500"
-                   step="5" />
+                   default="500"
+                   min="10"
+                   max="2000"
+                   step="50" />
         </fieldset>
     </fields>
 </form>

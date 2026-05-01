@@ -12,13 +12,14 @@
 namespace CWM\Component\Proclaim\Site\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Site\Helper\Cwmdownload;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
-use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -43,14 +44,11 @@ class CwmsermonsController extends BaseController
     public function download(): void
     {
         $input = Factory::getApplication()->getInput();
-        $task  = $input->get('task');
-        $mid   = $input->getInt('id');
+        $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        if ($task === 'download') {
-            CwmanalyticsHelper::logEvent('download', 0, $mid);
-            $downloader = new Cwmdownload();
-            $downloader->download($mid);
-        }
+        CwmanalyticsHelper::logEvent('download', 0, $mid);
+        $downloader = new Cwmdownload();
+        $downloader->download($mid);
     }
 
     /**
@@ -70,9 +68,14 @@ class CwmsermonsController extends BaseController
         CwmanalyticsHelper::logEvent('play', 0, $id);
 
         // Now the hit has been updated will redirect to the url.
-        $return = $app->getInput()->get('return');
-        $return = base64_decode($return);
-        $app->redirect($return);
+        $return = $app->getInput()->getBase64('return', '');
+        $return = $return ? base64_decode($return) : '';
+
+        if ($return && Uri::isInternal($return)) {
+            $app->redirect($return);
+        } else {
+            $app->redirect('index.php');
+        }
     }
 
     /**
@@ -107,7 +110,7 @@ class CwmsermonsController extends BaseController
      * update without a full reload.  Falls back gracefully — the form
      * still works via normal POST when JavaScript is disabled.
      *
-     * URL: index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw&{token}=1
+     * URL: index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw
      *
      * @return  void
      *
@@ -119,12 +122,7 @@ class CwmsermonsController extends BaseController
         $app = Factory::getApplication();
         header('Content-Type: application/json; charset=utf-8');
 
-        if (!Session::checkToken('get')) {
-            echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
-            $app->close();
-
-            return;
-        }
+        CwmDebug::startTimer('filterAjax');
 
         try {
             // Flatten bracket-format params (filter[teacher] → filter_teacher) so
@@ -143,20 +141,32 @@ class CwmsermonsController extends BaseController
             }
 
             /** @var CwmsermonsModel $model */
-            $model    = $this->getModel('Cwmsermons', 'Site');
+            $model = $this->getModel('Cwmsermons', 'Site');
+
+            // Trigger populateState, then force limitstart from the request.
+            // Joomla's Input object loses 'limitstart' during SEF routing /
+            // language-filter redirects, so read directly from $_GET.
+            $model->getState();
+            $limitstart = (int) ($_GET['limitstart'] ?? $_GET['start'] ?? 0);
+            $model->setState('list.start', $limitstart);
+
             $state    = $model->getState();
             $template = $state->get('template');
             $params   = $state->get('params');
 
+            CwmDebug::startTimer('filterAjax.query');
             $items      = $model->getItems();
             $pagination = $model->getPagination();
+            CwmDebug::stopTimer('filterAjax.query', 'items=' . \count($items ?? []));
 
             // Render the listing HTML using the same helper the template uses.
             $listing = new Cwmlisting();
             $html    = '';
 
             if ($items) {
+                CwmDebug::startTimer('filterAjax.render');
                 $html = $listing->getFluidListing($items, $params, $template, 'sermons');
+                CwmDebug::stopTimer('filterAjax.render');
             }
 
             // Build cross-filtered dropdown options so the client can
@@ -191,15 +201,26 @@ class CwmsermonsController extends BaseController
                 $filterOptions[$fieldName] = $options;
             }
 
-            echo json_encode([
-                'success'       => true,
-                'html'          => $html,
-                'pagination'    => $pagination->getPagesLinks(),
-                'pagesCounter'  => $pagination->getPagesCounter(),
-                'total'         => $pagination->total,
-                'pagesTotal'    => $pagination->pagesTotal,
-                'filterOptions' => $filterOptions,
-            ], JSON_THROW_ON_ERROR);
+            CwmDebug::stopTimer('filterAjax', 'total=' . $pagination->total);
+
+            $response = [
+                'success'        => true,
+                'html'           => $html,
+                'pagination'     => $pagination->getPagesLinks(),
+                'pagesCounter'   => $pagination->getPagesCounter(),
+                'total'          => $pagination->total,
+                'pagesTotal'     => $pagination->pagesTotal,
+                'showPagination' => (string) $params->get('show_pagination', '2'),
+                'filterOptions'  => $filterOptions,
+            ];
+
+            $debugBuffer = CwmDebug::getBuffer();
+
+            if (!empty($debugBuffer)) {
+                $response['_debug'] = $debugBuffer;
+            }
+
+            echo json_encode($response, JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
             echo json_encode([
                 'success' => false,

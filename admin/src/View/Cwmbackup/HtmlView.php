@@ -17,7 +17,6 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
@@ -151,18 +150,18 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::title(Text::_('JBS_CMN_ADMINISTRATION'), 'administration');
 
-        $toolbar = Toolbar::getInstance();
+        $toolbar = $this->getDocument()->getToolbar();
 
         // Add home button to cpanel
         $toolbar->linkButton('home', 'JBS_CMN_HOME')
             ->url('index.php?option=com_proclaim&view=cwmcpanel')
-            ->icon('fas fa-home')
+            ->icon('fa-solid fa-house')
             ->listCheck(false);
 
         // Add back to admin tools button
         $toolbar->linkButton('back', 'JTOOLBAR_BACK')
             ->url('index.php?option=com_proclaim&view=cwmadmin')
-            ->icon('fas fa-arrow-left')
+            ->icon('fa-solid fa-arrow-left')
             ->listCheck(false);
 
         ToolbarHelper::help('cwmbackup', true);

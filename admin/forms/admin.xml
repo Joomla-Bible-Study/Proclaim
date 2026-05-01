@@ -28,13 +28,10 @@
                description="JBS_STY_METAKEYWORDS_DESC" useglobal="true" filter="string"/>
         <field name="metadesc" type="textarea" cols="30" rows="3" label="JBS_STY_METADESCRIPTION"
                description="JBS_STY_METADESCRIPTION_DESC" filter="string"/>
-        <field name="compat_mode" type="radio" default="0" label="JBS_ADM_MEDIA_COMPAT_MODE"
-               description="JBS_ADM_MEDIA_COMPAT_MODE_DESC"
-               layout="joomla.form.field.radio.switcher">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        <field name="jbsmigrationshow" type="radio" default="0"
+        <field name="org_name" type="text" size="60" label="JBS_ADM_ORG_NAME"
+               description="JBS_ADM_ORG_NAME_DESC" filter="string"
+               hint="JBS_ADM_ORG_NAME_HINT"/>
+<field name="jbsmigrationshow" type="radio" default="0"
                label="JBS_IBM_SHOW_JBSMIGRATION_LABEL" description="JBS_IBM_SHOW_JBSMIGRATION_LABEL_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
@@ -52,12 +49,7 @@
         </field>
         <field name="popular_limit" type="int" default="" size="3" label="JBS_ADM_POPULAR_LIMIT"
                description="JBS_ADM_POPULAR_LIMIT_DESC"/>
-        <field name="character_filter" type="list" default="1" label="JBS_ADM_CHARACTER_FILTER"
-               description="JBS_ADM_CHARACTER_FILTER_DESC">
-            <option value="0">JBS_ADM_NO_FILTER</option>
-            <option value="1">JBS_ADM_FILTER</option>
-        </field>
-        <field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
+<field name="format_popular" default="0" type="list" label="JBS_ADM_FORMAT_POPULAR"
                description="JBS_ADM_FORMAT_POPULAR_DESC">
             <option value="0">JBS_ADM_HITS_PLAYS_DOWNLOAD</option>
             <option value="1">JBS_ADM_PLAYS_DOWNLOAD</option>
@@ -119,10 +111,10 @@
         <field name="download_icon_type" type="list" default=""
                label="JBS_ADDON_ICON_TYPE"
                description="JBS_ADDON_ICON_TYPE_DESC">
-            <option value="fas fa-download">JBS_DOWNLOAD_1</option>
-            <option value="fas fa-arrow-down">JBS_DOWNLOAD_2</option>
-            <option value="fas fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
-            <option value="fas fa-long-arrow-down">JBS_DOWNLOAD_4</option>
+            <option value="fa-solid fa-download">JBS_DOWNLOAD_1</option>
+            <option value="fa-solid fa-arrow-down">JBS_DOWNLOAD_2</option>
+            <option value="fa-solid fa-chevron-circle-down">JBS_DOWNLOAD_3</option>
+            <option value="fa-solid fa-long-arrow-down">JBS_DOWNLOAD_4</option>
             <option value="1">JBS_MED_CUSTOM</option>
         </field>
         <field name="download_custom_icon" type="text" default="" label="JBS_ADDON_CUSTOM_ICON"
@@ -147,9 +139,9 @@
             <option value="-1">JBS_CMN_SELECT_USER</option>
         </field>
         <!--Thumbnail sizes-->
-        <field name="thumbnail_teacher_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
+        <field name="thumbnail_teacher_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_TEACHER_SIZE"
                description="JBS_ADM_THUMBNAIL_TEACHER_SIZE_DESC" class="col-2"/>
-        <field name="thumbnail_series_size" default="100" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
+        <field name="thumbnail_series_size" default="400" type="int" size="5" label="JBS_ADM_THUMBNAIL_SERIES_SIZE"
                description="JBS_ADM_THUMBNAIL_SERIES_SIZE_DESC" class="col-2"/>
         <field name="thumbnail_study_size" default="600" type="int" size="5" label="JBS_ADM_THUMBNAIL_STUDY_SIZE"
                description="JBS_ADM_THUMBNAIL_STUDY_SIZE_DESC" class="col-2"/>
@@ -165,10 +157,6 @@
         <field name="series_id" type="Series" default="-1" label="JBS_CMN_SERIES"
                description="JBS_ADM_FILLIN_STUDY_DESC">
             <option value="-1">JBS_CMN_SELECT_SERIES</option>
-        </field>
-        <field name="booknumber" type="BookList" default="-1" label="JBS_CMN_BOOK"
-               description="JBS_ADM_FILLIN_STUDY_DESC">
-            <option value="-1">JBS_CMN_SELECT_BOOK</option>
         </field>
         <field name="messagetype" type="MessageTypeList" default="-1"
                label="JBS_CMN_FILTERS_MESSAGETYPES" description="JBS_CMN_FILTERS_DESC">
@@ -332,6 +320,14 @@
                description="JBS_ADM_AI_MODEL_DESC">
             <option value="">JBS_ADM_AI_MODEL_DEFAULT</option>
         </field>
+        <field name="ai_voice" type="list" default="third_person"
+               label="JBS_ADM_AI_VOICE"
+               description="JBS_ADM_AI_VOICE_DESC">
+            <option value="third_person">JBS_ADM_AI_VOICE_THIRD_PERSON</option>
+            <option value="first_person">JBS_ADM_AI_VOICE_FIRST_PERSON</option>
+            <option value="conversational">JBS_ADM_AI_VOICE_CONVERSATIONAL</option>
+            <option value="summary">JBS_ADM_AI_VOICE_SUMMARY</option>
+        </field>
         <field name="yt_auto_import_topics" type="radio" default="0"
                label="JBS_ADM_YT_AUTO_IMPORT_TOPICS"
                description="JBS_ADM_YT_AUTO_IMPORT_TOPICS_DESC"
@@ -363,6 +359,13 @@
                layout="joomla.form.field.radio.switcher">
             <option value="0">JBS_CMN_NO</option>
             <option value="1">JBS_CMN_YES</option>
+        </field>
+        <!-- REST API Settings -->
+        <field name="api_access" type="list" default="2"
+               label="JBS_ADM_API_ACCESS_LABEL" description="JBS_ADM_API_ACCESS_DESC">
+            <option value="0">JBS_ADM_API_DISABLED</option>
+            <option value="1">JBS_ADM_API_PUBLIC</option>
+            <option value="2">JBS_ADM_API_KEY_REQUIRED</option>
         </field>
         <!-- Auto Archive Settings -->
         <field name="archive_auto" type="radio" default="0"

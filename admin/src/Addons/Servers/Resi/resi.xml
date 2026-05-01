@@ -61,7 +61,7 @@
             </field>
             <field name="media_button_color" type="ColorPicker" default="#00aeef"
                    description="JBS_ADDON_RESI_BUTTON_COLOR_DESC" label="JBS_ADDON_RESI_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="fas fa-video"
+            <field name="media_icon_type" type="IconType" class="inputbox" default="fa-solid fa-video"
                    label="JBS_ADDON_RESI_ICON_TYPE"
                    description="JBS_ADDON_RESI_ICON_TYPE_DESC">
             </field>

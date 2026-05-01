@@ -5,8 +5,8 @@
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
-    <version>10.2.2</version>
-    <creationDate>Mar 19, 2026</creationDate>
+    <version>10.3.0-dev</version>
+    <creationDate>Mar 22, 2026</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>MOD_PROCLAIM_DESCRIPTION</description>
     <namespace path="src">CWM\Module\Proclaim</namespace>
@@ -299,7 +299,26 @@
                        show-view-settings="false"
                        lazy="true"
                        hiddenLabel="true"/>
+                <!-- Option-source fields used by the Layout Editor settings modal.
+                     These are not displayed; they exist so that scriptoptions.php
+                     can extract the dropdown choices via $form->getField(). -->
+                <field name="show_verses" type="ShowVerses" default="0" hidden="true"
+                       label="JBS_TPL_VERSES_SHOW_VERSES"/>
+                <field name="scripture_separator" type="ScriptureSeparator" default="middot" hidden="true"
+                       label="JBS_TPL_SCRIPTURE_SEPARATOR"/>
+                <field name="date_format" type="DateFormat" default="2" hidden="true"
+                       label="JBS_TPL_VERSES_DATE_FORMAT"/>
                 <!-- Hidden fields for layout data storage - managed by Layout Editor -->
+                <field name="scripturesrow" type="hidden" default="0"/>
+                <field name="scripturescol" type="hidden" default="1"/>
+                <field name="scripturescolspan" type="hidden" default="0"/>
+                <field name="scriptureselement" type="hidden" default="1"/>
+                <field name="scripturescustom" type="hidden" default=""/>
+                <field name="scriptureslinktype" type="hidden" default="0"/>
+                <field name="scripturesshow_verses" type="hidden" default=""/>
+                <field name="scripturesshow_version" type="hidden" default=""/>
+                <field name="scripturesshow_tooltip" type="hidden" default=""/>
+                <field name="scripturesseparator" type="hidden" default=""/>
                 <field name="scripture1row" type="hidden" default="1"/>
                 <field name="scripture1col" type="hidden" default="1"/>
                 <field name="scripture1colspan" type="hidden" default="0"/>
@@ -307,6 +326,8 @@
                 <field name="scripture1custom" type="hidden" default=""/>
                 <field name="scripture1linktype" type="hidden" default="0"/>
                 <field name="scripture1show_verses" type="hidden" default=""/>
+                <field name="scripture1show_version" type="hidden" default=""/>
+                <field name="scripture1show_tooltip" type="hidden" default=""/>
                 <field name="scripture2row" type="hidden" default="0"/>
                 <field name="scripture2col" type="hidden" default="1"/>
                 <field name="scripture2colspan" type="hidden" default="0"/>
@@ -314,6 +335,8 @@
                 <field name="scripture2custom" type="hidden" default=""/>
                 <field name="scripture2linktype" type="hidden" default="0"/>
                 <field name="scripture2show_verses" type="hidden" default=""/>
+                <field name="scripture2show_version" type="hidden" default=""/>
+                <field name="scripture2show_tooltip" type="hidden" default=""/>
                 <field name="secondaryrow" type="hidden" default="0"/>
                 <field name="secondarycol" type="hidden" default="1"/>
                 <field name="secondarycolspan" type="hidden" default="0"/>
@@ -321,6 +344,9 @@
                 <field name="secondarycustom" type="hidden" default=""/>
                 <field name="secondarylinktype" type="hidden" default="0"/>
                 <field name="secondaryshow_verses" type="hidden" default=""/>
+                <field name="secondaryshow_version" type="hidden" default=""/>
+                <field name="secondaryshow_tooltip" type="hidden" default=""/>
+                <field name="secondaryseparator" type="hidden" default=""/>
                 <field name="jbsmediarow" type="hidden" default="1"/>
                 <field name="jbsmediacol" type="hidden" default="1"/>
                 <field name="jbsmediacolspan" type="hidden" default="1"/>

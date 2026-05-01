@@ -79,6 +79,9 @@ class ServerField extends FormField
             }
 
             if (!isset($scriptSelect[$this->id])) {
+                // Inline: standard Joomla modal-fields proxy — each field instance
+                // needs its own jSelectServer_{id} function with a unique field ID
+                // baked in.  Too dynamic per-instance to extract.
                 $wa->addInlineScript(
                     "
 				window.jSelectServer_" . $this->id . " = function (id, title, object, url, language) {

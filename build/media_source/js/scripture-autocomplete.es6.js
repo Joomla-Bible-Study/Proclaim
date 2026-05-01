@@ -157,9 +157,11 @@
 
             dropdown = document.createElement('div');
             dropdown.className = 'scripture-autocomplete-dropdown';
-            dropdown.style.cssText = 'position:absolute;z-index:9999;background:#fff;border:1px solid #ccc;'
-                + 'border-radius:4px;max-height:200px;overflow-y:auto;box-shadow:0 2px 8px rgba(0,0,0,.15);'
-                + 'display:none;min-width:220px;';
+            dropdown.style.cssText = 'position:absolute;z-index:9999;'
+                + 'background:var(--bs-body-bg, #fff);color:var(--bs-body-color, #212529);'
+                + 'border:1px solid var(--bs-border-color, #ccc);'
+                + 'border-radius:4px;max-height:200px;overflow-y:auto;'
+                + 'box-shadow:0 2px 8px rgba(0,0,0,.15);display:none;min-width:220px;';
 
             // Hint element below input
             hintEl = document.createElement('div');
@@ -196,7 +198,7 @@
 
                 const chapterCount = getChapterCount(book.booknumber, structure);
                 const infoSpan = document.createElement('span');
-                infoSpan.style.cssText = 'font-size:11px;color:#6c757d;margin-left:12px;';
+                infoSpan.style.cssText = 'font-size:11px;color:var(--bs-secondary-color, #6c757d);margin-left:12px;';
                 if (chapterCount > 0) {
                     infoSpan.textContent = `${chapterCount} ch`;
                 }
@@ -232,7 +234,7 @@
             if (!dropdown) return;
             const items = dropdown.querySelectorAll('.scripture-autocomplete-item');
             items.forEach((el, i) => {
-                el.style.backgroundColor = i === index ? '#e8f0fe' : '';
+                el.style.backgroundColor = i === index ? 'var(--bs-tertiary-bg, #e8f0fe)' : '';
             });
             selectedIndex = index;
         }

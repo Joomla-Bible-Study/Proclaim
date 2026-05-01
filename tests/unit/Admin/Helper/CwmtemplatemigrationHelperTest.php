@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 // ============================================================================
 // Test infrastructure — local to this file
@@ -61,12 +62,13 @@ class TemplateMigStore
  * Delegates loadObjectList() to the shared TemplateMigStore so that after
  * updateTemplateParams() mutates the store, subsequent reads get fresh data.
  */
-class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver implements \Joomla\Database\DatabaseInterface
+class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
 {
     private TemplateMigStore $store;
 
     public function __construct(TemplateMigStore $store)
     {
+        // Skip parent constructor — no real DB connection needed
         $this->store = $store;
     }
 
@@ -107,6 +109,98 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver implements \Joom
         }
 
         return '`' . (string) $name . '`';
+    }
+
+    // Abstract method implementations required by DatabaseDriver
+    public function getTableCreate($tables)
+    {
+        return [];
+    }
+
+    protected function prepareStatement(string $query): \Joomla\Database\StatementInterface
+    {
+        throw new \RuntimeException('prepareStatement not implemented in test fake');
+    }
+
+    public function setUtf()
+    {
+        return false;
+    }
+    public function connect()
+    {
+    }
+    public function connected()
+    {
+        return true;
+    }
+    public function escape($text, $extra = false)
+    {
+        return addslashes((string) $text);
+    }
+    public function getCollation()
+    {
+        return 'utf8mb4_general_ci';
+    }
+    public function getConnectionCollation()
+    {
+        return 'utf8mb4_general_ci';
+    }
+    public function getConnectionEncryption(): string
+    {
+        return '';
+    }
+    public function isConnectionEncryptionSupported(): bool
+    {
+        return false;
+    }
+    public function getTableColumns($table, $typeOnly = true)
+    {
+        return [];
+    }
+    public function getTableKeys($tables)
+    {
+        return [];
+    }
+    public function getTableList()
+    {
+        return [];
+    }
+    public function getVersion()
+    {
+        return '8.0';
+    }
+    public function insertid()
+    {
+        return 0;
+    }
+    public static function isSupported()
+    {
+        return true;
+    }
+    public function lockTable($tableName)
+    {
+        return $this;
+    }
+    public function renameTable($oldTable, $newTable, $backup = null, $prefix = null)
+    {
+        return $this;
+    }
+    public function select($database)
+    {
+        return true;
+    }
+    public function transactionCommit($toSavepoint = false)
+    {
+    }
+    public function transactionRollback($toSavepoint = false)
+    {
+    }
+    public function transactionStart($asSavepoint = false)
+    {
+    }
+    public function unlockTables()
+    {
+        return $this;
     }
 }
 
@@ -308,8 +402,8 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every parameter documented in Backward-Compatibility-Breaks-10.1.md
      * must appear in the $migrations array with the correct default value.
      *
-     * @dataProvider provideExpectedNewParams
      */
+    #[DataProvider('provideExpectedNewParams')]
     public function testMigrationHasAllDocumentedNewParams(string $param, string $expectedDefault): void
     {
         $migrations = makeMigHelper([])->getMigrations();
@@ -352,14 +446,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
      * Every rename documented in Backward-Compatibility-Breaks-10.1.md must be
      * registered in the $renames array.
      *
-     * @dataProvider provideExpectedRenames
      */
+    #[DataProvider('provideExpectedRenames')]
     public function testRenameMapHasAllDocumentedEntries(string $oldName, string $newName): void
     {
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('renames');
-        $prop->setAccessible(true);
         $map  = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $map, '10.1.0 renames must exist');
@@ -393,7 +486,6 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h    = makeMigHelper([]);
         $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
         $prop = $ref->getProperty('renames');
-        $prop->setAccessible(true);
         $map  = $prop->getValue($h);
 
         $this->assertCount(14, $map['10.1.0'], 'Exactly 14 renames documented for 10.1.0');
@@ -403,15 +495,12 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 2c – B/C completeness: color fields
     // =========================================================================
 
-    /**
-     * @dataProvider provideExpectedColorFields
-     */
+    #[DataProvider('provideExpectedColorFields')]
     public function testColorConversionListHasAllDocumentedFields(string $field): void
     {
-        $h    = makeMigHelper([]);
-        $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
-        $prop = $ref->getProperty('colorConversions');
-        $prop->setAccessible(true);
+        $h      = makeMigHelper([]);
+        $ref    = new \ReflectionClass(CwmtemplatemigrationHelper::class);
+        $prop   = $ref->getProperty('colorConversions');
         $colors = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $colors);
@@ -438,10 +527,9 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
 
     public function testPathConversionHasBibleStudyToProclaimMapping(): void
     {
-        $h    = makeMigHelper([]);
-        $ref  = new \ReflectionClass(CwmtemplatemigrationHelper::class);
-        $prop = $ref->getProperty('pathConversions');
-        $prop->setAccessible(true);
+        $h     = makeMigHelper([]);
+        $ref   = new \ReflectionClass(CwmtemplatemigrationHelper::class);
+        $prop  = $ref->getProperty('pathConversions');
         $paths = $prop->getValue($h);
 
         $this->assertArrayHasKey('10.1.0', $paths);
@@ -688,9 +776,7 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
     // Section 7 – rowspan image migration
     // =========================================================================
 
-    /**
-     * @dataProvider provideRowspanItemMap
-     */
+    #[DataProvider('provideRowspanItemMap')]
     public function testRowspanItemMapsToElement(int $rowspanitem, string $elementKey): void
     {
         $h = makeMigHelper([['rowspanitem' => (string) $rowspanitem, 'rowspanitemspan' => '3']]);

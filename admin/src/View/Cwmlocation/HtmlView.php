@@ -94,15 +94,31 @@ class HtmlView extends BaseHtmlView
         $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'location', (int)$this->item->id);
 
-        $this->setLayout("edit");
+        // For modalreturn layout, just load item data and render (no toolbar, no extras)
+        if ($this->getLayout() === 'modalreturn') {
+            parent::display($tpl);
+
+            return;
+        }
+
+        $input          = Factory::getApplication()->getInput();
+        $forcedLanguage = $input->get('forcedLanguage', '', 'cmd');
+
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage) {
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+        }
 
         // Set the toolbar
-        $this->addToolbar();
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+        } else {
+            $this->addModalToolbar();
+        }
 
         // Display the template
         parent::display($tpl);
-
-        $isNew = ($this->item->id < 1);
     }
 
     /**
@@ -149,5 +165,33 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
         ToolbarHelper::help('location', true);
+    }
+
+    /**
+     * Add toolbar for modal layout (Apply/Save/Cancel only).
+     *
+     * @return void
+     *
+     * @since  10.2.0
+     */
+    protected function addModalToolbar(): void
+    {
+        $isNew   = ((int) $this->item->id === 0);
+        $toolbar = $this->getDocument()->getToolbar();
+
+        ToolbarHelper::title(
+            Text::_('JBS_CMN_LOCATIONS') . ': <small><small>[' . ($isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT')) . ']</small></small>',
+            'home home'
+        );
+
+        $canCreate = $isNew && $this->canDo->get('core.create', 'com_proclaim');
+        $canEdit   = $this->canDo->get('core.edit', 'com_proclaim');
+
+        if ($canCreate || $canEdit) {
+            $toolbar->apply('cwmlocation.apply');
+            $toolbar->save('cwmlocation.save');
+        }
+
+        $toolbar->cancel('cwmlocation.cancel');
     }
 }

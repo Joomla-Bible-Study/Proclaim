@@ -61,7 +61,7 @@ foreach ($this->items as $this->item) {
                 echo $this->item->teachername; ?></span></dd>
 
         <dd class="category-name">
-            <i class="fas fa-bible" aria-hidden="true"></i>
+            <i class="fa-solid fa-book-bible" aria-hidden="true"></i>
             <?php
             echo $this->item->scripture1; ?>    </dd>
 

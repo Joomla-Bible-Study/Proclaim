@@ -168,6 +168,29 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        // Prevent Joomla's Page Cache plugin from caching filtered/landing results.
+        // Filtered pages are user-specific (session state) and must not be served stale.
+        $app          = Factory::getApplication();
+        $input        = $app->getInput();
+        $filterParams = ['sendingview', 'filter_series', 'filter_teacher', 'filter_book',
+            'filter_topic', 'filter_year', 'filter_messagetype', 'filter_location'];
+        $hasFilters = false;
+
+        foreach ($filterParams as $param) {
+            if ($input->getString($param, '')) {
+                $hasFilters = true;
+                break;
+            }
+        }
+
+        if ($hasFilters) {
+            $app->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate', true);
+            $app->setHeader('Pragma', 'no-cache', true);
+            $app->setHeader('Expires', '0', true);
+            // Tell Joomla's Page Cache plugin to skip this page
+            $app->allowCache(false);
+        }
+
         /** @var CwmsermonsModel $model */
         $model       = $this->getModel();
         $this->state = $model->getState();
@@ -246,9 +269,15 @@ class HtmlView extends BaseHtmlView
             $t      = $this->template->id ?? $mainframe->input->getInt('t', 1);
             $itemId = $this->itemid;
 
-            $ajaxUrl = Uri::base() . 'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
+            // Use Route::_() to produce a SEF URL with the language prefix.
+            // A raw index.php?… URL triggers a Joomla redirect that strips
+            // query parameters (limitstart) from the Input object.
+            $ajaxUrl = Route::_(
+                'index.php?option=com_proclaim&task=cwmsermons.filterAjax&format=raw'
                 . '&t=' . (int) $t
-                . '&Itemid=' . (int) $itemId;
+                . '&Itemid=' . (int) $itemId,
+                false
+            );
 
             $mainframe->getDocument()->addScriptOptions('com_proclaim.sermonFilters', [
                 'ajaxUrl'         => $ajaxUrl,
@@ -258,16 +287,22 @@ class HtmlView extends BaseHtmlView
                 'limit'           => (int) $this->state->get('list.limit', 20),
                 'totalItems'      => (int) $pagination->total,
                 'scrollThreshold' => (int) $params->get('infinite_scroll_threshold', 3),
+                'showPagination'  => $params->get('show_pagination', '2'),
             ]);
 
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
+
+            // Disable Joomla's searchtools — it auto-submits the form on keystroke,
+            // conflicting with Proclaim's AJAX-based filtering which handles the
+            // same form without page reloads.
+            $wa->disableScript('searchtools');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled)
-        $wa->useScript('com_proclaim.scripture-tooltip');
-        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+        $wa->useScript('lib_cwmscripture.scripture-tooltip');
+        $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
         $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
             'ajaxUrl' => Route::_(
@@ -279,6 +314,10 @@ class HtmlView extends BaseHtmlView
         // Register language strings used by infinite scroll / load more JS
         Text::script('JBS_CMN_LOAD_MORE');
         Text::script('JBS_CMN_LOADING');
+        Text::script('JBS_CMN_LOADING_SLOW');
+        Text::script('JBS_CMN_LOADING_TIMEOUT');
+        Text::script('JBS_CMN_LOADING_ERROR');
+        Text::script('JBS_CMN_RETRY');
         Text::script('JBS_CMN_SHOWING_X_OF_Y');
         Text::script('JBS_CMN_ALL_ITEMS_LOADED');
 

@@ -77,7 +77,7 @@ async function loginAdmin(browser, baseUrl, username, password, storageStatePath
         await ctx.close();
         throw new Error(
             `Login failed for ${baseUrl} — credentials rejected or form not submitted.\n` +
-            `Check builder.joomla_username / builder.joomla_password in build.properties.\n` +
+            `Check builder.j5dev.username / builder.j5dev.password (or j6dev) in build.properties.\n` +
             `Current URL: ${url}`
         );
     }
@@ -91,18 +91,22 @@ module.exports = async function globalSetup() {
     const root = path.join(__dirname, '../..');
     const props = loadProps(root);
 
-    const username = props['builder.joomla_username'];
-    const password = props['builder.joomla_password'];
-
-    if (!username || !password) {
-        throw new Error(
-            'Missing builder.joomla_username / builder.joomla_password.\n' +
-            'Set them in build.properties (local dev) or build.dist.properties (shared defaults).'
-        );
-    }
-
     const j5Url = props['builder.j5dev.url'] || 'https://j5-dev.local:8890';
     const j6Url = props['builder.j6dev.url'] || 'https://j6-dev.local:8890';
+
+    // Per-site credentials with shared fallback
+    const j5User = props['builder.j5dev.username'] || props['builder.joomla_username'];
+    const j5Pass = props['builder.j5dev.password'] || props['builder.joomla_password'];
+    const j6User = props['builder.j6dev.username'] || props['builder.joomla_username'];
+    const j6Pass = props['builder.j6dev.password'] || props['builder.joomla_password'];
+
+    if (!j5User || !j5Pass || !j6User || !j6Pass) {
+        throw new Error(
+            'Missing admin credentials.\n' +
+            'Set builder.j5dev.username / builder.j5dev.password (and j6dev) in build.properties.\n' +
+            'Or set builder.joomla_username / builder.joomla_password as a shared fallback.'
+        );
+    }
 
     const authDir = path.join(__dirname, '.auth');
     if (!fs.existsSync(authDir)) {
@@ -113,10 +117,10 @@ module.exports = async function globalSetup() {
 
     try {
         console.log(`\nAuthenticating against j5-dev (${j5Url})…`);
-        await loginAdmin(browser, j5Url, username, password, path.join(authDir, 'admin-j5.json'));
+        await loginAdmin(browser, j5Url, j5User, j5Pass, path.join(authDir, 'admin-j5.json'));
 
         console.log(`Authenticating against j6-dev (${j6Url})…`);
-        await loginAdmin(browser, j6Url, username, password, path.join(authDir, 'admin-j6.json'));
+        await loginAdmin(browser, j6Url, j6User, j6Pass, path.join(authDir, 'admin-j6.json'));
     } finally {
         await browser.close();
     }

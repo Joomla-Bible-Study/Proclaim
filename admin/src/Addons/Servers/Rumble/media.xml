@@ -58,7 +58,7 @@
             <field name="media_button_color" type="ColorPicker" default="#85C742"
                    description="JBS_ADDON_RUMBLE_BUTTON_COLOR_DESC" label="JBS_ADDON_RUMBLE_BUTTON_COLOR"/>
             <field name="media_icon_type" type="IconType" class="form-select-color-state" size="1"
-                   default="fas fa-play-circle"
+                   default="fa-solid fa-circle-play"
                    label="JBS_ADDON_RUMBLE_ICON_TYPE"
                    description="JBS_ADDON_RUMBLE_ICON_TYPE_DESC">
             </field>

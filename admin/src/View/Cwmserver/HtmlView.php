@@ -104,15 +104,33 @@ class HtmlView extends BaseHtmlView
         $this->canDo       = ContentHelper::getActions('com_proclaim', 'server', (int)$this->item->id);
         $this->server_form = $model->getAddonServerForm();
 
+        // For modalreturn layout, just load item data and render (no toolbar, no extras)
+        if ($this->getLayout() === 'modalreturn') {
+            parent::display($tpl);
+
+            return;
+        }
+
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
-        $this->setLayout("edit");
+        $input          = Factory::getApplication()->getInput();
+        $forcedLanguage = $input->get('forcedLanguage', '', 'cmd');
+
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage) {
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+        }
 
         // Set the toolbar
-        $this->addToolbar();
+        if ($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+        } else {
+            $this->addModalToolbar();
+        }
 
         // Display the template
         parent::display($tpl);
@@ -163,5 +181,33 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
         ToolbarHelper::help('server', true);
+    }
+
+    /**
+     * Add toolbar for modal layout (Apply/Save/Cancel only).
+     *
+     * @return void
+     *
+     * @since  10.2.0
+     */
+    protected function addModalToolbar(): void
+    {
+        $isNew   = ($this->item->id < 1);
+        $toolbar = $this->getDocument()->getToolbar();
+
+        ToolbarHelper::title(
+            Text::_('JBS_CMN_SERVERS') . ': <small><small>[' . ($isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT')) . ']</small></small>',
+            'database database'
+        );
+
+        $canCreate = $isNew && $this->canDo->get('core.create', 'com_proclaim');
+        $canEdit   = $this->canDo->get('core.edit', 'com_proclaim');
+
+        if ($canCreate || $canEdit) {
+            $toolbar->apply('cwmserver.apply');
+            $toolbar->save('cwmserver.save');
+        }
+
+        $toolbar->cancel('cwmserver.cancel');
     }
 }

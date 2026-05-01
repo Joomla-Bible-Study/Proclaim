@@ -169,10 +169,25 @@ class CwmsermonsModel extends ListModel
         $this->landing = 0;
         $landingcheck  = $app->getInput()->get('sendingview');
 
-        if ($landingcheck === 'landing') {
+        if ($landingcheck === 'landing' || $landingcheck === 'cwmlanding') {
             $landing       = 1;
             $this->landing = 1;
             $this->setState('sendingview', '');
+
+            // Clear session filters so only the landing page's active filter applies.
+            // Without this, old session values bleed through for filters not in the URL.
+            $clearKeys = [
+                'filter.book', 'filter.teacher', 'filter.series',
+                'filter.messageType', 'filter.year', 'filter.topic',
+                'filter.location', 'filter.landingbook', 'filter.landingteacher',
+                'filter.landingseries', 'filter.landingmessageType',
+                'filter.landingyear', 'filter.landingtopic', 'filter.landinglocation',
+            ];
+
+            foreach ($clearKeys as $key) {
+                $this->setState($key, 0);
+                $app->setUserState($this->context . '.' . $key, 0);
+            }
         } else {
             // Clear both model state AND session so getUserStateFromRequest()
             // doesn't resurrect old filter selections from the session.
@@ -579,6 +594,7 @@ class CwmsermonsModel extends ListModel
             [
                 $db->quoteName('series.access') . ' IN (' . implode(',', $groups) . ')',
                 $db->quoteName('study.series_id') . ' <= 0',
+                $db->quoteName('study.series_id') . ' IS NULL',
             ],
             'OR'
         );
@@ -611,11 +627,12 @@ class CwmsermonsModel extends ListModel
                 . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
             // Admin: only check series published state
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         }
 
         // Filter by start and end dates for messages.
@@ -856,7 +873,8 @@ class CwmsermonsModel extends ListModel
         bool $isExpression = false,
     ): void {
         $colRef   = $isExpression ? $column : $db->quoteName($column);
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
 
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
@@ -896,7 +914,8 @@ class CwmsermonsModel extends ListModel
         ?array $paramValues,
         int $filterValue,
     ): void {
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
 
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
@@ -952,7 +971,8 @@ class CwmsermonsModel extends ListModel
         ?array $paramValues,
         int $filterValue,
     ): void {
-        $hasParam = $paramValues !== null && ($paramValues[0] ?? '-1') !== '-1';
+        $first    = $paramValues[0] ?? '-1';
+        $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
         $col      = $db->quoteName('study.booknumber');
 
         if ($hasParam && $filterValue < 1) {

@@ -257,7 +257,9 @@ class HtmlView extends BaseHtmlView
             CwmschemaorgHelper::buildTeacherDetail(
                 $this->item,
                 Uri::getInstance()->toString()
-            )
+            ),
+            (int) ($this->item->id ?? 0),
+            'com_proclaim.teacher'
         );
     }
 }

@@ -6,8 +6,8 @@
     <authorEmail>info@christianwebministries.org</authorEmail>
     <authorUrl>www.christianwebministries.org</authorUrl>
     <copyright>(C) 2026 Proclaim All rights reserved.</copyright>
-    <version>10.2.2</version>
-    <creationDate>Mar 19, 2026</creationDate>
+    <version>10.3.0-dev</version>
+    <creationDate>Mar 22, 2026</creationDate>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>JBS_INS_XML_DESCRIPTION</description>
     <namespace path="src">CWM\Component\Proclaim</namespace>
@@ -27,17 +27,16 @@
         </sql>
     </install>
 
-    <uninstall>
-        <sql>
-            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-        </sql>
-    </uninstall>
+    <!-- Uninstall SQL is handled conditionally by proclaim.script.php
+         based on the drop_tables admin setting. -->
 
     <update>
         <schemas>
             <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
+
+    <changelogurl>https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml</changelogurl>
 
     <updateservers>
         <server type="extension" priority="1" name="CWM Proclaim Package">

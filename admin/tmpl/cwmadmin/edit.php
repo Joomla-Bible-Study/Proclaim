@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
+use CWM\Library\Scripture\Field\TranslationsmanagerField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -28,7 +29,7 @@ $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->useScript('com_proclaim.cwmadmin')
-    ->useScript('com_proclaim.bible-translations')
+    ->useScript('lib_cwmscripture.bible-translations')
     ->useScript('com_proclaim.csv-import')
     ->useScript('com_proclaim.server-migration')
     ->useScript('com_proclaim.admin-youtube-log')
@@ -96,6 +97,55 @@ $this->useCoreUI = true;
     </div>
 </div>
 
+<!-- Bootstrap 5 Modal for Schema.org Sync -->
+<div class="modal fade" id="schema-sync-modal" tabindex="-1"
+     aria-labelledby="schemaSyncModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="schemaSyncModalLabel">
+                    <i class="icon-code me-2" aria-hidden="true"></i>
+                    <?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo Text::_('JCLOSE'); ?>"></button>
+            </div>
+            <div class="modal-body">
+                <div class="schema-sync-choose text-center">
+                    <p class="mb-3"><?php echo Text::_('JBS_ADM_SCHEMA_SYNC_DESC'); ?></p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-schema-sync-run" data-mode="smart">
+                            <i class="icon-refresh me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_SMART'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-schema-sync-run" data-mode="new">
+                            <i class="icon-plus me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_NEW'); ?>
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-schema-sync-run" data-mode="force">
+                            <i class="icon-warning me-1" aria-hidden="true"></i>
+                            <?php echo Text::_('JBS_ADM_SCHEMA_SYNC_FORCE'); ?>
+                        </button>
+                    </div>
+                </div>
+                <div class="schema-sync-progress text-center" style="display: none;">
+                    <div class="schema-sync-spinner mb-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden"><?php echo Text::_('JBS_ADM_LOADING'); ?></span>
+                        </div>
+                    </div>
+                    <p class="schema-sync-status-text fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_SCHEMA_SYNCING'); ?></p>
+                    <p class="schema-sync-result-text text-muted small mb-0"></p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center" style="display: none;">
+                <button type="button" class="btn btn-success btn-close-schema-modal">
+                    <i class="icon-checkmark me-1" aria-hidden="true"></i><?php echo Text::_('JCLOSE'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap 5 Modal for Player Tools -->
 <div class="modal fade" id="player-tools-modal" tabindex="-1"
      aria-labelledby="playerToolsModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -129,7 +179,7 @@ $this->useCoreUI = true;
 echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
       method="post" name="adminForm" id="item-admin"
       aria-label="<?php
-        echo Text::_('COM_CONTENT_FORM_TITLE_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
+        echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
       class="form-validate">
     <?php
     echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
@@ -192,6 +242,14 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <i class="icon-location" aria-hidden="true"></i>
                             <span><?php echo Text::_('JBS_ADM_LOCATION_WIZARD'); ?></span>
                         </a>
+                        <button type="button"
+                           class="cwmadmin-action-card"
+                           id="btn-schema-sync"
+                           data-schema-force="0"
+                           title="<?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?>">
+                            <i class="icon-code" aria-hidden="true"></i>
+                            <span><?php echo Text::_('JBS_ADM_SCHEMA_SYNC'); ?></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -215,6 +273,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SEO_METADATA'); ?></h3>
                     <?php echo $this->form->renderField('metakey', 'params'); ?>
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
+                    <?php echo $this->form->renderField('org_name', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>
@@ -244,6 +303,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                             <span id="ai-models-status" class="ms-2 small text-body-secondary"></span>
                         </div>
                     </div>
+                    <?php echo $this->form->renderField('ai_voice', 'params'); ?>
                 </div>
             </div>
             <div class="col-12 col-lg-6">
@@ -253,12 +313,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('show_location_media', 'params'); ?>
                     <?php echo $this->form->renderField('popular_limit', 'params'); ?>
                     <?php echo $this->form->renderField('format_popular', 'params'); ?>
-                    <?php echo $this->form->renderField('character_filter', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_PRIVACY_MAINTENANCE'); ?></h3>
                     <?php echo $this->form->renderField('gdpr_mode', 'params'); ?>
-                    <?php echo $this->form->renderField('compat_mode', 'params'); ?>
+
                     <?php echo $this->form->renderField('filestokeep'); ?>
                     <?php echo $this->form->renderField('drop_tables'); ?>
                     <?php echo $this->form->renderField('debug'); ?>
@@ -277,7 +336,6 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('location_id', 'params'); ?>
                     <?php echo $this->form->renderField('teacher_id', 'params'); ?>
                     <?php echo $this->form->renderField('series_id', 'params'); ?>
-                    <?php echo $this->form->renderField('booknumber', 'params'); ?>
                     <?php echo $this->form->renderField('messagetype', 'params'); ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
@@ -777,131 +835,12 @@ $wa->useScript('com_proclaim.admin-imagetools');
 echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
-echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB')); ?>
-        <div class="row" id="scripture-settings">
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS'); ?></h3>
-                    <p class="text-muted"><?php echo Text::_('JBS_ADM_SCRIPTURE_PROVIDERS_DESC'); ?></p>
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB'));
 
-                    <?php echo $this->form->renderField('provider_getbible', 'params'); ?>
-                    <?php echo $this->form->renderField('provider_api_bible', 'params'); ?>
-                    <?php echo $this->form->renderField('api_bible_api_key', 'params'); ?>
-                    <div id="api-bible-key-row" class="mb-3" style="display:none;">
-                        <a href="https://api.bible/sign-in" target="_blank" rel="noopener noreferrer"
-                           class="btn btn-sm btn-outline-secondary">
-                            <i class="icon-key" aria-hidden="true"></i>
-                            <?php echo Text::_('JBS_ADM_API_BIBLE_GET_KEY'); ?>
-                        </a>
-                    </div>
-                    <div id="api-bible-sync-row" class="mb-3" style="display:none;">
-                        <button type="button" class="btn btn-sm btn-primary" id="btn-sync-api-bible">
-                            <i class="icon-refresh" aria-hidden="true"></i>
-                            <?php echo Text::_('JBS_ADM_SYNC_TRANSLATIONS'); ?>
-                        </button>
-                        <span id="api-bible-sync-status" class="ms-2 small"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-lg-6">
-                <div class="cwmadmin-panel mb-4">
-                    <h3 class="tab-description"><?php echo Text::_('JBS_ADM_SCRIPTURE_SETTINGS'); ?></h3>
-                    <?php echo $this->form->renderField('default_bible_version', 'params'); ?>
-                    <?php echo $this->form->renderField('scripture_cache_days', 'params'); ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="cwmadmin-panel mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="tab-description mb-0" id="translations-card-header"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS'); ?></h3>
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-primary d-none" id="btn-update-all-translations"
-                                    title="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>">
-                                <i class="icon-download" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>
-                            </button>
-                            <button type="button" class="btn btn-danger d-none" id="btn-remove-all-translations"
-                                    title="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>">
-                                <i class="icon-trash" aria-hidden="true"></i> <?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" id="btn-refresh-translations"
-                                    title="<?php echo Text::_('JBS_ADM_REFRESH'); ?>">
-                                <i class="icon-refresh" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-muted"><?php echo Text::_('JBS_ADM_LOCAL_TRANSLATIONS_DESC'); ?></p>
-                    <div id="translations-list">
-                        <div class="text-center py-3">
-                            <span class="spinner-border spinner-border-sm" role="status"></span>
-                            <?php echo Text::_('JBS_ADM_LOADING'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bible-translations-config" class="d-none"
-             data-gdpr-mode="<?php echo (int) ($this->item->params['gdpr_mode'] ?? 0); ?>"
-             data-token="<?php echo Session::getFormToken(); ?>"
-             data-str-loading="<?php echo Text::_('JBS_ADM_LOADING'); ?>"
-             data-str-no-translations="<?php echo Text::_('JBS_ADM_NO_TRANSLATIONS'); ?>"
-             data-str-load-error="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
-             data-str-title="<?php echo Text::_('JGLOBAL_TITLE'); ?>"
-             data-str-abbreviation="<?php echo Text::_('JBS_ADM_ABBREVIATION'); ?>"
-             data-str-source="<?php echo Text::_('JBS_ADM_SOURCE'); ?>"
-             data-str-status="<?php echo Text::_('JSTATUS'); ?>"
-             data-str-verses="<?php echo Text::_('JBS_ADM_VERSES'); ?>"
-             data-str-installed="<?php echo Text::_('JBS_ADM_INSTALLED'); ?>"
-             data-str-not-installed="<?php echo Text::_('JBS_ADM_NOT_INSTALLED'); ?>"
-             data-str-download="<?php echo Text::_('JBS_ADM_DOWNLOAD'); ?>"
-             data-str-downloading="<?php echo Text::_('JBS_ADM_DOWNLOADING'); ?>"
-             data-str-remove="<?php echo Text::_('JBS_ADM_REMOVE'); ?>"
-             data-str-download-failed="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOAD_FAILED_GENERIC'); ?>"
-             data-str-confirm-remove="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_TRANSLATION'); ?>"
-             data-str-bundled-done="<?php echo Text::_('JBS_ADM_BUNDLED_AUTO_DOWNLOADED'); ?>"
-             data-str-status-ready="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_READY'); ?>"
-             data-str-status-installed="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_INSTALLED'); ?>"
-             data-str-status-none="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_NONE'); ?>"
-             data-str-status-unknown="<?php echo Text::_('JBS_ADM_PROVIDER_STATUS_UNKNOWN'); ?>"
-             data-str-remove-all="<?php echo Text::_('JBS_ADM_REMOVE_ALL'); ?>"
-             data-str-confirm-remove-all="<?php echo Text::_('JBS_ADM_CONFIRM_REMOVE_ALL'); ?>"
-             data-str-size="<?php echo Text::_('JBS_ADM_SIZE'); ?>"
-             data-str-total-size="<?php echo Text::_('JBS_ADM_TOTAL_SIZE'); ?>"
-             data-str-syncing="<?php echo Text::_('JBS_ADM_SYNCING'); ?>"
-             data-str-sync-complete="<?php echo Text::_('JBS_ADM_SYNC_COMPLETE'); ?>"
-             data-str-sync-failed="<?php echo Text::_('JBS_ADM_SYNC_FAILED'); ?>"
-             data-str-gdpr-disabled="<?php echo Text::_('JBS_ADM_GDPR_PROVIDERS_DISABLED'); ?>"
-             data-str-online="<?php echo Text::_('JBS_ADM_ONLINE'); ?>"
-             data-str-language="<?php echo Text::_('JBS_ADM_LANGUAGE'); ?>"
-             data-str-all-languages="<?php echo Text::_('JBS_ADM_ALL_LANGUAGES'); ?>"
-             data-str-filter-all="<?php echo Text::_('JBS_ADM_FILTER_STATUS_ALL'); ?>"
-             data-str-filter-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_INSTALLED'); ?>"
-             data-str-filter-not-installed="<?php echo Text::_('JBS_ADM_FILTER_STATUS_NOT_INSTALLED'); ?>"
-             data-str-filter-in-use="<?php echo Text::_('JBS_ADM_FILTER_STATUS_IN_USE'); ?>"
-             data-str-search-placeholder="<?php echo Text::_('JBS_ADM_SEARCH_TRANSLATIONS'); ?>"
-             data-str-usage-count="<?php echo Text::_('JBS_ADM_USAGE_COUNT'); ?>"
-             data-str-usage-badge="<?php echo Text::_('JBS_ADM_USAGE_BADGE'); ?>"
-             data-str-suggested="<?php echo Text::_('JBS_ADM_SUGGESTED'); ?>"
-             data-str-showing-count="<?php echo Text::_('JBS_ADM_SHOWING_COUNT'); ?>"
-             data-admin-language="<?php echo Factory::getApplication()->getLanguage()->getTag(); ?>"
-             data-str-core-translation="<?php echo Text::_('JBS_ADM_CORE_TRANSLATION'); ?>"
-             data-str-core-cannot-remove="<?php echo Text::_('JBS_ADM_CORE_CANNOT_REMOVE'); ?>"
-             data-str-suggested-desc="<?php echo Text::_('JBS_ADM_SUGGESTED_DESC'); ?>"
-             data-str-online-only="<?php echo Text::_('JBS_ADM_ONLINE_ONLY'); ?>"
-             data-str-online-only-desc="<?php echo Text::_('JBS_ADM_ONLINE_ONLY_DESC'); ?>"
-             data-str-provider-disable-confirm="<?php echo Text::_('JBS_ADM_PROVIDER_DISABLE_CONFIRM'); ?>"
-             data-str-provider-cleanup-done="<?php echo Text::_('JBS_ADM_PROVIDER_CLEANUP_DONE'); ?>"
-             data-str-bible-refresh="<?php echo Text::_('JBS_ADM_BIBLE_REFRESH'); ?>"
-             data-str-bible-refreshing="<?php echo Text::_('JBS_ADM_BIBLE_REFRESHING'); ?>"
-             data-str-bible-update-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL'); ?>"
-             data-str-bible-update-all-desc="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_DESC'); ?>"
-             data-str-bible-updating-all="<?php echo Text::_('JBS_ADM_BIBLE_UPDATING_ALL'); ?>"
-             data-str-bible-update-all-complete="<?php echo Text::_('JBS_ADM_BIBLE_UPDATE_ALL_COMPLETE'); ?>"
-             data-str-bible-downloaded-at="<?php echo Text::_('JBS_ADM_BIBLE_DOWNLOADED_AT'); ?>"
-        ></div>
+// Single shared renderer for the entire Scripture tab —
+// identical output on both the Proclaim Admin Center and the plugin settings page.
+echo TranslationsmanagerField::renderScriptureTab('jform[params]');
+?>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 

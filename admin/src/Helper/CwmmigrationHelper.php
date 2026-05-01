@@ -911,17 +911,12 @@ class CwmmigrationHelper
      * @return  int
      *
      * @since   10.1.0
+     *
+     * @deprecated Use CwmlocationHelper::getPublishedLocationCount() instead. Will be removed in 11.0.
      */
     public static function getPublishedLocationCount(): int
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_locations'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-
-        return (int) $db->loadResult();
+        return CwmlocationHelper::getPublishedLocationCount();
     }
 
     // -------------------------------------------------------------------------

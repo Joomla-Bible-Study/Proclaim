@@ -51,18 +51,9 @@ class IconTypeField extends ListField
     {
         $data = $this->getLayoutData();
 
-        $convert = [
-            'fa fa-play'          => 'fas fa-play',
-            'fa fa-youtube'       => 'fab fa-youtube',
-            'fa fa-video-camera'  => 'fas fa-video',
-            'fa fa fa-television' => 'far fa-tv',
-            'fa fa-file'          => 'fas fa-file',
-            'fa fa-file-pdf'      => 'fas fa-file-pdf',
-            'fa fa-vimeo'         => 'fab fa-vimeo',
-        ];
-
-        if (isset($convert[$this->value])) {
-            $this->value = $convert[$this->value];
+        // Normalize legacy FA4/FA5 values to FA6 canonical
+        if ($this->value) {
+            $this->value = Cwmmedia::normalizeIconClass($this->value);
         }
 
         $data['options'] = $this->getOptions();

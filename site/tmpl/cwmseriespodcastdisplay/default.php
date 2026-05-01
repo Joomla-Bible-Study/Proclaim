@@ -88,16 +88,16 @@ $CWMedia = new Cwmmedia();
                                 ); ?>
                                 <td>
                                     <?php
-                                    echo stripslashes($item->studytitle); ?>
+                                    echo htmlspecialchars(stripslashes($item->studytitle), ENT_QUOTES, 'UTF-8'); ?>
                                 </td>
                                 <td>
                                     <?php
                                     echo HTMLHelper::Date($item->createdate); ?>
                                 </td>
                                 <td>
-                                    <a href="javascript:loadVideo('<?php
-                                    echo $path1; ?>', '<?php
-                                    echo $item->series_thumbnail; ?>')">
+                                    <a href="javascript:loadVideo(<?php
+                                    echo htmlspecialchars(json_encode($path1), ENT_QUOTES, 'UTF-8'); ?>, <?php
+                                    echo htmlspecialchars(json_encode($item->series_thumbnail), ENT_QUOTES, 'UTF-8'); ?>)">
                                         <?php
                                         echo Text::_('JBS_CMN_LISTEN'); ?>
                                     </a>

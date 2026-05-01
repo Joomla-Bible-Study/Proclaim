@@ -22,7 +22,6 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
 
@@ -144,7 +143,7 @@ class HtmlView extends BaseHtmlView
         $user = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance
-        $toolbar = Toolbar::getInstance('toolbar');
+        $toolbar = $this->getDocument()->getToolbar('toolbar');
 
         ToolbarHelper::title(Text::_('JBS_CMN_LOCATIONS'), 'home home');
 
@@ -181,6 +180,15 @@ class HtmlView extends BaseHtmlView
                     ->selector('collapseModal')
                     ->listCheck(true);
             }
+        }
+
+        // Add merge button when user has both delete and edit permissions
+        if ($this->canDo->get('core.delete') && $this->canDo->get('core.edit')) {
+            $childBar->popupButton('merge')
+                ->text('JBS_LOC_MERGE')
+                ->selector('mergeModal')
+                ->listCheck(true)
+                ->icon('icon-copy');
         }
 
         if ($this->state->get('filter.published') === '-2' && $this->canDo->get('core.delete')) {

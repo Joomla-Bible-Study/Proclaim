@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Proclaim Changelog — Christian Web Ministries
+    Hosted at: https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml
+    Referenced via <changelogurl> in proclaim.xml (extension manifest).
+
+    Joomla 4.0+ reads this file and displays a "Changelog" button in:
+      - Extensions > Manage  (changelog for the currently installed version)
+      - Extensions > Update  (changelog for the version about to be installed)
+
+    Change type nodes (all optional, use what applies):
+      <security>  <fix>  <addition>  <change>  <remove>  <language>  <note>
+
+    Workflow:
+      1. Before a release, add a new <changelog> block at the TOP (newest first).
+      2. Use `composer changelog` to draft an entry from GitHub release notes.
+      3. The file ships with the release commit — no separate upload needed.
+-->
+<changelogs>
+
+    <!-- ============================================================ -->
+    <!-- 10.2.2                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.2.2</version>
+        <date>2026-03-19</date>
+        <fix>
+            <item>Missing podcast platform_links column — added in migration 10.1.0-20260303b but absent from install.mysql.utf8.sql; now included in install SQL and preflight schema check.</item>
+            <item>Preflight required-fixes pass now catches columns that should exist but were missed due to install SQL gaps, regardless of schema version.</item>
+        </fix>
+        <note>
+            <item>Safe to install over 10.2.0 or 10.2.1. The preflight automatically adds the missing platform_links column if absent. No data migration required.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.2.1                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.2.1</version>
+        <date>2026-03-19</date>
+        <fix>
+            <item>Upgrade failure from duplicate column errors — fixes installation failure when upgrading between versions (e.g., 10.0.1 to 10.2.0) caused by MySQL ALTER TABLE ADD COLUMN failing on columns already added by a previous partial upgrade attempt.</item>
+            <item>New preflight schema check reads install.mysql.utf8.sql to determine expected columns, compares against the live database, and drops leftover columns from failed upgrades before Joomla runs migration SQL.</item>
+        </fix>
+        <note>
+            <item>Safe to install over a failed 10.2.0 upgrade — preflight cleans up automatically. Also fixes database import/restore scenarios where schema does not match expectations. No data migration required.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.2.0                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.2.0</version>
+        <date>2026-03-15</date>
+        <addition>
+            <item>Media Chapters and Subtitles — VTT/SRT caption file upload, per-media chapter timestamps, clickable chapter lists on frontend players (YouTube iframe and HTML5 video/audio).</item>
+            <item>YouTube OAuth Integration — OAuth status field, import chapters and download captions directly from YouTube, addon-aware capability flags across 7 platforms.</item>
+            <item>Per-Media Copy Description — server-configurable description format templates with placeholder replacement ({title}, {series}, {teachers}, {chapters}, etc.).</item>
+            <item>AI Assist Enhancements — chapter generation, topic saving fixes, editor API updates for Joomla 6, toggle checkboxes for selective generation.</item>
+            <item>Google Drive Server Addon — document sharing and embedding for Google Drive links.</item>
+            <item>Chunked Export/Import — async post-restore steps for large databases.</item>
+            <item>YouTube Module Improvements — countdown timer, notify button, mini-player, smart quota optimization.</item>
+            <item>Podcast Enhancements — multi-platform links with Podcast Index API, configurable iTunes settings, artwork validation.</item>
+            <item>Schema-Driven Layout Editor — settings modal driven by XML schema, media icon sizing.</item>
+            <item>Analytics Improvements — archived indicators, status filtering, drill-down views, printable reports.</item>
+            <item>Social Sharing — dual-mode sharing with GDPR-compliant local option.</item>
+            <item>Legacy URL Support — redirect old com_biblestudy URLs to com_proclaim.</item>
+            <item>Playwright E2E Tests — browser-based smoke tests for Joomla 5 and 6.</item>
+        </addition>
+        <fix>
+            <item>YouTube API Quota — prevent quota exhaustion from search.list overuse; centralized file cache for throttle and scheduled start times; 15-minute search throttle saves ~200 units per hit.</item>
+            <item>AI Assist — fix topic saving (only one topic saved instead of multiple), chapter generation not displaying, deprecated Joomla editor API warnings.</item>
+            <item>Image Handling — protect source image from deletion during thumbnail cleanup; prevent File::copy error when source image is missing.</item>
+            <item>Frontend Filters — series filter not clearing due to stale session state; AJAX pagination page numbers and CSS; clear button disabled; CSRF gate removed from read-only endpoint.</item>
+            <item>SEF URLs — landing page URL fixes, session state bleeding, page caching; handle legacy 9.x SEF URLs and download redirects.</item>
+            <item>Dark Mode — theme-aware colors throughout (tables, cards, buttons, YouTube integration, analytics); WCAG AA contrast compliance.</item>
+            <item>Sermon Views — handle NULL series_id, custom not-found page with cached recent messages.</item>
+            <item>Database — correct AUTO_INCREMENT counters after backup restore; cast integer properties in Table bind() for PHP 8.3; add missing primary keys for sites upgraded from v7/v8/v9.</item>
+            <item>Analytics — correct series thumbnail column, fix Cartesian product in getSeriesList, CSV export headers.</item>
+            <item>Play Tracking — re-init YouTube players after AJAX filter, track inline mp3/Fancybox audio, use Joomla base href for multilingual sites.</item>
+        </fix>
+        <security>
+            <item>Escape exception text in innerHTML to prevent XSS (CodeQL #47).</item>
+        </security>
+        <note>
+            <item>Requires PHP 8.3+ and Joomla 5.1+. Also runs on Joomla 6 without backward compatibility layer.</item>
+            <item>523 PHPUnit tests (1,149 assertions), 231 Jest tests (17 suites), PHP CS Fixer 0 issues across 373 files.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.1.1                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.1.1</version>
+        <date>2026-03-13</date>
+        <fix>
+            <item>YouTube module quota exhaustion — fixed aggressive API polling burning ~200 quota units/minute when no live stream is active. Added 15-minute search throttle, full cache TTL for null results, removed expensive search.list fallback from AJAX polling (now 1 unit per poll instead of 200).</item>
+            <item>Series filter not clearing — fixed frontend sermons page filter reverting to old selections after clearing; session state was not being reset alongside model state.</item>
+            <item>Menu item SQL error — fixed "Unknown column 'text' in order clause" when editing menu items for 8 Proclaim views; template picker SQL referenced non-existent column.</item>
+            <item>Defensive params fallback — added try/catch around menu item parameter loading so corrupted XML degrades gracefully instead of breaking the sermons page.</item>
+        </fix>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.1.0                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.1.0</version>
+        <date>2026-03-10</date>
+        <addition>
+            <item>Visual Layout Editor — drag-and-drop template editor with 6 configurable rows; separate layout tabs for Messages, Details, Teachers, and Series views; schema-driven settings modal; works within mod_proclaim.</item>
+            <item>Scripture Entry Redesign — replaced legacy 10-field input with natural-text autocomplete; supports unlimited references per message via new junction table, per-reference Bible versions, and drag-to-reorder.</item>
+            <item>Multi-Campus Location System — single installation serves multiple campuses with content isolation; location records map to Joomla user groups; all 11 admin list models filter by location.</item>
+            <item>Analytics Dashboard and Campus Reports — GDPR-aware event tracking (page views, plays, downloads) with Chart.js dashboard, four-level drill-down, date presets, campus filtering, CSV export, and printable pastor-ready reports.</item>
+            <item>CSV Bulk Import — import messages from CSV or spreadsheet files; client-side parsing with auto-detected delimiters, 15-field column mapping, preview table, auto-creation of teachers/series/locations, AJAX batch processing.</item>
+            <item>Bible API Provider Architecture — three providers: GetBible (free), API.Bible (2,500+ translations), Local (offline/GDPR-safe); two-level configuration with local translation management and frontend AJAX version switcher.</item>
+            <item>Image Optimization Pipeline — WebP generation, picture elements with JPEG fallback, lazy loading; admin Image Tools include batch migration, WebP conversion, orphan cleanup, and broken-reference relinking.</item>
+            <item>9.x to 10.x Migration Wizard — in-place upgrade wizard; automatic legacy schema detection, 6-step AJAX wizard with per-step retry, comprehensive data fixes, and verification.</item>
+            <item>Video platform addons — Vimeo, Wistia, Resi.io, Dailymotion, Rumble, SoundCloud, Facebook video embeds.</item>
+            <item>Schema.org structured data (JSON-LD) for rich search results.</item>
+            <item>Three pagination styles — standard, load more, infinite scroll.</item>
+            <item>Record locking (check-in/checkout) across 12 entity types.</item>
+        </addition>
+        <fix>
+            <item>jQuery removal with Web Asset Manager migration.</item>
+            <item>Complete PSR-12 compliance across all PHP files.</item>
+            <item>Joomla 5/6 forward-compatible APIs throughout.</item>
+        </fix>
+        <note>
+            <item>Minimum PHP 8.3.0 and Joomla 5.1.0. Runs natively on Joomla 6.</item>
+            <item>523 PHPUnit tests plus 186 Jest tests. Full details: https://github.com/Joomla-Bible-Study/Proclaim/wiki/What%27s-New-v10.1</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.0.1                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.0.1</version>
+        <date>2025-09-17</date>
+        <fix>
+            <item>Fix podcastlink column missing from databases upgraded from 9.x.</item>
+            <item>Replace deprecated new JInstaller() with new Installer().</item>
+            <item>Fix Bootstrap progress bar display.</item>
+            <item>Fix error when a Series had no published studies.</item>
+            <item>Fix Simple Mode selection (#992).</item>
+            <item>Fix pagination layout at footer.</item>
+            <item>J6 compatibility changes.</item>
+        </fix>
+        <change>
+            <item>Remove usage of HTMLHelper; introduce Cwmhtml.php to replace old proclaim.php helper.</item>
+            <item>Rework module function usage.</item>
+            <item>PSR-12 cleanup and PHP 8.1 updates.</item>
+        </change>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.0.0                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.0.0</version>
+        <date>2025-07-29</date>
+        <addition>
+            <item>Major release — Proclaim 10.0.0 with full Joomla 4 and Joomla 5 support.</item>
+        </addition>
+        <note>
+            <item>First release in the 10.x series. Upgrade from 9.2.8 via included migration tooling.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 9.2.8                                                         -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>9.2.8</version>
+        <security>
+            <item>Fix XSS potential in Server Name creation. Issue discovered by Zhouyuan Yang of Fortinet FortiGuard Labs.</item>
+        </security>
+    </changelog>
+
+</changelogs>

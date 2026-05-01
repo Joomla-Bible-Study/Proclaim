@@ -19,6 +19,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmteacher\HtmlView $this */
@@ -35,9 +36,11 @@ if ($input->getInt('id')) {
 
 $wa = $this->getDocument()->getWebAssetManager();
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmteacher.cancel', 'formId' => 'teacher-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit')
     ->useScript('com_proclaim.phone-input')
+    ->useScript('com_proclaim.template-lazyload')
     ->useStyle('com_proclaim.intl-tel-input-css')
     ->useStyle('com_proclaim.phone-input-css');
 
@@ -56,15 +59,17 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
     <div class="main-card">
         <?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', ['active' => 'general', 'recall' => true, 'breakpoint' => 768]); ?>
 
-        <?php // ===== Details Tab ===== ?>
+        <?php // ===== Details Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'general', Text::_('JBS_CMN_DETAILS')); ?>
         <div class="row">
             <div class="col-lg-9">
                 <?php echo $this->form->renderField('title'); ?>
+                <?php echo $this->form->renderField('org_name'); ?>
                 <?php echo $this->form->renderField('phone'); ?>
                 <?php echo $this->form->renderField('email'); ?>
                 <?php echo $this->form->renderField('address'); ?>
                 <?php echo $this->form->renderField('contact'); ?>
+                <?php echo $this->form->renderField('user_id'); ?>
                 <?php if ($this->form->getValue('contact')) : ?>
                     <a href="<?php echo Route::_('index.php?option=com_contact&task=contact.edit&id=' . (int) $this->form->getValue('contact')); ?>"
                        target="_blank" class="btn btn-sm btn-secondary mb-3">
@@ -73,11 +78,6 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                 <?php endif; ?>
             </div>
             <div class="col-lg-3">
-                <?php if (!empty($this->item->teacher_thumbnail)) : ?>
-                    <img src="<?php echo Uri::root() . $this->item->teacher_thumbnail; ?>"
-                         alt="<?php echo $this->escape($this->form->getValue('teachername')); ?>"
-                         class="img-thumbnail mb-3 d-block" style="max-width: 200px;"/>
-                <?php endif; ?>
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
                 <hr/>
                 <?php echo $this->form->renderField('published'); ?>
@@ -89,7 +89,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Biography Tab ===== ?>
+        <?php // ===== Biography Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'biography', Text::_('JBS_TCH_BIOGRAPHY')); ?>
         <div class="row">
             <div class="col-lg-12">
@@ -99,14 +99,14 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Links Tab ===== ?>
+        <?php // ===== Links Tab =====?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'links', Text::_('JBS_TCH_LINKS')); ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php // ---- Website Field ---- ?>
+                <?php // ---- Website Field ----?>
                 <?php echo $this->form->renderField('website'); ?>
 
-                <?php // ---- Social Links Subform ---- ?>
+                <?php // ---- Social Links Subform ----?>
                 <div class="mt-4">
                     <h4 class="mb-2">
                         <i class="fa-solid fa-share-nodes"></i>
@@ -116,7 +116,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                     <?php echo $this->form->renderField('social_links'); ?>
                 </div>
 
-                <?php // ---- Legacy Links (if any exist) ---- ?>
+                <?php // ---- Legacy Links (if any exist) ----?>
                 <?php
                 $hasLegacyLinks = !empty($this->item->facebooklink)
                     || !empty($this->item->twitterlink)
@@ -124,7 +124,7 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
                     || !empty($this->item->link1)
                     || !empty($this->item->link2)
                     || !empty($this->item->link3);
-                ?>
+?>
                 <?php if ($hasLegacyLinks) : ?>
                 <div class="accordion mt-5" id="legacyLinksAccordion">
                     <div class="accordion-item">
@@ -169,62 +169,59 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // ===== Messages Tab (existing records only) ===== ?>
+        <?php // ===== Messages Tab (existing records only, lazy-loaded) =====?>
         <?php if (!empty($this->item->id) && $this->item->id > 0) : ?>
         <?php
-        $msgCount = \count($this->messages);
-        echo HTMLHelper::_(
-            'uitab.addTab',
-            'myTab',
-            'messages',
-            Text::sprintf('JBS_TCH_MESSAGES_COUNT', $msgCount)
-        ); ?>
+            echo HTMLHelper::_(
+                'uitab.addTab',
+                'myTab',
+                'messages',
+                Text::sprintf('JBS_TCH_MESSAGES_COUNT', $this->messagesCount)
+            );
+            $messagesLoadUrl = Route::_(
+                'index.php?option=com_proclaim&task=cwmteacher.loadMessages'
+                . '&id=' . (int) $this->item->id
+                . '&' . Session::getFormToken() . '=1'
+            );
+        ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php if ($msgCount > 0) : ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="w-5 text-center"><?php echo Text::_('JSTATUS'); ?></th>
-                            <th><?php echo Text::_('JGLOBAL_TITLE'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_DATE'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_SERIES'); ?></th>
-                            <th class="w-15"><?php echo Text::_('JBS_CMN_LOCATION'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($this->messages as $i => $msg) : ?>
-                        <tr>
-                            <td class="text-center">
-                                <?php echo HTMLHelper::_('jgrid.published', $msg->published, $i, '', false); ?>
-                            </td>
-                            <td>
-                                <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $msg->id); ?>">
-                                    <?php echo $this->escape($msg->studytitle); ?>
-                                </a>
-                            </td>
-                            <td>
-                                <?php echo HTMLHelper::_('date', $msg->studydate, Text::_('DATE_FORMAT_LC4')); ?>
-                            </td>
-                            <td>
-                                <?php echo $this->escape($msg->series_text ?? ''); ?>
-                            </td>
-                            <td>
-                                <?php echo $this->escape($msg->location_text ?? ''); ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <div class="mt-2">
-                    <a class="btn btn-secondary btn-sm"
-                       href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[teacher]=' . (int) $this->item->id); ?>">
-                        <?php echo Text::_('JBS_TCH_VIEW_ALL_MESSAGES'); ?>
-                    </a>
+                <div id="teacher-messages-ajax-container"
+                     class="proclaim-lazy-tab-content"
+                     data-load-url="<?php echo $messagesLoadUrl; ?>">
+                    <div class="text-center p-4 text-muted">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <?php echo Text::_('JLOADING'); ?>
+                    </div>
                 </div>
-                <?php else : ?>
-                <div class="alert alert-info">
-                    <?php echo Text::_('JBS_TCH_NO_MESSAGES'); ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
+
+        <?php // ===== Publishing Tab =====?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
+
+        <?php // ===== Schema.org Tab =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.teacher'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -232,30 +229,12 @@ $tmpl    = $isModal || $input->get('tmpl', '', 'cmd') === 'component' ? '&tmpl=c
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
         <?php endif; ?>
 
-        <?php // ===== Publishing Tab ===== ?>
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php // ===== Permissions Tab ===== ?>
-        <?php if ($this->canDo->get('core.admin')) : ?>
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_CMN_FIELDSET_RULES')); ?>
-        <fieldset id="fieldset-rules" class="options-form">
-            <div>
-                <?php echo $this->form->getInput('rules'); ?>
-            </div>
-        </fieldset>
-        <?php echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php echo $input->getBase64('return'); ?>"/>
         <input type="hidden" name="forcedLanguage" value="<?php echo $input->get('forcedLanguage', '', 'cmd'); ?>"/>
-        <?php echo $this->form->getInput('id'); ?>
+        <?php // id now rendered as a read-only field by the shared publish_tab layout.?>
         <?php echo $this->form->getInput('teacher_image'); ?>
         <?php echo HTMLHelper::_('form.token'); ?>
     </div>

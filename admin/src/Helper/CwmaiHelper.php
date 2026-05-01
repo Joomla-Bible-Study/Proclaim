@@ -86,7 +86,11 @@ class CwmaiHelper
         $cached   = $session->get($cacheKey);
 
         if ($cached !== null) {
-            $cached = json_decode($cached, true);
+            try {
+                $cached = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $cached = null;
+            }
 
             if (\is_array($cached) && !empty($cached['_ts']) && (time() - $cached['_ts']) < self::CACHE_TTL) {
                 unset($cached['_ts']);
@@ -102,11 +106,15 @@ class CwmaiHelper
             'text'   => !empty($context['generate_text'] ?? true),
         ];
 
-        $hasChapters     = !empty($context['video_chapters']);
-        $hasYouTube      = !empty($context['video_title']) || !empty($context['video_description']);
-        $suggestChapters = $fields['text'] && !$hasChapters && $hasYouTube;
+        $wantChapters    = !empty($context['generate_chapters'] ?? true);
+        $hasChapters     = $wantChapters && !empty($context['video_chapters']);
+        // Suggest chapters whenever the user wants them and none exist yet —
+        // the AI can infer logical structure from sermon content alone.
+        $suggestChapters = $wantChapters && !$hasChapters;
 
-        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters);
+        $voice        = $params->get('ai_voice', 'third_person');
+        $teacherName  = $context['teacher_name'] ?? '';
+        $systemPrompt = self::buildSystemPrompt($fields, $hasChapters, $suggestChapters, $voice, $teacherName);
         $userMessage  = self::buildUserMessage($context);
 
         $result = match ($provider) {
@@ -400,13 +408,31 @@ class CwmaiHelper
     private static function buildSystemPrompt(
         array $fields = ['topics' => true, 'intro' => true, 'text' => true],
         bool $hasChapters = false,
-        bool $suggestChapters = false
+        bool $suggestChapters = false,
+        string $voice = 'third_person',
+        string $teacherName = ''
     ): string {
         $instructions = [];
         $jsonKeys     = [];
 
+        $voiceGuide = match ($voice) {
+            'first_person' => 'Write from the teacher\'s perspective in first person'
+                . ($teacherName ? ' (as ' . $teacherName . ')' : '')
+                . '. Use "I", "we", and "us". Sound warm, personal, and pastoral — '
+                . 'as if the teacher is describing their own message to a friend.',
+            'conversational' => 'Write in a warm, conversational tone that speaks directly to the listener. '
+                . 'Use "you" and "we". Ask engaging questions. Sound like a trusted friend '
+                . 'inviting someone to listen, not a catalog description.',
+            'summary' => 'Write in a concise, factual style with no narrative voice. '
+                . 'Focus on the scripture references, key themes, and practical takeaways. '
+                . 'Keep sentences short and informative.',
+            default => 'Write in third person.'
+                . ($teacherName ? ' Refer to the teacher as ' . $teacherName . '.' : ''),
+        };
+
         $instructions[] = 'You are a ministry content assistant helping organize sermon and Bible study records. '
-            . 'Your task is to analyze sermon information and generate the requested content.';
+            . 'Your task is to analyze sermon information and generate the requested content. '
+            . $voiceGuide;
 
         $index = 1;
 
@@ -420,15 +446,32 @@ class CwmaiHelper
 
         if (!empty($fields['intro'])) {
             $instructions[] = $index . '. **Study Introduction** (studyintro) — a compelling 2-3 sentence summary suitable '
-                . 'for display in sermon listings and search results. Write in third person. Do not use markdown formatting.';
+                . 'for display in sermon listings and search results. Do not use markdown formatting.';
             $jsonKeys[] = '"studyintro":"Brief summary..."';
             $index++;
         }
 
         if (!empty($fields['text'])) {
-            $textInstruction = $index . '. **Study Text** (studytext) — a more detailed 2-4 paragraph description that '
-                . 'expands on the sermon\'s themes, key points, and application. Write in third person. '
-                . 'Use simple HTML for paragraphs (<p> tags only). Do not use markdown.';
+            $textInstruction = $index . '. **Study Text** (studytext) — a thorough, detailed writeup of what the teacher '
+                . 'actually preached. This is the primary content piece and should be **substantial** — aim for 6-10 '
+                . 'paragraphs (800-1500 words). Structure it as a comprehensive sermon recap covering:'
+                . "\n   - Opening context and why this scripture matters today"
+                . "\n   - Each major point the teacher made, with supporting scripture"
+                . "\n   - Key illustrations, stories, or real-world examples used"
+                . "\n   - Practical application — what should the listener do differently?"
+                . "\n   - Closing challenge or call to action"
+                . "\n   Someone who missed the sermon should be able to read this and walk away with "
+                . 'the same core understanding and conviction as someone who was there. '
+                . 'Format with clean HTML for comfortable reading. Allowed tags: '
+                . '<p>, <strong>, <em>, <blockquote> (for scripture quotes), '
+                . '<h3> (for section headings within the text), <ul>/<ol>/<li> (for lists of points), '
+                . 'and <br>. Do not use markdown, <h1>, <h2>, or inline styles. '
+                . 'IMPORTANT: When referencing Bible verses, wrap them with the scripture plugin tag '
+                . 'so they become interactive tooltip links. Use the format: '
+                . '{scripture display="tooltip"}Book Chapter:Verse{/scripture}. '
+                . 'Examples: {scripture display="tooltip"}John 3:16{/scripture}, '
+                . '{scripture display="tooltip"}Ephesians 4:14-16{/scripture}. '
+                . 'Do NOT use plain text or HTML links for scripture references.';
 
             if ($hasChapters) {
                 $textInstruction .= ' When referencing video chapters, embed clickable timestamp links using this format: '
@@ -442,8 +485,8 @@ class CwmaiHelper
         }
 
         if ($suggestChapters) {
-            $instructions[] = $index . '. **Suggested Chapters** (chapters) — the attached YouTube video has no chapter '
-                . 'markers. Based on the sermon content, suggest 3-8 logical chapter timestamps. The first chapter must '
+            $instructions[] = $index . '. **Suggested Chapters** (chapters) — Based on the sermon content, suggest 3-8 '
+                . 'logical chapter timestamps that divide the sermon into meaningful sections. The first chapter must '
                 . 'start at 0:00. Return as an array of objects with "time" (display format like "0:00" or "1:23:45") '
                 . 'and "label" (short chapter title).';
             $jsonKeys[] = '"chapters":[{"time":"0:00","label":"Introduction"},{"time":"2:30","label":"Main Point"}]';
@@ -557,7 +600,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'      => $model,
-            'max_tokens' => 2048,
+            'max_tokens' => 8192,
             'system'     => $systemPrompt,
             'messages'   => [
                 ['role' => 'user', 'content' => $userMessage],
@@ -573,7 +616,12 @@ class CwmaiHelper
         $response = $http->post('https://api.anthropic.com/v1/messages', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -581,8 +629,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['content'][0]['text'] ?? '';
+        $data       = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content    = $data['content'][0]['text'] ?? '';
+        $stopReason = $data['stop_reason'] ?? '';
+
+        if ($stopReason === 'max_tokens') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -620,7 +675,7 @@ class CwmaiHelper
             ],
             'generationConfig' => [
                 'temperature'      => 0.7,
-                'maxOutputTokens'  => 2048,
+                'maxOutputTokens'  => 8192,
                 'responseMimeType' => 'application/json',
             ],
         ], JSON_THROW_ON_ERROR);
@@ -632,7 +687,12 @@ class CwmaiHelper
         $response = $http->post($url, $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -640,8 +700,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $finishReason = $data['candidates'][0]['finishReason'] ?? '';
+
+        if ($finishReason === 'MAX_TOKENS') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }
@@ -666,7 +733,7 @@ class CwmaiHelper
 
         $payload = json_encode([
             'model'       => $model,
-            'max_tokens'  => 1024,
+            'max_tokens'  => 8192,
             'temperature' => 0.7,
             'messages'    => [
                 ['role' => 'system', 'content' => $systemPrompt],
@@ -683,7 +750,12 @@ class CwmaiHelper
         $response = $http->post('https://api.openai.com/v1/chat/completions', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
-            $body   = json_decode((string) $response->getBody(), true) ?? [];
+            try {
+                $body = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $body = [];
+            }
+
             $detail = $body['error']['message'] ?? (string) $response->getBody();
 
             throw new \RuntimeException(
@@ -691,8 +763,15 @@ class CwmaiHelper
             );
         }
 
-        $data    = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content = $data['choices'][0]['message']['content'] ?? '';
+        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $content      = $data['choices'][0]['message']['content'] ?? '';
+        $finishReason = $data['choices'][0]['finish_reason'] ?? '';
+
+        if ($finishReason === 'length') {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+            );
+        }
 
         return self::parseJsonResponse($content);
     }

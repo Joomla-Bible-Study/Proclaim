@@ -53,7 +53,7 @@
             </field>
             <field name="media_button_color" type="ColorPicker" default="#5C6BC0"
                    description="JBS_ADDON_DOCMAN_BUTTON_COLOR_DESC" label="JBS_ADDON_DOCMAN_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="fas fa-file-alt"
+            <field name="media_icon_type" type="IconType" class="inputbox" default="fa-solid fa-file-lines"
                    label="JBS_ADDON_DOCMAN_ICON_TYPE"
                    description="JBS_ADDON_DOCMAN_ICON_TYPE_DESC">
             </field>

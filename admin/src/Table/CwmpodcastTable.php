@@ -551,13 +551,13 @@ class CwmpodcastTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        if (!$this->getRules()) {
-            $this->setRules(
-                '{"core.delete":[],"core.edit":[],"core.create":[],"core.edit.state":[],"core.edit.own":[]}'
-            );
+        $result = parent::store($updateNulls);
+
+        if ($result) {
+            Cwmassets::stripEmptyAssetRow($this);
         }
 
-        return parent::store($updateNulls);
+        return $result;
     }
 
     /**

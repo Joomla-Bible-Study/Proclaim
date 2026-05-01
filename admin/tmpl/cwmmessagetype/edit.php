@@ -31,6 +31,7 @@ $input  = $app->getInput();
 
 $wa = $this->getDocument()->getWebAssetManager();
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmmessagetype.cancel', 'formId' => 'messagetype-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 ?>
@@ -50,35 +51,15 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
                 <?php echo $this->form->renderField('landing_show'); ?>
             </div>
             <div class="col-lg-3">
-                <?php echo $this->form->renderField('id'); ?>
                 <?php echo $this->form->renderField('published'); ?>
             </div>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php echo $this->form->getInput('rules'); ?>
-            </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <?php
         echo HTMLHelper::_('uitab.endTabSet'); ?>

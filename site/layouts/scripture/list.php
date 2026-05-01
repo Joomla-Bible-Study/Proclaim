@@ -33,7 +33,7 @@ if (\count($parts) === 1) {
     return;
 }
 
-$dot = '<span class="scripture-sep mx-2" aria-hidden="true"><i class="fas fa-circle" style="font-size:0.35em;vertical-align:middle;opacity:0.6;"></i></span>';
+$dot = '<span class="scripture-sep mx-2" aria-hidden="true"><i class="fa-solid fa-circle" style="font-size:0.35em;vertical-align:middle;opacity:0.6;"></i></span>';
 
 switch ($separator) {
     case 'middot':

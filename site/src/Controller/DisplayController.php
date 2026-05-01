@@ -88,6 +88,19 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
             $cachable = false;
         }
 
+        // Disable Joomla view caching when filters are active (e.g. landing page links)
+        if ($cachable && $vName === 'cwmsermons') {
+            $filterParams = ['sendingview', 'filter_series', 'filter_teacher', 'filter_book',
+                'filter_topic', 'filter_year', 'filter_messagetype', 'filter_location'];
+
+            foreach ($filterParams as $param) {
+                if ($input->getString($param, '')) {
+                    $cachable = false;
+                    break;
+                }
+            }
+        }
+
         // Attempt to change MySQL for an error in a large select
         $t = $input->get('t', '1', 'int');
 

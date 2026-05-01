@@ -56,8 +56,9 @@ if ($isNewRecord) {
     );
 }
 ?>
+<?php $currentLayout = $input->get('layout', 'edit'); ?>
 <form action="<?php
-echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (int)$this->item->id); ?>"
+echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentLayout . '&id=' . (int)$this->item->id); ?>"
       method="post" name="adminForm" id="item-form"
       aria-label="<?php
         echo Text::_('JBS_CMN_' . ((int)$this->item->id === 0 ? 'NEW' : 'EDIT'), true); ?>"
@@ -168,17 +169,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=edit&id=' . (
             endif; ?>
             <?php
         endif; ?>
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php echo $this->form->getInput('rules'); ?>
-            </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="return" value="<?php
         echo $input->getBase64('return'); ?>"/>

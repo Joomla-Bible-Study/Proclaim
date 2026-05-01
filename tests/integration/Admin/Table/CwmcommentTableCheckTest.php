@@ -30,8 +30,11 @@ class CwmcommentTableCheckTest extends IntegrationTestCase
         $this->table->user_id = null;
         $this->table->check();
 
-        // The stub CMSApplication::getIdentity() returns a User with id=42
-        $this->assertEquals(42, $this->table->user_id);
+        // Real ConsoleApplication has no authenticated identity in the
+        // test harness, so the null branch in CwmcommentTable::check()
+        // falls back to Guest (user_id 0). The old stub hardcoded 42,
+        // which was testing stub behavior rather than real logic.
+        $this->assertSame(0, $this->table->user_id);
     }
 
     public function testCheckPreservesExistingUserId(): void

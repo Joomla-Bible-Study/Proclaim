@@ -45,7 +45,9 @@
   "autoload": {
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-      "CWM\\Component\\Proclaim\\Site\\": "site/src/"
+      "CWM\\Component\\Proclaim\\Api\\": "admin/src/Api/",
+      "CWM\\Component\\Proclaim\\Site\\": "site/src/",
+      "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
     }
   },
   "autoload-dev": {
@@ -70,12 +72,22 @@
     "ext-fileinfo": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.0",
+    "phpunit/phpunit": "^12.5",
     "friendsofphp/php-cs-fixer": "^3.0",
     "phan/phan": "^5.4",
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
-    "phpmd/phpmd": "^2.15"
+    "phpmd/phpmd": "^2.15",
+    "joomla/database": "^4.0",
+    "joomla/registry": "^4.0",
+    "joomla/di": "^4.0",
+    "joomla/event": "^4.0",
+    "joomla/input": "^4.0",
+    "joomla/filter": "^4.0",
+    "joomla/filesystem": "^4.0",
+    "joomla/uri": "^4.0",
+    "joomla/application": "^4.0",
+    "joomla/string": "^4.0"
   },
   "replace": {
     "paragonie/random_compat": "9.99.99",
@@ -89,8 +101,8 @@
   },
   "scripts": {
     "test": "phpunit",
-    "test:unit": "phpunit --testsuite 'Proclaim Unit Tests'",
-    "test:integration": "phpunit --testsuite 'Proclaim Integration Tests'",
+    "test:unit": "phpunit --testsuite 'Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests'",
+    "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Api Tests,Integration Admin Table Tests'",
     "test:js": "npm test",
     "test:all": ["@test", "@test:js"],
     "lint:syntax": "php build/proclaim_build.php lint-syntax",
@@ -105,8 +117,11 @@
     "joomla-install": "php build/proclaim_build.php install-joomla",
     "joomla-latest": "php build/proclaim_build.php joomla-latest",
     "symlink": "php build/proclaim_build.php link",
+    "symlink:check": "php build/proclaim_build.php check",
+    "verify": "php build/proclaim_build.php verify",
     "clean": "php build/proclaim_build.php clean",
     "build": "php build/proclaim_build.php build",
+    "package": "php build/proclaim_build.php package",
     "version": "php build/bump.php",
     "sync-languages": "python3 build/sync_languages.py",
     "sync-languages-force": "python3 build/sync_languages.py --force",
@@ -114,7 +129,13 @@
     "vendor:check": "node build/check-vendor-versions.js",
     "vendor:update": "node build/update-vendors.js",
     "post-install-cmd": [
-      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\""
-    ]
+      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
+      "@joomla-cms-deps"
+    ],
+    "joomla-cms-deps": "@php build/joomla-cms-deps.php",
+    "changelog": "bash build/generate-changelog-entry.sh",
+    "ars-publish": "bash build/ars-release.sh",
+    "release": "bash build/release.sh",
+    "jed-prep": "bash build/jed-prep.sh"
   }
 }

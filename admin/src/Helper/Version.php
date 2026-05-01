@@ -51,7 +51,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const int MINOR_VERSION = 2;
+    public const int MINOR_VERSION = 3;
 
     /**
      * Patch release version.
@@ -59,7 +59,7 @@ final class Version
      * @var    int
      * @since  3.8.0
      */
-    public const int PATCH_VERSION = 2;
+    public const int PATCH_VERSION = 0;
 
     /**
      * Extra release version info.
@@ -70,7 +70,7 @@ final class Version
      * @var    string
      * @since  3.8.0
      */
-    public const string EXTRA_VERSION = '';
+    public const string EXTRA_VERSION = 'dev';
 
     /**
      * Development status.
@@ -78,7 +78,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const string DEV_STATUS = 'Stable';
+    public const string DEV_STATUS = 'Development';
 
     /**
      * Code name.
@@ -94,7 +94,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const string RELDATE = '19-March-2026';
+    public const string RELDATE = '22-March-2026';
 
     /**
      * Release time.
@@ -102,7 +102,7 @@ final class Version
      * @var    string
      * @since  3.5
      */
-    public const string RELTIME = '15:44';
+    public const string RELTIME = '21:33';
 
     /**
      * Release timezone.

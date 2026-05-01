@@ -43,8 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let abortController = null;
     let searchDebounceTimer = null;
     let clearInProgress = false;
+    let slowTimer = null;
 
     const DEBOUNCE_MS = 350;
+    const SLOW_THRESHOLD_MS = 5000;
 
     // Pagination style configuration
     const paginationStyle = opts.paginationStyle || 'pagination';
@@ -206,26 +208,70 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLoading() {
         listContainer.classList.add('proclaim-ajax-loading');
 
-        // Insert spinner if not already present
+        // Insert spinner at the top of the list so it's visible near the
+        // search bar instead of buried in the middle of a long list.
         if (!listContainer.querySelector('.proclaim-ajax-spinner')) {
             const spinner = document.createElement('div');
             spinner.className = 'proclaim-ajax-spinner';
             spinner.innerHTML = '<div class="spinner-border text-primary" role="status">'
                 + '<span class="visually-hidden">Loading...</span></div>';
-            listContainer.appendChild(spinner);
+            listContainer.prepend(spinner);
         }
+
+        // Show a "slow response" hint after a delay
+        clearTimeout(slowTimer);
+        slowTimer = setTimeout(() => {
+            const spinner = listContainer.querySelector('.proclaim-ajax-spinner');
+
+            if (spinner && !spinner.querySelector('.proclaim-ajax-slow')) {
+                const hint = document.createElement('div');
+                hint.className = 'proclaim-ajax-slow text-muted small mt-2';
+                hint.textContent = txt('JBS_CMN_LOADING_SLOW', 'Still loading, please wait\u2026');
+                spinner.appendChild(hint);
+            }
+        }, SLOW_THRESHOLD_MS);
     }
 
     /**
-     * Remove loading overlay.
+     * Remove loading overlay and cancel the slow-response timer.
      */
     function hideLoading() {
+        clearTimeout(slowTimer);
         listContainer.classList.remove('proclaim-ajax-loading');
         const spinner = listContainer.querySelector('.proclaim-ajax-spinner');
 
         if (spinner) {
             spinner.remove();
         }
+    }
+
+    /**
+     * Replace the spinner with a user-friendly error message and retry link.
+     *
+     * @param {string} message  The error text to display
+     */
+    function showLoadError(message) {
+        clearTimeout(slowTimer);
+        const spinner = listContainer.querySelector('.proclaim-ajax-spinner');
+
+        if (spinner) {
+            spinner.remove();
+        }
+
+        listContainer.classList.remove('proclaim-ajax-loading');
+
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'proclaim-ajax-error alert alert-warning text-center my-3';
+        errorDiv.innerHTML = `<p>${message}</p>`
+            + `<button type="button" class="btn btn-sm btn-outline-primary proclaim-retry-btn">`
+            + `${txt('JBS_CMN_RETRY', 'Retry')}</button>`;
+        listContainer.appendChild(errorDiv);
+
+        errorDiv.querySelector('.proclaim-retry-btn').addEventListener('click', () => {
+            errorDiv.remove();
+            resetScrollState();
+            fetchResults({ limitstart: 0 });
+        });
     }
 
     /**
@@ -323,6 +369,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#proclaim-pagination-top a, #proclaim-pagination-bottom a').forEach((link) => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
                 const href = link.getAttribute('href') || '';
                 const url = new URL(href, window.location.origin);
                 const limitstart = url.searchParams.get('limitstart') || url.searchParams.get('start') || '0';
@@ -335,28 +383,35 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Update top and bottom pagination containers from response data.
      *
+     * Respects the show_pagination template param:
+     *   '1' = top only, '2' = bottom only, '3' = both
+     * The server returns showPagination in the response so the JS
+     * doesn't render pagination bars the template hides on initial load.
+     *
      * @param {Object} result  The JSON response from filterAjax
      */
     function updatePagination(result) {
         const paginationHtml = result.pagination || '';
         const counterHtml = result.pagesCounter || '';
+        const showWhere = String(result.showPagination || opts.showPagination || '2');
+
+        // Build HTML matching the server-rendered template structure:
+        //   .proclaim-pagination-bar > .proclaim-page-counter + <nav>
+        const barHtml = `<div class="proclaim-pagination-bar">${
+            counterHtml ? `<span class="proclaim-page-counter">${counterHtml}</span>` : ''
+        }${paginationHtml}</div>`;
 
         if (paginationTop) {
-            if (result.pagesTotal > 1) {
-                paginationTop.innerHTML = `<div class="pagination pagination-centered">${
-                    counterHtml ? `<p class="counter float-right">${counterHtml}</p>` : ''
-                }${paginationHtml}</div>`;
+            if (result.pagesTotal > 1 && (showWhere === '1' || showWhere === '3')) {
+                paginationTop.innerHTML = barHtml;
             } else {
                 paginationTop.innerHTML = '';
             }
         }
 
         if (paginationBottom) {
-            if (result.pagesTotal > 1) {
-                paginationBottom.innerHTML = `<nav class="pagination__wrapper" aria-label="Pagination">${
-                    counterHtml ? `<div class="text-end me-3">${counterHtml}</div>` : ''
-                }</nav>`
-                    + `<div class="pagination pagination-centered">${paginationHtml}</div>`;
+            if (result.pagesTotal > 1 && (showWhere === '2' || showWhere === '3')) {
+                paginationBottom.innerHTML = barHtml;
             } else {
                 paginationBottom.innerHTML = '';
             }
@@ -447,9 +502,6 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Object}  overrides   Extra params to merge (e.g. limitstart)
      * @param {boolean} appendMode  If true, append results instead of replacing
      */
-    // Save the native submit so the error fallback can do a real POST
-    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
-
     async function fetchResults(overrides, appendMode) {
         // Cancel any in-flight request
         if (abortController) {
@@ -457,6 +509,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         abortController = new AbortController();
+
+        // Clear any leftover error message from a previous failed request
+        const prevError = listContainer.querySelector('.proclaim-ajax-error');
+
+        if (prevError) {
+            prevError.remove();
+        }
 
         if (appendMode) {
             showLoadMoreSpinner();
@@ -478,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     credentials: 'same-origin',
                 },
-                { timeout: 15000, retries: 0, signal: abortController.signal },
+                { timeout: 30000, retries: 0, signal: abortController.signal },
             );
 
             if (!response.ok) {
@@ -580,17 +639,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // Cancelled — a newer request replaced this one
             }
 
-            // Fallback: submit the form normally (use native submit to avoid infinite loop)
             console.warn('Proclaim AJAX filter error:', err.message);
 
             if (appendMode) {
                 hideLoadMoreSpinner();
                 isLoadingMore = false;
             } else {
-                hideLoading();
+                // Show an inline error with retry instead of silently submitting
+                // the form (which would make the user wait all over again).
+                const isTimeout = err.name === 'TimeoutError';
+                const message = isTimeout
+                    ? txt('JBS_CMN_LOADING_TIMEOUT', 'The server took too long to respond.')
+                    : txt('JBS_CMN_LOADING_ERROR', 'Could not load results. Please try again.');
+                showLoadError(message);
             }
 
-            nativeSubmit();
             return;
         }
 

@@ -47,6 +47,7 @@ $this->getDocument()->addScriptOptions('com_proclaim.platformIcons', $platformIc
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.podcast');
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmpodcast.cancel', 'formId' => 'podcast-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 
@@ -207,6 +208,22 @@ $wa->addInlineScript(
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'podcasting2', Text::_('JBS_PDC_PODCASTING2_TAB')); ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <?php echo $this->form->renderField('funding_url'); ?>
+                <?php echo $this->form->renderField('funding_text'); ?>
+                <hr>
+                <?php echo $this->form->renderField('podcast_license'); ?>
+                <?php echo $this->form->renderField('podcast_license_url'); ?>
+                <hr>
+                <?php echo $this->form->renderField('podcast_publisher'); ?>
+                <?php echo $this->form->renderField('podcast_txt_verify'); ?>
+                <?php echo $this->form->renderField('update_frequency'); ?>
+            </div>
+        </div>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'episode', Text::_('JBS_PDC_EPISODE_OPTIONS')); ?>
         <div class="row">
             <div class="col-lg-9">
@@ -277,23 +294,9 @@ $wa->addInlineScript(
         <?php endif; ?>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
-        <?php if ($this->canDo->get('core.admin')) : ?>
-            <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <div class="col-lg-12">
-                    <?php echo $this->form->getInput('rules'); ?>
-                </div>
-            </div>
-            <?php echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <?php echo HTMLHelper::_('uitab.endTabSet'); ?>
     </div>

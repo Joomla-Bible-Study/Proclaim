@@ -237,29 +237,58 @@ abstract class CWMAddon
      */
     public function renderOptionsFields(object $media_form, bool $new): string
     {
-        $html = '<div class="row">';
+        $html = '';
 
         foreach ($media_form->getFieldsets('params') as $name => $fieldset) {
-            if ($name !== 'general') {
-                $html .= '<div class="col-6">';
+            if ($name === 'general') {
+                continue;
+            }
 
-                foreach ($media_form->getFieldset($name) as $field) {
-                    if ($new) {
-                        $s_name = $field->fieldname;
+            $fields = $media_form->getFieldset($name);
 
-                        if (isset($media_form->s_params[$s_name])) {
-                            $field->setValue($media_form->s_params[$s_name]);
-                        }
+            if (empty($fields)) {
+                continue;
+            }
+
+            // Fall back to a humanised fieldset name when the XML omits a label,
+            // so every section still has a recognisable header.
+            $label = !empty($fieldset->label)
+                ? Text::_($fieldset->label)
+                : ucwords(str_replace(['_', '-'], ' ', $name));
+
+            $description = !empty($fieldset->description)
+                ? Text::_($fieldset->description)
+                : '';
+
+            $html .= '<div class="card shadow-sm mb-4 border-start border-4 border-primary proclaim-addon-section">';
+            $html .= '<div class="card-header bg-body-tertiary fw-semibold d-flex align-items-center">';
+            $html .= '<i class="icon-cog text-primary me-2" aria-hidden="true"></i>';
+            $html .= '<span class="fs-5">'
+                . htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</span>';
+            $html .= '</div>';
+            $html .= '<div class="card-body">';
+
+            if ($description !== '') {
+                $html .= '<p class="text-muted small mb-4 border-bottom pb-3">'
+                    . htmlspecialchars($description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                    . '</p>';
+            }
+
+            foreach ($fields as $field) {
+                if ($new) {
+                    $s_name = $field->fieldname;
+
+                    if (isset($media_form->s_params[$s_name])) {
+                        $field->setValue($media_form->s_params[$s_name]);
                     }
-
-                    $html .= $field->renderField();
                 }
 
-                $html .= '</div>';
+                $html .= $field->renderField();
             }
-        }
 
-        $html .= '</div>';
+            $html .= '</div></div>';
+        }
 
         return $html;
     }
@@ -317,7 +346,7 @@ abstract class CWMAddon
 
             $app        = Factory::getApplication();
             $serverId   = $app->getInput()->getInt('server_id', 0);
-            $batchLimit = $app->getInput()->getInt('batch_limit', 50);
+            $batchLimit = $app->getInput()->getInt('batch_limit', 500);
 
             if (!$serverId) {
                 return ['success' => false, 'error' => 'No server ID provided'];
@@ -476,6 +505,64 @@ abstract class CWMAddon
     public function syncDescription(int $mediaId, string $description): array
     {
         return ['success' => false, 'error' => 'Not supported by this addon'];
+    }
+
+    /**
+     * Whether this addon supports importing chapters from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a platform-specific
+     * "Import Chapters" button. Override in child class for platforms
+     * that expose chapter/timestamp data (e.g. YouTube descriptions).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsChapters(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Whether this addon supports downloading captions from the platform.
+     *
+     * When true, the Chapters & Tracks tab shows a "Download Captions"
+     * button. Override in child class for platforms that expose caption
+     * tracks (e.g. YouTube Captions API via OAuth).
+     *
+     * @return  bool
+     *
+     * @since   10.2.0
+     */
+    public function supportsCaptions(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Format chapters array as a timestamp block for video descriptions.
+     *
+     * The `0:00 Label` format is recognized by YouTube, Vimeo, and most
+     * video platforms for automatic chapter markers.
+     *
+     * @param   array  $chapters  Chapters from media params
+     *
+     * @return  string  Formatted timestamp block
+     *
+     * @since   10.2.0
+     */
+    public static function formatChaptersForDescription(array $chapters): string
+    {
+        $lines = [];
+
+        foreach ($chapters as $ch) {
+            $ch      = (array) $ch;
+            $time    = $ch['time'] ?? '0:00';
+            $label   = $ch['label'] ?? '';
+            $lines[] = $time . ' ' . $label;
+        }
+
+        return implode("\n", $lines);
     }
 
     /**
@@ -1076,6 +1163,23 @@ abstract class CWMAddon
         return '<iframe width="' . $width . '" height="' . $height
             . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
             . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+
+    /**
+     * Render a popup player for a direct media URL (no addon match).
+     *
+     * Falls back to an HTML5 audio element for direct file links.
+     *
+     * @param   string  $url  The direct media file URL
+     *
+     * @return  string  HTML audio element
+     *
+     * @since   10.3.0
+     */
+    public static function renderDirectPopupPlayer(string $url): string
+    {
+        return '<audio controls autoplay><source src="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8')
+            . '" type="audio/mpeg"></audio>';
     }
 
     /**

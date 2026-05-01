@@ -24,6 +24,7 @@ use Joomla\CMS\Factory;
 
 $wa = $this->getDocument()->getWebAssetManager();
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmtopic.cancel', 'formId' => 'item-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit')
     ->addInlineScript(
@@ -82,30 +83,10 @@ if (str_starts_with($string, 'JBS')) { ?>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
-        <div class="row">
-            <div class="col-lg-12">
-                <?php
-echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-        </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php echo $this->form->getInput('rules'); ?>
-            </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
-        <?php
-        echo $this->form->getInput('id'); ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
+        <?php // id now rendered as a read-only field by the shared publish_tab layout.?>
         <?php
         echo $this->form->getInput('asset_id'); ?>
         <input type="hidden" name="task" value=""/>

@@ -11,12 +11,12 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Bible;
 
-use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
-use CWM\Component\Proclaim\Site\Bible\BibleProviderInterface;
-use CWM\Component\Proclaim\Site\Bible\Provider\ApiBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\Provider\GetBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\Provider\LocalProvider;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Bible\BibleProviderInterface;
+use CWM\Library\Scripture\Bible\Provider\ApiBibleProvider;
+use CWM\Library\Scripture\Bible\Provider\GetBibleProvider;
+use CWM\Library\Scripture\Bible\Provider\LocalProvider;
 use Joomla\Registry\Registry;
 
 /**
@@ -116,7 +116,8 @@ class BibleProviderFactoryTest extends ProclaimTestCase
         $this->assertContains('local', $names);
         $this->assertContains('getbible', $names);
         $this->assertContains('api_bible', $names);
-        $this->assertCount(3, $names);
+        $this->assertContains('biblebrain', $names);
+        $this->assertCount(4, $names);
     }
 
     /**

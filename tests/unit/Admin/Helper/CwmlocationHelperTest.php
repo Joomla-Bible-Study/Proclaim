@@ -64,35 +64,35 @@ class CwmlocationHelperTest extends ProclaimTestCase
     }
 
     // -------------------------------------------------------------------------
-    // getTeacherLocations / userIsTeacher stubs
+    // getTeacherLocations / userIsTeacher edge cases (no DB needed)
     // -------------------------------------------------------------------------
 
     /**
-     * getTeacherLocations() is stubbed and must return an empty array for any
-     * user ID until a user_id column is added to #__bsms_teachers.
+     * getTeacherLocations() returns empty for zero or negative user IDs
+     * without hitting the database.
      *
      * @return void
-     * @since  10.1.0
+     * @since  10.3.0
      */
-    public function testGetTeacherLocationsReturnsEmptyArray(): void
+    public function testGetTeacherLocationsReturnsEmptyForInvalidUserId(): void
     {
-        $this->assertSame([], CwmlocationHelper::getTeacherLocations(1));
-        $this->assertSame([], CwmlocationHelper::getTeacherLocations(999));
         $this->assertSame([], CwmlocationHelper::getTeacherLocations(0));
+        $this->assertSame([], CwmlocationHelper::getTeacherLocations(-1));
     }
 
     /**
-     * userIsTeacher() is stubbed and must return false for any combination of
-     * user ID and message ID until the teacher-user linkage is implemented.
+     * userIsTeacher() returns false for zero or negative IDs without
+     * hitting the database.
      *
      * @return void
-     * @since  10.1.0
+     * @since  10.3.0
      */
-    public function testUserIsTeacherReturnsFalse(): void
+    public function testUserIsTeacherReturnsFalseForInvalidIds(): void
     {
-        $this->assertFalse(CwmlocationHelper::userIsTeacher(1, 1));
         $this->assertFalse(CwmlocationHelper::userIsTeacher(0, 0));
-        $this->assertFalse(CwmlocationHelper::userIsTeacher(999, 999));
+        $this->assertFalse(CwmlocationHelper::userIsTeacher(-1, 1));
+        $this->assertFalse(CwmlocationHelper::userIsTeacher(1, 0));
+        $this->assertFalse(CwmlocationHelper::userIsTeacher(1, -1));
     }
 
     // -------------------------------------------------------------------------

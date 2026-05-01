@@ -273,6 +273,31 @@ class CwmassetsController extends BaseController
     }
 
     /**
+     * Run the full Proclaim asset cleanup in one shot — the new-model
+     * Fix button. Delegates to `Cwmassets::fixAllAssets()` which cleans
+     * orphans, prunes empty-rules rows, reparents survivors, and rebuilds
+     * the tree. Fast because most tables now have nothing to do.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.3.0
+     */
+    public function cleanupAssetsXHR(): void
+    {
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+        }
+
+        try {
+            Cwmassets::fixAllAssets();
+            $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'));
+        } catch (\Exception $e) {
+            $this->sendJsonResponse(false, 'Cleanup failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Rebuild asset tree after fixing
      *
      * @return void

@@ -160,4 +160,58 @@ class Cwmtranslated
 
         return null;
     }
+
+    /**
+     * Batch-load translated topic strings for multiple studies in one query.
+     *
+     * Returns an associative array keyed by study_id, each value being
+     * the comma-separated translated topic text (same format as
+     * getConcatTopicItemTranslated).
+     *
+     * @param   int[]  $studyIds  Array of study IDs
+     *
+     * @return  array<int, string>  Keyed by study_id
+     *
+     * @since   10.3.0
+     */
+    public static function batchGetTopicsForStudies(array $studyIds): array
+    {
+        if (empty($studyIds)) {
+            return [];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+        $query->select([
+            $db->quoteName('st.study_id'),
+            $db->quoteName('t.topic_text'),
+            $db->quoteName('t.params', 'topic_params'),
+        ])
+            ->from($db->quoteName('#__bsms_studytopics', 'st'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_topics', 't') . ' ON '
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.topic_id')
+            )
+            ->where($db->quoteName('t.published') . ' = 1')
+            ->whereIn($db->quoteName('st.study_id'), $studyIds)
+            ->order($db->quoteName('st.study_id'));
+        $db->setQuery($query);
+        $rows = $db->loadObjectList();
+
+        // Group by study_id and translate
+        $result = [];
+
+        foreach ($rows as $row) {
+            $sid  = (int) $row->study_id;
+            $text = self::getTopicItemTranslated($row);
+
+            if (!isset($result[$sid])) {
+                $result[$sid] = $text;
+            } else {
+                $result[$sid] .= ', ' . $text;
+            }
+        }
+
+        return $result;
+    }
 }

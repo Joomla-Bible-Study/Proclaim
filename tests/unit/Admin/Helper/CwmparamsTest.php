@@ -33,7 +33,6 @@ class CwmparamsTest extends ProclaimTestCase
 
         if ($reflection->hasProperty('templateId')) {
             $prop = $reflection->getProperty('templateId');
-            $prop->setAccessible(true);
             $prop->setValue(null, 1);
         }
 

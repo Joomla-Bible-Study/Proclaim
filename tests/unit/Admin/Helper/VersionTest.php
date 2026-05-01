@@ -87,14 +87,14 @@ class VersionTest extends ProclaimTestCase
      */
     public function testIsCompatible(): void
     {
-        // Define JVERSION if not already defined (for testing environment)
-        if (!\defined('JVERSION')) {
-            \define('JVERSION', '4.0.0');
-        }
-
         $version = new Version();
+
+        // Should always be compatible with a lower version
         $this->assertTrue($version->isCompatible('3.0.0'));
-        $this->assertFalse($version->isCompatible('5.0.0'));
+
+        // Should not be compatible with a version higher than current
+        $futureVersion = ((int) JVERSION + 1) . '.0.0';
+        $this->assertFalse($version->isCompatible($futureVersion));
     }
 
     /**

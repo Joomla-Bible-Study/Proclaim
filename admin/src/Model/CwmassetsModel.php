@@ -22,7 +22,6 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\Database\DatabaseInterface;
 
 /**
  * class Assets model
@@ -321,116 +320,41 @@ class CwmassetsModel extends ListModel
      */
     private function realRun(): bool
     {
+        /**
+         * Batch path: `fixAllAssets()` runs orphan cleanup, empty-rules
+         * prune, reparent, and nested-set rebuild as ~4 bulk SQL queries.
+         * Replaces the legacy per-record loop that could take minutes on
+         * large sites.
+         */
         if (!empty($this->versionStack)) {
-            krsort($this->versionStack);
-
-            while (!empty($this->versionStack) && $this->haveEnoughTime()) {
-                $this->step = key($this->versionStack);
-
-                if (isset($this->versionStack[$this->step]) && @!empty($this->versionStack[$this->step])) {
-                    $version = (object)array_pop($this->versionStack[$this->step]);
-                    $this->doneSteps++;
-                    Cwmassets::fixAssets($this->step, $version);
-                } else {
-                    unset($this->versionStack[$this->step]);
-                }
-            }
-        }
-
-        if (empty($this->versionStack)) {
-            // Just finished
+            Cwmassets::fixAllAssets();
+            $this->doneSteps += \count($this->versionStack, COUNT_RECURSIVE) - \count($this->versionStack);
             $this->resetStack();
-
-            return false;
         }
 
-        // If we have more Versions or SQL files, continue in the next step
-        return true;
+        return false;
     }
 
     /**
-     * Check Assets
+     * Collect per-table asset status counts.
      *
-     * @return array
+     * **Behavior changed in 10.3.0**: Proclaim no longer registers a
+     * per-record #__assets row for every item. Records with `asset_id = 0`
+     * inherit permission checks from the com_proclaim parent, and that is
+     * now the normal, desired state. The returned shape reflects the new
+     * model — see `Cwmassets::getAssetStatus()` for key meanings.
      *
-     * @since 7.0
+     * @return  array
+     *
+     * @since   7.0
      */
     public function checkAssets(): array
     {
-        $return = [];
-        $db     = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // First get the new parent_id
         if ($this->parent_id === 0) {
             $this->parentId();
         }
 
-        // Get the names of the Proclaim tables
-        $objects = Cwmassets::getassetObjects();
-
-        // Run through each table
-        foreach ($objects as $object) {
-            // Put the table into the return array
-            // Get the total number of rows and collect the table into a query
-            $query = $db->getQuery(true);
-            $query->select(
-                $db->quoteName('j.id', 'jid') . ', '
-                . $db->quoteName('j.asset_id', 'jasset_id') . ', '
-                . $db->quoteName('a.id', 'aid') . ', '
-                . $db->quoteName('a.rules', 'arules') . ', '
-                . $db->quoteName('a.parent_id')
-            )
-                ->from($db->quoteName($object['name'], 'j'))
-                ->leftJoin($db->quoteName('#__assets', 'a') . ' ON (' . $db->quoteName('a.id') . ' = ' . $db->quoteName('j.asset_id') . ')');
-            $db->setQuery($query);
-            $results     = $db->loadObjectList();
-            $nullrows    = 0;
-            $matchrows   = 0;
-            $arulesrows  = 0;
-            $nomatchrows = 0;
-            $numrows     = \count($results);
-            $lastResult  = null;
-
-            // Now go through each record to test it for asset id
-            foreach ($results as $result) {
-                $lastResult = $result;
-
-                // If there is no jasset_id it means that this has not been set and should be
-                if (!$result->jasset_id) {
-                    $nullrows++;
-                }
-
-                // If there is a jasset_id but no match to the parent_id then a mismatch has occurred
-                if ($this->parent_id !== (int)$result->parent_id && $result->jasset_id) {
-                    $nomatchrows++;
-                }
-
-                // If $parent_id and $result->parent_id match and the Asset rules are not blank then everything is okay
-                if ($this->parent_id === (int)$result->parent_id && $result->arules !== "") {
-                    $matchrows++;
-                }
-
-                // If $parent_id and $result->parent_id match and the Asset rules is blank we need to fix
-                if ($this->parent_id === (int)$result->parent_id && $result->arules === "") {
-                    $arulesrows++;
-                }
-            }
-
-            $return[] = [
-                'realname'         => $object['realname'],
-                'numrows'          => $numrows,
-                'nullrows'         => $nullrows,
-                'matchrows'        => $matchrows,
-                'arulesrows'       => $arulesrows,
-                'nomatchrows'      => $nomatchrows,
-                'parent_id'        => $this->parent_id,
-                'result_parent_id' => $lastResult ? $lastResult->parent_id : null,
-                'id'               => $lastResult ? $lastResult->jid : null,
-                'assetid'          => $lastResult ? $lastResult->jasset_id : null,
-            ];
-        }
-
-        return $return;
+        return Cwmassets::getAssetStatus();
     }
 
     /**

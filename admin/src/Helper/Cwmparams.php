@@ -93,9 +93,10 @@ class Cwmparams
 
                 $admin->params = $registry;
 
-                // Add the current user id
+                // Add the current user id. getIdentity() may return null
+                // in CLI / pre-auth contexts, so fall back to Guest (0).
                 $user           = $app->getIdentity();
-                $admin->user_id = $user->id;
+                $admin->user_id = (int) ($user?->id ?? 0);
             }
 
             self::$admin = $admin;

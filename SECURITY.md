@@ -5,8 +5,10 @@
 | Version | Supported          |
 | ------- | ------------------ |
 | 10.x.x  | :white_check_mark: |
-| 9.x.x   | :white_check_mark: |
+| 9.x.x   | :x: (requires Joomla 3.x, which is EOL) |
 | < 9.0   | :x:                |
+
+> **Note:** Proclaim 9.x requires Joomla 3.x, which reached end-of-life in August 2023 and no longer receives security updates. We strongly recommend migrating to Proclaim 10.x on Joomla 5.
 
 ## Security Features
 

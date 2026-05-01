@@ -89,7 +89,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         }
 
         $routeUrl      = Route::_('index.php?option=com_proclaim&view=cwmsermons&t=' . $templateID);
-        $data['link']  = '<a href="' . $routeUrl . '"><button class="btn btn-primary"><span class="fas fa-bible" aria-hidden="true"></span> ' . $link_text . '</button></a>';
+        $data['link']  = '<a href="' . $routeUrl . '"><button class="btn btn-primary"><span class="fa-solid fa-book-bible" aria-hidden="true"></span> ' . $link_text . '</button></a>';
 
         $wa = $this->app->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.cwmcore');
@@ -97,8 +97,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled)
-        $wa->useScript('com_proclaim.scripture-tooltip');
-        $wa->useStyle('com_proclaim.scripture-tooltip-css');
+        $wa->useScript('lib_cwmscripture.scripture-tooltip');
+        $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
         $this->app->getDocument()->addScriptOptions('com_proclaim.scripture', [
             'ajaxUrl' => Route::_(

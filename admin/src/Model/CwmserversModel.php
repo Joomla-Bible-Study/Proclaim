@@ -200,13 +200,9 @@ class CwmserversModel extends ListModel
         $query->select($db->quoteName('uc.name', 'editor'))
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('server.checked_out'));
 
-        // Join location name for display (graceful — column may not exist on older installs)
-        $columns = $db->getTableColumns('#__bsms_servers');
-
-        if (isset($columns['location_id'])) {
-            $query->select($db->quoteName('loc.location_text', 'location_text'))
-                ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('server.location_id'));
-        }
+        // Join location name for display
+        $query->select($db->quoteName('loc.location_text', 'location_text'))
+            ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('server.location_id'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -226,7 +222,7 @@ class CwmserversModel extends ListModel
         // Restrict non-admin users: use hybrid location filter when location system is enabled,
         // otherwise fall back to standard Joomla access-level filtering
         if (!$user->authorise('core.admin')) {
-            if (CwmlocationHelper::isEnabled() && isset($columns['location_id'])) {
+            if (CwmlocationHelper::isEnabled()) {
                 // Shared server pattern: NULL = visible to all, specific ID = campus-restricted
                 $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
@@ -248,14 +244,12 @@ class CwmserversModel extends ListModel
         }
 
         // Filter by location
-        if (isset($columns['location_id'])) {
-            $location = $this->getState('filter.location');
+        $location = $this->getState('filter.location');
 
-            if (is_numeric($location)) {
-                $locationVal = (int) $location;
-                $query->where($db->quoteName('server.location_id') . ' = :locationId')
-                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
-            }
+        if (is_numeric($location)) {
+            $locationVal = (int) $location;
+            $query->where($db->quoteName('server.location_id') . ' = :locationId')
+                ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
         }
 
         // Add the list ordering clause with whitelist validation

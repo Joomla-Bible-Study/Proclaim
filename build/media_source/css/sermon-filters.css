@@ -19,16 +19,24 @@
 }
 
 .proclaim-ajax-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: sticky;
+    top: 40vh;
     z-index: 10;
+    text-align: center;
+    padding: 1rem 0;
 }
 
 .proclaim-ajax-spinner .spinner-border {
     width: 2.5rem;
     height: 2.5rem;
+}
+
+/* ─── Error / slow-loading feedback ──────────────────────── */
+
+.proclaim-ajax-error {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ─── Pagination transitions ──────────────────────────────── */

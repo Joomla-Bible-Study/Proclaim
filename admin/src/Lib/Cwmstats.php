@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
@@ -238,6 +239,8 @@ class Cwmstats
      */
     public static function getTopStudies(): string
     {
+        CwmDebug::startTimer('Cwmstats::getTopStudies');
+
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
@@ -247,6 +250,8 @@ class Cwmstats
         $cacheKey = 'topStudies:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
+            CwmDebug::stopTimer('Cwmstats::getTopStudies', 'hit=static_cache');
+
             return self::$cache[$cacheKey];
         }
 
@@ -270,7 +275,7 @@ class Cwmstats
             $top_studies = '';
 
             foreach ($rows as $row) {
-                $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                $top_studies .= Text::sprintf('JBS_CMN_HITS', (int) $row->hits) .
                     ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
                     htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
             }
@@ -279,6 +284,7 @@ class Cwmstats
         }, [], md5($cacheKey));
 
         self::$cache[$cacheKey] = $result;
+        CwmDebug::stopTimer('Cwmstats::getTopStudies', 'hit=persistent_cache_or_db');
 
         return $result;
     }
@@ -342,7 +348,7 @@ class Cwmstats
                 $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
             } else {
                 foreach ($rows as $row) {
-                    $top_studies .= (int) $row->hits . ' ' . Text::_('JBS_CMN_HITS') .
+                    $top_studies .= Text::sprintf('JBS_CMN_HITS', (int) $row->hits) .
                         ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->id . '">' .
                         htmlspecialchars($row->studytitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->studydate)) . '<br>';
                 }
@@ -482,7 +488,7 @@ class Cwmstats
                 $top_studies = Text::_('JBS_CPL_NO_INFORMATION');
             } else {
                 foreach ($rows as $row) {
-                    $top_studies .= (int) $row->downloads . ' ' . Text::_('JBS_CMN_HITS') .
+                    $top_studies .= Text::sprintf('JBS_CMN_DOWNLOADS', (int) $row->downloads) .
                         ' - <a href="index.php?option=com_proclaim&amp;task=message.edit&amp;id=' . (int) $row->sid . '">' .
                         htmlspecialchars($row->stitle, ENT_QUOTES, 'UTF-8') . '</a> - ' . date('Y-m-d', strtotime($row->sdate)) . '<br>';
                 }
@@ -535,6 +541,8 @@ class Cwmstats
      */
     public static function getTopScore(): string
     {
+        CwmDebug::startTimer('Cwmstats::getTopScore');
+
         $user    = Factory::getApplication()->getIdentity();
         $isAdmin = $user->authorise('core.admin');
 
@@ -544,6 +552,8 @@ class Cwmstats
         $cacheKey = 'topScore:' . $userKey;
 
         if (isset(self::$cache[$cacheKey])) {
+            CwmDebug::stopTimer('Cwmstats::getTopScore', 'hit=static_cache');
+
             return self::$cache[$cacheKey];
         }
 
@@ -618,6 +628,7 @@ class Cwmstats
         }, [], md5($cacheKey));
 
         self::$cache[$cacheKey] = $result;
+        CwmDebug::stopTimer('Cwmstats::getTopScore', 'hit=persistent_cache_or_db');
 
         return $result;
     }

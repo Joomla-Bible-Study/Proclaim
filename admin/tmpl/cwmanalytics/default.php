@@ -30,7 +30,13 @@ if ($this->isPrint) {
 }
 
 $input    = Factory::getApplication()->getInput();
-$presets  = ['7d' => 'JBS_ANA_LAST_7_DAYS', '30d' => 'JBS_ANA_LAST_30_DAYS', '90d' => 'JBS_ANA_LAST_90_DAYS', '1y' => 'JBS_ANA_LAST_YEAR'];
+$presets  = [
+    '7d'  => 'JBS_ANA_LAST_7_DAYS',
+    '30d' => 'JBS_ANA_LAST_30_DAYS',
+    '90d' => 'JBS_ANA_LAST_90_DAYS',
+    '1y'  => 'JBS_ANA_LAST_YEAR',
+    'all' => 'JBS_ANA_ALL_TIME',
+];
 $baseUrl  = 'index.php?option=com_proclaim&view=cwmanalytics';
 $token    = '&' . Session::getFormToken() . '=1';
 
@@ -249,15 +255,41 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
     // Three display states:
     //   $showImportPanel  — no real events yet AND seed not run → show full "Getting started" card
     //   $showSeededNotice — seed run but no real events yet     → show compact success note
-    //   $showPeriodStrip  — real events exist                   → show event-based period strip
+    //   $showPeriodKpi    — real events exist                   → show event-based KPI cards + all-time strip
     $legacySeeded    = ($this->legacyKpi['views'] + $this->legacyKpi['plays'] + $this->legacyKpi['downloads']) > 0;
 $hasRealEvents       = $this->hasTrackedEvents;
 $showImportPanel     = !$hasRealEvents && !$legacySeeded;
 $showSeededNotice    = $legacySeeded && !$hasRealEvents;
-$showPeriodStrip     = $hasRealEvents;
+$showPeriodKpi       = $hasRealEvents;
 ?>
 
-    <!-- ── All-Time KPI Cards (always from record counters) ─────────────── -->
+    <?php if ($showPeriodKpi) : ?>
+    <!-- ── Period KPI Cards (filtered by selected date range) ──────────── -->
+    <div class="row g-3 mb-2">
+        <?php
+    $periodCards = [
+        ['icon' => 'icon-eye',      'label' => 'JBS_ANA_VIEWS',           'value' => $this->kpi['views'],     'class' => 'text-primary'],
+        ['icon' => 'icon-play',     'label' => 'JBS_ANA_PLAYS',           'value' => $this->kpi['plays'],     'class' => 'text-success'],
+        ['icon' => 'icon-download', 'label' => 'JBS_ANA_DOWNLOADS',       'value' => $this->kpi['downloads'], 'class' => 'text-warning'],
+        ['icon' => 'icon-user',     'label' => 'JBS_ANA_UNIQUE_SESSIONS', 'value' => $this->kpi['sessions'],  'class' => 'text-info'],
+    ];
+?>
+        <?php foreach ($periodCards as $card) : ?>
+            <div class="col-6 col-md-3">
+                <div class="card text-center h-100">
+                    <div class="card-body py-3">
+                        <i class="<?php echo $card['icon']; ?> fa-2x <?php echo $card['class']; ?> mb-2" aria-hidden="true"></i>
+                        <div class="fw-bold fs-4 <?php echo $card['class']; ?>"><?php echo number_format($card['value']); ?></div>
+                        <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php elseif ($showSeededNotice) : ?>
+    <!-- ── Seeded notice — seed run, awaiting first real event ───────────── -->
+    <!-- All-Time KPI Cards (shown when no real events yet) -->
     <div class="row g-3 mb-3">
         <?php
     $kpiCards = [
@@ -266,7 +298,6 @@ $showPeriodStrip     = $hasRealEvents;
         ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
     ];
 
-    // Add External Plays KPI if platform stats exist
     if (($this->recordTotals['external_plays'] ?? 0) > 0) {
         $kpiCards[] = ['icon' => 'icon-globe', 'label' => 'JBS_MED_EXTERNAL_PLAYS', 'value' => $this->recordTotals['external_plays'], 'class' => 'text-info'];
     }
@@ -284,9 +315,6 @@ $showPeriodStrip     = $hasRealEvents;
             </div>
         <?php endforeach; ?>
     </div>
-
-    <?php if ($showSeededNotice) : ?>
-    <!-- ── Seeded notice — seed run, awaiting first real event ───────────── -->
     <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 bg-body-secondary rounded small text-muted">
         <i class="icon-check-circle text-success" aria-hidden="true"></i>
         <span><?php echo Text::sprintf('JBS_ANA_SEEDED_NOTICE',
@@ -305,41 +333,32 @@ $showPeriodStrip     = $hasRealEvents;
             </form>
         </span>
     </div>
-    <?php endif; ?>
+    <?php else : ?>
+    <!-- ── No events yet — show all-time cards as primary ──────────────── -->
+    <div class="row g-3 mb-3">
+        <?php
+    $kpiCards = [
+        ['icon' => 'icon-eye',      'label' => 'JBS_ANA_TOTAL_VIEWS',     'value' => $this->recordTotals['views'],     'class' => 'text-primary'],
+        ['icon' => 'icon-play',     'label' => 'JBS_ANA_TOTAL_PLAYS',     'value' => $this->recordTotals['plays'],     'class' => 'text-success'],
+        ['icon' => 'icon-download', 'label' => 'JBS_ANA_TOTAL_DOWNLOADS', 'value' => $this->recordTotals['downloads'], 'class' => 'text-warning'],
+    ];
 
-    <?php if ($showPeriodStrip) : ?>
-    <!-- ── Period strip — event-based totals for selected date range ─────── -->
-    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 p-2 bg-body-secondary rounded small">
-        <span class="fw-semibold text-muted">
-            <?php echo Text::_('JBS_ANA_PERIOD_ANALYTICS'); ?>
-            (<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?> – <?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>):
-        </span>
-        <span class="text-primary">
-            <i class="icon-eye me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['views']); ?> <?php echo Text::_('JBS_ANA_VIEWS'); ?>
-        </span>
-        <span class="text-success">
-            <i class="icon-play me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['plays']); ?> <?php echo Text::_('JBS_ANA_PLAYS'); ?>
-        </span>
-        <span class="text-warning">
-            <i class="icon-download me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['downloads']); ?> <?php echo Text::_('JBS_ANA_DOWNLOADS'); ?>
-        </span>
-        <span class="text-info">
-            <i class="icon-user me-1" aria-hidden="true"></i><?php echo number_format($this->kpi['sessions']); ?> <?php echo Text::_('JBS_ANA_UNIQUE_SESSIONS'); ?>
-        </span>
-        <span class="ms-auto">
-            <i class="icon-check-circle text-success me-1" aria-hidden="true"></i>
-            <?php echo Text::_('JBS_ANA_TRACKING_SINCE'); ?>
-            <strong><?php echo htmlspecialchars($this->firstEventDate, ENT_QUOTES); ?></strong>
-            &nbsp;·&nbsp;
-            <form method="post" action="index.php" class="d-inline">
-                <input type="hidden" name="option" value="com_proclaim">
-                <input type="hidden" name="task" value="cwmanalytics.seedLegacy">
-                <?php echo HTMLHelper::_('form.token'); ?>
-                <button type="submit" class="btn btn-link btn-sm text-muted text-decoration-none p-0 border-0">
-                    <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
-                </button>
-            </form>
-        </span>
+    if (($this->recordTotals['external_plays'] ?? 0) > 0) {
+        $kpiCards[] = ['icon' => 'icon-globe', 'label' => 'JBS_MED_EXTERNAL_PLAYS', 'value' => $this->recordTotals['external_plays'], 'class' => 'text-info'];
+    }
+?>
+        <?php foreach ($kpiCards as $card) : ?>
+            <div class="col-6 col-md-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="<?php echo $card['icon']; ?> fa-2x <?php echo $card['class']; ?> mb-2" aria-hidden="true"></i>
+                        <div class="fw-bold fs-4 <?php echo $card['class']; ?>"><?php echo number_format($card['value']); ?></div>
+                        <div class="text-muted small"><?php echo Text::_($card['label']); ?></div>
+                        <span class="text-muted" style="font-size:.7rem"><?php echo Text::_('JBS_ANA_ALL_TIME'); ?></span>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
     <?php endif; ?>
 
@@ -398,6 +417,32 @@ $showPeriodStrip     = $hasRealEvents;
     <?php endif; ?>
 
     <?php if ($isOverview) : ?>
+    <?php
+        // Human-readable label for the active preset — lets the section
+        // header state "Last 30 Days (Mar 12 — Apr 10)" etc. so every card
+        // below unambiguously reads as tied to that window.
+        if ($this->preset === 'all') {
+            $rangeLabel   = Text::_('JBS_ANA_ALL_TIME');
+            $rangeSubtext = Text::_('JBS_ANA_TRACKING_SINCE') . ' '
+                . HTMLHelper::_('date', $this->firstEventDate, Text::_('DATE_FORMAT_LC4'));
+        } else {
+            $presetKey    = $this->preset !== '' && isset($presets[$this->preset]) ? $this->preset : 'custom';
+            $rangeLabel   = isset($presets[$presetKey])
+                ? Text::_($presets[$presetKey])
+                : Text::_('JBS_ANA_CUSTOM_RANGE');
+            $rangeSubtext = HTMLHelper::_('date', $this->dateStart, Text::_('DATE_FORMAT_LC4'))
+                . ' — '
+                . HTMLHelper::_('date', $this->dateEnd, Text::_('DATE_FORMAT_LC4'));
+        }
+    ?>
+    <!-- ── Period section header — makes the active date scope unambiguous ── -->
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 px-3 py-2 bg-body-tertiary border-start border-4 border-primary rounded">
+        <i class="icon-calendar text-primary" aria-hidden="true"></i>
+        <span class="fw-semibold"><?php echo Text::_('JBS_ANA_SHOWING'); ?>:</span>
+        <span class="fw-semibold text-primary"><?php echo htmlspecialchars($rangeLabel, ENT_QUOTES); ?></span>
+        <span class="text-muted small">(<?php echo htmlspecialchars($rangeSubtext, ENT_QUOTES); ?>)</span>
+    </div>
+
     <!-- Line Chart: Views / Plays / Downloads over time -->
     <div class="card mb-3">
         <div class="card-header fw-semibold">
@@ -660,6 +705,26 @@ $showPeriodStrip     = $hasRealEvents;
     <?php elseif ($this->drilldown === 'media') : ?>
         <?php echo $this->loadTemplate('media'); ?>
     <?php else : ?>
+    <!-- Tracking-since + reseed admin footer (was embedded in the old all-time strip) -->
+    <?php if ($showPeriodKpi) : ?>
+    <div class="d-flex flex-wrap align-items-center gap-2 mt-3 p-2 bg-body-secondary rounded small text-muted">
+        <i class="icon-check-circle text-success" aria-hidden="true"></i>
+        <span>
+            <?php echo Text::_('JBS_ANA_TRACKING_SINCE'); ?>
+            <strong><?php echo htmlspecialchars($this->firstEventDate, ENT_QUOTES); ?></strong>
+        </span>
+        <span class="ms-auto">
+            <form method="post" action="index.php" class="d-inline">
+                <input type="hidden" name="option" value="com_proclaim">
+                <input type="hidden" name="task" value="cwmanalytics.seedLegacy">
+                <?php echo HTMLHelper::_('form.token'); ?>
+                <button type="submit" class="btn btn-link btn-sm text-muted text-decoration-none p-0 border-0">
+                    <i class="icon-refresh me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_RESEED_LEGACY'); ?>
+                </button>
+            </form>
+        </span>
+    </div>
+    <?php endif; ?>
     <!-- GDPR notice (overview only) -->
     <p class="text-muted small mt-3">
         <i class="icon-lock me-1" aria-hidden="true"></i><?php echo Text::_('JBS_ANA_GDPR_NOTICE'); ?>

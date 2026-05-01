@@ -6,7 +6,7 @@
  *   2. build.properties      — local overrides for credentials/paths (gitignored)
  *
  * To get started: copy build.dist.properties → build.properties and fill in
- * builder.joomla_username, builder.joomla_password, and the site URLs.
+ * per-site credentials (builder.j5dev.username, etc.) and site URLs.
  */
 
 const fs = require('fs');

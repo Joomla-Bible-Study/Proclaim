@@ -55,7 +55,7 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 7.0
      */
-    public function buildPage($item, $params, $template): object
+    public function buildPage($item, $params, $template, array $mediaIndex = [], array $topicMap = []): object
     {
         $item->tp_id = '1';
 
@@ -65,9 +65,23 @@ class Cwmpagebuilder
         $CWMElements = new Cwmlisting();
 
         if ($mids) {
-            // Build media files inline (was mediaBuilder)
-            $mediaIDs         = $CWMElements->getFluidMediaids($item);
-            $media            = $CWMElements->getMediaFiles($mediaIDs);
+            $mediaIDs = $CWMElements->getFluidMediaids($item);
+
+            // Use pre-loaded media files if available, otherwise query individually
+            if (!empty($mediaIndex)) {
+                $media = [];
+
+                foreach ($mediaIDs as $mid) {
+                    $mid = (int) (\is_array($mid) ? reset($mid) : $mid);
+
+                    if (isset($mediaIndex[$mid])) {
+                        $media[] = $mediaIndex[$mid];
+                    }
+                }
+            } else {
+                $media = $CWMElements->getMediaFiles($mediaIDs);
+            }
+
             $item->mediafiles = $media;
             $page->media      = $CWMElements->getFluidMediaFiles($item, $params, $template);
         } else {
@@ -100,8 +114,12 @@ class Cwmpagebuilder
         // Study Date
         $page->studydate = $CWMElements->getStudyDate($params, $item->studydate);
 
-        // Translate Topics.
-        $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
+        // Translate Topics — use batch-loaded data when available
+        if (!empty($topicMap) && isset($topicMap[(int) $item->id])) {
+            $item->topics_text = $topicMap[(int) $item->id];
+        } else {
+            $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
+        }
 
         if (isset($item->topics_text) && (substr_count($item->topics_text, ',') > 0)) {
             $topics = explode(',', $item->topics_text);
@@ -227,8 +245,54 @@ class Cwmpagebuilder
      */
     public function enrichStudies(array $studies, Registry $params, object $template): array
     {
+        if (empty($studies)) {
+            return $studies;
+        }
+
+        // Batch-load media files for all studies in one query (eliminates N+1)
+        $listing     = new Cwmlisting();
+        $allMediaIds = [];
+
         foreach ($studies as $study) {
-            $this->enrichStudy($study, $params, $template);
+            if (!empty($study->mids)) {
+                $ids = $listing->getFluidMediaids($study);
+
+                foreach ($ids as $id) {
+                    $allMediaIds[] = (int) $id;
+                }
+            }
+        }
+
+        $allMediaFiles = [];
+
+        if (!empty($allMediaIds)) {
+            $allMediaFiles = $listing->getMediaFiles($allMediaIds);
+        }
+
+        // Index media files by ID for fast lookup
+        $mediaIndex = [];
+
+        foreach ($allMediaFiles as $mf) {
+            $mediaIndex[(int) $mf->id] = $mf;
+        }
+
+        // Batch-load topic translations for all studies in one query
+        $studyIds = [];
+
+        foreach ($studies as $study) {
+            if (!empty($study->id)) {
+                $studyIds[] = (int) $study->id;
+            }
+        }
+
+        $topicMap = [];
+
+        if (!empty($studyIds)) {
+            $topicMap = Cwmtranslated::batchGetTopicsForStudies($studyIds);
+        }
+
+        foreach ($studies as $study) {
+            $this->enrichStudy($study, $params, $template, $mediaIndex, $topicMap);
         }
 
         return $studies;
@@ -246,9 +310,9 @@ class Cwmpagebuilder
      * @throws \Exception
      * @since 10.1.0
      */
-    public function enrichStudy(object $study, Registry $params, object $template): void
+    public function enrichStudy(object $study, Registry $params, object $template, array $mediaIndex = [], array $topicMap = []): void
     {
-        $page = $this->buildPage($study, $params, $template);
+        $page = $this->buildPage($study, $params, $template, $mediaIndex, $topicMap);
 
         $study->scripture1          = $page->scripture1;
         $study->scripture2          = $page->scripture2;
@@ -345,6 +409,7 @@ class Cwmpagebuilder
         $query->select(
             $db->quoteName('teacher.teachername', 'teachername') . ', '
             . $db->quoteName('teacher.title', 'teachertitle') . ', '
+            . $db->quoteName('teacher.org_name', 'teacherorgname') . ', '
             . $db->quoteName('teacher.teacher_thumbnail', 'thumb')
         );
         $query->join(
@@ -449,13 +514,17 @@ class Cwmpagebuilder
 
         if ($wherefield && $whereitem) {
             if ($wherefield === 'teacher') {
-                // Use junction table EXISTS subquery for multi-teacher support
+                // Junction table EXISTS subquery for multi-teacher support, with legacy
+                // study.teacher_id fallback to mirror CwmsermonsModel's COALESCE behavior
+                // and tolerate rows where the junction backfill has not run.
                 $tSubquery = $db->getQuery(true)
                     ->select('1')
                     ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                     ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
                     ->where($db->quoteName('stf.teacher_id') . ' = ' . (int) $whereitem);
-                $query->where('EXISTS (' . $tSubquery . ')');
+                $query->where(
+                    '(EXISTS (' . $tSubquery . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $whereitem . ')'
+                );
             } else {
                 $query->where($wherefield . ' = ' . $whereitem);
             }
@@ -480,10 +549,11 @@ class Cwmpagebuilder
                 '((' . $db->quoteName('series.published') . ' = 1'
                 . ' AND (' . $db->quoteName('series.publish_up') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_up') . ' <= ' . $nowDate . ')'
                 . ' AND (' . $db->quoteName('series.publish_down') . ' = ' . $nullDate . ' OR ' . $db->quoteName('series.publish_down') . ' >= ' . $nowDate . ')'
-                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)'
+                . ') OR ' . $db->quoteName('study.series_id') . ' <= 0'
+                . ' OR ' . $db->quoteName('study.series_id') . ' IS NULL)'
             );
         } else {
-            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+            $query->where('(' . $db->quoteName('series.published') . ' = 1 OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         }
 
         // Filter by language
@@ -500,7 +570,7 @@ class Cwmpagebuilder
         $query->order($db->quoteName('studydate') . ' ' . $order);
 
         // Filter only for authorized view
-        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0)');
+        $query->where('(' . $db->quoteName('series.access') . ' IN (' . $groups . ') OR ' . $db->quoteName('study.series_id') . ' <= 0 OR ' . $db->quoteName('study.series_id') . ' IS NULL)');
         $query->where($db->quoteName('study.access') . ' IN (' . $groups . ')');
 
         $db->setQuery($query, 0, $limit);

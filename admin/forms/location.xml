@@ -19,6 +19,9 @@
         <option value="*">JALL</option>
     </field>
     <field name="asset_id" type="hidden" filter="unset"/>
+    <field name="hits" type="text" label="JBS_STY_HITS"
+           description="JBS_STY_HITS_DESC" class="readonly" size="6"
+           default="0" readonly="true" filter="unset"/>
     <field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL"
            translate_label="false" filter="rules" component="com_proclaim"
            section="location" validate="rules"/>

@@ -249,6 +249,13 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `itunes_subcategory`      VARCHAR(100)     NOT NULL DEFAULT 'Christianity',
     `itunes_explicit`         VARCHAR(5)       NOT NULL DEFAULT 'false',
     `itunes_type`             VARCHAR(10)      NOT NULL DEFAULT 'episodic',
+    `funding_url`             VARCHAR(255)              DEFAULT NULL,
+    `funding_text`            VARCHAR(100)              DEFAULT NULL,
+    `podcast_license`         VARCHAR(255)              DEFAULT NULL,
+    `podcast_license_url`     VARCHAR(255)              DEFAULT NULL,
+    `podcast_publisher`       VARCHAR(150)              DEFAULT NULL,
+    `podcast_txt_verify`      VARCHAR(255)              DEFAULT NULL,
+    `update_frequency`        VARCHAR(20)               DEFAULT NULL,
     `created`                 DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
     `created_by`              INT(10) UNSIGNED NOT NULL DEFAULT '0',
     `created_by_alias`        VARCHAR(255)     NOT NULL DEFAULT '',
@@ -532,6 +539,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `teachername`       VARCHAR(250)                                     NOT NULL DEFAULT '',
     `alias`             VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
     `title`             VARCHAR(250)                                              DEFAULT NULL,
+    `org_name`          VARCHAR(255)                                              DEFAULT NULL,
     `phone`             VARCHAR(50)                                               DEFAULT NULL,
     `email`             VARCHAR(100)                                              DEFAULT NULL,
     `website`           TEXT,
@@ -554,6 +562,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     `link3`             VARCHAR(150)                                              DEFAULT NULL,
     `linklabel3`        VARCHAR(150)                                              DEFAULT NULL,
     `contact`           INT(11)                                                   DEFAULT NULL,
+    `user_id`           INT(10) UNSIGNED                                          DEFAULT NULL,
     `address`           MEDIUMTEXT,
     `social_links`      TEXT                                                      DEFAULT NULL,
     `landing_show`      INT(3)                                                    DEFAULT NULL,
@@ -570,7 +579,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_teachers`
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_createdby` (`created_by`),
-    KEY `idx_published_access` (`published`, `access`)
+    KEY `idx_published_access` (`published`, `access`),
+    KEY `idx_teacher_user` (`user_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

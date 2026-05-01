@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proclaim Landing Page - Design Options</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #f0f0f0; }
+        .option-divider {
+            padding: 2rem 0;
+            margin: 3rem 0;
+            border-top: 4px solid #0d6efd;
+            text-align: center;
+        }
+        .option-divider h2 {
+            display: inline-block;
+            background: #0d6efd;
+            color: #fff;
+            padding: 0.5rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1.5rem;
+        }
+        .option-divider p { color: #666; margin-top: 0.5rem; }
+        .mockup-frame {
+            background: #fff;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* ===== OPTION 1: Card Grid ===== */
+        .opt1-section { padding: 2rem 0; }
+        .opt1-section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            color: #2c3e50;
+        }
+        .opt1-card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        .opt1-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .opt1-card-img {
+            height: 160px;
+            object-fit: cover;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .opt1-card-body { padding: 1rem; }
+        .opt1-card-name { font-weight: 600; font-size: 1rem; margin: 0; color: #2c3e50; }
+        .opt1-card-meta { font-size: 0.85rem; color: #6c757d; margin-top: 0.25rem; }
+        .opt1-card-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+        }
+        .opt1-pill {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            margin: 0.25rem;
+            border-radius: 2rem;
+            background: #f1f3f5;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: 1px solid #dee2e6;
+        }
+        .opt1-pill:hover { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+        .opt1-pill-count {
+            display: inline-block;
+            background: #dee2e6;
+            color: #495057;
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 1rem;
+            margin-left: 0.3rem;
+        }
+        .opt1-pill:hover .opt1-pill-count { background: rgba(255,255,255,0.3); color: #fff; }
+
+        /* ===== OPTION 2: Hero Sections ===== */
+        .opt2-band { padding: 3rem 0; }
+        .opt2-band-light { background: #fff; }
+        .opt2-band-dark { background: #f8f9fa; }
+        .opt2-band-accent { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
+        .opt2-section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .opt2-section-subtitle {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+        .opt2-band-accent .opt2-section-subtitle { color: rgba(255,255,255,0.6); }
+        .opt2-hero-card {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            height: 240px;
+        }
+        .opt2-hero-card-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s;
+        }
+        .opt2-hero-card:hover .opt2-hero-card-bg { transform: scale(1.05); }
+        .opt2-hero-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%);
+        }
+        .opt2-hero-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+        }
+        .opt2-hero-card-title { font-weight: 700; font-size: 1.15rem; margin: 0; }
+        .opt2-hero-card-sub { font-size: 0.85rem; opacity: 0.8; margin-top: 0.25rem; }
+        .opt2-tag {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            margin: 0.3rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .opt2-tag-light { background: #e9ecef; color: #495057; }
+        .opt2-tag-light:hover { background: #0d6efd; color: #fff; }
+        .opt2-tag-dark { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+        .opt2-tag-dark:hover { background: rgba(255,255,255,0.25); }
+
+        /* ===== OPTION 3: Dashboard ===== */
+        .opt3-featured { padding: 2rem 0; }
+        .opt3-featured-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .opt3-featured-card {
+            display: flex;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            transition: box-shadow 0.2s;
+            height: 100%;
+        }
+        .opt3-featured-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .opt3-featured-img {
+            width: 140px;
+            min-height: 140px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        .opt3-featured-body { padding: 1.25rem; display: flex; flex-direction: column; justify-content: center; }
+        .opt3-featured-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #0d6efd;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .opt3-featured-title { font-weight: 700; font-size: 1.1rem; margin: 0 0 0.3rem; color: #2c3e50; }
+        .opt3-featured-meta { font-size: 0.85rem; color: #6c757d; margin: 0; }
+        .opt3-accordion .accordion-button {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .opt3-accordion .accordion-button::after { filter: none; }
+        .opt3-accordion .accordion-body { padding: 1rem 1.25rem; }
+        .opt3-list-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f1f3f5;
+            text-decoration: none;
+            color: #495057;
+            transition: color 0.15s;
+        }
+        .opt3-list-item:last-child { border-bottom: none; }
+        .opt3-list-item:hover { color: #0d6efd; }
+        .opt3-list-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .opt3-list-item:hover .opt3-list-item-icon { background: #dbeafe; color: #0d6efd; }
+        .opt3-list-item-name { flex: 1; font-weight: 500; }
+        .opt3-list-item-count { font-size: 0.8rem; color: #adb5bd; }
+        .opt3-section-count {
+            background: #e9ecef;
+            color: #6c757d;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
+            font-weight: 400;
+        }
+
+        /* placeholder images */
+        .ph-img-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .ph-img-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .ph-img-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .ph-img-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .ph-img-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .ph-img-6 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .ph-img-7 { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+        .ph-img-8 { background: linear-gradient(135deg, #89f7fe, #66a6ff); }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- OPTION 1: CARD GRID -->
+<!-- ============================================================ -->
+<div class="option-divider">
+    <h2>Option 1: Card Grid</h2>
+    <p>Clean cards with images for teachers/series, flowing pills for text-only sections</p>
+</div>
+
+<div class="mockup-frame">
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 style="font-weight: 800; color: #2c3e50;">Bible Studies</h1>
+            <p class="text-muted">Explore our collection of sermons, series, and teachings</p>
+        </div>
+
+        <!-- Teachers Section -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-user-tie me-2 text-primary"></i>Teachers</div>
+            <div class="row g-3">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-1 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">24 sermons</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Pastor David Mitchell</p>
+                            <p class="opt1-card-meta">Senior Pastor</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-3 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">18 sermons</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Rev. Sarah Thompson</p>
+                            <p class="opt1-card-meta">Associate Pastor</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-6 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">12 sermons</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Elder James Walker</p>
+                            <p class="opt1-card-meta">Youth Ministry</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-4 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user" style="font-size: 3rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">9 sermons</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Dr. Rachel Kim</p>
+                            <p class="opt1-card-meta">Guest Speaker</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Series Section -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-layer-group me-2 text-primary"></i>Series</div>
+            <div class="row g-3">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open" style="font-size: 2.5rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">8 parts</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Walking in Faith</p>
+                            <p class="opt1-card-meta">Hebrews 11</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-5 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open" style="font-size: 2.5rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">6 parts</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Psalms of Praise</p>
+                            <p class="opt1-card-meta">Psalms</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-8 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open" style="font-size: 2.5rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">12 parts</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">The Armor of God</p>
+                            <p class="opt1-card-meta">Ephesians 6</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="#" class="opt1-card position-relative">
+                        <div class="opt1-card-img ph-img-7 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open" style="font-size: 2.5rem; color: rgba(255,255,255,0.3);"></i>
+                        </div>
+                        <span class="opt1-card-badge">4 parts</span>
+                        <div class="opt1-card-body">
+                            <p class="opt1-card-name">Grace Abounding</p>
+                            <p class="opt1-card-meta">Romans 5-8</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topics Section -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-tags me-2 text-primary"></i>Topics</div>
+            <div>
+                <a href="#" class="opt1-pill">Prayer <span class="opt1-pill-count">14</span></a>
+                <a href="#" class="opt1-pill">Salvation <span class="opt1-pill-count">11</span></a>
+                <a href="#" class="opt1-pill">Faith <span class="opt1-pill-count">9</span></a>
+                <a href="#" class="opt1-pill">Worship <span class="opt1-pill-count">8</span></a>
+                <a href="#" class="opt1-pill">Grace <span class="opt1-pill-count">7</span></a>
+                <a href="#" class="opt1-pill">Forgiveness <span class="opt1-pill-count">6</span></a>
+                <a href="#" class="opt1-pill">Love <span class="opt1-pill-count">6</span></a>
+                <a href="#" class="opt1-pill">Hope <span class="opt1-pill-count">5</span></a>
+                <a href="#" class="opt1-pill">Family <span class="opt1-pill-count">4</span></a>
+                <a href="#" class="opt1-pill">Discipleship <span class="opt1-pill-count">4</span></a>
+                <a href="#" class="opt1-pill">Missions <span class="opt1-pill-count">3</span></a>
+                <a href="#" class="opt1-pill">End Times <span class="opt1-pill-count">3</span></a>
+            </div>
+        </div>
+
+        <!-- Books Section -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-bible me-2 text-primary"></i>Books of the Bible</div>
+            <div>
+                <a href="#" class="opt1-pill">Genesis <span class="opt1-pill-count">5</span></a>
+                <a href="#" class="opt1-pill">Psalms <span class="opt1-pill-count">12</span></a>
+                <a href="#" class="opt1-pill">Isaiah <span class="opt1-pill-count">4</span></a>
+                <a href="#" class="opt1-pill">Matthew <span class="opt1-pill-count">8</span></a>
+                <a href="#" class="opt1-pill">John <span class="opt1-pill-count">11</span></a>
+                <a href="#" class="opt1-pill">Acts <span class="opt1-pill-count">6</span></a>
+                <a href="#" class="opt1-pill">Romans <span class="opt1-pill-count">9</span></a>
+                <a href="#" class="opt1-pill">Ephesians <span class="opt1-pill-count">7</span></a>
+                <a href="#" class="opt1-pill">Philippians <span class="opt1-pill-count">3</span></a>
+                <a href="#" class="opt1-pill">Hebrews <span class="opt1-pill-count">8</span></a>
+                <a href="#" class="opt1-pill">Revelation <span class="opt1-pill-count">5</span></a>
+            </div>
+        </div>
+
+        <!-- Locations -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Locations</div>
+            <div>
+                <a href="#" class="opt1-pill">Main Campus <span class="opt1-pill-count">42</span></a>
+                <a href="#" class="opt1-pill">West Campus <span class="opt1-pill-count">18</span></a>
+                <a href="#" class="opt1-pill">Youth Center <span class="opt1-pill-count">11</span></a>
+                <a href="#" class="opt1-pill">Online <span class="opt1-pill-count">28</span></a>
+            </div>
+        </div>
+
+        <!-- Years -->
+        <div class="opt1-section">
+            <div class="opt1-section-title"><i class="fas fa-calendar-alt me-2 text-primary"></i>Years</div>
+            <div>
+                <a href="#" class="opt1-pill">2026 <span class="opt1-pill-count">23</span></a>
+                <a href="#" class="opt1-pill">2025 <span class="opt1-pill-count">48</span></a>
+                <a href="#" class="opt1-pill">2024 <span class="opt1-pill-count">52</span></a>
+                <a href="#" class="opt1-pill">2023 <span class="opt1-pill-count">44</span></a>
+                <a href="#" class="opt1-pill">2022 <span class="opt1-pill-count">39</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OPTION 2: HERO SECTIONS -->
+<!-- ============================================================ -->
+<div class="option-divider">
+    <h2>Option 2: Hero Sections</h2>
+    <p>Full-width alternating bands with large image cards and dramatic visual separation</p>
+</div>
+
+<div class="mockup-frame">
+    <!-- Page Header -->
+    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 3rem 0; text-align: center;">
+        <div class="container">
+            <h1 style="font-weight: 800; font-size: 2.5rem; margin-bottom: 0.5rem;">Bible Studies</h1>
+            <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem;">Explore our collection of sermons, series, and teachings</p>
+        </div>
+    </div>
+
+    <!-- Teachers Band -->
+    <div class="opt2-band opt2-band-light">
+        <div class="container">
+            <div class="opt2-section-title">Our Teachers</div>
+            <div class="opt2-section-subtitle">Learn from our pastors and guest speakers</div>
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-3">
+                    <a href="#" class="opt2-hero-card">
+                        <div class="opt2-hero-card-bg ph-img-1"></div>
+                        <div class="opt2-hero-card-overlay"></div>
+                        <div class="opt2-hero-card-content">
+                            <div class="opt2-hero-card-title">Pastor David Mitchell</div>
+                            <div class="opt2-hero-card-sub">24 sermons</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a href="#" class="opt2-hero-card">
+                        <div class="opt2-hero-card-bg ph-img-3"></div>
+                        <div class="opt2-hero-card-overlay"></div>
+                        <div class="opt2-hero-card-content">
+                            <div class="opt2-hero-card-title">Rev. Sarah Thompson</div>
+                            <div class="opt2-hero-card-sub">18 sermons</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a href="#" class="opt2-hero-card">
+                        <div class="opt2-hero-card-bg ph-img-6"></div>
+                        <div class="opt2-hero-card-overlay"></div>
+                        <div class="opt2-hero-card-content">
+                            <div class="opt2-hero-card-title">Elder James Walker</div>
+                            <div class="opt2-hero-card-sub">12 sermons</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a href="#" class="opt2-hero-card">
+                        <div class="opt2-hero-card-bg ph-img-4"></div>
+                        <div class="opt2-hero-card-overlay"></div>
+                        <div class="opt2-hero-card-content">
+                            <div class="opt2-hero-card-title">Dr. Rachel Kim</div>
+                            <div class="opt2-hero-card-sub">9 sermons</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Series Band -->
+    <div class="opt2-band opt2-band-dark">
+        <div class="container">
+            <div class="opt2-section-title">Sermon Series</div>
+            <div class="opt2-section-subtitle">Follow along with our multi-part studies</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href="#" class="opt2-hero-card" style="height: 280px;">
+                        <div class="opt2-hero-card-bg ph-img-2"></div>
+                        <div class="opt2-hero-card-overlay"></div>
+                        <div class="opt2-hero-card-content">
+                            <div class="opt2-hero-card-title" style="font-size: 1.4rem;">Walking in Faith</div>
+                            <div class="opt2-hero-card-sub">8-part series from Hebrews 11</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="#" class="opt2-hero-card" style="height: 133px;">
+                                <div class="opt2-hero-card-bg ph-img-5"></div>
+                                <div class="opt2-hero-card-overlay"></div>
+                                <div class="opt2-hero-card-content" style="padding: 1rem;">
+                                    <div class="opt2-hero-card-title">Psalms of Praise</div>
+                                    <div class="opt2-hero-card-sub">6 parts</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="opt2-hero-card" style="height: 133px;">
+                                <div class="opt2-hero-card-bg ph-img-8"></div>
+                                <div class="opt2-hero-card-overlay"></div>
+                                <div class="opt2-hero-card-content" style="padding: 1rem;">
+                                    <div class="opt2-hero-card-title">Armor of God</div>
+                                    <div class="opt2-hero-card-sub">12 parts</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="#" class="opt2-hero-card" style="height: 133px;">
+                                <div class="opt2-hero-card-bg ph-img-7"></div>
+                                <div class="opt2-hero-card-overlay"></div>
+                                <div class="opt2-hero-card-content" style="padding: 1rem;">
+                                    <div class="opt2-hero-card-title">Grace Abounding</div>
+                                    <div class="opt2-hero-card-sub">4-part series from Romans 5-8</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topics Band (dark) -->
+    <div class="opt2-band opt2-band-accent">
+        <div class="container">
+            <div class="opt2-section-title">Topics</div>
+            <div class="opt2-section-subtitle">Browse by theme</div>
+            <div>
+                <a href="#" class="opt2-tag opt2-tag-dark">Prayer</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Salvation</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Faith</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Worship</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Grace</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Forgiveness</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Love</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Hope</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Family</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Discipleship</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">Missions</a>
+                <a href="#" class="opt2-tag opt2-tag-dark">End Times</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Band -->
+    <div class="opt2-band opt2-band-light">
+        <div class="container">
+            <div class="opt2-section-title">Books of the Bible</div>
+            <div class="opt2-section-subtitle">Study by scripture reference</div>
+            <div>
+                <a href="#" class="opt2-tag opt2-tag-light">Genesis</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Psalms</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Isaiah</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Matthew</a>
+                <a href="#" class="opt2-tag opt2-tag-light">John</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Acts</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Romans</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Ephesians</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Philippians</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Hebrews</a>
+                <a href="#" class="opt2-tag opt2-tag-light">Revelation</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Locations + Years Band -->
+    <div class="opt2-band opt2-band-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="opt2-section-title">Locations</div>
+                    <div>
+                        <a href="#" class="opt2-tag opt2-tag-light">Main Campus</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">West Campus</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">Youth Center</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">Online</a>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-4 mt-md-0">
+                    <div class="opt2-section-title">Years</div>
+                    <div>
+                        <a href="#" class="opt2-tag opt2-tag-light">2026</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">2025</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">2024</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">2023</a>
+                        <a href="#" class="opt2-tag opt2-tag-light">2022</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OPTION 3: DASHBOARD -->
+<!-- ============================================================ -->
+<div class="option-divider">
+    <h2>Option 3: Dashboard</h2>
+    <p>Featured items up top, collapsible accordion sections below for compact browsing</p>
+</div>
+
+<div class="mockup-frame">
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="mb-4">
+            <h1 style="font-weight: 800; color: #2c3e50; margin-bottom: 0.25rem;">Bible Studies</h1>
+            <p class="text-muted">Explore our collection of sermons, series, and teachings</p>
+        </div>
+
+        <!-- Featured Row -->
+        <div class="opt3-featured">
+            <div class="opt3-featured-label">Featured</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href="#" class="opt3-featured-card">
+                        <div class="opt3-featured-img ph-img-2"></div>
+                        <div class="opt3-featured-body">
+                            <div class="opt3-featured-tag">Latest Series</div>
+                            <p class="opt3-featured-title">Walking in Faith</p>
+                            <p class="opt3-featured-meta">8-part series from Hebrews 11 &middot; Pastor David Mitchell</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="#" class="opt3-featured-card">
+                        <div class="opt3-featured-img ph-img-1"></div>
+                        <div class="opt3-featured-body">
+                            <div class="opt3-featured-tag">Most Recent Teacher</div>
+                            <p class="opt3-featured-title">Pastor David Mitchell</p>
+                            <p class="opt3-featured-meta">Senior Pastor &middot; 24 sermons</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accordion Sections -->
+        <div class="opt3-accordion accordion mt-3" id="dashboardAccordion">
+            <!-- Teachers -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#colTeachers">
+                        <i class="fas fa-user-tie me-2 text-primary"></i>Teachers
+                        <span class="opt3-section-count">4</span>
+                    </button>
+                </h2>
+                <div id="colTeachers" class="accordion-collapse collapse show" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-user"></i></div>
+                            <span class="opt3-list-item-name">Pastor David Mitchell</span>
+                            <span class="opt3-list-item-count">24 sermons</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-user"></i></div>
+                            <span class="opt3-list-item-name">Rev. Sarah Thompson</span>
+                            <span class="opt3-list-item-count">18 sermons</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-user"></i></div>
+                            <span class="opt3-list-item-name">Elder James Walker</span>
+                            <span class="opt3-list-item-count">12 sermons</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-user"></i></div>
+                            <span class="opt3-list-item-name">Dr. Rachel Kim</span>
+                            <span class="opt3-list-item-count">9 sermons</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Series -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colSeries">
+                        <i class="fas fa-layer-group me-2 text-primary"></i>Series
+                        <span class="opt3-section-count">4</span>
+                    </button>
+                </h2>
+                <div id="colSeries" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book-open"></i></div>
+                            <span class="opt3-list-item-name">Walking in Faith</span>
+                            <span class="opt3-list-item-count">8 parts</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book-open"></i></div>
+                            <span class="opt3-list-item-name">Psalms of Praise</span>
+                            <span class="opt3-list-item-count">6 parts</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book-open"></i></div>
+                            <span class="opt3-list-item-name">The Armor of God</span>
+                            <span class="opt3-list-item-count">12 parts</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book-open"></i></div>
+                            <span class="opt3-list-item-name">Grace Abounding</span>
+                            <span class="opt3-list-item-count">4 parts</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topics -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colTopics">
+                        <i class="fas fa-tags me-2 text-primary"></i>Topics
+                        <span class="opt3-section-count">12</span>
+                    </button>
+                </h2>
+                <div id="colTopics" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Prayer</span>
+                            <span class="opt3-list-item-count">14</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Salvation</span>
+                            <span class="opt3-list-item-count">11</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Faith</span>
+                            <span class="opt3-list-item-count">9</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Worship</span>
+                            <span class="opt3-list-item-count">8</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Grace</span>
+                            <span class="opt3-list-item-count">7</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-tag"></i></div>
+                            <span class="opt3-list-item-name">Forgiveness</span>
+                            <span class="opt3-list-item-count">6</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Books -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colBooks">
+                        <i class="fas fa-bible me-2 text-primary"></i>Books of the Bible
+                        <span class="opt3-section-count">11</span>
+                    </button>
+                </h2>
+                <div id="colBooks" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book"></i></div>
+                            <span class="opt3-list-item-name">Genesis</span>
+                            <span class="opt3-list-item-count">5</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book"></i></div>
+                            <span class="opt3-list-item-name">Psalms</span>
+                            <span class="opt3-list-item-count">12</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book"></i></div>
+                            <span class="opt3-list-item-name">John</span>
+                            <span class="opt3-list-item-count">11</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-book"></i></div>
+                            <span class="opt3-list-item-name">Romans</span>
+                            <span class="opt3-list-item-count">9</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colLocations">
+                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>Locations
+                        <span class="opt3-section-count">4</span>
+                    </button>
+                </h2>
+                <div id="colLocations" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-church"></i></div>
+                            <span class="opt3-list-item-name">Main Campus</span>
+                            <span class="opt3-list-item-count">42</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-church"></i></div>
+                            <span class="opt3-list-item-name">West Campus</span>
+                            <span class="opt3-list-item-count">18</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-church"></i></div>
+                            <span class="opt3-list-item-name">Youth Center</span>
+                            <span class="opt3-list-item-count">11</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-laptop"></i></div>
+                            <span class="opt3-list-item-name">Online</span>
+                            <span class="opt3-list-item-count">28</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Years -->
+            <div class="accordion-item border-0 mb-2" style="border-radius: 0.5rem; overflow: hidden;">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#colYears">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>Years
+                        <span class="opt3-section-count">5</span>
+                    </button>
+                </h2>
+                <div id="colYears" class="accordion-collapse collapse" data-bs-parent="#dashboardAccordion">
+                    <div class="accordion-body">
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-calendar"></i></div>
+                            <span class="opt3-list-item-name">2026</span>
+                            <span class="opt3-list-item-count">23</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-calendar"></i></div>
+                            <span class="opt3-list-item-name">2025</span>
+                            <span class="opt3-list-item-count">48</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-calendar"></i></div>
+                            <span class="opt3-list-item-name">2024</span>
+                            <span class="opt3-list-item-count">52</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-calendar"></i></div>
+                            <span class="opt3-list-item-name">2023</span>
+                            <span class="opt3-list-item-count">44</span>
+                        </a>
+                        <a href="#" class="opt3-list-item">
+                            <div class="opt3-list-item-icon"><i class="fas fa-calendar"></i></div>
+                            <span class="opt3-list-item-name">2022</span>
+                            <span class="opt3-list-item-count">39</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="height: 4rem;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

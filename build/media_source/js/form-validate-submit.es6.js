@@ -26,8 +26,7 @@
         if (task === cancelTask || document.formvalidator.isValid(formEl)) {
             Joomla.submitform(task, formEl);
         } else {
-            const msg = Joomla.Text._('JGLOBAL_VALIDATION_FORM_FAILED') || 'Some values are unacceptable.';
-            Joomla.renderMessages({ error: [msg] });
+            // Joomla's core form.validate already shows per-field error messages
         }
     };
 })();

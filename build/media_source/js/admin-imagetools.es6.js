@@ -1519,7 +1519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         downloadLogBtn.style.display = '';
                     }
                 })
-                .catch(() => {});
+                .catch(() => { /* HEAD probe — 404 is expected when no log exists */ });
         }
     }
     document.addEventListener('joomla.tab.shown', (e) => {

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
@@ -144,7 +145,9 @@ class Cwmpodcast
 
             $podhead = '<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"
- xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+ xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+ xmlns:podcast="https://podcastindex.org/namespace/1.0"
+ xmlns:psc="http://podlove.org/simple-chapters">
 <channel>
 	<generator>Proclaim</generator>
 	<title>' . $escapedTitle . '</title>
@@ -172,7 +175,56 @@ class Cwmpodcast
 	</itunes:category>
 	<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
 	<managingEditor>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</managingEditor>
-	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>';
+	<webMaster>' . $podinfo->editor_email . ' (' . $this->escapeHTML($podinfo->editor_name) . ')</webMaster>
+	<podcast:locked owner="' . $podinfo->editor_email . '">yes</podcast:locked>
+	<podcast:guid>' . $this->generatePodcastGuid($podinfo->website, $podinfo->filename) . '</podcast:guid>
+	<podcast:medium>audio</podcast:medium>
+	<podcast:image url="' . $imagePath . '" />';
+
+            // Podcasting 2.0: optional channel-level tags
+            if (!empty($podinfo->funding_url)) {
+                $fundingText = $this->escapeHTML($podinfo->funding_text ?: 'Support');
+                $podhead .= '
+	<podcast:funding url="' . $podinfo->funding_url . '">' . $fundingText . '</podcast:funding>';
+            }
+
+            if (!empty($podinfo->podcast_license)) {
+                $licUrl   = !empty($podinfo->podcast_license_url) ? ' url="' . $podinfo->podcast_license_url . '"' : '';
+                $podhead .= '
+	<podcast:license' . $licUrl . '>' . $this->escapeHTML($podinfo->podcast_license) . '</podcast:license>';
+            }
+
+            $publisher = $podinfo->podcast_publisher ?: CwmschemaorgHelper::getOrgName() ?: ($podinfo->author ?? '');
+
+            if (!empty($publisher)) {
+                $podhead .= '
+	<podcast:publisher>' . $this->escapeHTML($publisher) . '</podcast:publisher>';
+            }
+
+            if (!empty($podinfo->podcast_txt_verify)) {
+                $podhead .= '
+	<podcast:txt>' . $this->escapeHTML($podinfo->podcast_txt_verify) . '</podcast:txt>';
+            }
+
+            if (!empty($podinfo->update_frequency)) {
+                $podhead .= '
+	<podcast:updateFrequency>' . $this->escapeHTML($podinfo->update_frequency) . '</podcast:updateFrequency>';
+            }
+
+            // Podcasting 2.0: channel-level location from podcast settings
+            if (!empty($podinfo->location_id) && (int) $podinfo->location_id > 0) {
+                $locQuery = $db->getQuery(true)
+                    ->select($db->quoteName('location_text'))
+                    ->from($db->quoteName('#__bsms_locations'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $podinfo->location_id);
+                $db->setQuery($locQuery);
+                $channelLocation = $db->loadResult();
+
+                if (!empty($channelLocation)) {
+                    $podhead .= '
+	<podcast:location>' . $this->escapeHTML($channelLocation) . '</podcast:location>';
+                }
+            }
 
             $episodedetail = '';
 
@@ -195,6 +247,9 @@ class Cwmpodcast
                 $sanitizedIntro = $this->sanitizeHtmlForPodcast($episode->studyintro);
                 $escapedTeacher = $this->escapeHTML($episode->teachername);
 
+                // Append chapter timecodes to description for universal platform support
+                $descriptionWithTimecodes = $sanitizedIntro . $this->getChapterTimecodes($episode);
+
                 $episodedetail .= '
 	<item>
 		<itunes:episodeType>full</itunes:episodeType>
@@ -203,12 +258,57 @@ class Cwmpodcast
 		<comments>' . $link . '</comments>
 		<itunes:author>' . $escapedTeacher . '</itunes:author>
 		<dc:creator>' . $escapedTeacher . '</dc:creator>
-		<description><![CDATA[' . $sanitizedIntro . ']]></description>
-		<content:encoded><![CDATA[' . $sanitizedIntro . ']]></content:encoded>
+		<description><![CDATA[' . $descriptionWithTimecodes . ']]></description>
+		<content:encoded><![CDATA[' . $descriptionWithTimecodes . ']]></content:encoded>
 		<pubDate>' . $episodedate . '</pubDate>
 		<itunes:duration>' . $duration . '</itunes:duration>';
 
                 $episodedetail .= $this->getEnclosureXml($episode, $protocol, $path);
+
+                // Podcasting 2.0: alternate enclosures for additional media formats
+                $episodedetail .= $this->getAlternateEnclosureXml($episode, (int) $podinfo->id, $protocol);
+
+                // Podcasting 2.0: transcript tags from subtitle tracks
+                $episodedetail .= $this->getTranscriptXml($episode, $podinfo->website, $protocol);
+
+                // Podcasting 2.0: chapter tags (JSON link + Podlove inline)
+                $episodedetail .= $this->getChapterXml($episode, $podinfo->website, $protocol);
+
+                // Podcasting 2.0: person/speaker tags for all teachers
+                $episodedetail .= $this->getPersonXml($episode, $podinfo->website, $protocol);
+
+                // Podcasting 2.0: season (from series)
+                if (!empty($episode->series_text) && ($episode->series_id ?? -1) > 0) {
+                    $episodedetail .= '
+		<podcast:season name="' . $this->escapeHTML($episode->series_text) . '">'
+                        . (int) $episode->series_id . '</podcast:season>';
+                }
+
+                // Podcasting 2.0: episode number (from studynumber)
+                if (!empty($episode->studynumber)) {
+                    $epNum = preg_replace('/[^0-9]/', '', $episode->studynumber);
+
+                    if ($epNum !== '' && (int) $epNum > 0) {
+                        $episodedetail .= '
+		<podcast:episode display="' . $this->escapeHTML($episode->studynumber) . '">'
+                            . (int) $epNum . '</podcast:episode>';
+                    }
+                }
+
+                // Podcasting 2.0: item-level location
+                if (!empty($episode->location_text)) {
+                    $episodedetail .= '
+		<podcast:location>' . $this->escapeHTML($episode->location_text) . '</podcast:location>';
+                }
+
+                // Podcasting 2.0: item-level image from media_image param
+                $episodeImage = $episode->params->get('media_image', '');
+
+                if (!empty($episodeImage)) {
+                    $episodeImageUrl = $this->resolveUrl($podinfo->website, $protocol) . '/' . ltrim($episodeImage, '/');
+                    $episodedetail .= '
+		<podcast:image url="' . $episodeImageUrl . '" />';
+                }
 
                 $episodedetail .= '
 		<itunes:explicit>' . $this->escapeHTML($podinfo->itunes_explicit ?: 'false') . '</itunes:explicit>
@@ -305,6 +405,302 @@ class Cwmpodcast
     }
 
     /**
+     * Generate a Podcasting 2.0 podcast:guid (UUIDv5) from the feed URL.
+     *
+     * Per the spec, the GUID is a UUIDv5 generated from the feed URL with
+     * the protocol stripped and trailing slashes removed, using the
+     * Podcasting 2.0 namespace UUID "ead4c236-bf58-58c6-a2c6-a6b28d128cb6".
+     *
+     * @param   string  $website   Podcast website URL
+     * @param   string  $filename  RSS filename (e.g., "podcast.xml")
+     *
+     * @return  string  UUIDv5 string
+     *
+     * @since   10.3.0
+     * @see     https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/tags/guid.md
+     */
+    private function generatePodcastGuid(string $website, string $filename): string
+    {
+        // Build feed URL and normalize: strip protocol, trailing slashes
+        $feedUrl = rtrim($website, '/') . '/' . ltrim($filename, '/');
+        $feedUrl = preg_replace('#^[a-z][a-z0-9+\-.]*://#i', '', $feedUrl);
+        $feedUrl = rtrim($feedUrl, '/');
+
+        // Podcasting 2.0 namespace UUID for podcast:guid
+        $namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
+
+        return self::uuidv5($namespace, $feedUrl);
+    }
+
+    /**
+     * Generate a UUIDv5 (name-based, SHA-1) per RFC 4122.
+     *
+     * @param   string  $namespace  Namespace UUID string
+     * @param   string  $name       Name to hash
+     *
+     * @return  string  UUIDv5 string
+     *
+     * @since   10.3.0
+     */
+    private static function uuidv5(string $namespace, string $name): string
+    {
+        // Parse namespace UUID to binary
+        $nhex = str_replace(['-', '{', '}'], '', $namespace);
+        $nbin = hex2bin($nhex);
+
+        // Calculate hash of namespace + name
+        $hash = sha1($nbin . $name);
+
+        return \sprintf(
+            '%08s-%04s-%04x-%04x-%12s',
+            substr($hash, 0, 8),
+            substr($hash, 8, 4),
+            (hexdec(substr($hash, 12, 4)) & 0x0fff) | 0x5000,
+            (hexdec(substr($hash, 16, 4)) & 0x3fff) | 0x8000,
+            substr($hash, 20, 12)
+        );
+    }
+
+    /**
+     * Generate podcast:transcript XML tags from subtitle tracks.
+     *
+     * @param   object  $episode   Episode with params Registry
+     * @param   string  $website   Podcast website URL
+     * @param   string  $protocol  URL protocol
+     *
+     * @return  string  XML fragment (empty if no tracks)
+     *
+     * @since   10.3.0
+     */
+    private function getTranscriptXml(object $episode, string $website, string $protocol): string
+    {
+        $tracks = $episode->params->get('subtitle_tracks', []);
+
+        if (empty($tracks)) {
+            return '';
+        }
+
+        // MIME type mapping by file extension
+        $mimeMap = [
+            'vtt'  => 'text/vtt',
+            'srt'  => 'application/x-subrip',
+            'txt'  => 'text/plain',
+            'json' => 'application/json',
+        ];
+
+        $xml = '';
+
+        foreach ($tracks as $track) {
+            $track = (object) $track;
+            $src   = $track->src ?? '';
+
+            if (empty($src)) {
+                continue;
+            }
+
+            // Resolve to absolute URL
+            if (!preg_match('#^[a-z][a-z0-9+\-.]*://#i', $src)) {
+                $src = $this->resolveUrl($website, $protocol) . '/' . ltrim($src, '/');
+            }
+
+            // Determine MIME type from extension
+            $ext  = strtolower(pathinfo(parse_url($src, PHP_URL_PATH) ?: $src, PATHINFO_EXTENSION));
+            $type = $mimeMap[$ext] ?? 'text/vtt';
+
+            $lang = !empty($track->srclang) ? ' language="' . $this->escapeHTML($track->srclang) . '"' : '';
+
+            $xml .= '
+		<podcast:transcript url="' . $src . '" type="' . $type . '"' . $lang . ' />';
+        }
+
+        return $xml;
+    }
+
+    /**
+     * Generate podcast:chapters link and Podlove Simple Chapters XML.
+     *
+     * @param   object  $episode   Episode with params Registry
+     * @param   string  $website   Podcast website URL
+     * @param   string  $protocol  URL protocol
+     *
+     * @return  string  XML fragment (empty if no chapters)
+     *
+     * @since   10.3.0
+     */
+    private function getChapterXml(object $episode, string $website, string $protocol): string
+    {
+        $chapters = $episode->params->get('chapters', []);
+
+        if (empty($chapters)) {
+            return '';
+        }
+
+        $xml = '';
+
+        // Podcasting 2.0: link to JSON chapters endpoint
+        $chaptersUrl = $this->resolveUrl($website, $protocol)
+            . '/index.php?option=com_proclaim&task=cwmpodcast.chapters&media_id=' . (int) $episode->mfid;
+        $xml .= '
+		<podcast:chapters url="' . htmlspecialchars($chaptersUrl, ENT_XML1, 'UTF-8') . '" type="application/json+chapters" />';
+
+        // Podlove Simple Chapters (inline XML for Spotify compatibility)
+        $xml .= '
+		<psc:chapters version="1.2">';
+
+        foreach ($chapters as $chapter) {
+            $chapter = (object) $chapter;
+            $time    = $chapter->time ?? '';
+            $label   = $chapter->label ?? '';
+
+            if (empty($time) || empty($label)) {
+                continue;
+            }
+
+            // Normalize time to HH:MM:SS format for Podlove
+            $xml .= '
+			<psc:chapter start="' . $this->normalizeTime($time) . '" title="' . $this->escapeHTML($label) . '" />';
+        }
+
+        $xml .= '
+		</psc:chapters>';
+
+        return $xml;
+    }
+
+    /**
+     * Generate plain-text chapter timecodes for appending to episode description.
+     *
+     * Spotify and Apple Podcasts auto-detect timecodes in description text
+     * and render them as clickable chapter markers.
+     *
+     * @param   object  $episode  Episode with params Registry
+     *
+     * @return  string  Timecodes block (empty if no chapters)
+     *
+     * @since   10.3.0
+     */
+    private function getChapterTimecodes(object $episode): string
+    {
+        $chapters = $episode->params->get('chapters', []);
+
+        if (empty($chapters)) {
+            return '';
+        }
+
+        $lines = [];
+
+        foreach ($chapters as $chapter) {
+            $chapter = (object) $chapter;
+            $time    = $chapter->time ?? '';
+            $label   = $chapter->label ?? '';
+
+            if (empty($time) || empty($label)) {
+                continue;
+            }
+
+            $lines[] = $this->normalizeTime($time) . ' ' . strip_tags($label);
+        }
+
+        if (empty($lines)) {
+            return '';
+        }
+
+        return "\n\n" . implode("\n", $lines);
+    }
+
+    /**
+     * Normalize a time string to HH:MM:SS format.
+     *
+     * Accepts "M:SS", "MM:SS", or "H:MM:SS" and always returns "HH:MM:SS".
+     *
+     * @param   string  $time  Time string
+     *
+     * @return  string  Normalized time
+     *
+     * @since   10.3.0
+     */
+    private function normalizeTime(string $time): string
+    {
+        $parts = explode(':', $time);
+
+        if (\count($parts) === 2) {
+            return '00:' . str_pad($parts[0], 2, '0', STR_PAD_LEFT) . ':' . str_pad($parts[1], 2, '0', STR_PAD_LEFT);
+        }
+
+        if (\count($parts) === 3) {
+            return str_pad($parts[0], 2, '0', STR_PAD_LEFT) . ':'
+                . str_pad($parts[1], 2, '0', STR_PAD_LEFT) . ':'
+                . str_pad($parts[2], 2, '0', STR_PAD_LEFT);
+        }
+
+        return '00:00:00';
+    }
+
+    /**
+     * Generate podcast:person XML tags for all teachers on an episode.
+     *
+     * Queries the study_teachers junction table to get all teachers,
+     * falling back to the primary teacher already on the episode object.
+     *
+     * @param   object  $episode   Episode object (has sid, tid, teachername)
+     * @param   string  $website   Podcast website URL
+     * @param   string  $protocol  URL protocol
+     *
+     * @return  string  XML fragment (empty if no teacher)
+     *
+     * @since   10.3.0
+     */
+    private function getPersonXml(object $episode, string $website, string $protocol): string
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('t.teachername'),
+                $db->quoteName('t.teacher_image'),
+                $db->quoteName('t.teacher_thumbnail'),
+            ])
+            ->from($db->quoteName('#__bsms_study_teachers', 'st'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_teachers', 't')
+                . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.teacher_id')
+            )
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $episode->sid)
+            ->order($db->quoteName('st.ordering') . ' ASC');
+
+        $db->setQuery($query);
+        $teachers = $db->loadObjectList() ?: [];
+
+        // Fallback: if no junction rows, use the primary teacher from the episode
+        if (empty($teachers) && !empty($episode->teachername)) {
+            $teachers = [(object) [
+                'teachername'       => $episode->teachername,
+                'teacher_image'     => null,
+                'teacher_thumbnail' => null,
+            ]];
+        }
+
+        $xml     = '';
+        $baseUrl = $this->resolveUrl($website, $protocol);
+
+        foreach ($teachers as $teacher) {
+            $name = $this->escapeHTML($teacher->teachername);
+            $img  = $teacher->teacher_image ?: $teacher->teacher_thumbnail ?: '';
+
+            $imgAttr = '';
+
+            if (!empty($img)) {
+                $imgUrl  = $baseUrl . '/' . ltrim($img, '/');
+                $imgAttr = ' img="' . $imgUrl . '"';
+            }
+
+            $xml .= '
+		<podcast:person role="host" group="cast"' . $imgAttr . '>' . $name . '</podcast:person>';
+        }
+
+        return $xml;
+    }
+
+    /**
      * Get Episode Link
      *
      * @param   object  $podinfo            Podcast Info
@@ -382,6 +778,78 @@ class Cwmpodcast
     }
 
     /**
+     * Generate podcast:alternateEnclosure tags for additional media formats.
+     *
+     * Queries sibling media files for the same study that belong to the same
+     * podcast, excluding the primary media file already used as <enclosure>.
+     *
+     * @param   object  $episode    Current episode (primary media file)
+     * @param   int     $podcastId  Current podcast ID
+     * @param   string  $protocol   URL protocol
+     *
+     * @return  string  XML fragment (empty if no alternates)
+     *
+     * @since   10.3.0
+     */
+    private function getAlternateEnclosureXml(object $episode, int $podcastId, string $protocol): string
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('mf.params'),
+                $db->quoteName('sr.params', 'srparams'),
+            ])
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers', 'sr')
+                . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id')
+            )
+            ->where($db->quoteName('mf.study_id') . ' = ' . (int) $episode->sid)
+            ->where($db->quoteName('mf.id') . ' != ' . (int) $episode->mfid)
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->where('FIND_IN_SET(' . $podcastId . ', ' . $db->quoteName('mf.podcast_id') . ')');
+
+        $db->setQuery($query);
+        $alternates = $db->loadObjectList() ?: [];
+
+        if (empty($alternates)) {
+            return '';
+        }
+
+        $xml = '';
+
+        foreach ($alternates as $alt) {
+            $altParams  = new Registry($alt->params);
+            $altSrParms = new Registry($alt->srparams);
+            $filename   = $altParams->get('filename', '');
+            $mimeType   = $altParams->get('mime_type', 'audio/mpeg');
+            $size       = $altParams->get('size', '');
+
+            if (empty($filename)) {
+                continue;
+            }
+
+            $url = $protocol . Cwmhelper::mediaBuildUrl(
+                $altSrParms->get('path'),
+                str_replace(' ', '%20', $filename),
+                new Registry(),
+                false,
+                false,
+                true
+            );
+
+            $sizeAttr = !empty($size) ? ' length="' . (int) $size . '"' : '';
+
+            $xml .= '
+		<podcast:alternateEnclosure type="' . $this->escapeHTML($mimeType) . '"' . $sizeAttr . '>
+			<podcast:source uri="' . $url . '" />
+		</podcast:alternateEnclosure>';
+        }
+
+        return $xml;
+    }
+
+    /**
      * Get Episodes
      *
      * @param   int     $id     Id for Episode
@@ -410,10 +878,12 @@ class Cwmpodcast
                 'mf.published AS mfpub', 'mf.createdate', 'mf.params',
                 's.id AS sid', 's.alias AS alias', 's.studydate', 's.teacher_id', 's.booknumber', 's.chapter_begin', 's.verse_begin',
                 's.chapter_end', 's.verse_end', 's.studytitle', 's.studyintro', 's.published AS spub',
+                's.studynumber', 's.location_id', 's.series_id',
                 'se.series_text', 'se.published',
                 'sr.id AS srid', 'sr.params as srparams',
                 't.id AS tid', 't.teachername',
                 'b.id AS bid', 'b.booknumber AS bnumber', 'b.bookname',
+                'loc.location_text',
             ]
         )
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
@@ -426,6 +896,7 @@ class Cwmpodcast
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
             ->leftJoin($db->quoteName('#__bsms_teachers', 't') . ' ON '
                 . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+            ->leftJoin($db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('s.location_id'))
             ->leftJoin($db->quoteName('#__bsms_podcast', 'p') . ' ON FIND_IN_SET(' . $db->quoteName('p.id') . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where('FIND_IN_SET(' . $id . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where($db->quoteName('mf.published') . ' = 1')

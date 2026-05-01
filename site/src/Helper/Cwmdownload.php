@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
@@ -77,13 +78,22 @@ class Cwmdownload
                 $db->quoteName('#__bsms_servers') . ' ON ('
                 . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
             )
-            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid);
+            ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid)
+            ->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
         $db->setQuery($query, 0, 1);
 
         $media = $db->loadObject();
 
         if (!$media) {
             $this->sendError($app, 404, 'Media not found');
+        }
+
+        // Verify the current user has the required access level
+        $user         = $app->getIdentity();
+        $accessLevels = $user->getAuthorisedViewLevels();
+
+        if (isset($media->access) && !\in_array((int) $media->access, $accessLevels, true)) {
+            $this->sendError($app, 403, 'Access denied');
         }
 
         // Increment download count after validation
@@ -101,6 +111,11 @@ class Cwmdownload
 
         $download_file = Cwmhelper::mediaBuildUrl($media->spath, $params->get('filename'), $params, true);
         $isLocal       = false;
+
+        CwmDebug::log(
+            'mid=' . $mid . ' file=' . ($params->get('filename') ?: '(none)') . ' template=' . $templateId,
+            'download'
+        );
 
         // Optimization: Check if a file is local to avoid HTTP loopback and get an accurate size
         if ($download_file) {
@@ -145,7 +160,8 @@ class Cwmdownload
 
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($params->get('filename')) . '"');
+        $safeFilename = preg_replace('/[^\w.\-]/', '_', basename($params->get('filename')));
+        header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
@@ -168,9 +184,7 @@ class Cwmdownload
             $fh = @fopen($download_file, 'rb');
 
             if (!$fh) {
-                if (\defined('JBSMDEBUG') && JBSMDEBUG) {
-                    echo '<pre>' . $download_file . '</pre>';
-                }
+                CwmDebug::log('download fopen failed path=' . $download_file, 'download');
 
                 // We cannot send a 500 error cleanly if headers are already sent, but we can try
                 exit;

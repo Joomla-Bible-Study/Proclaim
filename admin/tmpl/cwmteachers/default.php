@@ -33,9 +33,9 @@ $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
 $archived   = $this->state->get('filter.published') == 2 ? true : false;
 $trashed    = $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder  = $listOrder == 'teacher.ordering';
-$sortFields = $this->getSortFields();
-$columns    = 9;
+$saveOrder         = $listOrder == 'teacher.ordering';
+$sortFields        = $this->getSortFields();
+$columns           = 11;
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_proclaim&task=cwmteachers.saveOrderAjax&tmpl=component';
@@ -53,13 +53,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                 echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
-                    <div class="alert alert-info">
-                        <span class="icon-info-circle" aria-hidden="true"></span><span
-                                class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
-                        <?php
-                        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-                    </div>
+                    <?php echo LayoutHelper::render('html.empty_state'); ?>
                 <?php else : ?>
                     <table class="table itemList" id="teachers">
                         <caption class="visually-hidden">
@@ -73,12 +67,19 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                         <thead>
                         <tr>
                             <th class="w-1 text-center">
-                                <?php
-                                echo HTMLHelper::_('grid.checkall'); ?>
+                                <?php echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo HTMLHelper::_(
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    '',
+                                    'teacher.ordering',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
+                            </th>
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                                <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_PUBLISHED',
                                     'cwmteacher.published',
@@ -87,50 +88,54 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 ); ?>
                             </th>
                             <th scope="col" style="min-width:100px">
-                                <?php
-                                                                echo HTMLHelper::_(
-                                                                    'searchtools.sort',
-                                                                    'JBS_CMN_TEACHER',
-                                                                    'cwmteacher.teachername',
-                                                                    $listDirn,
-                                                                    $listOrder
-                                                                ); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_CMN_TEACHER',
+                                    'cwmteacher.teachername',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                                                echo HTMLHelper::_(
-                                                                    'searchtools.sort',
-                                                                    'JGRID_HEADING_ACCESS',
-                                                                    'cwmteacher.access',
-                                                                    $listDirn,
-                                                                    $listOrder
-                                                                ); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JGRID_HEADING_ACCESS',
+                                    'cwmteacher.access',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
-                            <?php
-                            if (Multilanguage::isEnabled()) : ?>
+                            <?php if (Multilanguage::isEnabled()) : ?>
                                 <th scope="col" class="w-10 d-none d-md-table-cell">
-                                    <?php
-                                                                    echo HTMLHelper::_(
-                                                                        'searchtools.sort',
-                                                                        'JGRID_HEADING_LANGUAGE',
-                                                                        'language',
-                                                                        $listDirn,
-                                                                        $listOrder
-                                                                    ); ?>
+                                    <?php echo HTMLHelper::_(
+                                        'searchtools.sort',
+                                        'JGRID_HEADING_LANGUAGE',
+                                        'language',
+                                        $listDirn,
+                                        $listOrder
+                                    ); ?>
                                 </th>
-                            <?php
-                            endif; ?>
+                            <?php endif; ?>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo Text::_('JBS_TCH_SHOW_LIST'); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_TCH_SHOW_LIST',
+                                    'teacher.list_show',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                                <?php
-                                echo Text::_('JBS_TCH_SHOW_LANDING_PAGE'); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JBS_TCH_SHOW_LANDING_PAGE',
+                                    'teacher.landing_show',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
                             </th>
                             <th scope="col" class="w-1 text-center d-none d-lg-table-cell">
-                                <?php
-                                echo HTMLHelper::_(
+                                <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ID',
                                     'cwmteacher.id',
@@ -158,11 +163,27 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.teacher.' . $item->id);
                             $canChange          = $user->authorise('core.edit.state', 'com_proclaim.teacher.' . $item->id);
                             ?>
-                            <tr class="row<?php
-                            echo $i % 2; ?>">
+                            <tr class="row<?php echo $i % 2; ?>" data-draggable-group="1">
                                 <td class="text-center">
+                                    <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
+                                </td>
+                                <td class="text-center d-none d-md-table-cell">
                                     <?php
-                                    echo HTMLHelper::_('grid.id', $i, $item->id); ?>
+                                    $iconClass = '';
+                                    if (!$canChange) {
+                                        $iconClass = ' inactive';
+                                    } elseif (!$saveOrder) {
+                                        $iconClass = ' inactive" title="' . Text::_('JORDERINGDISABLED');
+                                    }
+                                    ?>
+                                    <span class="sortable-handler<?php echo $iconClass; ?>">
+                                        <span class="icon-ellipsis-v" aria-hidden="true"></span>
+                                    </span>
+                                    <?php if ($canChange && $saveOrder) : ?>
+                                        <input type="text" name="order[]" size="5"
+                                               value="<?php echo $item->ordering; ?>"
+                                               class="width-20 text-area-order hidden">
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
@@ -171,9 +192,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                         'disabled'    => !$canChange,
                                         'id'          => 'state-' . $item->id,
                                     ];
-                            echo (new PublishedButton())->render((int) $item->published, $i, $options);
-                            ?>
-                                </td>
+                                    echo (new PublishedButton())->render((int) $item->published, $i, $options);
+                                    ?>
                                 </td>
                                 <td class="nowrap has-context">
                                     <div class="float-left">

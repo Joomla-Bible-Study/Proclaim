@@ -255,7 +255,9 @@ class HtmlView extends BaseHtmlView
                 $this->studies ?? [],
                 Uri::getInstance()->toString(),
                 $mainframe->get('sitename')
-            )
+            ),
+            (int) ($this->items->id ?? 0),
+            'com_proclaim.serie'
         );
 
         parent::display($tpl);

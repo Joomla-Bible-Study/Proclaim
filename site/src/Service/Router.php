@@ -111,16 +111,6 @@ class Router extends RouterView
         $latest->setKey('id')->setParent($sermons);
         $this->registerView($latest);
 
-        // Podcast list view (parent for single podcast)
-        $podcastList = new RouterViewConfiguration('cwmpodcastlist');
-        $this->registerView($podcastList);
-
-        // Podcast display view - child of podcast list
-        // URL: /podcasts-menu/podcast-alias (instead of /podcasts-menu/cwmpodcastdisplay/podcast-alias)
-        $podcastDisplay = new RouterViewConfiguration('cwmpodcastdisplay');
-        $podcastDisplay->setKey('id')->setParent($podcastList);
-        $this->registerView($podcastDisplay);
-
         // Series Podcast list view (parent for single series podcast display)
         $seriesPodcastList = new RouterViewConfiguration('cwmseriespodcastlist');
         $this->registerView($seriesPodcastList);
@@ -160,7 +150,7 @@ class Router extends RouterView
     {
         if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('alias'))
                 ->from($this->db->quoteName('#__bsms_studies'))
                 ->where($this->db->quoteName('id') . ' = :id')
@@ -186,33 +176,35 @@ class Router extends RouterView
     }
 
     /**
-     * Method to get the segment(s) for a form
+     * Method to get the segment(s) for the sermons list view.
+     * List views have no key, so return empty segments.
      *
-     * @param   string  $id     ID of the article form to retrieve the segments for
+     * @param   string  $id     ID (unused for list views)
      * @param   array   $query  The request that is built right now
      *
-     * @return  array  The segments of this item
+     * @return  array  Empty — list views don't add segments
      *
      * @since   3.7.3
      */
     public function getCWMSermonsSegment(string $id, array $query): array
     {
-        return []; // $this->getCWMSermonSegment($id, $query);
+        return [];
     }
 
     /**
-     * Method to get the segment(s) for a form
+     * Method to get the segment(s) for the teachers list view.
+     * List views have no key, so return empty segments.
      *
-     * @param   string  $id     ID of the article form to retrieve the segments for
+     * @param   string  $id     ID (unused for list views)
      * @param   array   $query  The request that is built right now
      *
-     * @return  array  The segments of this item
+     * @return  array  Empty — list views don't add segments
      *
      * @since   3.7.3
      */
-    public function getCWMTeachersSegment($id, $query): array
+    public function getCWMTeachersSegment(string $id, array $query): array
     {
-        return $this->getCWMTeacherSegment($id, $query);
+        return [];
     }
 
     /**
@@ -228,7 +220,7 @@ class Router extends RouterView
     {
         if ((int)$this->cacheiddata !== (int)$id && !str_contains((string)$id, ':')) {
             $id      = (int)$id;
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('alias'))
                 ->from($this->db->quoteName('#__bsms_teachers'))
                 ->where($this->db->quoteName('id') . ' = :id')
@@ -279,20 +271,19 @@ class Router extends RouterView
     public function getCWMSermonId(string $segment, array $query): mixed
     {
         if ($this->noIDs) {
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__bsms_studies'))
-                ->where(
-                    [
-                        $this->db->quoteName('alias') . ' = :alias',
-
-                    ]
-                )
+                ->where($this->db->quoteName('alias') . ' = :alias')
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
+            $id = (int)$this->db->loadResult();
 
-            return (int)$this->db->loadResult();
+            // Return -1 for unknown aliases so routing completes and the
+            // view can render a friendly "not found" page with suggestions
+            // instead of Joomla's bare 404 error template.
+            return $id ?: -1;
         }
 
         return (int)$segment;
@@ -324,15 +315,10 @@ class Router extends RouterView
     public function getCWMTeacherId(string $segment, array $query): int
     {
         if ($this->noIDs) {
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__bsms_teachers'))
-                ->where(
-                    [
-                        $this->db->quoteName('alias') . ' = :alias',
-
-                    ]
-                )
+                ->where($this->db->quoteName('alias') . ' = :alias')
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
@@ -371,7 +357,7 @@ class Router extends RouterView
     {
         if (!str_contains((string)$id, ':')) {
             $id      = (int)$id;
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('alias'))
                 ->from($this->db->quoteName('#__bsms_series'))
                 ->where($this->db->quoteName('id') . ' = :id')
@@ -416,15 +402,10 @@ class Router extends RouterView
     public function getCWMSeriesDisplayId(string $segment, array $query): int
     {
         if ($this->noIDs) {
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__bsms_series'))
-                ->where(
-                    [
-                        $this->db->quoteName('alias') . ' = :alias',
-
-                    ]
-                )
+                ->where($this->db->quoteName('alias') . ' = :alias')
                 ->bind(':alias', $segment);
 
             $this->db->setQuery($dbquery);
@@ -436,18 +417,35 @@ class Router extends RouterView
     }
 
     /**
-     * Method to get the segment(s) for a Comment
+     * Method to get the segment(s) for the latest sermon view.
+     * Reuses sermon segment logic since latest points to a study record.
      *
-     * @param   string  $segment  Segment of the article to retrieve the ID for
+     * @param   int|string  $id     ID of the study to retrieve the segments for
+     * @param   array       $query  The request that is built right now
+     *
+     * @return  array  The segments of this item
+     *
+     * @since   10.3.0
+     */
+    public function getCWMLatestSegment(int|string $id, array $query): array
+    {
+        return $this->getCWMSermonSegment($id, $query);
+    }
+
+    /**
+     * Method to get the ID for the latest sermon view.
+     *
+     * @param   string  $segment  Segment to retrieve the ID for
      * @param   array   $query    The request that is parsed right now
      *
-     * @return  int   The id of this item or false
+     * @return  int  The id of this item or 0
+     *
      * @since   10.0.0
      */
     public function getCWMLatestId(string $segment, array $query): int
     {
         if ($this->noIDs) {
-            $dbquery = $this->db->getQuery(true);
+            $dbquery = $this->db->createQuery();
             $dbquery->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__bsms_studies'))
                 ->where($this->db->quoteName('alias') . ' = :alias')
@@ -492,12 +490,13 @@ class Router extends RouterView
     }
 
     /**
-     * Method to get the segment(s) for a series podcast list
+     * Method to get the segment(s) for the series podcast list view.
+     * List views have no key, so return empty segments.
      *
-     * @param   mixed   $id     ID of the article form to retrieve the segments for
-     * @param   array   $query  The request that is built right now
+     * @param   mixed  $id     ID (unused for list views)
+     * @param   array  $query  The request that is built right now
      *
-     * @return  array  The segments of this item
+     * @return  array  Empty — list views don't add segments
      *
      * @since   10.0.0
      */

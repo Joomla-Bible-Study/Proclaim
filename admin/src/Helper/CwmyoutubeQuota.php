@@ -46,11 +46,14 @@ class CwmyoutubeQuota
      *
      * @since  10.1.0
      */
-    public const COST_SEARCH         = 100;
-    public const COST_VIDEOS         = 1;
-    public const COST_CHANNELS       = 1;
-    public const COST_PLAYLISTS      = 1;
-    public const COST_PLAYLIST_ITEMS = 1;
+    public const COST_SEARCH            = 100;
+    public const COST_VIDEOS            = 1;
+    public const COST_CHANNELS          = 1;
+    public const COST_PLAYLISTS         = 1;
+    public const COST_PLAYLIST_ITEMS    = 1;
+    public const COST_VIDEO_UPDATE      = 50;
+    public const COST_CAPTIONS_LIST     = 50;
+    public const COST_CAPTIONS_DOWNLOAD = 200;
 
     /**
      * In-memory cache for server params to avoid repeated DB queries
@@ -276,7 +279,10 @@ class CwmyoutubeQuota
      */
     private static function quotaFilePath(int $serverId): string
     {
-        return JPATH_CACHE . '/mod_proclaim_youtube/quota_' . $serverId . '.json';
+        // Namespace by site identity (matches CwmyoutubeFileCache::dir())
+        $siteId = substr(md5(JPATH_CACHE), 0, 8);
+
+        return JPATH_ROOT . '/media/com_proclaim/youtube_cache/' . $siteId . '/quota_' . $serverId . '.json';
     }
 
     /**
@@ -323,7 +329,8 @@ class CwmyoutubeQuota
      */
     private static function saveQuotaFile(int $serverId, array $data): void
     {
-        $dir = JPATH_CACHE . '/mod_proclaim_youtube';
+        $siteId = substr(md5(JPATH_CACHE), 0, 8);
+        $dir    = JPATH_ROOT . '/media/com_proclaim/youtube_cache/' . $siteId;
 
         if (!is_dir($dir)) {
             @mkdir($dir, 0755, true);

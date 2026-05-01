@@ -16,7 +16,8 @@
            filter="rules"
            component="com_proclaim" section="topic" validate="rules"/>
     <field name="asset_id" type="hidden" filter="unset"/>
-    <field name="id" type="hidden" default="0" readonly="true"/>
+    <field name="id" type="text" label="JGLOBAL_FIELD_ID_LABEL"
+           description="JGLOBAL_FIELD_ID_DESC" size="10" default="0" readonly="true"/>
 
     <field
             name="created"

@@ -65,7 +65,7 @@ if ($this->more) {
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
                 <h3 class="card-title mb-0">
-                    <i class="fas fa-database me-2"></i>
+                    <i class="fa-solid fa-database me-2"></i>
                     <?php echo $this->more ? Text::_($workingKey) : Text::_($finishedKey); ?>
                 </h3>
             </div>
@@ -80,7 +80,7 @@ if ($this->more) {
                 <?php else: ?>
                 <!-- Completed State -->
                 <div class="text-center mb-4">
-                    <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    <i class="fa-solid fa-circle-check text-success" style="font-size: 4rem;"></i>
                 </div>
                 <?php endif; ?>
 
@@ -92,7 +92,7 @@ if ($this->more) {
 
                     <?php if ($this->running): ?>
                     <p class="text-center text-muted small mb-3">
-                        <i class="fas fa-cog fa-spin me-1"></i>
+                        <i class="fa-solid fa-gear fa-spin me-1"></i>
                         <?php echo Text::_('JBS_MIG_PROCESSING'); ?> <?php echo htmlspecialchars($this->running); ?>
                     </p>
                     <?php endif; ?>
@@ -113,13 +113,13 @@ if ($this->more) {
                 <?php if ($this->more): ?>
                 <!-- Auto-continue notice -->
                 <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
+                    <i class="fa-solid fa-circle-info me-2"></i>
                     <?php echo Text::_('JBS_MIG_AUTO_CONTINUE'); ?>
                 </div>
                 <?php else: ?>
                 <!-- Completion notice -->
                 <div class="alert alert-success mb-0">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="fa-solid fa-circle-check me-2"></i>
                     <?php echo Text::_('JBS_LBL_REDIRECT_IN_3S'); ?>
                 </div>
                 <?php
@@ -137,7 +137,7 @@ if ($this->more) {
             <?php if ($this->more): ?>
             <div class="card-footer text-center">
                 <small class="text-muted">
-                    <i class="fas fa-shield-alt me-1"></i>
+                    <i class="fa-solid fa-shield-halved me-1"></i>
                     <?php echo Text::_('JBS_MIG_DO_NOT_CLOSE'); ?>
                 </small>
             </div>
@@ -149,7 +149,7 @@ if ($this->more) {
         <div class="card mt-4">
             <div class="card-header bg-light">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-lightbulb me-2"></i><?php echo Text::_('JBS_MIG_TIPS_TITLE'); ?>
+                    <i class="fa-solid fa-lightbulb me-2"></i><?php echo Text::_('JBS_MIG_TIPS_TITLE'); ?>
                 </h5>
             </div>
             <div class="card-body">

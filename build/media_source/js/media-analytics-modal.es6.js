@@ -33,10 +33,10 @@
             { icon: 'icon-user',     label: 'JBS_ANA_UNIQUE_SESSIONS', value: kpi.sessions, cls: 'text-info' },
         ];
 
-        return '<div class="d-flex flex-wrap gap-2 mb-3">' + cards.map((c) =>
+        return '<div class="d-flex flex-wrap gap-3 mb-4">' + cards.map((c) =>
             '<div class="flex-fill" style="min-width:100px">'
             + '<div class="card text-center h-100">'
-            + '<div class="card-body py-2">'
+            + '<div class="card-body py-3">'
             + '<i class="' + c.icon + ' ' + c.cls + ' mb-1" aria-hidden="true"></i>'
             + '<div class="fw-bold fs-5 ' + c.cls + '">' + fmt(c.value) + '</div>'
             + '<div class="text-muted small">' + T(c.label) + '</div>'
@@ -95,7 +95,7 @@
 
         tbody += '</tbody>';
 
-        return '<h6 class="fw-semibold mb-2"><i class="icon-play me-1" aria-hidden="true"></i>'
+        return '<h6 class="fw-semibold mb-2 mt-3"><i class="icon-play me-1" aria-hidden="true"></i>'
             + T('JBS_ANA_MEDIA_FILES') + '</h6>'
             + '<table class="table table-sm table-hover mb-0">'
             + thead + tbody + '</table>';

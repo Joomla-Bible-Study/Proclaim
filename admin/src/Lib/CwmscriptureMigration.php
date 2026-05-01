@@ -15,7 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;

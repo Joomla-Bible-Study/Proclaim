@@ -348,13 +348,10 @@ class CwmsermonController extends FormController
     public function download(): void
     {
         $input = Factory::getApplication()->getInput();
-        $task  = $input->get('task');
-        $mid   = $input->getInt('mid');
+        $mid   = $input->getInt('mid') ?: $input->getInt('id');
 
-        if ($task === 'download') {
-            $downloader = new Cwmdownload();
-            $downloader->download($mid);
-        }
+        $downloader = new Cwmdownload();
+        $downloader->download($mid);
     }
 
     /**

@@ -105,27 +105,169 @@ class Cwmbackup
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Get com_proclaim row from extensions
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName(['extension_id', 'params']))
-            ->from($db->quoteName('#__extensions'))
-            ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->q('component'));
-        $db->setQuery($query);
-        $result = $db->loadObject();
-
-        if (!$result || empty($result->params)) {
-            return "\n-- No component configuration found\n";
-        }
-
-        // Build UPDATE statement (not INSERT - we update existing row)
-        $export = "\n-- --------------------------------------------------------\n";
+        // Always emit the section header so backup dumps stay self-documenting
+        // even on systems where com_proclaim isn't yet registered.
+        $export  = "\n-- --------------------------------------------------------\n";
         $export .= "-- Component Configuration (com_proclaim)\n";
         $export .= "-- --------------------------------------------------------\n\n";
+
+        try {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['extension_id', 'params']))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->q('component'));
+            $db->setQuery($query);
+            $result = $db->loadObject();
+        } catch (\Throwable $e) {
+            return $export . "-- Extensions table not available: " . $e->getMessage() . "\n\n";
+        }
+
+        if (!$result || empty($result->params)) {
+            return $export . "-- No component configuration found\n\n";
+        }
+
+        // UPDATE statement (not INSERT — we overwrite an existing row).
         $export .= "UPDATE " . $db->quoteName('#__extensions') . " SET ";
         $export .= $db->quoteName('params') . " = " . $db->q($result->params);
         $export .= " WHERE " . $db->quoteName('element') . " = " . $db->q('com_proclaim');
         $export .= " AND " . $db->quoteName('type') . " = " . $db->q('component') . ";\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Export Proclaim asset permissions from `#__assets`.
+     *
+     * Dumps two things in one block:
+     *   1. The component-level ACL — the `rules` column on the row where
+     *      `name = 'com_proclaim'`. That's the Permissions tab shown in
+     *      the component Options dialog (who can core.edit / core.create /
+     *      etc. at the component level).
+     *   2. Per-record ACL — any `com_proclaim.<type>.<id>` row whose rules
+     *      column is NOT in `Cwmassets::EMPTY_RULE_VARIANTS`. The empty
+     *      variants contribute nothing to permission decisions and are
+     *      intentionally skipped to keep backups lean.
+     *
+     * Replay strategy (the SQL is written to be idempotent and
+     * id-insensitive, since `#__assets.id` is auto-increment and will
+     * differ between source and destination):
+     *
+     *   - Parent: `UPDATE #__assets SET rules=... WHERE name='com_proclaim'`
+     *     assumes the destination has Proclaim installed so the parent
+     *     row already exists.
+     *   - Per-record: `DELETE ... WHERE name=<full name>` followed by an
+     *     `INSERT ... SELECT p.id, ...` that looks up the destination's
+     *     com_proclaim asset id via its name, plus an `UPDATE #__bsms_<type>
+     *     SET asset_id = (SELECT id FROM #__assets WHERE name=<full name>)
+     *     WHERE id=<record id>` that re-links the source record.
+     *   - `lft`, `rgt`, `level` are seeded to 0/0/2; the restore flow
+     *     calls `Cwmassets::fixAllAssets()` afterward, which rebuilds the
+     *     nested-set tree and assigns correct positions.
+     *
+     * @return string SQL statements (may be empty if nothing to export)
+     *
+     * @throws \Exception
+     * @since 10.3.0
+     */
+    public function getProclaimAssetsExport(): string
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $export  = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Proclaim Asset Permissions (component-level + per-record ACL)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
+        // 1. Component-level ACL (rules on the `com_proclaim` parent row).
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('rules'))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+        $db->setQuery($query);
+        $parentRules = (string) $db->loadResult();
+
+        if ($parentRules !== '' && $parentRules !== '{}' && $parentRules !== '[]') {
+            $export .= "-- Component-level ACL (the Permissions tab in Options)\n";
+            $export .= 'UPDATE ' . $db->quoteName('#__assets') . ' SET '
+                . $db->quoteName('rules') . ' = ' . $db->quote($parentRules)
+                . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote('com_proclaim') . ";\n\n";
+        } else {
+            $export .= "-- Component-level ACL inherits from Joomla root (nothing to export)\n\n";
+        }
+
+        // 2. Per-record ACL rows with genuine non-default rules.
+        $emptyQuoted = implode(
+            ',',
+            array_map(static fn ($v) => $db->quote($v), Cwmassets::EMPTY_RULE_VARIANTS)
+        );
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['name', 'title', 'rules']))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+            ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
+            ->where($db->quoteName('rules') . ' NOT IN (' . $emptyQuoted . ')');
+        $db->setQuery($query);
+        $customRules = $db->loadObjectList() ?: [];
+
+        if (empty($customRules)) {
+            $export .= "-- No per-record ACL rows with custom permissions\n\n";
+
+            return $export;
+        }
+
+        // Map `com_proclaim.<type>.<id>` → source table so we can relink
+        // the record's asset_id after the new asset row is inserted.
+        $typeToTable = array_column(Cwmassets::getAssetObjects(), 'name', 'assetname');
+
+        $export .= '-- ' . \count($customRules) . " per-record ACL row(s) with custom permissions\n";
+
+        foreach ($customRules as $row) {
+            // Idempotent: delete any row with this name on the destination
+            // before we re-insert. Raw DELETE is safe because the restore
+            // flow calls Cwmassets::fixAllAssets() afterward, which runs
+            // Asset::rebuild() to repair lft/rgt.
+            $export .= 'DELETE FROM ' . $db->quoteName('#__assets')
+                . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote($row->name) . ";\n";
+
+            // Resolve the destination's com_proclaim asset id by name and
+            // insert the new row as its child. lft/rgt seeded to 0; the
+            // nested-set rebuild fixes positions.
+            $export .= 'INSERT INTO ' . $db->quoteName('#__assets') . ' ('
+                . $db->quoteName('parent_id') . ', '
+                . $db->quoteName('lft') . ', '
+                . $db->quoteName('rgt') . ', '
+                . $db->quoteName('level') . ', '
+                . $db->quoteName('name') . ', '
+                . $db->quoteName('title') . ', '
+                . $db->quoteName('rules') . ') '
+                . 'SELECT p.' . $db->quoteName('id') . ', 0, 0, 2, '
+                . $db->quote($row->name) . ', '
+                . $db->quote((string) ($row->title ?? $row->name)) . ', '
+                . $db->quote((string) $row->rules) . ' '
+                . 'FROM ' . $db->quoteName('#__assets') . ' p '
+                . 'WHERE p.' . $db->quoteName('name') . ' = ' . $db->quote('com_proclaim') . ";\n";
+
+            // Reconnect the source record's asset_id by name. Name format
+            // is `com_proclaim.<type>.<id>`.
+            $parts = explode('.', $row->name, 3);
+
+            if (\count($parts) === 3) {
+                $assetType = $parts[1];
+                $recordId  = (int) $parts[2];
+                $sourceTbl = $typeToTable[$assetType] ?? '';
+
+                if ($sourceTbl !== '' && $recordId > 0) {
+                    $export .= 'UPDATE ' . $db->quoteName($sourceTbl) . ' SET '
+                        . $db->quoteName('asset_id') . ' = ('
+                        . 'SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__assets')
+                        . ' WHERE ' . $db->quoteName('name') . ' = ' . $db->quote($row->name) . ') '
+                        . 'WHERE ' . $db->quoteName('id') . ' = ' . $recordId . ";\n";
+                }
+            }
+        }
+
+        $export .= "\n";
 
         return $export;
     }
@@ -144,13 +286,18 @@ class Cwmbackup
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Check if scheduler_tasks table exists (Joomla 4+)
+        // Always emit the section header so backup dumps stay self-documenting
+        // even on systems that don't have #__scheduler_tasks yet.
+        $export  = "\n-- --------------------------------------------------------\n";
+        $export .= "-- Scheduled Tasks (proclaim)\n";
+        $export .= "-- --------------------------------------------------------\n\n";
+
         $tables         = $db->getTableList();
         $prefix         = $db->getPrefix();
         $schedulerTable = $prefix . 'scheduler_tasks';
 
         if (!\in_array($schedulerTable, $tables, true)) {
-            return "\n-- Scheduler tasks table not found (Joomla 4+ required)\n";
+            return $export . "-- Scheduler tasks table not found (Joomla 4+ required)\n\n";
         }
 
         // Get all Proclaim tasks
@@ -162,12 +309,8 @@ class Cwmbackup
         $results = $db->loadObjectList();
 
         if (empty($results)) {
-            return "\n-- No scheduled tasks found\n";
+            return $export . "-- No scheduled tasks found\n\n";
         }
-
-        $export = "\n-- --------------------------------------------------------\n";
-        $export .= "-- Scheduled Tasks (proclaim)\n";
-        $export .= "-- --------------------------------------------------------\n\n";
 
         // DELETE existing Proclaim tasks (clean slate on restore)
         $export .= "DELETE FROM " . $db->quoteName('#__scheduler_tasks');
@@ -221,9 +364,10 @@ class Cwmbackup
             $this->getExportTable($object['name']);
         }
 
-        // Append component configuration and scheduled tasks
+        // Append component configuration, scheduled tasks, and asset ACLs.
         $this->data_cache .= $this->getComponentConfigExport();
         $this->data_cache .= $this->getScheduledTasksExport();
+        $this->data_cache .= $this->getProclaimAssetsExport();
 
         switch ($run) {
             case 1:
@@ -316,6 +460,10 @@ class Cwmbackup
             return $this->getScheduledTasksExport();
         }
 
+        if ($table === '_proclaim_assets') {
+            return $this->getProclaimAssetsExport();
+        }
+
         // Reset the execution time limit for long-running exports
         if (\function_exists('set_time_limit')) {
             set_time_limit(\ini_get('max_execution_time'));
@@ -373,6 +521,107 @@ class Cwmbackup
         }
 
         $export .= "\n-- --------------------------------------------------------\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Count the number of rows in a Proclaim table.
+     *
+     * @param   string  $table  Full table name (with prefix)
+     *
+     * @return  int  Row count
+     *
+     * @since   10.2.0
+     */
+    public function getTableRowCount(string $table): int
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName($table));
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
+    }
+
+    /**
+     * Export table structure (DDL) only — DROP + CREATE statements.
+     *
+     * @param   string  $table  Full table name (with prefix)
+     *
+     * @return  string  SQL DDL statements
+     *
+     * @since   10.2.0
+     */
+    public function getExportTableStructure(string $table): string
+    {
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $prefix = $db->getPrefix();
+        $export = '';
+
+        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
+        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
+
+        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
+        $db->setQuery($query);
+        $table_def = $db->loadObject();
+
+        foreach ($table_def as $value) {
+            if (substr_count($value, 'CREATE')) {
+                $export .= str_replace($prefix, '#__', $value) . ";\n";
+                $export = str_replace('TYPE=', 'ENGINE=', $export);
+            }
+        }
+
+        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
+
+        return $export;
+    }
+
+    /**
+     * Export a range of rows from a table as INSERT statements.
+     *
+     * @param   string  $table   Full table name (with prefix)
+     * @param   int     $offset  Starting row offset
+     * @param   int     $limit   Maximum rows to export
+     *
+     * @return  string  SQL INSERT statements for the row range
+     *
+     * @since   10.2.0
+     */
+    public function getExportTableRows(string $table, int $offset, int $limit): string
+    {
+        if (\function_exists('set_time_limit')) {
+            set_time_limit(\ini_get('max_execution_time'));
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->getQuery(true)
+            ->select('*')
+            ->from($db->quoteName($table));
+        $db->setQuery($query, $offset, $limit);
+        $results = $db->loadObjectList();
+
+        $export = '';
+
+        if ($results) {
+            foreach ($results as $result) {
+                $data   = [];
+                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
+
+                foreach ($result as $key => $value) {
+                    if ($value === null) {
+                        $data[] = $db->quoteName($key) . "=NULL";
+                    } else {
+                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
+                    }
+                }
+
+                $export .= implode(',', $data) . ";\n";
+            }
+        }
 
         return $export;
     }

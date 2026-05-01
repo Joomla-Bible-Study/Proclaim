@@ -3,6 +3,12 @@ name: CI
 on:
   push:
     branches: [ "development", "10.x" ]
+    paths-ignore:
+      - '**.md'
+      - 'admin/language/**'
+      - 'site/language/**'
+      - 'build/mockups/**'
+      - '.claude/**'
   pull_request:
     branches: [ "development", "10.x" ]
 
@@ -15,15 +21,33 @@ jobs:
     name: PHP Lint & Tests
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_USER: proclaim_test
+          MYSQL_PASSWORD: proclaim_test
+          MYSQL_ROOT_PASSWORD: proclaim_test
+          MYSQL_DATABASE: proclaim_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, json, xml
+          extensions: mbstring, json, xml, mysqli
           coverage: none
 
       - name: Get Composer cache directory
@@ -31,20 +55,117 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Clone joomla-cms for test framework
+        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+
+      - name: Cache joomla-cms composer dependencies
+        id: joomla-cms-cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}
+
+      - name: Install joomla-cms composer dependencies
+        if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/../joomla-cms
+          composer install --no-dev --no-interaction --prefer-dist
+        # The test harness boots the real Joomla framework via
+        # libraries/bootstrap.php, which requires libraries/vendor/autoload.php.
+        # A fresh git clone of joomla-cms does not include the vendor directory
+        # so we install it here once and cache for subsequent runs.
+
+      - name: Generate minimal configuration.php for tests
+        run: |
+          cat > $GITHUB_WORKSPACE/../joomla-cms/configuration.php <<'PHP'
+          <?php
+          class JConfig
+          {
+              public $dbtype          = 'mysqli';
+              public $host            = '127.0.0.1';
+              public $user            = 'proclaim_test';
+              public $password        = 'proclaim_test';
+              public $db              = 'proclaim_test';
+              public $dbprefix        = 'proclaim_';
+              public $secret          = 'proclaim-test-secret-key-0123456789abcdef';
+              public $sitename        = 'Proclaim Test';
+              public $editor          = 'none';
+              public $captcha         = '0';
+              public $language        = 'en-GB';
+              public $mailer          = 'smtp';
+              public $mailfrom        = 'test@example.com';
+              public $fromname        = 'Proclaim Test';
+              public $sendmail        = '/usr/sbin/sendmail';
+              public $smtpauth        = '0';
+              public $smtpuser        = '';
+              public $smtppass        = '';
+              public $smtphost        = 'localhost';
+              public $smtpsecure      = 'none';
+              public $smtpport        = '25';
+              public $caching         = '0';
+              public $cache_handler   = 'file';
+              public $cachetime       = '15';
+              public $MetaDesc        = '';
+              public $MetaAuthor      = '1';
+              public $sef             = '1';
+              public $sef_rewrite     = '0';
+              public $sef_suffix      = '0';
+              public $unicodeslugs    = '0';
+              public $tmp_path        = '/tmp';
+              public $log_path        = '/tmp';
+              public $offline         = '0';
+              public $debug           = '0';
+              public $debug_lang      = '0';
+              public $error_reporting = 'default';
+              public $cookie_domain   = '';
+              public $cookie_path     = '';
+              public $lifetime        = '15';
+              public $session_handler = 'database';
+              public $session_metadata = '1';
+              public $force_ssl       = '0';
+              public $log_deprecated  = '0';
+          }
+          PHP
+        # The real Factory::createContainer() registers the Config service
+        # provider which reads JConfig. Without a configuration.php, the
+        # Database and Session providers cannot resolve and every test that
+        # goes through Factory::getContainer() fails to bootstrap.
+
       - name: Install Composer dependencies
         run: composer install --dev --no-interaction --prefer-dist
+
+      - name: Import Joomla core database schema
+        run: |
+          # Seed Joomla's base schema first so integration tests that
+          # query #__extensions, #__scheduler_tasks, #__users, etc.
+          # (CwmbackupEnhancedTest, for example) have the core tables
+          # they need. Proclaim's schema loads afterwards.
+          sed 's/#__/proclaim_/g' $GITHUB_WORKSPACE/../joomla-cms/installation/sql/mysql/base.sql > /tmp/joomla-base.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/joomla-base.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Import Proclaim database schema
+        run: |
+          sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
       - name: Check PHP syntax
         run: composer lint:syntax
 
       - name: Run PHPUnit tests
         run: composer test
+        env:
+          JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
+          JTEST_DB_HOST: 127.0.0.1
+          JTEST_DB_NAME: proclaim_test
+          JTEST_DB_USER: proclaim_test
+          JTEST_DB_PASSWORD: proclaim_test
+          JTEST_DB_PREFIX: proclaim_
 
   js-checks:
     name: JS Lint & Tests
@@ -52,10 +173,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'

@@ -175,6 +175,14 @@ class HtmlView extends BaseHtmlView
     public string $fluidListing = '';
 
     /**
+     * Recent messages for 404 not-found page
+     *
+     * @var array
+     * @since 10.2.0
+     */
+    public array $recentItems = [];
+
+    /**
      * Execute and display a template script.
      *
      * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -210,6 +218,49 @@ class HtmlView extends BaseHtmlView
         $item = $this->item;
 
         if (!$item) {
+            // Render within the site template so the user sees navigation,
+            // footer, and suggested messages instead of a bare error page.
+            // Set 404 for SEO after rendering starts so Gantry/Joomla can't intercept.
+            http_response_code(404);
+            $this->document->setTitle(Text::_('JBS_CMN_STUDY_NOT_FOUND'));
+
+            // Load recent messages from cache (15 min TTL) to reduce server load
+            $cacheKey   = 'proclaim_notfound_recent_' . implode(',', $user->getAuthorisedViewLevels());
+            $cacheGroup = 'com_proclaim';
+            $cache      = Factory::getContainer()->get(\Joomla\CMS\Cache\CacheControllerFactoryInterface::class)
+                ->createCacheController('callback', ['defaultgroup' => $cacheGroup, 'lifetime' => 15]);
+
+            $this->recentItems = $cache->get(
+                static function () use ($user) {
+                    $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+                    $query = $db->getQuery(true)
+                        ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.alias', 's.studyintro', 's.thumbnailm', 's.image']))
+                        ->select($db->quoteName('t.teachername'))
+                        ->select($db->quoteName('t.teacher_thumbnail'))
+                        ->select($db->quoteName('se.series_text'))
+                        ->join('LEFT', $db->quoteName('#__bsms_series', 'se')
+                            . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
+                        ->from($db->quoteName('#__bsms_studies', 's'))
+                        ->join('LEFT', $db->quoteName('#__bsms_study_teachers', 'stj')
+                            . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
+                            . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
+                        ->join('LEFT', $db->quoteName('#__bsms_teachers', 't')
+                            . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                        ->where($db->quoteName('s.published') . ' = 1')
+                        ->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels())
+                        ->order($db->quoteName('s.studydate') . ' DESC')
+                        ->setLimit(5);
+                    $db->setQuery($query);
+
+                    return $db->loadObjectList() ?: [];
+                },
+                [],
+                $cacheKey
+            );
+
+            $this->setLayout('notfound');
+            parent::display($tpl);
+
             return;
         }
 
@@ -373,30 +424,26 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        // Process the prepare content plugins
+        // Always run content prepare on the study text so that inline
+        // {scripture} tags (e.g. from AI-generated content) are processed
+        // regardless of the template's show_scripture_link setting.
         $article->text = $this->item->studytext;
-        $linkit        = $this->item->params->get('show_scripture_link');
+        $linkit        = (int) $this->item->params->get('show_scripture_link', 0);
 
-        if ($linkit) {
-            switch ($linkit) {
-                case 0:
-                    break;
-                case 1:
-                    PluginHelper::importPlugin('content');
-                    break;
-                case 2:
-                    PluginHelper::importPlugin('content', 'scripturelinks');
-                    break;
-            }
-
-            $limitstart = (int)$app->getInput()->get('limitstart', 0, 'int');
-            $app->triggerEvent(
-                'onContentPrepare',
-                ['com_proclaim.sermon', &$article, &$this->item->params, $limitstart]
-            );
-            $article->studytext    = $article->text;
-            $this->item->studytext = $article->text;
+        if ($linkit === 1) {
+            PluginHelper::importPlugin('content');
+        } else {
+            // Always load at least the scripture links plugin for inline tags
+            PluginHelper::importPlugin('content', 'scripturelinks');
         }
+
+        $limitstart = (int) $app->getInput()->get('limitstart', 0, 'int');
+        $app->triggerEvent(
+            'onContentPrepare',
+            ['com_proclaim.sermon', &$article, &$this->item->params, $limitstart]
+        );
+        $article->studytext    = $article->text;
+        $this->item->studytext = $article->text;
 
         // Prepares a link string for use in social networking
         $u                 = Uri::getInstance();
@@ -446,20 +493,19 @@ class HtmlView extends BaseHtmlView
         $wa = $this->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.print');
 
-        // Load timestamp seek handler for study text with clickable timestamps
-        if (
-            empty($this->print)
-            && !empty($this->item->studytext)
-            && str_contains($this->item->studytext, 'cwm-timestamp')
-        ) {
-            $wa->useScript('com_proclaim.cwm-timestamp');
+        // Load player chapters script for chapter lists and timestamp seeking
+        if (empty($this->print)) {
+            $wa->useScript('com_proclaim.cwm-player-chapters');
+            $wa->useStyle('com_proclaim.cwm-chapters');
+            $wa->useScript('com_proclaim.cwm-transcript');
+            $wa->useStyle('com_proclaim.cwm-transcript-css');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled). Skip in print mode.
         if (empty($this->print)) {
-            $wa->useScript('com_proclaim.scripture-tooltip');
-            $wa->useStyle('com_proclaim.scripture-tooltip-css');
+            $wa->useScript('lib_cwmscripture.scripture-tooltip');
+            $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
             $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
                 'ajaxUrl' => Route::_(
@@ -510,7 +556,7 @@ class HtmlView extends BaseHtmlView
         $menu    = $app->getMenu()->getActive();
         $pathway = $app->getPathway();
 
-        $this->item->metadesc = $this->item->studyintro;
+        $this->item->metadesc = mb_substr(trim(strip_tags($this->item->studyintro ?? '')), 0, 160);
         $this->item->metakey  = $this->item->topics;
 
         // Because the application sets a default page title,
@@ -557,7 +603,7 @@ class HtmlView extends BaseHtmlView
         if ($this->item->params->get('metadesc')) {
             $this->document->setDescription($this->item->params->get('metadesc'));
         } else {
-            $this->document->setDescription($this->item->studyintro);
+            $this->document->setDescription(mb_substr(trim(strip_tags($this->item->studyintro ?? '')), 0, 160));
         }
 
         if ($this->item->params->get('metakey')) {
@@ -596,7 +642,9 @@ class HtmlView extends BaseHtmlView
                     $this->item,
                     Uri::getInstance()->toString(),
                     $app->get('sitename')
-                )
+                ),
+                (int) ($this->item->id ?? 0),
+                'com_proclaim.cwmmessage'
             );
         }
     }

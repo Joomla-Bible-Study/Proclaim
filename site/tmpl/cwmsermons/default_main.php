@@ -40,12 +40,12 @@ $paginationStyle = $this->params->get('pagination_style', 'pagination');
     $showArchived = $this->params->get('show_archived', '0');
 if ($showArchived === '1') : ?>
         <div class="alert alert-secondary proclaim-archive-notice">
-            <i class="fas fa-archive" aria-hidden="true"></i>
+            <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
             <?php echo Text::_('JBS_CMN_VIEWING_ARCHIVED'); ?>
         </div>
     <?php elseif ($showArchived === '2') : ?>
         <div class="alert alert-secondary proclaim-archive-notice">
-            <i class="fas fa-archive" aria-hidden="true"></i>
+            <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
             <?php echo Text::_('JBS_CMN_VIEWING_ALL'); ?>
         </div>
     <?php endif; ?>
@@ -101,7 +101,7 @@ if ($showArchived === '1') : ?>
                     if ((int) $this->params->get('main_image_icon_or_image') === 1 && $this->mainimage !== '') {
                         echo '<div class="me-3" style="max-height: 80px;">' . $this->mainimage . '</div>';
                     } else {
-                        echo '<i class="fas fa-bible fa-3x me-3"></i>';
+                        echo '<i class="fa-solid fa-book-bible fa-3x me-3"></i>';
                     }
                 }
             if ($this->params->get('show_page_title') > 0) {

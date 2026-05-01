@@ -249,9 +249,7 @@ class CwmcommentsModel extends ListModel
             $query->whereIn($db->quoteName('comment.access'), $user->getAuthorisedViewLevels());
 
             // Location-based filtering via parent study
-            $studyColumns = $db->getTableColumns('#__bsms_studies');
-
-            if (CwmlocationHelper::isEnabled() && isset($studyColumns['location_id'])) {
+            if (CwmlocationHelper::isEnabled()) {
                 $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
                 if (!empty($accessible)) {
@@ -267,16 +265,12 @@ class CwmcommentsModel extends ListModel
         }
 
         // Filter by location (dropdown) via parent study
-        $studyColumns = $studyColumns ?? $db->getTableColumns('#__bsms_studies');
+        $location = $this->getState('filter.location');
 
-        if (isset($studyColumns['location_id'])) {
-            $location = $this->getState('filter.location');
-
-            if (is_numeric($location)) {
-                $locationVal = (int) $location;
-                $query->where($db->quoteName('study.location_id') . ' = :locationId')
-                    ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
-            }
+        if (is_numeric($location)) {
+            $locationVal = (int) $location;
+            $query->where($db->quoteName('study.location_id') . ' = :locationId')
+                ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
         }
 
         // Join over the users for the checked out user.

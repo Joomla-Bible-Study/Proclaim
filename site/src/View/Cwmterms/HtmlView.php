@@ -53,14 +53,6 @@ class HtmlView extends BaseHtmlView
     protected ?Registry $params = null;
 
     /**
-     * Compatibility mode flag
-     *
-     * @var int
-     * @since 7.0
-     */
-    public int $compat_mode = 0;
-
-    /**
      * Terms text content
      *
      * @var string|null
@@ -81,10 +73,8 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
-        $input             = Factory::getApplication()->getInput();
-        $mid               = $input->get('mid', '', 'int');
-        $this->compat_mode = $input->get('compat_mode', '0', 'int');
-
+        $input              = Factory::getApplication()->getInput();
+        $mid                = $input->get('mid', '', 'int');
         $template           = Cwmparams::getTemplateparams();
         $this->params       = $template->params;
         $this->termstext    = $this->params->get('terms');

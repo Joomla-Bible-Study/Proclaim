@@ -1,0 +1,573 @@
+<?php
+
+/**
+ * Setup Wizard template — 5-step first-run configuration.
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Language\Text;
+
+/** @var \CWM\Component\Proclaim\Administrator\View\Cwmsetupwizard\HtmlView $this */
+?>
+
+<script>window.ProcSetupWizard = <?php echo $this->getJsData(); ?>;</script>
+
+<div id="setup-wizard" class="container-fluid">
+
+    <!-- Progress Bar -->
+    <div class="wizard-progress mb-4">
+        <div class="progress" style="height: 6px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 20%;"
+                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" id="wizard-progress-bar"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <span class="wizard-step-label badge bg-success" data-step="1"><?php echo Text::_('JBS_WIZARD_STEP_STYLE'); ?></span>
+            <span class="wizard-step-label badge bg-secondary" data-step="2"><?php echo Text::_('JBS_WIZARD_STEP_SETTINGS'); ?></span>
+            <span class="wizard-step-label badge bg-secondary" data-step="3"><?php echo Text::_('JBS_WIZARD_STEP_CONTENT'); ?></span>
+            <span class="wizard-step-label badge bg-secondary" data-step="4"><?php echo Text::_('JBS_WIZARD_STEP_MEDIA'); ?></span>
+            <span class="wizard-step-label badge bg-secondary" data-step="5"><?php echo Text::_('JBS_WIZARD_STEP_REVIEW'); ?></span>
+        </div>
+    </div>
+
+    <!-- Step 1: Ministry Style -->
+    <div class="wizard-step active" data-step="1">
+        <h2><?php echo Text::_('JBS_WIZARD_STYLE_HEADING'); ?></h2>
+        <p class="lead"><?php echo Text::_('JBS_WIZARD_STYLE_INTRO'); ?></p>
+
+        <div class="row g-4 mt-3" id="style-cards">
+            <?php foreach ($this->presets as $key => $preset) : ?>
+                <div class="col-md-4">
+                    <div class="card h-100 style-card border-2" data-style="<?php echo $key; ?>" role="button" tabindex="0">
+                        <div class="card-body text-center">
+                            <i class="fa-solid <?php echo $preset['icon']; ?> fa-3x mb-3 text-primary"></i>
+                            <h4 class="card-title"><?php echo Text::_($preset['label']); ?></h4>
+                            <p class="card-text text-muted"><?php echo Text::_($preset['description']); ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <input type="hidden" id="wizard-ministry-style" value="">
+    </div>
+
+    <!-- Step 2: Essential Settings -->
+    <div class="wizard-step d-none" data-step="2">
+        <h2><?php echo Text::_('JBS_WIZARD_SETTINGS_HEADING'); ?></h2>
+        <p class="lead"><?php echo Text::_('JBS_WIZARD_SETTINGS_INTRO'); ?></p>
+
+        <div class="row mt-3">
+            <div class="col-md-8">
+
+                <!-- Section: Ministry Identity -->
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-church me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_IDENTITY'); ?>
+                </h5>
+
+                <div class="mb-3">
+                    <label for="wizard-org-name" class="form-label fw-bold">
+                        <?php echo Text::_('JBS_WIZARD_ORG_NAME'); ?> <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="wizard-org-name"
+                           placeholder="<?php echo Text::_('JBS_WIZARD_ORG_NAME_PLACEHOLDER'); ?>"
+                           value="<?php echo $this->escape($this->currentState['org_name'] ?? ''); ?>" required>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_ORG_NAME_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="wizard-teacher-name" class="form-label fw-bold">
+                        <?php echo Text::_('JBS_WIZARD_TEACHER_NAME'); ?>
+                    </label>
+                    <input type="text" class="form-control" id="wizard-teacher-name"
+                           placeholder="<?php echo Text::_('JBS_WIZARD_TEACHER_NAME_PLACEHOLDER'); ?>">
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_TEACHER_NAME_DESC'); ?></div>
+                </div>
+
+                <!-- Section: Scripture Settings -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-2">
+                    <i class="fa-solid fa-book-bible me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_SCRIPTURE'); ?>
+                </h5>
+                <p class="text-muted mb-3"><?php echo Text::_('JBS_WIZARD_SECTION_SCRIPTURE_DESC'); ?></p>
+
+                <div class="mb-3">
+                    <label for="wizard-bible-version" class="form-label fw-bold">
+                        <?php echo Text::_('JBS_WIZARD_BIBLE_VERSION'); ?>
+                    </label>
+                    <select class="form-select" id="wizard-bible-version">
+                        <option value="kjv" <?php echo ($this->currentState['default_bible_version'] ?? 'kjv') === 'kjv' ? 'selected' : ''; ?>>King James Version (KJV)</option>
+                        <option value="esv" <?php echo ($this->currentState['default_bible_version'] ?? '') === 'esv' ? 'selected' : ''; ?>>English Standard Version (ESV)</option>
+                        <option value="niv" <?php echo ($this->currentState['default_bible_version'] ?? '') === 'niv' ? 'selected' : ''; ?>>New International Version (NIV)</option>
+                        <option value="nlt" <?php echo ($this->currentState['default_bible_version'] ?? '') === 'nlt' ? 'selected' : ''; ?>>New Living Translation (NLT)</option>
+                        <option value="nasb" <?php echo ($this->currentState['default_bible_version'] ?? '') === 'nasb' ? 'selected' : ''; ?>>New American Standard Bible (NASB)</option>
+                        <option value="nkjv" <?php echo ($this->currentState['default_bible_version'] ?? '') === 'nkjv' ? 'selected' : ''; ?>>New King James Version (NKJV)</option>
+                    </select>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_BIBLE_VERSION_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_BIBLE_PROVIDER'); ?></label>
+                    <div class="form-text mb-2"><?php echo Text::_('JBS_WIZARD_BIBLE_PROVIDER_DESC'); ?></div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-bible-provider" id="provider-getbible" value="getbible" checked>
+                        <label class="form-check-label" for="provider-getbible">
+                            <?php echo Text::_('JBS_WIZARD_PROVIDER_GETBIBLE'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-bible-provider" id="provider-apibible" value="apibible">
+                        <label class="form-check-label" for="provider-apibible">
+                            <?php echo Text::_('JBS_WIZARD_PROVIDER_APIBIBLE'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- API.Bible key (shown when API.Bible selected) -->
+                <div class="mb-3 d-none" id="wizard-apibible-config">
+                    <label for="wizard-apibible-key" class="form-label"><?php echo Text::_('JBS_WIZARD_APIBIBLE_KEY'); ?></label>
+                    <input type="text" class="form-control" id="wizard-apibible-key" placeholder="">
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_APIBIBLE_KEY_DESC'); ?></div>
+                </div>
+
+                <!-- Section: Advanced -->
+                <hr class="my-4">
+                <h5 class="text-muted mb-3">
+                    <i class="fa-solid fa-gear me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_ADVANCED'); ?>
+                </h5>
+
+                <div class="mb-3">
+                    <label for="wizard-upload-path" class="form-label fw-bold">
+                        <?php echo Text::_('JBS_WIZARD_UPLOAD_PATH'); ?>
+                    </label>
+                    <input type="text" class="form-control" id="wizard-upload-path"
+                           value="<?php echo $this->escape($this->currentState['uploadpath'] ?? '/images/biblestudy/media/'); ?>">
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_UPLOAD_PATH_DESC'); ?></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="wizard-metadesc" class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_METADESC'); ?></label>
+                    <div class="form-text mb-1"><?php echo Text::_('JBS_WIZARD_METADESC_DESC'); ?></div>
+                    <textarea class="form-control" id="wizard-metadesc" rows="2"
+                              placeholder="<?php echo Text::_('JBS_WIZARD_METADESC_PLACEHOLDER'); ?>"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Content & Display -->
+    <div class="wizard-step d-none" data-step="3">
+        <h2><?php echo Text::_('JBS_WIZARD_CONTENT_HEADING'); ?></h2>
+        <p class="lead"><?php echo Text::_('JBS_WIZARD_CONTENT_INTRO'); ?></p>
+
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <div class="alert alert-info" id="wizard-content-note">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    <?php echo Text::_('JBS_WIZARD_CONTENT_PRESET_NOTE'); ?>
+                </div>
+
+                <!-- Section: Organization -->
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-folder-tree me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_ORGANIZE'); ?>
+                </h5>
+
+                <div class="mb-4">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="wizard-use-series" checked>
+                        <label class="form-check-label" for="wizard-use-series">
+                            <strong><?php echo Text::_('JBS_WIZARD_USE_SERIES'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_USE_SERIES_DESC'); ?></small>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="wizard-use-topics">
+                        <label class="form-check-label" for="wizard-use-topics">
+                            <strong><?php echo Text::_('JBS_WIZARD_USE_TOPICS'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_USE_TOPICS_DESC'); ?></small>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="wizard-use-locations">
+                        <label class="form-check-label" for="wizard-use-locations">
+                            <strong><?php echo Text::_('JBS_WIZARD_USE_LOCATIONS'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_USE_LOCATIONS_DESC'); ?></small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Location details (shown for Full Media and Multi-Campus) -->
+                <div class="d-none" id="wizard-location-details">
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa-solid fa-location-dot me-2"></i><?php echo Text::_('JBS_WIZARD_LOCATION_HEADING'); ?></h5>
+                            <p class="text-muted"><?php echo Text::_('JBS_WIZARD_LOCATION_DESC'); ?></p>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-loc-address" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_ADDRESS'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-loc-address" placeholder="123 Main Street">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-loc-city" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_CITY'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-loc-city">
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label for="wizard-loc-state" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_STATE'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-loc-state">
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label for="wizard-loc-postcode" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_POSTCODE'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-loc-postcode">
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <label for="wizard-loc-phone" class="form-label"><?php echo Text::_('JBS_WIZARD_LOC_PHONE'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-loc-phone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Campus note (shown when Multi-Campus selected) -->
+                <div class="alert alert-primary d-none" id="wizard-campus-note">
+                    <i class="fa-solid fa-church me-2"></i>
+                    <?php echo Text::_('JBS_WIZARD_CAMPUS_NOTE'); ?>
+                </div>
+
+                <!-- Section: Display Options -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-desktop me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_DISPLAY'); ?>
+                </h5>
+
+                <!-- Simple Mode: template choice (shown when Simple Ministry selected) -->
+                <div class="mb-4 d-none" id="wizard-simple-options">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_TEMPLATE_CHOICE'); ?></label>
+                    <div class="form-text mb-2"><?php echo Text::_('JBS_WIZARD_TEMPLATE_CHOICE_DESC'); ?></div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-simple-template" id="simple-tpl1" value="simple_mode1" checked>
+                        <label class="form-check-label" for="simple-tpl1">
+                            <?php echo Text::_('JBS_WIZARD_TEMPLATE_LIST'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-simple-template" id="simple-tpl2" value="simple_mode2">
+                        <label class="form-check-label" for="simple-tpl2">
+                            <?php echo Text::_('JBS_WIZARD_TEMPLATE_GRID'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input" type="checkbox" id="wizard-text-overlay" checked>
+                        <label class="form-check-label" for="wizard-text-overlay">
+                            <?php echo Text::_('JBS_WIZARD_TEXT_OVERLAY'); ?>
+                        </label>
+                    </div>
+                    <hr class="my-3">
+                </div>
+
+                <!-- Items per page -->
+                <div class="mb-3">
+                    <label for="wizard-items-per-page" class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_ITEMS_PER_PAGE'); ?></label>
+                    <select class="form-select" id="wizard-items-per-page" style="max-width: 200px;">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_ITEMS_PER_PAGE_DESC'); ?></div>
+                </div>
+
+                <!-- Section: Visitor Features -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-users me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_VISITOR'); ?>
+                </h5>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-social-sharing" checked>
+                    <label class="form-check-label" for="wizard-social-sharing">
+                        <strong><?php echo Text::_('JBS_WIZARD_SOCIAL_SHARING'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_SOCIAL_SHARING_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-enable-comments">
+                    <label class="form-check-label" for="wizard-enable-comments">
+                        <strong><?php echo Text::_('JBS_WIZARD_ENABLE_COMMENTS'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_COMMENTS_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <!-- Section: Getting Started Content -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_STARTER'); ?>
+                </h5>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-default-images" checked>
+                    <label class="form-check-label" for="wizard-default-images">
+                        <strong><?php echo Text::_('JBS_WIZARD_DEFAULT_IMAGES'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_DEFAULT_IMAGES_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-sample-content">
+                    <label class="form-check-label" for="wizard-sample-content">
+                        <strong><?php echo Text::_('JBS_WIZARD_CREATE_SAMPLE'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_CREATE_SAMPLE_DESC'); ?></small>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Media & Integrations -->
+    <div class="wizard-step d-none" data-step="4">
+        <h2><?php echo Text::_('JBS_WIZARD_MEDIA_HEADING'); ?></h2>
+        <p class="lead"><?php echo Text::_('JBS_WIZARD_MEDIA_INTRO'); ?></p>
+
+        <div class="row mt-3">
+            <div class="col-md-8">
+
+                <!-- Section: Media Source -->
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-photo-film me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_MEDIA_SOURCE'); ?>
+                </h5>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_PRIMARY_MEDIA'); ?></label>
+                    <div class="form-text mb-2"><?php echo Text::_('JBS_WIZARD_PRIMARY_MEDIA_DESC'); ?></div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-media" id="media-local" value="local" checked>
+                        <label class="form-check-label" for="media-local">
+                            <i class="fa-solid fa-hard-drive me-1"></i> <?php echo Text::_('JBS_WIZARD_MEDIA_LOCAL'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-media" id="media-youtube" value="youtube">
+                        <label class="form-check-label" for="media-youtube">
+                            <i class="fa-brands fa-youtube me-1 text-danger"></i> <?php echo Text::_('JBS_WIZARD_MEDIA_YOUTUBE'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-media" id="media-vimeo" value="vimeo">
+                        <label class="form-check-label" for="media-vimeo">
+                            <i class="fa-brands fa-vimeo me-1 text-info"></i> <?php echo Text::_('JBS_WIZARD_MEDIA_VIMEO'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="wizard-media" id="media-direct" value="direct">
+                        <label class="form-check-label" for="media-direct">
+                            <i class="fa-solid fa-link me-1"></i> <?php echo Text::_('JBS_WIZARD_MEDIA_DIRECT'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- YouTube config (shown when YouTube selected) -->
+                <div class="card mb-3 d-none" id="wizard-youtube-config">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-brands fa-youtube text-danger me-1"></i> <?php echo Text::_('JBS_WIZARD_YOUTUBE_CONFIG'); ?></h5>
+                        <div class="mb-2">
+                            <label for="wizard-yt-api-key" class="form-label"><?php echo Text::_('JBS_WIZARD_YOUTUBE_API_KEY'); ?></label>
+                            <input type="text" class="form-control" id="wizard-yt-api-key" placeholder="AIza...">
+                            <div class="form-text"><?php echo Text::_('JBS_WIZARD_YOUTUBE_API_KEY_DESC'); ?></div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="wizard-yt-channel" class="form-label"><?php echo Text::_('JBS_WIZARD_YOUTUBE_CHANNEL'); ?></label>
+                            <input type="text" class="form-control" id="wizard-yt-channel" placeholder="UC...">
+                            <div class="form-text"><?php echo Text::_('JBS_WIZARD_YOUTUBE_CHANNEL_DESC'); ?></div>
+                        </div>
+                        <div class="form-text text-muted mt-2">
+                            <i class="fa-solid fa-circle-info me-1"></i>
+                            <?php echo Text::_('JBS_WIZARD_YOUTUBE_SKIP_NOTE'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vimeo config (shown when Vimeo selected) -->
+                <div class="card mb-3 d-none" id="wizard-vimeo-config">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fa-brands fa-vimeo text-info me-1"></i> <?php echo Text::_('JBS_WIZARD_VIMEO_CONFIG'); ?></h5>
+                        <div class="mb-2">
+                            <label for="wizard-vimeo-token" class="form-label"><?php echo Text::_('JBS_WIZARD_VIMEO_TOKEN'); ?></label>
+                            <input type="text" class="form-control" id="wizard-vimeo-token">
+                            <div class="form-text"><?php echo Text::_('JBS_WIZARD_VIMEO_TOKEN_DESC'); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download button text -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_DOWNLOAD_TEXT'); ?></label>
+                    <div class="form-text mb-2"><?php echo Text::_('JBS_WIZARD_DOWNLOAD_TEXT_DESC'); ?></div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-listen" value="Listen" checked>
+                        <label class="form-check-label" for="download-listen">
+                            <i class="fa-solid fa-headphones me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_LISTEN'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-download" value="Download">
+                        <label class="form-check-label" for="download-download">
+                            <i class="fa-solid fa-download me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_DOWNLOAD'); ?>
+                        </label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="radio" name="wizard-download-text" id="download-watch" value="Watch">
+                        <label class="form-check-label" for="download-watch">
+                            <i class="fa-solid fa-play me-1"></i> <?php echo Text::_('JBS_WIZARD_DOWNLOAD_WATCH'); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section: Podcast Distribution (shown for Full Media and Multi-Campus) -->
+                <div class="d-none" id="wizard-podcast-section">
+                    <hr class="my-4">
+                    <h5 class="text-primary mb-3">
+                        <i class="fa-solid fa-podcast me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_PODCAST'); ?>
+                    </h5>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="wizard-enable-podcast">
+                        <label class="form-check-label" for="wizard-enable-podcast">
+                            <strong><?php echo Text::_('JBS_WIZARD_ENABLE_PODCAST'); ?></strong><br>
+                            <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_PODCAST_DESC'); ?></small>
+                        </label>
+                    </div>
+
+                    <!-- Podcast details (shown when podcast enabled) -->
+                    <div class="card d-none" id="wizard-podcast-config">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo Text::_('JBS_WIZARD_PODCAST_CONFIG'); ?></h5>
+                            <p class="text-muted small"><?php echo Text::_('JBS_WIZARD_PODCAST_CONFIG_DESC'); ?></p>
+                            <div class="mb-2">
+                                <label for="wizard-podcast-title" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_TITLE'); ?></label>
+                                <input type="text" class="form-control" id="wizard-podcast-title"
+                                       placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_TITLE_PLACEHOLDER'); ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label for="wizard-podcast-description" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_DESCRIPTION'); ?></label>
+                                <textarea class="form-control" id="wizard-podcast-description" rows="2"
+                                          placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_DESCRIPTION_PLACEHOLDER'); ?>"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-podcast-author" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_AUTHOR'); ?></label>
+                                    <input type="text" class="form-control" id="wizard-podcast-author"
+                                           placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_AUTHOR_PLACEHOLDER'); ?>">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="wizard-podcast-email" class="form-label"><?php echo Text::_('JBS_WIZARD_PODCAST_EMAIL'); ?></label>
+                                    <input type="email" class="form-control" id="wizard-podcast-email"
+                                           placeholder="<?php echo Text::_('JBS_WIZARD_PODCAST_EMAIL_PLACEHOLDER'); ?>">
+                                </div>
+                            </div>
+                            <div class="form-text text-muted">
+                                <i class="fa-solid fa-circle-info me-1"></i>
+                                <?php echo Text::_('JBS_WIZARD_PODCAST_SKIP_NOTE'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Optional Features -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-puzzle-piece me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_OPTIONAL'); ?>
+                </h5>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-enable-backup">
+                    <label class="form-check-label" for="wizard-enable-backup">
+                        <strong><?php echo Text::_('JBS_WIZARD_ENABLE_BACKUP'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_BACKUP_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-enable-ai">
+                    <label class="form-check-label" for="wizard-enable-ai">
+                        <strong><?php echo Text::_('JBS_WIZARD_ENABLE_AI'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_ENABLE_AI_DESC'); ?></small>
+                    </label>
+                </div>
+
+                <!-- AI voice selection (shown when AI enabled) -->
+                <div class="ms-4 mb-3 d-none" id="wizard-ai-voice-section">
+                    <label for="wizard-ai-voice" class="form-label fw-bold"><?php echo Text::_('JBS_WIZARD_AI_VOICE'); ?></label>
+                    <select class="form-select" id="wizard-ai-voice" style="max-width: 400px;">
+                        <option value="third_person"><?php echo Text::_('JBS_WIZARD_AI_VOICE_THIRD'); ?></option>
+                        <option value="first_person"><?php echo Text::_('JBS_WIZARD_AI_VOICE_FIRST'); ?></option>
+                        <option value="conversational"><?php echo Text::_('JBS_WIZARD_AI_VOICE_CONVERSATIONAL'); ?></option>
+                        <option value="summary"><?php echo Text::_('JBS_WIZARD_AI_VOICE_SUMMARY'); ?></option>
+                    </select>
+                    <div class="form-text"><?php echo Text::_('JBS_WIZARD_AI_VOICE_DESC'); ?></div>
+                </div>
+
+                <!-- Section: Privacy -->
+                <hr class="my-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fa-solid fa-shield-halved me-2"></i><?php echo Text::_('JBS_WIZARD_SECTION_PRIVACY'); ?>
+                </h5>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="wizard-gdpr-mode">
+                    <label class="form-check-label" for="wizard-gdpr-mode">
+                        <strong><?php echo Text::_('JBS_WIZARD_GDPR_MODE'); ?></strong><br>
+                        <small class="text-muted"><?php echo Text::_('JBS_WIZARD_GDPR_MODE_DESC'); ?></small>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5: Review & Apply -->
+    <div class="wizard-step d-none" data-step="5">
+        <h2><?php echo Text::_('JBS_WIZARD_REVIEW_HEADING'); ?></h2>
+        <p class="lead"><?php echo Text::_('JBS_WIZARD_REVIEW_INTRO'); ?></p>
+
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body" id="wizard-review-summary">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-3" id="wizard-apply-note">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    <?php echo Text::_('JBS_WIZARD_REVIEW_NOTE'); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+        <div>
+            <button type="button" class="btn btn-outline-secondary d-none" id="wizard-prev-btn">
+                <i class="fa-solid fa-arrow-left me-1"></i> <?php echo Text::_('JPREVIOUS'); ?>
+            </button>
+            <button type="button" class="btn btn-link text-muted" id="wizard-dismiss-btn">
+                <?php echo Text::_('JBS_WIZARD_SKIP'); ?>
+            </button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" id="wizard-next-btn" disabled>
+                <?php echo Text::_('JNEXT'); ?> <i class="fa-solid fa-arrow-right ms-1"></i>
+            </button>
+            <button type="button" class="btn btn-success d-none" id="wizard-apply-btn">
+                <i class="fa-solid fa-check me-1"></i> <?php echo Text::_('JBS_WIZARD_APPLY'); ?>
+            </button>
+        </div>
+    </div>
+</div>

@@ -14,21 +14,8 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 
-/** @var CWM\Component\Proclaim\Administrator\View\Cwmcomments\HtmlView $this */
+$this->getDocument()->getWebAssetManager()->useScript('com_proclaim.cwmadmin-batch-footer');
 
-$published = $this->state->get('filter.published');
-
-$wa = $this->getDocument()->getWebAssetManager();
-$wa->useScript('com_proclaim.cwmadmin-batch-footer');
-
-?>
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-    <?php
-    echo Text::_('JCANCEL'); ?>
-</button>
-<button type="submit" id='batch-submit-button-id' class="btn btn-success" data-submit-task='cwmcomment.batch'>
-    <?php
-    echo Text::_('JGLOBAL_BATCH_PROCESS'); ?>
-</button>
+echo LayoutHelper::render('html.batch.footer', ['submitTask' => 'cwmcomment.batch']);

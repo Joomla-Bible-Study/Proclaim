@@ -11,12 +11,13 @@
 
 namespace CWM\Component\Proclaim\Site\Helper;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
-use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Component\Proclaim\Administrator\Helper\ScriptureReference;
-use CWM\Component\Proclaim\Site\Bible\AbstractBibleProvider;
-use CWM\Component\Proclaim\Site\Bible\BiblePassageResult;
-use CWM\Component\Proclaim\Site\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Bible\AbstractBibleProvider;
+use CWM\Library\Scripture\Bible\BiblePassageResult;
+use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -57,6 +58,8 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
+        CwmDebug::startTimer('buildPassage');
+
         $choice    = (int) $params->get('show_passage_view', 3);
 
         // Read Bible version from message row (new), fallback to template params (legacy compat)
@@ -166,6 +169,8 @@ class Cwmshowscripture
             Log::add('No text returned for "' . $reference . '" (' . $requestedVersion . ') — all fallbacks exhausted', Log::WARNING, 'com_proclaim.bible');
 
             // Return "temporarily unavailable" notice with retry button
+            CwmDebug::stopTimer('buildPassage', 'ref=' . $reference . ' version=' . $requestedVersion . ' result=unavailable');
+
             if ($choice > 0) {
                 return $this->renderUnavailableNotice($row, $reference, $requestedVersion);
             }
@@ -191,6 +196,10 @@ class Cwmshowscripture
 
         $output .= $this->renderTextPassage($result, $choice, $params, $switcherHtml);
 
+        $providerName = $provider ? $provider->getName() : 'unknown';
+        $fallback     = $version !== $requestedVersion ? ' fallback=' . $version : '';
+        CwmDebug::stopTimer('buildPassage', 'ref=' . $reference . ' provider=' . $providerName . $fallback);
+
         return $output;
     }
 
@@ -209,7 +218,7 @@ class Cwmshowscripture
     public function renderTextPassage(BiblePassageResult $result, int $choice, Registry $params, string $switcherHtml = ''): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->useStyle('com_proclaim.scripture-text');
+        $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $copyrightHtml = '';
 
@@ -233,7 +242,7 @@ class Cwmshowscripture
                     . 'this.setAttribute(\'aria-expanded\', isHidden); return false;">';
 
                 if ((int) $params->get('showpassage_icon', 1) === 1) {
-                    $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
+                    $passage .= '<i class="fa-solid fa-book-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 }
 
@@ -273,7 +282,7 @@ class Cwmshowscripture
                     . 'title="' . Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE') . '">';
 
                 if ((int) $params->get('showpassage_icon', 1) === 1) {
-                    $passage .= '<i class="fas fa-bible fa-3x" aria-hidden="true" '
+                    $passage .= '<i class="fa-solid fa-book-bible fa-3x" aria-hidden="true" '
                         . 'style="display: flex; margin-right: 10px;"></i>';
                 } else {
                     $passage .= Text::_('JBS_STY_CLICK_TO_OPEN_PASSAGE');
@@ -355,8 +364,8 @@ class Cwmshowscripture
     {
         $app = Factory::getApplication();
         $wa  = $app->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.scripture-switcher');
-        $wa->useStyle('com_proclaim.scripture-switcher-css');
+        $wa->useScript('lib_cwmscripture.scripture-switcher');
+        $wa->useStyle('lib_cwmscripture.scripture-switcher-css');
 
         // Provide the AJAX endpoint URL to JS (SEF-safe, avoids redirect)
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
@@ -590,8 +599,8 @@ class Cwmshowscripture
     private function renderUnavailableNotice(object $row, string $reference, string $version): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $wa->useScript('com_proclaim.scripture-switcher');
-        $wa->useStyle('com_proclaim.scripture-text');
+        $wa->useScript('lib_cwmscripture.scripture-switcher');
+        $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
         Factory::getApplication()->getDocument()->addScriptOptions('com_proclaim.scripture', [
@@ -610,7 +619,7 @@ class Cwmshowscripture
         $html .= '<p class="text-muted"><em>' . Text::_('JBS_CMN_SCRIPTURE_UNAVAILABLE') . '</em></p>';
         $html .= '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn" '
             . 'id="' . $uid . '">'
-            . '<i class="fas fa-redo" aria-hidden="true"></i> '
+            . '<i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i> '
             . Text::_('JBS_CMN_SCRIPTURE_RETRY') . '</button>';
         $html .= '</div></div></div>';
 

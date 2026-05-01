@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -24,8 +26,8 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 
 /**
  * Controller For MediaFile
@@ -35,6 +37,8 @@ use Joomla\Database\ParameterType;
  */
 class CwmmediafileController extends FormController
 {
+    use MultiCampusAccessTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -50,6 +54,14 @@ class CwmmediafileController extends FormController
      * @since  7.0.0
      */
     protected $option = 'com_proclaim';
+
+    /**
+     * The database table for access level checks.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected string $accessTable = '#__bsms_mediafiles';
 
     /**
      * Method to add a new record.
@@ -96,7 +108,7 @@ class CwmmediafileController extends FormController
             $app->setUserState('com_proclaim.edit.mediafile.server_id', null);
         }
 
-        return true;
+        return $result;
     }
 
     /**
@@ -112,23 +124,9 @@ class CwmmediafileController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        $recordId = (int) ($data[$key] ?? 0);
-        $user     = Factory::getApplication()->getIdentity();
-
-        // Non-admin users must have access to the item's view level
-        if (!$user->authorise('core.admin') && $recordId > 0) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('access'))
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':rid', $recordId, ParameterType::INTEGER);
-            $db->setQuery($query);
-            $access = (int) $db->loadResult();
-
-            if ($access && !\in_array($access, $user->getAuthorisedViewLevels())) {
-                return false;
-            }
+        $denied = $this->checkRecordAccessLevel((int) ($data[$key] ?? 0));
+        if ($denied === false) {
+            return false;
         }
 
         return parent::allowEdit($data, $key);
@@ -163,7 +161,7 @@ class CwmmediafileController extends FormController
             $app = Factory::getApplication();
             $app->close();
         } else {
-            throw new \RuntimeException(Text::sprintf('Handler: "' . $handler . '" does not exist!'), 404);
+            throw new \RuntimeException(Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')), 404);
         }
     }
 
@@ -245,8 +243,14 @@ class CwmmediafileController extends FormController
             }
         }
 
-        if ($this->input->getCmd('return') && parent::cancel($key)) {
-            $this->setRedirect(base64_decode($this->input->getCmd('return')));
+        $return = $this->input->getCmd('return');
+
+        if ($return && parent::cancel($key)) {
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                $this->setRedirect($decoded);
+            }
 
             return true;
         }
@@ -417,6 +421,106 @@ class CwmmediafileController extends FormController
     }
 
     /**
+     * Save chapters to a media file's params via AJAX.
+     *
+     * Called from the message edit page when applying AI-suggested or
+     * YouTube-imported chapters to a media file.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    public function saveChapters(): void
+    {
+        CWMAddon::prepareAjaxEnvironment();
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+
+            return;
+        }
+
+        $app     = Factory::getApplication();
+        $mediaId = $app->getInput()->getInt('media_id', 0);
+
+        if (!$mediaId) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No media_id provided']);
+
+            return;
+        }
+
+        // Parse chapters from POST body (JSON)
+        $rawBody = file_get_contents('php://input');
+
+        try {
+            $payload  = json_decode($rawBody, true, 512, JSON_THROW_ON_ERROR);
+            $chapters = $payload['chapters'] ?? [];
+        } catch (\JsonException) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'Invalid JSON body']);
+
+            return;
+        }
+
+        if (empty($chapters) || !\is_array($chapters)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No chapters provided']);
+
+            return;
+        }
+
+        // Sanitize and compute seconds for each chapter
+        $clean = [];
+
+        foreach ($chapters as $ch) {
+            $ch    = (array) $ch;
+            $time  = preg_replace('/[^\d:]/', '', $ch['time'] ?? '0:00');
+            $label = trim(strip_tags($ch['label'] ?? ''));
+
+            if (empty($time) || empty($label)) {
+                continue;
+            }
+
+            $clean[] = [
+                'time'    => $time,
+                'seconds' => \CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel::timeToSeconds($time),
+                'label'   => $label,
+            ];
+        }
+
+        if (empty($clean)) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'No valid chapters after sanitization']);
+
+            return;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($query);
+        $paramsJson = $db->loadResult();
+
+        if ($paramsJson === null) {
+            CWMAddon::outputJson(['success' => false, 'error' => 'Media file not found']);
+
+            return;
+        }
+
+        $params = new \Joomla\Registry\Registry($paramsJson ?: '{}');
+        $params->set('chapters', $clean);
+
+        $update = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
+        $db->setQuery($update);
+        $db->execute();
+
+        CWMAddon::outputJson(['success' => true, 'count' => \count($clean)]);
+    }
+
+    /**
      * Function that allows child controller access to model data after the data has been saved.
      *
      * @param   BaseModel  $model      The data model object.
@@ -433,8 +537,107 @@ class CwmmediafileController extends FormController
         $task   = $this->input->get('task');
 
         if ($return && $task !== 'apply') {
-            Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
-            $this->setRedirect(base64_decode($return));
+            $decoded = base64_decode($return);
+
+            if ($decoded && Uri::isInternal($decoded)) {
+                Factory::getApplication()->enqueueMessage(Text::_('JBS_MED_SAVE'), 'message');
+                $this->setRedirect($decoded);
+            }
         }
+    }
+
+    /**
+     * AJAX endpoint: upload a VTT/SRT caption file.
+     *
+     * Accepts a single file via multipart POST, validates the extension,
+     * and stores it in media/com_proclaim/captions/. Returns the public
+     * URL to the uploaded file.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.2.0
+     */
+    public function uploadVttXHR(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $input    = Factory::getApplication()->getInput();
+        $userfile = $input->files->get('vttfile', null, 'raw');
+
+        if (!\is_array($userfile) || $userfile['error'] || $userfile['size'] < 1) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $validator = new CwmcaptionValidator();
+        $ext       = strtolower(pathinfo($userfile['name'], PATHINFO_EXTENSION));
+
+        if (!$validator->isAllowedExtension($ext)) {
+            echo json_encode([
+                'success' => false,
+                'error'   => Text::sprintf('JBS_MED_VTT_INVALID_TYPE', implode(', ', CwmcaptionValidator::ALLOWED_EXTENSIONS)),
+            ]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        if (!$validator->isAllowedSize((int) $userfile['size'])) {
+            echo json_encode([
+                'success' => false,
+                'error'   => Text::sprintf('JBS_MED_VTT_FILE_TOO_LARGE', '2 MB'),
+            ]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        // Sniff the first 64 bytes to confirm WEBVTT or SRT magic — defends
+        // against a renamed binary slipping past the extension whitelist.
+        $head = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
+
+        if ($head === false || $validator->detectFormat($head) === null) {
+            echo json_encode([
+                'success' => false,
+                'error'   => Text::_($head === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
+            ]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $destDir = JPATH_ROOT . '/media/com_proclaim/captions';
+
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $fileName = $validator->buildFilename($userfile['name'], $ext);
+        $destPath = $destDir . '/' . $fileName;
+
+        if (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $url = Uri::root() . 'media/com_proclaim/captions/' . $fileName;
+
+        echo json_encode(['success' => true, 'url' => $url, 'filename' => $fileName]);
+        Factory::getApplication()->close();
     }
 }

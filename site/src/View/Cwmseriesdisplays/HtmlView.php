@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
@@ -259,6 +260,16 @@ class HtmlView extends BaseHtmlView
         }
 
         $this->updateFilters();
+
+        // Schema.org structured data
+        $app = Factory::getApplication();
+        CwmschemaorgHelper::inject(
+            CwmschemaorgHelper::buildSeriesList(
+                $this->items ?? [],
+                Uri::getInstance()->toString(),
+                $app->get('sitename')
+            )
+        );
 
         parent::display($tpl);
     }

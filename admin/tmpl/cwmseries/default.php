@@ -55,13 +55,7 @@ if (str_contains($listOrder, 'publish_up')) {
                 echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
                 <?php
                 if (empty($this->items)) : ?>
-                    <div class="alert alert-info">
-                        <span class="icon-info-circle" aria-hidden="true"></span><span
-                                class="visually-hidden"><?php
-                            echo Text::_('INFO'); ?></span>
-                        <?php
-                        echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-                    </div>
+                    <?php echo LayoutHelper::render('html.empty_state'); ?>
                 <?php else : ?>
                     <table class="table itemList" id="seriesList">
                         <thead>

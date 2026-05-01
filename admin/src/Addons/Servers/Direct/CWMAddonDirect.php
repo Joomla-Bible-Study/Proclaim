@@ -72,10 +72,7 @@ class CWMAddonDirect extends CWMAddon
         return [
             'type'     => 'direct',
             'label'    => 'Direct Link',
-            'patterns' => [
-                '/drive\.google\.com/i',
-                '/docs\.google\.com/i',
-            ],
+            'patterns' => [],
         ];
     }
 

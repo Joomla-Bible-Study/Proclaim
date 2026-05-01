@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -22,8 +23,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmmessage\HtmlView $this */
+
+CwmlangHelper::registerAllForJs();
 
 $this->configFieldsets  = ['editorConfig'];
 $this->hiddenFieldsets  = ['basic-limited'];
@@ -62,6 +66,7 @@ if ($input->getInt('id')) {
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.general');
 $this->getDocument()->addScriptOptions('com_proclaim.formValidate', ['cancelTask' => 'cwmmessage.cancel', 'formId' => 'message-form']);
+Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 $wa->useScript('keepalive')
     ->useScript('com_proclaim.form-validate-submit');
 
@@ -106,6 +111,9 @@ echo Route::_(
         'vimeo'   => 'bg-info',
         'legacy'  => 'bg-secondary',
     ];
+
+    // Server types that support description sync (copy/paste to platform)
+    $descSyncTypes = ['youtube', 'vimeo', 'wistia', 'facebook', 'dailymotion', 'rumble', 'soundcloud'];
 
     // Pre-scan mediafiles for YouTube type
     $hasYouTubeMedia = false;
@@ -179,6 +187,7 @@ echo Route::_(
                                 <?php echo Text::_('JBS_CMN_MEDIA_CREATE_DATE'); ?>
                             </th>
                             <th scope="col" class="w-5 text-center d-none d-md-table-cell">ID</th>
+                            <th scope="col" class="w-10 text-center d-none d-md-table-cell"><?php echo Text::_('JBS_MED_DESCRIPTION'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -244,6 +253,18 @@ echo Route::_(
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php echo (int) $item->id; ?>
                                 </td>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php if (\in_array($serverType, $descSyncTypes, true)) : ?>
+                                        <button type="button"
+                                                class="btn btn-primary btn-sm cwm-copy-desc-btn"
+                                                data-media-id="<?php echo (int) $item->id; ?>"
+                                                data-study-id="<?php echo (int) $this->item->id; ?>"
+                                                title="<?php echo Text::_('JBS_MED_COPY_DESC_TIP'); ?>">
+                                            <span class="icon-copy" aria-hidden="true"></span>
+                                            <?php echo Text::_('JBS_MED_COPY_DESC'); ?>
+                                        </button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -280,8 +301,12 @@ echo Route::_(
                                 <label class="form-check-label" for="ai-gen-intro"><?php echo Text::_('JBS_CMN_AI_GEN_INTRO'); ?></label>
                             </div>
                             <div class="form-check form-check-inline mb-0">
-                                <input class="form-check-input" type="checkbox" id="ai-gen-text" checked>
-                                <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?></label>
+                                <input class="form-check-input" type="checkbox" id="ai-gen-text">
+                                <label class="form-check-label" for="ai-gen-text"><?php echo Text::_('JBS_CMN_AI_GEN_TEXT'); ?> <span class="text-body-secondary small">(<?php echo Text::_('JBS_CMN_AI_GEN_TEXT_TIME'); ?>)</span></label>
+                            </div>
+                            <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="checkbox" id="ai-gen-chapters" checked>
+                                <label class="form-check-label" for="ai-gen-chapters"><?php echo Text::_('JBS_CMN_AI_GEN_CHAPTERS'); ?></label>
                             </div>
                         </div>
                     </div>
@@ -298,13 +323,7 @@ echo Route::_(
                 <?php
             } ?>
             <div class="col-lg-5">
-                <div class="mb-3">
-                    <label id="jform_hits-lbl" for="jform_hits" class="form-label">
-                        <?php echo Text::_('JBS_STY_HITS'); ?>
-                    </label>
-                    <input type="text" id="jform_hits" value="<?php echo $this->item->hits; ?>"
-                           class="form-control" size="10" readonly aria-invalid="false">
-                </div>
+                <?php // Hits moved to the Publishing tab via the form's new "hits" field.?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('studydate'); ?>
                 <?php echo $this->form->renderField('image', null, $imageDefault); ?>
@@ -382,35 +401,36 @@ echo Route::_(
             <?php
         } ?>
 
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'publish', Text::_('JBS_STY_PUBLISH')); ?>
+        <?php echo LayoutHelper::render('edit.publish_tab', $this); ?>
+
+        <?php // ===== Schema.org Tab (injected by system plugin when enabled) =====?>
+        <?php if ($this->form->getFieldset('schema')) : ?>
+        <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'schema', Text::_('JBS_CMN_SCHEMAORG_TAB')); ?>
         <div class="row">
             <div class="col-lg-12">
-                <?php
-                echo LayoutHelper::render('joomla.edit.publishingdata', $this); ?>
-            </div>
-            <div class="col-6">
-                <?php echo $this->form->renderField('metakey', 'params'); ?>
-                <?php echo $this->form->renderField('metadesc', 'params'); ?>
-                <?php
-                echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
+                <?php foreach ($this->form->getFieldset('schema') as $field) : ?>
+                    <?php echo $field->renderField(); ?>
+                <?php endforeach; ?>
+                <?php if (!empty($this->item->id)) : ?>
+                <div class="mt-3">
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmadmin.schemaForceRefresh'
+                        . '&item_id=' . (int) $this->item->id
+                        . '&schema_context=com_proclaim.cwmmessage'
+                        . '&return=' . base64_encode(Uri::getInstance()->toString())
+                        . '&' . Session::getFormToken() . '=1'
+                    ); ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-refresh me-1" aria-hidden="true"></i>
+                        <?php echo Text::_('JBS_CMN_SCHEMA_RESET'); ?>
+                    </a>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
-        <?php
-        if ($this->canDo->get('core.admin')) : ?>
-            <?php
-            echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_ADMIN_PERMISSIONS')); ?>
-            <div class="row">
-                <?php
-                echo $this->form->getInput('rules'); ?>
-            </div>
-            <?php
-            echo HTMLHelper::_('uitab.endTab'); ?>
-            <?php
-        endif; ?>
+        <?php echo LayoutHelper::render('edit.permissions_tab', ['form' => $this->form, 'canDo' => $this->canDo, 'tabName' => 'myTab']); ?>
 
         <!-- Hidden fields -->
         <?php
@@ -467,7 +487,8 @@ echo Route::_(
                             <div class="alert alert-info small mb-1">
                                 <?php echo Text::_('JBS_CMN_AI_ASSIST_DESC'); ?>
                             </div>
-                            <textarea id="ai-studyintro" class="form-control" rows="3"></textarea>
+                            <div id="ai-studyintro-preview" class="form-control bg-body-tertiary" style="min-height:4rem;max-height:12rem;overflow-y:auto"></div>
+                            <input type="hidden" id="ai-studyintro" value="">
                             <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-intro">
                                 <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
                                 &rarr; <?php echo Text::_('JBS_CMN_DESCRIPTION'); ?>
@@ -476,7 +497,8 @@ echo Route::_(
                         <!-- AI Study Text -->
                         <div class="mb-3" id="ai-text-section">
                             <label class="form-label fw-bold"><?php echo Text::_('JBS_CMN_AI_STUDY_TEXT'); ?></label>
-                            <textarea id="ai-studytext" class="form-control" rows="6"></textarea>
+                            <div id="ai-studytext-preview" class="form-control bg-body-tertiary" style="min-height:6rem;max-height:20rem;overflow-y:auto"></div>
+                            <input type="hidden" id="ai-studytext" value="">
                             <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="btn-ai-apply-text">
                                 <?php echo Text::_('JBS_CMN_AI_APPLY'); ?>
                                 &rarr; <?php echo Text::_('JBS_STY_STUDY_TEXT'); ?>
@@ -489,7 +511,11 @@ echo Route::_(
                                 <?php echo Text::_('JBS_CMN_AI_CHAPTERS_DESC'); ?>
                             </div>
                             <textarea id="ai-chapters-text" class="form-control font-monospace" rows="6" readonly></textarea>
-                            <div class="mt-2">
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" id="btn-apply-chapters">
+                                    <span class="icon-save" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_APPLY_CHAPTERS'); ?>
+                                </button>
                                 <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-copy-chapters">
                                     <span class="icon-copy" aria-hidden="true"></span>
                                     <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
@@ -565,10 +591,16 @@ echo Route::_(
                             <h6><?php echo Text::_('JBS_CMN_AI_CHAPTERS'); ?></h6>
                             <p class="text-muted small"><?php echo Text::_('JBS_CMN_YT_SYNC_CHAPTERS_DESC'); ?></p>
                             <textarea id="yt-chapters-text" class="form-control font-monospace" rows="4" readonly></textarea>
-                            <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="btn-yt-copy-chapters">
-                                <span class="icon-copy" aria-hidden="true"></span>
-                                <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
-                            </button>
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" id="btn-yt-apply-chapters">
+                                    <span class="icon-save" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_APPLY_CHAPTERS'); ?>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-yt-copy-chapters">
+                                    <span class="icon-copy" aria-hidden="true"></span>
+                                    <?php echo Text::_('JBS_CMN_AI_COPY_CHAPTERS'); ?>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -585,10 +617,19 @@ echo Route::_(
 
 <?php
 // Build config data for the external topic-suggest / AI assist script
-$firstMediaId = 0;
+// Use the YouTube media file for chapter/sync operations; fall back to the first media file
+$firstMediaId   = 0;
+$youtubeMediaId = 0;
 
 if (!empty($this->mediafiles)) {
     $firstMediaId = (int) $this->mediafiles[0]->id;
+
+    foreach ($this->mediafiles as $mf) {
+        if (strtolower(trim($mf->server_type ?? '')) === 'youtube') {
+            $youtubeMediaId = (int) $mf->id;
+            break;
+        }
+    }
 }
 
 $wa = $this->getDocument()->getWebAssetManager();
@@ -597,5 +638,6 @@ $wa->useScript('com_proclaim.message-ai-assist');
 <div id="message-ai-config"
      data-token="<?php echo Session::getFormToken(); ?>"
      data-media-id="<?php echo $firstMediaId; ?>"
+     data-youtube-media-id="<?php echo $youtubeMediaId; ?>"
      data-has-youtube="<?php echo $hasYouTubeMedia ? '1' : '0'; ?>"
      style="display:none;"></div>

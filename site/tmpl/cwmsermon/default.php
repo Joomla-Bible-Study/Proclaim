@@ -35,13 +35,13 @@ $isPrint = !empty($this->print);
     ?>
     <div class="proclaim-print-btn d-none d-md-block text-end mb-2">
         <a href="<?php echo htmlspecialchars($printUrl->toString()); ?>" target="printWindow" class="btn btn-sm btn-outline-secondary" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
-            <span class="fas fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
+            <span class="fa-solid fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
         </a>
     </div>
 <?php else : ?>
     <div class="proclaim-print-btn d-none d-md-block text-end mb-2 proclaim-no-print">
         <button type="button" class="btn btn-sm btn-outline-secondary js-print-btn" title="<?php echo Text::_('JBS_CMN_PRINT'); ?>">
-            <span class="fas fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
+            <span class="fa-solid fa-print" aria-hidden="true"></span> <?php echo Text::_('JBS_CMN_PRINT'); ?>
         </button>
     </div>
 <?php endif; ?>

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Table\CwmteacherTable;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -28,8 +29,10 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Teacher model class
@@ -46,6 +49,86 @@ class CwmteacherModel extends AdminModel
      * @since    3.2
      */
     public $typeAlias = 'com_proclaim.teacher';
+
+    /**
+     * Batch commands mapping.
+     *
+     * @var   array
+     * @since 10.3.0
+     */
+    protected $batch_commands = [
+        'assetgroup_id' => 'batchAccess',
+        'landing_show'  => 'batchLandingShow',
+        'list_show'     => 'batchListShow',
+        'move_position' => 'batchMovePosition',
+    ];
+
+    /**
+     * Run a batch operation against a set of teachers.
+     *
+     * Overrides Joomla's AdminModel::batch() because the parent uses
+     * `!empty($commands[$identifier])` to decide whether a command was
+     * submitted. In PHP, `!empty("0")` is false — so a legitimate
+     * `landing_show = 0` ("Don't show on landing") or `list_show = 0`
+     * ("Hide") value is silently dropped, and if it was the only change
+     * selected the user gets "Insufficient information to perform the
+     * batch operation."
+     *
+     * Uses a strict `isset() && $value !== ''` check so "0" is a valid
+     * batch value. Proclaim doesn't use Joomla's copy/move or tag batch
+     * features, so those branches are intentionally omitted.
+     *
+     * @param   array  $commands  Batch command key/value pairs from the form
+     * @param   array  $pks       Row IDs to operate on
+     * @param   array  $contexts  Per-row asset contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    #[\Override]
+    public function batch($commands, $pks, $contexts)
+    {
+        $pks = array_unique(ArrayHelper::toInteger($pks));
+
+        if (($zeroKey = array_search(0, $pks, true)) !== false) {
+            unset($pks[$zeroKey]);
+        }
+
+        if (empty($pks)) {
+            $this->setError(Text::_('JGLOBAL_NO_ITEM_SELECTED'));
+
+            return false;
+        }
+
+        PluginHelper::importPlugin($this->events_map['batch']);
+        $this->initBatch();
+
+        $done = false;
+
+        foreach ($this->batch_commands as $identifier => $command) {
+            if (!isset($commands[$identifier]) || $commands[$identifier] === '') {
+                continue;
+            }
+
+            if (!$this->$command($commands[$identifier], $pks, $contexts)) {
+                return false;
+            }
+
+            $done = true;
+        }
+
+        if (!$done) {
+            $this->setError(Text::_('JLIB_APPLICATION_ERROR_INSUFFICIENT_BATCH_INFORMATION'));
+
+            return false;
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
+
     /**
      * Controller Prefix
      *
@@ -313,7 +396,7 @@ class CwmteacherModel extends AdminModel
         $params        = Cwmparams::getAdmin()->params;
         $app           = Factory::getApplication();
         $image         = HTMLHelper::cleanImageURL($data['image']);
-        $data['image'] = $image->url;
+        $data['image'] = urldecode($image->url);
 
         // Set contact to be an Int to work with Database
         $data['contact'] = (int) $data['contact'];
@@ -364,6 +447,10 @@ class CwmteacherModel extends AdminModel
             $data['teacher_thumbnail'] = '';
 
             return parent::save($data);
+        }
+
+        if (!empty($validation['warning']) && $app->isClient('administrator')) {
+            $app->enqueueMessage($validation['warning'], 'warning');
         }
 
         // For new records, save first to get the ID
@@ -451,6 +538,35 @@ class CwmteacherModel extends AdminModel
     }
 
     /**
+     * Preprocess the form to import system plugins (needed for Schema.org tab).
+     *
+     * @param   Form    $form   The form to preprocess
+     * @param   mixed   $data   The form data
+     * @param   string  $group  Plugin group
+     *
+     * @return  void
+     *
+     * @since   10.3.0
+     */
+    protected function preprocessForm(Form $form, $data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
+    /**
+     * @inheritDoc
+     * @since 10.3.0
+     */
+    protected function preprocessData($context, &$data, $group = 'content'): void
+    {
+        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
+
+        parent::preprocessData($context, $data, $group);
+    }
+
+    /**
      * Method to get the data that should be injected in the form.
      *
      * @return    mixed    The data for the form.
@@ -462,8 +578,97 @@ class CwmteacherModel extends AdminModel
     {
         // Check the session for previously entered form data.
         $session = Factory::getApplication()->getUserState('com_proclaim.edit.teacher.data', []);
+        $data    = empty($session) ? $this->data : $session;
 
-        return empty($session) ? $this->data : $session;
+        // Auto-populate Schema.org defaults from teacher data.
+        // Always set defaults — Joomla's system plugin onContentPrepareData will
+        // overwrite with saved schema data from #__schemaorg if it exists.
+        if (\is_object($data) && !empty($data->id)) {
+            $hasSchema = !empty($data->schema['schemaType']) && $data->schema['schemaType'] !== 'None';
+
+            if (!$hasSchema) {
+                $data->schema               = $data->schema ?? [];
+                $data->schema['schemaType'] = 'Teacher';
+
+                $teacher = ['@type' => 'Person'];
+
+                if (!empty($data->teachername)) {
+                    $teacher['name'] = $data->teachername;
+                }
+
+                if (!empty($data->title)) {
+                    $teacher['jobTitle'] = $data->title;
+                }
+
+                if (!empty($data->short)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->short, ENT_QUOTES, 'UTF-8')));
+                } elseif (!empty($data->information)) {
+                    $teacher['description'] = trim(strip_tags(html_entity_decode($data->information, ENT_QUOTES, 'UTF-8')));
+                }
+
+                if (!empty($data->teacher_image)) {
+                    $teacher['image'] = $data->teacher_image;
+                } elseif (!empty($data->teacher_thumbnail)) {
+                    $teacher['image'] = $data->teacher_thumbnail;
+                }
+
+                // Website as url
+                if (!empty($data->website)) {
+                    $teacher['url'] = $data->website;
+                }
+
+                // Collect social links for sameAs
+                $sameAs = [];
+
+                // New social_links JSON field
+                if (!empty($data->social_links) && \is_string($data->social_links)) {
+                    try {
+                        $links = json_decode($data->social_links, true, 512, JSON_THROW_ON_ERROR);
+
+                        foreach ($links as $link) {
+                            if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                                $sameAs[] = $link['url'];
+                            }
+                        }
+                    } catch (\Throwable) {
+                        // Malformed JSON — skip
+                    }
+                }
+
+                // Legacy link fields as fallback
+                if (empty($sameAs)) {
+                    foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
+                        if (!empty($data->$field) && filter_var($data->$field, FILTER_VALIDATE_URL)) {
+                            $sameAs[] = $data->$field;
+                        }
+                    }
+                }
+
+                if (!empty($sameAs)) {
+                    // Structure as subform expects: array of {value: url}
+                    $teacher['sameAs'] = array_map(
+                        static fn ($url) => ['value' => $url],
+                        $sameAs
+                    );
+                }
+
+                // worksFor: teacher org_name → admin setting → site name
+                $orgName = !empty($data->org_name) ? $data->org_name : CwmschemaorgHelper::getOrgName();
+
+                if ($orgName !== '') {
+                    $teacher['worksFor'] = [
+                        '@type' => 'Organization',
+                        'name'  => $orgName,
+                    ];
+                }
+
+                $data->schema['Teacher'] = $teacher;
+            }
+        }
+
+        $this->preprocessData('com_proclaim.teacher', $data);
+
+        return $data;
     }
 
     /**
@@ -576,9 +781,53 @@ class CwmteacherModel extends AdminModel
 
         $query->order($db->quoteName('study.studydate') . ' DESC');
 
-        $db->setQuery($query, 0, 20);
+        $db->setQuery($query, 0, 50);
 
         return $db->loadObjectList() ?: [];
+    }
+
+    /**
+     * Get the count of messages (sermons) by this teacher.
+     *
+     * Lightweight counterpart to getMessages() used for the tab badge when
+     * the Messages tab contents are lazy-loaded.
+     *
+     * @return  int
+     *
+     * @since   10.3.0
+     */
+    public function getMessagesCount(): int
+    {
+        $item = $this->getItem();
+
+        if (!$item || empty($item->id)) {
+            return 0;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true);
+
+        $query->select('COUNT(DISTINCT ' . $db->quoteName('study.id') . ')')
+            ->from($db->quoteName('#__bsms_studies', 'study'));
+
+        $query->where(
+            '(' . $db->quoteName('study.id') . ' IN ('
+            . $db->getQuery(true)
+                ->select($db->quoteName('st.study_id'))
+                ->from($db->quoteName('#__bsms_study_teachers', 'st'))
+                ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
+            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
+        );
+
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('study.access'), $user->getAuthorisedViewLevels());
+        }
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 
     /**
@@ -597,4 +846,146 @@ class CwmteacherModel extends AdminModel
         parent::cleanCache('mod_proclaim');
     }
 
+    /**
+     * Batch set landing_show for a group of teachers.
+     *
+     * @param   int    $value     The landing_show value (0/1/2)
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchLandingShow(int $value, array $pks, array $contexts): bool
+    {
+        $user  = Factory::getApplication()->getIdentity();
+        /** @var CwmteacherTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->landing_show = $value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch set list_show for a group of teachers.
+     *
+     * @param   int    $value     The list_show value (0/1)
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchListShow(int $value, array $pks, array $contexts): bool
+    {
+        $user  = Factory::getApplication()->getIdentity();
+        /** @var CwmteacherTable $table */
+        $table = $this->getTable();
+
+        foreach ($pks as $pk) {
+            if ($user->authorise('core.edit', $contexts[$pk])) {
+                $table->reset();
+                $table->load($pk);
+                $table->list_show = $value;
+
+                if (!$table->store()) {
+                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
+                }
+            } else {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
+
+    /**
+     * Batch move selected teachers to a specific ordering position.
+     *
+     * Inserts the selected teachers (sorted alphabetically) starting at the
+     * given position and shifts all other teachers down to make room.
+     *
+     * @param   int    $value     The target ordering position (1-based)
+     * @param   array  $pks       An array of row IDs
+     * @param   array  $contexts  An array of item contexts
+     *
+     * @return  bool
+     *
+     * @since   10.3.0
+     */
+    protected function batchMovePosition(int $value, array $pks, array $contexts): bool
+    {
+        $user = Factory::getApplication()->getIdentity();
+
+        // Verify permissions for all selected items
+        foreach ($pks as $pk) {
+            if (!$user->authorise('core.edit', $contexts[$pk])) {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+        }
+
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
+        $position = max(1, $value);
+
+        // Get all teacher IDs in current ordering, excluding the selected ones.
+        // Tiebreaker on teachername prevents random shuffling when multiple
+        // teachers share the same ordering value (e.g. all at 0).
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->whereNotIn($db->quoteName('id'), $pks)
+            ->order($db->quoteName('ordering') . ' ASC, ' . $db->quoteName('teachername') . ' ASC');
+        $db->setQuery($query);
+        $otherIds = $db->loadColumn();
+
+        // Get the selected teacher IDs sorted alphabetically
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('id'))
+            ->from($db->quoteName('#__bsms_teachers'))
+            ->whereIn($db->quoteName('id'), $pks)
+            ->order($db->quoteName('teachername') . ' ASC');
+        $db->setQuery($query);
+        $selectedIds = $db->loadColumn();
+
+        // Build new ordering: insert selected at target position
+        $insertAt = min($position - 1, \count($otherIds));
+        $newOrder = array_merge(
+            \array_slice($otherIds, 0, $insertAt),
+            $selectedIds,
+            \array_slice($otherIds, $insertAt)
+        );
+
+        // Update all ordering values
+        foreach ($newOrder as $index => $id) {
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_teachers'))
+                ->set($db->quoteName('ordering') . ' = ' . ($index + 1))
+                ->where($db->quoteName('id') . ' = ' . (int) $id);
+            $db->setQuery($query);
+            $db->execute();
+        }
+
+        $this->cleanCache();
+
+        return true;
+    }
 }

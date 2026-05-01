@@ -119,7 +119,7 @@ $wa->addInlineScript(
         <div class="wizard-step active card shadow-sm" data-step="1">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <i class="fa-solid fa-location-dot me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP1_TITLE'); ?>
                 </h4>
             </div>
@@ -128,7 +128,7 @@ $wa->addInlineScript(
 
                 <!-- Detected scenario card -->
                 <div class="alert alert-<?php echo $this->scenario === '2C' ? 'info' : 'warning'; ?> d-flex align-items-start">
-                    <i class="fas fa-<?php echo $this->scenario === '2C' ? 'info-circle' : 'exclamation-triangle'; ?> me-3 mt-1 fa-lg"></i>
+                    <i class="fa-solid fa-<?php echo $this->scenario === '2C' ? 'circle-info' : 'triangle-exclamation'; ?> me-3 mt-1 fa-lg"></i>
                     <div>
                         <strong><?php echo Text::sprintf('JBS_WIZARD_DETECTED', $scenarioLabel); ?></strong><br>
                         <span class="small opacity-75" id="wizard-scenario-desc">
@@ -162,13 +162,13 @@ $wa->addInlineScript(
                 </div>
 
                 <p class="text-body-secondary mb-0">
-                    <i class="fas fa-clock me-1"></i>
+                    <i class="fa-solid fa-clock me-1"></i>
                     <?php echo Text::_('JBS_WIZARD_TIME_ESTIMATE'); ?>
                 </p>
             </div>
             <div class="card-footer d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-primary wizard-next-btn">
-                    <?php echo Text::_('JBS_WIZARD_START'); ?> <i class="fas fa-arrow-right ms-1"></i>
+                    <?php echo Text::_('JBS_WIZARD_START'); ?> <i class="fa-solid fa-arrow-right ms-1"></i>
                 </button>
             </div>
         </div>
@@ -179,7 +179,7 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="2">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-users me-2"></i>
+                    <i class="fa-solid fa-users me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP2_TITLE'); ?>
                 </h4>
             </div>
@@ -215,16 +215,16 @@ $wa->addInlineScript(
                 </div>
 
                 <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
+                    <i class="fa-solid fa-circle-info me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP2_HINT'); ?>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between gap-2">
                 <button type="button" class="btn btn-secondary wizard-prev-btn">
-                    <i class="fas fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
+                    <i class="fa-solid fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
                 </button>
                 <button type="button" class="btn btn-primary wizard-next-btn">
-                    <?php echo Text::_('JNEXT'); ?> <i class="fas fa-arrow-right ms-1"></i>
+                    <?php echo Text::_('JNEXT'); ?> <i class="fa-solid fa-arrow-right ms-1"></i>
                 </button>
             </div>
         </div>
@@ -235,7 +235,7 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="3">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-sitemap me-2"></i>
+                    <i class="fa-solid fa-sitemap me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP3_TITLE'); ?>
                 </h4>
             </div>
@@ -244,7 +244,7 @@ $wa->addInlineScript(
 
                 <?php if (empty($this->locations)): ?>
                 <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_NO_LOCATIONS'); ?>
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocation&layout=edit'); ?>"
                        class="alert-link"><?php echo Text::_('JBS_WIZARD_CREATE_LOCATION'); ?></a>
@@ -254,7 +254,7 @@ $wa->addInlineScript(
                     <?php foreach ($this->locations as $loc): ?>
                     <div class="card mb-3">
                         <div class="card-header py-2">
-                            <strong><i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                            <strong><i class="fa-solid fa-location-dot me-2 text-primary"></i>
                                 <?php echo htmlspecialchars($loc->location_text); ?></strong>
                         </div>
                         <div class="card-body py-2">
@@ -291,17 +291,17 @@ $wa->addInlineScript(
                 </div>
 
                 <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
+                    <i class="fa-solid fa-circle-info me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP3_HINT'); ?>
                 </div>
                 <?php endif; ?>
             </div>
             <div class="card-footer d-flex justify-content-between gap-2">
                 <button type="button" class="btn btn-secondary wizard-prev-btn">
-                    <i class="fas fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
+                    <i class="fa-solid fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
                 </button>
                 <button type="button" class="btn btn-primary wizard-next-btn">
-                    <?php echo Text::_('JNEXT'); ?> <i class="fas fa-arrow-right ms-1"></i>
+                    <?php echo Text::_('JNEXT'); ?> <i class="fa-solid fa-arrow-right ms-1"></i>
                 </button>
             </div>
         </div>
@@ -312,7 +312,7 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="4">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-shield-alt me-2"></i>
+                    <i class="fa-solid fa-shield-halved me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP4_TITLE'); ?>
                 </h4>
             </div>
@@ -326,16 +326,16 @@ $wa->addInlineScript(
                 </div>
 
                 <div class="alert alert-info mt-3 mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
+                    <i class="fa-solid fa-circle-info me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP4_HINT'); ?>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between gap-2">
                 <button type="button" class="btn btn-secondary wizard-prev-btn">
-                    <i class="fas fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
+                    <i class="fa-solid fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
                 </button>
                 <button type="button" class="btn btn-primary wizard-next-btn">
-                    <?php echo Text::_('JNEXT'); ?> <i class="fas fa-arrow-right ms-1"></i>
+                    <?php echo Text::_('JNEXT'); ?> <i class="fa-solid fa-arrow-right ms-1"></i>
                 </button>
             </div>
         </div>
@@ -346,7 +346,7 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="5">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-eye me-2"></i>
+                    <i class="fa-solid fa-eye me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP5_TITLE'); ?>
                 </h4>
             </div>
@@ -362,16 +362,16 @@ $wa->addInlineScript(
                 </div>
 
                 <div class="alert alert-warning mt-3 mb-0">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP5_HINT'); ?>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between gap-2">
                 <button type="button" class="btn btn-secondary wizard-prev-btn">
-                    <i class="fas fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
+                    <i class="fa-solid fa-arrow-left me-1"></i> <?php echo Text::_('JPREV'); ?>
                 </button>
                 <button type="button" class="btn btn-primary wizard-next-btn">
-                    <?php echo Text::_('JBS_WIZARD_CONFIRM'); ?> <i class="fas fa-check ms-1"></i>
+                    <?php echo Text::_('JBS_WIZARD_CONFIRM'); ?> <i class="fa-solid fa-check ms-1"></i>
                 </button>
             </div>
         </div>
@@ -382,7 +382,7 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="6">
             <div class="card-header bg-warning text-dark">
                 <h4 class="mb-0">
-                    <i class="fas fa-cog fa-spin me-2"></i>
+                    <i class="fa-solid fa-gear fa-spin me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP6_TITLE'); ?>
                 </h4>
             </div>
@@ -406,12 +406,12 @@ $wa->addInlineScript(
         <div class="wizard-step card shadow-sm" data-step="7">
             <div class="card-header bg-success text-white">
                 <h4 class="mb-0">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="fa-solid fa-circle-check me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP7_TITLE'); ?>
                 </h4>
             </div>
             <div class="card-body text-center py-4">
-                <i class="fas fa-check-circle text-success mb-4" style="font-size: 5rem;"></i>
+                <i class="fa-solid fa-circle-check text-success mb-4" style="font-size: 5rem;"></i>
                 <h4><?php echo Text::_('JBS_WIZARD_COMPLETE_HEADING'); ?></h4>
                 <p class="text-body-secondary"><?php echo Text::_('JBS_WIZARD_COMPLETE_DESC'); ?></p>
 
@@ -419,13 +419,13 @@ $wa->addInlineScript(
                     <div class="col-sm-auto">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmlocations'); ?>"
                            class="btn btn-primary">
-                            <i class="fas fa-map-marker-alt me-2"></i><?php echo Text::_('JBS_WIZARD_GO_LOCATIONS'); ?>
+                            <i class="fa-solid fa-location-dot me-2"></i><?php echo Text::_('JBS_WIZARD_GO_LOCATIONS'); ?>
                         </a>
                     </div>
                     <div class="col-sm-auto">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim'); ?>"
                            class="btn btn-outline-secondary">
-                            <i class="fas fa-home me-2"></i><?php echo Text::_('JBS_WIZARD_GO_CPANEL'); ?>
+                            <i class="fa-solid fa-house me-2"></i><?php echo Text::_('JBS_WIZARD_GO_CPANEL'); ?>
                         </a>
                     </div>
                 </div>

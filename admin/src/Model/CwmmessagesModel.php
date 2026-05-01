@@ -274,17 +274,17 @@ class CwmmessagesModel extends ListModel
             $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('locations.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
-        // Join over Plays/Downloads
-        $query->select(
-            'SUM(' . $db->quoteName('mediafile.plays') . ') AS ' . $db->quoteName('totalplays')
-            . ', SUM(' . $db->quoteName('mediafile.downloads') . ') AS ' . $db->quoteName('totaldownloads')
-            . ', ' . $db->quoteName('mediafile.study_id')
-        );
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_mediafiles', 'mediafile') . ' ON ' . $db->quoteName('mediafile.study_id') . ' = ' . $db->quoteName('study.id')
-        );
-        $query->group($db->quoteName('study.id'));
+        // Plays/Downloads totals via scalar subqueries (avoids GROUP BY on the main query)
+        $playsSubquery = $db->getQuery(true)
+            ->select('COALESCE(SUM(' . $db->quoteName('mf.plays') . '), 0)')
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
+        $downloadsSubquery = $db->getQuery(true)
+            ->select('COALESCE(SUM(' . $db->quoteName('mf.downloads') . '), 0)')
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
+        $query->select('(' . $playsSubquery . ') AS ' . $db->quoteName('totalplays'));
+        $query->select('(' . $downloadsSubquery . ') AS ' . $db->quoteName('totaldownloads'));
 
         // Join over the users for the checked out user.
         $query->select($db->quoteName('uc.name', 'editor'))
@@ -334,7 +334,9 @@ class CwmmessagesModel extends ListModel
         // Filter by published state
         $published = $this->getState('filter.published');
 
-        if (is_numeric($published)) {
+        if (\is_array($published)) {
+            $query->whereIn($db->quoteName('study.published'), array_map('intval', $published));
+        } elseif (is_numeric($published)) {
             $query->where($db->quoteName('study.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
             $query->where('(' . $db->quoteName('study.published') . ' = 0 OR ' . $db->quoteName('study.published') . ' = 1 OR ' . $db->quoteName('study.published') . ' = 2)');
