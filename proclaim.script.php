@@ -1145,6 +1145,12 @@ class com_proclaimInstallerScript extends InstallerScript
             // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
             $this->dropLegacyTemplateColumns();
 
+            // Drop pre-10.1 / pre-10.0 orphaned tables that linger on sites
+            // upgraded across multiple major versions (Joomla skips already-
+            // applied migrations on jump-upgrades, so the per-version DROPs
+            // never run).
+            $this->dropLegacyTables();
+
             // Migrate existing alternate link data to platform_links JSON
             $this->migratePodcastAlternateLinks();
 
@@ -1827,6 +1833,85 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         } catch (\Exception $e) {
             // Non-fatal — column may already be gone
+        }
+    }
+
+    /**
+     * Drop legacy/orphaned Proclaim tables that the current codebase no
+     * longer references.
+     *
+     * Some of these have been targeted by old migration files
+     * (10.1.0-20260228, 10.1.0-20260301), but Joomla skips already-applied
+     * migrations on upgrades that jump multiple versions, so sites that
+     * went straight from 10.0 → 10.2/10.3 still carry the rows. Others
+     * (e.g. `jbsbackup_timeset`) are pre-10.0 leftovers never covered by
+     * any migration.
+     *
+     * Each candidate has been verified against the live codebase: not
+     * referenced in admin/, site/, libraries/, plugins/, or modules/.
+     * Tables still in use (`#__bsms_version`, `#__bsms_styles`) are
+     * intentionally NOT in this list — bsms_version is read by the
+     * v7→v10 upgrade detector, bsms_styles is the active template-styles
+     * store.
+     *
+     * @return  void
+     *
+     * @since   10.3.2
+     */
+    private function dropLegacyTables(): void
+    {
+        $tables = [
+            'bsms_storage',         // pre-10.1; dropped by 10.1.0-20260301 migration
+            'bsms_update',          // pre-10.1 version tracking; replaced by #__schemas
+            'bsms_install',         // pre-10.0 install bookkeeping
+            'bsms_folders',         // pre-10.0 file-management
+            'bsms_media',           // pre-10.0 (replaced by bsms_mediafiles)
+            'bsms_order',           // pre-10.0 ordering helper
+            'bsms_mimetype',        // pre-10.0 MIME-type lookup
+            'bsms_search',          // pre-10.0 search index
+            'bsms_share',           // pre-10.0 share counts
+            'jbsbackup_timeset',    // pre-10.0 standalone backup extension
+        ];
+
+        try {
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
+            $prefix = $db->getPrefix();
+            $dropped = [];
+
+            foreach ($tables as $name) {
+                $full = $prefix . $name;
+                $db->setQuery('SHOW TABLES LIKE ' . $db->quote($full));
+
+                if (!$db->loadResult()) {
+                    continue;
+                }
+
+                try {
+                    $db->setQuery('DROP TABLE IF EXISTS ' . $db->quoteName($full));
+                    $db->execute();
+                    $dropped[] = $name;
+                } catch (\Exception $e) {
+                    Log::add(
+                        'dropLegacyTables: failed to drop ' . $full . ': ' . $e->getMessage(),
+                        Log::WARNING,
+                        'com_proclaim'
+                    );
+                }
+            }
+
+            if (!empty($dropped)) {
+                try {
+                    Factory::getApplication()->enqueueMessage(
+                        'Removed ' . \count($dropped) . ' legacy database table(s): ' . implode(', ', $dropped) . '.',
+                        'message'
+                    );
+                } catch (\Throwable) {
+                    // Application may not be available in all install contexts
+                }
+            }
+        } catch (\Exception $e) {
+            // Non-fatal — leave legacy tables in place rather than block the upgrade
+            Log::add('dropLegacyTables: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
     }
 
