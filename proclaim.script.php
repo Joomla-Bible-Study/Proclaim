@@ -366,6 +366,39 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function preflight($type, $parent): bool
     {
+        // com_proclaim depends on lib_cwmscripture. The standalone
+        // component zip does not bundle the library, and even when
+        // installed via pkg_proclaim the library lands one step before
+        // us in the same HTTP request — so the runtime autoloader
+        // (initialised at request start, with autoload_psr4.php cached)
+        // does not yet know about CWM\Library\Scripture\*. Register the
+        // namespace manually if the files are on disk so the rest of
+        // our preflight (and the install routines that follow) can
+        // resolve the classes.
+        if ($type !== 'uninstall') {
+            $libBase = JPATH_LIBRARIES . '/lib_cwmscripture/src';
+
+            if (is_dir($libBase) && !class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper', false)) {
+                \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase, false, false, 'psr4');
+            }
+
+            if (!class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper')) {
+                $msg = 'Proclaim 10.3+ requires lib_cwmscripture to be installed first. '
+                    . 'Install pkg_proclaim (the bundled package) instead, or install '
+                    . 'lib_cwmscripture before retrying this update.';
+
+                try {
+                    Factory::getApplication()->enqueueMessage($msg, 'error');
+                } catch (\Throwable) {
+                    // Application may not be available during certain install
+                    // contexts; fall through with the return-false below so
+                    // Joomla still aborts cleanly.
+                }
+
+                return false;
+            }
+        }
+
         $this->setDboFromAdapter($parent);
 
         if ($type === 'update') {
