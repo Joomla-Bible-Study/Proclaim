@@ -127,8 +127,10 @@ else
     git add build/proclaim-changelog.xml
     git commit -m "chore: add changelog entry for ${VERSION}"
     git push
-    # Update the tag to include the changelog commit
-    git tag -f "$TAG"
+    # Update the tag to include the changelog commit. Use -a (annotated)
+    # so signed-tag policies (e.g. tag.gpgsign=true) can sign it; -m is
+    # required when -a is set non-interactively.
+    git tag -af "$TAG" -m "$TAG"
     git push origin "$TAG" --force
 fi
 echo ""
