@@ -10,7 +10,9 @@
 #   bash build/cwm-article.sh 10.3.1 path/to/bullets.txt
 #
 # Optional env vars:
-#   CATEGORY_ID=8         # com_content category for the new article (default 8)
+#   CATEGORY_ID=2         # com_content category for the new article
+#                         # default 2 = "General News and Information" on
+#                         # christianwebministries.org
 #   PREV_ARTICLE_ID=42    # explicit previous article to un-feature
 #                         # (otherwise auto-detected via featured filter)
 #   BULLETS_FILE=...      # one bullet per line; alternative to positional arg.
@@ -30,18 +32,18 @@
 #
 # Prerequisites:
 #   - 1Password CLI (op) authenticated
-#   - "CWM Joomla API Token" item in CWM vault
+#   - "CWM ARS API Token" item in CWM vault — same Joomla API token used
+#     by ars-release.sh; no separate token needed for the content API
 #   - GitHub release for the version exists (used for the download link)
 #   - jq + gh CLI installed
 #
 # Setup (one-time, on christianwebministries.org):
-#   1. System → Manage → Plugins: enable "Web Services - Content".
-#   2. User Manager → edit your admin user → Joomla API Token tab → Create.
-#   3. Save token in 1Password as item "CWM Joomla API Token" in vault "CWM",
-#      field "credential".
-#   4. Confirm the user has Edit / Edit State / Create permission on
-#      com_content articles.
-#   5. Pick a category for release announcements; pass id via CATEGORY_ID.
+#   The 1Password item is shared with ars-release.sh, so if ARS publish
+#   already works for you, the token is already in place. Just make sure:
+#   1. "Web Services - Content" plugin is enabled (System → Manage → Plugins).
+#   2. The user that owns the API token has Edit / Edit State / Create
+#      permission on com_content articles (Super Users do by default).
+#   3. Pick a category for release announcements; pass id via CATEGORY_ID.
 #
 # @since 10.3.2
 
@@ -52,7 +54,7 @@ ARTICLES_URL="${SITE_URL}/api/index.php/v1/content/articles"
 GITHUB_REPO="Joomla-Bible-Study/Proclaim"
 GITHUB_BASE="https://github.com/${GITHUB_REPO}"
 
-CATEGORY_ID="${CATEGORY_ID:-8}"
+CATEGORY_ID="${CATEGORY_ID:-2}"   # 2 = "General News and Information" on christianwebministries.org
 
 # --- Resolve version ---
 if [ -n "${1:-}" ]; then
@@ -123,11 +125,21 @@ if [ "${DRY_RUN:-0}" = "1" ]; then
     echo "DRY RUN: skipping 1Password lookup."
 else
     echo "Retrieving Joomla API token from 1Password..."
-    TOKEN=$(op item get "CWM Joomla API Token" --vault CWM --fields label=credential --reveal 2>/dev/null)
+    # `|| true` so a non-zero op exit doesn't abort the script via set -e
+    # before we can print the friendly diagnostic below.
+    TOKEN=$(op item get "CWM ARS API Token" --vault CWM --fields label=credential --reveal 2>&1 || true)
 
-    if [ -z "$TOKEN" ]; then
+    if [ -z "$TOKEN" ] || echo "$TOKEN" | grep -q '\[ERROR\]'; then
+        echo ""
         echo "Error: Could not retrieve API token from 1Password."
-        echo "Create a 'CWM Joomla API Token' item in the CWM vault with the token in the 'credential' field."
+        if echo "$TOKEN" | grep -q '\[ERROR\]'; then
+            echo "1Password said: ${TOKEN}"
+        fi
+        echo ""
+        echo "This script reuses the same 1Password item as ars-release.sh."
+        echo "If ARS publish works for you, the token should already exist."
+        echo "Item lookup: vault 'CWM', title 'CWM ARS API Token', field 'credential'."
+        echo "Re-run after fixing: composer cwm-article -- ${VERSION} ${BULLETS_PATH:-bullets.txt}"
         exit 1
     fi
 fi
@@ -178,9 +190,10 @@ build_li() {
 LIST_ITEMS=$(build_li)
 
 # --- Compose article HTML (mirrors the 10.2.2 announcement structure) ---
-INTRO_HTML="<p>The Christian Web Ministries Team is proud to announce <strong>Proclaim ${VERSION}</strong> — ${LEAD}</p>"
-
-FULL_HTML=$(cat <<HTML
+# Everything goes in introtext so the article shows in full on category /
+# featured listings without a "Read More" button. fulltext stays empty.
+INTRO_HTML=$(cat <<HTML
+<p>The Christian Web Ministries Team is proud to announce <strong>Proclaim ${VERSION}</strong> — ${LEAD}</p>
 <p><strong>What&#39;s new in Proclaim ${MAJOR}:</strong></p>
 <ul>
 ${LIST_ITEMS}</ul>
@@ -192,11 +205,13 @@ ${LIST_ITEMS}</ul>
 HTML
 )
 
+FULL_HTML=""
+
 # --- Helper: PATCH article ---
 api_patch() {
     local id="$1"
     local payload="$2"
-    curl -sS -w "\n%{http_code}" \
+    curl -sS -g -w "\n%{http_code}" \
         -X PATCH \
         -H "$AUTH_HEADER" -H "$JSON_HEADER" -H "$ACCEPT_HEADER" \
         "${ARTICLES_URL}/${id}" \
@@ -219,7 +234,9 @@ POST_PAYLOAD=$(jq -n \
         featured: 1,
         state: 1,
         language: "*",
-        access: 1
+        access: 1,
+        publish_up: "2000-01-01 00:00:00",
+        publish_down: null
     }')
 
 if [ "${DRY_RUN:-0}" = "1" ]; then
@@ -303,8 +320,6 @@ if [ "${DRY_RUN:-0}" = "1" ]; then
         <article>
             <h1>${TITLE}</h1>
             ${INTRO_HTML}
-            <hr class="divider">
-            ${FULL_HTML}
         </article>
         <p class="footer-note">Local preview — generated by build/cwm-article.sh DRY_RUN. Nothing has been posted to christianwebministries.org.</p>
     </div>
@@ -338,7 +353,7 @@ UNFEATURE_IDS=()
 if [ -n "${PREV_ARTICLE_ID:-}" ]; then
     UNFEATURE_IDS+=("$PREV_ARTICLE_ID")
 else
-    LIST=$(curl -sS \
+    LIST=$(curl -sS -g \
         -H "$AUTH_HEADER" -H "$ACCEPT_HEADER" \
         "${ARTICLES_URL}?filter[featured]=1&fields[articles]=title,featured")
 
@@ -367,7 +382,7 @@ echo ""
 # --- Step 2: POST new article ---
 echo "Creating new article in category ${CATEGORY_ID}..."
 
-RESPONSE=$(curl -sS -w "\n%{http_code}" \
+RESPONSE=$(curl -sS -g -w "\n%{http_code}" \
     -X POST \
     -H "$AUTH_HEADER" -H "$JSON_HEADER" -H "$ACCEPT_HEADER" \
     "$ARTICLES_URL" \

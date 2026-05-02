@@ -4,11 +4,13 @@
 #
 # Runs on the current branch (should be main). Handles:
 #   1. Version bump (interactive if no version given)
-#   2. Build zip package
+#   2. Build component + pkg_proclaim zips
 #   3. Commit version bump and push
-#   4. Create GitHub release with zip
-#   5. Publish to ARS on christianwebministries.org
-#   6. Update versions.json on development branch
+#   4. Create GitHub release with both zips attached
+#   5. Generate changelog entry, commit, move tag forward
+#   6. Publish to ARS on christianwebministries.org
+#   7. Update versions.json on development branch
+#   8. Post CWM release announcement article (skipped if no bullets file)
 #
 # Usage:
 #   composer release -- 10.2.3              # Release specific version
@@ -75,12 +77,12 @@ echo "=== Proclaim Release ${VERSION} ==="
 echo ""
 
 # --- Step 1: Version bump ---
-echo "[1/7] Bumping version to ${VERSION}..."
+echo "[1/8] Bumping version to ${VERSION}..."
 composer version -- -v "$VERSION"
 echo ""
 
 # --- Step 2: Build ---
-echo "[2/7] Building package (component + bundled pkg_proclaim)..."
+echo "[2/8] Building package (component + bundled pkg_proclaim)..."
 composer package
 echo ""
 
@@ -97,14 +99,14 @@ if [ ! -f "build/${PKG_NAME}" ]; then
 fi
 
 # --- Step 3: Commit and push ---
-echo "[3/7] Committing version bump..."
+echo "[3/8] Committing version bump..."
 git add -A
 git commit -m "chore: bump version to ${VERSION}"
 git push
 echo ""
 
 # --- Step 4: GitHub release ---
-echo "[4/7] Creating GitHub release ${TAG}..."
+echo "[4/8] Creating GitHub release ${TAG}..."
 
 # Get release notes from the latest commits since last tag
 PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
@@ -126,7 +128,7 @@ gh release create "$TAG" "build/${PKG_NAME}" "build/${ZIP_NAME}" \
 echo ""
 
 # --- Step 5: Generate changelog entry ---
-echo "[5/7] Updating changelog..."
+echo "[5/8] Updating changelog..."
 bash build/generate-changelog-entry.sh "$VERSION"
 if git diff --quiet build/proclaim-changelog.xml 2>/dev/null; then
     echo "  (no changes — entry already existed)"
@@ -143,12 +145,12 @@ fi
 echo ""
 
 # --- Step 6: Publish to ARS ---
-echo "[6/7] Publishing to ARS..."
+echo "[6/8] Publishing to ARS..."
 bash build/ars-release.sh "$VERSION"
 echo ""
 
 # --- Step 7: Update development versions.json ---
-echo "[7/7] Updating development branch..."
+echo "[7/8] Updating development branch..."
 
 # Parse version parts for next patch
 IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION%%-*}"
@@ -177,8 +179,26 @@ git push
 
 git checkout main
 git stash pop 2>/dev/null || true
-
 echo ""
+
+# --- Step 8: CWM release announcement article ---
+# Posts the "Proclaim X.Y.Z Released" article to christianwebministries.org
+# and un-features the previous one. Only runs if a bullets file is present
+# at build/release-bullets-${VERSION}.txt — otherwise skipped with a hint
+# so the release itself doesn't fail on a missing announcement draft.
+echo "[8/8] Posting CWM release announcement..."
+
+BULLETS_FILE="build/release-bullets-${VERSION}.txt"
+
+if [ -f "$BULLETS_FILE" ]; then
+    bash build/cwm-article.sh "$VERSION" "$BULLETS_FILE"
+else
+    echo "  Skipped: ${BULLETS_FILE} not found."
+    echo "  Create it (one bullet per line) and run when ready:"
+    echo "    composer cwm-article -- ${VERSION} ${BULLETS_FILE}"
+fi
+echo ""
+
 echo "=== Release ${VERSION} complete! ==="
 echo "  GitHub: https://github.com/Joomla-Bible-Study/Proclaim/releases/tag/${TAG}"
 echo "  ARS:    https://www.christianwebministries.org/downloads/proclaim.html"
