@@ -120,15 +120,15 @@ console.log('  Copied fancybox (from node_modules)');
 
 // intl-tel-input — CSS, JS, and flag images
 copyFile(
-    path.join(nodeModules, 'intl-tel-input/build/css/intlTelInput.min.css'),
+    path.join(nodeModules, 'intl-tel-input/dist/css/intlTelInput.min.css'),
     path.join(mediaBase, 'vendor/intl-tel-input/css/intlTelInput.min.css')
 );
 copyFile(
-    path.join(nodeModules, 'intl-tel-input/build/js/intlTelInputWithUtils.min.js'),
+    path.join(nodeModules, 'intl-tel-input/dist/js/intlTelInputWithUtils.min.js'),
     path.join(mediaBase, 'vendor/intl-tel-input/js/intlTelInputWithUtils.min.js')
 );
 copyDir(
-    path.join(nodeModules, 'intl-tel-input/build/img'),
+    path.join(nodeModules, 'intl-tel-input/dist/img'),
     path.join(mediaBase, 'vendor/intl-tel-input/img')
 );
 console.log('  Copied intl-tel-input (from node_modules)');
