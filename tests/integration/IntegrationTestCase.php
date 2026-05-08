@@ -43,48 +43,87 @@ abstract class IntegrationTestCase extends ProclaimTestCase
         $prop = $ref->getProperty('_tbl_key');
         $prop->setValue($instance, $tblKey);
 
-        // Provide a mock DatabaseInterface to satisfy non-nullable return types.
-        // Real CMS Table::getDatabase() throws if no DB is set.
-        $queryMock = $this->createMock(\Joomla\Database\QueryInterface::class);
-        $queryMock->method('select')->willReturnSelf();
-        $queryMock->method('from')->willReturnSelf();
-        $queryMock->method('where')->willReturnSelf();
-        $queryMock->method('whereIn')->willReturnSelf();
+        // Inject DB and dispatcher: prefer real services from the CMS container
+        // when available so check()/store() exercise the same code paths as in
+        // production. Fall back to stubs when the test harness has no live DB —
+        // that path satisfies non-nullable return types but won't run real
+        // queries, so tests that depend on real query results should guard with
+        // `if (!PROCLAIM_TEST_DB_AVAILABLE) { $this->markTestSkipped(...); }`.
+        $db         = $this->resolveDatabase();
+        $dispatcher = $this->resolveDispatcher();
 
-        // Use DatabaseDriver (abstract class) as mock base — it has both
-        // getQuery() and createQuery() regardless of framework version.
-        $dbMock = $this->getMockBuilder(\Joomla\Database\DatabaseDriver::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $dbMock->method('getQuery')->willReturn($queryMock);
-        $dbMock->method('createQuery')->willReturn($queryMock);
-        $dbMock->method('quoteName')->willReturnCallback(
-            static fn ($name) => \is_array($name)
-                ? array_map(static fn ($n) => '`' . $n . '`', $name)
-                : '`' . $name . '`'
-        );
-        $dbMock->method('quote')->willReturnCallback(
-            static fn ($text) => "'" . $text . "'"
-        );
-        $dbMock->method('setQuery')->willReturnSelf();
-        $dbMock->method('loadObject')->willReturn(null);
-
-        // Inject DB via the real setter or reflection
         if ($ref->hasMethod('setDatabase')) {
-            $instance->setDatabase($dbMock);
+            $instance->setDatabase($db);
         } elseif ($ref->hasProperty('_db')) {
             $dbProp = $ref->getProperty('_db');
-            $dbProp->setValue($instance, $dbMock);
+            $dbProp->setValue($instance, $db);
         }
 
-        // Provide a mock event dispatcher (required by real CMS Table::store/check)
         if ($ref->hasMethod('setDispatcher')) {
-            $dispatcher = $this->createMock(\Joomla\Event\DispatcherInterface::class);
-            $dispatcher->method('dispatch')->willReturn(new \Joomla\Event\Event('test'));
             $instance->setDispatcher($dispatcher);
         }
 
         return $instance;
+    }
+
+    /**
+     * Get a DatabaseInterface for tables: real driver from the CMS container
+     * when PROCLAIM_TEST_DB_AVAILABLE, otherwise a typed stub.
+     *
+     * @return  \Joomla\Database\DatabaseInterface
+     */
+    private function resolveDatabase(): \Joomla\Database\DatabaseInterface
+    {
+        if (\defined('PROCLAIM_TEST_DB_AVAILABLE') && PROCLAIM_TEST_DB_AVAILABLE) {
+            return \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        }
+
+        $queryStub = $this->createStub(\Joomla\Database\QueryInterface::class);
+        $queryStub->method('select')->willReturnSelf();
+        $queryStub->method('from')->willReturnSelf();
+        $queryStub->method('where')->willReturnSelf();
+        $queryStub->method('whereIn')->willReturnSelf();
+
+        // DatabaseDriver is abstract — createStub() handles that the same as
+        // createMock() but flags the result so PHPUnit 12 doesn't emit a
+        // "no expectations configured" notice.
+        $dbStub = $this->createStub(\Joomla\Database\DatabaseDriver::class);
+        $dbStub->method('getQuery')->willReturn($queryStub);
+        $dbStub->method('createQuery')->willReturn($queryStub);
+        $dbStub->method('quoteName')->willReturnCallback(
+            static fn ($name) => \is_array($name)
+                ? array_map(static fn ($n) => '`' . $n . '`', $name)
+                : '`' . $name . '`'
+        );
+        $dbStub->method('quote')->willReturnCallback(
+            static fn ($text) => "'" . $text . "'"
+        );
+        $dbStub->method('setQuery')->willReturnSelf();
+        $dbStub->method('loadObject')->willReturn(null);
+
+        return $dbStub;
+    }
+
+    /**
+     * Get a DispatcherInterface for tables: real CMS dispatcher when
+     * available, otherwise a stub that returns an empty Event.
+     *
+     * @return  \Joomla\Event\DispatcherInterface
+     */
+    private function resolveDispatcher(): \Joomla\Event\DispatcherInterface
+    {
+        if (\defined('PROCLAIM_TEST_DB_AVAILABLE') && PROCLAIM_TEST_DB_AVAILABLE) {
+            try {
+                return \Joomla\CMS\Factory::getContainer()->get(\Joomla\Event\DispatcherInterface::class);
+            } catch (\Throwable) {
+                // Container has no dispatcher registered — fall through to stub.
+            }
+        }
+
+        $dispatcher = $this->createStub(\Joomla\Event\DispatcherInterface::class);
+        $dispatcher->method('dispatch')->willReturn(new \Joomla\Event\Event('test'));
+
+        return $dispatcher;
     }
 
     /**

@@ -35,13 +35,14 @@ $componentRoot = \dirname(__DIR__, 2);
 // Resolve Joomla CMS path from build.properties
 // ---------------------------------------------------------------------------
 
-$joomlaCmsPath = '';
+$joomlaCmsPath    = '';
+$joomlaConfigPath = '';
+$props            = [];
 
 $propsFile = $componentRoot . '/build.properties';
 
 if (file_exists($propsFile)) {
     $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    $props = [];
 
     foreach ($lines as $line) {
         $trimmed = trim($line);
@@ -70,6 +71,29 @@ if (file_exists($propsFile)) {
         }
     } elseif (!empty($props['builder.joomla_path']) && is_dir($props['builder.joomla_path'])) {
         $joomlaCmsPath = $props['builder.joomla_path'];
+    }
+
+    // Resolve a path that actually has configuration.php (a deployed dev site)
+    // for JPATH_CONFIGURATION. The CMS clone above provides class signatures;
+    // the dev site provides JConfig so Joomla's container Config provider can
+    // hand a populated Registry to the Database service.
+    $configCandidates = [];
+
+    if (!empty($props['builder.joomla_paths'])) {
+        foreach (explode(',', $props['builder.joomla_paths']) as $p) {
+            $configCandidates[] = trim($p);
+        }
+    }
+
+    if (!empty($props['builder.joomla_path'])) {
+        $configCandidates[] = $props['builder.joomla_path'];
+    }
+
+    foreach ($configCandidates as $candidate) {
+        if ($candidate !== '' && is_file(rtrim($candidate, '/') . '/configuration.php')) {
+            $joomlaConfigPath = rtrim($candidate, '/');
+            break;
+        }
     }
 }
 
@@ -117,8 +141,13 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JPATH_CACHE', $rootDir . '/administrator/cache');
         }
 
+        // Point JPATH_CONFIGURATION at the deployed dev site (which has a real
+        // configuration.php) when one is available — otherwise fall back to the
+        // CMS clone path (which usually has no config). This lets Joomla's
+        // container Config service provider load JConfig and downstream
+        // services (Database, Session) build with valid credentials.
         if (!\defined('JPATH_CONFIGURATION')) {
-            \define('JPATH_CONFIGURATION', $rootDir);
+            \define('JPATH_CONFIGURATION', $joomlaConfigPath !== '' ? $joomlaConfigPath : $rootDir);
         }
 
         if (!\defined('JPATH_PLUGINS')) {
@@ -325,36 +354,32 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         $port          = (int) $port;
     }
 
+    // Set up the container + Console application unconditionally. The
+    // Console app is what code paths like Route::_, CwmcommentTable::check
+    // and Cwmparams::getAdmin reach for via Factory::getApplication().
+    // Creating it does not require a working DB, so unit tests that touch
+    // those paths must not be coupled to DB availability.
+    $container = \Joomla\CMS\Factory::getContainer();
+
+    // The Application service provider (registered by createContainer)
+    // expects SessionInterface to be resolvable. The Session provider
+    // registers concrete implementations (session.web.*, session.cli)
+    // but leaves the generic aliasing to the caller — cli/joomla.php
+    // does this for CLI context, so we do the same here.
+    $container->alias('session', 'session.cli')
+        ->alias('JSession', 'session.cli')
+        ->alias(\Joomla\CMS\Session\Session::class, 'session.cli')
+        ->alias(\Joomla\Session\Session::class, 'session.cli')
+        ->alias(\Joomla\Session\SessionInterface::class, 'session.cli');
+
+    \Joomla\CMS\Factory::$application = $container->get(\Joomla\Console\Application::class);
+
+    // DB connection is best-effort: integration tests that need a live
+    // driver check PROCLAIM_TEST_DB_AVAILABLE; pure unit tests don't.
     try {
-        // We don't manually construct a DatabaseDriver. Factory::getContainer()
-        // registers the real Database service provider which reads JConfig
-        // and hands out a live driver. Asking for it here is enough to
-        // verify the connection is reachable. Integration tests then get
-        // the same driver from Factory::getContainer()->get(...).
-        $container = \Joomla\CMS\Factory::getContainer();
-
-        // The Application service provider (registered by createContainer)
-        // expects SessionInterface to be resolvable. The Session provider
-        // registers concrete implementations (session.web.*, session.cli)
-        // but leaves the generic aliasing to the caller — cli/joomla.php
-        // does this for CLI context, so we do the same here.
-        $container->alias('session', 'session.cli')
-            ->alias('JSession', 'session.cli')
-            ->alias(\Joomla\CMS\Session\Session::class, 'session.cli')
-            ->alias(\Joomla\Session\Session::class, 'session.cli')
-            ->alias(\Joomla\Session\SessionInterface::class, 'session.cli');
-
-        // Pull the live DB driver from the container to verify the
-        // connection works and stash it for legacy $GLOBALS consumers.
         $db = $container->get(\Joomla\Database\DatabaseInterface::class);
         $db->connect();
         $GLOBALS['__proclaim_test_db'] = $db;
-
-        // Populate Factory::$application with the real CLI Console
-        // Application so code paths that call Factory::getApplication()
-        // (Route::_, CwmcommentTable::check, Cwmparams::getAdmin, etc.)
-        // don't throw "Failed to start application".
-        \Joomla\CMS\Factory::$application = $container->get(\Joomla\Console\Application::class);
 
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 
