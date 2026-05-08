@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5140a69fdb939f5f8df0f05f7ca177b",
+    "content-hash": "0616e53ad0eb06233e8eef4fc05a4f2f",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -840,6 +840,83 @@
                 }
             ],
             "time": "2024-05-06T16:37:16+00:00"
+        },
+        {
+            "name": "cwm/build-tools",
+            "version": "v0.4.0-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
+                "reference": "70b7c726f2132258309f977c92160a46df074860"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/70b7c726f2132258309f977c92160a46df074860",
+                "reference": "70b7c726f2132258309f977c92160a46df074860",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "ext-zip": "*",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpunit/phpunit": "^11.0"
+            },
+            "bin": [
+                "bin/cwm-release",
+                "bin/cwm-bump",
+                "bin/cwm-package",
+                "bin/cwm-sync-configs",
+                "bin/cwm-sync-languages",
+                "bin/cwm-ars-publish",
+                "bin/cwm-ars-list",
+                "bin/cwm-ars-create-stream",
+                "bin/cwm-changelog",
+                "bin/cwm-init",
+                "bin/cwm-setup",
+                "bin/cwm-link",
+                "bin/cwm-link-check",
+                "bin/cwm-clean",
+                "bin/cwm-verify",
+                "bin/cwm-joomla-install",
+                "bin/cwm-joomla-latest"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CWM\\BuildTools\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "CWM\\BuildTools\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "CWM Team",
+                    "homepage": "https://www.christianwebministries.org"
+                }
+            ],
+            "description": "Shared build, release, and CI tooling for CWM Joomla extensions",
+            "keywords": [
+                "ars",
+                "build",
+                "cwm",
+                "joomla",
+                "release"
+            ],
+            "support": {
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.4.0-alpha",
+                "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
+            },
+            "time": "2026-05-07T20:27:34+00:00"
         },
         {
             "name": "doctrine/deprecations",

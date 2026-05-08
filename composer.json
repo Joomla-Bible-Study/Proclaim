@@ -26,6 +26,12 @@
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools"
+    }
+  ],
   "config": {
     "optimize-autoloader": true,
     "platform": {
@@ -78,6 +84,7 @@
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
+    "cwm/build-tools": "v0.4.0-alpha",
     "joomla/database": "^4.0",
     "joomla/registry": "^4.0",
     "joomla/di": "^4.0",
@@ -113,30 +120,30 @@
     "build:assets": "npm ci && npm run build",
     "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
     "build:full": ["@check:all", "@build"],
-    "setup": "php build/proclaim_build.php setup",
-    "joomla-install": "php build/proclaim_build.php install-joomla",
-    "joomla-latest": "php build/proclaim_build.php joomla-latest",
-    "symlink": "php build/proclaim_build.php link",
-    "symlink:check": "php build/proclaim_build.php check",
-    "verify": "php build/proclaim_build.php verify",
-    "clean": "php build/proclaim_build.php clean",
+    "setup": "cwm-setup",
+    "joomla-install": "cwm-joomla-install",
+    "joomla-latest": "cwm-joomla-latest",
+    "symlink": "cwm-link",
+    "symlink:check": "cwm-link-check",
+    "verify": "cwm-verify",
+    "clean": "cwm-clean",
     "build": "php build/proclaim_build.php build",
     "package": "php build/proclaim_build.php package",
-    "version": "php build/bump.php",
-    "sync-languages": "python3 build/sync_languages.py",
-    "sync-languages-force": "python3 build/sync_languages.py --force",
-    "sync-languages-setup": "python3 build/sync_languages.py setup",
-    "vendor:check": "node build/check-vendor-versions.js",
-    "vendor:update": "node build/update-vendors.js",
+    "version": "cwm-bump",
+    "sync-languages": "cwm-sync-languages",
+    "sync-languages-force": "cwm-sync-languages --force",
+    "sync-languages-setup": "cwm-sync-languages setup",
+    "vendor:check": "node libraries/vendor/cwm/build-tools/templates/vendor-check.js",
+    "vendor:update": "node libraries/vendor/cwm/build-tools/templates/vendor-update.js",
     "post-install-cmd": [
       "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
       "@joomla-cms-deps"
     ],
     "joomla-cms-deps": "@php build/joomla-cms-deps.php",
-    "changelog": "bash build/generate-changelog-entry.sh",
-    "ars-publish": "bash build/ars-release.sh",
+    "changelog": "cwm-changelog",
+    "ars-publish": "cwm-ars-publish",
     "cwm-article": "bash build/cwm-article.sh",
-    "release": "bash build/release.sh",
+    "release": "cwm-release",
     "jed-prep": "bash build/jed-prep.sh"
   }
 }
