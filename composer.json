@@ -72,6 +72,7 @@
     "ext-fileinfo": "*"
   },
   "require-dev": {
+    "cwm/build-tools": "^0.4@alpha",
     "phpunit/phpunit": "^12.5",
     "friendsofphp/php-cs-fixer": "^3.0",
     "phan/phan": "^5.4",
@@ -94,6 +95,12 @@
     "symfony/polyfill-php80": "*",
     "symfony/polyfill-php81": "*"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools"
+    }
+  ],
   "extra": {
     "branch-alias": {
       "dev-master": "2.x-dev"
@@ -105,7 +112,7 @@
     "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Api Tests,Integration Admin Table Tests'",
     "test:js": "npm test",
     "test:all": ["@test", "@test:js"],
-    "lint:syntax": "php build/proclaim_build.php lint-syntax",
+    "lint:syntax": "find admin/src site/src libraries/lib_cwmscripture/src modules plugins -type f -name '*.php' -print0 2>/dev/null | xargs -0 -n 1 -P 8 php -l > /dev/null",
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "check": ["@lint:syntax", "@lint", "@test"],
@@ -113,13 +120,13 @@
     "build:assets": "npm ci && npm run build",
     "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
     "build:full": ["@check:all", "@build"],
-    "setup": "php build/proclaim_build.php setup",
-    "joomla-install": "php build/proclaim_build.php install-joomla",
-    "joomla-latest": "php build/proclaim_build.php joomla-latest",
-    "symlink": "php build/proclaim_build.php link",
-    "symlink:check": "php build/proclaim_build.php check",
-    "verify": "php build/proclaim_build.php verify",
-    "clean": "php build/proclaim_build.php clean",
+    "setup": "cwm-setup",
+    "joomla-install": "cwm-joomla-install",
+    "joomla-latest": "cwm-joomla-latest",
+    "link": "cwm-link",
+    "link-check": "cwm-link-check",
+    "verify": "cwm-verify",
+    "clean": "cwm-clean",
     "build": "php build/proclaim_build.php build",
     "package": "php build/proclaim_build.php package",
     "version": "php build/bump.php",
