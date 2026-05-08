@@ -19,6 +19,77 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.1                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.3.1</version>
+        <date>2026-05-01</date>
+        <fix>
+            <item>Install failure on fresh sites — register lib_cwmscripture namespace with the autoloader before the install script's class_exists check, so the bundled scripture library is detected on first install.</item>
+        </fix>
+        <note>
+            <item>Patch release for 10.3.0. Safe to install over 10.3.0; no data migration required.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.3.0                                                        -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>com_proclaim</element>
+        <type>component</type>
+        <version>10.3.0</version>
+        <date>2026-05-01</date>
+        <addition>
+            <item>Setup Wizard — guided first-run configuration covering podcast, comments, social sharing, and core display options.</item>
+            <item>New Message Wizard — step-by-step guided sermon creation with topics, message type, access, language, and image fields.</item>
+            <item>Landing Page Redesign — three selectable layout styles (cards, hero, dashboard) with batch landing_show/list_show controls and standard Joomla ordering.</item>
+            <item>RESTful API — JSON:API endpoints with full CRUD for sermons, teachers, series, media, and podcasts; configurable access control (disabled / public / API key).</item>
+            <item>AI Writing Voice — configurable AI tone/voice options for content generation, with study text improvements.</item>
+            <item>Bible Brain Provider — new scripture/audio source integration alongside existing providers.</item>
+            <item>Interactive Transcript Panel — VTT parsing with seek-on-click and in-transcript search.</item>
+            <item>Modal Edit Support — inline edit modals for Teachers, Locations, Messages, and Servers with Quick Create toolbar.</item>
+            <item>pkg_proclaim Package Installer — bundles the component, modules, plugins, and lib_cwmscripture into a single Joomla package.</item>
+            <item>Expanded Debug Mode — new CwmDebug helper for richer troubleshooting output.</item>
+            <item>ACL Backup &amp; Restore — component-level and per-record Proclaim ACL rules now included in backup archives.</item>
+            <item>Assets Admin Tool Rework — aligned with the new inherit-from-parent ACL model.</item>
+            <item>Edit View Polish — Publishing tabs harmonized across edit views; ID and hits visible; media Options tab renders fieldsets as labeled sections; teacher edit lazy-loads and gains an analytics time-scope.</item>
+        </addition>
+        <change>
+            <item>Font Awesome upgraded to FA6 canonical syntax with FA7 forward compatibility.</item>
+            <item>AJAX filter UX improved for slow server responses; Joomla searchtools JS disabled when AJAX filters are active.</item>
+            <item>Deprecated Joomla APIs replaced with J6-native equivalents.</item>
+            <item>Popup view modernized — Flash-era dead code removed, player layout extracted.</item>
+            <item>Inline JS/CSS extracted to external files for CSP compliance; reusable layouts extracted from duplicated template blocks.</item>
+            <item>Test infrastructure now boots a real Joomla CMS framework for every test run; stubs removed.</item>
+            <item>Performance — N+1 elimination via batch loading of media files, topics, and book names; database LIMIT applied to landing page queries; loading="lazy" on embedded iframes; assets table no longer accumulates empty-rules rows; fixAllAssets skipped when nothing drifted; admin asset-fix tool batches operations.</item>
+        </change>
+        <fix>
+            <item>Teacher view — show sermons with NULL series_id and tolerate junction drift; biography editors, social_links column, and asset cleanup crash all fixed.</item>
+            <item>Teacher batch operations — accept '0' values; batch reordering no longer shuffles positions randomly.</item>
+            <item>YouTube — OAuth disconnect routed through ProclaimFetch; module cache cleared on content save; quota exhaustion from aggressive search.list polling resolved.</item>
+            <item>Analytics — KPI cards respond to date preset; platform stats task auto-registered.</item>
+            <item>Backup — virtual-table exports always emit section headers.</item>
+            <item>Install — don't clobber user-placed modules on upgrade; pkg_proclaim installer and module default params corrected.</item>
+            <item>Landing page — hero card text overflow and default image fallbacks; landing_show above/below fold respected in all layout styles; series description stripped of HTML and truncated in card meta.</item>
+            <item>Filters — series filter now clears properly when session state is stale.</item>
+            <item>Thumbnails — preserve aspect ratio and increase default sizes.</item>
+            <item>Dark mode support for the scripture autocomplete dropdown.</item>
+            <item>Calendar field — remove seconds-stripping JS that caused a flash; reset non-zero seconds to :00 on save.</item>
+        </fix>
+        <security>
+            <item>Setup wizard review summary now escapes user input.</item>
+            <item>phpseclib/phpseclib upgraded 3.0.50 → 3.0.51 (CVE-2026-40194).</item>
+            <item>Joomla 9.x dropped from the supported-versions list.</item>
+        </security>
+        <note>
+            <item>Major feature release. Safe to install over 10.2.x; the preflight automatically reconciles schema and ACL drift.</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.2.2                                                        -->
     <!-- ============================================================ -->
     <changelog>

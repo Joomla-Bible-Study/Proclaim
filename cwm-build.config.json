@@ -1,0 +1,79 @@
+{
+    "extension": {
+        "type": "package",
+        "name": "pkg_proclaim"
+    },
+    "manifests": {
+        "package": "build/pkg_proclaim.xml",
+        "extensions": [
+            {
+                "type": "component",
+                "path": "proclaim.xml"
+            },
+            {
+                "type": "library",
+                "path": "libraries/lib_cwmscripture/cwmscripture.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/content/scripturelinks/scripturelinks.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/finder/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/schemaorg/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/system/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/task/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/webservices/proclaim/proclaim.xml"
+            }
+        ]
+    },
+    "build": {
+        "command": "php build/proclaim_build.php package",
+        "outputGlob": "build/packages/pkg_proclaim-*.zip"
+    },
+    "vendors": [
+        { "npm": "chart.js",       "label": "chart.js",       "notes": "https://github.com/chartjs/Chart.js/releases" },
+        { "npm": "@fancyapps/ui",  "label": "fancybox",       "notes": "https://github.com/fancyapps/ui/releases" },
+        { "npm": "intl-tel-input", "label": "intl-tel-input", "notes": "https://github.com/jackocnr/intl-tel-input/releases" },
+        { "npm": "sortablejs",     "label": "sortablejs",     "notes": "https://github.com/SortableJS/Sortable/releases" }
+    ],
+    "ars": {
+        "endpoint": "https://www.christianwebministries.org",
+        "categoryId": 1,
+        "updateStreamId": 2,
+        "tokenItem": "CWM ARS API Token",
+        "tokenVault": "CWM",
+        "itemDescription": "pkg_proclaim download"
+    },
+    "github": {
+        "owner": "Joomla-Bible-Study",
+        "repo": "Proclaim",
+        "releaseBranch": "main",
+        "developmentBranch": "development"
+    },
+    "versionsFile": "build/versions.json",
+    "changelog": {
+        "file": "build/proclaim-changelog.xml",
+        "url": "https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml"
+    },
+    "announcement": {
+        "bulletsDir": "build",
+        "command": "bash build/cwm-article.sh"
+    },
+    "dev": {
+        "deriveLinks": true
+    }
+}
