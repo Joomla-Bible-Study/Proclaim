@@ -19,6 +19,61 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.2                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.3.2</version>
+        <date>2026-05-09</date>
+        <note>
+            <item>Release v10.1.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1137</item>
+            <item>fix: YouTube quota, series filter, and menu item SQL hotfixes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1145</item>
+            <item>refactor: extract duplicated option-source fields into reusable Field classes by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1146</item>
+            <item>fix: YouTube poller concurrent fetch guard and versions.json update by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1147</item>
+            <item>feat: interactive transcript panel with VTT parsing, seek, and search by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1148</item>
+            <item>perf: apply database LIMIT to landing page queries by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1149</item>
+            <item>fix: add search/autocomplete to teacher selection in message subform by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1150</item>
+            <item>feat: add New Message Wizard for guided sermon creation by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1151</item>
+            <item>refactor: extract inline JS/CSS to external files for CSP compliance by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1152</item>
+            <item>refactor: extract 4 reusable layouts from 40+ duplicated template blocks by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1153</item>
+            <item>fix: remove redundant controller overrides and fix edit() return bug by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1154</item>
+            <item>refactor: extract controller traits + fix calendar date save error by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1155</item>
+            <item>feat: landing page styles, teacher ordering, and module fix by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1168</item>
+            <item>refactor: use real Joomla packages for tests, clean up stubs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1169</item>
+            <item>refactor: require joomla-cms clone for tests, delete all stubs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1170</item>
+            <item>feat: Schema.org structured data integration by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1171</item>
+            <item>fix: prevent YouTube API quota exhaustion (#1157) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1175</item>
+            <item>Fix security vulnerabilities: XSS, open redirect, path traversal, IDOR by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1176</item>
+            <item>feat: add teacher organization name to frontend rendering by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1177</item>
+            <item>feat: add spacer element for layout spacing by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1178</item>
+            <item>fix: preflight schema check prevents duplicate column errors on upgrade by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1183</item>
+            <item>feat: visual indicators for custom-overridden schema fields by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1185</item>
+            <item>feat: location merge/reassign workflow and delete safety by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1187</item>
+            <item>feat: link teachers to Joomla user accounts for auto-access by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1188</item>
+            <item>feat: Podcasting 2.0 full namespace support for RSS feeds by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1189</item>
+            <item>feat: migrate scripture settings to ScriptureLinks plugin by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1191</item>
+            <item>Create pkg_proclaim package installer by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1192</item>
+            <item>feat: AI writing voice options, study text improvements, and Bible Brain provider by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1200</item>
+            <item>fix: add missing org_name migration for teacher table by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1201</item>
+            <item>feat: expand debug mode with CwmDebug helper (#1194) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1202</item>
+            <item>feat: REST API with full CRUD, changelog wiring, npm updates by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1204</item>
+            <item>feat: Setup Wizard — guided first-run configuration (#1196) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1205</item>
+            <item>chore(deps-dev): bump phpunit/phpunit from 11.5.55 to 12.5.22 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1207</item>
+            <item>style: align match arms after php-cs-fixer 3.95 update by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1208</item>
+            <item>refactor: replace deprecated Joomla APIs with J6-native equivalents by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1209</item>
+            <item>fix(teacher): biography editors, social_links column, asset cleanup crash by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1212</item>
+            <item>Release 10.3.0: development → main by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1213</item>
+            <item>build(deps): upgrade intl-tel-input 26.x → 28.x by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1214</item>
+            <item>feat: first-time adoption of cwm-build-tools v0.4 dev-environment commands by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1216</item>
+            <item>chore(deps): bump phpseclib/phpseclib from 3.0.51 to 3.0.52 in /admin/src/Addons/Servers/Youtube by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1215</item>
+            <item>chore: adopt cwm/build-tools v0.4.0-alpha and remove local duplicates by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1218</item>
+            <item>test: decouple Joomla app setup from DB and use real services when available by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1217</item>
+            <item>Release 10.3.2 — scripture provider fix, build infrastructure, and dependency upgrades by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1219</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.1                                                        -->
     <!-- ============================================================ -->
     <changelog>
