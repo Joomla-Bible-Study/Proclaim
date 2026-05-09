@@ -12,11 +12,11 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
-use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Library\Scripture\Bible\AbstractBibleProvider;
 use CWM\Library\Scripture\Bible\BiblePassageResult;
 use CWM\Library\Scripture\Bible\BibleProviderFactory;
 use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -69,12 +69,11 @@ class Cwmshowscripture
             $version = 'kjv';
         }
 
-        // Get admin params for provider configuration
+        // Provider settings live in the scripturelinks plugin params (not Proclaim admin).
         try {
-            $admin       = Cwmparams::getAdmin();
-            $adminParams = $admin->params ?? new Registry();
+            $adminParams = ScriptureParamsHelper::getParams();
         } catch (\Exception $e) {
-            Log::add('Failed to load admin params: ' . $e->getMessage(), Log::WARNING, 'com_proclaim.bible');
+            Log::add('Failed to load scripture params: ' . $e->getMessage(), Log::WARNING, 'com_proclaim.bible');
             $adminParams = new Registry();
         }
 
@@ -87,7 +86,7 @@ class Cwmshowscripture
             $provider = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
 
             // Configure cache TTL from admin params
-            $cacheDays = (int) $adminParams->get('scripture_cache_days', 30);
+            $cacheDays = (int) $adminParams->get('cache_days', 30);
 
             if ($cacheDays > 0 && method_exists($provider, 'setCacheTtl')) {
                 $provider->setCacheTtl($cacheDays * 86400);
@@ -115,7 +114,7 @@ class Cwmshowscripture
 
         // Fallback 2: try the admin default bible version locally
         if ($result === null || !$result->hasText()) {
-            $defaultVersion = (string) $adminParams->get('default_bible_version', 'kjv');
+            $defaultVersion = (string) $adminParams->get('default_version', 'kjv');
 
             if ($defaultVersion === '') {
                 $defaultVersion = 'kjv';
@@ -379,11 +378,34 @@ class Cwmshowscripture
         // Detect the site's active language (ISO 2-letter code)
         $siteLang = substr(Factory::getApplication()->getLanguage()->getTag(), 0, 2);
 
-        // Collect translations from DB with language info (cached per-request)
-        static $translationsCache = null;
+        // Determine which providers can actually serve passages right now.
+        // Locally-installed translations (installed=1) always work; rows backed
+        // by an external provider only work when that provider is enabled and
+        // GDPR mode isn't blocking external calls.
+        $gdprMode          = (int) $adminParams->get('gdpr_mode', 0) === 1;
+        $enabledSources    = [];
 
-        if ($translationsCache === null) {
-            $translationsCache = [];
+        if (!$gdprMode) {
+            if ((int) $adminParams->get('provider_getbible', 1) === 1) {
+                $enabledSources[] = 'getbible';
+            }
+
+            if ((int) $adminParams->get('provider_api_bible', 0) === 1) {
+                $enabledSources[] = 'api_bible';
+            }
+
+            if ((int) $adminParams->get('provider_biblebrain', 0) === 1) {
+                $enabledSources[] = 'biblebrain';
+            }
+        }
+
+        // Collect translations from DB with language info (cached per-request,
+        // keyed by the enabled-provider set so cache invalidates across calls).
+        static $translationsCacheByKey = [];
+        $cacheKey = ($gdprMode ? 'gdpr' : implode(',', $enabledSources)) ?: 'none';
+
+        if (!isset($translationsCacheByKey[$cacheKey])) {
+            $translationsCacheByKey[$cacheKey] = [];
 
             try {
                 $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
@@ -391,14 +413,24 @@ class Cwmshowscripture
                     ->select($db->quoteName(['abbreviation', 'name', 'language']))
                     ->from($db->quoteName('#__bsms_bible_translations'))
                     ->order($db->quoteName('language') . ' ASC, ' . $db->quoteName('name') . ' ASC');
+
+                $clauses = [$db->quoteName('installed') . ' = 1'];
+
+                if (!empty($enabledSources)) {
+                    $quoted    = array_map([$db, 'quote'], $enabledSources);
+                    $clauses[] = $db->quoteName('source') . ' IN (' . implode(',', $quoted) . ')';
+                }
+
+                $query->where('(' . implode(' OR ', $clauses) . ')');
+
                 $db->setQuery($query);
-                $translationsCache = $db->loadObjectList() ?: [];
+                $translationsCacheByKey[$cacheKey] = $db->loadObjectList() ?: [];
             } catch (\Exception $e) {
                 // DB not available
             }
         }
 
-        $translations = $translationsCache;
+        $translations = $translationsCacheByKey[$cacheKey];
 
         // Fallback if nothing found
         if (empty($translations)) {

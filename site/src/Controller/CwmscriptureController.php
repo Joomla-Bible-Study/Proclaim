@@ -11,9 +11,9 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Library\Scripture\Bible\AbstractBibleProvider;
 use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -88,16 +88,15 @@ class CwmscriptureController extends BaseController
         }
 
         try {
-            $admin       = Cwmparams::getAdmin();
-            $adminParams = $admin->params ?? new Registry();
+            $scriptureParams = ScriptureParamsHelper::getParams();
         } catch (\Exception $e) {
-            $adminParams = new Registry();
+            $scriptureParams = new Registry();
         }
 
         try {
             AbstractBibleProvider::registerLogger();
-            $provider  = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
-            $cacheDays = (int) $adminParams->get('scripture_cache_days', 30);
+            $provider  = BibleProviderFactory::getProviderForTranslation($version, $scriptureParams);
+            $cacheDays = (int) $scriptureParams->get('cache_days', 30);
 
             if ($cacheDays > 0 && method_exists($provider, 'setCacheTtl')) {
                 $provider->setCacheTtl($cacheDays * 86400);
@@ -124,7 +123,7 @@ class CwmscriptureController extends BaseController
 
             // Fallback 2: try admin default version locally
             if (!$result->hasText()) {
-                $defaultVersion = (string) $adminParams->get('default_bible_version', 'kjv');
+                $defaultVersion = (string) $scriptureParams->get('default_version', 'kjv');
 
                 if ($defaultVersion === '') {
                     $defaultVersion = 'kjv';
