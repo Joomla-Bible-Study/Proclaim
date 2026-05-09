@@ -49,8 +49,81 @@
         ]
     },
     "build": {
-        "command": "php build/proclaim_build.php package",
-        "outputGlob": "build/dist/pkg_proclaim-*.zip"
+        "command":    "cwm-package",
+        "outputGlob": "build/dist/pkg_proclaim-*.zip",
+        "outputDir":  "build/dist",
+        "outputName": "com_proclaim-{version}.zip",
+        "manifest":   "proclaim.xml",
+        "sources":    [{ "from": ".", "to": "" }],
+        "excludeMatchMode": "strict",
+        "excludes": [
+            "build.xml", "build.properties", "build.dist.properties",
+            "phpunit.xml", "phpunit.xml.bak",
+            ".php-cs-fixer.dist.php",
+            "CLAUDE.md", "GEMINI.md", "SECURITY.md", "_config.yml",
+            ".git", ".vscode", ".idea", ".DS_Store",
+            "node_modules",
+            "composer.json", "composer.lock",
+            "package.json", "package-lock.json",
+            "build", "tests",
+            ".jshintrc",
+            "admin/proclaim.xml", "admin/proclaim.script.php",
+            "media/js/joomla.d.ts",
+            "libraries/vendor",
+            "libraries/lib_cwmscripture",
+            "plugins/content/scripturelinks"
+        ],
+        "excludeExtensions": ["map"],
+        "excludePaths": ["media/backup/*.sql"],
+        "vendorPrune": true,
+        "includeRoots": ["admin/", "media/", "modules/", "plugins/", "site/", "libraries/"],
+        "includeRootExtensions": ["php", "xml", "txt", "md"],
+        "preBuild": {
+            "mode": "run",
+            "command": "npm install && npm run build"
+        }
+    },
+    "package": {
+        "manifest":     "build/pkg_proclaim.xml",
+        "outputDir":    "build/dist",
+        "outputName":   "pkg_proclaim-{version}.zip",
+        "innerLayout":  "packages-prefix",
+        "installer":    "build/script.install.php",
+        "languageFiles": [
+            { "from": "build/language/en-GB/en-GB.pkg_proclaim.sys.ini",
+              "to":   "language/en-GB/en-GB.pkg_proclaim.sys.ini" }
+        ],
+        "includes": [
+            {
+                "type":        "subBuild",
+                "path":        "libraries/lib_cwmscripture",
+                "buildScript": "build/build-package.php",
+                "distGlob":    "build/dist/lib_cwmscripture-*.zip",
+                "outputName":  "lib_cwmscripture.zip"
+            },
+            {
+                "type":        "subBuild",
+                "path":        "plugins/content/scripturelinks",
+                "buildScript": "build/build-package.php",
+                "args":        ["--plugin-only"],
+                "distGlob":    "build/dist/plg_content_scripturelinks*.zip",
+                "outputName":  "plg_content_scripturelinks.zip"
+            },
+            {
+                "type":       "self",
+                "outputName": "com_proclaim.zip"
+            }
+        ],
+        "verify": {
+            "expectedEntries": [
+                "pkg_proclaim.xml",
+                "script.install.php",
+                "language/en-GB/en-GB.pkg_proclaim.sys.ini",
+                "packages/lib_cwmscripture.zip",
+                "packages/plg_content_scripturelinks.zip",
+                "packages/com_proclaim.zip"
+            ]
+        }
     },
     "gitignore": {
         "_comment": "Override the auto-derived media paths because pkg_proclaim is a package wrapper around com_proclaim, which DOES own /media/proclaim/. Without this, sync-configs skips media patterns (package wrappers don't usually own a media dir).",
@@ -86,7 +159,7 @@
     },
     "announcement": {
         "bulletsDir": "build",
-        "command": "bash build/cwm-article.sh"
+        "command": "cwm-article"
     },
     "dev": {
         "deriveLinks": true

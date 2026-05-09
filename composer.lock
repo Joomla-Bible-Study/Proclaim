@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b23152550a647fb8c0f36258f02d70ca",
+    "content-hash": "93c9d895d171d746db6bf9af4e8a0a47",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -843,16 +843,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v0.4.1-alpha",
+            "version": "v0.5.1-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "85cf5e69675923334c2f9ce3e2553c8c64cd3ce9"
+                "reference": "2b3fcc3bb740cc90ee9ac3160cc173ec5bb63ce4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/85cf5e69675923334c2f9ce3e2553c8c64cd3ce9",
-                "reference": "85cf5e69675923334c2f9ce3e2553c8c64cd3ce9",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/2b3fcc3bb740cc90ee9ac3160cc173ec5bb63ce4",
+                "reference": "2b3fcc3bb740cc90ee9ac3160cc173ec5bb63ce4",
                 "shasum": ""
             },
             "require": {
@@ -868,6 +868,7 @@
             "bin": [
                 "bin/cwm-release",
                 "bin/cwm-bump",
+                "bin/cwm-build",
                 "bin/cwm-package",
                 "bin/cwm-sync-configs",
                 "bin/cwm-sync-languages",
@@ -875,6 +876,7 @@
                 "bin/cwm-ars-list",
                 "bin/cwm-ars-create-stream",
                 "bin/cwm-changelog",
+                "bin/cwm-article",
                 "bin/cwm-init",
                 "bin/cwm-setup",
                 "bin/cwm-link",
@@ -882,7 +884,8 @@
                 "bin/cwm-clean",
                 "bin/cwm-verify",
                 "bin/cwm-joomla-install",
-                "bin/cwm-joomla-latest"
+                "bin/cwm-joomla-latest",
+                "bin/cwm-joomla-cms-deps"
             ],
             "type": "library",
             "autoload": {
@@ -904,6 +907,7 @@
                     "/.php-cs-fixer.cache",
                     "/.phpunit.cache",
                     "/.phpunit.result.cache",
+                    "/CLAUDE.md",
                     "/phpunit.xml",
                     "/phpunit.xml.dist",
                     "/tests",
@@ -933,10 +937,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.4.1-alpha",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.5.1-alpha",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-05-08T23:47:04+00:00"
+            "time": "2026-05-09T22:17:44+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -7740,6 +7744,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "cwm/build-tools": 15,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,
