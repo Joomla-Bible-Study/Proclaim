@@ -106,8 +106,6 @@ build.properties
 
 # === cwm-build-tools: extension paths (do not edit between markers) ===
 /build/dist/
-/media/proclaim/js/*.min.js
-/media/proclaim/js/*.min.js.map
-/media/proclaim/css/*.min.css
-/media/proclaim/css/*.min.css.map
+/media/proclaim/js/
+/media/proclaim/css/
 # === cwm-build-tools: end extension paths ===

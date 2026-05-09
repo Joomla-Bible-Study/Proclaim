@@ -24,6 +24,7 @@
     "csso": "^5.0.5",
     "eslint": "^10.0.1",
     "globals": "^17.4.0",
+    "intl-tel-input": "^28.0.4",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "rollup": "^4.58.0",
@@ -52,10 +53,10 @@
   ],
   "scripts": {
     "build": "npm run build:js && npm run build:css && npm run build:assets",
-    "build:js": "rollup -c build/rollup.config.js",
-    "build:css": "node build/build-css.js",
+    "build:js": "SOURCE_DIR=build/media_source/js OUTPUT_DIR=media/proclaim/js rollup -c libraries/vendor/cwm/build-tools/templates/rollup.config.js",
+    "build:css": "SOURCE_DIR=build/media_source/css OUTPUT_DIR=media/proclaim/css node libraries/vendor/cwm/build-tools/templates/build-css.js",
     "build:assets": "node build/build-assets.js",
-    "watch": "rollup -c build/rollup.config.js -w",
+    "watch": "SOURCE_DIR=build/media_source/js OUTPUT_DIR=media/proclaim/js rollup -c libraries/vendor/cwm/build-tools/templates/rollup.config.js -w",
     "test": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js",
     "test:watch": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --watch",
     "test:coverage": "node --no-deprecation node_modules/.bin/jest -c build/jest.config.js --coverage",
@@ -68,8 +69,7 @@
   "dependencies": {
     "@fancyapps/ui": "^6.1.11",
     "chart.js": "^4.5.1",
-    "core-js": "^3.48.0",
-    "intl-tel-input": "^26.5.1"
+    "core-js": "^3.48.0"
   },
   "overrides": {
     "serialize-javascript": "^7.0.3",
