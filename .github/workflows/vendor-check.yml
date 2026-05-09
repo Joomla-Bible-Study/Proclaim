@@ -1,0 +1,136 @@
+name: Vendor dependency check
+
+# Runs the bundled-vendor-library check (chart.js, fancybox, intl-tel-input,
+# sortablejs) plus an `composer outdated` sweep across every composer.json in
+# the repo (root + every Joomla addon under admin/src/Addons/). Opens or
+# updates a tracking issue when anything is behind. Catches both:
+#   - bundled JS libs Dependabot doesn't see (they're devDependencies that get
+#     copied into media/proclaim/vendor/ at build time, not imported)
+#   - sub-composer.json files in addons (e.g. admin/src/Addons/Servers/Youtube
+#     with google/apiclient + phpseclib transitives)
+
+on:
+  schedule:
+    # Mondays 09:00 UTC (Sunday 02:00–05:00 PT depending on DST)
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install root deps
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist
+          npm ci
+
+      - name: Run vendor:check (root)
+        id: vendor_check
+        run: |
+          set +e
+          OUT=$(composer vendor:check 2>&1)
+          CODE=$?
+          set -e
+          {
+            echo "## Root vendor:check (exit $CODE)"
+            echo
+            echo '```'
+            echo "$OUT"
+            echo '```'
+          } > /tmp/report.md
+          echo "exit=$CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Sweep sub-composer.json in addons
+        id: addon_sweep
+        run: |
+          ANY_OUTDATED=0
+          {
+            echo
+            echo "## Addon composer outdated sweep"
+            echo
+          } >> /tmp/report.md
+
+          while IFS= read -r manifest; do
+            DIR=$(dirname "$manifest")
+            REL=${DIR#./}
+            echo "  -> $REL"
+            (
+              cd "$DIR"
+              composer install --no-interaction --no-progress --prefer-dist >/dev/null 2>&1 || true
+              set +e
+              OUT=$(composer outdated --direct --strict --no-interaction 2>&1)
+              CODE=$?
+              set -e
+              if [ "$CODE" -ne 0 ] || [ -n "$(echo "$OUT" | grep -v '^$')" ]; then
+                {
+                  echo "### $REL (exit $CODE)"
+                  echo
+                  echo '```'
+                  echo "$OUT"
+                  echo '```'
+                  echo
+                } >> /tmp/report.md
+                echo "$REL" >> /tmp/outdated_addons.txt
+              fi
+            )
+          done < <(find admin/src/Addons -name composer.json -not -path '*/vendor/*' 2>/dev/null)
+
+          if [ -s /tmp/outdated_addons.txt ]; then
+            ANY_OUTDATED=1
+          fi
+          echo "any_outdated=$ANY_OUTDATED" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update tracking issue
+        if: steps.vendor_check.outputs.exit != '0' || steps.addon_sweep.outputs.any_outdated == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          TITLE="Weekly vendor dependency check: updates available"
+          BODY=$(cat /tmp/report.md)
+          BODY="$BODY
+
+          ---
+          *Updated by .github/workflows/vendor-check.yml. Triggered on $(date -u +%Y-%m-%d).*"
+
+          NUM=$(gh issue list --repo "$REPO" --state open --search "in:title \"$TITLE\"" --json number --jq '.[0].number // ""')
+
+          if [ -n "$NUM" ]; then
+            echo "Updating existing issue #$NUM"
+            gh issue edit "$NUM" --repo "$REPO" --body "$BODY"
+          else
+            echo "Opening new issue"
+            gh issue create --repo "$REPO" \
+              --title "$TITLE" \
+              --label "dependencies" \
+              --body "$BODY"
+          fi
+
+      - name: Close tracking issue when everything is current
+        if: steps.vendor_check.outputs.exit == '0' && steps.addon_sweep.outputs.any_outdated == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          TITLE="Weekly vendor dependency check: updates available"
+          NUM=$(gh issue list --repo "$REPO" --state open --search "in:title \"$TITLE\"" --json number --jq '.[0].number // ""')
+          if [ -n "$NUM" ]; then
+            gh issue close "$NUM" --repo "$REPO" --comment "All vendor dependencies up to date as of $(date -u +%Y-%m-%d). Closing automatically."
+          fi
