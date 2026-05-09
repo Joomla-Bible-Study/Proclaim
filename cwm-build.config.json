@@ -11,12 +11,20 @@
                 "path": "proclaim.xml"
             },
             {
-                "type": "library",
-                "path": "libraries/lib_cwmscripture/cwmscripture.xml"
+                "type": "module",
+                "path": "modules/site/mod_proclaim/mod_proclaim.xml"
             },
             {
-                "type": "plugin",
-                "path": "plugins/content/scripturelinks/scripturelinks.xml"
+                "type": "module",
+                "path": "modules/site/mod_proclaim_podcast/mod_proclaim_podcast.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/site/mod_proclaim_youtube/mod_proclaim_youtube.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/admin/mod_proclaimicon/mod_proclaimicon.xml"
             },
             {
                 "type": "plugin",
