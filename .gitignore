@@ -77,3 +77,35 @@ Desktop.ini
 !/.gitignore
 !/build/.gitignore
 .claude/worktrees/
+
+# === cwm-build-tools: managed (do not edit between markers) ===
+# Dependencies
+/vendor/
+/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tool caches
+.php-cs-fixer.cache
+.phpunit.cache
+.phpunit.result.cache
+/build/.cwm-cache/
+
+# Local env
+.env
+.env.local
+build.properties
+# === cwm-build-tools: end managed ===
+
+# === cwm-build-tools: extension paths (do not edit between markers) ===
+/build/dist/
+/media/proclaim/js/
+/media/proclaim/css/
+# === cwm-build-tools: end extension paths ===

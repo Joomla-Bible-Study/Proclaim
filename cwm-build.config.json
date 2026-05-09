@@ -1,67 +1,87 @@
 {
-    "_comment": "Per-project config for cwm-build-tools. The headline extension is com_proclaim; the package wrapper bundles the component plus four modules, six plugins, and the lib_cwmscripture submodule. ARS IDs and announcement bullets directory match the legacy build/ artifacts the Proclaim-specific scripts already use.",
     "extension": {
-        "type": "component",
-        "name": "com_proclaim"
+        "type": "package",
+        "name": "pkg_proclaim"
     },
     "manifests": {
         "package": "build/pkg_proclaim.xml",
         "extensions": [
-            { "type": "component", "path": "proclaim.xml" },
-
-            { "type": "module", "path": "modules/site/mod_proclaim/mod_proclaim.xml" },
-            { "type": "module", "path": "modules/site/mod_proclaim_podcast/mod_proclaim_podcast.xml" },
-            { "type": "module", "path": "modules/site/mod_proclaim_youtube/mod_proclaim_youtube.xml" },
-            { "type": "module", "path": "modules/admin/mod_proclaimicon/mod_proclaimicon.xml" },
-
-            { "type": "plugin", "path": "plugins/finder/proclaim/proclaim.xml" },
-            { "type": "plugin", "path": "plugins/schemaorg/proclaim/proclaim.xml" },
-            { "type": "plugin", "path": "plugins/system/proclaim/proclaim.xml" },
-            { "type": "plugin", "path": "plugins/task/proclaim/proclaim.xml" },
-            { "type": "plugin", "path": "plugins/webservices/proclaim/proclaim.xml" },
-            { "type": "plugin", "path": "plugins/content/scripturelinks/scripturelinks.xml" },
-
-            { "type": "library", "path": "libraries/lib_cwmscripture/cwmscripture.xml" }
+            {
+                "type": "component",
+                "path": "proclaim.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/site/mod_proclaim/mod_proclaim.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/site/mod_proclaim_podcast/mod_proclaim_podcast.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/site/mod_proclaim_youtube/mod_proclaim_youtube.xml"
+            },
+            {
+                "type": "module",
+                "path": "modules/admin/mod_proclaimicon/mod_proclaimicon.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/finder/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/schemaorg/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/system/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/task/proclaim/proclaim.xml"
+            },
+            {
+                "type": "plugin",
+                "path": "plugins/webservices/proclaim/proclaim.xml"
+            }
         ]
     },
     "build": {
-        "_comment": "Project-specific package assembly still lives in build/proclaim_build.php — that script knows how to bundle the component + library + plugin submodules into pkg_proclaim. Replace once the generic cwm PackageBuilder lands (Phase 4).",
         "command": "php build/proclaim_build.php package",
-        "outputGlob": "build/pkg_proclaim-*.zip"
+        "outputGlob": "build/packages/pkg_proclaim-*.zip"
     },
+    "vendors": [
+        { "npm": "chart.js",       "label": "chart.js",       "notes": "https://github.com/chartjs/Chart.js/releases" },
+        { "npm": "@fancyapps/ui",  "label": "fancybox",       "notes": "https://github.com/fancyapps/ui/releases" },
+        { "npm": "intl-tel-input", "label": "intl-tel-input", "notes": "https://github.com/jackocnr/intl-tel-input/releases" },
+        { "npm": "sortablejs",     "label": "sortablejs",     "notes": "https://github.com/SortableJS/Sortable/releases" }
+    ],
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
-        "categoryId": 0,
-        "updateStreamId": 0,
-        "environments": ["45", "46", "48", "49", "50"],
+        "categoryId": 1,
+        "updateStreamId": 2,
         "tokenItem": "CWM ARS API Token",
         "tokenVault": "CWM",
-        "itemDescription": "CWM Proclaim — sermon, study and Bible-study management for Joomla 5/6, including the Proclaim component, four site/admin modules, the Smart Search adapter, schema.org / system / task / webservices plugins, and the bundled CWM Scripture library."
+        "itemDescription": "pkg_proclaim download"
     },
     "github": {
         "owner": "Joomla-Bible-Study",
         "repo": "Proclaim",
-        "releaseBranch": "main"
+        "releaseBranch": "main",
+        "developmentBranch": "development"
     },
+    "versionsFile": "build/versions.json",
     "changelog": {
         "file": "build/proclaim-changelog.xml",
-        "url":  "https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml"
+        "url": "https://raw.githubusercontent.com/Joomla-Bible-Study/Proclaim/main/build/proclaim-changelog.xml"
+    },
+    "announcement": {
+        "bulletsDir": "build",
+        "command": "bash build/cwm-article.sh"
     },
     "dev": {
-        "_comment": "Drives cwm-link / cwm-link-check / cwm-clean / cwm-verify against the developer's local Joomla install(s). Auto-derive picks up admin/site/media + every module/plugin/library from manifests.extensions[]. The internalLinks block replaces the gitignored mirror symlinks (proclaim.xml, proclaim.script.php) the legacy build/proclaim_build.php created in admin/.",
-        "internalLinks": [
-            { "source": "proclaim.xml",        "link": "admin/proclaim.xml" },
-            { "source": "proclaim.script.php", "link": "admin/proclaim.script.php" }
-        ],
-        "links": [
-            {
-                "source": "admin/language/en-GB/en-GB.com_proclaim.ini",
-                "target": "{joomlaPath}/administrator/language/en-GB/en-GB.com_proclaim.ini"
-            },
-            {
-                "source": "admin/language/en-GB/en-GB.com_proclaim.sys.ini",
-                "target": "{joomlaPath}/administrator/language/en-GB/en-GB.com_proclaim.sys.ini"
-            }
-        ]
+        "deriveLinks": true
     }
 }

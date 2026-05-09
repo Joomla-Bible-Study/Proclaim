@@ -11,11 +11,12 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Library\Scripture\Bible\AbstractBibleProvider;
 use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use Joomla\Registry\Registry;
@@ -60,9 +61,14 @@ class CwmscriptureController extends BaseController
             header('Content-Type: application/json; charset=utf-8');
             header('Cache-Control: no-store');
             try {
-                echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
+                echo json_encode(
+                    ['success' => false, 'message' => Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_INVALID_TOKEN')],
+                    JSON_THROW_ON_ERROR
+                );
             } catch (\JsonException) {
-                echo '{"success":false,"message":"JSON encoding error"}';
+                echo '{"success":false,"message":'
+                    . json_encode(Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_JSON_ENCODE_ERROR'))
+                    . '}';
             }
             $app->close();
 
@@ -73,22 +79,24 @@ class CwmscriptureController extends BaseController
         $version   = $input->getString('version', 'kjv');
 
         if (empty($reference)) {
-            $this->sendJson($app, ['success' => false, 'message' => 'No reference provided']);
+            $this->sendJson($app, [
+                'success' => false,
+                'message' => Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_NO_REFERENCE'),
+            ]);
 
             return;
         }
 
         try {
-            $admin       = Cwmparams::getAdmin();
-            $adminParams = $admin->params ?? new Registry();
+            $scriptureParams = ScriptureParamsHelper::getParams();
         } catch (\Exception $e) {
-            $adminParams = new Registry();
+            $scriptureParams = new Registry();
         }
 
         try {
             AbstractBibleProvider::registerLogger();
-            $provider  = BibleProviderFactory::getProviderForTranslation($version, $adminParams);
-            $cacheDays = (int) $adminParams->get('scripture_cache_days', 30);
+            $provider  = BibleProviderFactory::getProviderForTranslation($version, $scriptureParams);
+            $cacheDays = (int) $scriptureParams->get('cache_days', 30);
 
             if ($cacheDays > 0 && method_exists($provider, 'setCacheTtl')) {
                 $provider->setCacheTtl($cacheDays * 86400);
@@ -115,7 +123,7 @@ class CwmscriptureController extends BaseController
 
             // Fallback 2: try admin default version locally
             if (!$result->hasText()) {
-                $defaultVersion = (string) $adminParams->get('default_bible_version', 'kjv');
+                $defaultVersion = (string) $scriptureParams->get('default_version', 'kjv');
 
                 if ($defaultVersion === '') {
                     $defaultVersion = 'kjv';
@@ -169,7 +177,7 @@ class CwmscriptureController extends BaseController
                 $this->sendJson($app, [
                     'success'   => false,
                     'retryable' => $transient,
-                    'message'   => 'No passage text returned',
+                    'message'   => Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_NO_PASSAGE_TEXT'),
                     'provider'  => $providerName,
                     'requested' => $version,
                 ]);
@@ -178,7 +186,7 @@ class CwmscriptureController extends BaseController
             $this->sendJson($app, [
                 'success'   => false,
                 'retryable' => false,
-                'message'   => $e->getMessage(),
+                'message'   => Text::sprintf('COM_PROCLAIM_SCRIPTURE_AJAX_PROVIDER_ERROR', $e->getMessage()),
                 'requested' => $version,
             ]);
         }
@@ -206,7 +214,9 @@ class CwmscriptureController extends BaseController
         try {
             echo json_encode($data, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            echo '{"success":false,"message":"JSON encoding error"}';
+            echo '{"success":false,"message":'
+                . json_encode(Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_JSON_ENCODE_ERROR'))
+                . '}';
         }
         $app->close();
     }

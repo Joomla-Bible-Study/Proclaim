@@ -3,9 +3,11 @@
 /**
  * PHPUnit Bootstrap for Proclaim Component Unit Tests
  *
- * Loads the real Joomla CMS framework from a local joomla-cms clone
- * (configured via builder.joomla_dir in build.properties). This ensures
- * tests validate against actual Joomla class signatures.
+ * Loads the real Joomla CMS framework from a local joomla-cms clone.
+ * Resolution order: tests.joomla_cms_path in build.properties → JOOMLA_CMS_PATH
+ * env var → ../joomla-cms sibling (auto-cloned by build/joomla-cms-deps.php)
+ * → first entry in builder.joomla_paths. This ensures tests validate against
+ * actual Joomla class signatures.
  *
  * @package    Proclaim.UnitTest
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -35,13 +37,14 @@ $componentRoot = \dirname(__DIR__, 2);
 // Resolve Joomla CMS path from build.properties
 // ---------------------------------------------------------------------------
 
-$joomlaCmsPath = '';
+$joomlaCmsPath    = '';
+$joomlaConfigPath = '';
+$props            = [];
 
 $propsFile = $componentRoot . '/build.properties';
 
 if (file_exists($propsFile)) {
     $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    $props = [];
 
     foreach ($lines as $line) {
         $trimmed = trim($line);
@@ -59,17 +62,67 @@ if (file_exists($propsFile)) {
         $props[trim(substr($trimmed, 0, $eq))] = trim(substr($trimmed, $eq + 1));
     }
 
-    // Prefer builder.joomla_dir, fall back to first entry in builder.joomla_paths
-    if (!empty($props['builder.joomla_dir']) && is_dir($props['builder.joomla_dir'])) {
-        $joomlaCmsPath = $props['builder.joomla_dir'];
-    } elseif (!empty($props['builder.joomla_paths'])) {
-        $candidate = trim(explode(',', $props['builder.joomla_paths'])[0]);
+    // Resolution order for the Joomla CMS source path:
+    //   1. tests.joomla_cms_path     — explicit override for unusual setups
+    //   2. JOOMLA_CMS_PATH env var   — handled below (CI / one-off)
+    //   3. ../joomla-cms             — sibling default (auto-cloned by joomla-cms-deps.php)
+    //   4. builder.joomla_paths[0]   — last resort: first dev site (j5-dev is a full Joomla tree)
+    //
+    // Note: builder.joomla_dir is intentionally NOT consulted here. cwm-build-tools
+    // owns that key with relative-subpath semantics (appended onto each install).
+    // Earlier Proclaim revisions overloaded it as an absolute CMS source path —
+    // emit a one-line nudge if we still see that, so users migrate cleanly.
+    if (!empty($props['builder.joomla_dir']) && str_starts_with($props['builder.joomla_dir'], '/')) {
+        fwrite(
+            STDERR,
+            "WARNING: builder.joomla_dir looks like an absolute path. cwm-build-tools "
+            . "treats this key as a relative subdirectory; Proclaim's test harness now "
+            . "reads tests.joomla_cms_path. Please rename the entry in build.properties."
+            . PHP_EOL
+        );
+    }
 
-        if ($candidate !== '' && is_dir($candidate)) {
-            $joomlaCmsPath = $candidate;
+    if (!empty($props['tests.joomla_cms_path']) && is_dir($props['tests.joomla_cms_path'])) {
+        $joomlaCmsPath = $props['tests.joomla_cms_path'];
+    }
+
+    if ($joomlaCmsPath === '') {
+        $sibling = \dirname($componentRoot) . '/joomla-cms';
+
+        if (is_dir($sibling)) {
+            $joomlaCmsPath = $sibling;
+        } elseif (!empty($props['builder.joomla_paths'])) {
+            $candidate = trim(explode(',', $props['builder.joomla_paths'])[0]);
+
+            if ($candidate !== '' && is_dir($candidate)) {
+                $joomlaCmsPath = $candidate;
+            }
+        } elseif (!empty($props['builder.joomla_path']) && is_dir($props['builder.joomla_path'])) {
+            $joomlaCmsPath = $props['builder.joomla_path'];
         }
-    } elseif (!empty($props['builder.joomla_path']) && is_dir($props['builder.joomla_path'])) {
-        $joomlaCmsPath = $props['builder.joomla_path'];
+    }
+
+    // Resolve a path that actually has configuration.php (a deployed dev site)
+    // for JPATH_CONFIGURATION. The CMS clone above provides class signatures;
+    // the dev site provides JConfig so Joomla's container Config provider can
+    // hand a populated Registry to the Database service.
+    $configCandidates = [];
+
+    if (!empty($props['builder.joomla_paths'])) {
+        foreach (explode(',', $props['builder.joomla_paths']) as $p) {
+            $configCandidates[] = trim($p);
+        }
+    }
+
+    if (!empty($props['builder.joomla_path'])) {
+        $configCandidates[] = $props['builder.joomla_path'];
+    }
+
+    foreach ($configCandidates as $candidate) {
+        if ($candidate !== '' && is_file(rtrim($candidate, '/') . '/configuration.php')) {
+            $joomlaConfigPath = rtrim($candidate, '/');
+            break;
+        }
     }
 }
 
@@ -117,8 +170,13 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JPATH_CACHE', $rootDir . '/administrator/cache');
         }
 
+        // Point JPATH_CONFIGURATION at the deployed dev site (which has a real
+        // configuration.php) when one is available — otherwise fall back to the
+        // CMS clone path (which usually has no config). This lets Joomla's
+        // container Config service provider load JConfig and downstream
+        // services (Database, Session) build with valid credentials.
         if (!\defined('JPATH_CONFIGURATION')) {
-            \define('JPATH_CONFIGURATION', $rootDir);
+            \define('JPATH_CONFIGURATION', $joomlaConfigPath !== '' ? $joomlaConfigPath : $rootDir);
         }
 
         if (!\defined('JPATH_PLUGINS')) {
@@ -185,7 +243,8 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
 }
 
 if (!$joomlaLoaded) {
-    fwrite(STDERR, "ERROR: Joomla CMS not found. Set builder.joomla_dir in build.properties" . PHP_EOL);
+    fwrite(STDERR, "ERROR: Joomla CMS not found. Run 'composer install' to auto-clone ../joomla-cms," . PHP_EOL);
+    fwrite(STDERR, "       set tests.joomla_cms_path in build.properties," . PHP_EOL);
     fwrite(STDERR, "       or set JOOMLA_CMS_PATH environment variable." . PHP_EOL);
     fwrite(STDERR, "       See: https://github.com/Joomla-Bible-Study/Proclaim/wiki/Development-Setup" . PHP_EOL);
     exit(1);
@@ -325,36 +384,32 @@ require_once __DIR__ . '/ProclaimTestCase.php';
         $port          = (int) $port;
     }
 
+    // Set up the container + Console application unconditionally. The
+    // Console app is what code paths like Route::_, CwmcommentTable::check
+    // and Cwmparams::getAdmin reach for via Factory::getApplication().
+    // Creating it does not require a working DB, so unit tests that touch
+    // those paths must not be coupled to DB availability.
+    $container = \Joomla\CMS\Factory::getContainer();
+
+    // The Application service provider (registered by createContainer)
+    // expects SessionInterface to be resolvable. The Session provider
+    // registers concrete implementations (session.web.*, session.cli)
+    // but leaves the generic aliasing to the caller — cli/joomla.php
+    // does this for CLI context, so we do the same here.
+    $container->alias('session', 'session.cli')
+        ->alias('JSession', 'session.cli')
+        ->alias(\Joomla\CMS\Session\Session::class, 'session.cli')
+        ->alias(\Joomla\Session\Session::class, 'session.cli')
+        ->alias(\Joomla\Session\SessionInterface::class, 'session.cli');
+
+    \Joomla\CMS\Factory::$application = $container->get(\Joomla\Console\Application::class);
+
+    // DB connection is best-effort: integration tests that need a live
+    // driver check PROCLAIM_TEST_DB_AVAILABLE; pure unit tests don't.
     try {
-        // We don't manually construct a DatabaseDriver. Factory::getContainer()
-        // registers the real Database service provider which reads JConfig
-        // and hands out a live driver. Asking for it here is enough to
-        // verify the connection is reachable. Integration tests then get
-        // the same driver from Factory::getContainer()->get(...).
-        $container = \Joomla\CMS\Factory::getContainer();
-
-        // The Application service provider (registered by createContainer)
-        // expects SessionInterface to be resolvable. The Session provider
-        // registers concrete implementations (session.web.*, session.cli)
-        // but leaves the generic aliasing to the caller — cli/joomla.php
-        // does this for CLI context, so we do the same here.
-        $container->alias('session', 'session.cli')
-            ->alias('JSession', 'session.cli')
-            ->alias(\Joomla\CMS\Session\Session::class, 'session.cli')
-            ->alias(\Joomla\Session\Session::class, 'session.cli')
-            ->alias(\Joomla\Session\SessionInterface::class, 'session.cli');
-
-        // Pull the live DB driver from the container to verify the
-        // connection works and stash it for legacy $GLOBALS consumers.
         $db = $container->get(\Joomla\Database\DatabaseInterface::class);
         $db->connect();
         $GLOBALS['__proclaim_test_db'] = $db;
-
-        // Populate Factory::$application with the real CLI Console
-        // Application so code paths that call Factory::getApplication()
-        // (Route::_, CwmcommentTable::check, Cwmparams::getAdmin, etc.)
-        // don't throw "Failed to start application".
-        \Joomla\CMS\Factory::$application = $container->get(\Joomla\Console\Application::class);
 
         \define('PROCLAIM_TEST_DB_AVAILABLE', true);
 

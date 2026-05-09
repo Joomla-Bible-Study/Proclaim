@@ -25,11 +25,16 @@
             nationalMode: true,
             formatAsYouType: true,
             autoPlaceholder: 'aggressive',
-            showSelectedDialCode: true,
+            // Pin to false: preserves the current "flag only" look. v28 flipped
+            // the default to true; the previous code passed showSelectedDialCode
+            // which v26 silently ignored, so production has always rendered
+            // without the dial code beside the flag.
+            separateDialCode: false,
             containerClass: 'iti--proclaim',
             countrySearch: true,
-            // Put common church-ministry countries first
-            preferredCountries: ['us', 'ca', 'gb', 'au', 'nz', 'za', 'ph', 'in', 'br', 'mx', 'de', 'kr', 'ng'],
+            // Put common church-ministry countries first.
+            // (Renamed from preferredCountries in v25; required from v28.)
+            countryOrder: ['us', 'ca', 'gb', 'au', 'nz', 'za', 'ph', 'in', 'br', 'mx', 'de', 'kr', 'ng'],
         };
 
         const options = { ...defaults, ...opts };
