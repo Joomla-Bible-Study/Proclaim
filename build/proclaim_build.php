@@ -14,6 +14,10 @@
 
 \define('BASE_DIR', realpath(__DIR__ . '/..'));
 const BUILD_DIR = BASE_DIR . '/build';
+// Standardize zip output to build/dist/ — matches cwm-build-tools' canonical
+// convention (cwm-build.config.json.tmpl, init.php, sync-configs.php all
+// expect /build/dist/) and keeps build/ for source-controlled scripts only.
+const DIST_DIR = BUILD_DIR . '/dist';
 
 $command = $argv[1] ?? 'help';
 $verbose = \in_array('--verbose', $argv, true) || \in_array('-v', $argv, true);
@@ -175,7 +179,11 @@ function doBuild(bool $verbose = false): void
 
     echo "\nPackaging Proclaim v$version...\n";
 
-    $zipFile = BUILD_DIR . "/com_proclaim-$version.zip";
+    if (!is_dir(DIST_DIR)) {
+        mkdir(DIST_DIR, 0777, true);
+    }
+
+    $zipFile = DIST_DIR . "/com_proclaim-$version.zip";
 
     if (file_exists($zipFile)) {
         unlink($zipFile);
@@ -421,7 +429,7 @@ function doPackage(bool $verbose = false): void
     // Find the com_proclaim zip that doBuild created
     $comZipSource = null;
 
-    foreach (glob(BUILD_DIR . '/com_proclaim-*.zip') as $candidate) {
+    foreach (glob(DIST_DIR . '/com_proclaim-*.zip') as $candidate) {
         $comZipSource = $candidate;
         break;
     }
@@ -435,7 +443,11 @@ function doPackage(bool $verbose = false): void
 
     // Step 4: Assemble pkg_proclaim zip
     echo "\nAssembling pkg_proclaim-$version.zip...\n";
-    $pkgZipPath = BUILD_DIR . '/pkg_proclaim-' . $version . '.zip';
+    if (!is_dir(DIST_DIR)) {
+        mkdir(DIST_DIR, 0777, true);
+    }
+
+    $pkgZipPath = DIST_DIR . '/pkg_proclaim-' . $version . '.zip';
 
     if (file_exists($pkgZipPath)) {
         unlink($pkgZipPath);
