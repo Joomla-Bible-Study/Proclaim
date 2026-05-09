@@ -133,6 +133,7 @@
     "sync-languages": "cwm-sync-languages",
     "sync-languages-force": "cwm-sync-languages --force",
     "sync-languages-setup": "cwm-sync-languages setup",
+    "sync-configs": "cwm-sync-configs",
     "vendor:check": "node libraries/vendor/cwm/build-tools/templates/vendor-check.js",
     "vendor:update": "node libraries/vendor/cwm/build-tools/templates/vendor-update.js",
     "post-install-cmd": [
@@ -142,6 +143,7 @@
     "joomla-cms-deps": "@php build/joomla-cms-deps.php",
     "changelog": "cwm-changelog",
     "ars-publish": "cwm-ars-publish",
+    "ars-list": "cwm-ars-list",
     "cwm-article": "bash build/cwm-article.sh",
     "release": "cwm-release",
     "jed-prep": "bash build/jed-prep.sh"

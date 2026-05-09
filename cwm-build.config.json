@@ -52,6 +52,13 @@
         "command": "php build/proclaim_build.php package",
         "outputGlob": "build/dist/pkg_proclaim-*.zip"
     },
+    "gitignore": {
+        "_comment": "Override the auto-derived media paths because pkg_proclaim is a package wrapper around com_proclaim, which DOES own /media/proclaim/. Without this, sync-configs skips media patterns (package wrappers don't usually own a media dir).",
+        "mediaPaths": [
+            "/media/proclaim/js/",
+            "/media/proclaim/css/"
+        ]
+    },
     "vendors": [
         { "npm": "chart.js",       "label": "chart.js",       "notes": "https://github.com/chartjs/Chart.js/releases" },
         { "npm": "@fancyapps/ui",  "label": "fancybox",       "notes": "https://github.com/fancyapps/ui/releases" },
