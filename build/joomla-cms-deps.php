@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Install Composer dependencies in the joomla-cms clone for unit testing.
+ * Ensure a Joomla CMS source clone exists for unit testing.
  *
- * Reads builder.joomla_dir from build.properties and runs `composer install`
- * inside that directory if vendor/autoload.php is missing.
- *
- * Called automatically via `composer install --dev` (post-install-cmd).
+ * Resolves the clone path in this order:
+ *   1. tests.joomla_cms_path in build.properties (explicit override)
+ *   2. ../joomla-cms sibling of this repo (default)
+ * Clones a known-stable Joomla tag into the resolved location if it does not
+ * already exist. Called automatically via `composer install --dev`
+ * (post-install-cmd).
  *
  * @package    Proclaim.Build
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -17,49 +19,40 @@
 $root      = \dirname(__DIR__);
 $propsFile = $root . '/build.properties';
 
-if (!file_exists($propsFile)) {
-    // No build.properties yet — skip silently (will be created by setup)
-    return;
-}
-
-// Parse build.properties for joomla_dir
+// Parse build.properties (if it exists) for an explicit override.
 $joomlaDir = '';
-$lines     = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-foreach ($lines as $line) {
-    $trimmed = trim($line);
+if (file_exists($propsFile)) {
+    $lines = file($propsFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-    if ($trimmed === '' || str_starts_with($trimmed, '#')) {
-        continue;
-    }
+    foreach ($lines as $line) {
+        $trimmed = trim($line);
 
-    $eq = strpos($trimmed, '=');
+        if ($trimmed === '' || str_starts_with($trimmed, '#')) {
+            continue;
+        }
 
-    if ($eq === false) {
-        continue;
-    }
+        $eq = strpos($trimmed, '=');
 
-    $key   = trim(substr($trimmed, 0, $eq));
-    $value = trim(substr($trimmed, $eq + 1));
+        if ($eq === false) {
+            continue;
+        }
 
-    if ($key === 'builder.joomla_dir') {
-        $joomlaDir = $value;
-        break;
+        $key   = trim(substr($trimmed, 0, $eq));
+        $value = trim(substr($trimmed, $eq + 1));
+
+        if ($key === 'tests.joomla_cms_path' && $value !== '') {
+            $joomlaDir = $value;
+            break;
+        }
     }
 }
 
-// Default location: sibling directory to this repo
+// Default to ../joomla-cms if no override. We don't write this back to
+// build.properties — the path is derived, not configured. Anyone who wants
+// to pin a custom location can add tests.joomla_cms_path themselves.
 if ($joomlaDir === '') {
     $joomlaDir = \dirname($root) . '/joomla-cms';
-
-    // Update build.properties with the default path
-    $propsContent = file_get_contents($propsFile);
-    $propsContent = preg_replace(
-        '/^builder\.joomla_dir=.*$/m',
-        'builder.joomla_dir=' . $joomlaDir,
-        $propsContent
-    );
-    file_put_contents($propsFile, $propsContent);
 }
 
 if (!is_dir($joomlaDir)) {

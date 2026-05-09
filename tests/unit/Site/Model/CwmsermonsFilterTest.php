@@ -50,15 +50,15 @@ class CwmsermonsFilterTest extends ProclaimTestCase
     private array $whereCalls = [];
 
     /**
-     * Create a PHPUnit mock of QueryInterface that tracks where() calls.
+     * Create a PHPUnit stub of QueryInterface that tracks where() calls.
      *
-     * @return  QueryInterface&\PHPUnit\Framework\MockObject\MockObject
+     * @return  QueryInterface&\PHPUnit\Framework\MockObject\Stub
      */
     private function createMockQuery(): QueryInterface
     {
         $this->whereCalls = [];
 
-        $mock = $this->createMock(QueryInterface::class);
+        $mock = $this->createStub(QueryInterface::class);
 
         $mock->method('where')->willReturnCallback(function ($condition) use ($mock) {
             $this->whereCalls[] = $condition;
