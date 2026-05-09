@@ -84,7 +84,7 @@
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
-    "cwm/build-tools": "v0.4.0-alpha",
+    "cwm/build-tools": "v0.4.1-alpha",
     "joomla/database": "^4.0",
     "joomla/registry": "^4.0",
     "joomla/di": "^4.0",

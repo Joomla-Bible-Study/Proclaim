@@ -96,6 +96,7 @@ Thumbs.db
 .php-cs-fixer.cache
 .phpunit.cache
 .phpunit.result.cache
+/build/.cwm-cache/
 
 # Local env
 .env
