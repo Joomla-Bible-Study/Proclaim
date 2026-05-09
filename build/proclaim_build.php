@@ -70,14 +70,27 @@ function ask(string $question, string|null $default = null, int $timeout = 0): s
 {
     $prompt = $question . ($default ? " [$default]" : '');
 
+    // Skip the interactive countdown when called from a wrapper that's not
+    // a real terminal session (cwm-release, CI, scripted runs). Honors
+    // common signals so chained release scripts get the default cleanly
+    // without leaving half-drawn countdown fragments behind.
+    $nonInteractive = !stream_isatty(STDIN)
+        || !stream_isatty(STDOUT)
+        || getenv('CI') !== false
+        || getenv('CWM_NONINTERACTIVE') !== false;
+
     // Countdown timer with single-keypress detection
-    if ($timeout > 0 && $default !== null && stream_isatty(STDIN)) {
+    if ($timeout > 0 && $default !== null && !$nonInteractive) {
         $oldStty = trim((string) shell_exec('stty -g 2>/dev/null'));
         system('stty cbreak -echo 2>/dev/null');
 
+        // ANSI clear-to-end-of-line wipes any leftover characters from a
+        // previous, longer redraw (e.g. "(10s):" being replaced by "(9s):"
+        // would otherwise leave a stray "0" on the line).
+        $clear = "\r\033[K";
+
         for ($remaining = $timeout; $remaining > 0; $remaining--) {
-            // Overwrite line with updated countdown
-            echo "\r" . $prompt . " ({$remaining}s): ";
+            echo $clear . $prompt . " ({$remaining}s): ";
 
             $read   = [STDIN];
             $write  = null;
@@ -87,14 +100,20 @@ function ask(string $question, string|null $default = null, int $timeout = 0): s
             if ($ready > 0) {
                 $char = fread(STDIN, 1);
                 system('stty ' . escapeshellarg($oldStty) . ' 2>/dev/null');
-                echo "\r" . $prompt . ': ' . $char . "    \n";
+                echo $clear . $prompt . ': ' . $char . "\n";
                 return $char === '' ? $default : $char;
             }
         }
 
         // Timeout — no input
         system('stty ' . escapeshellarg($oldStty) . ' 2>/dev/null');
-        echo "\r" . $prompt . ': ' . $default . " (auto)\n";
+        echo $clear . $prompt . ': ' . $default . " (auto)\n";
+        return $default;
+    }
+
+    // Non-interactive: take the default immediately, no prompt drawn.
+    if ($nonInteractive && $default !== null) {
+        echo $prompt . ': ' . $default . " (auto, non-interactive)\n";
         return $default;
     }
 
