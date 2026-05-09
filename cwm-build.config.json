@@ -50,7 +50,7 @@
     },
     "build": {
         "command": "php build/proclaim_build.php package",
-        "outputGlob": "build/packages/pkg_proclaim-*.zip"
+        "outputGlob": "build/pkg_proclaim-*.zip"
     },
     "vendors": [
         { "npm": "chart.js",       "label": "chart.js",       "notes": "https://github.com/chartjs/Chart.js/releases" },
