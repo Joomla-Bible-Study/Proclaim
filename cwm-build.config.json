@@ -81,6 +81,10 @@
         "preBuild": {
             "mode": "run",
             "command": "npm install && npm run build"
+        },
+        "versionPrompt": {
+            "enabled": true,
+            "timeout": 10
         }
     },
     "package": {
