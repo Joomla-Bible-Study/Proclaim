@@ -843,16 +843,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v0.5.3-alpha",
+            "version": "v0.5.4-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "4f2323f26e35fe8f52abaa749521124995cbf69e"
+                "reference": "252c07cbbf92b20e5f6d933bdfc37646dac58d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/4f2323f26e35fe8f52abaa749521124995cbf69e",
-                "reference": "4f2323f26e35fe8f52abaa749521124995cbf69e",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/252c07cbbf92b20e5f6d933bdfc37646dac58d3d",
+                "reference": "252c07cbbf92b20e5f6d933bdfc37646dac58d3d",
                 "shasum": ""
             },
             "require": {
@@ -937,10 +937,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.5.3-alpha",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.5.4-alpha",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-05-10T13:40:57+00:00"
+            "time": "2026-05-11T16:13:23+00:00"
         },
         {
             "name": "doctrine/deprecations",
