@@ -9,7 +9,6 @@
 /docker-compose.yml
 /nbproject
 /.devcontainer
-/.github
 /.vscode
 
 # AI tooling
