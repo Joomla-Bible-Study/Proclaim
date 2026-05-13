@@ -602,11 +602,12 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Sniff the first 64 bytes to confirm WEBVTT or SRT magic — defends
-        // against a renamed binary slipping past the extension whitelist.
-        $head = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
+        // Sniff the first 64 bytes to confirm WEBVTT, SBV, or SRT magic —
+        // defends against a renamed binary slipping past the extension whitelist.
+        $head     = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
+        $detected = $head === false ? null : $validator->detectFormat($head);
 
-        if ($head === false || $validator->detectFormat($head) === null) {
+        if ($detected === null) {
             echo json_encode([
                 'success' => false,
                 'error'   => Text::_($head === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
@@ -625,10 +626,22 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        $fileName = $validator->buildFilename($userfile['name'], $ext);
+        // SBV is converted to WEBVTT on store so the on-site player can consume
+        // it without a runtime shim — every stored file ends in `.vtt`.
+        $storeExt = $detected === 'sbv' ? 'vtt' : $ext;
+        $fileName = $validator->buildFilename($userfile['name'], $storeExt);
         $destPath = $destDir . '/' . $fileName;
 
-        if (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
+        if ($detected === 'sbv') {
+            $body = file_get_contents($userfile['tmp_name']);
+
+            if ($body === false || file_put_contents($destPath, $validator->convertSbvToVtt($body)) === false) {
+                echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
+                Factory::getApplication()->close();
+
+                return;
+            }
+        } elseif (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
             Factory::getApplication()->close();
 

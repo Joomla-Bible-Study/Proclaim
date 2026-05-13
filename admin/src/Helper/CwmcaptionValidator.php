@@ -34,7 +34,7 @@ class CwmcaptionValidator
      * @var    string[]
      * @since  10.3.0
      */
-    public const ALLOWED_EXTENSIONS = ['vtt', 'srt'];
+    public const ALLOWED_EXTENSIONS = ['vtt', 'srt', 'sbv'];
 
     /**
      * Maximum caption file size in bytes (2 MB).
@@ -103,14 +103,20 @@ class CwmcaptionValidator
      * Recognizes:
      *  - WEBVTT files: leading `WEBVTT` token (per W3C VTT spec), with
      *    or without a UTF-8 BOM.
+     *  - SBV files: a comma-joined `H:MM:SS.mmm,H:MM:SS.mmm` cue
+     *    timestamp line (per YouTube SubViewer convention).
      *  - SRT files: a numeric cue index on its own line followed by
      *    a `HH:MM…` timestamp line (per SubRip convention).
      *
+     * The SBV check runs before SRT so a 2-digit-hour SBV cue cannot
+     * be misclassified — SBV's signature comma between timestamps is
+     * unique to that format.
+     *
      * @param   string  $head  First N bytes of the file. The caller is
      *                         responsible for choosing N — 64 bytes is
-     *                         enough to cover both signatures plus a BOM.
+     *                         enough to cover all three signatures plus a BOM.
      *
-     * @return  string|null  'vtt', 'srt', or null when neither matches.
+     * @return  string|null  'vtt', 'srt', 'sbv', or null when none match.
      *
      * @since   10.3.0
      */
@@ -123,11 +129,60 @@ class CwmcaptionValidator
             return 'vtt';
         }
 
+        if (preg_match('/^\d{1,2}:\d{2}:\d{2}\.\d{3},\d{1,2}:\d{2}:\d{2}\.\d{3}/', $head)) {
+            return 'sbv';
+        }
+
         if (preg_match('/^\d+\s*\r?\n\d{2}:\d{2}/', $head)) {
             return 'srt';
         }
 
         return null;
+    }
+
+    /**
+     * Convert a YouTube SBV caption body to WebVTT.
+     *
+     * SBV cues are `H:MM:SS.mmm,H:MM:SS.mmm` on one line, followed by
+     * one or more text lines, separated by blank lines. WebVTT expects
+     * `HH:MM:SS.mmm --> HH:MM:SS.mmm` after a `WEBVTT` header — so the
+     * conversion is mechanical: strip BOM, normalize line endings,
+     * split each cue's timestamp line on `,`, zero-pad the hour to two
+     * digits, and rejoin with ` --> `.
+     *
+     * @param   string  $body  Raw SBV file contents.
+     *
+     * @return  string  WebVTT body with header, suitable for writing to disk.
+     *
+     * @since   10.3.0
+     */
+    public function convertSbvToVtt(string $body): string
+    {
+        $body = ltrim($body, "\xEF\xBB\xBF");
+        $body = str_replace(["\r\n", "\r"], "\n", $body);
+
+        $blocks    = preg_split('/\n\s*\n/', trim($body));
+        $converted = [];
+
+        foreach ($blocks as $block) {
+            $lines = explode("\n", $block);
+            $first = array_shift($lines);
+
+            if (!preg_match(
+                '/^(\d{1,2}):(\d{2}:\d{2}\.\d{3}),(\d{1,2}):(\d{2}:\d{2}\.\d{3})$/',
+                trim($first),
+                $m
+            )) {
+                continue;
+            }
+
+            $start = \sprintf('%02d:%s', (int) $m[1], $m[2]);
+            $end   = \sprintf('%02d:%s', (int) $m[3], $m[4]);
+
+            $converted[] = $start . ' --> ' . $end . "\n" . implode("\n", $lines);
+        }
+
+        return "WEBVTT\n\n" . implode("\n\n", $converted) . "\n";
     }
 
     /**
