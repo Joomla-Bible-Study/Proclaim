@@ -62,7 +62,7 @@ class VttUploadField extends FormField
 
         $uploadLabel  = Text::_('JBS_MED_VTT_UPLOAD');
         $browseLabel  = Text::_('JBS_MED_VTT_BROWSE');
-        $acceptedExts = '.vtt,.srt';
+        $acceptedExts = '.vtt,.srt,.sbv';
 
         // Wrapper div for DOM traversal in the external JS
         $html = '<div class="cwm-vtt-field">';
