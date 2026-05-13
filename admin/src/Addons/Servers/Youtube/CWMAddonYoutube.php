@@ -29,6 +29,8 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Google;
 use Google\Service\Exception;
 use Google\Service\YouTube;
+use Google\Service\YouTube\Caption;
+use Google\Service\YouTube\CaptionSnippet;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -2329,5 +2331,205 @@ class CWMAddonYoutube extends CWMAddon
     public static function formatChaptersForYouTube(array $chapters): string
     {
         return parent::formatChaptersForDescription($chapters);
+    }
+
+    /**
+     * Insert a plain-text transcript as a caption track on a YouTube video.
+     *
+     * Uses `sync=true` so YouTube generates timecodes from the audio rather
+     * than honoring any timecodes in the upload. The `sync` parameter is
+     * marked deprecated in current API docs but remains functional and is
+     * the only path for syncing plain-text transcripts — pre-timed captions
+     * use the regular upload flow that already exists in this addon.
+     *
+     * @param   YouTube  $service     Authenticated YouTube service.
+     * @param   string   $videoId     YouTube video id (must be owned by the
+     *                                authenticated channel).
+     * @param   string   $transcript  Plain-text transcript bytes.
+     * @param   string   $language    BCP-47 language tag (default 'en').
+     *
+     * @return  string  The new caption resource id.
+     *
+     * @throws  Exception            Wraps the Google SDK error with the
+     *                               original status code preserved.
+     * @throws  \RuntimeException    For local pre-flight failures (empty
+     *                               transcript, etc.).
+     *
+     * @since   10.3.0
+     */
+    public function insertTranscriptAsCaption(
+        YouTube $service,
+        string $videoId,
+        string $transcript,
+        string $language = 'en'
+    ): string {
+        if (trim($transcript) === '') {
+            throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_NO_TRANSCRIPT'));
+        }
+
+        $snippet = new CaptionSnippet();
+        $snippet->setVideoId($videoId);
+        $snippet->setLanguage($language);
+        $snippet->setName('Proclaim transcript');
+
+        $caption = new Caption();
+        $caption->setSnippet($snippet);
+
+        $inserted = $service->captions->insert(
+            'snippet',
+            $caption,
+            [
+                'data'       => $transcript,
+                'mimeType'   => 'text/plain',
+                'uploadType' => 'multipart',
+                'sync'       => true,
+            ]
+        );
+
+        return (string) $inserted->getId();
+    }
+
+    /**
+     * Poll `captions.list` until the caption leaves `syncing` status, or
+     * timeout. YouTube's transcript→captions sync is eventually consistent
+     * and typically takes 30–90 seconds for a sermon-length transcript.
+     *
+     * @param   YouTube  $service     Authenticated YouTube service.
+     * @param   string   $videoId     YouTube video id.
+     * @param   string   $captionId   Caption id returned by an earlier insert.
+     * @param   int      $timeoutSec  Total wait budget. Defaults to 90s.
+     *
+     * @return  string  Final status — typically `serving`; may be `failed`
+     *                  when YouTube cannot produce timecodes from the audio.
+     *
+     * @throws  \RuntimeException  When polling exceeds the timeout budget
+     *                             without leaving `syncing`.
+     *
+     * @since   10.3.0
+     */
+    public function awaitCaptionReady(
+        YouTube $service,
+        string $videoId,
+        string $captionId,
+        int $timeoutSec = 90
+    ): string {
+        $deadline = time() + max(1, $timeoutSec);
+        $delay    = 5;
+        $status   = 'syncing';
+
+        while (time() < $deadline) {
+            $resp  = $service->captions->listCaptions('snippet', $videoId, ['id' => $captionId]);
+            $items = $resp->getItems();
+
+            if ($items === [] || $items[0] === null) {
+                throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_TIMEOUT'));
+            }
+
+            $status = (string) $items[0]->getSnippet()->getStatus();
+
+            if ($status !== 'syncing') {
+                return $status;
+            }
+
+            sleep($delay);
+        }
+
+        throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_TIMEOUT'));
+    }
+
+    /**
+     * Download a caption track in the requested target format.
+     *
+     * @param   YouTube  $service    Authenticated YouTube service.
+     * @param   string   $captionId  Caption id (from insert or list).
+     * @param   string   $tfmt       Target format — one of vtt|srt|sbv|scc|ttml.
+     *
+     * @return  string  Raw caption bytes.
+     *
+     * @throws  Exception  Wraps the Google SDK error with the original
+     *                     status code preserved.
+     *
+     * @since   10.3.0
+     */
+    public function downloadCaption(YouTube $service, string $captionId, string $tfmt = 'vtt'): string
+    {
+        $response = $service->captions->download(
+            $captionId,
+            ['tfmt' => $tfmt, 'alt' => 'media']
+        );
+
+        // SDK returns Psr\Http\Message\ResponseInterface when alt=media.
+        if (\is_object($response) && method_exists($response, 'getBody')) {
+            return (string) $response->getBody();
+        }
+
+        return (string) $response;
+    }
+
+    /**
+     * High-level orchestrator: insert transcript → poll until ready → download VTT.
+     *
+     * Returns the WebVTT bytes ready to hand to the controller's storage
+     * pipeline. Translates documented Google API errors into localized
+     * RuntimeException messages so the caller can echo them straight to
+     * the user without leaking SDK-internal vocabulary.
+     *
+     * Quota cost: insert (400) + N×list (50) + download (200) ≈ 650 + 50N units.
+     *
+     * @param   int     $serverId    Proclaim server id whose OAuth tokens
+     *                               authorize the caption operations.
+     * @param   string  $videoId     YouTube video id (must be owned by the
+     *                               authenticated channel).
+     * @param   string  $transcript  Plain-text transcript bytes.
+     * @param   string  $language    BCP-47 language tag (default 'en').
+     *
+     * @return  string  WebVTT body for the generated caption track.
+     *
+     * @throws  \RuntimeException  Localized error messages for the documented
+     *                             failure modes — OAuth not connected,
+     *                             channel not owned, duplicate caption,
+     *                             quota exhausted, sync timeout.
+     *
+     * @since   10.3.0
+     */
+    public function generateCaptionsFromTranscript(
+        int $serverId,
+        string $videoId,
+        string $transcript,
+        string $language = 'en'
+    ): string {
+        $client = $this->createOAuthClient($serverId);
+
+        if ($client === null || $client->getAccessToken() === null) {
+            throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_OAUTH_REQUIRED'));
+        }
+
+        $service = new YouTube($client);
+
+        try {
+            $captionId = $this->insertTranscriptAsCaption($service, $videoId, $transcript, $language);
+            $this->awaitCaptionReady($service, $videoId, $captionId);
+
+            return $this->downloadCaption($service, $captionId, 'vtt');
+        } catch (Exception $e) {
+            $code    = (int) $e->getCode();
+            $message = (string) $e->getMessage();
+
+            // Forbidden — caller doesn't own the channel hosting the video.
+            if ($code === 403 && CwmyoutubeQuota::isQuotaExceededError($message)) {
+                throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_QUOTA'));
+            }
+
+            if ($code === 403) {
+                throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_NOT_OWNED'));
+            }
+
+            // Caption with this language+name already exists on the video.
+            if ($code === 409) {
+                throw new \RuntimeException(Text::_('JBS_MED_GENERATE_CAPTIONS_DUPLICATE'));
+            }
+
+            throw new \RuntimeException($message, $code, $e);
+        }
     }
 }
