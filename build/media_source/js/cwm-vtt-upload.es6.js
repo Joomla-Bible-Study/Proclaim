@@ -87,4 +87,34 @@
                 fileInput.value = '';
             });
     });
+
+    // Download-format dropdown → navigate to the download endpoint with the
+    // chosen format. The server validates the filename against the same
+    // whitelist regex used at upload time and confines reads to the
+    // captions directory via realpath.
+    document.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('cwm-vtt-download-format')) {
+            return;
+        }
+
+        const select   = e.target;
+        const format   = select.value;
+        const filename = select.dataset.filename || '';
+        const downloadUrl = cfg.downloadUrl || '';
+
+        if (!format || !filename || !downloadUrl) {
+            return;
+        }
+
+        const sep = downloadUrl.includes('?') ? '&' : '?';
+        const url = downloadUrl
+            + sep + 'filename=' + encodeURIComponent(filename)
+            + '&format=' + encodeURIComponent(format);
+
+        // Navigate top-level so the browser handles Content-Disposition.
+        window.location.href = url;
+
+        // Reset selection so picking the same format twice fires the event again.
+        select.value = '';
+    });
 })();

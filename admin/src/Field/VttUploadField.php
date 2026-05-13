@@ -98,13 +98,28 @@ class VttUploadField extends FormField
             $acceptedExts
         );
 
-        // Current file indicator
+        // Current file indicator + download-format dropdown
         if (!empty($this->value)) {
-            $filename = basename((string) $this->value);
-            $html .= '<small class="text-muted mt-1 d-block">'
+            $filename     = basename((string) $this->value);
+            $downloadable = (bool) preg_match('/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/', $filename);
+
+            $html .= '<small class="text-muted mt-1 d-block cwm-vtt-current">'
                 . '<span class="icon-file" aria-hidden="true"></span> '
-                . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8')
-                . '</small>';
+                . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8');
+
+            if ($downloadable) {
+                $html .= ' &mdash; '
+                    . htmlspecialchars(Text::_('JBS_MED_CAPTION_DOWNLOAD'), ENT_QUOTES, 'UTF-8')
+                    . ' <select class="form-select form-select-sm d-inline-block w-auto cwm-vtt-download-format"'
+                    . ' data-filename="' . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . '">'
+                    . '<option value="">&hellip;</option>'
+                    . '<option value="vtt">' . htmlspecialchars(Text::_('JBS_MED_CAPTION_DOWNLOAD_VTT'), ENT_QUOTES, 'UTF-8') . '</option>'
+                    . '<option value="srt">' . htmlspecialchars(Text::_('JBS_MED_CAPTION_DOWNLOAD_SRT'), ENT_QUOTES, 'UTF-8') . '</option>'
+                    . '<option value="sbv">' . htmlspecialchars(Text::_('JBS_MED_CAPTION_DOWNLOAD_SBV'), ENT_QUOTES, 'UTF-8') . '</option>'
+                    . '</select>';
+            }
+
+            $html .= '</small>';
         }
 
         $html .= '</div>';
@@ -134,12 +149,19 @@ class VttUploadField extends FormField
 
         $wa->useScript('com_proclaim.cwm-vtt-upload');
 
+        $token = Session::getFormToken();
+
         $uploadUrl = Uri::base()
             . 'index.php?option=com_proclaim&task=cwmmediafile.uploadVttXHR&'
-            . Session::getFormToken() . '=1';
+            . $token . '=1';
+
+        $downloadUrl = Uri::base()
+            . 'index.php?option=com_proclaim&task=cwmmediafile.downloadCaption&'
+            . $token . '=1';
 
         $doc->addScriptOptions('com_proclaim.vttUpload', [
-            'uploadUrl' => $uploadUrl,
+            'uploadUrl'   => $uploadUrl,
+            'downloadUrl' => $downloadUrl,
         ]);
     }
 }
