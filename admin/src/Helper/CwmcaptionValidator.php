@@ -246,6 +246,167 @@ class CwmcaptionValidator
     }
 
     /**
+     * Strip WebVTT scaffolding so a body block can be reformatted into SRT or SBV.
+     *
+     * Removes the `WEBVTT` header, any header metadata block, leading
+     * `NOTE`/`STYLE`/`REGION` blocks, cue identifiers, cue settings (anything
+     * after the `start --> end` pair on the timestamp line), and inline tags
+     * (`<v>`, `<c>`, etc.). Returns an array of cue blocks where each block's
+     * first line is `start --> end` and subsequent lines are clean text.
+     *
+     * Returns an empty array when no valid cues are present.
+     *
+     * @param   string  $vttBody  Raw WebVTT file contents.
+     *
+     * @return  array<int, array{0: string, 1: string, 2: array<int, string>}>
+     *                  List of [start, end, textLines] tuples.
+     *
+     * @since   10.3.0
+     */
+    private function parseVttCues(string $vttBody): array
+    {
+        $body = ltrim($vttBody, "\xEF\xBB\xBF");
+        $body = str_replace(["\r\n", "\r"], "\n", $body);
+        $body = trim($body);
+
+        $blocks = preg_split('/\n\s*\n/', $body);
+        $cues   = [];
+
+        foreach ($blocks as $block) {
+            // Skip non-cue blocks: header, NOTE, STYLE, REGION.
+            if (
+                preg_match('/^WEBVTT(\s|$)/', $block)
+                || preg_match('/^(NOTE|STYLE|REGION)(\s|$)/', $block)
+            ) {
+                continue;
+            }
+
+            $lines = explode("\n", $block);
+
+            // Drop a leading cue identifier line — anything before the
+            // timestamp line that does not itself contain ' --> '.
+            while ($lines !== [] && !str_contains($lines[0], '-->')) {
+                array_shift($lines);
+            }
+
+            if ($lines === []) {
+                continue;
+            }
+
+            // Timestamp line: capture HH:MM:SS.mmm or MM:SS.mmm on either side,
+            // ignore any cue settings that may follow the end timestamp.
+            if (!preg_match(
+                '/^((?:\d{2,}:)?\d{2}:\d{2}\.\d{3})\s*-->\s*((?:\d{2,}:)?\d{2}:\d{2}\.\d{3})/',
+                array_shift($lines),
+                $m
+            )) {
+                continue;
+            }
+
+            // Strip inline tags from text lines (<v Speaker>, <c.class>, etc.)
+            $text = array_map(static fn (string $l): string => preg_replace('/<[^>]+>/', '', $l), $lines);
+
+            $cues[] = [$m[1], $m[2], $text];
+        }
+
+        return $cues;
+    }
+
+    /**
+     * Convert a WebVTT body to SubRip (SRT).
+     *
+     * Strips WebVTT scaffolding, prepends `HH:` when the source timestamp
+     * has no hours component, numbers cues sequentially from 1, and swaps
+     * the period fraction separator for SRT's comma. Inline tags and cue
+     * settings are dropped.
+     *
+     * @param   string  $vttBody  Raw WebVTT file contents.
+     *
+     * @return  string  SubRip body suitable for download.
+     *
+     * @since   10.3.0
+     */
+    public function convertVttToSrt(string $vttBody): string
+    {
+        $cues   = $this->parseVttCues($vttBody);
+        $output = [];
+
+        foreach ($cues as $i => [$start, $end, $text]) {
+            $output[] = ((string) ($i + 1)) . "\n"
+                . $this->vttToSrtTimestamp($start) . ' --> ' . $this->vttToSrtTimestamp($end) . "\n"
+                . implode("\n", $text);
+        }
+
+        return implode("\n\n", $output) . ($output === [] ? '' : "\n");
+    }
+
+    /**
+     * Convert a WebVTT body to YouTube SBV.
+     *
+     * Strips WebVTT scaffolding, reduces the hours component from two
+     * digits to one to match YouTube's documented example output, drops
+     * the ` --> ` separator in favor of a literal comma between
+     * timestamps, and removes inline tags and cue settings.
+     *
+     * @param   string  $vttBody  Raw WebVTT file contents.
+     *
+     * @return  string  SBV body suitable for download.
+     *
+     * @since   10.3.0
+     */
+    public function convertVttToSbv(string $vttBody): string
+    {
+        $cues   = $this->parseVttCues($vttBody);
+        $output = [];
+
+        foreach ($cues as [$start, $end, $text]) {
+            $output[] = $this->vttToSbvTimestamp($start) . ',' . $this->vttToSbvTimestamp($end) . "\n"
+                . implode("\n", $text);
+        }
+
+        return implode("\n\n", $output) . ($output === [] ? '' : "\n");
+    }
+
+    /**
+     * Format a WebVTT timestamp as SRT — pad hours to two digits, swap
+     * `.` for `,` in the fraction.
+     *
+     * @since 10.3.0
+     */
+    private function vttToSrtTimestamp(string $vttStamp): string
+    {
+        if (preg_match('/^(\d{2,}):(\d{2}):(\d{2})\.(\d{3})$/', $vttStamp, $m)) {
+            return \sprintf('%02d:%s:%s,%s', (int) $m[1], $m[2], $m[3], $m[4]);
+        }
+
+        // MM:SS.mmm — no hours component; prepend 00.
+        if (preg_match('/^(\d{2}):(\d{2})\.(\d{3})$/', $vttStamp, $m)) {
+            return '00:' . $m[1] . ':' . $m[2] . ',' . $m[3];
+        }
+
+        return $vttStamp;
+    }
+
+    /**
+     * Format a WebVTT timestamp as SBV — single-digit hours per Google's
+     * documented example, period fraction unchanged.
+     *
+     * @since 10.3.0
+     */
+    private function vttToSbvTimestamp(string $vttStamp): string
+    {
+        if (preg_match('/^(\d{2,}):(\d{2}):(\d{2})\.(\d{3})$/', $vttStamp, $m)) {
+            return ((int) $m[1]) . ':' . $m[2] . ':' . $m[3] . '.' . $m[4];
+        }
+
+        if (preg_match('/^(\d{2}):(\d{2})\.(\d{3})$/', $vttStamp, $m)) {
+            return '0:' . $m[1] . ':' . $m[2] . '.' . $m[3];
+        }
+
+        return $vttStamp;
+    }
+
+    /**
      * Strip everything outside `[A-Za-z0-9_-]` from the given base name
      * and fall back to a constant when nothing usable remains.
      *
