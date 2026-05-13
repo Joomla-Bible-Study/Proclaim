@@ -37,6 +37,17 @@ class CwmcaptionValidator
     public const ALLOWED_EXTENSIONS = ['vtt', 'srt', 'sbv'];
 
     /**
+     * File extensions recognized as plain-text transcripts rather than
+     * timed captions. Uploads matching these are rejected from the caption
+     * uploader with a redirect message pointing to the Message entity's
+     * transcript field.
+     *
+     * @var    string[]
+     * @since  10.3.0
+     */
+    public const TRANSCRIPT_EXTENSIONS = ['txt'];
+
+    /**
      * Maximum caption file size in bytes (2 MB).
      *
      * @var    int
@@ -77,6 +88,24 @@ class CwmcaptionValidator
     public function isAllowedExtension(string $ext): bool
     {
         return \in_array(strtolower($ext), self::ALLOWED_EXTENSIONS, true);
+    }
+
+    /**
+     * Check whether the given extension is a plain-text transcript.
+     *
+     * Transcripts belong on the Message entity's `transcript` field, not
+     * in the captions directory — when the controller sees one, it returns
+     * a redirect message so the user knows where to put it.
+     *
+     * @param   string  $ext  File extension without the leading dot.
+     *
+     * @return  bool  True when the extension is a transcript format.
+     *
+     * @since   10.3.0
+     */
+    public function isTranscriptExtension(string $ext): bool
+    {
+        return \in_array(strtolower($ext), self::TRANSCRIPT_EXTENSIONS, true);
     }
 
     /**

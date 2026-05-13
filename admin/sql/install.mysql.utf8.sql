@@ -423,6 +423,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `messagetype`         VARCHAR(100)                                              DEFAULT '1',
     `series_id`           INT(3)                                                    DEFAULT '0',
     `studytext`           TEXT,
+    `transcript`          MEDIUMTEXT                                                DEFAULT NULL,
     `thumbnailm`          TEXT,
     `image`               TEXT                                                      DEFAULT NULL,
     `thumbhm`             INT(11)                                                   DEFAULT NULL,
@@ -458,7 +459,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`),
     KEY `idx_messagetype_published` (`messagetype`, `published`),
     KEY `idx_booknumber_published` (`booknumber`, `published`),
-    KEY `idx_language_published` (`language`, `published`)
+    KEY `idx_language_published` (`language`, `published`),
+    FULLTEXT KEY `idx_transcript` (`transcript`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
