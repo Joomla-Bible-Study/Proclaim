@@ -226,6 +226,69 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringNotContainsString('garbage', $vtt);
     }
 
+    public static function convertSrtToVttProvider(): array
+    {
+        return [
+            'single cue with counter, comma → period' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nHello",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
+            ],
+            'multi-cue with non-sequential counters' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nFirst\n\n7\n00:00:10,500 --> 00:00:12,500\nSeventh",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nFirst\n\n00:00:10.500 --> 00:00:12.500\nSeventh\n",
+            ],
+            'multi-line cue text preserved' => [
+                "1\n00:00:01,000 --> 00:00:05,000\nLine one\nLine two",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:05.000\nLine one\nLine two\n",
+            ],
+            'CRLF line endings normalized' => [
+                "1\r\n00:00:01,000 --> 00:00:02,000\r\nHello\r\n\r\n2\r\n00:00:03,000 --> 00:00:04,000\r\nWorld",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n\n00:00:03.000 --> 00:00:04.000\nWorld\n",
+            ],
+            'BOM stripped' => [
+                "\xEF\xBB\xBF1\n00:00:01,000 --> 00:00:02,000\nHello",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
+            ],
+            'commas in cue text untouched' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nWell, hello, there.",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nWell, hello, there.\n",
+            ],
+        ];
+    }
+
+    #[DataProvider('convertSrtToVttProvider')]
+    public function testConvertSrtToVtt(string $srt, string $expectedVtt): void
+    {
+        $this->assertSame($expectedVtt, $this->validator->convertSrtToVtt($srt));
+    }
+
+    public function testConvertSrtToVttAlwaysStartsWithWebvttHeader(): void
+    {
+        $vtt = $this->validator->convertSrtToVtt("1\n00:00:01,000 --> 00:00:02,000\nHi");
+        $this->assertStringStartsWith("WEBVTT\n\n", $vtt);
+    }
+
+    public function testConvertSrtToVttSkipsBlocksWithoutValidTimestampLine(): void
+    {
+        // Garbage block in the middle should not crash conversion.
+        $srt = "1\n00:00:01,000 --> 00:00:02,000\nGood\n\nrandom garbage\n\n2\n00:00:03,000 --> 00:00:04,000\nAlso good";
+        $vtt = $this->validator->convertSrtToVtt($srt);
+
+        $this->assertStringContainsString("00:00:01.000 --> 00:00:02.000\nGood", $vtt);
+        $this->assertStringContainsString("00:00:03.000 --> 00:00:04.000\nAlso good", $vtt);
+        $this->assertStringNotContainsString('garbage', $vtt);
+    }
+
+    public function testConvertSrtToVttDoesNotTouchCommasInsideText(): void
+    {
+        // Property test: commas inside body text must round-trip verbatim.
+        $srt = "1\n00:00:01,000 --> 00:00:02,000\nA, B, C, D, E";
+        $vtt = $this->validator->convertSrtToVtt($srt);
+
+        $this->assertStringContainsString('A, B, C, D, E', $vtt);
+        $this->assertStringContainsString('00:00:01.000 --> 00:00:02.000', $vtt);
+    }
+
     public static function sanitizeFilenameProvider(): array
     {
         return [

@@ -186,6 +186,66 @@ class CwmcaptionValidator
     }
 
     /**
+     * Convert a SubRip (SRT) caption body to WebVTT.
+     *
+     * SRT cues are numbered with `HH:MM:SS,mmm --> HH:MM:SS,mmm` timestamps
+     * separated by blank lines. WebVTT expects the same ` --> ` separator
+     * but with `.` as the millisecond delimiter and an optional cue
+     * identifier instead of a positional counter. The conversion is
+     * mechanical: prepend the `WEBVTT` header, drop each cue's leading
+     * numeric counter, and swap `,` for `.` inside the timestamp line only
+     * — text bodies legitimately contain commas and must not be touched.
+     *
+     * @param   string  $body  Raw SRT file contents.
+     *
+     * @return  string  WebVTT body with header, suitable for writing to disk.
+     *
+     * @since   10.3.0
+     */
+    public function convertSrtToVtt(string $body): string
+    {
+        $body = ltrim($body, "\xEF\xBB\xBF");
+        $body = str_replace(["\r\n", "\r"], "\n", $body);
+
+        $blocks    = preg_split('/\n\s*\n/', trim($body));
+        $converted = [];
+
+        foreach ($blocks as $block) {
+            $lines = explode("\n", $block);
+
+            // Drop the SRT cue counter when the first line is a bare integer
+            // — SRT counters are positional, not identifiers, and WebVTT does
+            // not require them.
+            if ($lines !== [] && preg_match('/^\d+$/', trim($lines[0]))) {
+                array_shift($lines);
+            }
+
+            if ($lines === []) {
+                continue;
+            }
+
+            // Swap the comma fraction separator for a period on the timestamp
+            // line only. Match a full SRT timestamp pair to avoid touching
+            // any commas inside cue text.
+            $lines[0] = preg_replace(
+                '/^(\d{2}:\d{2}:\d{2}),(\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}),(\d{3})(.*)$/',
+                '$1.$2 --> $3.$4$5',
+                $lines[0],
+                1,
+                $count
+            );
+
+            if (!$count) {
+                continue;
+            }
+
+            $converted[] = implode("\n", $lines);
+        }
+
+        return "WEBVTT\n\n" . implode("\n\n", $converted) . "\n";
+    }
+
+    /**
      * Strip everything outside `[A-Za-z0-9_-]` from the given base name
      * and fall back to a constant when nothing usable remains.
      *
