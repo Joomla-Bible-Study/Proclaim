@@ -626,22 +626,21 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // SBV is converted to WEBVTT on store so the on-site player can consume
-        // it without a runtime shim — every stored file ends in `.vtt`.
-        $storeExt = $detected === 'sbv' ? 'vtt' : $ext;
-        $fileName = $validator->buildFilename($userfile['name'], $storeExt);
+        // Every stored caption ends in `.vtt` — VTT files are moved in place
+        // (zero-copy), SBV and SRT are converted to WebVTT on store so the
+        // on-site player consumes one canonical format without a runtime shim.
+        $fileName = $validator->buildFilename($userfile['name'], 'vtt');
         $destPath = $destDir . '/' . $fileName;
 
-        if ($detected === 'sbv') {
-            $body = file_get_contents($userfile['tmp_name']);
+        $stored = match ($detected) {
+            'vtt' => move_uploaded_file($userfile['tmp_name'], $destPath),
+            'srt' => ($body = file_get_contents($userfile['tmp_name'])) !== false
+                && file_put_contents($destPath, $validator->convertSrtToVtt($body)) !== false,
+            'sbv' => ($body = file_get_contents($userfile['tmp_name'])) !== false
+                && file_put_contents($destPath, $validator->convertSbvToVtt($body)) !== false,
+        };
 
-            if ($body === false || file_put_contents($destPath, $validator->convertSbvToVtt($body)) === false) {
-                echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
-                Factory::getApplication()->close();
-
-                return;
-            }
-        } elseif (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
+        if (!$stored) {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
             Factory::getApplication()->close();
 
