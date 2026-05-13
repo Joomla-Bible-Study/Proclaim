@@ -402,7 +402,7 @@ class Cwmshowscripture
         // Collect translations from DB with language info (cached per-request,
         // keyed by the enabled-provider set so cache invalidates across calls).
         static $translationsCacheByKey = [];
-        $cacheKey = ($gdprMode ? 'gdpr' : implode(',', $enabledSources)) ?: 'none';
+        $cacheKey                      = ($gdprMode ? 'gdpr' : implode(',', $enabledSources)) ?: 'none';
 
         if (!isset($translationsCacheByKey[$cacheKey])) {
             $translationsCacheByKey[$cacheKey] = [];
