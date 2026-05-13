@@ -406,6 +406,50 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->assertStringContainsString("1:23:45.000,1:23:46.500\nLater", $rebuilt);
     }
 
+    public function testTranscriptExtensionsConstantContainsTxt(): void
+    {
+        $this->assertSame(['txt'], CwmcaptionValidator::TRANSCRIPT_EXTENSIONS);
+    }
+
+    public static function transcriptExtensionProvider(): array
+    {
+        return [
+            'lowercase txt' => ['txt', true],
+            'uppercase TXT' => ['TXT', true],
+            'mixed Txt'     => ['Txt', true],
+            'vtt rejected'  => ['vtt', false],
+            'srt rejected'  => ['srt', false],
+            'sbv rejected'  => ['sbv', false],
+            'empty'         => ['', false],
+            'with-dot'      => ['.txt', false],
+        ];
+    }
+
+    #[DataProvider('transcriptExtensionProvider')]
+    public function testIsTranscriptExtension(string $ext, bool $expected): void
+    {
+        $this->assertSame($expected, $this->validator->isTranscriptExtension($ext));
+    }
+
+    public function testTranscriptAndCaptionExtensionsAreDisjoint(): void
+    {
+        // Property: a single extension should never satisfy both checks —
+        // otherwise the controller's branch order would matter for correctness.
+        foreach (CwmcaptionValidator::ALLOWED_EXTENSIONS as $captionExt) {
+            $this->assertFalse(
+                $this->validator->isTranscriptExtension($captionExt),
+                "Caption extension '$captionExt' must not also be a transcript extension"
+            );
+        }
+
+        foreach (CwmcaptionValidator::TRANSCRIPT_EXTENSIONS as $transcriptExt) {
+            $this->assertFalse(
+                $this->validator->isAllowedExtension($transcriptExt),
+                "Transcript extension '$transcriptExt' must not also be an allowed caption extension"
+            );
+        }
+    }
+
     public static function sanitizeFilenameProvider(): array
     {
         return [

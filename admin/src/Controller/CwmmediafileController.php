@@ -582,6 +582,20 @@ class CwmmediafileController extends FormController
         $validator = new CwmcaptionValidator();
         $ext       = strtolower(pathinfo($userfile['name'], PATHINFO_EXTENSION));
 
+        // Plain-text transcripts belong on the Message entity's transcript
+        // field, not in the captions directory. Return a redirect hint so
+        // the JS can scroll the user to the right field.
+        if ($validator->isTranscriptExtension($ext)) {
+            echo json_encode([
+                'success'  => false,
+                'error'    => Text::_('JBS_MED_VTT_USE_TRANSCRIPT_FIELD'),
+                'redirect' => 'transcript',
+            ]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
         if (!$validator->isAllowedExtension($ext)) {
             echo json_encode([
                 'success' => false,
