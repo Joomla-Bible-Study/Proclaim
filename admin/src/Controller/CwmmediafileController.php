@@ -652,4 +652,79 @@ class CwmmediafileController extends FormController
         echo json_encode(['success' => true, 'url' => $url, 'filename' => $fileName]);
         Factory::getApplication()->close();
     }
+
+    /**
+     * Stream a stored caption back to the browser in the requested format.
+     *
+     * Reads a stored `.vtt` caption file and converts it on the fly to VTT,
+     * SRT, or SBV. Defense against path traversal is layered: the filename
+     * input is matched against the same whitelist regex used at upload
+     * (`/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/`) and then `realpath()` is
+     * confined to the captions directory before any file read.
+     *
+     * Query string:
+     *  - `filename`  required, must match the upload-time filename shape
+     *  - `format`    required, one of `vtt|srt|sbv`
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.3.0
+     */
+    public function downloadCaption(): void
+    {
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+        }
+
+        $input    = Factory::getApplication()->getInput();
+        $filename = (string) $input->getString('filename', '');
+        $format   = strtolower((string) $input->getCmd('format', ''));
+
+        if (!preg_match('/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/', $filename)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        if (!\in_array($format, ['vtt', 'srt', 'sbv'], true)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_INVALID_FORMAT'), 400);
+        }
+
+        $captionsDir = JPATH_ROOT . '/media/com_proclaim/captions';
+        $dirReal     = realpath($captionsDir);
+        $fileReal    = realpath($captionsDir . '/' . $filename);
+
+        if ($dirReal === false || $fileReal === false || !str_starts_with($fileReal, $dirReal . \DIRECTORY_SEPARATOR)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        $vtt = file_get_contents($fileReal);
+
+        if ($vtt === false) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        $validator = new CwmcaptionValidator();
+
+        $body = match ($format) {
+            'vtt' => $vtt,
+            'srt' => $validator->convertVttToSrt($vtt),
+            'sbv' => $validator->convertVttToSbv($vtt),
+        };
+
+        $mime = match ($format) {
+            'vtt' => 'text/vtt; charset=utf-8',
+            'srt' => 'application/x-subrip; charset=utf-8',
+            'sbv' => 'text/plain; charset=utf-8',
+        };
+
+        $base       = pathinfo($filename, PATHINFO_FILENAME);
+        $outputName = $base . '.' . $format;
+
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: attachment; filename="' . $outputName . '"');
+        header('Content-Length: ' . \strlen($body));
+
+        echo $body;
+        Factory::getApplication()->close();
+    }
 }
