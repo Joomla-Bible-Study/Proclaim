@@ -31,3 +31,14 @@
 .subform-repeatable-group {
     overflow: visible !important;
 }
+
+/* Dark-mode contrast fix for already-selected items in the dropdown.
+   Atum's template only overrides .is-highlighted (the keyboard-focused
+   item) for dark mode, leaving .is-selected items with the bundled
+   choices.css `#f2f2f2` light background — which renders the inherited
+   light text invisible against light grey. Mirror atum's is-highlighted
+   pattern so the two states stay visually consistent. */
+[data-bs-theme="dark"] .choices .choices__list--dropdown .choices__item--selectable.is-selected,
+[data-bs-theme="dark"] .choices .choices__list[aria-expanded] .choices__item--selectable.is-selected {
+    background-color: var(--gray-800);
+}
