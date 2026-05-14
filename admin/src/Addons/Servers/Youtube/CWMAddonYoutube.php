@@ -2355,7 +2355,7 @@ class CWMAddonYoutube extends CWMAddon
      * @throws  \RuntimeException    For local pre-flight failures (empty
      *                               transcript, etc.).
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function insertTranscriptAsCaption(
         YouTube $service,
@@ -2405,7 +2405,7 @@ class CWMAddonYoutube extends CWMAddon
      * @throws  \RuntimeException  When polling exceeds the timeout budget
      *                             without leaving `syncing`.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function awaitCaptionReady(
         YouTube $service,
@@ -2449,7 +2449,7 @@ class CWMAddonYoutube extends CWMAddon
      * @throws  Exception  Wraps the Google SDK error with the original
      *                     status code preserved.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function downloadCaption(YouTube $service, string $captionId, string $tfmt = 'vtt'): string
     {
@@ -2490,7 +2490,7 @@ class CWMAddonYoutube extends CWMAddon
      *                             channel not owned, duplicate caption,
      *                             quota exhausted, sync timeout.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function generateCaptionsFromTranscript(
         int $serverId,
