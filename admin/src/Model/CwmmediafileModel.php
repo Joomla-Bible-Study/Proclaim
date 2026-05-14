@@ -25,6 +25,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
@@ -220,6 +221,39 @@ class CwmmediafileModel extends AdminModel
 
                 unset($ch);
                 $params->set('chapters', $chapters);
+            }
+
+            // Auto-fill empty label / srclang on subtitle tracks from site default language
+            $subtitleTracks = $params->get('subtitle_tracks', []);
+
+            if (!empty($subtitleTracks)) {
+                $defaultLang = Factory::getLanguage()->getTag();
+                $shortLang   = strtolower(substr($defaultLang, 0, 2));
+                $known       = LanguageHelper::getKnownLanguages();
+                $rawName     = $known[$defaultLang]['name'] ?? $defaultLang;
+                // Strip trailing parenthetical so "English (en-GB)" becomes "English"
+                $nativeName  = trim((string) preg_replace('/\s*\([^)]*\)\s*$/', '', $rawName));
+
+                $subtitleTracks = (array) $subtitleTracks;
+
+                foreach ($subtitleTracks as &$track) {
+                    $track = (array) $track;
+
+                    if (empty($track['src'])) {
+                        continue;
+                    }
+
+                    if (empty($track['srclang'])) {
+                        $track['srclang'] = $shortLang;
+                    }
+
+                    if (empty($track['label'])) {
+                        $track['label'] = $nativeName;
+                    }
+                }
+
+                unset($track);
+                $params->set('subtitle_tracks', $subtitleTracks);
             }
 
             $data['params'] = $params->toArray();

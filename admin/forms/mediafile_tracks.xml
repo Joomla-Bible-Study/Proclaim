@@ -24,9 +24,11 @@
                    buttons="add,remove,move">
                 <form>
                     <field name="label" type="text" label="JBS_MED_TRACK_LABEL"
-                           hint="English" required="true" filter="STRING"/>
+                           description="JBS_MED_TRACK_LABEL_DESC"
+                           hint="English" filter="STRING"/>
                     <field name="srclang" type="text" label="JBS_MED_TRACK_LANGUAGE"
-                           hint="en" size="5" required="true" filter="STRING"/>
+                           description="JBS_MED_TRACK_LANGUAGE_DESC"
+                           hint="en" size="5" filter="STRING"/>
                     <field name="src" type="VttUpload" label="JBS_MED_TRACK_URL"
                            description="JBS_MED_TRACK_URL_DESC"
                            required="true" filter="URL"
