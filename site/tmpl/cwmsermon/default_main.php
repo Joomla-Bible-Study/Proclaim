@@ -118,6 +118,18 @@ if (
     echo $this->item->studytext;
 }
 
+// Transcript — rendered below the message text in a collapsible panel so
+// it's available without dominating the page. Empty/null transcripts are
+// silently omitted.
+if (!empty($this->item->transcript)) {
+    echo '<details class="cwm-transcript mt-3">'
+        . '<summary>' . htmlspecialchars(Text::_('JBS_STY_TRANSCRIPT_HEADING'), ENT_QUOTES, 'UTF-8') . '</summary>'
+        . '<div class="cwm-transcript-body mt-2">'
+        . nl2br(htmlspecialchars((string) $this->item->transcript, ENT_QUOTES, 'UTF-8'))
+        . '</div>'
+        . '</details>';
+}
+
 ?>
 <?php
 if ($this->item->params->get('showrelated') === '2') {

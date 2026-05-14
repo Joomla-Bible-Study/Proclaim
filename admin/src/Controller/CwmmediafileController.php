@@ -582,6 +582,20 @@ class CwmmediafileController extends FormController
         $validator = new CwmcaptionValidator();
         $ext       = strtolower(pathinfo($userfile['name'], PATHINFO_EXTENSION));
 
+        // Plain-text transcripts belong on the Message entity's transcript
+        // field, not in the captions directory. Return a redirect hint so
+        // the JS can scroll the user to the right field.
+        if ($validator->isTranscriptExtension($ext)) {
+            echo json_encode([
+                'success'  => false,
+                'error'    => Text::_('JBS_MED_VTT_USE_TRANSCRIPT_FIELD'),
+                'redirect' => 'transcript',
+            ]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
         if (!$validator->isAllowedExtension($ext)) {
             echo json_encode([
                 'success' => false,
@@ -602,11 +616,12 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Sniff the first 64 bytes to confirm WEBVTT or SRT magic — defends
-        // against a renamed binary slipping past the extension whitelist.
-        $head = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
+        // Sniff the first 64 bytes to confirm WEBVTT, SBV, or SRT magic —
+        // defends against a renamed binary slipping past the extension whitelist.
+        $head     = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
+        $detected = $head === false ? null : $validator->detectFormat($head);
 
-        if ($head === false || $validator->detectFormat($head) === null) {
+        if ($detected === null) {
             echo json_encode([
                 'success' => false,
                 'error'   => Text::_($head === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
@@ -625,10 +640,21 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        $fileName = $validator->buildFilename($userfile['name'], $ext);
+        // Every stored caption ends in `.vtt` — VTT files are moved in place
+        // (zero-copy), SBV and SRT are converted to WebVTT on store so the
+        // on-site player consumes one canonical format without a runtime shim.
+        $fileName = $validator->buildFilename($userfile['name'], 'vtt');
         $destPath = $destDir . '/' . $fileName;
 
-        if (!move_uploaded_file($userfile['tmp_name'], $destPath)) {
+        $stored = match ($detected) {
+            'vtt' => move_uploaded_file($userfile['tmp_name'], $destPath),
+            'srt' => ($body = file_get_contents($userfile['tmp_name'])) !== false
+                && file_put_contents($destPath, $validator->convertSrtToVtt($body)) !== false,
+            'sbv' => ($body = file_get_contents($userfile['tmp_name'])) !== false
+                && file_put_contents($destPath, $validator->convertSbvToVtt($body)) !== false,
+        };
+
+        if (!$stored) {
             echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_VTT_UPLOAD_FAILED')]);
             Factory::getApplication()->close();
 
@@ -638,6 +664,235 @@ class CwmmediafileController extends FormController
         $url = Uri::root() . 'media/com_proclaim/captions/' . $fileName;
 
         echo json_encode(['success' => true, 'url' => $url, 'filename' => $fileName]);
+        Factory::getApplication()->close();
+    }
+
+    /**
+     * Store a WebVTT body in the captions directory and return the
+     * publicly-accessible URL and stored filename.
+     *
+     * Mirrors the storage half of {@see uploadVttXHR()} so other endpoints
+     * (e.g. {@see generateCaptionsFromTranscript()}) can land caption
+     * bytes through the same canonical pipeline without re-implementing
+     * the directory + filename + write dance.
+     *
+     * @param   string  $vttBody       Already-converted WebVTT bytes.
+     * @param   string  $originalName  Filename hint for sanitization;
+     *                                 used only for the slug portion of
+     *                                 the stored name.
+     *
+     * @return  array{url: string, filename: string}
+     *
+     * @throws  \RuntimeException  When the destination directory cannot be
+     *                             created or the file write fails.
+     *
+     * @since   10.3.0
+     */
+    private function storeVttBody(string $vttBody, string $originalName): array
+    {
+        $destDir = JPATH_ROOT . '/media/com_proclaim/captions';
+
+        if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
+            throw new \RuntimeException(Text::_('JBS_MED_VTT_UPLOAD_FAILED'));
+        }
+
+        $validator = new CwmcaptionValidator();
+        $fileName  = $validator->buildFilename($originalName, 'vtt');
+        $destPath  = $destDir . '/' . $fileName;
+
+        if (file_put_contents($destPath, $vttBody) === false) {
+            throw new \RuntimeException(Text::_('JBS_MED_VTT_UPLOAD_FAILED'));
+        }
+
+        return [
+            'url'      => Uri::root() . 'media/com_proclaim/captions/' . $fileName,
+            'filename' => $fileName,
+        ];
+    }
+
+    /**
+     * Stream a stored caption back to the browser in the requested format.
+     *
+     * Reads a stored `.vtt` caption file and converts it on the fly to VTT,
+     * SRT, or SBV. Defense against path traversal is layered: the filename
+     * input is matched against the same whitelist regex used at upload
+     * (`/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/`) and then `realpath()` is
+     * confined to the captions directory before any file read.
+     *
+     * Query string:
+     *  - `filename`  required, must match the upload-time filename shape
+     *  - `format`    required, one of `vtt|srt|sbv`
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.3.0
+     */
+    public function downloadCaption(): void
+    {
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+        }
+
+        $input    = Factory::getApplication()->getInput();
+        $filename = (string) $input->getString('filename', '');
+        $format   = strtolower((string) $input->getCmd('format', ''));
+
+        if (!preg_match('/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/', $filename)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        if (!\in_array($format, ['vtt', 'srt', 'sbv'], true)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_INVALID_FORMAT'), 400);
+        }
+
+        $captionsDir = JPATH_ROOT . '/media/com_proclaim/captions';
+        $dirReal     = realpath($captionsDir);
+        $fileReal    = realpath($captionsDir . '/' . $filename);
+
+        if ($dirReal === false || $fileReal === false || !str_starts_with($fileReal, $dirReal . \DIRECTORY_SEPARATOR)) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        $vtt = file_get_contents($fileReal);
+
+        if ($vtt === false) {
+            throw new \RuntimeException(Text::_('JBS_MED_CAPTION_NOT_FOUND'), 404);
+        }
+
+        $validator = new CwmcaptionValidator();
+
+        $body = match ($format) {
+            'vtt' => $vtt,
+            'srt' => $validator->convertVttToSrt($vtt),
+            'sbv' => $validator->convertVttToSbv($vtt),
+        };
+
+        $mime = match ($format) {
+            'vtt' => 'text/vtt; charset=utf-8',
+            'srt' => 'application/x-subrip; charset=utf-8',
+            'sbv' => 'text/plain; charset=utf-8',
+        };
+
+        $base       = pathinfo($filename, PATHINFO_FILENAME);
+        $outputName = $base . '.' . $format;
+
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: attachment; filename="' . $outputName . '"');
+        header('Content-Length: ' . \strlen($body));
+
+        echo $body;
+        Factory::getApplication()->close();
+    }
+
+    /**
+     * Generate captions for a YouTube-hosted media file from its parent
+     * Message's transcript field.
+     *
+     * Pipeline: load media file → load linked study → fetch server's OAuth
+     * client → upload transcript with sync=true → poll captions.list → download
+     * the time-coded VTT → store via {@see storeVttBody()}. Returns the same
+     * JSON response shape as {@see uploadVttXHR()} so the caption upload UI
+     * can render the result without distinguishing source.
+     *
+     * Synchronous because the user explicitly clicked a "this may take a
+     * minute" button — Joomla's request thread is acceptable for the
+     * 30–90 second wait. If sermon length pushes past 90s, the addon
+     * throws a TIMEOUT message pointing the user at YouTube Studio.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   10.3.0
+     */
+    public function generateCaptionsFromTranscript(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get') && !Session::checkToken()) {
+            echo json_encode(['success' => false, 'error' => Text::_('JINVALID_TOKEN')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $input         = Factory::getApplication()->getInput();
+        $mediaFileId   = (int) $input->getInt('id', 0);
+        $language      = (string) $input->getCmd('language', 'en');
+
+        if ($mediaFileId <= 0) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_GENERATE_CAPTIONS_NO_TRANSCRIPT')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Load the media file alongside its parent study's transcript in one
+        // query — the join keeps us from fetching the whole study row twice.
+        $query = $db->getQuery(true)
+            ->select([
+                $db->quoteName('m.id'),
+                $db->quoteName('m.server_id'),
+                $db->quoteName('m.params', 'media_params'),
+                $db->quoteName('s.transcript'),
+            ])
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->join('LEFT', $db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.study_id'))
+            ->where($db->quoteName('m.id') . ' = ' . $mediaFileId);
+        $db->setQuery($query);
+
+        $row = $db->loadAssoc();
+
+        if (!$row) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_CAPTION_NOT_FOUND')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $transcript = trim((string) ($row['transcript'] ?? ''));
+
+        if ($transcript === '') {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_GENERATE_CAPTIONS_NO_TRANSCRIPT')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        // Extract the YouTube video id from the media file's stored params.
+        // The addon owns the parsing rules so multiple URL shapes are handled.
+        $mediaParams = new \Joomla\Registry\Registry((string) ($row['media_params'] ?? '{}'));
+        $videoUrl    = (string) $mediaParams->get('filename', '');
+        $videoId     = \CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube::extractYoutubeVideoId($videoUrl);
+
+        if ($videoId === null) {
+            echo json_encode(['success' => false, 'error' => Text::_('JBS_MED_GENERATE_CAPTIONS_NOT_OWNED')]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        $serverId = (int) ($row['server_id'] ?? 0);
+
+        try {
+            /** @var \CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube $addon */
+            $addon  = CWMAddon::getInstance('Youtube');
+            $vtt    = $addon->generateCaptionsFromTranscript($serverId, $videoId, $transcript, $language);
+            $stored = $this->storeVttBody($vtt, 'youtube-' . $videoId . '.vtt');
+        } catch (\RuntimeException $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            Factory::getApplication()->close();
+
+            return;
+        }
+
+        echo json_encode([
+            'success'  => true,
+            'url'      => $stored['url'],
+            'filename' => $stored['filename'],
+        ]);
         Factory::getApplication()->close();
     }
 }

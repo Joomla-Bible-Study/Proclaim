@@ -36,9 +36,9 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         $this->validator = new CwmcaptionValidator();
     }
 
-    public function testAllowedExtensionsConstantContainsVttAndSrt(): void
+    public function testAllowedExtensionsConstantContainsVttSrtAndSbv(): void
     {
-        $this->assertSame(['vtt', 'srt'], CwmcaptionValidator::ALLOWED_EXTENSIONS);
+        $this->assertSame(['vtt', 'srt', 'sbv'], CwmcaptionValidator::ALLOWED_EXTENSIONS);
     }
 
     public function testMaxSizeIsTwoMegabytes(): void
@@ -51,7 +51,9 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
         return [
             'lowercase vtt'     => ['vtt', true],
             'lowercase srt'     => ['srt', true],
+            'lowercase sbv'     => ['sbv', true],
             'uppercase VTT'     => ['VTT', true],
+            'uppercase SBV'     => ['SBV', true],
             'mixed-case Srt'    => ['Srt', true],
             'mp4 rejected'      => ['mp4', false],
             'php rejected'      => ['php', false],
@@ -133,6 +135,319 @@ class CwmcaptionValidatorTest extends ProclaimTestCase
     public function testDetectFormatRejectsHtmlPretendingToBeCaption(): void
     {
         $this->assertNull($this->validator->detectFormat("<html>WEBVTT</html>"));
+    }
+
+    public function testDetectFormatReturnsSbvForSingleDigitHourCue(): void
+    {
+        // Canonical YouTube SBV download — single-digit hour, comma between timestamps.
+        $this->assertSame(
+            'sbv',
+            $this->validator->detectFormat("0:00:01.000,0:00:02.000\nHello")
+        );
+    }
+
+    public function testDetectFormatReturnsSbvForDoubleDigitHourCue(): void
+    {
+        // Defensive: SBV parsers commonly accept zero-padded hours too.
+        $this->assertSame(
+            'sbv',
+            $this->validator->detectFormat("01:23:45.000,01:23:46.500\nHello")
+        );
+    }
+
+    public function testDetectFormatReturnsSbvWithBom(): void
+    {
+        $this->assertSame(
+            'sbv',
+            $this->validator->detectFormat("\xEF\xBB\xBF0:00:01.000,0:00:02.000\nHello")
+        );
+    }
+
+    public function testDetectFormatPrefersSbvOverSrtWhenBothCouldMatch(): void
+    {
+        // SBV's first line is also the timestamp line — no leading numeric counter.
+        // The SBV branch must win to keep ' --> ' out of the SRT regex's path.
+        $this->assertSame(
+            'sbv',
+            $this->validator->detectFormat("0:00:01.000,0:00:02.000\nText")
+        );
+    }
+
+    public static function convertSbvToVttProvider(): array
+    {
+        return [
+            'single cue, single-digit hour' => [
+                "0:00:01.000,0:00:02.000\nHello world",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello world\n",
+            ],
+            'single cue, double-digit hour kept' => [
+                "01:23:45.000,01:23:46.500\nLater",
+                "WEBVTT\n\n01:23:45.000 --> 01:23:46.500\nLater\n",
+            ],
+            'multi-cue with blank-line separator' => [
+                "0:00:01.000,0:00:02.000\nFirst\n\n0:00:03.000,0:00:04.000\nSecond",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nFirst\n\n00:00:03.000 --> 00:00:04.000\nSecond\n",
+            ],
+            'multi-line text in cue' => [
+                "0:00:01.000,0:00:05.000\nLine one\nLine two",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:05.000\nLine one\nLine two\n",
+            ],
+            'CRLF line endings normalized' => [
+                "0:00:01.000,0:00:02.000\r\nHello\r\n\r\n0:00:03.000,0:00:04.000\r\nWorld",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n\n00:00:03.000 --> 00:00:04.000\nWorld\n",
+            ],
+            'BOM stripped' => [
+                "\xEF\xBB\xBF0:00:01.000,0:00:02.000\nHello",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
+            ],
+        ];
+    }
+
+    #[DataProvider('convertSbvToVttProvider')]
+    public function testConvertSbvToVtt(string $sbv, string $expectedVtt): void
+    {
+        $this->assertSame($expectedVtt, $this->validator->convertSbvToVtt($sbv));
+    }
+
+    public function testConvertSbvToVttAlwaysStartsWithWebvttHeader(): void
+    {
+        $vtt = $this->validator->convertSbvToVtt("0:00:01.000,0:00:02.000\nHello");
+        $this->assertStringStartsWith("WEBVTT\n\n", $vtt);
+    }
+
+    public function testConvertSbvToVttSkipsBlocksWithoutTimestampLine(): void
+    {
+        // A garbage block in the middle should not crash conversion.
+        $sbv = "0:00:01.000,0:00:02.000\nGood\n\nrandom garbage\n\n0:00:03.000,0:00:04.000\nAlso good";
+        $vtt = $this->validator->convertSbvToVtt($sbv);
+
+        $this->assertStringContainsString("00:00:01.000 --> 00:00:02.000\nGood", $vtt);
+        $this->assertStringContainsString("00:00:03.000 --> 00:00:04.000\nAlso good", $vtt);
+        $this->assertStringNotContainsString('garbage', $vtt);
+    }
+
+    public static function convertSrtToVttProvider(): array
+    {
+        return [
+            'single cue with counter, comma → period' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nHello",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
+            ],
+            'multi-cue with non-sequential counters' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nFirst\n\n7\n00:00:10,500 --> 00:00:12,500\nSeventh",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nFirst\n\n00:00:10.500 --> 00:00:12.500\nSeventh\n",
+            ],
+            'multi-line cue text preserved' => [
+                "1\n00:00:01,000 --> 00:00:05,000\nLine one\nLine two",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:05.000\nLine one\nLine two\n",
+            ],
+            'CRLF line endings normalized' => [
+                "1\r\n00:00:01,000 --> 00:00:02,000\r\nHello\r\n\r\n2\r\n00:00:03,000 --> 00:00:04,000\r\nWorld",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n\n00:00:03.000 --> 00:00:04.000\nWorld\n",
+            ],
+            'BOM stripped' => [
+                "\xEF\xBB\xBF1\n00:00:01,000 --> 00:00:02,000\nHello",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n",
+            ],
+            'commas in cue text untouched' => [
+                "1\n00:00:01,000 --> 00:00:02,000\nWell, hello, there.",
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nWell, hello, there.\n",
+            ],
+        ];
+    }
+
+    #[DataProvider('convertSrtToVttProvider')]
+    public function testConvertSrtToVtt(string $srt, string $expectedVtt): void
+    {
+        $this->assertSame($expectedVtt, $this->validator->convertSrtToVtt($srt));
+    }
+
+    public function testConvertSrtToVttAlwaysStartsWithWebvttHeader(): void
+    {
+        $vtt = $this->validator->convertSrtToVtt("1\n00:00:01,000 --> 00:00:02,000\nHi");
+        $this->assertStringStartsWith("WEBVTT\n\n", $vtt);
+    }
+
+    public function testConvertSrtToVttSkipsBlocksWithoutValidTimestampLine(): void
+    {
+        // Garbage block in the middle should not crash conversion.
+        $srt = "1\n00:00:01,000 --> 00:00:02,000\nGood\n\nrandom garbage\n\n2\n00:00:03,000 --> 00:00:04,000\nAlso good";
+        $vtt = $this->validator->convertSrtToVtt($srt);
+
+        $this->assertStringContainsString("00:00:01.000 --> 00:00:02.000\nGood", $vtt);
+        $this->assertStringContainsString("00:00:03.000 --> 00:00:04.000\nAlso good", $vtt);
+        $this->assertStringNotContainsString('garbage', $vtt);
+    }
+
+    public function testConvertSrtToVttDoesNotTouchCommasInsideText(): void
+    {
+        // Property test: commas inside body text must round-trip verbatim.
+        $srt = "1\n00:00:01,000 --> 00:00:02,000\nA, B, C, D, E";
+        $vtt = $this->validator->convertSrtToVtt($srt);
+
+        $this->assertStringContainsString('A, B, C, D, E', $vtt);
+        $this->assertStringContainsString('00:00:01.000 --> 00:00:02.000', $vtt);
+    }
+
+    public static function convertVttToSrtProvider(): array
+    {
+        return [
+            'single cue, period → comma' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello\n",
+            ],
+            'multi-cue numbered sequentially' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nFirst\n\n00:00:03.000 --> 00:00:04.000\nSecond",
+                "1\n00:00:01,000 --> 00:00:02,000\nFirst\n\n2\n00:00:03,000 --> 00:00:04,000\nSecond\n",
+            ],
+            'NOTE block stripped' => [
+                "WEBVTT\n\nNOTE this is a comment\n\n00:00:01.000 --> 00:00:02.000\nHello",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello\n",
+            ],
+            'STYLE block stripped' => [
+                "WEBVTT\n\nSTYLE\n::cue { color: red }\n\n00:00:01.000 --> 00:00:02.000\nHello",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello\n",
+            ],
+            'cue identifier line dropped' => [
+                "WEBVTT\n\nintro-cue\n00:00:01.000 --> 00:00:02.000\nHello",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello\n",
+            ],
+            'cue settings dropped' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000 align:start position:50%\nHello",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello\n",
+            ],
+            'inline tags stripped' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n<v Speaker>Hello <c.red>world</c></v>",
+                "1\n00:00:01,000 --> 00:00:02,000\nHello world\n",
+            ],
+            'MM:SS.mmm hours-absent prepends 00' => [
+                "WEBVTT\n\n00:01.500 --> 00:02.500\nShort",
+                "1\n00:00:01,500 --> 00:00:02,500\nShort\n",
+            ],
+        ];
+    }
+
+    #[DataProvider('convertVttToSrtProvider')]
+    public function testConvertVttToSrt(string $vtt, string $expectedSrt): void
+    {
+        $this->assertSame($expectedSrt, $this->validator->convertVttToSrt($vtt));
+    }
+
+    public static function convertVttToSbvProvider(): array
+    {
+        return [
+            'single cue, hours reduced to single digit' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello",
+                "0:00:01.000,0:00:02.000\nHello\n",
+            ],
+            'multi-digit hours kept' => [
+                "WEBVTT\n\n12:34:56.000 --> 12:34:57.000\nLater",
+                "12:34:56.000,12:34:57.000\nLater\n",
+            ],
+            'multi-cue blank-line separated' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nFirst\n\n00:00:03.000 --> 00:00:04.000\nSecond",
+                "0:00:01.000,0:00:02.000\nFirst\n\n0:00:03.000,0:00:04.000\nSecond\n",
+            ],
+            'NOTE/STYLE/REGION blocks stripped' => [
+                "WEBVTT\n\nNOTE foo\n\nSTYLE\n::cue {}\n\nREGION\nid:r1\n\n00:00:01.000 --> 00:00:02.000\nHello",
+                "0:00:01.000,0:00:02.000\nHello\n",
+            ],
+            'cue identifier + settings dropped' => [
+                "WEBVTT\n\nintro\n00:00:01.000 --> 00:00:02.000 align:center\nHello",
+                "0:00:01.000,0:00:02.000\nHello\n",
+            ],
+            'inline tags stripped' => [
+                "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\n<v Speaker>Hi</v>",
+                "0:00:01.000,0:00:02.000\nHi\n",
+            ],
+            'MM:SS.mmm hours-absent prepends 0' => [
+                "WEBVTT\n\n00:01.500 --> 00:02.500\nShort",
+                "0:00:01.500,0:00:02.500\nShort\n",
+            ],
+        ];
+    }
+
+    #[DataProvider('convertVttToSbvProvider')]
+    public function testConvertVttToSbv(string $vtt, string $expectedSbv): void
+    {
+        $this->assertSame($expectedSbv, $this->validator->convertVttToSbv($vtt));
+    }
+
+    public function testConvertVttToSrtReturnsEmptyForHeaderOnly(): void
+    {
+        $this->assertSame('', $this->validator->convertVttToSrt("WEBVTT\n\n"));
+    }
+
+    public function testConvertVttToSbvReturnsEmptyForHeaderOnly(): void
+    {
+        $this->assertSame('', $this->validator->convertVttToSbv("WEBVTT\n\n"));
+    }
+
+    public function testRoundTripSrtToVttToSrtPreservesCues(): void
+    {
+        // Property test: SRT → VTT → SRT round-trip yields equivalent
+        // cue content (numbering may renormalize, whitespace may differ
+        // by a trailing newline).
+        $original = "1\n00:00:01,500 --> 00:00:02,750\nFirst, with comma\n\n2\n00:01:00,000 --> 00:01:05,000\nLater";
+        $vtt      = $this->validator->convertSrtToVtt($original);
+        $rebuilt  = $this->validator->convertVttToSrt($vtt);
+
+        $this->assertStringContainsString("00:00:01,500 --> 00:00:02,750\nFirst, with comma", $rebuilt);
+        $this->assertStringContainsString("00:01:00,000 --> 00:01:05,000\nLater", $rebuilt);
+    }
+
+    public function testRoundTripSbvToVttToSbvPreservesCues(): void
+    {
+        $original = "0:00:01.500,0:00:02.750\nFirst\n\n1:23:45.000,1:23:46.500\nLater";
+        $vtt      = $this->validator->convertSbvToVtt($original);
+        $rebuilt  = $this->validator->convertVttToSbv($vtt);
+
+        $this->assertStringContainsString("0:00:01.500,0:00:02.750\nFirst", $rebuilt);
+        $this->assertStringContainsString("1:23:45.000,1:23:46.500\nLater", $rebuilt);
+    }
+
+    public function testTranscriptExtensionsConstantContainsTxt(): void
+    {
+        $this->assertSame(['txt'], CwmcaptionValidator::TRANSCRIPT_EXTENSIONS);
+    }
+
+    public static function transcriptExtensionProvider(): array
+    {
+        return [
+            'lowercase txt' => ['txt', true],
+            'uppercase TXT' => ['TXT', true],
+            'mixed Txt'     => ['Txt', true],
+            'vtt rejected'  => ['vtt', false],
+            'srt rejected'  => ['srt', false],
+            'sbv rejected'  => ['sbv', false],
+            'empty'         => ['', false],
+            'with-dot'      => ['.txt', false],
+        ];
+    }
+
+    #[DataProvider('transcriptExtensionProvider')]
+    public function testIsTranscriptExtension(string $ext, bool $expected): void
+    {
+        $this->assertSame($expected, $this->validator->isTranscriptExtension($ext));
+    }
+
+    public function testTranscriptAndCaptionExtensionsAreDisjoint(): void
+    {
+        // Property: a single extension should never satisfy both checks —
+        // otherwise the controller's branch order would matter for correctness.
+        foreach (CwmcaptionValidator::ALLOWED_EXTENSIONS as $captionExt) {
+            $this->assertFalse(
+                $this->validator->isTranscriptExtension($captionExt),
+                "Caption extension '$captionExt' must not also be a transcript extension"
+            );
+        }
+
+        foreach (CwmcaptionValidator::TRANSCRIPT_EXTENSIONS as $transcriptExt) {
+            $this->assertFalse(
+                $this->validator->isAllowedExtension($transcriptExt),
+                "Transcript extension '$transcriptExt' must not also be an allowed caption extension"
+            );
+        }
     }
 
     public static function sanitizeFilenameProvider(): array
