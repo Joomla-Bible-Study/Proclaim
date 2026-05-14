@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const { token } = config.dataset;
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
     // All XHR requests must bypass browser cache — counts and batch responses
     // change on every call as images are migrated/recovered/converted.
     const noCache = { cache: 'no-store' };
@@ -603,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cwmFetch(`index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${token}=1`)
             .then((data) => {
                 const grandTotal = data.total;
-                const types = ['studies', 'teachers', 'series'].filter((t) => data[t] > 0);
+                const types = ['studies', 'teachers', 'series'].filter((type) => data[type] > 0);
                 processNextType(types, 0, grandTotal);
             });
 
@@ -1164,7 +1172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pipelineKeys = {
             running: 'JBS_ADM_PIPELINE_RUNNING', done: 'JBS_ADM_PIPELINE_DONE', skipped: 'JBS_ADM_PIPELINE_SKIPPED', error: 'JBS_ADM_PIPELINE_ERROR',
         };
-        badge.textContent = Joomla.Text._(pipelineKeys[state] || '') || state;
+        badge.textContent = t(pipelineKeys[state] || '', state);
     }
 
     function setPipelineStatus(text) {
@@ -1303,7 +1311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cleanupKeys = {
             running: 'JBS_ADM_CLEANUP_PIPELINE_RUNNING', done: 'JBS_ADM_CLEANUP_PIPELINE_DONE', skipped: 'JBS_ADM_CLEANUP_PIPELINE_SKIPPED', error: 'JBS_ADM_CLEANUP_PIPELINE_ERROR',
         };
-        badge.textContent = Joomla.Text._(cleanupKeys[state] || '') || state;
+        badge.textContent = t(cleanupKeys[state] || '', state);
     }
 
     function setCleanupStatus(text) {

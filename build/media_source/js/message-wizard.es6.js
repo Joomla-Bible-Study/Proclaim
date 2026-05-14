@@ -7,6 +7,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     const TOTAL_STEPS = 6;
     let currentStep = 1;
 
@@ -186,26 +195,26 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let html = '<dl class="row mb-0">';
-        html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_TITLE') || 'Title') + '</dt>';
+        html += '<dt class="col-sm-3">' + (t('JBS_CMN_TITLE', 'Title')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(getValue('jform_studytitle') || '—') + '</dd>';
 
-        html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_STUDY_DATE') || 'Date') + '</dt>';
+        html += '<dt class="col-sm-3">' + (t('JBS_CMN_STUDY_DATE', 'Date')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(getValue('jform_studydate') || '—') + '</dd>';
 
-        html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_TEACHERS') || 'Teachers') + '</dt>';
+        html += '<dt class="col-sm-3">' + (t('JBS_CMN_TEACHERS', 'Teachers')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(teacherNames.join(', ') || '—') + '</dd>';
 
         // Series — get text from the modal field display
         const seriesDisplay = document.getElementById('jform_series_id_name');
         const seriesText = seriesDisplay ? seriesDisplay.value.trim() : '';
-        html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_SERIES') || 'Series') + '</dt>';
+        html += '<dt class="col-sm-3">' + (t('JBS_CMN_SERIES', 'Series')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(seriesText || '—') + '</dd>';
 
-        html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_SCRIPTURE') || 'Scripture') + '</dt>';
+        html += '<dt class="col-sm-3">' + (t('JBS_CMN_SCRIPTURE', 'Scripture')) + '</dt>';
         html += '<dd class="col-sm-9">' + escHtml(scriptureRefs.join('; ') || '—') + '</dd>';
 
         if (introPreview) {
-            html += '<dt class="col-sm-3">' + (Joomla.Text._('JBS_CMN_STUDYINTRO') || 'Description') + '</dt>';
+            html += '<dt class="col-sm-3">' + (t('JBS_CMN_STUDYINTRO', 'Description')) + '</dt>';
             html += '<dd class="col-sm-9">' + escHtml(introPreview) + (introPreview.length >= 200 ? '...' : '') + '</dd>';
         }
 

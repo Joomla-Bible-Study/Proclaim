@@ -11,6 +11,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     // --- Level filter ---
     const levelFilter = document.getElementById('yt-log-level-filter');
 
@@ -57,8 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Reset quota counter buttons ---
     document.querySelectorAll('.btn-reset-yt-quota').forEach((btn) => {
         btn.addEventListener('click', () => {
-            const msg = Joomla.Text._('JBS_ADM_YOUTUBE_QUOTA_RESET_CONFIRM')
-                || 'Reset the quota counter for this server?';
+            const msg = t('JBS_ADM_YOUTUBE_QUOTA_RESET_CONFIRM', 'Reset the quota counter for this server?');
 
             if (!window.confirm(msg)) {
                 return;
@@ -102,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         Joomla.renderMessages({message: [
-                            Joomla.Text._('JBS_ADM_YOUTUBE_QUOTA_RESET_SUCCESS') || 'Quota counter has been reset.'
+                            t('JBS_ADM_YOUTUBE_QUOTA_RESET_SUCCESS', 'Quota counter has been reset.')
                         ]});
                     } else {
                         Joomla.renderMessages({error: [data.error || 'Reset failed']});
@@ -122,8 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-            const msg = Joomla.Text._('JBS_ADM_YOUTUBE_LOG_CLEAR_CONFIRM')
-                || 'Are you sure you want to clear all YouTube log entries?';
+            const msg = t('JBS_ADM_YOUTUBE_LOG_CLEAR_CONFIRM', 'Are you sure you want to clear all YouTube log entries?');
 
             if (!window.confirm(msg)) {
                 return;

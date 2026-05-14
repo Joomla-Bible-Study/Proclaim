@@ -14,6 +14,15 @@
 ((Joomla) => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     if (!Joomla) {
         return;
     }
@@ -452,7 +461,7 @@
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.className = 'form-control form-control-sm';
-        searchInput.placeholder = Joomla.Text._('JBS_STY_SEARCH_VERSIONS') || 'Search versions...';
+        searchInput.placeholder = t('JBS_STY_SEARCH_VERSIONS', 'Search versions...');
         searchInput.style.cssText = 'margin-bottom:4px;font-size:12px;';
         wrapper.insertBefore(searchInput, select);
 

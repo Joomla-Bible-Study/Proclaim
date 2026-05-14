@@ -6,6 +6,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     window.Proclaim = window.Proclaim || {};
 
     window.Proclaim.YoutubeBrowser = {
@@ -289,7 +298,7 @@
             fetch(url)
                 .then((response) => {
                     if (response.status === 403 || response.status === 401) {
-                        const expiredMsg = Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED') || 'Your session has expired. Please log in again.';
+                        const expiredMsg = t('JLIB_ENVIRONMENT_SESSION_EXPIRED', 'Your session has expired. Please log in again.');
                         Joomla.renderMessages({ error: [expiredMsg] });
                         setTimeout(() => { window.location.reload(); }, 3000);
                         throw new Error('Session expired');
@@ -373,7 +382,7 @@
             fetch(url)
                 .then((response) => {
                     if (response.status === 403 || response.status === 401) {
-                        const expiredMsg = Joomla.Text._('JLIB_ENVIRONMENT_SESSION_EXPIRED') || 'Your session has expired. Please log in again.';
+                        const expiredMsg = t('JLIB_ENVIRONMENT_SESSION_EXPIRED', 'Your session has expired. Please log in again.');
                         Joomla.renderMessages({ error: [expiredMsg] });
                         setTimeout(() => { window.location.reload(); }, 3000);
                         throw new Error('Session expired');

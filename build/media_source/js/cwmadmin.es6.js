@@ -12,6 +12,15 @@
 ((Joomla) => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     /**
    * CWM Admin Page Manager
    */
@@ -242,7 +251,7 @@
 
                 if (result.success && result.data) {
                     container.innerHTML = result.data.html;
-                    this.announceToScreenReader(Joomla.Text._('JBS_ADM_STATS_LOADED') || 'Statistics loaded');
+                    this.announceToScreenReader(t('JBS_ADM_STATS_LOADED', 'Statistics loaded'));
                 } else {
                     container.innerHTML = `<span class="text-danger">${result.message || 'Error loading stats'}</span>`;
                 }
@@ -339,7 +348,7 @@
 
             // Reset modal state
             if (spinner) spinner.style.display = 'block';
-            if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_ALIAS_UPDATING') || 'Updating aliases...';
+            if (statusText) statusText.textContent = t('JBS_ADM_ALIAS_UPDATING', 'Updating aliases...');
             if (resultText) resultText.textContent = '';
             if (footer) footer.style.display = 'none';
 
@@ -359,14 +368,14 @@
                     // Show success state
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-checkmark text-success me-2"></i>${
-                            Joomla.Text._('JBS_ADM_ALIAS_COMPLETE') || 'Alias update complete!'}`;
+                            t('JBS_ADM_ALIAS_COMPLETE', 'Alias update complete!')}`;
                     }
                     if (resultText) {
                         const count = result.count || 0;
                         if (count > 0) {
                             resultText.textContent = result.message || `${count} aliases updated`;
                         } else {
-                            resultText.textContent = Joomla.Text._('JBS_ADM_ALIAS_NONE') || 'No aliases needed to be updated.';
+                            resultText.textContent = t('JBS_ADM_ALIAS_NONE', 'No aliases needed to be updated.');
                         }
                     }
 
@@ -380,7 +389,7 @@
                     // Show error state
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                            Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                            t('JBS_ADM_ERROR', 'Error')}`;
                     }
                     if (resultText) {
                         resultText.textContent = result.message || 'An error occurred';
@@ -394,7 +403,7 @@
                 if (spinner) spinner.style.display = 'none';
                 if (statusText) {
                     statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                        Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                        t('JBS_ADM_ERROR', 'Error')}`;
                 }
                 if (resultText) {
                     resultText.textContent = error.message || 'An error occurred';
@@ -420,7 +429,7 @@
             if (choose) choose.style.display = 'none';
             if (progress) progress.style.display = 'block';
             if (spinner) spinner.style.display = 'block';
-            if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_SCHEMA_SYNCING') || 'Syncing schema data...';
+            if (statusText) statusText.textContent = t('JBS_ADM_SCHEMA_SYNCING', 'Syncing schema data...');
             if (resultText) resultText.textContent = '';
             if (footer) footer.style.display = 'none';
 
@@ -433,7 +442,7 @@
                 if (result.success) {
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-checkmark text-success me-2"></i>${
-                            Joomla.Text._('JBS_ADM_SCHEMA_SYNC_COMPLETE') || 'Schema sync complete!'}`;
+                            t('JBS_ADM_SCHEMA_SYNC_COMPLETE', 'Schema sync complete!')}`;
                     }
                     if (resultText) {
                         resultText.textContent = result.message || `${result.count} items synced`;
@@ -447,7 +456,7 @@
                 } else {
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                            Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                            t('JBS_ADM_ERROR', 'Error')}`;
                     }
                     if (resultText) {
                         resultText.textContent = result.message || 'An error occurred';
@@ -460,7 +469,7 @@
                 if (spinner) spinner.style.display = 'none';
                 if (statusText) {
                     statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                        Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                        t('JBS_ADM_ERROR', 'Error')}`;
                 }
                 if (resultText) {
                     resultText.textContent = error.message || 'An error occurred';
@@ -484,7 +493,7 @@
                 plays: 'JBS_ADM_RESET_STATS_CONFIRM_PLAYS',
             };
             if (statusEl) statusEl.style.display = 'none';
-            if (textEl) textEl.textContent = Joomla.Text._(keys[field]) || `Reset all ${field} to zero?`;
+            if (textEl) textEl.textContent = t(keys[field], `Reset all ${field} to zero?`);
             if (confirmEl) confirmEl.style.display = '';
         }
 
@@ -519,7 +528,7 @@
                 const result = await this.fetchJson(url);
                 if (statusEl) {
                     statusEl.style.display = 'block';
-                    const doneKey = Joomla.Text._('JBS_ADM_RESET_STATS_DONE') || '%s record(s) reset to zero.';
+                    const doneKey = t('JBS_ADM_RESET_STATS_DONE', '%s record(s) reset to zero.');
                     if (result.success) {
                         statusEl.innerHTML = `<div class="alert alert-success mb-0"><i class="icon-checkmark me-1" aria-hidden="true"></i>${doneKey.replace('%s', result.updated)}</div>`;
                     } else {
@@ -560,7 +569,7 @@
             // Validate selections
             if (!fromValue || fromValue === 'x' || !toValue || toValue === 'x') {
                 Joomla.renderMessages({
-                    error: [Joomla.Text._('JBS_ADM_SELECT_FROM_TO') || 'Please select both From and To values.'],
+                    error: [t('JBS_ADM_SELECT_FROM_TO', 'Please select both From and To values.')],
                 });
                 return;
             }
@@ -575,7 +584,7 @@
             // Reset modal state
             if (modalTitle) modalTitle.textContent = title;
             if (spinner) spinner.style.display = 'block';
-            if (statusText) statusText.textContent = Joomla.Text._('JBS_ADM_PLAYER_TOOLS_PROCESSING') || 'Processing changes...';
+            if (statusText) statusText.textContent = t('JBS_ADM_PLAYER_TOOLS_PROCESSING', 'Processing changes...');
             if (resultText) resultText.textContent = '';
             if (footer) footer.style.display = 'none';
 
@@ -610,7 +619,7 @@
                     // Show success state
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-checkmark text-success me-2"></i>${
-                            Joomla.Text._('JBS_ADM_PLAYER_TOOLS_COMPLETE') || 'Operation complete!'}`;
+                            t('JBS_ADM_PLAYER_TOOLS_COMPLETE', 'Operation complete!')}`;
                     }
                     if (resultText) {
                         resultText.textContent = result.message || `${result.count} records updated`;
@@ -630,7 +639,7 @@
                     // Show error state
                     if (statusText) {
                         statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                            Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                            t('JBS_ADM_ERROR', 'Error')}`;
                     }
                     if (resultText) {
                         resultText.textContent = result.message || 'An error occurred';
@@ -644,7 +653,7 @@
                 if (spinner) spinner.style.display = 'none';
                 if (statusText) {
                     statusText.innerHTML = `<i class="icon-warning text-danger me-2"></i>${
-                        Joomla.Text._('JBS_ADM_ERROR') || 'Error'}`;
+                        t('JBS_ADM_ERROR', 'Error')}`;
                 }
                 if (resultText) {
                     resultText.textContent = error.message || 'An error occurred';
@@ -686,8 +695,7 @@
             }
 
             // Confirm thumbnail resize
-            const confirmMsg = Joomla.Text._('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM')
-        || `You modified the default thumbnail size(s). Thumbnails will be recreated for: ${thumbnailChanges.join(', ')}. Click OK to continue.`;
+            const confirmMsg = t('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM', `You modified the default thumbnail size(s). Thumbnails will be recreated for: ${thumbnailChanges.join(', ')}. Click OK to continue.`);
 
             if (!confirm(confirmMsg)) {
                 return;
@@ -728,7 +736,7 @@
                 // Get total counts (filtered to changed types only) for progress display
                 const countsUrl = `index.php?option=com_proclaim&task=cwmadmin.getThumbRegenCountXHR&${this.token}=1`;
                 const counts = await this.fetchJson(countsUrl);
-                const grandTotal = imageTypes.reduce((sum, t) => sum + (counts[t] || 0), 0);
+                const grandTotal = imageTypes.reduce((sum, type) => sum + (counts[type] || 0), 0);
 
                 if (grandTotal === 0) {
                     if (this.thumbnailModal) this.thumbnailModal.hide();
@@ -751,7 +759,7 @@
                     }
                 };
 
-                const regenLabel = Joomla.Text._('JBS_ADM_REGENERATING') || 'Regenerating';
+                const regenLabel = t('JBS_ADM_REGENERATING', 'Regenerating');
 
                 for (const type of imageTypes) {
                     const newSize = typeSizes[type] || 300;
