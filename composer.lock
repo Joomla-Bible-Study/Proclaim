@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93c9d895d171d746db6bf9af4e8a0a47",
+    "content-hash": "48208927c8709139254765bba4f0877d",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -843,16 +843,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v0.5.5-alpha",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "aafadd9cb4b1382df41d7be40c29da0d253b2328"
+                "reference": "6458fd4a6f6a69e6ce40f04eb1942ecf13a00fd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/aafadd9cb4b1382df41d7be40c29da0d253b2328",
-                "reference": "aafadd9cb4b1382df41d7be40c29da0d253b2328",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/6458fd4a6f6a69e6ce40f04eb1942ecf13a00fd2",
+                "reference": "6458fd4a6f6a69e6ce40f04eb1942ecf13a00fd2",
                 "shasum": ""
             },
             "require": {
@@ -937,10 +937,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v0.5.5-alpha",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.0.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-05-12T14:48:33+00:00"
+            "time": "2026-05-14T20:41:05+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -7744,7 +7744,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "cwm/build-tools": 15,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,
