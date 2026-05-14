@@ -101,7 +101,7 @@ class CwmcaptionValidator
      *
      * @return  bool  True when the extension is a transcript format.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function isTranscriptExtension(string $ext): bool
     {
@@ -183,7 +183,7 @@ class CwmcaptionValidator
      *
      * @return  string  WebVTT body with header, suitable for writing to disk.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function convertSbvToVtt(string $body): string
     {
@@ -229,7 +229,7 @@ class CwmcaptionValidator
      *
      * @return  string  WebVTT body with header, suitable for writing to disk.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function convertSrtToVtt(string $body): string
     {
@@ -290,7 +290,7 @@ class CwmcaptionValidator
      * @return  array<int, array{0: string, 1: string, 2: array<int, string>}>
      *                  List of [start, end, textLines] tuples.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     private function parseVttCues(string $vttBody): array
     {
@@ -353,7 +353,7 @@ class CwmcaptionValidator
      *
      * @return  string  SubRip body suitable for download.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function convertVttToSrt(string $vttBody): string
     {
@@ -381,7 +381,7 @@ class CwmcaptionValidator
      *
      * @return  string  SBV body suitable for download.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function convertVttToSbv(string $vttBody): string
     {
@@ -400,7 +400,7 @@ class CwmcaptionValidator
      * Format a WebVTT timestamp as SRT — pad hours to two digits, swap
      * `.` for `,` in the fraction.
      *
-     * @since 10.3.0
+     * @since   10.3.3
      */
     private function vttToSrtTimestamp(string $vttStamp): string
     {
@@ -420,7 +420,7 @@ class CwmcaptionValidator
      * Format a WebVTT timestamp as SBV — single-digit hours per Google's
      * documented example, period fraction unchanged.
      *
-     * @since 10.3.0
+     * @since   10.3.3
      */
     private function vttToSbvTimestamp(string $vttStamp): string
     {

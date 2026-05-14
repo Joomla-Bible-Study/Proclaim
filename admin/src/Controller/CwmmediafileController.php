@@ -686,7 +686,7 @@ class CwmmediafileController extends FormController
      * @throws  \RuntimeException  When the destination directory cannot be
      *                             created or the file write fails.
      *
-     * @since   10.3.0
+     * @since   10.3.3
      */
     private function storeVttBody(string $vttBody, string $originalName): array
     {
@@ -726,7 +726,7 @@ class CwmmediafileController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function downloadCaption(): void
     {
@@ -803,7 +803,7 @@ class CwmmediafileController extends FormController
      * @return  void
      *
      * @throws  \Exception
-     * @since   10.3.0
+     * @since   10.3.3
      */
     public function generateCaptionsFromTranscript(): void
     {
