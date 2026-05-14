@@ -18,32 +18,32 @@
  * Hidden:  <div data-proclaim-section="sectionId" data-proclaim-hidden>
  */
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-proclaim-toggle]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const sectionId = btn.dataset.proclaimToggle;
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('[data-proclaim-toggle]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = btn.dataset.proclaimToggle;
+            const expanded = btn.getAttribute('aria-expanded') === 'true';
 
-      // Toggle all hidden items in this section
-      document.querySelectorAll(
-        `[data-proclaim-section="${sectionId}"][data-proclaim-hidden]`
-      ).forEach((el) => {
-        el.classList.toggle('proclaim-landing--hidden');
-      });
+            // Toggle all hidden items in this section
+            document.querySelectorAll(
+                `[data-proclaim-section="${sectionId}"][data-proclaim-hidden]`
+            ).forEach((el) => {
+                el.classList.toggle('proclaim-landing--hidden');
+            });
 
-      // Update ARIA state
-      btn.setAttribute('aria-expanded', String(!expanded));
+            // Update ARIA state
+            btn.setAttribute('aria-expanded', String(!expanded));
 
-      // Update button text
-      const showText = btn.dataset.proclaimShowText;
-      const hideText = btn.dataset.proclaimHideText;
-      const label = btn.querySelector('.proclaim-landing__toggle-label');
+            // Update button text
+            const showText = btn.dataset.proclaimShowText;
+            const hideText = btn.dataset.proclaimHideText;
+            const label = btn.querySelector('.proclaim-landing__toggle-label');
 
-      if (showText && hideText && label) {
-        label.textContent = expanded ? showText : hideText;
-      }
+            if (showText && hideText && label) {
+                label.textContent = expanded ? showText : hideText;
+            }
+        });
     });
-  });
 });
 
 /**
@@ -54,23 +54,23 @@ document.addEventListener('DOMContentLoaded', () => {
  * @deprecated 10.3.0 Use data-proclaim-toggle attributes instead
  */
 window.ReverseDisplay2 = function ReverseDisplay2(d) {
-  const el = document.getElementById(d);
+    const el = document.getElementById(d);
 
-  if (el) {
-    if (el.style.display === 'none') {
-      el.style.display = 'contents';
+    if (el) {
+        if (el.style.display === 'none') {
+            el.style.display = 'contents';
+        } else {
+            el.style.display = 'none';
+        }
     } else {
-      el.style.display = 'none';
-    }
-  } else {
-    const elements = document.getElementsByClassName(`landing-hidden-${d}`);
+        const elements = document.getElementsByClassName(`landing-hidden-${d}`);
 
-    for (let i = 0; i < elements.length; i += 1) {
-      if (elements[i].style.display === 'none') {
-        elements[i].style.display = '';
-      } else {
-        elements[i].style.display = 'none';
-      }
+        for (let i = 0; i < elements.length; i += 1) {
+            if (elements[i].style.display === 'none') {
+                elements[i].style.display = '';
+            } else {
+                elements[i].style.display = 'none';
+            }
+        }
     }
-  }
 };

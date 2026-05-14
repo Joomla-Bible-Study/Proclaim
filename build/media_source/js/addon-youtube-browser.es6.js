@@ -253,9 +253,8 @@
 
             // Get study title for auto-search
             const studyTitleField = document.getElementById('jform_study_id_name');
-            let studyTitle = '';
             if (studyTitleField && studyTitleField.value) {
-                studyTitle = studyTitleField.value;
+                const studyTitle = studyTitleField.value;
                 // Skip if it's the placeholder text
                 if (studyTitle.indexOf('Select') === -1 && studyTitle.indexOf('select') === -1) {
                     this.searchQuery = studyTitle;

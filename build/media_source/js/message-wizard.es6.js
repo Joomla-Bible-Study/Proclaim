@@ -132,20 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return el ? el.value.trim() : '';
         };
 
-        const getSelectedText = (id) => {
-            const el = document.getElementById(id);
-
-            if (!el) {
-                return '';
-            }
-
-            if (el.selectedIndex >= 0 && el.options[el.selectedIndex]) {
-                return el.options[el.selectedIndex].text;
-            }
-
-            return el.value || '';
-        };
-
         // Gather teachers from subform
         const teacherNames = [];
         document.querySelectorAll('[name*="[teacher_id]"]').forEach((sel) => {

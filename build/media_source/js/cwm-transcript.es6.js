@@ -81,7 +81,7 @@
             }
 
             // Strip position/alignment settings from end timestamp
-            const endRaw = tsParts[1].split(/\s/)[0];
+            const [endRaw] = tsParts[1].split(/\s/);
             const start = parseVttTime(tsParts[0]);
             const end = parseVttTime(endRaw);
 

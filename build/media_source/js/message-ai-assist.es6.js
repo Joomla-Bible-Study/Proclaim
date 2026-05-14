@@ -564,7 +564,7 @@
                     text.textContent = pulseMessages[pulseIndex % pulseMessages.length];
                 }
 
-                pulseIndex++;
+                pulseIndex += 1;
             }, 8000);
         }, lastDelay + 5000);
         timers.push(pulseStart);
