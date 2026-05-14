@@ -323,14 +323,14 @@
 
         const resultContainer = document.getElementById('cwm-youtube-tracks-result');
 
-        var chaptersBtn = document.getElementById('cwm-import-chapters-btn');
+        const chaptersBtn = document.getElementById('cwm-import-chapters-btn');
         if (chaptersBtn) {
             chaptersBtn.addEventListener('click', function () {
                 handleImportChapters(resultContainer);
             });
         }
 
-        var captionsBtn = document.getElementById('cwm-list-captions-btn');
+        const captionsBtn = document.getElementById('cwm-list-captions-btn');
         if (captionsBtn) {
             captionsBtn.addEventListener('click', function () {
                 handleListCaptions(resultContainer);
