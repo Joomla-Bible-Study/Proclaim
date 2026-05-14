@@ -176,8 +176,12 @@
         }
 
         if (matchedChoice) {
-            // Select the existing option by its numeric ID
-            choices.setValue([{ value: resolvedValue, label: matchedChoice.label }]);
+            // Select the existing option by its numeric ID. setChoiceByValue
+            // appends to a multi-select; setValue([{…}]) REPLACES the whole
+            // selection list, so the loop in btn-add-matched would only
+            // ever leave the last topic selected. Confirmed in the current
+            // Choices.js bundled with Joomla — see issue history (PR #1237).
+            choices.setChoiceByValue(resolvedValue);
         } else {
             // New topic — add as text value (backend will create it)
             choices.setChoices(

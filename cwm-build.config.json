@@ -130,10 +130,10 @@
         }
     },
     "gitignore": {
-        "_comment": "Override the auto-derived media paths because pkg_proclaim is a package wrapper around com_proclaim, which DOES own /media/proclaim/. Without this, sync-configs skips media patterns (package wrappers don't usually own a media dir).",
+        "_comment": "Override the auto-derived media paths because pkg_proclaim is a package wrapper around com_proclaim, which DOES own /media/. Without this, sync-configs skips media patterns (package wrappers don't usually own a media dir). Paths align with package.json OUTPUT_DIR settings.",
         "mediaPaths": [
-            "/media/proclaim/js/",
-            "/media/proclaim/css/"
+            "/media/js/",
+            "/media/css/"
         ]
     },
     "vendors": [
