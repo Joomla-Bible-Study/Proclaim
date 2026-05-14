@@ -150,6 +150,15 @@
         "tokenVault": "CWM",
         "itemDescription": "pkg_proclaim download"
     },
+    "versionTracking": {
+        "versionsJson": "build/versions.json",
+        "packageJson":  "package.json",
+        "substituteTokens": {
+            "token":      "__DEPLOY_VERSION__",
+            "paths":      ["admin/", "site/", "modules/", "plugins/"],
+            "extensions": ["php"]
+        }
+    },
     "github": {
         "owner": "Joomla-Bible-Study",
         "repo": "Proclaim",
