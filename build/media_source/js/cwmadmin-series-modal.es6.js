@@ -32,7 +32,7 @@
         }
 
         const tag = `<a ${hreflang} href="${link}">${title}</a>`;
-        window.parent.Joomla.editors.instances[editor].replaceSelection(tag);
+        window.parent.JoomlaEditor.get(editor).replaceSelection(tag);
 
         if (window.parent.Joomla.Modal) {
             window.parent.Joomla.Modal.getCurrent().close();
