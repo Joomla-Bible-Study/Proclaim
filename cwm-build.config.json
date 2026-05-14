@@ -167,5 +167,51 @@
     },
     "dev": {
         "deriveLinks": true
+    },
+    "assets": {
+        "images": {
+            "from": "build/media_source/images",
+            "to": "media/images"
+        },
+        "vendorMediaSource": {
+            "from": "build/media_source/vendor",
+            "to": "media/vendor"
+        },
+        "vendorOutputDir": "media/vendor",
+        "packages": [
+            {
+                "name": "chart.js",
+                "files": [
+                    { "from": "dist/chart.umd.min.js", "to": "chart.js/chart.umd.min.js" }
+                ]
+            },
+            {
+                "name": "@fancyapps/ui",
+                "cleanDest": "fancybox",
+                "files": [
+                    { "from": "dist/fancybox/fancybox.umd.js", "to": "fancybox/fancybox.umd.js" },
+                    { "from": "dist/fancybox/fancybox.css",    "to": "fancybox/fancybox.css", "minifyCss": true }
+                ],
+                "dirs": [
+                    { "from": "dist/fancybox/l10n", "to": "fancybox/l10n", "match": "*.umd.js" }
+                ]
+            },
+            {
+                "name": "intl-tel-input",
+                "files": [
+                    { "from": "dist/css/intlTelInput.min.css",         "to": "intl-tel-input/css/intlTelInput.min.css" },
+                    { "from": "dist/js/intlTelInputWithUtils.min.js",  "to": "intl-tel-input/js/intlTelInputWithUtils.min.js" }
+                ],
+                "dirs": [
+                    { "from": "dist/img", "to": "intl-tel-input/img" }
+                ]
+            },
+            {
+                "name": "sortablejs",
+                "files": [
+                    { "from": "Sortable.min.js", "to": "sortable/Sortable.min.js" }
+                ]
+            }
+        ]
     }
 }
