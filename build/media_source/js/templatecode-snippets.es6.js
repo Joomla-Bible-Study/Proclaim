@@ -20,7 +20,7 @@
    * @param {string} text      The snippet text to insert
    */
     const insertSnippet = (editorId, text) => {
-        const editor = Joomla.editors.instances[editorId];
+        const editor = JoomlaEditor.get(editorId);
 
         if (!editor) {
             return;
