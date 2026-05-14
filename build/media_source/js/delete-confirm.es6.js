@@ -17,6 +17,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     /* ── helpers ─────────────────────────────────────────────────── */
 
     /**
@@ -161,7 +170,7 @@
         // ── footer
         const footer = el('div', 'modal-footer');
 
-        const btnCancel = el('button', 'btn btn-secondary', Joomla.Text._('JCANCEL') || 'Cancel');
+        const btnCancel = el('button', 'btn btn-secondary', t('JCANCEL', 'Cancel'));
         btnCancel.type = 'button';
         btnCancel.setAttribute('data-bs-dismiss', 'modal');
 

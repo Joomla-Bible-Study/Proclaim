@@ -11,6 +11,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     /**
      * Parse a VTT timestamp (HH:MM:SS.mmm or MM:SS.mmm) into seconds.
      *
@@ -148,7 +157,7 @@
         const searchInput = document.createElement('input');
         searchInput.type = 'search';
         searchInput.className = 'form-control form-control-sm';
-        searchInput.placeholder = Joomla.Text._('JBS_MED_TRANSCRIPT_SEARCH') || 'Search transcript...';
+        searchInput.placeholder = t('JBS_MED_TRANSCRIPT_SEARCH', 'Search transcript...');
         searchInput.setAttribute('aria-label', searchInput.placeholder);
         searchWrap.appendChild(searchInput);
         panel.appendChild(searchWrap);
@@ -185,11 +194,11 @@
             let lastActive = -1;
 
             media.addEventListener('timeupdate', () => {
-                const t = media.currentTime;
+                const time = media.currentTime;
                 let activeIdx = -1;
 
                 for (let i = cues.length - 1; i >= 0; i -= 1) {
-                    if (t >= cues[i].start && t < cues[i].end) {
+                    if (time >= cues[i].start && time < cues[i].end) {
                         activeIdx = i;
                         break;
                     }

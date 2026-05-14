@@ -12,6 +12,14 @@
 'use strict';
 
 (function () {
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
     const config = window.ProcSetupWizard || {};
     const token = config.token || '';
     const baseUrl = config.baseUrl || '';
@@ -324,7 +332,7 @@
    * Dismiss the wizard without applying.
    */
     async function dismissWizard() {
-        if (!confirm(Joomla.Text._('JBS_WIZARD_CONFIRM_DISMISS') || 'Skip the setup wizard?')) {
+        if (!confirm(t('JBS_WIZARD_CONFIRM_DISMISS', 'Skip the setup wizard?'))) {
             return;
         }
 

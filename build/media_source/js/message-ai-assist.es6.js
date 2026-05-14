@@ -14,6 +14,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     const config = document.getElementById('message-ai-config');
 
     if (!config) {
@@ -286,7 +295,7 @@
                 if (data.success) {
                     showAppliedFeedback(
                         btn,
-                        (Joomla.Text._('JBS_CMN_AI_CHAPTERS_APPLIED') || '{count} chapters saved')
+                        (t('JBS_CMN_AI_CHAPTERS_APPLIED', '{count} chapters saved'))
                             .replace('{count}', data.count),
                     );
                 } else {
@@ -596,7 +605,7 @@
 
             // Validate at least one checked
             if (!wantTopics && !wantIntro && !wantText && !wantChapters) {
-                alert(Joomla.Text._('JBS_CMN_AI_SELECT_ONE') || 'Select at least one field to generate.');
+                alert(t('JBS_CMN_AI_SELECT_ONE', 'Select at least one field to generate.'));
 
                 return;
             }
@@ -802,7 +811,7 @@
                     navigator.clipboard.writeText(textarea.value).then(() => {
                         showAppliedFeedback(
                             btnCopyChapters,
-                            Joomla.Text._('JBS_CMN_AI_CHAPTERS_COPIED') || 'Copied',
+                            t('JBS_CMN_AI_CHAPTERS_COPIED', 'Copied'),
                         );
                     });
                 }
@@ -845,7 +854,7 @@
 
                     if (data.quota_error) {
                         ytErr.innerHTML += '<br><small class="mt-1 d-block">'
-                            + (Joomla.Text._('JBS_CMN_YT_QUOTA_HELP') || 'You can increase your quota in the YouTube server settings, or request a higher quota from Google.')
+                            + (t('JBS_CMN_YT_QUOTA_HELP', 'You can increase your quota in the YouTube server settings, or request a higher quota from Google.'))
                             + ' <a href="https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas" '
                             + 'target="_blank" rel="noopener">Google API Console</a></small>';
                     }
@@ -998,7 +1007,7 @@
                     navigator.clipboard.writeText(textarea.value).then(() => {
                         showAppliedFeedback(
                             btnYtCopyChapters,
-                            Joomla.Text._('JBS_CMN_YT_SYNC_CHAPTERS_COPIED') || 'Copied',
+                            t('JBS_CMN_YT_SYNC_CHAPTERS_COPIED', 'Copied'),
                         );
                     });
                 }

@@ -13,6 +13,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     /** Timeout presets (milliseconds) */
     const ADMIN_TIMEOUT = 30000;
     const FRONTEND_TIMEOUT = 15000;
@@ -103,7 +112,7 @@
     function notifySessionExpired() {
         if (typeof Joomla !== 'undefined' && Joomla.renderMessages) {
             const msg = (typeof Joomla.Text !== 'undefined' && Joomla.Text._)
-                ? Joomla.Text._('JBS_CMN_SESSION_EXPIRED') || 'Your session has expired. Please reload and log in again.'
+                ? t('JBS_CMN_SESSION_EXPIRED', 'Your session has expired. Please reload and log in again.')
                 : 'Your session has expired. Please reload and log in again.';
 
             Joomla.renderMessages({ error: [msg] });

@@ -17,6 +17,15 @@
 (() => {
     'use strict';
 
+    // Local helper: Joomla.Text._() returns the raw key string when a key
+    // is unregistered (truthy), so `Joomla.Text._('K') || 'fallback'` never
+    // fires the fallback. Compare against the key itself to detect misses.
+    const t = (key, fallback) => {
+        const v = Joomla.Text._(key);
+        return v === key ? fallback : v;
+    };
+
+
     function init() {
         const customFields = Joomla.getOptions('com_proclaim.schemaCustomFields') || [];
 
@@ -68,9 +77,8 @@
                     badge.className = 'badge bg-info ms-2';
                     badge.style.fontSize = '0.7em';
                     badge.style.verticalAlign = 'middle';
-                    badge.textContent = Joomla.Text._('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM') || 'Custom';
-                    badge.title = Joomla.Text._('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM_DESC')
-                        || 'This field was manually customized and won\'t auto-update. Clear the field to restore auto-sync.';
+                    badge.textContent = t('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM', 'Custom');
+                    badge.title = t('PLG_SCHEMAORG_PROCLAIM_BADGE_CUSTOM_DESC', 'This field was manually customized and won\'t auto-update. Clear the field to restore auto-sync.');
                     label.appendChild(badge);
                 }
 
