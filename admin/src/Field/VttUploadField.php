@@ -163,5 +163,16 @@ class VttUploadField extends FormField
             'uploadUrl'   => $uploadUrl,
             'downloadUrl' => $downloadUrl,
         ]);
+
+        // Register the language keys this field's JS consumes via
+        // Joomla.Text._(). Joomla.Text._() returns the raw key string when
+        // a key is unregistered (truthy), so a `Joomla.Text._('K') || 'fallback'`
+        // pattern in the JS would silently print the raw key instead of the
+        // fallback. Register here rather than relying on the host template
+        // calling CwmlangHelper::registerAllForJs() — this field is self-contained.
+        $existing                              = $doc->getScriptOptions('joomla.jtext') ?: [];
+        $existing['JBS_MED_VTT_UPLOADING']     = Text::_('JBS_MED_VTT_UPLOADING');
+        $existing['JBS_MED_VTT_UPLOAD_FAILED'] = Text::_('JBS_MED_VTT_UPLOAD_FAILED');
+        $doc->addScriptOptions('joomla.jtext', $existing, false);
     }
 }
