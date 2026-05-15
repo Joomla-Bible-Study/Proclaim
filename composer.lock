@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50f5db47e24a5851f2fb3e5212a02136",
+    "content-hash": "d621af9383fa2af99416b239e71d0ebe",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -843,16 +843,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.1.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "747fbd85d55dc413466c02c42934de2007e2227a"
+                "reference": "8eb9d1a212c14846506e065900db892d30250aa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/747fbd85d55dc413466c02c42934de2007e2227a",
-                "reference": "747fbd85d55dc413466c02c42934de2007e2227a",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/8eb9d1a212c14846506e065900db892d30250aa4",
+                "reference": "8eb9d1a212c14846506e065900db892d30250aa4",
                 "shasum": ""
             },
             "require": {
@@ -938,10 +938,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.1.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.3.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-05-15T18:07:30+00:00"
+            "time": "2026-05-15T20:05:49+00:00"
         },
         {
             "name": "doctrine/deprecations",
