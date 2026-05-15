@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48208927c8709139254765bba4f0877d",
+    "content-hash": "50f5db47e24a5851f2fb3e5212a02136",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -843,16 +843,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.0.2",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "53ce4711301e52423104ea8032474861a87167cf"
+                "reference": "747fbd85d55dc413466c02c42934de2007e2227a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/53ce4711301e52423104ea8032474861a87167cf",
-                "reference": "53ce4711301e52423104ea8032474861a87167cf",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/747fbd85d55dc413466c02c42934de2007e2227a",
+                "reference": "747fbd85d55dc413466c02c42934de2007e2227a",
                 "shasum": ""
             },
             "require": {
@@ -883,6 +883,7 @@
                 "bin/cwm-link-check",
                 "bin/cwm-clean",
                 "bin/cwm-verify",
+                "bin/cwm-install-zip",
                 "bin/cwm-joomla-install",
                 "bin/cwm-joomla-latest",
                 "bin/cwm-joomla-cms-deps"
@@ -937,10 +938,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.0.2",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.1.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-05-14T23:29:56+00:00"
+            "time": "2026-05-15T18:07:30+00:00"
         },
         {
             "name": "doctrine/deprecations",

@@ -84,7 +84,7 @@
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
-    "cwm/build-tools": "^1.0",
+    "cwm/build-tools": "^1.1",
     "joomla/database": "^4.0",
     "joomla/registry": "^4.0",
     "joomla/di": "^4.0",
@@ -104,6 +104,20 @@
   "extra": {
     "branch-alias": {
       "dev-master": "2.x-dev"
+    },
+    "cwm-build-tools": {
+      "joomlaLinks": [
+        { "type": "component", "name": "com_proclaim" },
+        { "type": "module",    "name": "mod_proclaim",         "client": "site" },
+        { "type": "module",    "name": "mod_proclaim_podcast", "client": "site" },
+        { "type": "module",    "name": "mod_proclaim_youtube", "client": "site" },
+        { "type": "module",    "name": "mod_proclaimicon",     "client": "administrator" },
+        { "type": "plugin",    "group": "finder",      "element": "proclaim" },
+        { "type": "plugin",    "group": "schemaorg",   "element": "proclaim" },
+        { "type": "plugin",    "group": "system",      "element": "proclaim" },
+        { "type": "plugin",    "group": "task",        "element": "proclaim" },
+        { "type": "plugin",    "group": "webservices", "element": "proclaim" }
+      ]
     }
   },
   "scripts": {
