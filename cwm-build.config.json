@@ -3,6 +3,8 @@
         "type": "package",
         "name": "pkg_proclaim"
     },
+    "_profile_comment": "Component-shaped versionTracking despite the package wrapper — Proclaim owns its own versions.json + package.json on a single cadence. The substituteTokens.paths override drops 'language/' (no top-level language/ here) and matches what was previously hand-authored.",
+    "profile": "component",
     "manifests": {
         "package": "build/pkg_proclaim.xml",
         "extensions": [
@@ -151,12 +153,8 @@
         "itemDescription": "pkg_proclaim download"
     },
     "versionTracking": {
-        "versionsJson": "build/versions.json",
-        "packageJson":  "package.json",
         "substituteTokens": {
-            "token":      "__DEPLOY_VERSION__",
-            "paths":      ["admin/", "site/", "modules/", "plugins/"],
-            "extensions": ["php"]
+            "paths": ["admin/", "site/", "modules/", "plugins/"]
         }
     },
     "github": {
