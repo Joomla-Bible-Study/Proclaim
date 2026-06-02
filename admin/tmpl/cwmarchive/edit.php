@@ -53,7 +53,7 @@ $this->getDocument()->addScriptOptions('com_proclaim.archive', [
                 </div>
                 <p class="status-text text-center fw-bold mb-2" aria-live="polite"><?php echo Text::_('JBS_ADM_PROCESSING'); ?></p>
                 <div class="progress mb-3" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0">0%</div>
                 </div>
                 <p class="detail-text text-muted small text-center mb-0" aria-live="polite"></p>
             </div>

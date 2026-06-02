@@ -60,7 +60,7 @@ $this->useCoreUI = true;
             </div>
             <div class="modal-body">
                 <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="<?php echo Text::_('JBS_ADM_THUMBNAIL_PROGRESS'); ?>">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0">0%</div>
                 </div>
                 <p class="status-text text-center mt-2 mb-0" aria-live="polite"></p>
             </div>
@@ -566,7 +566,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
             </ol>
             <div id="pipeline-progress-wrap" style="display:none;" class="mb-3">
                 <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <div id="pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                    <div id="pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0;"></div>
                 </div>
             </div>
             <p id="pipeline-status-text" class="mb-3 text-body-secondary" aria-live="polite"></p>
@@ -592,7 +592,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                     </div>
                     <div id="thumb-regen-progress" class="mb-3" style="display:none;">
                         <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-info" style="width: 0%"></div>
+                            <div class="progress-bar bg-info" style="width: 0"></div>
                         </div>
                         <div class="mt-2" id="thumb-regen-status"></div>
                     </div>
@@ -634,7 +634,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </div>
                                     <div id="webp-progress" class="mb-3" style="display:none;">
                                         <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar bg-success" style="width: 0%"></div>
+                                            <div class="progress-bar bg-success" style="width: 0"></div>
                                         </div>
                                         <div class="mt-2" id="webp-status"></div>
                                     </div>
@@ -654,7 +654,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </div>
                                     <div id="recovery-progress" class="mb-3" style="display:none;">
                                         <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar bg-warning" style="width: 0%"></div>
+                                            <div class="progress-bar bg-warning" style="width: 0"></div>
                                         </div>
                                         <div class="mt-2" id="recovery-status"></div>
                                     </div>
@@ -674,7 +674,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                                     </div>
                                     <div id="relink-progress" class="mb-3" style="display:none;">
                                         <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar bg-primary" style="width: 0%"></div>
+                                            <div class="progress-bar bg-primary" style="width: 0"></div>
                                         </div>
                                         <div class="mt-2" id="relink-status"></div>
                                     </div>
@@ -725,7 +725,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
                             </ol>
                             <div id="cleanup-pipeline-progress-wrap" style="display:none;" class="mb-3">
                                 <div class="progress" role="progressbar" aria-label="<?php echo Text::_('JBS_ADM_CLEANUP_PIPELINE_PROGRESS'); ?>" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                    <div id="cleanup-pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                                    <div id="cleanup-pipeline-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0;"></div>
                                 </div>
                             </div>
                             <div id="cleanup-pipeline-confirm" class="alert alert-warning mb-3" style="display:none;">
@@ -815,7 +815,7 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         <div id="imagetools-migration-driver" style="display:none;" aria-hidden="true">
             <div id="migration-counts"></div>
             <div id="migration-progress">
-                <div class="progress"><div class="progress-bar" style="width: 0%"></div></div>
+                <div class="progress"><div class="progress-bar" style="width: 0"></div></div>
                 <div id="migration-status"></div>
             </div>
             <div id="migration-error-report"></div>

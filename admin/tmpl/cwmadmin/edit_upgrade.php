@@ -148,7 +148,7 @@ use Joomla\CMS\Session\Session;
             <div class="mb-3">
                 <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
                      id="upgrade-progress" aria-label="<?php echo Text::_('JBS_UPG_PROGRESS'); ?>">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%">0%</div>
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0">0%</div>
                 </div>
             </div>
 
