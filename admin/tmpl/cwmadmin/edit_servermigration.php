@@ -76,7 +76,7 @@ use Joomla\CMS\Session\Session;
             <h3 class="tab-description"><?php echo Text::_('JBS_SMG_PROGRESS_TITLE'); ?></h3>
             <div class="progress mb-2" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar progress-bar-striped progress-bar-animated" id="smg-progress-bar"
-                     style="width: 0%">0%</div>
+                     style="width: 0">0%</div>
             </div>
             <p id="smg-progress-text" class="text-center mb-0" aria-live="polite"></p>
         </div>

@@ -188,7 +188,7 @@ Text::script('JCLOSE');
                     <span id="fix-status-text"><?php echo Text::_('JBS_CMN_PROCESSING'); ?></span>
                 </div>
                 <div class="progress mb-3" style="height: 25px;">
-                    <div id="fix-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div id="fix-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                         <span id="fix-progress-text">0%</span>
                     </div>
                 </div>
