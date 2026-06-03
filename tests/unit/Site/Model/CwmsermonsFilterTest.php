@@ -283,6 +283,63 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
     }
 
+    #[TestDox("addTeacherFilter: ['-1'] sentinel adds no WHERE clause")]
+    public function testAddTeacherFilterSentinelNoFilter(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addTeacherFilter', [$query, $db, ['-1'], 0]);
+
+        $this->assertEmpty($this->whereCalls, '["-1"] sentinel should add no EXISTS subquery');
+    }
+
+    #[TestDox('addTeacherFilter: [null] adds no WHERE clause')]
+    public function testAddTeacherFilterNullElementNoFilter(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addTeacherFilter', [$query, $db, [null], 0]);
+
+        $this->assertEmpty($this->whereCalls, '[null] should add no EXISTS subquery');
+    }
+
+    #[TestDox('addTeacherFilter: multiple teacher IDs adds one EXISTS clause')]
+    public function testAddTeacherFilterMultipleIds(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addTeacherFilter', [$query, $db, ['3', '7'], 0]);
+
+        $this->assertCount(1, $this->whereCalls, 'Multiple param teachers use a single IN-based EXISTS subquery');
+        $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
+    }
+
+    #[TestDox('addTeacherFilter: user filter only adds one EXISTS clause')]
+    public function testAddTeacherFilterUserFilterOnly(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addTeacherFilter', [$query, $db, null, 5]);
+
+        $this->assertCount(1, $this->whereCalls);
+        $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
+    }
+
+    #[TestDox('addTeacherFilter: param + user filter adds two EXISTS clauses')]
+    public function testAddTeacherFilterParamAndUserFilter(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addTeacherFilter', [$query, $db, ['3'], 5]);
+
+        $this->assertCount(2, $this->whereCalls, 'Param + user teacher should add two EXISTS clauses');
+    }
+
     // =========================================================================
     // addBookFilter tests
     // =========================================================================
@@ -318,5 +375,30 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->invokeFilter('addBookFilter', [$query, $db, ['-1'], 0]);
 
         $this->assertEmpty($this->whereCalls);
+    }
+
+    #[TestDox('addBookFilter: [null] adds no WHERE clause')]
+    public function testAddBookFilterNullElementNoFilter(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        $this->invokeFilter('addBookFilter', [$query, $db, [null], 0]);
+
+        $this->assertEmpty($this->whereCalls, '[null] should not filter by book');
+    }
+
+    #[TestDox('addBookFilter: multiple values adds IN clause')]
+    public function testAddBookFilterMultipleValues(): void
+    {
+        $query = $this->createMockQuery();
+        $db    = $this->createMockDb();
+
+        // Multi-value params use a plain IN clause and bypass the chapter-range
+        // path (addBookChapterWhere), so no application bootstrap is required.
+        $this->invokeFilter('addBookFilter', [$query, $db, ['5', '10'], 0]);
+
+        $this->assertCount(1, $this->whereCalls, 'Multiple book numbers use a single IN clause');
+        $this->assertStringContainsString('IN (5,10)', $this->whereCalls[0]);
     }
 }
