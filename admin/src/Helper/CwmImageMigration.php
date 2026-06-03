@@ -2077,9 +2077,23 @@ class CwmImageMigration
                 $thumbRelPath = $relDir . '/thumb_' . $baseName . '.jpg';
                 $imageRelPath = $relDir . '/' . basename($imagePath);
 
-                // Generate thumbnail
-                $image     = new Image($imagePath);
-                $thumbnail = $image->resize($size, (int) round($size * 0.5625), true, Image::SCALE_INSIDE);
+                // Generate thumbnail preserving the original aspect ratio.
+                // $size is the max dimension; the other side scales proportionally
+                // (matches Cwmthumbnail::create so portrait/square images aren't
+                // squashed into a 16:9 box and re-blurred during migration).
+                $image        = new Image($imagePath);
+                $sourceWidth  = $image->getWidth();
+                $sourceHeight = $image->getHeight();
+
+                if ($sourceWidth >= $sourceHeight) {
+                    $thumbWidth  = $size;
+                    $thumbHeight = (int) round($size * ($sourceHeight / $sourceWidth));
+                } else {
+                    $thumbHeight = $size;
+                    $thumbWidth  = (int) round($size * ($sourceWidth / $sourceHeight));
+                }
+
+                $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, Image::SCALE_INSIDE);
                 $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
 
                 // Always regenerate WebP variants

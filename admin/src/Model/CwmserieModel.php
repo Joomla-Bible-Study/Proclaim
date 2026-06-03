@@ -250,6 +250,10 @@ class CwmserieModel extends AdminModel
             return parent::save($data);
         }
 
+        if (!empty($validation['warning']) && $app->isClient('administrator')) {
+            $app->enqueueMessage($validation['warning'], 'warning');
+        }
+
         // For new records, save first to get the ID
         if ($isNew) {
             $data['image']            = '';
