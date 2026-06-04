@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\Http\HttpFactory;
+use Joomla\Http\Response;
 
 /**
  * Podcast Index API Helper — submit and search podcast feeds.
@@ -92,6 +93,40 @@ class CwmpodcastIndexHelper
     }
 
     /**
+     * Issue an authenticated GET to the Podcast Index API with debug logging.
+     *
+     * Times the request and records it via CwmDebug::logApi when JBSMDEBUG is on
+     * (transport failures go through CwmDebug::error, which always writes).
+     * Zero overhead when debug is off.
+     *
+     * @param   string  $label  Caller label for debug output (submitFeed/searchByFeedUrl)
+     * @param   string  $url    The fully built request URL
+     *
+     * @return  Response  The HTTP response (status left for the caller to check)
+     *
+     * @throws  \Exception  If the request itself fails (connection, TLS, …)
+     * @since   __DEPLOY_VERSION__
+     */
+    private function apiGet(string $label, string $url): Response
+    {
+        $http    = HttpFactory::getHttp();
+        $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
+
+        try {
+            $response = $http->get($url, $this->getAuthHeaders());
+        } catch (\Exception $e) {
+            CwmDebug::error('Podcast Index ' . $label . ' request failed', $e, 'api');
+
+            throw $e;
+        }
+
+        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi('podcast.index.' . $label, 'GET', $url, $response->getStatusCode(), $elapsed);
+
+        return $response;
+    }
+
+    /**
      * Submit a feed URL to Podcast Index for indexing.
      *
      * GET /add/byfeedurl?url={feedUrl}
@@ -107,8 +142,7 @@ class CwmpodcastIndexHelper
     public function submitFeed(string $feedUrl): object
     {
         $url      = $this->baseUrl . '/add/byfeedurl?url=' . urlencode($feedUrl);
-        $http     = HttpFactory::getHttp();
-        $response = $http->get($url, $this->getAuthHeaders());
+        $response = $this->apiGet('submitFeed', $url);
 
         $status = $response->getStatusCode();
         $body   = (string) $response->getBody();
@@ -144,8 +178,7 @@ class CwmpodcastIndexHelper
     public function searchByFeedUrl(string $feedUrl): ?object
     {
         $url      = $this->baseUrl . '/podcasts/byfeedurl?url=' . urlencode($feedUrl);
-        $http     = HttpFactory::getHttp();
-        $response = $http->get($url, $this->getAuthHeaders());
+        $response = $this->apiGet('searchByFeedUrl', $url);
 
         $status = $response->getStatusCode();
         $body   = (string) $response->getBody();
