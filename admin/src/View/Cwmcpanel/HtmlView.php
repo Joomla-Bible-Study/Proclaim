@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;
 use Joomla\CMS\Component\ComponentHelper;
@@ -45,6 +46,18 @@ class HtmlView extends BaseHtmlView
      * @since    7.0.0
      */
     public string $total_messages;
+
+    /**
+     * Count of studies awaiting editorial review (unpublished).
+     *
+     * Surfaced as a dashboard notice for users who can publish, so content
+     * submitted via the API by non-editors (forced to published=0) does not
+     * sit unnoticed. 0 when the current user lacks core.edit.state.
+     *
+     * @var    int
+     * @since  __DEPLOY_VERSION__
+     */
+    public int $pendingReview = 0;
 
     /**
      * The model state
@@ -98,6 +111,15 @@ class HtmlView extends BaseHtmlView
 
         $this->hasPostInstallationMessages = $model->hasPostInstallMessages();
         $this->extension_id                = ComponentHelper::getComponent('com_proclaim')->id;
+
+        // Editorial review notice: count unpublished studies, but only for users
+        // who can actually publish them. Location-filtered so multi-campus
+        // editors only see pending content they can act on.
+        $user = Factory::getApplication()->getIdentity();
+
+        if ($user && $user->authorise('core.edit.state', 'com_proclaim')) {
+            $this->pendingReview = CwmcountHelper::getCountByState('#__bsms_studies', 0, 'location');
+        }
 
         // Display the template
         parent::display($tpl);
