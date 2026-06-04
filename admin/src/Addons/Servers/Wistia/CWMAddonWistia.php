@@ -22,7 +22,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -328,14 +327,12 @@ class CWMAddonWistia extends CWMAddon
     {
         $videoUrl = 'https://home.wistia.com/medias/' . $mediaHash;
         $url      = 'https://fast.wistia.com/oembed?url=' . urlencode($videoUrl);
-        $factory  = new HttpFactory();
-        $http     = $factory->getHttp();
         $headers  = [
             'Accept' => 'application/json',
         ];
 
         try {
-            $response = $http->get($url, $headers);
+            $response = $this->apiRequest('GET', $url, $headers, null, 'wistia.oembed');
 
             if ($response->getStatusCode() !== 200) {
                 throw new \RuntimeException('Wistia oEmbed error: HTTP ' . $response->getStatusCode());
@@ -423,17 +420,18 @@ class CWMAddonWistia extends CWMAddon
         }
 
         try {
-            $http     = (new \Joomla\Http\HttpFactory())->getHttp();
             $headers  = [
                 'Authorization' => 'Bearer ' . $apiToken,
                 'Content-Type'  => 'application/x-www-form-urlencoded',
             ];
 
             $body     = http_build_query(['description' => $description]);
-            $response = $http->put(
+            $response = $this->apiRequest(
+                'PUT',
                 'https://api.wistia.com/v1/medias/' . rawurlencode($hashedId) . '.json',
+                $headers,
                 $body,
-                $headers
+                'wistia.syncDescription'
             );
 
             if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
@@ -495,17 +493,18 @@ class CWMAddonWistia extends CWMAddon
 
         $synced  = 0;
         $errors  = [];
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $apiToken,
         ];
 
         foreach ($videoMap as $hash => $mediaIds) {
             try {
-                $response = $http->get(
+                $response = $this->apiRequest(
+                    'GET',
                     'https://api.wistia.com/v1/medias/' . rawurlencode($hash) . '/stats.json',
-                    $headers
+                    $headers,
+                    null,
+                    'wistia.stats'
                 );
 
                 if ($response->getStatusCode() !== 200) {
@@ -633,13 +632,11 @@ class CWMAddonWistia extends CWMAddon
             }
 
             // Test API connection by getting account info
-            $factory = new HttpFactory();
-            $http    = $factory->getHttp();
             $headers = [
                 'Authorization' => 'Bearer ' . $apiToken,
             ];
 
-            $response = $http->get('https://api.wistia.com/v1/account.json', $headers);
+            $response = $this->apiRequest('GET', 'https://api.wistia.com/v1/account.json', $headers, null, 'wistia.testConnection');
 
             if ($response->getStatusCode() !== 200) {
                 return [
@@ -780,16 +777,17 @@ class CWMAddonWistia extends CWMAddon
             $params['project_id'] = $projectId;
         }
 
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $apiToken,
         ];
 
         try {
-            $response = $http->get(
+            $response = $this->apiRequest(
+                'GET',
                 'https://api.wistia.com/v1/medias.json?' . http_build_query($params),
-                $headers
+                $headers,
+                null,
+                'wistia.search'
             );
 
             if ($response->getStatusCode() !== 200) {
@@ -871,16 +869,17 @@ class CWMAddonWistia extends CWMAddon
             return ['success' => false, 'error' => 'no api_token'];
         }
 
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $apiToken,
         ];
 
         try {
-            $response = $http->get(
+            $response = $this->apiRequest(
+                'GET',
                 'https://api.wistia.com/v1/projects.json?per_page=100&sort_by=name&sort_direction=asc',
-                $headers
+                $headers,
+                null,
+                'wistia.projects'
             );
 
             if ($response->getStatusCode() !== 200) {

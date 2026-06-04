@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Http\HttpFactory;
 use Joomla\Registry\Registry;
 
 /**
@@ -399,8 +398,6 @@ class CWMAddonResi extends CWMAddon
         }
 
         try {
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Content-Type' => 'application/json',
                 'Accept'       => 'application/json',
@@ -411,7 +408,7 @@ class CWMAddonResi extends CWMAddon
                 'grant_type'    => 'client_credentials',
             ], JSON_THROW_ON_ERROR);
 
-            $response = $http->post('https://api.resi.io/v1/oauth/token', $body, $headers);
+            $response = $this->apiRequest('POST', 'https://api.resi.io/v1/oauth/token', $headers, $body, 'resi.oauth');
 
             if ($response->getStatusCode() === 200) {
                 $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -475,14 +472,12 @@ class CWMAddonResi extends CWMAddon
 
         try {
             $token    = $this->getOAuthToken($serverId);
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Authorization' => 'Bearer ' . $token,
                 'Accept'        => 'application/json',
             ];
 
-            $response = $http->get('https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers);
+            $response = $this->apiRequest('GET', 'https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers, null, 'resi.video');
 
             if ($response->getStatusCode() !== 200) {
                 $errorData = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -539,8 +534,6 @@ class CWMAddonResi extends CWMAddon
             throw new \RuntimeException(Text::_('JBS_ADDON_RESI_NO_CLIENT_ID'));
         }
 
-        $factory  = new HttpFactory();
-        $http     = $factory->getHttp();
         $headers  = [
             'Content-Type' => 'application/json',
             'Accept'       => 'application/json',
@@ -551,7 +544,7 @@ class CWMAddonResi extends CWMAddon
             'grant_type'    => 'client_credentials',
         ], JSON_THROW_ON_ERROR);
 
-        $response = $http->post('https://api.resi.io/v1/oauth/token', $body, $headers);
+        $response = $this->apiRequest('POST', 'https://api.resi.io/v1/oauth/token', $headers, $body, 'resi.oauth');
 
         if ($response->getStatusCode() !== 200) {
             $errorData = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -704,14 +697,12 @@ class CWMAddonResi extends CWMAddon
 
         try {
             $token    = $this->getOAuthToken((int) $server->id);
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Authorization' => 'Bearer ' . $token,
                 'Accept'        => 'application/json',
             ];
 
-            $response = $http->get('https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers);
+            $response = $this->apiRequest('GET', 'https://api.resi.io/v1/ondemand/videos/' . rawurlencode($videoId), $headers, null, 'resi.video');
 
             if ($response->getStatusCode() !== 200) {
                 return;
