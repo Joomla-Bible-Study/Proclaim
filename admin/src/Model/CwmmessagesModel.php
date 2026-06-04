@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -368,6 +369,8 @@ class CwmmessagesModel extends ListModel
         $orderCol  = $this->state->get('list.ordering', 'study.studydate');
         $orderDirn = $this->state->get('list.direction', 'DESC');
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
+
+        CwmDebug::logQuery('messages.getListQuery', $query);
 
         return $query;
     }
