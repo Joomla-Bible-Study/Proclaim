@@ -187,6 +187,43 @@ class CwmDebug
     }
 
     /**
+     * Log an outbound HTTP/API call for diagnostic purposes.
+     *
+     * @param   string    $label       Caller label (e.g. 'ai.claude', 'podcast.index')
+     * @param   string    $method      HTTP method (GET, POST, HEAD, …)
+     * @param   string    $url         Request URL
+     * @param   int|null  $statusCode  Response status code, if known
+     * @param   float     $elapsedMs   Elapsed milliseconds, if measured
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function logApi(
+        string $label,
+        string $method,
+        string $url,
+        ?int $statusCode = null,
+        float $elapsedMs = 0.0
+    ): void {
+        if (!self::isEnabled()) {
+            return;
+        }
+
+        $msg = $method . ' ' . $url;
+
+        if ($statusCode !== null) {
+            $msg .= ' -> ' . $statusCode;
+        }
+
+        if ($elapsedMs > 0) {
+            $msg .= ' (' . round($elapsedMs, 1) . 'ms)';
+        }
+
+        self::log($label . ': ' . $msg, 'api');
+    }
+
+    /**
      * Get the buffered debug messages (e.g. for appending to AJAX responses).
      *
      * @return  string[]
