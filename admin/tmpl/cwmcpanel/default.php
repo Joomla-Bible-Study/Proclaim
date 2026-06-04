@@ -248,6 +248,24 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
         <?php endif; ?>
         <?php
+            // Content awaiting editorial review (unpublished studies) — shown to publishers only
+            if ($this->pendingReview > 0) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <span class="icon-pencil-2" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_PENDING_REVIEW_TITLE'); ?></strong>
+                    <p class="mb-1">
+                        <?php echo Text::plural('JBS_CPL_PENDING_REVIEW_DESC_N', $this->pendingReview); ?>
+                    </p>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[published]=0'); ?>"
+                       class="btn btn-info btn-sm">
+                        <?php echo Text::_('JBS_CPL_PENDING_REVIEW_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php
             // Database schema out-of-sync warning
             $schemaGap = CwmupgradeHelper::isSchemaOutOfDate();
             if ($schemaGap) :
