@@ -22,7 +22,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Http\HttpFactory;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
@@ -330,14 +329,12 @@ class CWMAddonVimeo extends CWMAddon
     {
         try {
             $url      = 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $videoId;
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Accept' => 'application/json',
             ];
 
             try {
-                $response = $http->get($url, $headers);
+                $response = $this->apiRequest('GET', $url, $headers, null, 'vimeo.oembed');
 
                 if ($response->getStatusCode() !== 200) {
                     throw new \RuntimeException('Vimeo oEmbed error: HTTP ' . $response->getStatusCode());
@@ -421,8 +418,6 @@ class CWMAddonVimeo extends CWMAddon
         }
 
         try {
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type'  => 'application/json',
@@ -430,7 +425,7 @@ class CWMAddonVimeo extends CWMAddon
             ];
 
             $body     = json_encode(['description' => $description], JSON_THROW_ON_ERROR);
-            $response = $http->patch('https://api.vimeo.com/videos/' . $videoId, $body, $headers);
+            $response = $this->apiRequest('PATCH', 'https://api.vimeo.com/videos/' . $videoId, $headers, $body, 'vimeo.syncDescription');
 
             if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
                 return ['success' => true];
@@ -504,8 +499,6 @@ class CWMAddonVimeo extends CWMAddon
 
         $synced  = 0;
         $errors  = [];
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $accessToken,
             'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
@@ -523,7 +516,7 @@ class CWMAddonVimeo extends CWMAddon
                     'fields' => 'uri,stats',
                 ]);
 
-                $response = $http->get('https://api.vimeo.com/videos?' . $params, $headers);
+                $response = $this->apiRequest('GET', 'https://api.vimeo.com/videos?' . $params, $headers, null, 'vimeo.stats');
 
                 if ($response->getStatusCode() !== 200) {
                     $errors[] = 'Vimeo API error: HTTP ' . $response->getStatusCode();
@@ -658,14 +651,12 @@ class CWMAddonVimeo extends CWMAddon
             }
 
             // Test API connection by getting user info
-            $factory  = new HttpFactory();
-            $http     = $factory->getHttp();
             $headers  = [
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
             ];
 
-            $response = $http->get('https://api.vimeo.com/me', $headers);
+            $response = $this->apiRequest('GET', 'https://api.vimeo.com/me', $headers, null, 'vimeo.testConnection');
 
             if ($response->getStatusCode() !== 200) {
                 return [
@@ -790,8 +781,6 @@ class CWMAddonVimeo extends CWMAddon
         $query    = $input->getString('query', '');
         $folderId = $input->getString('folder_id', '');
 
-        $factory  = new HttpFactory();
-        $http     = $factory->getHttp();
         $headers  = [
             'Authorization' => 'Bearer ' . $accessToken,
             'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
@@ -814,7 +803,7 @@ class CWMAddonVimeo extends CWMAddon
             : 'https://api.vimeo.com/me/projects/' . rawurlencode($folderId) . '/videos';
 
         try {
-            $response = $http->get($endpoint . '?' . http_build_query($params), $headers);
+            $response = $this->apiRequest('GET', $endpoint . '?' . http_build_query($params), $headers, null, 'vimeo.search');
 
             if ($response->getStatusCode() !== 200) {
                 return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->getStatusCode() . ')'];
@@ -905,17 +894,18 @@ class CWMAddonVimeo extends CWMAddon
             return ['success' => false, 'error' => 'no access_token'. $e->getMessage()];
         }
 
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
         $headers = [
             'Authorization' => 'Bearer ' . $accessToken,
             'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
         ];
 
         try {
-            $response = $http->get(
+            $response = $this->apiRequest(
+                'GET',
                 'https://api.vimeo.com/me/projects?per_page=100&fields=uri,name',
-                $headers
+                $headers,
+                null,
+                'vimeo.folders'
             );
 
             if ($response->getStatusCode() !== 200) {

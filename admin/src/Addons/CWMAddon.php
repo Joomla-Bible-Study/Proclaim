@@ -16,12 +16,15 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
+use Joomla\Http\HttpFactory;
+use Joomla\Http\Response;
 use Joomla\Registry\Registry;
 
 /**
@@ -648,6 +651,59 @@ abstract class CWMAddon
     public function detectMetadata(Registry $params, object $server, string $set_path, Registry $path, Cwmpodcast $jbspodcast): void
     {
         // Default implementation does nothing
+    }
+
+    /**
+     * Perform an outbound HTTP request to a server-addon API with debug logging.
+     *
+     * Centralises HTTP client creation for the server addons (Vimeo, Wistia,
+     * Resi, …). Times the request and records it via CwmDebug::logApi when
+     * JBSMDEBUG is on; transport failures go through CwmDebug::error (which
+     * always writes) before being re-thrown. Zero overhead when debug is off.
+     * Callers keep their own status-code / response handling.
+     *
+     * @param   string       $method   HTTP verb: GET, POST, PUT, PATCH, DELETE
+     * @param   string       $url      Request URL
+     * @param   array        $headers  Request headers
+     * @param   string|null  $body     Request body for POST/PUT/PATCH (null otherwise)
+     * @param   string       $label    Caller label for debug output (defaults to addon type)
+     *
+     * @return  Response  The HTTP response (status left for the caller to check)
+     *
+     * @throws  \Exception  If the request itself fails (connection, TLS, …)
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function apiRequest(
+        string $method,
+        string $url,
+        array $headers = [],
+        ?string $body = null,
+        string $label = ''
+    ): Response {
+        $http    = (new HttpFactory())->getHttp();
+        $verb    = strtoupper($method);
+        $label   = $label !== '' ? $label : $this->getType();
+        $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
+
+        try {
+            $response = match ($verb) {
+                'GET'    => $http->get($url, $headers),
+                'DELETE' => $http->delete($url, $headers),
+                'POST'   => $http->post($url, (string) $body, $headers),
+                'PUT'    => $http->put($url, (string) $body, $headers),
+                'PATCH'  => $http->patch($url, (string) $body, $headers),
+                default  => throw new \InvalidArgumentException('Unsupported HTTP method: ' . $verb),
+            };
+        } catch (\Exception $e) {
+            CwmDebug::error($label . ' ' . $verb . ' request failed', $e, 'api');
+
+            throw $e;
+        }
+
+        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi($label, $verb, $url, $response->getStatusCode(), $elapsed);
+
+        return $response;
     }
 
     /**
