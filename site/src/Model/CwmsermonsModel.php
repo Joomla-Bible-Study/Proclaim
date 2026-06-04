@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Model;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
@@ -733,6 +734,8 @@ class CwmsermonsModel extends ListModel
 
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
+        CwmDebug::logQuery('sermons.getListQuery', $query);
+
         return $query;
     }
 
@@ -841,6 +844,8 @@ class CwmsermonsModel extends ListModel
 
         $query->whereIn($db->quoteName('study_id'), $studyIds)
             ->group($db->quoteName('study_id'));
+
+        CwmDebug::logQuery('sermons.batchLoadMediaStats (' . \count($studyIds) . ' studies)', $query);
 
         $db->setQuery($query);
 
