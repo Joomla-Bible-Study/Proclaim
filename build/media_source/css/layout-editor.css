@@ -928,12 +928,14 @@
     color: var(--layout-text-primary);
 }
 
-.view-settings-modal .controls {
+.view-settings-modal .controls,
+.section-settings-modal .controls {
     margin-bottom: .25rem;
 }
 
 /* Description text below form fields */
-.view-settings-modal .controls > br + * {
+.view-settings-modal .controls > br + *,
+.section-settings-modal .controls > br + * {
     font-size: 0.875rem;
     color: var(--layout-text-muted);
     line-height: 1.4;
@@ -944,35 +946,45 @@
    (240px label + flex controls) doesn't leave enough width for editors
    inside the modal context */
 .view-settings-modal .control-group:has(textarea),
-.view-settings-modal .control-group:has(.js-editor-tinymce) {
+.view-settings-modal .control-group:has(.js-editor-tinymce),
+.section-settings-modal .control-group:has(textarea),
+.section-settings-modal .control-group:has(.js-editor-tinymce) {
     flex-direction: column;
 }
 
 .view-settings-modal .control-group:has(textarea) .control-label,
-.view-settings-modal .control-group:has(.js-editor-tinymce) .control-label {
+.view-settings-modal .control-group:has(.js-editor-tinymce) .control-label,
+.section-settings-modal .control-group:has(textarea) .control-label,
+.section-settings-modal .control-group:has(.js-editor-tinymce) .control-label {
     inline-size: 100%;
     padding-bottom: 0;
 }
 
 /* Prevent TinyMCE editor from overflowing the modal */
-.view-settings-modal .tox-tinymce {
+.view-settings-modal .tox-tinymce,
+.section-settings-modal .tox-tinymce {
     max-width: 100%;
 }
 
-.view-settings-modal .control-group:has(.js-editor-tinymce) .controls {
+.view-settings-modal .control-group:has(.js-editor-tinymce) .controls,
+.section-settings-modal .control-group:has(.js-editor-tinymce) .controls {
     max-inline-size: 100%;
     overflow: hidden;
 }
 
-/* Two-column layout for form fields on larger screens */
+/* Two-column layout for form fields on larger screens. The view-settings
+   modal lays fields out per accordion body; the section-settings modal uses a
+   single flat .options-form container — both need the same grid. */
 @media (min-width: 768px) {
-    .view-settings-modal .accordion-body {
+    .view-settings-modal .accordion-body,
+    .section-settings-modal .options-form {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem 2rem;
     }
 
-    .view-settings-modal .control-group {
+    .view-settings-modal .control-group,
+    .section-settings-modal .control-group {
         margin-bottom: 0;
     }
 
@@ -980,7 +992,11 @@
     .view-settings-modal .control-group:has(textarea),
     .view-settings-modal .control-group:has(.editor),
     .view-settings-modal .control-group:has(.js-editor-tinymce),
-    .view-settings-modal .control-group:has([type="editor"]) {
+    .view-settings-modal .control-group:has([type="editor"]),
+    .section-settings-modal .control-group:has(textarea),
+    .section-settings-modal .control-group:has(.editor),
+    .section-settings-modal .control-group:has(.js-editor-tinymce),
+    .section-settings-modal .control-group:has([type="editor"]) {
         grid-column: 1 / -1;
     }
 }
