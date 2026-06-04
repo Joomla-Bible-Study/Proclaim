@@ -109,3 +109,7 @@ build.properties
 /media/js/
 /media/css/
 # === cwm-build-tools: end extension paths ===
+
+# Claude Code personal/local settings (not shared)
+.claude/settings.local.json
+.claude/settings.local.json.bak
