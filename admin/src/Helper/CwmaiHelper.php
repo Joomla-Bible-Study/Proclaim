@@ -20,6 +20,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Http\HttpFactory;
+use Joomla\Http\Response;
 use Joomla\Registry\Registry;
 
 /**
@@ -581,6 +582,44 @@ class CwmaiHelper
     }
 
     /**
+     * POST a JSON payload to an AI provider endpoint with debug instrumentation.
+     *
+     * Centralises the HTTP client creation for the provider calls and records
+     * the request (method, URL, status, elapsed) via CwmDebug when JBSMDEBUG is
+     * on. Transport-level failures are logged via CwmDebug::error (which always
+     * writes) before being re-thrown. Zero overhead when debug is off.
+     *
+     * @param   string  $provider  Provider label for debug output (claude/gemini/openai)
+     * @param   string  $url       Endpoint URL
+     * @param   string  $payload   JSON request body
+     * @param   array   $headers   Request headers
+     *
+     * @return  Response  The HTTP response (status is left for the caller to check)
+     *
+     * @throws  \Exception  If the request itself fails (connection, TLS, …)
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function postJson(string $provider, string $url, string $payload, array $headers): Response
+    {
+        $http    = (new HttpFactory())->getHttp();
+        $label   = 'ai.' . $provider;
+        $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
+
+        try {
+            $response = $http->post($url, $payload, $headers);
+        } catch (\Exception $e) {
+            CwmDebug::error($provider . ' API request failed', $e, 'ai');
+
+            throw $e;
+        }
+
+        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi($label, 'POST', $url, $response->getStatusCode(), $elapsed);
+
+        return $response;
+    }
+
+    /**
      * Call the Anthropic Claude API
      *
      * @param   string  $apiKey        API key
@@ -595,9 +634,6 @@ class CwmaiHelper
      */
     private static function callClaude(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
     {
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
-
         $payload = json_encode([
             'model'      => $model,
             'max_tokens' => 8192,
@@ -613,7 +649,7 @@ class CwmaiHelper
             'anthropic-version' => '2023-06-01',
         ];
 
-        $response = $http->post('https://api.anthropic.com/v1/messages', $payload, $headers);
+        $response = self::postJson('claude', 'https://api.anthropic.com/v1/messages', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
             try {
@@ -657,9 +693,6 @@ class CwmaiHelper
      */
     private static function callGemini(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
     {
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
-
         // Ensure no double models/ prefix
         $model   = str_replace('models/', '', $model);
         $url     = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent?key=' . $apiKey;
@@ -684,7 +717,7 @@ class CwmaiHelper
             'Content-Type' => 'application/json',
         ];
 
-        $response = $http->post($url, $payload, $headers);
+        $response = self::postJson('gemini', $url, $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
             try {
@@ -728,9 +761,6 @@ class CwmaiHelper
      */
     private static function callOpenAI(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
     {
-        $factory = new HttpFactory();
-        $http    = $factory->getHttp();
-
         $payload = json_encode([
             'model'       => $model,
             'max_tokens'  => 8192,
@@ -747,7 +777,7 @@ class CwmaiHelper
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
-        $response = $http->post('https://api.openai.com/v1/chat/completions', $payload, $headers);
+        $response = self::postJson('openai', 'https://api.openai.com/v1/chat/completions', $payload, $headers);
 
         if ($response->getStatusCode() !== 200) {
             try {

@@ -76,6 +76,14 @@ class CwmDebugTest extends ProclaimTestCase
         $this->assertSame([], CwmDebug::getBuffer());
     }
 
+    #[TestDox('logApi is a no-op when JBSMDEBUG is off')]
+    public function testLogApiNoopWhenDisabled(): void
+    {
+        CwmDebug::logApi('ai.claude', 'POST', 'https://api.example.com/v1/messages', 200, 12.3);
+
+        $this->assertSame([], CwmDebug::getBuffer(), 'Disabled logApi must not buffer anything');
+    }
+
     #[TestDox('log and error also no-op the buffer when disabled')]
     public function testLogAndTimerNoopWhenDisabled(): void
     {
