@@ -17,6 +17,7 @@
 
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Log\Log;
 use Joomla\Registry\Registry;
 
 /** @var Registry $params */
@@ -46,6 +47,20 @@ $Listing = new Cwmlisting();
             try {
                 echo $Listing->getFluidListing($list, $params, $cwmtemplate, $type = "sermons");
             } catch (Exception $e) {
+                // Never let a listing render error blank the module silently. Always
+                // log it; surface the detail inline only when component debug is on
+                // (JBSMDEBUG, set by api.php — 1 on admin pages or with ?jbsmdbg=1).
+                Log::add(
+                    'mod_proclaim: failed to render sermon listing — ' . $e->getMessage(),
+                    Log::ERROR,
+                    'mod_proclaim'
+                );
+
+                if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+                    echo '<div class="alert alert-danger" role="alert">'
+                        . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8')
+                        . '</div>';
+                }
             }
             ?>
         </div>
