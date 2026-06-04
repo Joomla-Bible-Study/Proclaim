@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
@@ -2531,6 +2532,8 @@ class Cwmpodcast
      */
     protected function getRemoteFileHeaders(string $url): ?array
     {
+        $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_NOBODY, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -2543,9 +2546,17 @@ class Cwmpodcast
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr  = curl_error($ch);
         curl_close($ch);
 
+        $elapsed = $startNs !== null ? (hrtime(true) - $startNs) / 1_000_000 : 0.0;
+        CwmDebug::logApi('podcast.remoteHeaders', 'HEAD', $url, (int) $httpCode, $elapsed);
+
         if ($httpCode < 200 || $httpCode >= 400 || $response === false) {
+            if ($response === false && $curlErr !== '') {
+                CwmDebug::error('Remote header check failed for ' . $url . ': ' . $curlErr, null, 'api');
+            }
+
             return null;
         }
 
