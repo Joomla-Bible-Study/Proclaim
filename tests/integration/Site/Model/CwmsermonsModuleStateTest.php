@@ -114,8 +114,7 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
     private function silenced(callable $fn): mixed
     {
         set_error_handler(
-            static fn (int $errno, string $errstr, string $errfile): bool =>
-                str_contains($errfile, 'joomla/language/src/Language.php')
+            static fn (int $errno, string $errstr, string $errfile): bool => str_contains($errfile, 'joomla/language/src/Language.php')
         );
 
         try {
