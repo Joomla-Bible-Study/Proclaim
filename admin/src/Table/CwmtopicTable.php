@@ -188,7 +188,6 @@ class CwmtopicTable extends Table
      *
      * @return  bool  True on success.
      *
-     * @todo    Consider deprecating this override
      * @link    http://docs.joomla.org/Table/bind
      * @since   11.1
      */
