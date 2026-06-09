@@ -51,7 +51,6 @@ class CwmsermonModel extends FormModel
      *
      * @return    bool    True on success
      *
-     * @todo      this looks like it could be moved to a helper.
      * @since     1.5
      */
     public function hit(?int $pk = null): bool
