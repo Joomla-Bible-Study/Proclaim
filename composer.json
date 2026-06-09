@@ -158,6 +158,7 @@
     "ars-list": "cwm-ars-list",
     "cwm-article": "cwm-article",
     "release": "cwm-release",
-    "jed-prep": "bash build/jed-prep.sh"
+    "jed-prep": "bash build/jed-prep.sh",
+    "release:wiki": "bash build/sync-wiki-version.sh"
   }
 }
