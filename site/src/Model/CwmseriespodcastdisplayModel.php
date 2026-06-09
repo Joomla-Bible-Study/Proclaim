@@ -60,7 +60,6 @@ class CwmseriespodcastdisplayModel extends ItemModel
      * @throws \Exception
      *
      * @since 7.1.0
-     * @todo  look at removing this, as it may not be used. bcc
      */
     public function getItem($pk = null): mixed
     {

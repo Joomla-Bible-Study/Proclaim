@@ -280,53 +280,6 @@ class CwmtopicTable extends Table
     }
 
     /**
-     * check and (re-)construct the alias before storing the topic
-     *
-     * @param   array  $data      Data of record
-     * @param   int    $recordId  id
-     *
-     * @return  bool|array ?
-     *
-     * @since 9.0.0
-     *
-     * @todo  this look like it is not used. (Neither Tom nor Brent wrote this one)
-     */
-    public function checkAlias($data = [], $recordId = null): array|bool
-    {
-        $topic = $data['topic_text'];
-
-        // Topic_text not given? -> use the first language item with some text
-        if ($topic == null || \strlen($topic) == 0) {
-            if (isset($data['params']) && \is_array($data['params'])) {
-                foreach ($data['params'] as $language) {
-                    if (\strlen($language) > 0) {
-                        $topic = $language;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // If still empty: use id
-        // todo: For new items, this is always '0'. Next primary key would be nice...
-        if ($topic == null || \strlen($topic) == 0) {
-            $topic = $recordId;
-        }
-
-        // Add prefix if needed
-        if (strncmp($topic, 'JBS_TOP_', 8) != 0) {
-            $topic = 'JBS_TOP_' . $topic;
-        }
-
-        // And form well
-        // replace all non a-Z 0-9 by '_'
-        $topic              = strtoupper(preg_replace('/[^a-z0-9]/i', '_', $topic));
-        $data['topic_text'] = $topic;
-
-        return $data;
-    }
-
-    /**
      * Method to compute the default name of the asset.
      * The default name is in the form `table_name.id`
      * where id is the value of the primary key of the table.
