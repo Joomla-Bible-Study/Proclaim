@@ -44,14 +44,13 @@ class HtmlView extends BaseHtmlView
     {
         /** @var CwmlatestModel $model */
         $model = $this->getModel();
-        $id    = $model->getLatestStudyId();
+        $slug  = $model->getLatestStudySlug();
 
         $app   = Factory::getApplication();
         $input = $app->getInput();
         $t     = $input->get('t', '1');
 
-        // @todo move to slug asap, this will require a new query to load both alias and ID.
-        $link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $id . '&t=' . $t);
+        $link = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $slug . '&t=' . $t);
 
         $app->redirect($link);
     }

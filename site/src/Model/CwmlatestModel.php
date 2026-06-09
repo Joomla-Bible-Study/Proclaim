@@ -28,19 +28,26 @@ use Joomla\Database\ParameterType;
 class CwmlatestModel extends BaseDatabaseModel
 {
     /**
-     * Get the ID of the most recently published study
+     * Get the slug (id:alias) of the most recently published study.
      *
-     * @return int|null The ID of the latest study, or null if none found
+     * Returns the SEF-friendly "id:alias" form so the redirect lands on a
+     * slugged URL; the cwmsermon view extracts the leading integer id anyway.
      *
-     * @since 7.1.0
+     * @return string|null The "id:alias" slug of the latest study, or null if none found
+     *
+     * @since __DEPLOY_VERSION__
      */
-    public function getLatestStudyId(): ?int
+    public function getLatestStudySlug(): ?string
     {
         $db    = $this->getDatabase();
         $query = $db->getQuery(true);
 
         $published = 1;
-        $query->select($db->quoteName('id'))
+        $query->select(
+            'CASE WHEN CHAR_LENGTH(' . $db->quoteName('alias') . ') THEN CONCAT_WS('
+            . $db->quote(':') . ', ' . $db->quoteName('id') . ', ' . $db->quoteName('alias')
+            . ') ELSE ' . $db->quoteName('id') . ' END AS ' . $db->quoteName('slug')
+        )
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('published') . ' = :published')
             ->bind(':published', $published, ParameterType::INTEGER)
@@ -51,6 +58,6 @@ class CwmlatestModel extends BaseDatabaseModel
 
         $result = $db->loadResult();
 
-        return $result !== null ? (int) $result : null;
+        return $result !== null ? (string) $result : null;
     }
 }

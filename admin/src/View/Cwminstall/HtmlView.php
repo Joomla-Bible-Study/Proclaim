@@ -170,7 +170,6 @@ class HtmlView extends BaseHtmlView
         }
 
         // Install systems setup files
-        // @todo need to move to a helper as this is call do many times.
         $this->installSetup();
 
         $this->addToolbar();

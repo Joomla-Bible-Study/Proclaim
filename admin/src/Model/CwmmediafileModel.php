@@ -586,7 +586,6 @@ class CwmmediafileModel extends AdminModel
                 $table->reset();
                 $table->load($pk);
 
-                // Todo Need to move to params BCC
                 $table->player = (int)$value;
 
                 if (!$table->store()) {
