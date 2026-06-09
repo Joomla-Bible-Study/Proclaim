@@ -190,7 +190,6 @@ class HtmlView extends BaseHtmlView
      * @return  void
      *
      * @throws \Exception
-     * @todo  Need to clean up the display function as there is stuff needed to change up.
      *
      * @since 7.0
      */
@@ -352,9 +351,6 @@ class HtmlView extends BaseHtmlView
         $this->item->scripture1    = $CWMListing->getScripture($scriptureParams, $item, 0, 1);
         $this->item->scripture2    = $CWMListing->getScripture($scriptureParams, $item, 0, 2);
         $this->item->allScriptures = $CWMListing->getAllScriptures($scriptureParams, $item);
-
-        // @todo check to see if this works
-        $this->item->topics = $this->item->topic_text;
 
         if ($item->params->get('showrelated') > 0) {
             $relatedstudies = new Cwmrelatedstudies();
@@ -557,7 +553,7 @@ class HtmlView extends BaseHtmlView
         $pathway = $app->getPathway();
 
         $this->item->metadesc = mb_substr(trim(strip_tags($this->item->studyintro ?? '')), 0, 160);
-        $this->item->metakey  = $this->item->topics;
+        $this->item->metakey  = $this->item->topic_text;
 
         // Because the application sets a default page title,
         // we need to get it from the menu item itself

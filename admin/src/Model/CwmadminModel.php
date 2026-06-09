@@ -249,32 +249,6 @@ class CwmadminModel extends AdminModel
         }
     }
 
-    /**
-     * Get Media Files
-     *
-     * @return mixed
-     *
-     * @since 7.0
-     *
-     * @todo  not sure if this should be here.
-     */
-    public function getMediaFiles(): mixed
-    {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from($db->quoteName('#__bsms_mediafiles'));
-        $db->setQuery($query);
-        $mediafiles = $db->loadObjectList();
-
-        foreach ($mediafiles as $i => $mediafile) {
-            $reg = new Registry();
-            $reg->loadString($mediafile->params);
-            $mediafiles[$i]->params = $reg;
-        }
-
-        return $mediafiles;
-    }
 
     /**
      * Fixes database problems

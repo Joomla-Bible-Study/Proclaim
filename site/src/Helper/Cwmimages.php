@@ -352,8 +352,6 @@ class Cwmimages
      *           }
      *
      * @since    7.0
-     *
-     * @todo This looks like it needs a rework.
      */
     public static function getTeacherImage(?string $image1 = null, ?string $image2 = null): object
     {
