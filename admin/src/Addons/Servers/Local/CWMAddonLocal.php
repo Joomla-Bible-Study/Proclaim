@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Local;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
@@ -321,28 +322,7 @@ class CWMAddonLocal extends CWMAddon
 
         // MIME type: try real detection first, fall back to extension
         if ($needsMime) {
-            $mimeType = null;
-
-            if (\function_exists('mime_content_type')) {
-                $mimeType = mime_content_type($localPath);
-
-                if ($mimeType === 'application/octet-stream') {
-                    $mimeType = null;
-                }
-            }
-
-            if (!$mimeType && class_exists('finfo')) {
-                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-                $mimeType = $finfo->file($localPath);
-
-                if ($mimeType === 'application/octet-stream') {
-                    $mimeType = null;
-                }
-            }
-
-            if (!$mimeType) {
-                $mimeType = $this->getMimeTypeFromExtension($localPath);
-            }
+            $mimeType = Cwmmime::detect($localPath);
 
             if ($mimeType) {
                 $params->set('mime_type', $mimeType);

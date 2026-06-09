@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
@@ -748,7 +749,7 @@ class Cwmbackup
         @ob_end_clean();
 
         // Verify MimeType or Extract the MimeType
-        $mime_type = $this->verifyMimeType($mime_type, $file);
+        $mime_type = Cwmmime::forDownload($mime_type, $file);
 
         // Reset the execution time limit for file output
         if (\function_exists('set_time_limit')) {
@@ -791,51 +792,6 @@ class Cwmbackup
             flush();
         }
         return true;
-    }
-
-    /**
-     * Verify MimeType
-     *
-     * @param   string  $mime_type  MimeType (optional)
-     * @param   string  $file       File with a full path
-     *
-     * @return string Return correct MimeType (ex. application/zip)
-     *
-     * @since 10.0.0
-     * @todo may need to move this out into a helper file.
-     */
-    private function verifyMimeType(string $mime_type = '', string $file = ''): string
-    {
-        /* Figure out the MIME type (if not specified) */
-        $known_mime_types = [
-            "pdf"  => "application/pdf",
-            "txt"  => "text/plain",
-            "html" => "text/html",
-            "htm"  => "text/html",
-            "exe"  => "application/octet-stream",
-            "zip"  => "application/zip",
-            "doc"  => "application/msword",
-            "xls"  => "application/vnd.ms-excel",
-            "ppt"  => "application/vnd.ms-powerpoint",
-            "gif"  => "image/gif",
-            "png"  => "image/png",
-            "jpeg" => "image/jpg",
-            "jpg"  => "image/jpg",
-            "php"  => "text/plain",
-            "sql"  => "text/x-sql",
-        ];
-
-        if ($mime_type === '') {
-            $file_extension = strtolower(substr(strrchr($file, "."), 1));
-
-            if (\array_key_exists($file_extension, $known_mime_types)) {
-                return $known_mime_types[$file_extension];
-            }
-
-            return "application/force-download";
-        }
-
-        return $mime_type;
     }
 
     /**
