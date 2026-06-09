@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -717,25 +718,7 @@ abstract class CWMAddon
      */
     protected function getMimeTypeFromExtension(string $filename): ?string
     {
-        $path      = parse_url($filename, PHP_URL_PATH);
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        $mimeTypes = [
-            'mp3'  => 'audio/mpeg',
-            'mp4'  => 'video/mp4',
-            'm4a'  => 'audio/mp4',
-            'm4v'  => 'video/mp4',
-            'ogg'  => 'audio/ogg',
-            'oga'  => 'audio/ogg',
-            'ogv'  => 'video/ogg',
-            'wav'  => 'audio/wav',
-            'webm' => 'video/webm',
-            'flac' => 'audio/flac',
-            'aac'  => 'audio/aac',
-            'pdf'  => 'application/pdf',
-        ];
-
-        return $mimeTypes[$extension] ?? null;
+        return Cwmmime::fromExtension($filename);
     }
 
     /**

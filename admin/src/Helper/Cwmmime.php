@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * Part of Proclaim Package
+ *
+ * @package    Proclaim.Admin
+ * @copyright  (C) 2026 CWM Team All rights reserved
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ * @link       https://www.christianwebministries.org
+ * */
+
+namespace CWM\Component\Proclaim\Administrator\Helper;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+
+// phpcs:enable PSR1.Files.SideEffects
+
+/**
+ * Shared MIME-type detection helper.
+ *
+ * Consolidates the extension→MIME maps and the mime_content_type → finfo →
+ * extension detection chain that were previously duplicated across the backup
+ * library, the addon base/local classes, and the podcast helper.
+ *
+ * @package  Proclaim.Admin
+ * @since    __DEPLOY_VERSION__
+ */
+final class Cwmmime
+{
+    /**
+     * Canonical single-extension → MIME-type map.
+     *
+     * Note: this is for detecting a single file's type. The broader pipe-keyed
+     * "allowed types" catalog used by the media upload field lives in
+     * Cwmmedia::getMimetypes() and is a separate concern.
+     *
+     * @var array<string, string>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const MAP = [
+        // Audio
+        'mp3'  => 'audio/mpeg',
+        'm4a'  => 'audio/mp4',
+        'm4b'  => 'audio/mp4',
+        'oga'  => 'audio/ogg',
+        'ogg'  => 'audio/ogg',
+        'wav'  => 'audio/wav',
+        'flac' => 'audio/flac',
+        'aac'  => 'audio/aac',
+        'wma'  => 'audio/x-ms-wma',
+        // Video
+        'mp4'  => 'video/mp4',
+        'm4v'  => 'video/mp4',
+        'ogv'  => 'video/ogg',
+        'webm' => 'video/webm',
+        'mov'  => 'video/quicktime',
+        'avi'  => 'video/x-msvideo',
+        'mkv'  => 'video/x-matroska',
+        'wmv'  => 'video/x-ms-wmv',
+        // Documents
+        'pdf'  => 'application/pdf',
+        'txt'  => 'text/plain',
+        'htm'  => 'text/html',
+        'html' => 'text/html',
+        'doc'  => 'application/msword',
+        'xls'  => 'application/vnd.ms-excel',
+        'ppt'  => 'application/vnd.ms-powerpoint',
+        'sql'  => 'text/x-sql',
+        'php'  => 'text/plain',
+        // Images
+        'gif'  => 'image/gif',
+        'png'  => 'image/png',
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        // Archives / binaries
+        'zip' => 'application/zip',
+        'exe' => 'application/octet-stream',
+    ];
+
+    /**
+     * Resolve a MIME type from a filename or URL by its extension.
+     *
+     * @param   string  $pathOrFilename  A file path, filename, or URL.
+     *
+     * @return  string|null  The mapped MIME type, or null when the extension is unknown.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function fromExtension(string $pathOrFilename): ?string
+    {
+        $path      = parse_url($pathOrFilename, PHP_URL_PATH) ?: $pathOrFilename;
+        $extension = strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
+
+        return self::MAP[$extension] ?? null;
+    }
+
+    /**
+     * Detect a file's MIME type: real detection (mime_content_type, then finfo),
+     * falling back to the extension map.
+     *
+     * @param   string  $filepath  Path to a local, readable file.
+     *
+     * @return  string|null  The detected MIME type, or null when undetermined.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function detect(string $filepath): ?string
+    {
+        if (\function_exists('mime_content_type')) {
+            $mimeType = mime_content_type($filepath);
+
+            if ($mimeType && $mimeType !== 'application/octet-stream') {
+                return $mimeType;
+            }
+        }
+
+        if (class_exists('finfo')) {
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($filepath);
+
+            if ($mimeType && $mimeType !== 'application/octet-stream') {
+                return $mimeType;
+            }
+        }
+
+        return self::fromExtension($filepath);
+    }
+
+    /**
+     * Resolve a MIME type for a download response. Honours an explicit type,
+     * otherwise derives one from the extension, falling back to a forced download.
+     *
+     * @param   string  $mimeType  An explicit MIME type, or '' to derive one.
+     * @param   string  $file      The file path/name used to derive the type.
+     *
+     * @return  string  A non-empty MIME type suitable for a Content-Type header.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function forDownload(string $mimeType, string $file): string
+    {
+        if ($mimeType !== '') {
+            return $mimeType;
+        }
+
+        return self::fromExtension($file) ?? 'application/force-download';
+    }
+}

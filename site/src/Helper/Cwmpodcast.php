@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
@@ -2584,46 +2585,7 @@ class Cwmpodcast
      */
     protected function detectMimeType(string $filepath): ?string
     {
-        // Try mime_content_type first
-        if (\function_exists('mime_content_type')) {
-            $mimeType = mime_content_type($filepath);
-            if ($mimeType && $mimeType !== 'application/octet-stream') {
-                return $mimeType;
-            }
-        }
-
-        // Try finfo
-        if (class_exists('finfo')) {
-            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->file($filepath);
-            if ($mimeType && $mimeType !== 'application/octet-stream') {
-                return $mimeType;
-            }
-        }
-
-        // Fall back to extension-based detection
-        $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
-        $mimeTypes = [
-            'mp3'  => 'audio/mpeg',
-            'mp4'  => 'video/mp4',
-            'm4a'  => 'audio/mp4',
-            'm4v'  => 'video/mp4',
-            'ogg'  => 'audio/ogg',
-            'oga'  => 'audio/ogg',
-            'ogv'  => 'video/ogg',
-            'wav'  => 'audio/wav',
-            'webm' => 'video/webm',
-            'flac' => 'audio/flac',
-            'aac'  => 'audio/aac',
-            'wma'  => 'audio/x-ms-wma',
-            'wmv'  => 'video/x-ms-wmv',
-            'avi'  => 'video/x-msvideo',
-            'mov'  => 'video/quicktime',
-            'mkv'  => 'video/x-matroska',
-            'pdf'  => 'application/pdf',
-        ];
-
-        return $mimeTypes[$extension] ?? null;
+        return Cwmmime::detect($filepath);
     }
 
     /**
