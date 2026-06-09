@@ -26,9 +26,14 @@
 [data-bs-theme="dark"] {
     --iti-hover-color: rgba(255, 255, 255, 0.08);
     --iti-border-color: var(--bs-border-color, #495057);
-    --iti-dialcode-color: var(--bs-secondary-color, #adb5bd);
-    --iti-dropdown-bg: var(--bs-body-bg, #212529);
+    /* Renamed from --iti-dropdown-bg in v29 */
+    --iti-country-selector-bg: var(--bs-body-bg, #212529);
     --iti-icon-color: var(--bs-secondary-color, #adb5bd);
+}
+
+/* Dial code in the country list (v29 removed --iti-dialcode-color) */
+[data-bs-theme="dark"] .iti__dial-code {
+    color: var(--bs-secondary-color, #adb5bd);
 }
 
 /* Search input in dark mode */
@@ -48,8 +53,8 @@
     color: var(--bs-body-color, #dee2e6);
 }
 
-/* Dropdown box-shadow for dark mode */
-[data-bs-theme="dark"] .iti--inline-dropdown .iti__dropdown-content {
+/* Dropdown box-shadow for dark mode (classes renamed in v29) */
+[data-bs-theme="dark"] .iti--inline-country-selector .iti__country-selector {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -66,9 +71,12 @@
     :root:not([data-bs-theme="light"]) {
         --iti-hover-color: rgba(255, 255, 255, 0.08);
         --iti-border-color: #495057;
-        --iti-dialcode-color: #adb5bd;
-        --iti-dropdown-bg: #212529;
+        --iti-country-selector-bg: #212529;
         --iti-icon-color: #adb5bd;
+    }
+
+    :root:not([data-bs-theme="light"]) .iti__dial-code {
+        color: #adb5bd;
     }
 
     :root:not([data-bs-theme="light"]) .iti__search-input {
@@ -86,7 +94,7 @@
         color: #dee2e6;
     }
 
-    :root:not([data-bs-theme="light"]) .iti--inline-dropdown .iti__dropdown-content {
+    :root:not([data-bs-theme="light"]) .iti--inline-country-selector .iti__country-selector {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 

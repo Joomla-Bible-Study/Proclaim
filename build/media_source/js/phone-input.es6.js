@@ -22,9 +22,11 @@
 
         const defaults = {
             initialCountry: 'us',
-            nationalMode: true,
+            // Replaces nationalMode + formatOnDisplay in v29.
+            numberDisplayFormat: 'NATIONAL',
             formatAsYouType: true,
-            autoPlaceholder: 'aggressive',
+            // Renamed from autoPlaceholder in v29; values are now uppercase.
+            placeholderNumberPolicy: 'AGGRESSIVE',
             // Pin to false: preserves the current "flag only" look. v28 flipped
             // the default to true; the previous code passed showSelectedDialCode
             // which v26 silently ignored, so production has always rendered
@@ -46,7 +48,9 @@
 
         if (form) {
             form.addEventListener('submit', () => {
-                if (iti.isValidNumber()) {
+                // v29 renamed strict validation to isValidNumberPrecise()
+                // (isValidNumber() is now the looser possible-number check).
+                if (iti.isValidNumberPrecise()) {
                     input.value = iti.getNumber();
                 } else if (input.value.trim()) {
                     // Keep whatever the user typed if not valid international
