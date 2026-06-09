@@ -37,7 +37,6 @@ class CWMHtml5Inline
      * @return  string
      *
      * @since      10.0.0
-     * @todo Need to clean up and verify all sanserif.
      */
     public static function render(
         object $media,
