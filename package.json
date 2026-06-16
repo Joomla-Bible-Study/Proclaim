@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^7.29.6",
     "@babel/preset-env": "^7.29.5",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
