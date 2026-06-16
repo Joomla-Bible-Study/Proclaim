@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Archive button click
-    document.getElementById('btn-start-archive').addEventListener('click', () => {
+    document.getElementById('btn-start-archive').addEventListener('click', async () => {
         const timeframe = document.getElementById('jform_timeframe').value;
         const switchEl = document.querySelector('input[name="jform[switch]"]:checked');
         const switchVal = switchEl ? switchEl.value : 'year';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirmMsg = Joomla.Text._('JBS_ARCHIVE_CONFIRM')
             .replace('%s', `${timeframe} ${intervalLabels[switchVal]}`);
 
-        if (!confirm(confirmMsg)) {
+        if (!await window.cwmConfirm(confirmMsg)) {
             return;
         }
 

@@ -247,7 +247,7 @@ describe('message-ai-assist', () => {
 
             document.getElementById('btn-ai-assist').click();
 
-            expect(global.alert).toHaveBeenCalled();
+            expect(window.cwmAlert).toHaveBeenCalled();
             expect(global.fetch).not.toHaveBeenCalled();
         });
     });

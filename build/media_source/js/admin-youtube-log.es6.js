@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Reset quota counter buttons ---
     document.querySelectorAll('.btn-reset-yt-quota').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             const msg = t('JBS_ADM_YOUTUBE_QUOTA_RESET_CONFIRM', 'Reset the quota counter for this server?');
 
-            if (!window.confirm(msg)) {
+            if (!await window.cwmConfirm(msg)) {
                 return;
             }
 
@@ -129,10 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearBtn = document.getElementById('btn-clear-youtube-log');
 
     if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
+        clearBtn.addEventListener('click', async () => {
             const msg = t('JBS_ADM_YOUTUBE_LOG_CLEAR_CONFIRM', 'Are you sure you want to clear all YouTube log entries?');
 
-            if (!window.confirm(msg)) {
+            if (!await window.cwmConfirm(msg)) {
                 return;
             }
 

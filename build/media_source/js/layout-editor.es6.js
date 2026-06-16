@@ -841,6 +841,10 @@
             });
 
             // Intercept modal close to warn about unsaved changes
+            // NOTE: not migrated to window.cwmConfirm — e.preventDefault() must run
+            // synchronously inside the bootstrap hide.bs.modal dispatch; an async
+            // dialog can't cancel the hide in time. Migrate with the bootstrap-modal
+            // removal. See cwm-dialog.es6.mjs.
             modal.addEventListener('hide.bs.modal', (e) => {
                 // Check if we have unsaved changes (changes without clicking Apply)
                 if (this.viewSettingsHasChanges) {
@@ -1498,6 +1502,10 @@
             });
 
             // Intercept modal close to warn about unsaved changes
+            // NOTE: not migrated to window.cwmConfirm — e.preventDefault() must run
+            // synchronously inside the bootstrap hide.bs.modal dispatch; an async
+            // dialog can't cancel the hide in time. Migrate with the bootstrap-modal
+            // removal. See cwm-dialog.es6.mjs.
             modal.addEventListener('hide.bs.modal', (e) => {
                 if (this.sectionSettingsHasChanges) {
                     const message = this.trans('JBS_TPL_MODAL_UNSAVED_CHANGES') || 'You have unsaved changes in this dialog. Discard changes?';
@@ -2703,6 +2711,11 @@
                 const cancelBtn = e.target.closest('.button-cancel');
                 if (cancelBtn && this.isDirty) {
                     const message = this.trans('JBS_TPL_UNSAVED_CHANGES_CONFIRM') || 'You have unsaved changes. Are you sure you want to leave without saving?';
+                    // NOTE: not migrated to window.cwmConfirm — this guard depends on the
+                    // synchronous return of confirm() to preventDefault/stopPropagation
+                    // during capture-phase event dispatch. JoomlaDialog is async, so this
+                    // needs an async-aware redesign (always preventDefault, await, then
+                    // re-dispatch) alongside the bootstrap-modal removal. See cwm-dialog.es6.mjs.
                     if (!window.confirm(message)) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -2972,11 +2985,11 @@
         /**
              * Close settings modal without saving (for close button)
              */
-        closeSettingsModal() {
+        async closeSettingsModal() {
             // Check if any values have changed
             if (this.originalModalValues && this.hasModalChanges()) {
                 const message = this.trans('JBS_TPL_MODAL_UNSAVED_CHANGES') || 'You have unsaved changes in this dialog. Discard changes?';
-                if (!window.confirm(message)) {
+                if (!await window.cwmConfirm(message)) {
                     return; // User cancelled, keep modal open
                 }
             }

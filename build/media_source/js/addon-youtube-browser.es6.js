@@ -247,14 +247,14 @@
             }
         },
 
-        open() {
+        async open() {
             const serverField = document.querySelector('[name="jform[server_id]"]');
             if (serverField) {
                 this.serverId = serverField.value;
             }
 
             if (!this.serverId) {
-                alert('Please select a server first.');
+                await window.cwmAlert('Please select a server first.');
                 return;
             }
 

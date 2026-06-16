@@ -332,7 +332,7 @@
    * Dismiss the wizard without applying.
    */
     async function dismissWizard() {
-        if (!confirm(t('JBS_WIZARD_CONFIRM_DISMISS', 'Skip the setup wizard?'))) {
+        if (!await window.cwmConfirm(t('JBS_WIZARD_CONFIRM_DISMISS', 'Skip the setup wizard?'))) {
             return;
         }
 

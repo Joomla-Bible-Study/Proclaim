@@ -697,7 +697,7 @@
             // Confirm thumbnail resize
             const confirmMsg = t('JBS_ADM_THUMBNAIL_RESIZE_CONFIRM', `You modified the default thumbnail size(s). Thumbnails will be recreated for: ${thumbnailChanges.join(', ')}. Click OK to continue.`);
 
-            if (!confirm(confirmMsg)) {
+            if (!await window.cwmConfirm(confirmMsg)) {
                 return;
             }
 

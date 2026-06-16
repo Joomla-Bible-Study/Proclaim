@@ -11,7 +11,8 @@
             "uri": "com_proclaim/cwm-archive.min.js",
             "dependencies": [
                 "core",
-                "bootstrap.modal"
+                "bootstrap.modal",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -70,7 +71,8 @@
             "uri": "com_proclaim/location-wizard.min.js",
             "dependencies": [
                 "core",
-                "lib_cwmscripture.cwm-fetch"
+                "lib_cwmscripture.cwm-fetch",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -81,10 +83,22 @@
             "type": "script",
             "uri": "com_proclaim/setup-wizard.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.cwm-dialog",
+            "type": "script",
+            "uri": "com_proclaim/cwm-dialog.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "type": "module"
             }
         },
         {
@@ -145,7 +159,8 @@
             "uri": "com_proclaim/message-ai-assist.min.js",
             "dependencies": [
                 "core",
-                "bootstrap.modal"
+                "bootstrap.modal",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -199,7 +214,8 @@
             "type": "script",
             "uri": "com_proclaim/admin-youtube-log.min.js",
             "dependencies": [
-                "core"
+                "core",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -211,7 +227,8 @@
             "uri": "com_proclaim/admin-imagetools.min.js",
             "dependencies": [
                 "core",
-                "lib_cwmscripture.cwm-fetch"
+                "lib_cwmscripture.cwm-fetch",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "type": "module"
@@ -245,7 +262,8 @@
             "uri": "com_proclaim/addon-youtube-browser.min.js",
             "dependencies": [
                 "core",
-                "bootstrap.modal"
+                "bootstrap.modal",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "type": "module"
@@ -436,7 +454,8 @@
             "dependencies": [
                 "core",
                 "lib_cwmscripture.cwm-fetch",
-                "bootstrap.modal"
+                "bootstrap.modal",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -587,7 +606,8 @@
             "uri": "com_proclaim/layout-editor.js",
             "dependencies": [
                 "core",
-                "com_proclaim.sortable"
+                "com_proclaim.sortable",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "defer": true
@@ -660,7 +680,8 @@
             "uri": "com_proclaim/mediafile-edit.min.js",
             "dependencies": [
                 "core",
-                "form.validate"
+                "form.validate",
+                "com_proclaim.cwm-dialog"
             ],
             "attributes": {
                 "type": "module"

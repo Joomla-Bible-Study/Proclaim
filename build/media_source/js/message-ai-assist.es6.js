@@ -609,7 +609,7 @@
 
             // Validate at least one checked
             if (!wantTopics && !wantIntro && !wantText && !wantChapters) {
-                alert(t('JBS_CMN_AI_SELECT_ONE', 'Select at least one field to generate.'));
+                await window.cwmAlert(t('JBS_CMN_AI_SELECT_ONE', 'Select at least one field to generate.'));
 
                 return;
             }

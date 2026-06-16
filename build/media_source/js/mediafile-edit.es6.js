@@ -411,7 +411,7 @@
         // Bind card click events
         const cards = modalEl.querySelectorAll('.server-picker-card');
         cards.forEach((card) => {
-            function selectServer() {
+            async function selectServer() {
                 const { serverId } = card.dataset;
 
                 // Check if changing type — confirm if addon already loaded
@@ -421,7 +421,7 @@
                 if (previousServerValue && previousServerType
                     && previousServerType.toLowerCase() !== newType.toLowerCase()) {
                     const warning = config.switchWarning || 'Changing server type will reset the media options. Continue?';
-                    if (!window.confirm(warning)) {
+                    if (!await window.cwmConfirm(warning)) {
                         return;
                     }
                 }

@@ -42,6 +42,13 @@ window.ProclaimFetch = {
 global.alert = jest.fn();
 global.confirm = jest.fn(() => true);
 
+// Mock the JoomlaDialog bridge (cwm-dialog.es6.mjs) — Promise-based, like the
+// real JoomlaDialog.confirm()/alert(). The bridge module is not loaded in unit
+// tests, so provide the globals the migrated handlers call. cwmConfirm defaults
+// to resolving true (the "OK/Yes" path); override per-test for the cancel path.
+window.cwmConfirm = jest.fn(() => Promise.resolve(true));
+window.cwmAlert = jest.fn(() => Promise.resolve());
+
 // Mock console methods to reduce noise (but keep errors visible)
 const originalError = console.error;
 global.console = {

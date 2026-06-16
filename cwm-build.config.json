@@ -84,6 +84,7 @@
             "mode": "run",
             "command": "npm install && npm run build"
         },
+        "verifyAssets": true,
         "versionPrompt": {
             "enabled": true,
             "timeout": 10

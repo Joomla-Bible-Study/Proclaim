@@ -361,12 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- Orphan Cleanup ----
-    document.getElementById('btn-scan-orphans').addEventListener('click', function () {
+    document.getElementById('btn-scan-orphans').addEventListener('click', async function () {
         const btn = this;
 
         // Warn if migration or unresolvable cleanup hasn't been done yet
         if (migrationTotals.total > 0) {
-            if (!confirm(Joomla.Text._('JBS_ADM_ORPHAN_MIGRATION_WARNING'))) {
+            if (!await window.cwmConfirm(Joomla.Text._('JBS_ADM_ORPHAN_MIGRATION_WARNING'))) {
                 return;
             }
         }
@@ -996,14 +996,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Delete selected legacy folders
                 const delLegacyBtn = document.getElementById('btn-delete-legacy');
                 if (delLegacyBtn) {
-                    delLegacyBtn.addEventListener('click', () => {
+                    delLegacyBtn.addEventListener('click', async () => {
                         const selected = [];
                         document.querySelectorAll('.legacy-checkbox:checked').forEach((cb) => selected.push(cb.value));
                         if (selected.length === 0) return;
 
                         const message = Joomla.Text._('JBS_ADM_CONFIRM_DELETE_LEGACY').replace('%s', selected.length);
 
-                        if (!confirm(message)) return;
+                        if (!await window.cwmConfirm(message)) return;
 
                         delLegacyBtn.disabled = true;
                         delLegacyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> ${Joomla.Text._('JBS_ADM_DELETING')}`;
@@ -1101,11 +1101,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
+        clearBtn.addEventListener('click', async () => {
             const count = clearBtn.dataset.count || '?';
             const message = Joomla.Text._('JBS_ADM_CONFIRM_CLEAR_UNRESOLVABLE').replace('%s', count);
 
-            if (!confirm(message)) {
+            if (!await window.cwmConfirm(message)) {
                 return;
             }
 

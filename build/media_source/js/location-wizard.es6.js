@@ -470,8 +470,8 @@
         // Dismiss button
         const dismissBtn = el('wizard-dismiss-btn');
         if (dismissBtn) {
-            dismissBtn.addEventListener('click', () => {
-                if (window.confirm(txt('JBS_WIZARD_CONFIRM_DISMISS', 'Skip the location setup wizard?'))) {
+            dismissBtn.addEventListener('click', async () => {
+                if (await window.cwmConfirm(txt('JBS_WIZARD_CONFIRM_DISMISS', 'Skip the location setup wizard?'))) {
                     dismissWizard();
                 }
             });

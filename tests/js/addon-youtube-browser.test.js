@@ -58,7 +58,7 @@ describe('addon-youtube-browser.es6.js', () => {
             document.querySelector('[name="jform[server_id]"]').value = '';
             const browser = window.Proclaim.YoutubeBrowser;
             browser.open();
-            expect(global.alert).toHaveBeenCalledWith('Please select a server first.');
+            expect(window.cwmAlert).toHaveBeenCalledWith('Please select a server first.');
         });
     });
 });

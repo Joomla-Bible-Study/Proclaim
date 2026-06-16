@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2723919e1dbac01a3dbcbb913537f634",
+    "content-hash": "5b7db7e40dbff3cc884334237be695a4",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -551,16 +551,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.4.1",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "19c9fdbd5bb112127ede278e2de4c38909ba6f53"
+                "reference": "b39904fa26a53c495c0589dd54b85d283eafc165"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/19c9fdbd5bb112127ede278e2de4c38909ba6f53",
-                "reference": "19c9fdbd5bb112127ede278e2de4c38909ba6f53",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/b39904fa26a53c495c0589dd54b85d283eafc165",
+                "reference": "b39904fa26a53c495c0589dd54b85d283eafc165",
                 "shasum": ""
             },
             "require": {
@@ -589,6 +589,7 @@
                 "bin/cwm-setup",
                 "bin/cwm-link",
                 "bin/cwm-link-check",
+                "bin/cwm-lint-deprecations",
                 "bin/cwm-clean",
                 "bin/cwm-verify",
                 "bin/cwm-install-zip",
@@ -646,10 +647,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.4.1",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.5.1",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-06-04T17:58:11+00:00"
+            "time": "2026-06-16T15:07:15+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
