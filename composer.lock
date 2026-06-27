@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b7db7e40dbff3cc884334237be695a4",
+    "content-hash": "06cd7b1f0a6b0f85b16c2ff9552ab9e5",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.5.1",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "b39904fa26a53c495c0589dd54b85d283eafc165"
+                "reference": "50f443630cd8e8020cd5c70afc22fc8afc2c3ae4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/b39904fa26a53c495c0589dd54b85d283eafc165",
-                "reference": "b39904fa26a53c495c0589dd54b85d283eafc165",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/50f443630cd8e8020cd5c70afc22fc8afc2c3ae4",
+                "reference": "50f443630cd8e8020cd5c70afc22fc8afc2c3ae4",
                 "shasum": ""
             },
             "require": {
@@ -615,6 +615,8 @@
                     "/.phpunit.cache",
                     "/.phpunit.result.cache",
                     "/CLAUDE.md",
+                    "/docs",
+                    "/mkdocs.yml",
                     "/phpunit.xml",
                     "/phpunit.xml.dist",
                     "/tests",
@@ -644,10 +646,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.5.1",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.6.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-06-16T15:07:15+00:00"
+            "time": "2026-06-27T23:50:58+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
