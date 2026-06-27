@@ -34,6 +34,7 @@ use Google\Service\YouTube\CaptionSnippet;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -92,21 +93,56 @@ class CWMAddonYoutube extends CWMAddon
         // Load YouTube browser JavaScript
         HTMLHelper::_('script', 'media/com_proclaim/js/addon-youtube-browser.js', ['version' => 'auto']);
 
-        $html   = '';
         $fields = $media_form->getFieldset('general');
 
-        if ($fields) {
+        if (!$fields) {
+            return '';
+        }
+
+        // On new media, seed field values from the server defaults (s_params).
+        if ($new) {
             foreach ($fields as $field) {
-                if ($new) {
-                    $s_name = $field->fieldname;
+                $s_name = $field->fieldname;
 
-                    if (isset($media_form->s_params[$s_name])) {
-                        $field->setValue($media_form->s_params[$s_name]);
-                    }
+                if (isset($media_form->s_params[$s_name])) {
+                    $field->setValue($media_form->s_params[$s_name]);
                 }
-
-                $html .= $field->renderField();
             }
+        }
+
+        // Pre-render the Browse button so it can be inlined with the URL field.
+        $browse = '';
+
+        foreach ($fields as $field) {
+            if ($field->fieldname === 'youtube_browse_btn') {
+                $browse = $field->input;
+                break;
+            }
+        }
+
+        $html = '';
+
+        foreach ($fields as $field) {
+            // The Browse button is inlined with the URL field; skip its standalone row.
+            if ($field->fieldname === 'youtube_browse_btn') {
+                continue;
+            }
+
+            // Render the URL input and the Browse button together as one input group.
+            if ($field->fieldname === 'filename' && $browse !== '') {
+                $html .= LayoutHelper::render('joomla.form.renderfield', [
+                    'label'       => $field->label,
+                    'input'       => '<div class="input-group">' . $field->input . $browse . '</div>',
+                    'description' => $field->description !== '' ? Text::_($field->description) : '',
+                    'id'          => $field->id,
+                    'name'        => $field->name,
+                    'options'     => [],
+                ]);
+
+                continue;
+            }
+
+            $html .= $field->renderField();
         }
 
         return $html;

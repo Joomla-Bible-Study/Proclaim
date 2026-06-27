@@ -40,6 +40,37 @@ class PodcastsField extends ListField
     protected $type = 'Podcasts';
 
     /**
+     * Set up the field, switching to the fancy-select (Choices.js) layout when
+     * searchable="true". Gives a searchable, tag-style multi-select instead of
+     * the native ctrl-click listbox.
+     *
+     * @param   \SimpleXMLElement  $element  The XML element
+     * @param   mixed              $value    The field value
+     * @param   string             $group    The field group
+     *
+     * @return  bool
+     *
+     * @since   10.3.3
+     */
+    #[\Override]
+    public function setup(\SimpleXMLElement $element, $value, $group = null): bool
+    {
+        $result = parent::setup($element, $value, $group);
+
+        if ($result && (string) $this->element['searchable'] === 'true') {
+            $this->layout = 'joomla.form.field.list-fancy-select';
+
+            // Ensure the Choices.js dropdown is not clipped by parent containers
+            // (rules live in topics-field.css).
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+            $wa->useStyle('com_proclaim.topics-field');
+        }
+
+        return $result;
+    }
+
+    /**
      * Method to get a list of options for a list input.
      *
      * @return  array  An array of JHtml options.

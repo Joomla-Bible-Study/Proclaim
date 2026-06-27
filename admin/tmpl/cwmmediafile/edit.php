@@ -120,7 +120,6 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
         <div class="row">
             <div class="col-lg-7">
                 <?php echo $this->form->renderField('study_id', null, $study_id); ?>
-                <?php echo $this->form->renderField('createdate', null, $createdate); ?>
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
 
@@ -136,6 +135,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
 
             </div>
             <div class="col-lg-5">
+                <?php echo $this->form->renderField('createdate', null, $createdate); ?>
                 <?php echo $this->form->renderField('published'); ?>
                 <?php echo $this->form->renderField('access'); ?>
                 <?php echo $this->form->renderField('language'); ?>
