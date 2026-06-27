@@ -298,6 +298,14 @@ class CwmplaylistTable extends Table
             }
         }
 
+        // Nullify empty nullable datetime columns so MySQL strict mode does not
+        // reject empty strings (e.g. last_sync on a never-synced playlist).
+        foreach (['last_sync', 'created', 'modified', 'checked_out_time'] as $dateField) {
+            if (isset($array[$dateField]) && trim((string) $array[$dateField]) === '') {
+                $array[$dateField] = null;
+            }
+        }
+
         return parent::bind($array, $ignore);
     }
 

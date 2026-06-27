@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
     <field name="published"
            type="status"
            label="JSTATUS"
@@ -19,10 +19,9 @@
            description="JBS_PLAYLIST_DESCRIPTION_DESC"
            cols="60" rows="5" filter="safehtml"/>
 
-    <field name="server_id" type="sql"
+    <field name="server_id" type="ServerList"
            label="JBS_PLAYLIST_SERVER" description="JBS_PLAYLIST_SERVER_DESC"
-           required="true" validate="options"
-           query="SELECT id AS value, server_name AS text FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC">
+           required="true" validate="options">
         <option value="">JBS_CMN_SELECT_SERVER</option>
     </field>
 
@@ -31,10 +30,9 @@
            size="50" filter="trim"
            hint="PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
 
-    <field name="series_id" type="sql"
+    <field name="series_id" type="Series"
            label="JBS_PLAYLIST_SERIES" description="JBS_PLAYLIST_SERIES_DESC"
-           validate="options"
-           query="SELECT id AS value, series_text AS text FROM #__bsms_series WHERE published = 1 ORDER BY series_text ASC">
+           validate="options">
         <option value="">JBS_PLAYLIST_NO_SERIES</option>
     </field>
 
@@ -59,9 +57,8 @@
                 <option value="1">JPUBLISHED</option>
                 <option value="0">JUNPUBLISHED</option>
             </field>
-            <field name="default_teacher_id" type="sql"
-                   label="JBS_PLAYLIST_DEFAULT_TEACHER" description="JBS_PLAYLIST_DEFAULT_TEACHER_DESC"
-                   query="SELECT id AS value, teachername AS text FROM #__bsms_teachers WHERE published = 1 ORDER BY teachername ASC">
+            <field name="default_teacher_id" type="TeacherList" searchable="true"
+                   label="JBS_PLAYLIST_DEFAULT_TEACHER" description="JBS_PLAYLIST_DEFAULT_TEACHER_DESC">
                 <option value="">JBS_CMN_SELECT_TEACHER</option>
             </field>
             <field name="default_description" type="textarea"

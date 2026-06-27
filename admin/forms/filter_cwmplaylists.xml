@@ -21,10 +21,9 @@
             </field>
             <field
                     name="server_id"
-                    type="sql"
+                    type="ServerList"
                     label="JBS_PLAYLIST_SERVER"
                     class="js-select-submit-on-change"
-                    query="SELECT id AS value, server_name AS text FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
             >
                 <option value="">JBS_CMN_SELECT_SERVER</option>
             </field>
