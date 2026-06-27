@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="playlistsync_settings" label="PLG_TASK_PROCLAIM_PLAYLISTSYNC_SETTINGS">
+            <field name="note" type="note"
+                   description="PLG_TASK_PROCLAIM_PLAYLISTSYNC_NOTE" />
+
+            <field name="server_id" type="number"
+                   label="PLG_TASK_PROCLAIM_PLAYLISTSYNC_SERVER_LABEL"
+                   description="PLG_TASK_PROCLAIM_PLAYLISTSYNC_SERVER_DESC"
+                   default="0"
+                   min="0" />
+
+            <field name="discover_new" type="radio"
+                   layout="joomla.form.field.radio.switcher"
+                   label="PLG_TASK_PROCLAIM_PLAYLISTSYNC_DISCOVER_LABEL"
+                   description="PLG_TASK_PROCLAIM_PLAYLISTSYNC_DISCOVER_DESC"
+                   default="0">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+        </fieldset>
+    </fields>
+</form>

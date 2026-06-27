@@ -52,17 +52,24 @@ final class CwmplaylistSyncHelper
      * Import every playlist from one (or all) YouTube server(s) and reconcile
      * their videos against the local media library.
      *
-     * This is the single entry point shared by the toolbar action and the
-     * scheduled task. Passing 0 sweeps every published YouTube server.
+     * This is the single entry point shared by the "Import from YouTube" toolbar
+     * action and the scheduled task. Passing 0 sweeps every published YouTube
+     * server.
      *
-     * @param   integer  $serverId  Server ID to import, or 0 for all YouTube servers.
+     * The scheduled task passes $discoverNew = false so it only refreshes
+     * playlists that were already imported by a human — it never silently
+     * creates a channel's playlists for the first time. The interactive toolbar
+     * action passes true (the deliberate initial import).
      *
-     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, itemsMatched:int, itemsUnmatched:int, errors:string[]}
+     * @param   integer  $serverId     Server ID to import, or 0 for all YouTube servers.
+     * @param   boolean  $discoverNew  Whether to create playlists not seen locally yet.
+     *
+     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function import(int $serverId = 0): array
+    public static function import(int $serverId = 0, bool $discoverNew = true): array
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $servers = $serverId > 0 ? [$serverId] : self::getYoutubeServerIds($db);
@@ -71,8 +78,10 @@ final class CwmplaylistSyncHelper
             'servers'          => 0,
             'playlistsCreated' => 0,
             'playlistsUpdated' => 0,
+            'playlistsSkipped' => 0,
             'itemsMatched'     => 0,
             'itemsUnmatched'   => 0,
+            'conflicts'        => [],
             'errors'           => [],
         ];
 
@@ -91,7 +100,7 @@ final class CwmplaylistSyncHelper
         foreach ($servers as $sid) {
             $stats['servers']++;
 
-            $imported = self::importChannelPlaylists($db, $addon, $sid);
+            $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew);
 
             if ($imported['error'] !== null) {
                 $stats['errors'][] = \sprintf('Server %d: %s', $sid, $imported['error']);
@@ -101,6 +110,8 @@ final class CwmplaylistSyncHelper
 
             $stats['playlistsCreated'] += $imported['created'];
             $stats['playlistsUpdated'] += $imported['updated'];
+            $stats['playlistsSkipped'] += $imported['skipped'];
+            $stats['conflicts']         = array_merge($stats['conflicts'], $imported['conflicts']);
 
             foreach ($imported['playlistIds'] as $pid) {
                 $reconciled = self::reconcilePlaylist($db, $addon, $pid, $videoMap);
@@ -122,22 +133,29 @@ final class CwmplaylistSyncHelper
     /**
      * Fetch a channel's playlists and upsert each as a Proclaim Playlist.
      *
-     * Existing playlists are matched on (youtube_playlist_id, server_id). The
-     * YouTube-authoritative fields (title, description) are refreshed; user-owned
-     * fields (series_id, default_settings, access, published) are preserved.
+     * Existing playlists are matched on (youtube_playlist_id, server_id).
      *
-     * @param   DatabaseInterface  $db        Database driver.
-     * @param   CWMAddonYoutube    $addon     YouTube addon instance.
-     * @param   integer            $serverId  Server ID to import from.
+     * Conflict gate: the YouTube title is only re-applied to an existing playlist
+     * when it actually changed AND the local row was NOT edited by a human since
+     * the last sync (modified <= last_sync). When both sides diverged, the local
+     * value is kept and the divergence is reported as a conflict rather than
+     * silently overwritten. Playlists opted out of sync (sync_enabled = 0) are
+     * skipped entirely. Truly bidirectional resolution arrives with the phase-5
+     * OAuth write-back; until then read-sync always prefers the local edit.
      *
-     * @return  array{created:int, updated:int, playlistIds:int[], error:?string}
+     * @param   DatabaseInterface  $db           Database driver.
+     * @param   CWMAddonYoutube    $addon        YouTube addon instance.
+     * @param   integer            $serverId     Server ID to import from.
+     * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
+     *
+     * @return  array{created:int, updated:int, skipped:int, playlistIds:int[], conflicts:string[], error:?string}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddonYoutube $addon, int $serverId): array
+    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddonYoutube $addon, int $serverId, bool $discoverNew = true): array
     {
-        $out = ['created' => 0, 'updated' => 0, 'playlistIds' => [], 'error' => null];
+        $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
         $response = $addon->fetchChannelPlaylists(new Input(['server_id' => $serverId]));
 
@@ -157,30 +175,64 @@ final class CwmplaylistSyncHelper
             }
 
             $existingId = self::findPlaylistId($db, $remoteId, $serverId);
+            $isNew      = $existingId === 0;
 
-            $table = new CwmplaylistTable($db);
-            $isNew = $existingId === 0;
+            // The scheduled task refreshes existing playlists only; a brand-new
+            // channel playlist must be added by the deliberate "Import from
+            // YouTube" action first.
+            if ($isNew && !$discoverNew) {
+                $out['skipped']++;
 
-            if (!$isNew) {
-                $table->load($existingId);
+                continue;
             }
 
-            $data = [
-                'title'               => (string) ($pl['title'] ?? $remoteId),
-                'youtube_playlist_id' => $remoteId,
-                'server_id'           => $serverId,
-                'last_sync'           => $now,
-            ];
+            $newTitle = (string) ($pl['title'] ?? $remoteId);
+            $table    = new CwmplaylistTable($db);
 
             if ($isNew) {
-                // Sensible defaults for a freshly imported playlist; everything
-                // here is user-editable afterwards.
-                $data['published']    = 1;
-                $data['access']       = 1;
-                $data['language']     = '*';
-                $data['sync_enabled'] = 1;
-                $data['params']       = '{}';
-                $data['description']  = (string) ($pl['description'] ?? '');
+                $data = [
+                    'title'               => $newTitle,
+                    'youtube_playlist_id' => $remoteId,
+                    'server_id'           => $serverId,
+                    'last_sync'           => $now,
+                    // Sensible defaults for a freshly imported playlist; all
+                    // user-editable afterwards.
+                    'published'    => 1,
+                    'access'       => 1,
+                    'language'     => '*',
+                    'sync_enabled' => 1,
+                    'params'       => '{}',
+                    'description'  => (string) ($pl['description'] ?? ''),
+                ];
+            } else {
+                $table->load($existingId);
+
+                // Respect a per-playlist opt-out from syncing.
+                if ((int) $table->sync_enabled !== 1) {
+                    $out['skipped']++;
+
+                    continue;
+                }
+
+                $data = [
+                    'youtube_playlist_id' => $remoteId,
+                    'server_id'           => $serverId,
+                    'last_sync'           => $now,
+                ];
+
+                // Conflict gate + "only write if changed".
+                if ($newTitle !== (string) $table->title) {
+                    if (self::isLocallyEdited($table)) {
+                        $out['conflicts'][] = \sprintf(
+                            'Playlist "%s" (#%d): kept local title; YouTube title "%s" not applied.',
+                            (string) $table->title,
+                            $existingId,
+                            $newTitle
+                        );
+                    } else {
+                        $data['title'] = $newTitle;
+                    }
+                }
             }
 
             if (!$table->bind($data) || !$table->check() || !$table->store()) {
@@ -194,6 +246,29 @@ final class CwmplaylistSyncHelper
         }
 
         return $out;
+    }
+
+    /**
+     * Decide whether a playlist row was edited by a human since its last sync.
+     *
+     * The engine never bumps `modified` when it stores (only the admin form's
+     * model does), so `modified > last_sync` reliably means a person changed the
+     * row after the last sync ran — the signal the conflict gate uses to avoid
+     * clobbering local edits.
+     *
+     * @param   CwmplaylistTable  $table  A loaded playlist row.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function isLocallyEdited(CwmplaylistTable $table): bool
+    {
+        if (empty($table->last_sync) || empty($table->modified)) {
+            return false;
+        }
+
+        return strtotime((string) $table->modified) > strtotime((string) $table->last_sync);
     }
 
     /**

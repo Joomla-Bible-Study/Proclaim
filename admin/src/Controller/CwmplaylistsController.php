@@ -75,6 +75,8 @@ class CwmplaylistsController extends AdminController
             return;
         }
 
+        $clean = $stats['errors'] === [] && $stats['conflicts'] === [];
+
         $this->setMessage(
             Text::sprintf(
                 'JBS_PLAYLIST_IMPORT_RESULT',
@@ -83,8 +85,12 @@ class CwmplaylistsController extends AdminController
                 $stats['itemsMatched'],
                 $stats['itemsUnmatched']
             ),
-            $stats['errors'] === [] ? 'message' : 'warning'
+            $clean ? 'message' : 'warning'
         );
+
+        foreach ($stats['conflicts'] as $conflict) {
+            $this->app->enqueueMessage($conflict, 'warning');
+        }
 
         foreach ($stats['errors'] as $error) {
             $this->app->enqueueMessage($error, 'warning');
