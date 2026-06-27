@@ -16,8 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Router\Route;
 
 /**
  * Playlists list controller class
@@ -41,5 +44,52 @@ class CwmplaylistsController extends AdminController
     public function getModel($name = 'Cwmplaylist', $prefix = 'Administrator', $config = ['ignore_request' => true]): BaseDatabaseModel
     {
         return parent::getModel($name, $prefix, $config);
+    }
+
+    /**
+     * Bulk-import playlists from YouTube and reconcile their videos against the
+     * existing media library.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function import(): void
+    {
+        $this->checkToken();
+
+        if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $serverId = $this->input->getInt('server_id', 0);
+        $redirect = Route::_('index.php?option=com_proclaim&view=cwmplaylists', false);
+
+        try {
+            $stats = CwmplaylistSyncHelper::import($serverId);
+        } catch (\Exception $e) {
+            $this->setMessage(Text::sprintf('JBS_PLAYLIST_IMPORT_FAILED', $e->getMessage()), 'error');
+            $this->setRedirect($redirect);
+
+            return;
+        }
+
+        $this->setMessage(
+            Text::sprintf(
+                'JBS_PLAYLIST_IMPORT_RESULT',
+                $stats['playlistsCreated'],
+                $stats['playlistsUpdated'],
+                $stats['itemsMatched'],
+                $stats['itemsUnmatched']
+            ),
+            $stats['errors'] === [] ? 'message' : 'warning'
+        );
+
+        foreach ($stats['errors'] as $error) {
+            $this->app->enqueueMessage($error, 'warning');
+        }
+
+        $this->setRedirect($redirect);
     }
 }

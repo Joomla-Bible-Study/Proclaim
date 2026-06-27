@@ -131,6 +131,10 @@ class HtmlView extends BaseHtmlView
 
         if ($this->canDo->get('core.create')) {
             $toolbar->addNew('cwmplaylist.add');
+
+            $toolbar->standardButton('import', Text::_('JBS_PLAYLIST_IMPORT'), 'cwmplaylists.import')
+                ->icon('icon-upload')
+                ->listCheck(false);
         }
 
         $dropdown = $toolbar->dropdownButton('status-group')
