@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
@@ -296,6 +297,11 @@ class CwmmediafileTable extends Table
 
         if ($result) {
             Cwmassets::stripEmptyAssetRow($this);
+
+            // Immediately attach this media file to any playlist that already
+            // lists its YouTube video (local-only; safe no-op for non-YouTube
+            // media and on sites without the playlist tables).
+            CwmplaylistSyncHelper::linkMediafileToPlaylists((int) $this->id, (string) $this->params);
         }
 
         return $result;
@@ -326,6 +332,9 @@ class CwmmediafileTable extends Table
 
         // Clean up locally stored caption/subtitle VTT files
         $this->deleteCaptionFiles();
+
+        // Detach from any playlist junction rows so none point at deleted media.
+        CwmplaylistSyncHelper::unlinkMediafile((int) $pk);
 
         return parent::delete($pk);
     }

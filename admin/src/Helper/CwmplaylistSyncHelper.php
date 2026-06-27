@@ -355,6 +355,106 @@ final class CwmplaylistSyncHelper
     }
 
     /**
+     * Link a just-saved media file to the playlists that already contain its video.
+     *
+     * Called on every media-file save so a YouTube video gets attached to its
+     * playlist(s) immediately, without waiting for the scheduled task. This is a
+     * LOCAL-ONLY operation — no YouTube API call: it simply backfills the junction
+     * rows that a previous import left unmatched (mediafile_id NULL) because the
+     * media did not exist yet. If the media file's URL changed, its now-stale
+     * links are cleared first. Never throws — a media save must not fail because
+     * of playlist bookkeeping.
+     *
+     * @param   integer  $mediafileId  The saved media file's ID.
+     * @param   string   $params       The media file's params JSON (holds filename).
+     *
+     * @return  integer  Number of junction rows linked to this media file.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function linkMediafileToPlaylists(int $mediafileId, string $params): int
+    {
+        if ($mediafileId <= 0 || $params === '') {
+            return 0;
+        }
+
+        $decoded = json_decode($params, true);
+
+        if (!\is_array($decoded) || empty($decoded['filename'])) {
+            return 0;
+        }
+
+        $videoId = CWMAddonYoutube::extractMediaId((string) $decoded['filename']);
+
+        if ($videoId === null) {
+            return 0;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // Clear links that no longer match (the media file's URL changed).
+            $db->setQuery(
+                $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_playlist_items'))
+                    ->set($db->quoteName('mediafile_id') . ' = NULL')
+                    ->where($db->quoteName('mediafile_id') . ' = :mid')
+                    ->where($db->quoteName('youtube_video_id') . ' != :vid')
+                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                    ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
+            )->execute();
+
+            // Backfill every still-unmatched junction row for this video.
+            $db->setQuery(
+                $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_playlist_items'))
+                    ->set($db->quoteName('mediafile_id') . ' = :mid')
+                    ->where($db->quoteName('youtube_video_id') . ' = :vid')
+                    ->where($db->quoteName('mediafile_id') . ' IS NULL')
+                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                    ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
+            )->execute();
+
+            return $db->getAffectedRows();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Detach a deleted media file from any playlist junction rows.
+     *
+     * Leaves the rows in place (the video may still be in the playlist) but nulls
+     * the mediafile_id so no row points at a deleted media file. Never throws.
+     *
+     * @param   integer  $mediafileId  The deleted media file's ID.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function unlinkMediafile(int $mediafileId): void
+    {
+        if ($mediafileId <= 0) {
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $db->setQuery(
+                $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_playlist_items'))
+                    ->set($db->quoteName('mediafile_id') . ' = NULL')
+                    ->where($db->quoteName('mediafile_id') . ' = :mid')
+                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+            )->execute();
+        } catch (\Exception $e) {
+            // A delete must not fail because of playlist bookkeeping.
+        }
+    }
+
+    /**
      * Build a YouTube-video-ID => mediafile-ID map from the existing media library.
      *
      * Reads every media file's stored URL (params.filename) and extracts the
