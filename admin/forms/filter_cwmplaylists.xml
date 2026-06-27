@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field">
+        <fields name="filter">
+            <field
+                    name="search"
+                    type="text"
+                    inputmode="search"
+                    label="JBS_CMN_FILTER_SEARCH_DESC"
+                    description="JBS_CMN_FILTER_SEARCH_DESC"
+                    hint="JSEARCH_FILTER"
+            />
+            <field
+                    name="published"
+                    type="status"
+                    label="JSTATUS"
+                    class="js-select-submit-on-change"
+                    extension="com_proclaim"
+            >
+                <option value="">JOPTION_SELECT_PUBLISHED</option>
+            </field>
+            <field
+                    name="server_id"
+                    type="sql"
+                    label="JBS_PLAYLIST_SERVER"
+                    class="js-select-submit-on-change"
+                    query="SELECT id AS value, server_name AS text FROM #__bsms_servers WHERE published = 1 ORDER BY server_name ASC"
+            >
+                <option value="">JBS_CMN_SELECT_SERVER</option>
+            </field>
+            <field
+                    name="access"
+                    type="accesslevel"
+                    label="JOPTION_FILTER_ACCESS"
+                    multiple="true"
+                    layout="joomla.form.field.list-fancy-select"
+                    hint="JOPTION_SELECT_ACCESS"
+                    class="js-select-submit-on-change"
+            />
+        </fields>
+    </fieldset>
+    <fields name="list">
+        <field
+                name="fullordering"
+                type="list"
+                label="JGLOBAL_SORT_BY"
+                class="js-select-submit-on-change"
+                default="playlist.ordering ASC"
+                validate="options"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="playlist.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+            <option value="playlist.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+            <option value="playlist.title ASC">JGLOBAL_TITLE_ASC</option>
+            <option value="playlist.title DESC">JGLOBAL_TITLE_DESC</option>
+            <option value="playlist.published ASC">JSTATUS_ASC</option>
+            <option value="playlist.published DESC">JSTATUS_DESC</option>
+            <option value="playlist.last_sync ASC">JDATE_ASC</option>
+            <option value="playlist.last_sync DESC">JDATE_DESC</option>
+            <option value="playlist.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="playlist.id DESC">JGRID_HEADING_ID_DESC</option>
+        </field>
+        <field
+                name="limit"
+                type="limitbox"
+                label="JGLOBAL_LIST_LIMIT"
+                default="25"
+                class="js-select-submit-on-change"
+        />
+    </fields>
+</form>

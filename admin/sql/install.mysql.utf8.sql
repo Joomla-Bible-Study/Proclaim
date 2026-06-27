@@ -132,6 +132,47 @@ CREATE TABLE IF NOT EXISTS `#__bsms_locations`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `#__bsms_playlists`
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
+(
+    `id`                  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title`               VARCHAR(250)              DEFAULT NULL,
+    `alias`               VARCHAR(400)     NOT NULL DEFAULT '',
+    `description`         MEDIUMTEXT,
+    `youtube_playlist_id` VARCHAR(64)      NOT NULL DEFAULT '' COMMENT 'Remote playlist ID (e.g. YouTube playlist ID)',
+    `server_id`           INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to #__bsms_servers',
+    `series_id`           INT(10) UNSIGNED          DEFAULT NULL COMMENT 'Optional FK to #__bsms_series',
+    `default_settings`    TEXT COMMENT 'JSON of default settings applied to synced videos',
+    `sync_enabled`        TINYINT(1)       NOT NULL DEFAULT '0',
+    `last_sync`           DATETIME                  DEFAULT NULL,
+    `params`              TEXT             NOT NULL,
+    `language`            CHAR(7)          NOT NULL DEFAULT '',
+    `checked_out`         INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `checked_out_time`    DATETIME                  DEFAULT NULL,
+    `created`             DATETIME                  DEFAULT NULL,
+    `created_by`          INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `created_by_alias`    VARCHAR(255)     NOT NULL DEFAULT '',
+    `modified`            DATETIME                  DEFAULT NULL,
+    `modified_by`         INT(10) UNSIGNED NOT NULL DEFAULT '0',
+    `published`           TINYINT(3)       NOT NULL DEFAULT '1',
+    `asset_id`            INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
+    `access`              INT(10) UNSIGNED NOT NULL DEFAULT '1',
+    `ordering`            INT(11)          NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`),
+    KEY `idx_state` (`published`),
+    KEY `idx_access` (`access`),
+    KEY `idx_checkout` (`checked_out`),
+    KEY `idx_server` (`server_id`),
+    KEY `idx_published_access` (`published`, `access`)
+) ENGINE InnoDB
+  DEFAULT CHARSET = utf8mb4
+  DEFAULT COLLATE = utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `#__bsms_mediafiles`
 --
 
