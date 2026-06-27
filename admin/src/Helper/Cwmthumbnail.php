@@ -43,6 +43,16 @@ class Cwmthumbnail
     ];
 
     /**
+     * Maximum length of the generated base filename (before the version hash and
+     * extension are appended). Keeps the final name — including the "thumb_"
+     * prefix and ".webp" variants — comfortably within the 255-byte filesystem
+     * limit and avoids unwieldy names built from long sermon titles.
+     *
+     * @since 10.3.3
+     */
+    private const int MAX_BASENAME_LENGTH = 80;
+
+    /**
      * Validate an image file before processing
      *
      * @param   string  $filePath       Absolute path to the file
@@ -176,6 +186,41 @@ class Cwmthumbnail
      *
      * @since 9.0.0
      */
+    /**
+     * Build a filesystem- and URL-safe base filename from a title (or fall back
+     * to the original filename), slugified and length-capped.
+     *
+     * Both inputs are run through ApplicationHelper::stringURLSafe so that spaces,
+     * smart quotes, commas and other characters that break filesystem paths and
+     * URLs are stripped — the previous behaviour passed the raw original filename
+     * through unchanged, producing names such as
+     * "Anticipating the Return of Christ … 1105 am by.jpg" (#1272). The result is
+     * truncated to MAX_BASENAME_LENGTH characters and falls back to "image" when
+     * slugification yields an empty string.
+     *
+     * @param   string|null  $title         Preferred source for the name (e.g. sermon title)
+     * @param   string       $originalPath  Path used for the fallback basename
+     *
+     * @return  string  A safe, non-empty base filename (no extension, no version hash)
+     *
+     * @since 10.3.3
+     */
+    public static function buildSafeBaseFilename(?string $title, string $originalPath): string
+    {
+        $source = ($title !== null && trim($title) !== '')
+            ? $title
+            : pathinfo($originalPath, PATHINFO_FILENAME);
+
+        $base = ApplicationHelper::stringURLSafe((string) $source);
+
+        if (mb_strlen($base) > self::MAX_BASENAME_LENGTH) {
+            // Trim to the limit, then drop any dash left dangling by the cut.
+            $base = rtrim(mb_substr($base, 0, self::MAX_BASENAME_LENGTH), '-');
+        }
+
+        return $base !== '' ? $base : 'image';
+    }
+
     public static function create(
         string $file,
         string $path,
@@ -194,12 +239,9 @@ class Cwmthumbnail
         // Get file extension
         $extension = strtolower(pathinfo($originalPath, PATHINFO_EXTENSION));
 
-        // Generate filename from title or use original basename
-        if ($title !== null && trim($title) !== '') {
-            $baseFilename = ApplicationHelper::stringURLSafe($title);
-        } else {
-            $baseFilename = pathinfo($originalPath, PATHINFO_FILENAME);
-        }
+        // Generate a filesystem- and URL-safe filename from the title (falling
+        // back to the original basename), slugified and length-capped. See #1272.
+        $baseFilename = self::buildSafeBaseFilename($title, $originalPath);
 
         // Add a short version hash based on file content to bust browser cache
         // when the image is replaced with a new file at the same logical path.
