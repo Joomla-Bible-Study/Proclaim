@@ -948,7 +948,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->snippet->resourceId->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1055,7 +1055,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->id->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1143,7 +1143,7 @@ class CWMAddonYoutube extends CWMAddon
                 $playlists[] = [
                     'playlistId' => $item->id,
                     'title'      => $item->snippet->title,
-                    'thumbnail'  => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'  => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                 ];
             }
 
@@ -1236,7 +1236,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->snippet->resourceId->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1335,7 +1335,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->id->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                     'liveBadge'   => $eventType === 'live' ? 'LIVE' : ($eventType === 'upcoming' ? 'UPCOMING' : ''),
                 ];
