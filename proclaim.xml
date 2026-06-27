@@ -121,6 +121,11 @@
                   alt="Proclaim/Servers">
                 JBS_MNU_SERVERS
             </menu>
+            <menu link="option=com_proclaim&amp;view=cwmplaylists"
+                  view="cwmplaylists"
+                  alt="Proclaim/Playlists">
+                JBS_MNU_PLAYLISTS
+            </menu>
             <menu link="option=com_proclaim&amp;view=cwmpodcasts"
                   view="cwmpodcasts"
                   alt="Proclaim/Podcasts">
