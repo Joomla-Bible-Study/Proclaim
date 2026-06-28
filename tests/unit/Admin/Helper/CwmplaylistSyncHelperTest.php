@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
+use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -45,7 +46,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
             ['id' => 14, 'params' => json_encode(['filename' => 'JustABareId'])],
         ];
 
-        $map = CwmplaylistSyncHelper::extractVideoMapFromRows($rows);
+        $map = CwmplaylistSyncHelper::extractVideoMapFromRows($rows, [CWMAddonYoutube::class, 'extractMediaId']);
 
         $this->assertSame(10, $map['cXhKlo2nxPs']);
         $this->assertSame(11, $map['dQw4w9WgXcQ']);
@@ -73,7 +74,7 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
             ['id' => 6, 'params' => json_encode(['filename' => 'https://youtu.be/cXhKlo2nxPs'])], // dup -> ignored
         ];
 
-        $map = CwmplaylistSyncHelper::extractVideoMapFromRows($rows);
+        $map = CwmplaylistSyncHelper::extractVideoMapFromRows($rows, [CWMAddonYoutube::class, 'extractMediaId']);
 
         $this->assertCount(1, $map);
         $this->assertSame(5, $map['cXhKlo2nxPs']);
@@ -89,6 +90,6 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
      */
     public function testExtractVideoMapEmpty(): void
     {
-        $this->assertSame([], CwmplaylistSyncHelper::extractVideoMapFromRows([]));
+        $this->assertSame([], CwmplaylistSyncHelper::extractVideoMapFromRows([], [CWMAddonYoutube::class, 'extractMediaId']));
     }
 }

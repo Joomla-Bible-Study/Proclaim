@@ -141,7 +141,7 @@ class CwmplaylistsModel extends ListModel
                     'playlist.title',
                     'playlist.published',
                     'playlist.access',
-                    'playlist.youtube_playlist_id',
+                    'playlist.remote_playlist_id',
                     'playlist.server_id',
                     'playlist.series_id',
                     'playlist.sync_enabled',

@@ -581,7 +581,172 @@ class CWMAddonVimeo extends CWMAddon
             'getMetadata',
             'fetchVideos',
             'fetchFolders',
+            'fetchRemotePlaylists',
+            'fetchRemotePlaylistItems',
         ];
+    }
+
+    /**
+     * Vimeo supports the playlist system via showcases (albums).
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylists(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Platform-neutral contract: list the account's showcases (albums) as playlists.
+     *
+     * @param   Input  $input  Request input (expects server_id).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylists(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided', 'playlists' => []];
+        }
+
+        try {
+            $accessToken = $this->getServerAccessToken($serverId);
+        } catch (\JsonException $e) {
+            return ['success' => false, 'error' => 'no access_token' . $e->getMessage(), 'playlists' => []];
+        }
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+        ];
+
+        try {
+            $response = $this->apiRequest(
+                'GET',
+                'https://api.vimeo.com/me/albums?per_page=100&fields=uri,name,description',
+                $headers,
+                null,
+                'vimeo.albums'
+            );
+
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->getStatusCode() . ')', 'playlists' => []];
+            }
+
+            $data      = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $playlists = [];
+
+            foreach ($data['data'] ?? [] as $album) {
+                $albumId = '';
+
+                if (preg_match('/\/albums\/(\d+)/', $album['uri'] ?? '', $m)) {
+                    $albumId = $m[1];
+                }
+
+                if ($albumId === '') {
+                    continue;
+                }
+
+                $playlists[] = [
+                    'playlistId'  => $albumId,
+                    'title'       => $album['name'] ?? '',
+                    'description' => $album['description'] ?? '',
+                    'thumbnail'   => '',
+                ];
+            }
+
+            return ['success' => true, 'playlists' => $playlists];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage(), 'playlists' => []];
+        }
+    }
+
+    /**
+     * Platform-neutral contract: list a showcase's videos, paginated.
+     *
+     * Vimeo paginates by page number; we map the engine's opaque page_token to a
+     * page number and return the next page number (or null) as nextPageToken.
+     *
+     * @param   Input  $input  Request input (server_id, playlist_id, page_token, max_results).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylistItems(Input $input): array
+    {
+        $serverId = $input->getInt('server_id', 0);
+        $albumId  = $input->getString('playlist_id', '');
+        $page     = max(1, (int) ($input->getString('page_token', '') ?: '1'));
+        $perPage  = max(1, min(100, $input->getInt('max_results', 50)));
+
+        if (!$serverId) {
+            return ['success' => false, 'error' => 'No server ID provided', 'videos' => [], 'nextPageToken' => null];
+        }
+
+        if ($albumId === '') {
+            return ['success' => false, 'error' => 'No playlist ID provided', 'videos' => [], 'nextPageToken' => null];
+        }
+
+        try {
+            $accessToken = $this->getServerAccessToken($serverId);
+        } catch (\JsonException $e) {
+            return ['success' => false, 'error' => 'no access_token' . $e->getMessage(), 'videos' => [], 'nextPageToken' => null];
+        }
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Accept'        => 'application/vnd.vimeo.*+json;version=3.4',
+        ];
+
+        $params = [
+            'per_page' => $perPage,
+            'page'     => $page,
+            'fields'   => 'uri,name',
+        ];
+
+        try {
+            $response = $this->apiRequest(
+                'GET',
+                'https://api.vimeo.com/me/albums/' . rawurlencode($albumId) . '/videos?' . http_build_query($params),
+                $headers,
+                null,
+                'vimeo.albumVideos'
+            );
+
+            if ($response->getStatusCode() !== 200) {
+                return ['success' => false, 'error' => 'Vimeo API error (HTTP ' . $response->getStatusCode() . ')', 'videos' => [], 'nextPageToken' => null];
+            }
+
+            $data   = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $videos = [];
+
+            foreach ($data['data'] ?? [] as $video) {
+                $videoId = '';
+
+                if (preg_match('/\/videos\/(\d+)/', $video['uri'] ?? '', $m)) {
+                    $videoId = $m[1];
+                }
+
+                if ($videoId === '') {
+                    continue;
+                }
+
+                $videos[] = ['videoId' => $videoId, 'title' => $video['name'] ?? ''];
+            }
+
+            $hasNext = !empty($data['paging']['next']);
+
+            return ['success' => true, 'videos' => $videos, 'nextPageToken' => $hasNext ? (string) ($page + 1) : null];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage(), 'videos' => [], 'nextPageToken' => null];
+        }
     }
 
     /**

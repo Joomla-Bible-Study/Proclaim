@@ -299,8 +299,8 @@ class CwmmediafileTable extends Table
             Cwmassets::stripEmptyAssetRow($this);
 
             // Immediately attach this media file to any playlist that already
-            // lists its YouTube video (local-only; safe no-op for non-YouTube
-            // media and on sites without the playlist tables).
+            // lists its remote video (local-only; safe no-op for non-playlist
+            // platforms and on sites without the playlist tables).
             CwmplaylistSyncHelper::linkMediafileToPlaylists((int) $this->id, (string) $this->params);
         }
 

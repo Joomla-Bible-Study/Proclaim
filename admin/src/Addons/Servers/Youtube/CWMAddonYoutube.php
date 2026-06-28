@@ -475,6 +475,36 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Platform-neutral contract: list the channel's playlists.
+     *
+     * @param   Input  $input  Request input.
+     *
+     * @return  array
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylists(Input $input): array
+    {
+        return $this->fetchChannelPlaylists($input);
+    }
+
+    /**
+     * Platform-neutral contract: list a playlist's videos.
+     *
+     * @param   Input  $input  Request input.
+     *
+     * @return  array
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylistItems(Input $input): array
+    {
+        return $this->fetchPlaylistVideos($input);
+    }
+
+    /**
      * Fetch video statistics from YouTube Data API for media linked to this server.
      * Batches up to 50 video IDs per API call. When $batchLimit > 0, only the
      * least-recently-synced videos are processed (never-synced first).
@@ -668,6 +698,8 @@ class CWMAddonYoutube extends CWMAddon
             'searchChannelVideos',
             'fetchChannelPlaylists',
             'fetchPlaylistVideos',
+            'fetchRemotePlaylists',
+            'fetchRemotePlaylistItems',
             'fetchLiveVideos',
             'getVideoStatus',
             'disconnectOAuth',

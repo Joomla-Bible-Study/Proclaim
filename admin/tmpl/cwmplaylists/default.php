@@ -137,8 +137,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmplaylists'); ?>" method="po
                             <?php else : ?>
                                 <span><?php echo $this->escape($item->title); ?></span>
                             <?php endif; ?>
-                            <?php if (!empty($item->youtube_playlist_id)) : ?>
-                                <div class="small text-muted"><?php echo $this->escape($item->youtube_playlist_id); ?></div>
+                            <?php if (!empty($item->remote_playlist_id)) : ?>
+                                <div class="small text-muted"><?php echo $this->escape($item->remote_playlist_id); ?></div>
                             <?php endif; ?>
                         </td>
                         <td class="small d-none d-md-table-cell">

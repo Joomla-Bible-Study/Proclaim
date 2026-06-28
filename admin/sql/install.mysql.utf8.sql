@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
     `title`               VARCHAR(250)              DEFAULT NULL,
     `alias`               VARCHAR(400)     NOT NULL DEFAULT '',
     `description`         MEDIUMTEXT,
-    `youtube_playlist_id` VARCHAR(64)      NOT NULL DEFAULT '' COMMENT 'Remote playlist ID (e.g. YouTube playlist ID)',
+    `remote_playlist_id` VARCHAR(64)      NOT NULL DEFAULT '' COMMENT 'Remote playlist ID (e.g. YouTube playlist ID)',
     `server_id`           INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to #__bsms_servers',
     `series_id`           INT(10) UNSIGNED          DEFAULT NULL COMMENT 'Optional FK to #__bsms_series',
     `default_settings`    TEXT COMMENT 'JSON of default settings applied to synced videos',
@@ -181,15 +181,15 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
     `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `playlist_id`      INT(10) UNSIGNED NOT NULL,
     `mediafile_id`     INT(10) UNSIGNED          DEFAULT NULL COMMENT 'FK to #__bsms_mediafiles; NULL when no local media yet',
-    `youtube_video_id` VARCHAR(32)      NOT NULL DEFAULT '' COMMENT 'Reconciliation key matched against params.filename',
+    `remote_video_id` VARCHAR(32)      NOT NULL DEFAULT '' COMMENT 'Reconciliation key matched against params.filename',
     `title`            VARCHAR(400)     NOT NULL DEFAULT '',
     `position`         INT(11)          NOT NULL DEFAULT '0',
     `created`          DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_playlist_video` (`playlist_id`, `youtube_video_id`),
+    UNIQUE KEY `idx_playlist_video` (`playlist_id`, `remote_video_id`),
     KEY `idx_playlist` (`playlist_id`),
     KEY `idx_mediafile` (`mediafile_id`),
-    KEY `idx_video` (`youtube_video_id`)
+    KEY `idx_video` (`remote_video_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

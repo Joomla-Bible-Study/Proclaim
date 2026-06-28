@@ -26,6 +26,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Http\HttpFactory;
 use Joomla\Http\Response;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -680,6 +681,62 @@ abstract class CWMAddon
                 return false;
             }
         }));
+    }
+
+    /**
+     * List a server's remote playlists/collections.
+     *
+     * The platform-neutral contract the playlist engine and the picker call.
+     * Override in a playlist-capable addon. Must return:
+     *   ['success' => bool, 'error' => ?string,
+     *    'playlists' => [ ['playlistId' => string, 'title' => string, 'description' => string, 'thumbnail' => string], ... ]]
+     *
+     * @param   Input  $input  Request input (expects server_id).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylists(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'playlists' => []];
+    }
+
+    /**
+     * List the items (videos) inside one remote playlist, paginated.
+     *
+     * Override in a playlist-capable addon. Must return:
+     *   ['success' => bool, 'error' => ?string,
+     *    'videos' => [ ['videoId' => string, 'title' => string], ... ],
+     *    'nextPageToken' => ?string]
+     *
+     * @param   Input  $input  Request input (expects server_id, playlist_id, page_token, max_results).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylistItems(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'videos' => [], 'nextPageToken' => null];
+    }
+
+    /**
+     * Extract this platform's stable media ID from a stored URL/value.
+     *
+     * Instance-level so the playlist engine never names a platform. Defaults to
+     * the addon's static extractMediaId() — which YouTube/Vimeo/Wistia already
+     * implement — so playlist reconciliation generalizes for free.
+     *
+     * @param   string  $text  A media URL or bare ID.
+     *
+     * @return  string|null  The platform media ID, or null.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function extractRemoteMediaId(string $text): ?string
+    {
+        return static::extractMediaId($text);
     }
 
     /**

@@ -2,7 +2,7 @@
  * Playlist picker (#1273 phase 4)
  *
  * Opens a modal listing the selected server's live channel playlists and, on
- * pick, writes the remote playlist ID into the read-only youtube_playlist_id
+ * pick, writes the remote playlist ID into the read-only remote_playlist_id
  * field and auto-fills the Title when it is still empty (e.g. on a new playlist).
  *
  * Reuses the existing fetchChannelPlaylists XHR endpoint. No build-time deps
@@ -107,7 +107,21 @@
     load(serverId) {
       this.setBody(`<div class="text-center p-4"><span class="icon-spinner icon-spin" aria-hidden="true"></span> ${Joomla.Text._('JGLOBAL_LOADING')}</div>`);
 
-      let url = 'index.php?option=com_proclaim&task=cwmmediafile.xhr&type=youtube&handler=fetchChannelPlaylists';
+      // Resolve the platform type from the server select's data-server-types map
+      // so the picker works for any playlist-capable platform, not just YouTube.
+      const serverField = document.querySelector('[name="jform[server_id]"]');
+      let serverType = 'youtube';
+
+      if (serverField) {
+        try {
+          const map = JSON.parse(serverField.getAttribute('data-server-types') || '{}');
+          serverType = map[serverId] || serverType;
+        } catch (e) {
+          // keep the default
+        }
+      }
+
+      let url = `index.php?option=com_proclaim&task=cwmmediafile.xhr&type=${encodeURIComponent(serverType)}&handler=fetchRemotePlaylists`;
       url += `&server_id=${encodeURIComponent(serverId)}`;
       url += `&${Joomla.getOptions('csrf.token')}=1`;
 
@@ -166,7 +180,7 @@
      * Apply the chosen playlist to the form and close.
      */
     pick(playlistId, title) {
-      const idField = document.querySelector('[name="jform[youtube_playlist_id]"]');
+      const idField = document.querySelector('[name="jform[remote_playlist_id]"]');
 
       if (idField) {
         idField.value = playlistId;
