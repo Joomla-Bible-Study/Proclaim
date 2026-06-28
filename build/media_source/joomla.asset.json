@@ -270,6 +270,18 @@
             }
         },
         {
+            "name": "com_proclaim.playlist-picker",
+            "type": "script",
+            "uri": "com_proclaim/playlist-picker.min.js",
+            "dependencies": [
+                "core",
+                "bootstrap.modal"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.addon-vimeo-browser",
             "type": "script",
             "uri": "com_proclaim/addon-vimeo-browser.min.js",

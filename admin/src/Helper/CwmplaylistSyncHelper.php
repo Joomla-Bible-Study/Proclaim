@@ -71,8 +71,19 @@ final class CwmplaylistSyncHelper
      */
     public static function import(int $serverId = 0, bool $discoverNew = true): array
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $servers = $serverId > 0 ? [$serverId] : self::getYoutubeServerIds($db);
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // The capability registry (CWMAddon::supportsPlaylists) is the single
+        // source of truth for which servers can host playlists — so the engine
+        // never hardcodes "youtube" and a new platform addon opts in by simply
+        // returning true from supportsPlaylists().
+        $typeById = [];
+
+        foreach (CWMAddon::getPlaylistCapableServers() as $srv) {
+            $typeById[(int) $srv['id']] = (string) $srv['type'];
+        }
+
+        $serverIds = $serverId > 0 ? [$serverId] : array_keys($typeById);
 
         $stats = [
             'servers'          => 0,
@@ -85,8 +96,8 @@ final class CwmplaylistSyncHelper
             'errors'           => [],
         ];
 
-        if ($servers === []) {
-            $stats['errors'][] = 'No published YouTube server configured.';
+        if ($serverIds === []) {
+            $stats['errors'][] = 'No published playlist-capable server configured.';
 
             return $stats;
         }
@@ -94,12 +105,19 @@ final class CwmplaylistSyncHelper
         // Build the local video-id -> mediafile-id map once for the whole run.
         $videoMap = self::buildLocalVideoMap($db);
 
-        /** @var CWMAddonYoutube $addon */
-        $addon = CWMAddon::getInstance('youtube');
+        foreach ($serverIds as $sid) {
+            $sid  = (int) $sid;
+            $type = $typeById[$sid] ?? null;
 
-        foreach ($servers as $sid) {
+            if ($type === null) {
+                $stats['errors'][] = \sprintf('Server %d does not support playlists.', $sid);
+
+                continue;
+            }
+
             $stats['servers']++;
 
+            $addon    = CWMAddon::getInstance($type);
             $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew);
 
             if ($imported['error'] !== null) {
@@ -144,7 +162,7 @@ final class CwmplaylistSyncHelper
      * OAuth write-back; until then read-sync always prefers the local edit.
      *
      * @param   DatabaseInterface  $db           Database driver.
-     * @param   CWMAddonYoutube    $addon        YouTube addon instance.
+     * @param   CWMAddon           $addon        YouTube addon instance.
      * @param   integer            $serverId     Server ID to import from.
      * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
      *
@@ -153,7 +171,7 @@ final class CwmplaylistSyncHelper
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddonYoutube $addon, int $serverId, bool $discoverNew = true): array
+    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true): array
     {
         $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
@@ -279,7 +297,7 @@ final class CwmplaylistSyncHelper
      * video. Junction rows for videos no longer in the playlist are removed.
      *
      * @param   DatabaseInterface  $db          Database driver.
-     * @param   CWMAddonYoutube    $addon       YouTube addon instance.
+     * @param   CWMAddon           $addon       YouTube addon instance.
      * @param   integer            $playlistId  Local playlist row ID.
      * @param   array<string,int>  $videoMap    videoId => mediafileId map (built once per run).
      *
@@ -288,7 +306,7 @@ final class CwmplaylistSyncHelper
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function reconcilePlaylist(DatabaseInterface $db, CWMAddonYoutube $addon, int $playlistId, array $videoMap): array
+    public static function reconcilePlaylist(DatabaseInterface $db, CWMAddon $addon, int $playlistId, array $videoMap): array
     {
         $out = ['items' => 0, 'matched' => 0, 'unmatched' => 0, 'error' => null];
 
@@ -615,27 +633,5 @@ final class CwmplaylistSyncHelper
                 ->bind(':rid', $remoteId, \Joomla\Database\ParameterType::STRING)
                 ->bind(':sid', $serverId, \Joomla\Database\ParameterType::INTEGER)
         )->loadResult() ?? 0);
-    }
-
-    /**
-     * Get the IDs of all published YouTube-type servers.
-     *
-     * @param   DatabaseInterface  $db  Database driver.
-     *
-     * @return  int[]
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private static function getYoutubeServerIds(DatabaseInterface $db): array
-    {
-        $ids = $db->setQuery(
-            $db->getQuery(true)
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_servers'))
-                ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'))
-                ->where($db->quoteName('published') . ' = 1')
-        )->loadColumn();
-
-        return array_map('intval', $ids ?: []);
     }
 }
