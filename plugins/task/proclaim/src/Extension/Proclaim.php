@@ -554,9 +554,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         $params      = $event->getArgument('params') ?? new \stdClass();
         $serverId    = (int) ($params->server_id ?? 0);
         $discoverNew = (bool) ($params->discover_new ?? false);
+        $pushChanges = (bool) ($params->push_changes ?? false);
+        $dryRun      = (bool) ($params->dry_run ?? false);
 
         try {
-            $stats = CwmplaylistSyncHelper::import($serverId, $discoverNew);
+            $stats = CwmplaylistSyncHelper::import($serverId, $discoverNew, $pushChanges, $dryRun);
 
             $this->logTask(Text::sprintf(
                 'PLG_TASK_PROCLAIM_PLAYLISTSYNC_RESULT',
@@ -573,6 +575,24 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     'PLG_TASK_PROCLAIM_PLAYLISTSYNC_SKIPPED',
                     $stats['playlistsSkipped']
                 ));
+            }
+
+            // Write-back outcomes (phase 6): pushed titles, dry-run previews, failures.
+            if ($pushChanges) {
+                if ($dryRun) {
+                    foreach ($stats['titlesWouldPush'] as $would) {
+                        $this->logTask('  ~ ' . $would);
+                    }
+                } elseif ($stats['titlesPushed'] > 0) {
+                    $this->logTask(Text::sprintf(
+                        'PLG_TASK_PROCLAIM_PLAYLISTSYNC_PUSHED',
+                        $stats['titlesPushed']
+                    ));
+                }
+
+                foreach ($stats['pushErrors'] as $pushError) {
+                    $this->logTask('  - ' . $pushError);
+                }
             }
 
             foreach ($stats['conflicts'] as $conflict) {

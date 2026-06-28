@@ -92,4 +92,54 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
     {
         $this->assertSame([], CwmplaylistSyncHelper::extractVideoMapFromRows([], [CWMAddonYoutube::class, 'extractMediaId']));
     }
+
+    /**
+     * Matching titles need no action regardless of edit/write-back state.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testTitlePushDecisionNoneWhenTitlesMatch(): void
+    {
+        $this->assertSame('none', CwmplaylistSyncHelper::titlePushDecision('Same', 'Same', false, false));
+        $this->assertSame('none', CwmplaylistSyncHelper::titlePushDecision('Same', 'Same', true, true));
+    }
+
+    /**
+     * A remote change with no local edit is pulled in, write-back irrelevant.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testTitlePushDecisionPullsRemoteWhenNotLocallyEdited(): void
+    {
+        $this->assertSame('pull', CwmplaylistSyncHelper::titlePushDecision('Local', 'Remote', false, false));
+        $this->assertSame('pull', CwmplaylistSyncHelper::titlePushDecision('Local', 'Remote', false, true));
+    }
+
+    /**
+     * A locally-edited divergence pushes when write-back is on.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testTitlePushDecisionPushesWhenLocallyEditedAndWritebackOn(): void
+    {
+        $this->assertSame('push', CwmplaylistSyncHelper::titlePushDecision('Local', 'Remote', true, true));
+    }
+
+    /**
+     * A locally-edited divergence is a conflict (keep local) when write-back is off.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testTitlePushDecisionConflictWhenLocallyEditedAndWritebackOff(): void
+    {
+        $this->assertSame('conflict', CwmplaylistSyncHelper::titlePushDecision('Local', 'Remote', true, false));
+    }
 }

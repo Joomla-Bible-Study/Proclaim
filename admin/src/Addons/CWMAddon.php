@@ -740,6 +740,45 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon can push playlist changes back to the platform via its
+     * write API (e.g. YouTube playlists.update). Override and return true to opt
+     * a platform into write-back; the actual connection/authorisation is checked
+     * at call time inside pushPlaylistTitle().
+     *
+     * Kept separate from supportsPlaylists() (read/import) so a platform can
+     * import playlists without necessarily being able to write them back.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylistWriteback(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Push a locally-authoritative playlist title to the remote platform.
+     *
+     * Called by the sync engine when Proclaim is the source of truth for a
+     * playlist whose title diverged from the remote and the playlist is opted in
+     * to write-back. Override in a write-back-capable addon. Must return:
+     *   ['success' => bool, 'error' => ?string]
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The platform playlist ID to update.
+     * @param   string  $title             The new title to set on the platform.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function pushPlaylistTitle(int $serverId, string $remotePlaylistId, string $title): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+    }
+
+    /**
      * Detect metadata for a file.
      *
      * @param   Registry    $params      Media params (modified in place)

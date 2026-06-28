@@ -60,15 +60,23 @@ final class CwmplaylistSyncHelper
      * creates a channel's playlists for the first time. The interactive toolbar
      * action passes true (the deliberate initial import).
      *
+     * When $pushTitles is true, a playlist whose local title is the authoritative
+     * one (locally edited and diverged from the remote) and which is opted in to
+     * write-back (writeback_enabled = 1) has its local title pushed back to the
+     * remote platform — completing the conflict gate instead of only logging it.
+     * $dryRun reports what would be pushed without calling the remote write API.
+     *
      * @param   integer  $serverId     Server ID to import, or 0 for all YouTube servers.
      * @param   boolean  $discoverNew  Whether to create playlists not seen locally yet.
+     * @param   boolean  $pushTitles   Whether to push locally-authoritative titles back to the remote.
+     * @param   boolean  $dryRun       Report would-push titles without writing to the remote.
      *
-     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, conflicts:string[], errors:string[]}
+     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function import(int $serverId = 0, bool $discoverNew = true): array
+    public static function import(int $serverId = 0, bool $discoverNew = true, bool $pushTitles = false, bool $dryRun = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -91,6 +99,9 @@ final class CwmplaylistSyncHelper
             'playlistsSkipped' => 0,
             'itemsMatched'     => 0,
             'itemsUnmatched'   => 0,
+            'titlesPushed'     => 0,
+            'titlesWouldPush'  => [],
+            'pushErrors'       => [],
             'conflicts'        => [],
             'errors'           => [],
         ];
@@ -117,7 +128,7 @@ final class CwmplaylistSyncHelper
             $stats['servers']++;
 
             $addon    = CWMAddon::getInstance($type);
-            $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew);
+            $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew, $pushTitles, $dryRun);
 
             if ($imported['error'] !== null) {
                 $stats['errors'][] = \sprintf('Server %d: %s', $sid, $imported['error']);
@@ -128,6 +139,9 @@ final class CwmplaylistSyncHelper
             $stats['playlistsCreated'] += $imported['created'];
             $stats['playlistsUpdated'] += $imported['updated'];
             $stats['playlistsSkipped'] += $imported['skipped'];
+            $stats['titlesPushed'] += $imported['titlesPushed'];
+            $stats['titlesWouldPush']   = array_merge($stats['titlesWouldPush'], $imported['titlesWouldPush']);
+            $stats['pushErrors']        = array_merge($stats['pushErrors'], $imported['pushErrors']);
             $stats['conflicts']         = array_merge($stats['conflicts'], $imported['conflicts']);
 
             foreach ($imported['playlistIds'] as $pid) {
@@ -152,27 +166,31 @@ final class CwmplaylistSyncHelper
      *
      * Existing playlists are matched on (remote_playlist_id, server_id).
      *
-     * Conflict gate: the YouTube title is only re-applied to an existing playlist
-     * when it actually changed AND the local row was NOT edited by a human since
-     * the last sync (modified <= last_sync). When both sides diverged, the local
-     * value is kept and the divergence is reported as a conflict rather than
-     * silently overwritten. Playlists opted out of sync (sync_enabled = 0) are
-     * skipped entirely. Truly bidirectional resolution arrives with the phase-5
-     * OAuth write-back; until then read-sync always prefers the local edit.
+     * Conflict gate (see titlePushDecision): the remote title is pulled into an
+     * existing playlist only when the local row was NOT edited by a human since
+     * the last sync. When the local row diverged AND was locally edited, the local
+     * value is authoritative — it is either pushed back to the remote (when
+     * $pushTitles and the playlist's writeback_enabled are both on, phase 6) or,
+     * absent write-back, kept and reported as a conflict. Playlists opted out of
+     * sync (sync_enabled = 0) are skipped entirely. last_sync is bumped only when
+     * the row ends in sync with the remote, so an unresolved local edit stays
+     * protected across runs.
      *
      * @param   DatabaseInterface  $db           Database driver.
-     * @param   CWMAddon           $addon        YouTube addon instance.
+     * @param   CWMAddon           $addon        Playlist-capable addon instance.
      * @param   integer            $serverId     Server ID to import from.
      * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
+     * @param   boolean            $pushTitles   Whether to push locally-authoritative titles to the remote.
+     * @param   boolean            $dryRun       Report would-push titles without writing to the remote.
      *
-     * @return  array{created:int, updated:int, skipped:int, playlistIds:int[], conflicts:string[], error:?string}
+     * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true): array
+    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true, bool $pushTitles = false, bool $dryRun = false): array
     {
-        $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'playlistIds' => [], 'conflicts' => [], 'error' => null];
+        $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'titlesPushed' => 0, 'titlesWouldPush' => [], 'pushErrors' => [], 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
         $response = $addon->fetchRemotePlaylists(new Input(['server_id' => $serverId]));
 
@@ -234,21 +252,72 @@ final class CwmplaylistSyncHelper
                 $data = [
                     'remote_playlist_id' => $remoteId,
                     'server_id'          => $serverId,
-                    'last_sync'          => $now,
                 ];
 
-                // Conflict gate + "only write if changed".
+                // Bump last_sync only when the row ends in sync with the remote;
+                // keep it untouched while a local edit remains unresolved so the
+                // edit stays protected across runs.
+                $markSynced = true;
+
                 if ($newTitle !== (string) $table->title) {
-                    if (self::isLocallyEdited($table)) {
-                        $out['conflicts'][] = \sprintf(
-                            'Playlist "%s" (#%d): kept local title; YouTube title "%s" not applied.',
-                            (string) $table->title,
-                            $existingId,
-                            $newTitle
-                        );
-                    } else {
-                        $data['title'] = $newTitle;
+                    $writebackOn = $pushTitles
+                        && (int) $table->writeback_enabled === 1
+                        && $addon->supportsPlaylistWriteback();
+
+                    $decision = self::titlePushDecision(
+                        (string) $table->title,
+                        $newTitle,
+                        self::isLocallyEdited($table),
+                        $writebackOn
+                    );
+
+                    switch ($decision) {
+                        case 'pull':
+                            // Remote changed, no local edit — safe to apply.
+                            $data['title'] = $newTitle;
+                            break;
+
+                        case 'push':
+                            if ($dryRun) {
+                                $out['titlesWouldPush'][] = \sprintf(
+                                    'Playlist "%s" (#%d): would push local title to remote (remote currently "%s").',
+                                    (string) $table->title,
+                                    $existingId,
+                                    $newTitle
+                                );
+                                $markSynced = false;
+                            } else {
+                                $push = $addon->pushPlaylistTitle($serverId, $remoteId, (string) $table->title);
+
+                                if (!empty($push['success'])) {
+                                    // Remote now matches local — converged.
+                                    $out['titlesPushed']++;
+                                } else {
+                                    $out['pushErrors'][] = \sprintf(
+                                        'Playlist "%s" (#%d): write-back failed: %s',
+                                        (string) $table->title,
+                                        $existingId,
+                                        $push['error'] ?? 'unknown error'
+                                    );
+                                    $markSynced = false;
+                                }
+                            }
+                            break;
+
+                        case 'conflict':
+                            $out['conflicts'][] = \sprintf(
+                                'Playlist "%s" (#%d): kept local title; remote title "%s" not applied.',
+                                (string) $table->title,
+                                $existingId,
+                                $newTitle
+                            );
+                            $markSynced = false;
+                            break;
                     }
+                }
+
+                if ($markSynced) {
+                    $data['last_sync'] = $now;
                 }
             }
 
@@ -263,6 +332,40 @@ final class CwmplaylistSyncHelper
         }
 
         return $out;
+    }
+
+    /**
+     * Decide how to resolve a title divergence between the local playlist and the
+     * remote platform. Pure (no I/O) so the gate is unit-testable.
+     *
+     * Returns one of:
+     *   'none'     — titles already match; nothing to do.
+     *   'pull'     — remote changed and the local row was not edited; apply remote.
+     *   'push'     — local row is authoritative (edited + diverged) and opted in to
+     *                write-back; push the local title to the remote.
+     *   'conflict' — local row is authoritative but write-back is off; keep local,
+     *                report the divergence.
+     *
+     * @param   string   $localTitle        Current local title.
+     * @param   string   $remoteTitle       Current remote title.
+     * @param   boolean  $locallyEdited     Whether the local row was edited since last sync.
+     * @param   boolean  $writebackEnabled  Whether write-back is on for this run + playlist.
+     *
+     * @return  string  One of 'none', 'pull', 'push', 'conflict'.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function titlePushDecision(string $localTitle, string $remoteTitle, bool $locallyEdited, bool $writebackEnabled): string
+    {
+        if ($localTitle === $remoteTitle) {
+            return 'none';
+        }
+
+        if (!$locallyEdited) {
+            return 'pull';
+        }
+
+        return $writebackEnabled ? 'push' : 'conflict';
     }
 
     /**
