@@ -16,10 +16,12 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Server List Form Field class for the Proclaim component
@@ -72,6 +74,19 @@ class ServerListField extends ListField
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')
             ->order($db->quoteName('server_name') . ' ASC');
+
+        // Optional `capability` attribute restricts the list to servers whose
+        // addon reports that capability — so forms don't hardcode platform
+        // types. Currently only "playlists" is wired (see CWMAddon).
+        $capability = (string) $this->getAttribute('capability', '');
+
+        if ($capability === 'playlists') {
+            $capableIds = array_map(static fn ($s) => (int) $s['id'], CWMAddon::getPlaylistCapableServers());
+
+            // No capable servers -> render an empty list rather than all servers.
+            $query->whereIn($db->quoteName('id'), $capableIds ?: [0], ParameterType::INTEGER);
+        }
+
         $db->setQuery($query);
         $servers = $db->loadObjectList();
         $options = [];

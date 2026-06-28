@@ -463,6 +463,18 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * YouTube supports the playlist system (channel playlist import + sync).
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylists(): bool
+    {
+        return true;
+    }
+
+    /**
      * Fetch video statistics from YouTube Data API for media linked to this server.
      * Batches up to 50 video IDs per API call. When $batchLimit > 0, only the
      * least-recently-synced videos are processed (never-synced first).

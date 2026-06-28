@@ -19,13 +19,13 @@
            description="JBS_PLAYLIST_DESCRIPTION_DESC"
            cols="60" rows="5" filter="safehtml"/>
 
-    <field name="server_id" type="ServerList"
+    <field name="server_id" type="ServerList" capability="playlists"
            label="JBS_PLAYLIST_SERVER" description="JBS_PLAYLIST_SERVER_DESC"
            required="true" validate="options">
         <option value="">JBS_CMN_SELECT_SERVER</option>
     </field>
 
-    <field name="youtube_playlist_id" type="text"
+    <field name="youtube_playlist_id" type="PlaylistPicker"
            label="JBS_PLAYLIST_YOUTUBE_ID" description="JBS_PLAYLIST_YOUTUBE_ID_DESC"
            size="50" filter="trim"
            hint="PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>

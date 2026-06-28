@@ -637,6 +637,52 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon supports the playlist system (import/sync of remote
+     * playlists, e.g. YouTube). Override in a child class and return true to
+     * make the platform's servers available to the playlist features.
+     *
+     * This is the single source of truth the playlist system consults so the
+     * feature can expand to other platforms without hardcoding "youtube".
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylists(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Get all published servers whose addon supports the playlist system.
+     *
+     * Used by the playlist server picker, the import action and the scheduled
+     * sync task so none of them hardcode which platforms can host playlists.
+     *
+     * @return  array<int, array{id: mixed, server_name: mixed, type: mixed}>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getPlaylistCapableServers(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['id', 'server_name', 'type']))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('server_name') . ' ASC');
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
+
+        return array_values(array_filter($servers, function ($srv) {
+            try {
+                return static::getInstance($srv['type'])->supportsPlaylists();
+            } catch (\RuntimeException) {
+                return false;
+            }
+        }));
+    }
+
+    /**
      * Detect metadata for a file.
      *
      * @param   Registry    $params      Media params (modified in place)
