@@ -116,6 +116,14 @@ class CwmplaylistTable extends Table
     public ?int $sync_enabled = 0;
 
     /**
+     * Whether local title changes are pushed back to the remote platform
+     *
+     * @var int|null
+     * @since __DEPLOY_VERSION__
+     */
+    public ?int $writeback_enabled = 0;
+
+    /**
      * Timestamp of the last successful sync
      *
      * @var string|null
@@ -291,7 +299,7 @@ class CwmplaylistTable extends Table
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings.
         foreach ([
             'id', 'published', 'asset_id', 'access', 'server_id', 'series_id',
-            'sync_enabled', 'ordering', 'created_by', 'modified_by', 'checked_out',
+            'sync_enabled', 'writeback_enabled', 'ordering', 'created_by', 'modified_by', 'checked_out',
         ] as $field) {
             if (isset($array[$field])) {
                 $array[$field] = $array[$field] !== '' ? (int) $array[$field] : null;

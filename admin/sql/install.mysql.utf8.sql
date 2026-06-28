@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
     `series_id`           INT(10) UNSIGNED          DEFAULT NULL COMMENT 'Optional FK to #__bsms_series',
     `default_settings`    TEXT COMMENT 'JSON of default settings applied to synced videos',
     `sync_enabled`        TINYINT(1)       NOT NULL DEFAULT '0',
+    `writeback_enabled`   TINYINT(1)       NOT NULL DEFAULT '0' COMMENT 'Push local title changes back to the remote platform',
     `last_sync`           DATETIME                  DEFAULT NULL,
     `params`              TEXT             NOT NULL,
     `language`            CHAR(7)          NOT NULL DEFAULT '',

@@ -98,4 +98,93 @@ class CwmplaylistsController extends AdminController
 
         $this->setRedirect($redirect);
     }
+
+    /**
+     * Push locally-authoritative playlist titles back to the remote platform
+     * (e.g. YouTube playlists.update). Only playlists opted in to write-back
+     * (writeback_enabled = 1) whose local title diverged after a local edit are
+     * pushed.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function push(): void
+    {
+        $this->runPush(false);
+    }
+
+    /**
+     * Preview a write-back push without writing to the remote platform — reports
+     * which playlist titles would be pushed.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function pushpreview(): void
+    {
+        $this->runPush(true);
+    }
+
+    /**
+     * Shared write-back runner for push()/pushpreview().
+     *
+     * @param   bool  $dryRun  Report would-push titles without writing to the remote.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    private function runPush(bool $dryRun): void
+    {
+        $this->checkToken();
+
+        if (!$this->app->getIdentity()->authorise('core.edit', 'com_proclaim')) {
+            throw new \Exception(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $serverId = $this->input->getInt('server_id', 0);
+        $redirect = Route::_('index.php?option=com_proclaim&view=cwmplaylists', false);
+
+        try {
+            $stats = CwmplaylistSyncHelper::import($serverId, false, true, $dryRun);
+        } catch (\Exception $e) {
+            $this->setMessage(Text::sprintf('JBS_PLAYLIST_PUSH_FAILED', $e->getMessage()), 'error');
+            $this->setRedirect($redirect);
+
+            return;
+        }
+
+        if ($dryRun) {
+            $this->setMessage(
+                Text::sprintf('JBS_PLAYLIST_PUSH_DRYRUN_RESULT', \count($stats['titlesWouldPush'])),
+                'info'
+            );
+
+            foreach ($stats['titlesWouldPush'] as $would) {
+                $this->app->enqueueMessage($would, 'info');
+            }
+        } else {
+            $clean = $stats['pushErrors'] === [];
+
+            $this->setMessage(
+                Text::sprintf('JBS_PLAYLIST_PUSH_RESULT', $stats['titlesPushed']),
+                $clean ? 'message' : 'warning'
+            );
+        }
+
+        foreach ($stats['pushErrors'] as $error) {
+            $this->app->enqueueMessage($error, 'warning');
+        }
+
+        foreach ($stats['errors'] as $error) {
+            $this->app->enqueueMessage($error, 'warning');
+        }
+
+        $this->setRedirect($redirect);
+    }
 }

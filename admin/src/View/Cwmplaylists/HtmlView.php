@@ -137,6 +137,16 @@ class HtmlView extends BaseHtmlView
                 ->listCheck(false);
         }
 
+        if ($this->canDo->get('core.edit')) {
+            $toolbar->standardButton('push-preview', Text::_('JBS_PLAYLIST_PUSH_PREVIEW'), 'cwmplaylists.pushpreview')
+                ->icon('icon-search')
+                ->listCheck(false);
+
+            $toolbar->standardButton('push', Text::_('JBS_PLAYLIST_PUSH'), 'cwmplaylists.push')
+                ->icon('icon-out-2')
+                ->listCheck(false);
+        }
+
         $dropdown = $toolbar->dropdownButton('status-group')
             ->text('JTOOLBAR_CHANGE_STATUS')
             ->toggleSplit(false)

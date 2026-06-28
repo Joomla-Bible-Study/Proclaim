@@ -72,3 +72,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
+
+-- #1273 phase 6 (OAuth write-back): per-playlist opt-in for pushing local title
+-- changes back to the remote platform (e.g. YouTube playlists.update). Default 0
+-- so write-back is strictly opt-in; the conflict gate keeps prior read-sync behaviour.
+ALTER TABLE `#__bsms_playlists` ADD COLUMN `writeback_enabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Push local title changes back to the remote platform' AFTER `sync_enabled`;
