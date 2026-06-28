@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
-use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Table\CwmplaylistTable;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -151,7 +150,7 @@ final class CwmplaylistSyncHelper
     /**
      * Fetch a channel's playlists and upsert each as a Proclaim Playlist.
      *
-     * Existing playlists are matched on (youtube_playlist_id, server_id).
+     * Existing playlists are matched on (remote_playlist_id, server_id).
      *
      * Conflict gate: the YouTube title is only re-applied to an existing playlist
      * when it actually changed AND the local row was NOT edited by a human since
@@ -175,7 +174,7 @@ final class CwmplaylistSyncHelper
     {
         $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
-        $response = $addon->fetchChannelPlaylists(new Input(['server_id' => $serverId]));
+        $response = $addon->fetchRemotePlaylists(new Input(['server_id' => $serverId]));
 
         if (empty($response['success'])) {
             $out['error'] = $response['error'] ?? 'Unknown error fetching playlists.';
@@ -209,10 +208,10 @@ final class CwmplaylistSyncHelper
 
             if ($isNew) {
                 $data = [
-                    'title'               => $newTitle,
-                    'youtube_playlist_id' => $remoteId,
-                    'server_id'           => $serverId,
-                    'last_sync'           => $now,
+                    'title'              => $newTitle,
+                    'remote_playlist_id' => $remoteId,
+                    'server_id'          => $serverId,
+                    'last_sync'          => $now,
                     // Sensible defaults for a freshly imported playlist; all
                     // user-editable afterwards.
                     'published'    => 1,
@@ -233,9 +232,9 @@ final class CwmplaylistSyncHelper
                 }
 
                 $data = [
-                    'youtube_playlist_id' => $remoteId,
-                    'server_id'           => $serverId,
-                    'last_sync'           => $now,
+                    'remote_playlist_id' => $remoteId,
+                    'server_id'          => $serverId,
+                    'last_sync'          => $now,
                 ];
 
                 // Conflict gate + "only write if changed".
@@ -296,10 +295,10 @@ final class CwmplaylistSyncHelper
      * video ID against the supplied local map, and upserts a junction row per
      * video. Junction rows for videos no longer in the playlist are removed.
      *
-     * @param   DatabaseInterface  $db          Database driver.
-     * @param   CWMAddon           $addon       YouTube addon instance.
-     * @param   integer            $playlistId  Local playlist row ID.
-     * @param   array<string,int>  $videoMap    videoId => mediafileId map (built once per run).
+     * @param   DatabaseInterface              $db          Database driver.
+     * @param   CWMAddon                       $addon       Playlist-capable addon instance.
+     * @param   integer                        $playlistId  Local playlist row ID.
+     * @param   array<string,array<string,int>>  $videoMap  type => (videoId => mediafileId), built once per run.
      *
      * @return  array{items:int, matched:int, unmatched:int, error:?string}
      *
@@ -312,20 +311,22 @@ final class CwmplaylistSyncHelper
 
         $playlist = $db->setQuery(
             $db->getQuery(true)
-                ->select($db->quoteName(['youtube_playlist_id', 'server_id']))
-                ->from($db->quoteName('#__bsms_playlists'))
-                ->where($db->quoteName('id') . ' = :id')
+                ->select($db->quoteName(['p.remote_playlist_id', 'p.server_id', 's.type']))
+                ->from($db->quoteName('#__bsms_playlists', 'p'))
+                ->join('INNER', $db->quoteName('#__bsms_servers', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('p.server_id'))
+                ->where($db->quoteName('p.id') . ' = :id')
                 ->bind(':id', $playlistId, \Joomla\Database\ParameterType::INTEGER)
         )->loadObject();
 
-        if (!$playlist || $playlist->youtube_playlist_id === '') {
-            $out['error'] = 'Playlist has no remote YouTube playlist ID.';
+        if (!$playlist || $playlist->remote_playlist_id === '') {
+            $out['error'] = 'Playlist has no remote playlist ID.';
 
             return $out;
         }
 
-        $remoteId = (string) $playlist->youtube_playlist_id;
+        $remoteId = (string) $playlist->remote_playlist_id;
         $serverId = (int) $playlist->server_id;
+        $typeMap  = $videoMap[(string) $playlist->type] ?? [];
         $now      = Factory::getDate()->toSql();
 
         $position   = 0;
@@ -333,7 +334,7 @@ final class CwmplaylistSyncHelper
         $pageToken  = '';
 
         do {
-            $response = $addon->fetchPlaylistVideos(new Input([
+            $response = $addon->fetchRemotePlaylistItems(new Input([
                 'server_id'   => $serverId,
                 'playlist_id' => $remoteId,
                 'page_token'  => $pageToken,
@@ -353,7 +354,7 @@ final class CwmplaylistSyncHelper
                     continue;
                 }
 
-                $mediafileId = $videoMap[$videoId] ?? null;
+                $mediafileId = $typeMap[$videoId] ?? null;
                 $mediafileId === null ? $out['unmatched']++ : $out['matched']++;
 
                 self::upsertItem($db, $playlistId, $videoId, (string) ($video['title'] ?? ''), $mediafileId, $position, $now);
@@ -402,7 +403,10 @@ final class CwmplaylistSyncHelper
             return 0;
         }
 
-        $videoId = CWMAddonYoutube::extractMediaId((string) $decoded['filename']);
+        // Identify the video using any playlist-capable platform's extractor — a
+        // media file's URL is the source of truth, regardless of which server
+        // type it is filed under.
+        $videoId = self::extractAnyRemoteId((string) $decoded['filename']);
 
         if ($videoId === null) {
             return 0;
@@ -417,7 +421,7 @@ final class CwmplaylistSyncHelper
                     ->update($db->quoteName('#__bsms_playlist_items'))
                     ->set($db->quoteName('mediafile_id') . ' = NULL')
                     ->where($db->quoteName('mediafile_id') . ' = :mid')
-                    ->where($db->quoteName('youtube_video_id') . ' != :vid')
+                    ->where($db->quoteName('remote_video_id') . ' != :vid')
                     ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
                     ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
             )->execute();
@@ -427,7 +431,7 @@ final class CwmplaylistSyncHelper
                 $db->getQuery(true)
                     ->update($db->quoteName('#__bsms_playlist_items'))
                     ->set($db->quoteName('mediafile_id') . ' = :mid')
-                    ->where($db->quoteName('youtube_video_id') . ' = :vid')
+                    ->where($db->quoteName('remote_video_id') . ' = :vid')
                     ->where($db->quoteName('mediafile_id') . ' IS NULL')
                     ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
                     ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
@@ -473,28 +477,50 @@ final class CwmplaylistSyncHelper
     }
 
     /**
-     * Build a YouTube-video-ID => mediafile-ID map from the existing media library.
+     * Build a per-platform video-ID => mediafile-ID map from the media library.
      *
-     * Reads every media file's stored URL (params.filename) and extracts the
-     * YouTube video ID from it. This is the reconciliation index that lets bulk
-     * import link to media we already have rather than duplicate it.
+     * One sub-map per playlist-capable server type, each built with that
+     * platform's own ID extractor — so a YouTube ID and a Vimeo ID never
+     * collide. This is the reconciliation index that lets import/sync link to
+     * media we already have rather than duplicate it.
      *
      * @param   DatabaseInterface  $db  Database driver.
      *
-     * @return  array<string,int>  videoId => mediafileId (first match wins).
+     * @return  array<string,array<string,int>>  type => (videoId => mediafileId).
      *
      * @since   __DEPLOY_VERSION__
      */
     public static function buildLocalVideoMap(DatabaseInterface $db): array
     {
+        $types = array_values(array_unique(array_map(
+            static fn ($srv) => (string) $srv['type'],
+            CWMAddon::getPlaylistCapableServers()
+        )));
+
+        if ($types === []) {
+            return [];
+        }
+
+        // Scan all media with a URL once, then build one sub-map per platform by
+        // running that platform's own extractor. A YouTube URL filed under any
+        // server type still matches the YouTube map (the extractor recognises the
+        // URL, not the server record); a platform's extractor returns null for
+        // other platforms' URLs, so the maps stay disjoint.
         $rows = $db->setQuery(
             $db->getQuery(true)
                 ->select($db->quoteName(['id', 'params']))
                 ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%youtu%'))
-        )->loadAssocList();
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%http%'))
+        )->loadAssocList() ?: [];
 
-        return self::extractVideoMapFromRows($rows ?: []);
+        $map = [];
+
+        foreach ($types as $type) {
+            $addon       = CWMAddon::getInstance($type);
+            $map[$type]  = self::extractVideoMapFromRows($rows, [$addon, 'extractRemoteMediaId']);
+        }
+
+        return $map;
     }
 
     /**
@@ -502,15 +528,17 @@ final class CwmplaylistSyncHelper
      *
      * Extracted as a static, dependency-free method so the matching core can be
      * unit-tested without a database. Each row must have 'id' and 'params'
-     * (a JSON string whose 'filename' holds the media URL).
+     * (a JSON string whose 'filename' holds the media URL). The platform's ID
+     * extractor is injected so this stays platform-neutral and testable.
      *
-     * @param   array<int,array{id:mixed,params:mixed}>  $rows  Media-file rows.
+     * @param   array<int,array{id:mixed,params:mixed}>  $rows       Media-file rows.
+     * @param   callable                                 $extractor  fn(string $url): ?string.
      *
      * @return  array<string,int>  videoId => mediafileId (first match wins).
      *
      * @since   __DEPLOY_VERSION__
      */
-    public static function extractVideoMapFromRows(array $rows): array
+    public static function extractVideoMapFromRows(array $rows, callable $extractor): array
     {
         $map = [];
 
@@ -527,7 +555,7 @@ final class CwmplaylistSyncHelper
                 continue;
             }
 
-            $videoId = CWMAddonYoutube::extractMediaId((string) $decoded['filename']);
+            $videoId = $extractor((string) $decoded['filename']);
 
             if ($videoId === null || isset($map[$videoId])) {
                 continue;
@@ -537,6 +565,42 @@ final class CwmplaylistSyncHelper
         }
 
         return $map;
+    }
+
+    /**
+     * Extract a remote media ID from a URL using any playlist-capable platform.
+     *
+     * Tries each capable platform's extractor and returns the first match. Used
+     * by on-save linking, where we only have the media URL — not which platform
+     * it belongs to. Platform extractors recognise only their own URLs, so the
+     * first non-null result is unambiguous.
+     *
+     * @param   string  $url  The media URL.
+     *
+     * @return  string|null  The remote media ID, or null if no platform matched.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function extractAnyRemoteId(string $url): ?string
+    {
+        $types = array_unique(array_map(
+            static fn ($srv) => (string) $srv['type'],
+            CWMAddon::getPlaylistCapableServers()
+        ));
+
+        foreach ($types as $type) {
+            try {
+                $videoId = CWMAddon::getInstance($type)->extractRemoteMediaId($url);
+            } catch (\RuntimeException) {
+                continue;
+            }
+
+            if ($videoId !== null) {
+                return $videoId;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -561,17 +625,17 @@ final class CwmplaylistSyncHelper
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('playlist_id') . ' = :pid')
-                ->where($db->quoteName('youtube_video_id') . ' = :vid')
+                ->where($db->quoteName('remote_video_id') . ' = :vid')
                 ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER)
                 ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
         )->loadResult() ?? 0);
 
         $item = (object) [
-            'playlist_id'      => $playlistId,
-            'mediafile_id'     => $mediafileId,
-            'youtube_video_id' => $videoId,
-            'title'            => $title,
-            'position'         => $position,
+            'playlist_id'     => $playlistId,
+            'mediafile_id'    => $mediafileId,
+            'remote_video_id' => $videoId,
+            'title'           => $title,
+            'position'        => $position,
         ];
 
         if ($existingId > 0) {
@@ -605,7 +669,7 @@ final class CwmplaylistSyncHelper
 
         if ($keepVideos !== []) {
             $quoted = array_map([$db, 'quote'], array_unique($keepVideos));
-            $query->where($db->quoteName('youtube_video_id') . ' NOT IN (' . implode(',', $quoted) . ')');
+            $query->where($db->quoteName('remote_video_id') . ' NOT IN (' . implode(',', $quoted) . ')');
         }
 
         $db->setQuery($query)->execute();
@@ -628,7 +692,7 @@ final class CwmplaylistSyncHelper
             $db->getQuery(true)
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_playlists'))
-                ->where($db->quoteName('youtube_playlist_id') . ' = :rid')
+                ->where($db->quoteName('remote_playlist_id') . ' = :rid')
                 ->where($db->quoteName('server_id') . ' = :sid')
                 ->bind(':rid', $remoteId, \Joomla\Database\ParameterType::STRING)
                 ->bind(':sid', $serverId, \Joomla\Database\ParameterType::INTEGER)

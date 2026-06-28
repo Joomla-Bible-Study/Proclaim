@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
     `title`               VARCHAR(250)              DEFAULT NULL,
     `alias`               VARCHAR(400)     NOT NULL DEFAULT '',
     `description`         MEDIUMTEXT,
-    `youtube_playlist_id` VARCHAR(64)      NOT NULL DEFAULT '',
+    `remote_playlist_id` VARCHAR(64)      NOT NULL DEFAULT '',
     `server_id`           INT(10) UNSIGNED NOT NULL DEFAULT '0',
     `series_id`           INT(10) UNSIGNED          DEFAULT NULL,
     `default_settings`    TEXT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
   DEFAULT COLLATE = utf8mb4_unicode_ci;
 
 -- Playlist items junction (#1273 phase 2): maps a playlist to the Proclaim
--- media files it contains. youtube_video_id is the reconciliation key — bulk
+-- media files it contains. remote_video_id is the reconciliation key — bulk
 -- import matches it against existing #__bsms_mediafiles (params.filename) so we
 -- link rather than duplicate. mediafile_id is nullable: a playlist video with no
 -- local media yet is still recorded so the membership/order is preserved.
@@ -60,15 +60,15 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
     `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `playlist_id`      INT(10) UNSIGNED NOT NULL,
     `mediafile_id`     INT(10) UNSIGNED          DEFAULT NULL,
-    `youtube_video_id` VARCHAR(32)      NOT NULL DEFAULT '',
+    `remote_video_id` VARCHAR(32)      NOT NULL DEFAULT '',
     `title`            VARCHAR(400)     NOT NULL DEFAULT '',
     `position`         INT(11)          NOT NULL DEFAULT '0',
     `created`          DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `idx_playlist_video` (`playlist_id`, `youtube_video_id`),
+    UNIQUE KEY `idx_playlist_video` (`playlist_id`, `remote_video_id`),
     KEY `idx_playlist` (`playlist_id`),
     KEY `idx_mediafile` (`mediafile_id`),
-    KEY `idx_video` (`youtube_video_id`)
+    KEY `idx_video` (`remote_video_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;

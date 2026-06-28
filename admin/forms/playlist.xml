@@ -25,7 +25,7 @@
         <option value="">JBS_CMN_SELECT_SERVER</option>
     </field>
 
-    <field name="youtube_playlist_id" type="PlaylistPicker"
+    <field name="remote_playlist_id" type="PlaylistPicker"
            label="JBS_PLAYLIST_YOUTUBE_ID" description="JBS_PLAYLIST_YOUTUBE_ID_DESC"
            size="50" filter="trim"
            hint="PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>

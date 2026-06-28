@@ -81,7 +81,7 @@ class CwmplaylistTable extends Table
      * @var string|null
      * @since 10.3.3
      */
-    public ?string $youtube_playlist_id = null;
+    public ?string $remote_playlist_id = null;
 
     /**
      * Server ID (FK to #__bsms_servers) that hosts the playlist

@@ -48,7 +48,7 @@ echo Route::_('index.php?option=com_proclaim&layout=' . $currentLayout . '&id=' 
                 <?php echo $this->form->renderField('alias'); ?>
                 <?php echo $this->form->renderField('description'); ?>
                 <?php echo $this->form->renderField('server_id'); ?>
-                <?php echo $this->form->renderField('youtube_playlist_id'); ?>
+                <?php echo $this->form->renderField('remote_playlist_id'); ?>
                 <?php echo $this->form->renderField('series_id'); ?>
                 <?php echo $this->form->renderField('sync_enabled'); ?>
                 <?php echo $this->form->renderField('last_sync'); ?>
