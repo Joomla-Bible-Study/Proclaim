@@ -12,6 +12,7 @@ namespace CWM\Plugin\Task\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmanalyticsHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
@@ -78,6 +79,11 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             'langConstPrefix' => 'PLG_TASK_PROCLAIM_PLATFORMSTATS',
             'form'            => 'platformstats',
             'method'          => 'platformStatsTask',
+        ],
+        'proclaim.playlistsync' => [
+            'langConstPrefix' => 'PLG_TASK_PROCLAIM_PLAYLISTSYNC',
+            'form'            => 'playlistsync',
+            'method'          => 'playlistSyncTask',
         ],
     ];
 
@@ -510,6 +516,75 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     $scrubResult['removed'],
                     $scrubResult['kept']
                 ));
+            }
+        } catch (\Exception $e) {
+            try {
+                $this->logTask($e->getMessage());
+            } catch (\Exception $exception) {
+                return Status::KNOCKOUT;
+            }
+
+            return Status::KNOCKOUT;
+        }
+
+        return Status::OK;
+    }
+
+    /**
+     * Keep imported YouTube playlists in step with the channel.
+     *
+     * Reuses the same engine as the "Import from YouTube" toolbar action so the
+     * two never drift. By default it only refreshes playlists already imported by
+     * a human (discover_new = 0) — the deliberate initial import must run first.
+     * A conflict gate preserves local edits made since the last sync rather than
+     * letting either side silently overwrite the other.
+     *
+     * @param   ExecuteTaskEvent  $event
+     *
+     * @return  int
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    private function playlistSyncTask(ExecuteTaskEvent $event): int
+    {
+        $jLanguage = $this->getApplication()->getLanguage();
+        $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
+
+        $params      = $event->getArgument('params') ?? new \stdClass();
+        $serverId    = (int) ($params->server_id ?? 0);
+        $discoverNew = (bool) ($params->discover_new ?? false);
+
+        try {
+            $stats = CwmplaylistSyncHelper::import($serverId, $discoverNew);
+
+            $this->logTask(Text::sprintf(
+                'PLG_TASK_PROCLAIM_PLAYLISTSYNC_RESULT',
+                $stats['playlistsCreated'],
+                $stats['playlistsUpdated'],
+                $stats['itemsMatched'],
+                $stats['itemsUnmatched']
+            ));
+
+            // Surface the gate's decisions: skipped (not-yet-imported / opted-out)
+            // and conflicts (local edits preserved against a remote change).
+            if (!$discoverNew && $stats['playlistsSkipped'] > 0) {
+                $this->logTask(Text::sprintf(
+                    'PLG_TASK_PROCLAIM_PLAYLISTSYNC_SKIPPED',
+                    $stats['playlistsSkipped']
+                ));
+            }
+
+            foreach ($stats['conflicts'] as $conflict) {
+                $this->logTask('  - ' . $conflict);
+            }
+
+            foreach ($stats['errors'] as $error) {
+                $this->logTask('  - ' . $error);
+            }
+
+            if ($stats['errors'] !== []) {
+                return Status::KNOCKOUT;
             }
         } catch (\Exception $e) {
             try {

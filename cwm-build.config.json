@@ -136,7 +136,8 @@
         "_comment": "Override the auto-derived media paths because pkg_proclaim is a package wrapper around com_proclaim, which DOES own /media/. Without this, sync-configs skips media patterns (package wrappers don't usually own a media dir). Paths align with package.json OUTPUT_DIR settings.",
         "mediaPaths": [
             "/media/js/",
-            "/media/css/"
+            "/media/css/",
+            "/media/joomla.asset.json"
         ]
     },
     "vendors": [
@@ -180,6 +181,10 @@
         "images": {
             "from": "build/media_source/images",
             "to": "media/images"
+        },
+        "manifest": {
+            "from": "build/media_source/joomla.asset.json",
+            "to": "media/joomla.asset.json"
         },
         "vendorMediaSource": {
             "from": "build/media_source/vendor",

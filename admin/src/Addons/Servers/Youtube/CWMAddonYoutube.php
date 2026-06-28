@@ -463,6 +463,48 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * YouTube supports the playlist system (channel playlist import + sync).
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylists(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Platform-neutral contract: list the channel's playlists.
+     *
+     * @param   Input  $input  Request input.
+     *
+     * @return  array
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylists(Input $input): array
+    {
+        return $this->fetchChannelPlaylists($input);
+    }
+
+    /**
+     * Platform-neutral contract: list a playlist's videos.
+     *
+     * @param   Input  $input  Request input.
+     *
+     * @return  array
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylistItems(Input $input): array
+    {
+        return $this->fetchPlaylistVideos($input);
+    }
+
+    /**
      * Fetch video statistics from YouTube Data API for media linked to this server.
      * Batches up to 50 video IDs per API call. When $batchLimit > 0, only the
      * least-recently-synced videos are processed (never-synced first).
@@ -656,6 +698,8 @@ class CWMAddonYoutube extends CWMAddon
             'searchChannelVideos',
             'fetchChannelPlaylists',
             'fetchPlaylistVideos',
+            'fetchRemotePlaylists',
+            'fetchRemotePlaylistItems',
             'fetchLiveVideos',
             'getVideoStatus',
             'disconnectOAuth',
@@ -948,7 +992,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->snippet->resourceId->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1055,7 +1099,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->id->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1143,7 +1187,7 @@ class CWMAddonYoutube extends CWMAddon
                 $playlists[] = [
                     'playlistId' => $item->id,
                     'title'      => $item->snippet->title,
-                    'thumbnail'  => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'  => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                 ];
             }
 
@@ -1236,7 +1280,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->snippet->resourceId->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
             }
@@ -1335,7 +1379,7 @@ class CWMAddonYoutube extends CWMAddon
                     'videoId'     => $item->id->videoId,
                     'title'       => $item->snippet->title,
                     'description' => $item->snippet->description,
-                    'thumbnail'   => $item->snippet->thumbnails->medium->url ?? $item->snippet->thumbnails->default->url,
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                     'liveBadge'   => $eventType === 'live' ? 'LIVE' : ($eventType === 'upcoming' ? 'UPCOMING' : ''),
                 ];

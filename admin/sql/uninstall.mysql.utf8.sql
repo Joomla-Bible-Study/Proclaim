@@ -20,6 +20,8 @@ DROP TABLE IF EXISTS `#__bsms_admin`;
 DROP TABLE IF EXISTS `#__bsms_studytopics`;
 DROP TABLE IF EXISTS `#__bsms_version`;
 DROP TABLE IF EXISTS `#__bsms_locations`;
+DROP TABLE IF EXISTS `#__bsms_playlist_items`;
+DROP TABLE IF EXISTS `#__bsms_playlists`;
 DROP TABLE IF EXISTS `#__bsms_timeset`;
 DROP TABLE IF EXISTS `#__bsms_install`;
 DROP TABLE IF EXISTS `#__bsms_search`;

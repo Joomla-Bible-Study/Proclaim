@@ -26,6 +26,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Http\HttpFactory;
 use Joomla\Http\Response;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -634,6 +635,108 @@ abstract class CWMAddon
                 return false;
             }
         }));
+    }
+
+    /**
+     * Whether this addon supports the playlist system (import/sync of remote
+     * playlists, e.g. YouTube). Override in a child class and return true to
+     * make the platform's servers available to the playlist features.
+     *
+     * This is the single source of truth the playlist system consults so the
+     * feature can expand to other platforms without hardcoding "youtube".
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsPlaylists(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Get all published servers whose addon supports the playlist system.
+     *
+     * Used by the playlist server picker, the import action and the scheduled
+     * sync task so none of them hardcode which platforms can host playlists.
+     *
+     * @return  array<int, array{id: mixed, server_name: mixed, type: mixed}>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getPlaylistCapableServers(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['id', 'server_name', 'type']))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('server_name') . ' ASC');
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
+
+        return array_values(array_filter($servers, function ($srv) {
+            try {
+                return static::getInstance($srv['type'])->supportsPlaylists();
+            } catch (\RuntimeException) {
+                return false;
+            }
+        }));
+    }
+
+    /**
+     * List a server's remote playlists/collections.
+     *
+     * The platform-neutral contract the playlist engine and the picker call.
+     * Override in a playlist-capable addon. Must return:
+     *   ['success' => bool, 'error' => ?string,
+     *    'playlists' => [ ['playlistId' => string, 'title' => string, 'description' => string, 'thumbnail' => string], ... ]]
+     *
+     * @param   Input  $input  Request input (expects server_id).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylists(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'playlists' => []];
+    }
+
+    /**
+     * List the items (videos) inside one remote playlist, paginated.
+     *
+     * Override in a playlist-capable addon. Must return:
+     *   ['success' => bool, 'error' => ?string,
+     *    'videos' => [ ['videoId' => string, 'title' => string], ... ],
+     *    'nextPageToken' => ?string]
+     *
+     * @param   Input  $input  Request input (expects server_id, playlist_id, page_token, max_results).
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function fetchRemotePlaylistItems(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'videos' => [], 'nextPageToken' => null];
+    }
+
+    /**
+     * Extract this platform's stable media ID from a stored URL/value.
+     *
+     * Instance-level so the playlist engine never names a platform. Defaults to
+     * the addon's static extractMediaId() — which YouTube/Vimeo/Wistia already
+     * implement — so playlist reconciliation generalizes for free.
+     *
+     * @param   string  $text  A media URL or bare ID.
+     *
+     * @return  string|null  The platform media ID, or null.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function extractRemoteMediaId(string $text): ?string
+    {
+        return static::extractMediaId($text);
     }
 
     /**

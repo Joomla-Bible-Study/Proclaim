@@ -43,6 +43,7 @@ com_proclaim/media/css/site/
 /media/images/
 /media/vendor/
 /media/fancybox/
+/media/joomla.asset.json
 
 # Local configuration
 /build.properties
