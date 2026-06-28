@@ -779,6 +779,29 @@ abstract class CWMAddon
     }
 
     /**
+     * Add a video to a remote playlist (membership write-back).
+     *
+     * Called by the sync engine to ensure a video Proclaim considers a member of
+     * a playlist (e.g. via the playlist's linked series) is actually in that
+     * playlist on the platform. Override in a write-back-capable addon. Must
+     * return ['success' => bool, 'error' => ?string]. The engine only calls this
+     * for videos not already recorded as members, but a duplicate insert should
+     * still fail gracefully.
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The platform playlist ID.
+     * @param   string  $remoteVideoId     The platform video ID to add.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+    }
+
+    /**
      * Detect metadata for a file.
      *
      * @param   Registry    $params      Media params (modified in place)

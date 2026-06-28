@@ -160,19 +160,21 @@ class CwmplaylistsController extends AdminController
         }
 
         if ($dryRun) {
+            $would = array_merge($stats['titlesWouldPush'], $stats['membershipsWouldPush']);
+
             $this->setMessage(
-                Text::sprintf('JBS_PLAYLIST_PUSH_DRYRUN_RESULT', \count($stats['titlesWouldPush'])),
+                Text::sprintf('JBS_PLAYLIST_PUSH_DRYRUN_RESULT', \count($would)),
                 'info'
             );
 
-            foreach ($stats['titlesWouldPush'] as $would) {
-                $this->app->enqueueMessage($would, 'info');
+            foreach ($would as $line) {
+                $this->app->enqueueMessage($line, 'info');
             }
         } else {
             $clean = $stats['pushErrors'] === [];
 
             $this->setMessage(
-                Text::sprintf('JBS_PLAYLIST_PUSH_RESULT', $stats['titlesPushed']),
+                Text::sprintf('JBS_PLAYLIST_PUSH_RESULT', $stats['titlesPushed'], $stats['membershipsPushed']),
                 $clean ? 'message' : 'warning'
             );
         }

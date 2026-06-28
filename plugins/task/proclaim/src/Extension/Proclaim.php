@@ -590,6 +590,17 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                     ));
                 }
 
+                if ($dryRun) {
+                    foreach ($stats['membershipsWouldPush'] as $would) {
+                        $this->logTask('  ~ ' . $would);
+                    }
+                } elseif ($stats['membershipsPushed'] > 0) {
+                    $this->logTask(Text::sprintf(
+                        'PLG_TASK_PROCLAIM_PLAYLISTSYNC_MEMBERS_PUSHED',
+                        $stats['membershipsPushed']
+                    ));
+                }
+
                 foreach ($stats['pushErrors'] as $pushError) {
                     $this->logTask('  - ' . $pushError);
                 }

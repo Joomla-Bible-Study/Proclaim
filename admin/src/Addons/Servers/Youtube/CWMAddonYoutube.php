@@ -31,6 +31,9 @@ use Google\Service\Exception;
 use Google\Service\YouTube;
 use Google\Service\YouTube\Caption;
 use Google\Service\YouTube\CaptionSnippet;
+use Google\Service\YouTube\PlaylistItem;
+use Google\Service\YouTube\PlaylistItemSnippet;
+use Google\Service\YouTube\ResourceId;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -2224,6 +2227,64 @@ class CWMAddonYoutube extends CWMAddon
 
             $youtube->playlists->update('snippet', $playlist);
             CwmyoutubeQuota::recordUsage($serverId, $cost);
+
+            return ['success' => true];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Add a video to a YouTube playlist (membership write-back) via
+     * playlistItems.insert. Requires OAuth (youtube.force-ssl).
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The YouTube playlist ID.
+     * @param   string  $remoteVideoId     The YouTube video ID to add.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
+    {
+        if ($remotePlaylistId === '' || $remoteVideoId === '') {
+            return ['success' => false, 'error' => 'Missing YouTube playlist or video ID'];
+        }
+
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_PLAYLIST_INSERT)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            $resourceId = new ResourceId();
+            $resourceId->setKind('youtube#video');
+            $resourceId->setVideoId($remoteVideoId);
+
+            $snippet = new PlaylistItemSnippet();
+            $snippet->setPlaylistId($remotePlaylistId);
+            $snippet->setResourceId($resourceId);
+
+            $item = new PlaylistItem();
+            $item->setSnippet($snippet);
+
+            $youtube->playlistItems->insert('snippet', $item);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLIST_INSERT);
 
             return ['success' => true];
         } catch (Exception $e) {
