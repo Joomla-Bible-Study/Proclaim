@@ -62,18 +62,44 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             $this->markTestSkipped('Database not available for integration tests');
         }
 
-        // pushMemberships() stamps junction rows via Factory::getDate(), which
-        // reads Factory::$language->getTag(). In the console-app test harness
-        // that static language is an untagged instance, so getTag() is null and
-        // the date path emits PHP warnings that trip beStrictAboutOutputDuringTests.
-        // Prime the static with the application's configured (tagged) language.
-        Factory::$language = Factory::getApplication()->getLanguage();
+        $this->silenceDateLanguageWarnings();
 
         $this->db = Factory::getContainer()->get(DatabaseDriver::class);
         $this->db->transactionStart();
 
         $this->serverId = $this->insertServer();
         $this->seriesId = $this->insertSeries();
+    }
+
+    /**
+     * Stop Factory::getDate() from emitting PHP warnings in the test harness.
+     *
+     * pushMemberships() stamps junction rows via Factory::getDate(), which reads
+     * Factory::$language->getTag() — i.e. the language's metadata['tag']. The CI
+     * Joomla root carries no langmetadata files, so every Language instance here
+     * has metadata = null; getTag() then accesses an offset on null and the date
+     * path prints warnings that trip beStrictAboutOutputDuringTests. There is no
+     * public tag setter, so force a tag onto the metadata via reflection and make
+     * that language the one Factory::getDate() reads.
+     *
+     * @return  void
+     */
+    private function silenceDateLanguageWarnings(): void
+    {
+        $lang = Factory::getApplication()->getLanguage();
+
+        try {
+            $prop = new \ReflectionProperty($lang, 'metadata');
+            $meta = $prop->getValue($lang);
+
+            if (!\is_array($meta) || ($meta['tag'] ?? null) === null) {
+                $prop->setValue($lang, array_merge(\is_array($meta) ? $meta : [], ['tag' => 'en-GB']));
+            }
+        } catch (\ReflectionException) {
+            // Property absent on this Joomla version — leave the language as-is.
+        }
+
+        Factory::$language = $lang;
     }
 
     /**
