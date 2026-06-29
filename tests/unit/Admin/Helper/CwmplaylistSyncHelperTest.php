@@ -142,4 +142,69 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
     {
         $this->assertSame('conflict', CwmplaylistSyncHelper::titlePushDecision('Local', 'Remote', true, false));
     }
+
+    /**
+     * membershipsToPush returns only videos that resolve to an ID and are not
+     * already members, deduped, carrying mediafile id + title.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testMembershipsToPushPlansOnlyMissingVideos(): void
+    {
+        $rows = [
+            ['id' => 10, 'params' => json_encode(['filename' => 'https://youtu.be/cXhKlo2nxPs']), 'title' => 'Sermon A'],
+            ['id' => 11, 'params' => json_encode(['filename' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ']), 'title' => 'Sermon B'],
+            ['id' => 12, 'params' => json_encode(['filename' => 'https://www.youtube.com/embed/AbCdEfGhIjK']), 'title' => 'Sermon C'],
+        ];
+
+        // dQw4w9WgXcQ is already a member, so only A and C should be planned.
+        $plan = CwmplaylistSyncHelper::membershipsToPush($rows, [CWMAddonYoutube::class, 'extractMediaId'], ['dQw4w9WgXcQ']);
+
+        $this->assertCount(2, $plan);
+        $this->assertSame(['mediafileId' => 10, 'videoId' => 'cXhKlo2nxPs', 'title' => 'Sermon A'], $plan[0]);
+        $this->assertSame(['mediafileId' => 12, 'videoId' => 'AbCdEfGhIjK', 'title' => 'Sermon C'], $plan[1]);
+    }
+
+    /**
+     * membershipsToPush skips junk rows and dedups repeats within the candidate set.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testMembershipsToPushSkipsJunkAndDedups(): void
+    {
+        $rows = [
+            ['id' => 1, 'params' => ''],
+            ['id' => 2, 'params' => 'not-json'],
+            ['id' => 3, 'params' => json_encode(['link_type' => '0'])],
+            ['id' => 4, 'params' => json_encode(['filename' => 'https://example.com/audio.mp3'])],
+            ['id' => 5, 'params' => json_encode(['filename' => 'https://youtu.be/cXhKlo2nxPs']), 'title' => 'First'],
+            ['id' => 6, 'params' => json_encode(['filename' => 'https://youtu.be/cXhKlo2nxPs']), 'title' => 'Dup'],
+        ];
+
+        $plan = CwmplaylistSyncHelper::membershipsToPush($rows, [CWMAddonYoutube::class, 'extractMediaId'], []);
+
+        $this->assertCount(1, $plan);
+        $this->assertSame(5, $plan[0]['mediafileId']);
+        $this->assertSame('cXhKlo2nxPs', $plan[0]['videoId']);
+    }
+
+    /**
+     * Everything already a member yields an empty plan.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testMembershipsToPushEmptyWhenAllPresent(): void
+    {
+        $rows = [
+            ['id' => 5, 'params' => json_encode(['filename' => 'https://youtu.be/cXhKlo2nxPs'])],
+        ];
+
+        $this->assertSame([], CwmplaylistSyncHelper::membershipsToPush($rows, [CWMAddonYoutube::class, 'extractMediaId'], ['cXhKlo2nxPs']));
+    }
 }

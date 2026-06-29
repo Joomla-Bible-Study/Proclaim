@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Table\CwmplaylistTable;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Input\Input;
 
 /**
@@ -60,23 +61,24 @@ final class CwmplaylistSyncHelper
      * creates a channel's playlists for the first time. The interactive toolbar
      * action passes true (the deliberate initial import).
      *
-     * When $pushTitles is true, a playlist whose local title is the authoritative
-     * one (locally edited and diverged from the remote) and which is opted in to
-     * write-back (writeback_enabled = 1) has its local title pushed back to the
-     * remote platform — completing the conflict gate instead of only logging it.
-     * $dryRun reports what would be pushed without calling the remote write API.
+     * When $pushChanges is true, write-back runs for playlists opted in
+     * (writeback_enabled = 1): a locally-authoritative title (edited and diverged)
+     * is pushed back to the remote — completing the conflict gate instead of only
+     * logging it — and videos Proclaim considers members (via the playlist's
+     * linked series) are added to the remote playlist if missing. $dryRun reports
+     * what would be pushed without calling the remote write API.
      *
      * @param   integer  $serverId     Server ID to import, or 0 for all YouTube servers.
      * @param   boolean  $discoverNew  Whether to create playlists not seen locally yet.
-     * @param   boolean  $pushTitles   Whether to push locally-authoritative titles back to the remote.
-     * @param   boolean  $dryRun       Report would-push titles without writing to the remote.
+     * @param   boolean  $pushChanges  Whether to push locally-authoritative titles + memberships to the remote.
+     * @param   boolean  $dryRun       Report would-push changes without writing to the remote.
      *
-     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
+     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function import(int $serverId = 0, bool $discoverNew = true, bool $pushTitles = false, bool $dryRun = false): array
+    public static function import(int $serverId = 0, bool $discoverNew = true, bool $pushChanges = false, bool $dryRun = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -93,17 +95,19 @@ final class CwmplaylistSyncHelper
         $serverIds = $serverId > 0 ? [$serverId] : array_keys($typeById);
 
         $stats = [
-            'servers'          => 0,
-            'playlistsCreated' => 0,
-            'playlistsUpdated' => 0,
-            'playlistsSkipped' => 0,
-            'itemsMatched'     => 0,
-            'itemsUnmatched'   => 0,
-            'titlesPushed'     => 0,
-            'titlesWouldPush'  => [],
-            'pushErrors'       => [],
-            'conflicts'        => [],
-            'errors'           => [],
+            'servers'              => 0,
+            'playlistsCreated'     => 0,
+            'playlistsUpdated'     => 0,
+            'playlistsSkipped'     => 0,
+            'itemsMatched'         => 0,
+            'itemsUnmatched'       => 0,
+            'titlesPushed'         => 0,
+            'titlesWouldPush'      => [],
+            'membershipsPushed'    => 0,
+            'membershipsWouldPush' => [],
+            'pushErrors'           => [],
+            'conflicts'            => [],
+            'errors'               => [],
         ];
 
         if ($serverIds === []) {
@@ -128,7 +132,7 @@ final class CwmplaylistSyncHelper
             $stats['servers']++;
 
             $addon    = CWMAddon::getInstance($type);
-            $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew, $pushTitles, $dryRun);
+            $imported = self::importChannelPlaylists($db, $addon, $sid, $discoverNew, $pushChanges, $dryRun);
 
             if ($imported['error'] !== null) {
                 $stats['errors'][] = \sprintf('Server %d: %s', $sid, $imported['error']);
@@ -155,6 +159,17 @@ final class CwmplaylistSyncHelper
 
                 $stats['itemsMatched'] += $reconciled['matched'];
                 $stats['itemsUnmatched'] += $reconciled['unmatched'];
+
+                // Membership write-back (phase 6.2): after the junction reflects
+                // YouTube, ensure videos Proclaim considers members (via the
+                // playlist's linked series) are actually in the playlist.
+                if ($pushChanges) {
+                    $membership = self::pushMemberships($db, $addon, $pid, $dryRun);
+
+                    $stats['membershipsPushed'] += $membership['pushed'];
+                    $stats['membershipsWouldPush']  = array_merge($stats['membershipsWouldPush'], $membership['wouldPush']);
+                    $stats['pushErrors']            = array_merge($stats['pushErrors'], $membership['errors']);
+                }
             }
         }
 
@@ -170,7 +185,7 @@ final class CwmplaylistSyncHelper
      * existing playlist only when the local row was NOT edited by a human since
      * the last sync. When the local row diverged AND was locally edited, the local
      * value is authoritative — it is either pushed back to the remote (when
-     * $pushTitles and the playlist's writeback_enabled are both on, phase 6) or,
+     * $pushChanges and the playlist's writeback_enabled are both on, phase 6) or,
      * absent write-back, kept and reported as a conflict. Playlists opted out of
      * sync (sync_enabled = 0) are skipped entirely. last_sync is bumped only when
      * the row ends in sync with the remote, so an unresolved local edit stays
@@ -180,7 +195,7 @@ final class CwmplaylistSyncHelper
      * @param   CWMAddon           $addon        Playlist-capable addon instance.
      * @param   integer            $serverId     Server ID to import from.
      * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
-     * @param   boolean            $pushTitles   Whether to push locally-authoritative titles to the remote.
+     * @param   boolean            $pushChanges   Whether to push locally-authoritative titles to the remote.
      * @param   boolean            $dryRun       Report would-push titles without writing to the remote.
      *
      * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
@@ -188,7 +203,7 @@ final class CwmplaylistSyncHelper
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true, bool $pushTitles = false, bool $dryRun = false): array
+    public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true, bool $pushChanges = false, bool $dryRun = false): array
     {
         $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'titlesPushed' => 0, 'titlesWouldPush' => [], 'pushErrors' => [], 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
@@ -260,7 +275,7 @@ final class CwmplaylistSyncHelper
                 $markSynced = true;
 
                 if ($newTitle !== (string) $table->title) {
-                    $writebackOn = $pushTitles
+                    $writebackOn = $pushChanges
                         && (int) $table->writeback_enabled === 1
                         && $addon->supportsPlaylistWriteback();
 
@@ -477,6 +492,127 @@ final class CwmplaylistSyncHelper
     }
 
     /**
+     * Membership write-back (phase 6.2): ensure videos Proclaim considers members
+     * of a playlist are actually in the playlist on the remote platform.
+     *
+     * Scope (this slice): membership is derived from the playlist's linked series
+     * — every published media file on the playlist's server whose study belongs to
+     * that series should be in the playlist. Only playlists opted in to write-back
+     * (writeback_enabled = 1) with a linked series are processed. Videos already
+     * recorded as members (junction row exists) are skipped, so repeat runs are
+     * cheap. Each push is quota-checked by the addon; on a quota/auth failure the
+     * run stops early and reports it. Call reconcile first so the junction is fresh.
+     *
+     * @param   DatabaseInterface  $db          Database driver.
+     * @param   CWMAddon           $addon       Playlist-capable addon instance.
+     * @param   integer            $playlistId  Local playlist row ID.
+     * @param   boolean            $dryRun      Report would-push without writing to the remote.
+     *
+     * @return  array{pushed:int, wouldPush:string[], errors:string[]}
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function pushMemberships(DatabaseInterface $db, CWMAddon $addon, int $playlistId, bool $dryRun = false): array
+    {
+        $out = ['pushed' => 0, 'wouldPush' => [], 'errors' => []];
+
+        $pl = $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName(['remote_playlist_id', 'server_id', 'series_id', 'writeback_enabled', 'title']))
+                ->from($db->quoteName('#__bsms_playlists'))
+                ->where($db->quoteName('id') . ' = :id')
+                ->bind(':id', $playlistId, ParameterType::INTEGER)
+        )->loadObject();
+
+        // Only opted-in, series-linked playlists drive membership in this slice.
+        if (!$pl || (int) $pl->writeback_enabled !== 1 || empty($pl->series_id)) {
+            return $out;
+        }
+
+        $serverId = (int) $pl->server_id;
+        $seriesId = (int) $pl->series_id;
+
+        // Candidate members: published media on this server whose study is in the
+        // playlist's linked series.
+        $rows = $db->setQuery(
+            $db->getQuery(true)
+                ->select([
+                    $db->quoteName('mf.id', 'id'),
+                    $db->quoteName('mf.params', 'params'),
+                    $db->quoteName('st.studytitle', 'title'),
+                ])
+                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_studies', 'st')
+                    . ' ON ' . $db->quoteName('st.id') . ' = ' . $db->quoteName('mf.study_id')
+                )
+                ->where($db->quoteName('st.series_id') . ' = :sid')
+                ->where($db->quoteName('mf.server_id') . ' = :srv')
+                ->where($db->quoteName('mf.published') . ' = 1')
+                ->bind(':sid', $seriesId, ParameterType::INTEGER)
+                ->bind(':srv', $serverId, ParameterType::INTEGER)
+        )->loadAssocList();
+
+        if ($rows === []) {
+            return $out;
+        }
+
+        // Video IDs already recorded as members of this playlist.
+        $existing = $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName('remote_video_id'))
+                ->from($db->quoteName('#__bsms_playlist_items'))
+                ->where($db->quoteName('playlist_id') . ' = :id')
+                ->bind(':id', $playlistId, ParameterType::INTEGER)
+        )->loadColumn() ?: [];
+
+        $toPush = self::membershipsToPush($rows, [$addon, 'extractRemoteMediaId'], $existing);
+
+        if ($toPush === []) {
+            return $out;
+        }
+
+        $remotePlaylistId = (string) $pl->remote_playlist_id;
+        $now              = Factory::getDate()->toSql();
+        $position         = \count($existing);
+
+        foreach ($toPush as $item) {
+            if ($dryRun) {
+                $out['wouldPush'][] = \sprintf(
+                    'Playlist "%s" (#%d): would add video %s%s.',
+                    (string) $pl->title,
+                    $playlistId,
+                    $item['videoId'],
+                    $item['title'] !== '' ? \sprintf(' ("%s")', $item['title']) : ''
+                );
+
+                continue;
+            }
+
+            $res = $addon->addPlaylistMembership($serverId, $remotePlaylistId, $item['videoId']);
+
+            if (!empty($res['success'])) {
+                self::upsertItem($db, $playlistId, $item['videoId'], $item['title'], $item['mediafileId'], $position++, $now);
+                $out['pushed']++;
+
+                continue;
+            }
+
+            $error           = (string) ($res['error'] ?? 'unknown error');
+            $out['errors'][] = \sprintf('Playlist "%s" (#%d): add video %s failed: %s', (string) $pl->title, $playlistId, $item['videoId'], $error);
+
+            // Stop the run early if the platform is out of quota or disconnected —
+            // further inserts would only repeat the same failure.
+            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
+                break;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
      * Link a just-saved media file to the playlists that already contain its video.
      *
      * Called on every media-file save so a YouTube video gets attached to its
@@ -668,6 +804,55 @@ final class CwmplaylistSyncHelper
         }
 
         return $map;
+    }
+
+    /**
+     * Pure planner: from candidate media-file rows, decide which videos need to
+     * be pushed into a playlist (i.e. resolve to a platform video ID and are not
+     * already members). Dependency-free so the membership planner is unit-testable.
+     *
+     * @param   array<int,array{id:mixed,params:mixed,title?:mixed}>  $rows             Candidate media rows.
+     * @param   callable                                             $extractor         fn(string $url): ?string.
+     * @param   string[]                                             $existingVideoIds  Video IDs already in the playlist.
+     *
+     * @return  array<int,array{mediafileId:int,videoId:string,title:string}>  Videos to push (deduped).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function membershipsToPush(array $rows, callable $extractor, array $existingVideoIds): array
+    {
+        $existing = array_flip($existingVideoIds);
+        $seen     = [];
+        $out      = [];
+
+        foreach ($rows as $row) {
+            $params = $row['params'] ?? '';
+
+            if (!\is_string($params) || $params === '') {
+                continue;
+            }
+
+            $decoded = json_decode($params, true);
+
+            if (!\is_array($decoded) || empty($decoded['filename'])) {
+                continue;
+            }
+
+            $videoId = $extractor((string) $decoded['filename']);
+
+            if ($videoId === null || isset($existing[$videoId]) || isset($seen[$videoId])) {
+                continue;
+            }
+
+            $seen[$videoId] = true;
+            $out[]          = [
+                'mediafileId' => (int) $row['id'],
+                'videoId'     => $videoId,
+                'title'       => (string) ($row['title'] ?? ''),
+            ];
+        }
+
+        return $out;
     }
 
     /**
