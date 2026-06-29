@@ -62,6 +62,13 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             $this->markTestSkipped('Database not available for integration tests');
         }
 
+        // pushMemberships() stamps junction rows via Factory::getDate(), which
+        // reads Factory::$language->getTag(). In the console-app test harness
+        // that static language is an untagged instance, so getTag() is null and
+        // the date path emits PHP warnings that trip beStrictAboutOutputDuringTests.
+        // Prime the static with the application's configured (tagged) language.
+        Factory::$language = Factory::getApplication()->getLanguage();
+
         $this->db = Factory::getContainer()->get(DatabaseDriver::class);
         $this->db->transactionStart();
 
