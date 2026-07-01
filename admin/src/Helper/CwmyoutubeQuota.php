@@ -54,6 +54,7 @@ class CwmyoutubeQuota
     public const COST_VIDEO_UPDATE      = 50;
     public const COST_PLAYLIST_UPDATE   = 50;
     public const COST_PLAYLIST_INSERT   = 50;
+    public const COST_PLAYLIST_DELETE   = 50;
     public const COST_CAPTIONS_LIST     = 50;
     public const COST_CAPTIONS_DOWNLOAD = 200;
 

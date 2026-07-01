@@ -279,12 +279,16 @@ class CwmmediafileModel extends AdminModel
 
             if (parent::save($data)) {
                 // Reconcile manual playlist assignments to the junction now the row
-                // has an ID. Local-only; the video reaches the platform via the
-                // write-back push path, not this save.
+                // has an ID. Local-only; the video reaches (or leaves) the platform
+                // via the write-back push path, not this save. When the site opts in
+                // to platform-side removal, de-selections are queued for removal.
+                $deleteSync = (int) Cwmparams::getAdmin()->params->get('playlist_delete_sync', 0) === 1;
+
                 CwmplaylistSyncHelper::setManualPlaylistAssignments(
                     (int) $this->getState($this->getName() . '.id'),
                     $desiredPlaylists,
-                    $params->toString()
+                    $params->toString(),
+                    $deleteSync
                 );
 
                 return true;

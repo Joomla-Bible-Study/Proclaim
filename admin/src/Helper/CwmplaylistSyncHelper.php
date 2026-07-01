@@ -73,7 +73,7 @@ final class CwmplaylistSyncHelper
      * @param   boolean  $pushChanges  Whether to push locally-authoritative titles, descriptions + memberships to the remote.
      * @param   boolean  $dryRun       Report would-push changes without writing to the remote.
      *
-     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
+     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], membershipsRemoved:int, membershipsWouldRemove:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
@@ -95,21 +95,23 @@ final class CwmplaylistSyncHelper
         $serverIds = $serverId > 0 ? [$serverId] : array_keys($typeById);
 
         $stats = [
-            'servers'               => 0,
-            'playlistsCreated'      => 0,
-            'playlistsUpdated'      => 0,
-            'playlistsSkipped'      => 0,
-            'itemsMatched'          => 0,
-            'itemsUnmatched'        => 0,
-            'titlesPushed'          => 0,
-            'titlesWouldPush'       => [],
-            'descriptionsPushed'    => 0,
-            'descriptionsWouldPush' => [],
-            'membershipsPushed'     => 0,
-            'membershipsWouldPush'  => [],
-            'pushErrors'            => [],
-            'conflicts'             => [],
-            'errors'                => [],
+            'servers'                => 0,
+            'playlistsCreated'       => 0,
+            'playlistsUpdated'       => 0,
+            'playlistsSkipped'       => 0,
+            'itemsMatched'           => 0,
+            'itemsUnmatched'         => 0,
+            'titlesPushed'           => 0,
+            'titlesWouldPush'        => [],
+            'descriptionsPushed'     => 0,
+            'descriptionsWouldPush'  => [],
+            'membershipsPushed'      => 0,
+            'membershipsWouldPush'   => [],
+            'membershipsRemoved'     => 0,
+            'membershipsWouldRemove' => [],
+            'pushErrors'             => [],
+            'conflicts'              => [],
+            'errors'                 => [],
         ];
 
         if ($serverIds === []) {
@@ -172,7 +174,9 @@ final class CwmplaylistSyncHelper
 
                     $stats['membershipsPushed'] += $membership['pushed'];
                     $stats['membershipsWouldPush']  = array_merge($stats['membershipsWouldPush'], $membership['wouldPush']);
-                    $stats['pushErrors']            = array_merge($stats['pushErrors'], $membership['errors']);
+                    $stats['membershipsRemoved'] += $membership['removed'];
+                    $stats['membershipsWouldRemove'] = array_merge($stats['membershipsWouldRemove'], $membership['wouldRemove']);
+                    $stats['pushErrors']             = array_merge($stats['pushErrors'], $membership['errors']);
                 }
             }
         }
@@ -587,7 +591,10 @@ final class CwmplaylistSyncHelper
      *       series is linked). Videos already recorded as members are skipped.
      *   (B) Manual (phase 6.2b) — junction rows flagged source='manual' by a user's
      *       explicit media-file playlist assignment; pushed then flipped to 'remote'.
-     * Each push is quota-checked by the addon; on a quota/auth failure the run stops
+     *   (C) Removals (phase 6.2b, deleteSync) — junction rows flagged
+     *       source='remove_pending' by a de-selection; removed from the platform then
+     *       dropped from the junction.
+     * Each call is quota-checked by the addon; on a quota/auth failure the run stops
      * early and reports it. Call reconcile first so the junction is fresh.
      *
      * @param   DatabaseInterface  $db          Database driver.
@@ -595,14 +602,14 @@ final class CwmplaylistSyncHelper
      * @param   integer            $playlistId  Local playlist row ID.
      * @param   boolean            $dryRun      Report would-push without writing to the remote.
      *
-     * @return  array{pushed:int, wouldPush:string[], errors:string[]}
+     * @return  array{pushed:int, wouldPush:string[], removed:int, wouldRemove:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
     public static function pushMemberships(DatabaseInterface $db, CWMAddon $addon, int $playlistId, bool $dryRun = false): array
     {
-        $out = ['pushed' => 0, 'wouldPush' => [], 'errors' => []];
+        $out = ['pushed' => 0, 'wouldPush' => [], 'removed' => 0, 'wouldRemove' => [], 'errors' => []];
 
         $pl = $db->setQuery(
             $db->getQuery(true)
@@ -756,7 +763,89 @@ final class CwmplaylistSyncHelper
             }
         }
 
+        // ── (C) Queued removals (phase 6.2b, deleteSync) ───────────────────
+        // Rows flagged source='remove_pending' are memberships de-selected on a
+        // media file when platform-side removal is enabled. Remove each from the
+        // platform then drop the junction row.
+        $removePending = $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName(['id', 'remote_video_id', 'title']))
+                ->from($db->quoteName('#__bsms_playlist_items'))
+                ->where($db->quoteName('playlist_id') . ' = :id')
+                ->where($db->quoteName('source') . ' = ' . $db->quote('remove_pending'))
+                ->bind(':id', $playlistId, ParameterType::INTEGER)
+        )->loadAssocList();
+
+        foreach ($removePending as $row) {
+            if ($stopped) {
+                break;
+            }
+
+            $videoId = (string) ($row['remote_video_id'] ?? '');
+            $itemId  = (int) ($row['id'] ?? 0);
+
+            // No resolvable video — just drop the stale row locally.
+            if ($videoId === '') {
+                self::deleteItemById($db, $itemId);
+
+                continue;
+            }
+
+            if ($dryRun) {
+                $out['wouldRemove'][] = \sprintf(
+                    'Playlist "%s" (#%d): would remove video %s%s from the platform.',
+                    (string) $pl->title,
+                    $playlistId,
+                    $videoId,
+                    ($row['title'] ?? '') !== '' ? \sprintf(' ("%s")', $row['title']) : ''
+                );
+
+                continue;
+            }
+
+            $res = $addon->removePlaylistMembership($serverId, $remotePlaylistId, $videoId);
+
+            if (!empty($res['success'])) {
+                self::deleteItemById($db, $itemId);
+                $out['removed']++;
+
+                continue;
+            }
+
+            $error           = (string) ($res['error'] ?? 'unknown error');
+            $out['errors'][] = \sprintf('Playlist "%s" (#%d): remove video %s failed: %s', (string) $pl->title, $playlistId, $videoId, $error);
+
+            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
+                $stopped = true;
+            }
+        }
+
         return $out;
+    }
+
+    /**
+     * Delete a single junction row by ID. Used when a queued removal has been
+     * applied on the platform (or is unresolvable) and the local row should go.
+     *
+     * @param   DatabaseInterface  $db      Database driver.
+     * @param   integer            $itemId  Junction row ID.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function deleteItemById(DatabaseInterface $db, int $itemId): void
+    {
+        if ($itemId <= 0) {
+            return;
+        }
+
+        $db->setQuery(
+            $db->getQuery(true)
+                ->delete($db->quoteName('#__bsms_playlist_items'))
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':rid', $itemId, ParameterType::INTEGER)
+        )->execute();
     }
 
     /**
@@ -886,6 +975,9 @@ final class CwmplaylistSyncHelper
                     ->select($db->quoteName('playlist_id'))
                     ->from($db->quoteName('#__bsms_playlist_items'))
                     ->where($db->quoteName('mediafile_id') . ' = :mid')
+                    // A row queued for removal (remove_pending) is no longer a
+                    // membership the user has — hide it from the field value.
+                    ->where($db->quoteName('source') . ' <> ' . $db->quote('remove_pending'))
                     ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
             )->loadColumn() ?: [];
 
@@ -972,22 +1064,25 @@ final class CwmplaylistSyncHelper
      * Reconcile a media file's manual playlist assignments to the user's selection.
      *
      * Called on media-file save. LOCAL-ONLY (no platform API): it upserts a
-     * junction row (source='manual') for every newly-selected playlist and removes
-     * the manual rows for de-selected playlists. Rows imported/confirmed on the
-     * platform (source='remote') are never deleted here — removing a video from the
-     * remote playlist is a separate, opt-in slice. Additions need a resolvable
-     * remote video ID (the junction key); when the media has none, only removals
-     * apply. Never throws — a media save must not fail on playlist bookkeeping.
+     * junction row (source='manual') for every newly-selected playlist and reconciles
+     * de-selected playlists. A never-pushed manual row is simply deleted. A row that
+     * IS on the platform (source='remote') is deleted locally when $deleteSync is off
+     * (the platform stays authoritative), or queued as 'remove_pending' when
+     * $deleteSync is on so the write-back push removes it from the platform too.
+     * Additions need a resolvable remote video ID (the junction key); when the media
+     * has none, only removals apply. Never throws — a media save must not fail on
+     * playlist bookkeeping.
      *
      * @param   integer  $mediafileId         The saved media file's ID.
      * @param   int[]    $desiredPlaylistIds  Playlist IDs the user selected.
      * @param   string   $params              The media file's params JSON (holds filename).
+     * @param   boolean  $deleteSync          Queue de-selected remote memberships for platform removal.
      *
      * @return  void
      *
      * @since   __DEPLOY_VERSION__
      */
-    public static function setManualPlaylistAssignments(int $mediafileId, array $desiredPlaylistIds, string $params): void
+    public static function setManualPlaylistAssignments(int $mediafileId, array $desiredPlaylistIds, string $params, bool $deleteSync = false): void
     {
         if ($mediafileId <= 0) {
             return;
@@ -1001,8 +1096,9 @@ final class CwmplaylistSyncHelper
                 $desiredPlaylistIds
             );
 
-            // Removals: only ever local, and only manual rows.
             if ($plan['remove'] !== []) {
+                // A pending manual row (never pushed) is just dropped — nothing on
+                // the platform to remove.
                 $db->setQuery(
                     $db->getQuery(true)
                         ->delete($db->quoteName('#__bsms_playlist_items'))
@@ -1011,6 +1107,20 @@ final class CwmplaylistSyncHelper
                         ->whereIn($db->quoteName('playlist_id'), $plan['remove'], \Joomla\Database\ParameterType::INTEGER)
                         ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
                 )->execute();
+
+                if ($deleteSync) {
+                    // Queue de-selected on-platform memberships for removal; the
+                    // write-back push calls the platform then drops the row.
+                    $db->setQuery(
+                        $db->getQuery(true)
+                            ->update($db->quoteName('#__bsms_playlist_items'))
+                            ->set($db->quoteName('source') . ' = ' . $db->quote('remove_pending'))
+                            ->where($db->quoteName('mediafile_id') . ' = :mid')
+                            ->where($db->quoteName('source') . ' = ' . $db->quote('remote'))
+                            ->whereIn($db->quoteName('playlist_id'), $plan['remove'], \Joomla\Database\ParameterType::INTEGER)
+                            ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                    )->execute();
+                }
             }
 
             if ($plan['add'] === []) {
@@ -1066,15 +1176,22 @@ final class CwmplaylistSyncHelper
         )->loadResult() ?? 0);
 
         if ($existingId > 0) {
-            // Already a member (imported or manual): just ensure it links here.
-            $db->setQuery(
-                $db->getQuery(true)
-                    ->update($db->quoteName('#__bsms_playlist_items'))
-                    ->set($db->quoteName('mediafile_id') . ' = :mid')
-                    ->where($db->quoteName('id') . ' = :rid')
-                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
-                    ->bind(':rid', $existingId, \Joomla\Database\ParameterType::INTEGER)
-            )->execute();
+            // Already a member (imported or manual): ensure it links here. If it was
+            // queued for removal, re-selecting it cancels that — it is confirmed on
+            // the platform, so restore it to 'remote'.
+            $query = $db->getQuery(true)
+                ->update($db->quoteName('#__bsms_playlist_items'))
+                ->set($db->quoteName('mediafile_id') . ' = :mid')
+                ->set(
+                    $db->quoteName('source') . ' = CASE WHEN ' . $db->quoteName('source')
+                    . ' = ' . $db->quote('remove_pending') . ' THEN ' . $db->quote('remote')
+                    . ' ELSE ' . $db->quoteName('source') . ' END'
+                )
+                ->where($db->quoteName('id') . ' = :rid')
+                ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                ->bind(':rid', $existingId, \Joomla\Database\ParameterType::INTEGER);
+
+            $db->setQuery($query)->execute();
 
             return;
         }
@@ -1328,9 +1445,9 @@ final class CwmplaylistSyncHelper
         $query = $db->getQuery(true)
             ->delete($db->quoteName('#__bsms_playlist_items'))
             ->where($db->quoteName('playlist_id') . ' = :pid')
-            // Never prune a manual assignment that has not been pushed yet: it is a
-            // pending local membership the remote playlist does not list yet.
-            ->where($db->quoteName('source') . ' <> ' . $db->quote('manual'))
+            // Never prune a local-only pending row: a manual assignment not yet
+            // pushed, or a row queued for removal from the remote playlist.
+            ->where($db->quoteName('source') . ' NOT IN (' . $db->quote('manual') . ', ' . $db->quote('remove_pending') . ')')
             ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER);
 
         if ($keepVideos !== []) {
