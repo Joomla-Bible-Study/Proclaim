@@ -12,7 +12,9 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -35,6 +37,25 @@ class CwmtopicController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_topics';
+
+    /**
+     * Method to run after a successful save — records the action in Joomla's logs.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmtopic.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TOPIC_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TOPIC_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['topic_text'] ?? '', 'topic', $id);
+    }
 
     /**
      * Method override to check if you can edit an existing record.

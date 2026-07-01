@@ -115,6 +115,24 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
             <?php
             endif; ?>
+
+            <?php if (\Joomla\CMS\Component\ComponentHelper::isEnabled('com_actionlogs')) : ?>
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <span class="icon-list-2" aria-hidden="true"></span>
+                            <?php echo Text::_('JBS_CPANEL_ACTIONLOG_TITLE'); ?>
+                        </h3>
+                        <p><?php echo Text::_('JBS_CPANEL_ACTIONLOG_DESC'); ?></p>
+                        <a href="<?php echo Route::_('index.php?option=com_actionlogs&view=actionlogs&filter[extension]=com_proclaim'); ?>"
+                           class="btn btn-primary btn-large">
+                            <?php echo Text::_('JBS_CPANEL_ACTIONLOG_LINK'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         <?php
             if ($simple->mode === 1 && $simple->display === 1) {
                 ?>

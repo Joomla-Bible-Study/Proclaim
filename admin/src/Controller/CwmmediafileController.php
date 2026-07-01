@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use Joomla\CMS\Factory;
@@ -533,6 +534,13 @@ class CwmmediafileController extends FormController
      */
     protected function postSaveHook($model, $validData = []): void
     {
+        $mediaId = (int) $model->getState('cwmmediafile.id');
+        $isNew   = empty($validData['id']);
+        $key     = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MEDIAFILE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MEDIAFILE_UPDATED';
+        $title   = $validData['params']['filename'] ?? ('#' . $mediaId);
+
+        CwmactionlogHelper::log($key, $title, 'mediafile', $mediaId);
+
         $return = $this->input->getCmd('return');
         $task   = $this->input->get('task');
 

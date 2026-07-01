@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -121,7 +122,11 @@ class CwmlocationController extends FormController
     #[\Override]
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
-        $id = (int) $model->getState('cwmlocation.id');
+        $id    = (int) $model->getState('cwmlocation.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_LOCATION_ADDED' : 'COM_PROCLAIM_ACTION_LOG_LOCATION_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['location_text'] ?? '', 'location', $id);
 
         if ($this->handleModalPostSave($id)) {
             return;

@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
@@ -80,7 +81,11 @@ class CwmserieController extends FormController
     #[\Override]
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {
-        $id = (int) $model->getState('cwmserie.id');
+        $id    = (int) $model->getState('cwmserie.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_SERIES_ADDED' : 'COM_PROCLAIM_ACTION_LOG_SERIES_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['series_text'] ?? '', 'serie', $id);
 
         if ($this->handleModalPostSave($id)) {
             return;

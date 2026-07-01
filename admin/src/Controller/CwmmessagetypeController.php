@@ -17,7 +17,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
 
 /**
@@ -37,6 +39,25 @@ class CwmmessagetypeController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_message_type';
+
+    /**
+     * Method to run after a successful save — records the action in Joomla's logs.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmmessagetype.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MESSAGETYPE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MESSAGETYPE_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['message_type'] ?? '', 'messagetype', $id);
+    }
 
     /**
      * Method override to check if you can edit an existing record.
