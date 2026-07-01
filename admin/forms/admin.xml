@@ -187,6 +187,12 @@
                label="JBS_CMN_PODCAST" description="JBS_ADM_FILLIN_MEDIAFILE_PODCAST_DESC">
             <option value="-1">JBS_ADM_NO_PODCAST</option>
         </field>
+        <field name="playlist_delete_sync" type="radio" default="0"
+               label="JBS_ADM_PLAYLIST_DELETE_SYNC" description="JBS_ADM_PLAYLIST_DELETE_SYNC_DESC"
+               class="btn-group btn-group-yesno" layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
         <field name="from" type="list" label="JBS_ADM_CHANGE_PLAYERS">
             <option value="x">JBS_ADM_SELECT_EXISTING_PLAYER</option>
             <option value="0">JBS_CMN_DIRECT_LINK</option>

@@ -823,6 +823,27 @@ abstract class CWMAddon
     }
 
     /**
+     * Remove a video from a remote playlist (membership write-back).
+     *
+     * Called by the sync engine when a media file's playlist assignment is removed
+     * and the site opted in to platform-side removal. Override in a write-back-capable
+     * addon. Must return ['success' => bool, 'error' => ?string]. A video that is
+     * already absent from the playlist should be treated as a success (idempotent).
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The platform playlist ID.
+     * @param   string  $remoteVideoId     The platform video ID to remove.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+    }
+
+    /**
      * Detect metadata for a file.
      *
      * @param   Registry    $params      Media params (modified in place)

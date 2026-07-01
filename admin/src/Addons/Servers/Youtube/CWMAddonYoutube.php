@@ -2364,6 +2364,73 @@ class CWMAddonYoutube extends CWMAddon
         }
     }
 
+    /**
+     * Remove a video from a YouTube playlist (membership write-back) via
+     * playlistItems.delete. Requires OAuth (youtube.force-ssl). The playlistItem ID
+     * is not the video ID, so we first list the playlist item(s) for this video then
+     * delete them. A video already absent is treated as success (idempotent).
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The YouTube playlist ID.
+     * @param   string  $remoteVideoId     The YouTube video ID to remove.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
+    {
+        if ($remotePlaylistId === '' || $remoteVideoId === '') {
+            return ['success' => false, 'error' => 'Missing YouTube playlist or video ID'];
+        }
+
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+        }
+
+        // Quota: playlistItems.list (1) + playlistItems.delete (50).
+        $cost = CwmyoutubeQuota::COST_PLAYLIST_ITEMS + CwmyoutubeQuota::COST_PLAYLIST_DELETE;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            // Find the playlist item(s) for this video in this playlist.
+            $response = $youtube->playlistItems->listPlaylistItems('id', [
+                'playlistId' => $remotePlaylistId,
+                'videoId'    => $remoteVideoId,
+                'maxResults' => 50,
+            ]);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLIST_ITEMS);
+
+            if (empty($response->items)) {
+                // Already absent from the playlist — nothing to do.
+                return ['success' => true];
+            }
+
+            foreach ($response->items as $item) {
+                $youtube->playlistItems->delete($item->id);
+                CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLIST_DELETE);
+            }
+
+            return ['success' => true];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
     // ─── Import Chapters ────────────────────────────────────────────────
 
     /**
