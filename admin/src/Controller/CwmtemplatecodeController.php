@@ -12,9 +12,11 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
@@ -56,6 +58,25 @@ class CwmtemplatecodeController extends FormController
      * @since  7.0.0
      */
     protected $option = 'com_proclaim';
+
+    /**
+     * Method to run after a successful save — records the action in Joomla's logs.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmtemplatecode.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TEMPLATECODE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TEMPLATECODE_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['filename'] ?? '', 'templatecode', $id);
+    }
 
     /**
      * Method override to check if you can edit an existing record.

@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
  * Playlist item controller class
@@ -33,4 +35,23 @@ class CwmplaylistController extends FormController
      * @since  10.3.3
      */
     protected $view_list = 'cwmplaylists';
+
+    /**
+     * Method to run after a successful save — records the action in Joomla's logs.
+     *
+     * @param   BaseDatabaseModel  $model      The model.
+     * @param   array              $validData  The validated data.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
+    {
+        $id    = (int) $model->getState('cwmplaylist.id');
+        $isNew = empty($validData['id']);
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_PLAYLIST_ADDED' : 'COM_PROCLAIM_ACTION_LOG_PLAYLIST_UPDATED';
+
+        CwmactionlogHelper::log($key, $validData['title'] ?? '', 'playlist', $id);
+    }
 }
