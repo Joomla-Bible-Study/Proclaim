@@ -160,7 +160,7 @@ class CwmplaylistsController extends AdminController
         }
 
         if ($dryRun) {
-            $would = array_merge($stats['titlesWouldPush'], $stats['membershipsWouldPush']);
+            $would = array_merge($stats['titlesWouldPush'], $stats['descriptionsWouldPush'], $stats['membershipsWouldPush']);
 
             $this->setMessage(
                 Text::sprintf('JBS_PLAYLIST_PUSH_DRYRUN_RESULT', \count($would)),
@@ -174,7 +174,7 @@ class CwmplaylistsController extends AdminController
             $clean = $stats['pushErrors'] === [];
 
             $this->setMessage(
-                Text::sprintf('JBS_PLAYLIST_PUSH_RESULT', $stats['titlesPushed'], $stats['membershipsPushed']),
+                Text::sprintf('JBS_PLAYLIST_PUSH_RESULT', $stats['titlesPushed'], $stats['descriptionsPushed'], $stats['membershipsPushed']),
                 $clean ? 'message' : 'warning'
             );
         }

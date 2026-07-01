@@ -779,6 +779,27 @@ abstract class CWMAddon
     }
 
     /**
+     * Push a locally-authoritative playlist description to the remote platform.
+     *
+     * Called by the sync engine when Proclaim is the source of truth for a
+     * playlist whose description diverged from the remote and the playlist is
+     * opted in to write-back. Override in a write-back-capable addon. Must
+     * return ['success' => bool, 'error' => ?string].
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The platform playlist ID to update.
+     * @param   string  $description       The new description to set on the platform.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function pushPlaylistDescription(int $serverId, string $remotePlaylistId, string $description): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+    }
+
+    /**
      * Add a video to a remote playlist (membership write-back).
      *
      * Called by the sync engine to ensure a video Proclaim considers a member of
