@@ -1188,9 +1188,10 @@ class CWMAddonYoutube extends CWMAddon
 
             foreach ($response->items as $item) {
                 $playlists[] = [
-                    'playlistId' => $item->id,
-                    'title'      => $item->snippet->title,
-                    'thumbnail'  => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
+                    'playlistId'  => $item->id,
+                    'title'       => $item->snippet->title,
+                    'description' => $item->snippet->description ?? '',
+                    'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                 ];
             }
 
@@ -2224,6 +2225,71 @@ class CWMAddonYoutube extends CWMAddon
 
             $playlist = $response->items[0];
             $playlist->getSnippet()->setTitle($title);
+
+            $youtube->playlists->update('snippet', $playlist);
+            CwmyoutubeQuota::recordUsage($serverId, $cost);
+
+            return ['success' => true];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Push a locally-authoritative playlist description to YouTube.
+     *
+     * Requires OAuth. playlists.update replaces the full snippet, so we fetch the
+     * current snippet first then change the description only — preserving the
+     * remote title — mirroring pushPlaylistTitle().
+     *
+     * @param   int     $serverId          The server record ID.
+     * @param   string  $remotePlaylistId  The YouTube playlist ID.
+     * @param   string  $description       The new description to set.
+     *
+     * @return  array{success: bool, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function pushPlaylistDescription(int $serverId, string $remotePlaylistId, string $description): array
+    {
+        if ($remotePlaylistId === '') {
+            return ['success' => false, 'error' => 'Missing YouTube playlist ID'];
+        }
+
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+        }
+
+        // Quota: playlists.list (1) + playlists.update (50).
+        $cost = CwmyoutubeQuota::COST_PLAYLISTS + CwmyoutubeQuota::COST_PLAYLIST_UPDATE;
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            // Fetch current snippet (update replaces the full snippet).
+            $response = $youtube->playlists->listPlaylists('snippet', ['id' => $remotePlaylistId]);
+
+            if (empty($response->items)) {
+                CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_PLAYLISTS);
+
+                return ['success' => false, 'error' => 'Playlist not found on YouTube'];
+            }
+
+            $playlist = $response->items[0];
+            $playlist->getSnippet()->setDescription($description);
 
             $youtube->playlists->update('snippet', $playlist);
             CwmyoutubeQuota::recordUsage($serverId, $cost);

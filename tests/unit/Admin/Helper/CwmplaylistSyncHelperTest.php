@@ -144,6 +144,55 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
     }
 
     /**
+     * fieldPushDecision is field-agnostic: the same gate drives title and
+     * description write-back. Covers all four outcomes for a description-shaped
+     * value (multi-line text) so phase 6.3 shares the title gate's guarantees.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testFieldPushDecisionCoversAllOutcomes(): void
+    {
+        $local  = "Local desc\nline two";
+        $remote = "Remote desc\nline two";
+
+        // Identical values → nothing to do, regardless of edit/write-back state.
+        $this->assertSame('none', CwmplaylistSyncHelper::fieldPushDecision($local, $local, false, false));
+        $this->assertSame('none', CwmplaylistSyncHelper::fieldPushDecision($local, $local, true, true));
+
+        // Diverged, not locally edited → pull remote in (write-back irrelevant).
+        $this->assertSame('pull', CwmplaylistSyncHelper::fieldPushDecision($local, $remote, false, false));
+        $this->assertSame('pull', CwmplaylistSyncHelper::fieldPushDecision($local, $remote, false, true));
+
+        // Diverged + locally edited → push when write-back on, conflict when off.
+        $this->assertSame('push', CwmplaylistSyncHelper::fieldPushDecision($local, $remote, true, true));
+        $this->assertSame('conflict', CwmplaylistSyncHelper::fieldPushDecision($local, $remote, true, false));
+    }
+
+    /**
+     * titlePushDecision must stay a faithful alias of fieldPushDecision so the
+     * shipped phase-6.1 behaviour is preserved after generalisation.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testTitlePushDecisionDelegatesToFieldPushDecision(): void
+    {
+        foreach ([['A', 'A'], ['A', 'B']] as [$l, $r]) {
+            foreach ([true, false] as $edited) {
+                foreach ([true, false] as $writeback) {
+                    $this->assertSame(
+                        CwmplaylistSyncHelper::fieldPushDecision($l, $r, $edited, $writeback),
+                        CwmplaylistSyncHelper::titlePushDecision($l, $r, $edited, $writeback)
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * membershipsToPush returns only videos that resolve to an ID and are not
      * already members, deduped, carrying mediafile id + title.
      *

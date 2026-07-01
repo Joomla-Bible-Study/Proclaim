@@ -62,18 +62,18 @@ final class CwmplaylistSyncHelper
      * action passes true (the deliberate initial import).
      *
      * When $pushChanges is true, write-back runs for playlists opted in
-     * (writeback_enabled = 1): a locally-authoritative title (edited and diverged)
-     * is pushed back to the remote — completing the conflict gate instead of only
-     * logging it — and videos Proclaim considers members (via the playlist's
-     * linked series) are added to the remote playlist if missing. $dryRun reports
-     * what would be pushed without calling the remote write API.
+     * (writeback_enabled = 1): a locally-authoritative title or description (edited
+     * and diverged) is pushed back to the remote — completing the conflict gate
+     * instead of only logging it — and videos Proclaim considers members (via the
+     * playlist's linked series) are added to the remote playlist if missing.
+     * $dryRun reports what would be pushed without calling the remote write API.
      *
      * @param   integer  $serverId     Server ID to import, or 0 for all YouTube servers.
      * @param   boolean  $discoverNew  Whether to create playlists not seen locally yet.
-     * @param   boolean  $pushChanges  Whether to push locally-authoritative titles + memberships to the remote.
+     * @param   boolean  $pushChanges  Whether to push locally-authoritative titles, descriptions + memberships to the remote.
      * @param   boolean  $dryRun       Report would-push changes without writing to the remote.
      *
-     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
+     * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
@@ -95,19 +95,21 @@ final class CwmplaylistSyncHelper
         $serverIds = $serverId > 0 ? [$serverId] : array_keys($typeById);
 
         $stats = [
-            'servers'              => 0,
-            'playlistsCreated'     => 0,
-            'playlistsUpdated'     => 0,
-            'playlistsSkipped'     => 0,
-            'itemsMatched'         => 0,
-            'itemsUnmatched'       => 0,
-            'titlesPushed'         => 0,
-            'titlesWouldPush'      => [],
-            'membershipsPushed'    => 0,
-            'membershipsWouldPush' => [],
-            'pushErrors'           => [],
-            'conflicts'            => [],
-            'errors'               => [],
+            'servers'               => 0,
+            'playlistsCreated'      => 0,
+            'playlistsUpdated'      => 0,
+            'playlistsSkipped'      => 0,
+            'itemsMatched'          => 0,
+            'itemsUnmatched'        => 0,
+            'titlesPushed'          => 0,
+            'titlesWouldPush'       => [],
+            'descriptionsPushed'    => 0,
+            'descriptionsWouldPush' => [],
+            'membershipsPushed'     => 0,
+            'membershipsWouldPush'  => [],
+            'pushErrors'            => [],
+            'conflicts'             => [],
+            'errors'                => [],
         ];
 
         if ($serverIds === []) {
@@ -145,8 +147,10 @@ final class CwmplaylistSyncHelper
             $stats['playlistsSkipped'] += $imported['skipped'];
             $stats['titlesPushed'] += $imported['titlesPushed'];
             $stats['titlesWouldPush']   = array_merge($stats['titlesWouldPush'], $imported['titlesWouldPush']);
-            $stats['pushErrors']        = array_merge($stats['pushErrors'], $imported['pushErrors']);
-            $stats['conflicts']         = array_merge($stats['conflicts'], $imported['conflicts']);
+            $stats['descriptionsPushed'] += $imported['descriptionsPushed'];
+            $stats['descriptionsWouldPush'] = array_merge($stats['descriptionsWouldPush'], $imported['descriptionsWouldPush']);
+            $stats['pushErrors']            = array_merge($stats['pushErrors'], $imported['pushErrors']);
+            $stats['conflicts']             = array_merge($stats['conflicts'], $imported['conflicts']);
 
             foreach ($imported['playlistIds'] as $pid) {
                 $reconciled = self::reconcilePlaylist($db, $addon, $pid, $videoMap);
@@ -181,31 +185,32 @@ final class CwmplaylistSyncHelper
      *
      * Existing playlists are matched on (remote_playlist_id, server_id).
      *
-     * Conflict gate (see titlePushDecision): the remote title is pulled into an
-     * existing playlist only when the local row was NOT edited by a human since
-     * the last sync. When the local row diverged AND was locally edited, the local
-     * value is authoritative — it is either pushed back to the remote (when
+     * Conflict gate (see fieldPushDecision): a remote title or description is pulled
+     * into an existing playlist only when the local row was NOT edited by a human
+     * since the last sync. When the local row diverged AND was locally edited, the
+     * local value is authoritative — it is either pushed back to the remote (when
      * $pushChanges and the playlist's writeback_enabled are both on, phase 6) or,
-     * absent write-back, kept and reported as a conflict. Playlists opted out of
-     * sync (sync_enabled = 0) are skipped entirely. last_sync is bumped only when
-     * the row ends in sync with the remote, so an unresolved local edit stays
-     * protected across runs.
+     * absent write-back, kept and reported as a conflict. The description gate runs
+     * only when the platform reports a description. Playlists opted out of sync
+     * (sync_enabled = 0) are skipped entirely. last_sync is bumped only when the
+     * row ends in sync with the remote on both fields, so an unresolved local edit
+     * stays protected across runs.
      *
      * @param   DatabaseInterface  $db           Database driver.
      * @param   CWMAddon           $addon        Playlist-capable addon instance.
      * @param   integer            $serverId     Server ID to import from.
      * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
-     * @param   boolean            $pushChanges   Whether to push locally-authoritative titles to the remote.
-     * @param   boolean            $dryRun       Report would-push titles without writing to the remote.
+     * @param   boolean            $pushChanges   Whether to push locally-authoritative titles + descriptions to the remote.
+     * @param   boolean            $dryRun       Report would-push changes without writing to the remote.
      *
-     * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
+     * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
      *
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
     public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true, bool $pushChanges = false, bool $dryRun = false): array
     {
-        $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'titlesPushed' => 0, 'titlesWouldPush' => [], 'pushErrors' => [], 'playlistIds' => [], 'conflicts' => [], 'error' => null];
+        $out = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'titlesPushed' => 0, 'titlesWouldPush' => [], 'descriptionsPushed' => 0, 'descriptionsWouldPush' => [], 'pushErrors' => [], 'playlistIds' => [], 'conflicts' => [], 'error' => null];
 
         $response = $addon->fetchRemotePlaylists(new Input(['server_id' => $serverId]));
 
@@ -271,18 +276,21 @@ final class CwmplaylistSyncHelper
 
                 // Bump last_sync only when the row ends in sync with the remote;
                 // keep it untouched while a local edit remains unresolved so the
-                // edit stays protected across runs.
-                $markSynced = true;
+                // edit stays protected across runs. Title and description share the
+                // same edit signal and write-back gate; either left diverged keeps
+                // the row unsynced.
+                $markSynced    = true;
+                $writebackOn   = $pushChanges
+                    && (int) $table->writeback_enabled === 1
+                    && $addon->supportsPlaylistWriteback();
+                $locallyEdited = self::isLocallyEdited($table);
 
+                // ── Title ──────────────────────────────────────────────────
                 if ($newTitle !== (string) $table->title) {
-                    $writebackOn = $pushChanges
-                        && (int) $table->writeback_enabled === 1
-                        && $addon->supportsPlaylistWriteback();
-
-                    $decision = self::titlePushDecision(
+                    $decision = self::fieldPushDecision(
                         (string) $table->title,
                         $newTitle,
-                        self::isLocallyEdited($table),
+                        $locallyEdited,
                         $writebackOn
                     );
 
@@ -309,7 +317,7 @@ final class CwmplaylistSyncHelper
                                     $out['titlesPushed']++;
                                 } else {
                                     $out['pushErrors'][] = \sprintf(
-                                        'Playlist "%s" (#%d): write-back failed: %s',
+                                        'Playlist "%s" (#%d): title write-back failed: %s',
                                         (string) $table->title,
                                         $existingId,
                                         $push['error'] ?? 'unknown error'
@@ -328,6 +336,64 @@ final class CwmplaylistSyncHelper
                             );
                             $markSynced = false;
                             break;
+                    }
+                }
+
+                // ── Description ────────────────────────────────────────────
+                // Only when the platform actually reports a description, so a
+                // platform that omits it never blanks the local copy.
+                if (\array_key_exists('description', $pl)) {
+                    $remoteDescription = (string) $pl['description'];
+
+                    if ($remoteDescription !== (string) $table->description) {
+                        $decision = self::fieldPushDecision(
+                            (string) $table->description,
+                            $remoteDescription,
+                            $locallyEdited,
+                            $writebackOn
+                        );
+
+                        switch ($decision) {
+                            case 'pull':
+                                // Remote changed, no local edit — safe to apply.
+                                $data['description'] = $remoteDescription;
+                                break;
+
+                            case 'push':
+                                if ($dryRun) {
+                                    $out['descriptionsWouldPush'][] = \sprintf(
+                                        'Playlist "%s" (#%d): would push local description to remote.',
+                                        (string) $table->title,
+                                        $existingId
+                                    );
+                                    $markSynced = false;
+                                } else {
+                                    $push = $addon->pushPlaylistDescription($serverId, $remoteId, (string) $table->description);
+
+                                    if (!empty($push['success'])) {
+                                        // Remote now matches local — converged.
+                                        $out['descriptionsPushed']++;
+                                    } else {
+                                        $out['pushErrors'][] = \sprintf(
+                                            'Playlist "%s" (#%d): description write-back failed: %s',
+                                            (string) $table->title,
+                                            $existingId,
+                                            $push['error'] ?? 'unknown error'
+                                        );
+                                        $markSynced = false;
+                                    }
+                                }
+                                break;
+
+                            case 'conflict':
+                                $out['conflicts'][] = \sprintf(
+                                    'Playlist "%s" (#%d): kept local description; remote description not applied.',
+                                    (string) $table->title,
+                                    $existingId
+                                );
+                                $markSynced = false;
+                                break;
+                        }
                     }
                 }
 
@@ -350,16 +416,43 @@ final class CwmplaylistSyncHelper
     }
 
     /**
-     * Decide how to resolve a title divergence between the local playlist and the
-     * remote platform. Pure (no I/O) so the gate is unit-testable.
+     * Decide how to resolve a divergence between a local playlist field and the
+     * same field on the remote platform. Field-agnostic (title, description, …)
+     * and pure (no I/O) so the gate is unit-testable.
      *
      * Returns one of:
-     *   'none'     — titles already match; nothing to do.
+     *   'none'     — values already match; nothing to do.
      *   'pull'     — remote changed and the local row was not edited; apply remote.
      *   'push'     — local row is authoritative (edited + diverged) and opted in to
-     *                write-back; push the local title to the remote.
+     *                write-back; push the local value to the remote.
      *   'conflict' — local row is authoritative but write-back is off; keep local,
      *                report the divergence.
+     *
+     * @param   string   $localValue        Current local value.
+     * @param   string   $remoteValue       Current remote value.
+     * @param   boolean  $locallyEdited     Whether the local row was edited since last sync.
+     * @param   boolean  $writebackEnabled  Whether write-back is on for this run + playlist.
+     *
+     * @return  string  One of 'none', 'pull', 'push', 'conflict'.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function fieldPushDecision(string $localValue, string $remoteValue, bool $locallyEdited, bool $writebackEnabled): string
+    {
+        if ($localValue === $remoteValue) {
+            return 'none';
+        }
+
+        if (!$locallyEdited) {
+            return 'pull';
+        }
+
+        return $writebackEnabled ? 'push' : 'conflict';
+    }
+
+    /**
+     * Backwards-compatible alias for {@see self::fieldPushDecision()}; the gate is
+     * identical for any playlist field, and title was the first field wired up.
      *
      * @param   string   $localTitle        Current local title.
      * @param   string   $remoteTitle       Current remote title.
@@ -372,15 +465,7 @@ final class CwmplaylistSyncHelper
      */
     public static function titlePushDecision(string $localTitle, string $remoteTitle, bool $locallyEdited, bool $writebackEnabled): string
     {
-        if ($localTitle === $remoteTitle) {
-            return 'none';
-        }
-
-        if (!$locallyEdited) {
-            return 'pull';
-        }
-
-        return $writebackEnabled ? 'push' : 'conflict';
+        return self::fieldPushDecision($localTitle, $remoteTitle, $locallyEdited, $writebackEnabled);
     }
 
     /**
