@@ -256,4 +256,56 @@ class CwmplaylistSyncHelperTest extends ProclaimTestCase
 
         $this->assertSame([], CwmplaylistSyncHelper::membershipsToPush($rows, [CWMAddonYoutube::class, 'extractMediaId'], ['cXhKlo2nxPs']));
     }
+
+    /**
+     * planPlaylistAssignments diffs current vs desired into add/remove lists
+     * (phase 6.2b), the pure core of the media-file playlist reconcile.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testPlanPlaylistAssignmentsDiffsCurrentAndDesired(): void
+    {
+        $plan = CwmplaylistSyncHelper::planPlaylistAssignments([1, 2, 3], [2, 3, 4]);
+
+        $this->assertSame([4], $plan['add']);
+        $this->assertSame([1], $plan['remove']);
+    }
+
+    /**
+     * An empty desired set removes every current membership; an empty current set
+     * adds every desired one.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testPlanPlaylistAssignmentsHandlesEmptySides(): void
+    {
+        $cleared = CwmplaylistSyncHelper::planPlaylistAssignments([1, 2], []);
+        $this->assertSame([], $cleared['add']);
+        $this->assertSame([1, 2], $cleared['remove']);
+
+        $fresh = CwmplaylistSyncHelper::planPlaylistAssignments([], [7, 8]);
+        $this->assertSame([7, 8], $fresh['add']);
+        $this->assertSame([], $fresh['remove']);
+    }
+
+    /**
+     * Desired IDs are cast to int, de-duplicated, and non-positive/junk values
+     * dropped — a form post is untrusted input.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testPlanPlaylistAssignmentsSanitisesDesiredIds(): void
+    {
+        $plan = CwmplaylistSyncHelper::planPlaylistAssignments([5], ['5', '9', '9', 0, -1, 'x']);
+
+        // '5' already present (no-op), '9' added once, junk/zero/negative ignored.
+        $this->assertSame([9], $plan['add']);
+        $this->assertSame([], $plan['remove']);
+    }
 }

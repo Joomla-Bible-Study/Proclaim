@@ -77,3 +77,9 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
 -- changes back to the remote platform (e.g. YouTube playlists.update). Default 0
 -- so write-back is strictly opt-in; the conflict gate keeps prior read-sync behaviour.
 ALTER TABLE `#__bsms_playlists` ADD COLUMN `writeback_enabled` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Push local title changes back to the remote platform' AFTER `sync_enabled`;
+
+-- #1273 phase 6.2b (per-media playlist field): distinguish junction rows created
+-- by a user's explicit media-file playlist assignment ('manual') from rows
+-- imported/confirmed on the platform ('remote'). Lets manual assignments be pushed
+-- to the platform and be removed locally on de-select without touching import rows.
+ALTER TABLE `#__bsms_playlist_items` ADD COLUMN `source` VARCHAR(16) NOT NULL DEFAULT 'remote' COMMENT 'remote = imported/confirmed on platform; manual = assigned via the media-file playlist field' AFTER `position`;

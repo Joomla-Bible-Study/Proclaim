@@ -185,6 +185,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
     `remote_video_id` VARCHAR(32)      NOT NULL DEFAULT '' COMMENT 'Reconciliation key matched against params.filename',
     `title`            VARCHAR(400)     NOT NULL DEFAULT '',
     `position`         INT(11)          NOT NULL DEFAULT '0',
+    `source`           VARCHAR(16)      NOT NULL DEFAULT 'remote' COMMENT 'remote = imported/confirmed on platform; manual = assigned via the media-file playlist field, not yet confirmed on the platform',
     `created`          DATETIME                  DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_playlist_video` (`playlist_id`, `remote_video_id`),

@@ -580,13 +580,15 @@ final class CwmplaylistSyncHelper
      * Membership write-back (phase 6.2): ensure videos Proclaim considers members
      * of a playlist are actually in the playlist on the remote platform.
      *
-     * Scope (this slice): membership is derived from the playlist's linked series
-     * — every published media file on the playlist's server whose study belongs to
-     * that series should be in the playlist. Only playlists opted in to write-back
-     * (writeback_enabled = 1) with a linked series are processed. Videos already
-     * recorded as members (junction row exists) are skipped, so repeat runs are
-     * cheap. Each push is quota-checked by the addon; on a quota/auth failure the
-     * run stops early and reports it. Call reconcile first so the junction is fresh.
+     * Two membership sources, both requiring write-back opt-in (writeback_enabled
+     * = 1):
+     *   (A) Series-derived — every published media file on the playlist's server
+     *       whose study belongs to the playlist's linked series (skipped when no
+     *       series is linked). Videos already recorded as members are skipped.
+     *   (B) Manual (phase 6.2b) — junction rows flagged source='manual' by a user's
+     *       explicit media-file playlist assignment; pushed then flipped to 'remote'.
+     * Each push is quota-checked by the addon; on a quota/auth failure the run stops
+     * early and reports it. Call reconcile first so the junction is fresh.
      *
      * @param   DatabaseInterface  $db          Database driver.
      * @param   CWMAddon           $addon       Playlist-capable addon instance.
@@ -610,87 +612,147 @@ final class CwmplaylistSyncHelper
                 ->bind(':id', $playlistId, ParameterType::INTEGER)
         )->loadObject();
 
-        // Only opted-in, series-linked playlists drive membership in this slice.
-        if (!$pl || (int) $pl->writeback_enabled !== 1 || empty($pl->series_id)) {
+        // Only opted-in playlists drive write-back.
+        if (!$pl || (int) $pl->writeback_enabled !== 1) {
             return $out;
         }
 
-        $serverId = (int) $pl->server_id;
-        $seriesId = (int) $pl->series_id;
-
-        // Candidate members: published media on this server whose study is in the
-        // playlist's linked series.
-        $rows = $db->setQuery(
-            $db->getQuery(true)
-                ->select([
-                    $db->quoteName('mf.id', 'id'),
-                    $db->quoteName('mf.params', 'params'),
-                    $db->quoteName('st.studytitle', 'title'),
-                ])
-                ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-                ->innerJoin(
-                    $db->quoteName('#__bsms_studies', 'st')
-                    . ' ON ' . $db->quoteName('st.id') . ' = ' . $db->quoteName('mf.study_id')
-                )
-                ->where($db->quoteName('st.series_id') . ' = :sid')
-                ->where($db->quoteName('mf.server_id') . ' = :srv')
-                ->where($db->quoteName('mf.published') . ' = 1')
-                ->bind(':sid', $seriesId, ParameterType::INTEGER)
-                ->bind(':srv', $serverId, ParameterType::INTEGER)
-        )->loadAssocList();
-
-        if ($rows === []) {
-            return $out;
-        }
-
-        // Video IDs already recorded as members of this playlist.
-        $existing = $db->setQuery(
-            $db->getQuery(true)
-                ->select($db->quoteName('remote_video_id'))
-                ->from($db->quoteName('#__bsms_playlist_items'))
-                ->where($db->quoteName('playlist_id') . ' = :id')
-                ->bind(':id', $playlistId, ParameterType::INTEGER)
-        )->loadColumn() ?: [];
-
-        $toPush = self::membershipsToPush($rows, [$addon, 'extractRemoteMediaId'], $existing);
-
-        if ($toPush === []) {
-            return $out;
-        }
-
+        $serverId         = (int) $pl->server_id;
         $remotePlaylistId = (string) $pl->remote_playlist_id;
         $now              = Factory::getDate()->toSql();
-        $position         = \count($existing);
+        $stopped          = false;
 
-        foreach ($toPush as $item) {
+        // Push one video to the remote playlist. Records failures and flips the
+        // shared early-stop flag on quota/auth errors (further inserts would only
+        // repeat the same failure). Returns true only on a confirmed add.
+        $doPush = function (string $videoId) use ($db, $addon, $serverId, $remotePlaylistId, $playlistId, $pl, &$out, &$stopped): bool {
+            $res = $addon->addPlaylistMembership($serverId, $remotePlaylistId, $videoId);
+
+            if (!empty($res['success'])) {
+                return true;
+            }
+
+            $error           = (string) ($res['error'] ?? 'unknown error');
+            $out['errors'][] = \sprintf('Playlist "%s" (#%d): add video %s failed: %s', (string) $pl->title, $playlistId, $videoId, $error);
+
+            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
+                $stopped = true;
+            }
+
+            return false;
+        };
+
+        // ── (A) Series-derived memberships ─────────────────────────────────
+        // Every published media on this server whose study is in the linked
+        // series should be a member. Only runs when a series is linked.
+        if (!empty($pl->series_id)) {
+            $seriesId = (int) $pl->series_id;
+
+            $rows = $db->setQuery(
+                $db->getQuery(true)
+                    ->select([
+                        $db->quoteName('mf.id', 'id'),
+                        $db->quoteName('mf.params', 'params'),
+                        $db->quoteName('st.studytitle', 'title'),
+                    ])
+                    ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+                    ->innerJoin(
+                        $db->quoteName('#__bsms_studies', 'st')
+                        . ' ON ' . $db->quoteName('st.id') . ' = ' . $db->quoteName('mf.study_id')
+                    )
+                    ->where($db->quoteName('st.series_id') . ' = :sid')
+                    ->where($db->quoteName('mf.server_id') . ' = :srv')
+                    ->where($db->quoteName('mf.published') . ' = 1')
+                    ->bind(':sid', $seriesId, ParameterType::INTEGER)
+                    ->bind(':srv', $serverId, ParameterType::INTEGER)
+            )->loadAssocList();
+
+            if ($rows !== []) {
+                // Video IDs already recorded as members of this playlist.
+                $existing = $db->setQuery(
+                    $db->getQuery(true)
+                        ->select($db->quoteName('remote_video_id'))
+                        ->from($db->quoteName('#__bsms_playlist_items'))
+                        ->where($db->quoteName('playlist_id') . ' = :id')
+                        ->bind(':id', $playlistId, ParameterType::INTEGER)
+                )->loadColumn() ?: [];
+
+                $toPush   = self::membershipsToPush($rows, [$addon, 'extractRemoteMediaId'], $existing);
+                $position = \count($existing);
+
+                foreach ($toPush as $item) {
+                    if ($stopped) {
+                        break;
+                    }
+
+                    if ($dryRun) {
+                        $out['wouldPush'][] = \sprintf(
+                            'Playlist "%s" (#%d): would add video %s%s.',
+                            (string) $pl->title,
+                            $playlistId,
+                            $item['videoId'],
+                            $item['title'] !== '' ? \sprintf(' ("%s")', $item['title']) : ''
+                        );
+
+                        continue;
+                    }
+
+                    if ($doPush($item['videoId'])) {
+                        self::upsertItem($db, $playlistId, $item['videoId'], $item['title'], $item['mediafileId'], $position++, $now);
+                        $out['pushed']++;
+                    }
+                }
+            }
+        }
+
+        // ── (B) Manual assignments (phase 6.2b) ────────────────────────────
+        // Junction rows flagged source='manual' are user-assigned memberships not
+        // yet confirmed on the platform. Push each, then flip to 'remote' so a
+        // repeat run does not re-push it.
+        $manual = $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName(['remote_video_id', 'title']))
+                ->from($db->quoteName('#__bsms_playlist_items'))
+                ->where($db->quoteName('playlist_id') . ' = :id')
+                ->where($db->quoteName('source') . ' = ' . $db->quote('manual'))
+                ->bind(':id', $playlistId, ParameterType::INTEGER)
+        )->loadAssocList();
+
+        foreach ($manual as $row) {
+            $videoId = (string) ($row['remote_video_id'] ?? '');
+
+            if ($videoId === '' || $stopped) {
+                if ($stopped) {
+                    break;
+                }
+
+                continue;
+            }
+
             if ($dryRun) {
                 $out['wouldPush'][] = \sprintf(
-                    'Playlist "%s" (#%d): would add video %s%s.',
+                    'Playlist "%s" (#%d): would add manually-assigned video %s%s.',
                     (string) $pl->title,
                     $playlistId,
-                    $item['videoId'],
-                    $item['title'] !== '' ? \sprintf(' ("%s")', $item['title']) : ''
+                    $videoId,
+                    ($row['title'] ?? '') !== '' ? \sprintf(' ("%s")', $row['title']) : ''
                 );
 
                 continue;
             }
 
-            $res = $addon->addPlaylistMembership($serverId, $remotePlaylistId, $item['videoId']);
-
-            if (!empty($res['success'])) {
-                self::upsertItem($db, $playlistId, $item['videoId'], $item['title'], $item['mediafileId'], $position++, $now);
+            if ($doPush($videoId)) {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->update($db->quoteName('#__bsms_playlist_items'))
+                        ->set($db->quoteName('source') . ' = ' . $db->quote('remote'))
+                        ->where($db->quoteName('playlist_id') . ' = :pid')
+                        ->where($db->quoteName('remote_video_id') . ' = :vid')
+                        ->where($db->quoteName('source') . ' = ' . $db->quote('manual'))
+                        ->bind(':pid', $playlistId, ParameterType::INTEGER)
+                        ->bind(':vid', $videoId, ParameterType::STRING)
+                )->execute();
                 $out['pushed']++;
-
-                continue;
-            }
-
-            $error           = (string) ($res['error'] ?? 'unknown error');
-            $out['errors'][] = \sprintf('Playlist "%s" (#%d): add video %s failed: %s', (string) $pl->title, $playlistId, $item['videoId'], $error);
-
-            // Stop the run early if the platform is out of quota or disconnected —
-            // further inserts would only repeat the same failure.
-            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
-                break;
             }
         }
 
@@ -798,6 +860,234 @@ final class CwmplaylistSyncHelper
         } catch (\Exception $e) {
             // A delete must not fail because of playlist bookkeeping.
         }
+    }
+
+    /**
+     * The playlist IDs a media file is currently a member of (any source), used
+     * as the value of the media-file playlist field. Never throws.
+     *
+     * @param   integer  $mediafileId  The media file's ID.
+     *
+     * @return  int[]  Playlist row IDs.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getMediafilePlaylistIds(int $mediafileId): array
+    {
+        if ($mediafileId <= 0) {
+            return [];
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $ids = $db->setQuery(
+                $db->getQuery(true)
+                    ->select($db->quoteName('playlist_id'))
+                    ->from($db->quoteName('#__bsms_playlist_items'))
+                    ->where($db->quoteName('mediafile_id') . ' = :mid')
+                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+            )->loadColumn() ?: [];
+
+            return array_values(array_unique(array_map('intval', $ids)));
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Playlists linked to the series of a given study — the auto-fill source for
+     * a new media file's playlist assignment (Message → Series → Playlist). Never
+     * throws.
+     *
+     * @param   integer  $studyId  The study (Message) ID.
+     *
+     * @return  int[]  Published playlist row IDs linked to the study's series.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getSeriesPlaylistIdsForStudy(int $studyId): array
+    {
+        if ($studyId <= 0) {
+            return [];
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $seriesId = (int) ($db->setQuery(
+                $db->getQuery(true)
+                    ->select($db->quoteName('series_id'))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = :id')
+                    ->bind(':id', $studyId, \Joomla\Database\ParameterType::INTEGER)
+            )->loadResult() ?? 0);
+
+            if ($seriesId <= 0) {
+                return [];
+            }
+
+            $ids = $db->setQuery(
+                $db->getQuery(true)
+                    ->select($db->quoteName('id'))
+                    ->from($db->quoteName('#__bsms_playlists'))
+                    ->where($db->quoteName('series_id') . ' = :sid')
+                    ->where($db->quoteName('published') . ' = 1')
+                    ->bind(':sid', $seriesId, \Joomla\Database\ParameterType::INTEGER)
+            )->loadColumn() ?: [];
+
+            return array_values(array_unique(array_map('intval', $ids)));
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Pure planner: diff the playlists a media file is currently in against the
+     * desired set, returning the additions and removals. Kept side-effect-free so
+     * the reconcile logic is unit-testable.
+     *
+     * @param   int[]  $currentIds  Playlist IDs the media is currently in.
+     * @param   int[]  $desiredIds  Playlist IDs the user selected.
+     *
+     * @return  array{add:int[], remove:int[]}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function planPlaylistAssignments(array $currentIds, array $desiredIds): array
+    {
+        $current = array_values(array_unique(array_map('intval', $currentIds)));
+        $desired = array_values(array_unique(array_filter(
+            array_map('intval', $desiredIds),
+            static fn ($id) => $id > 0
+        )));
+
+        return [
+            'add'    => array_values(array_diff($desired, $current)),
+            'remove' => array_values(array_diff($current, $desired)),
+        ];
+    }
+
+    /**
+     * Reconcile a media file's manual playlist assignments to the user's selection.
+     *
+     * Called on media-file save. LOCAL-ONLY (no platform API): it upserts a
+     * junction row (source='manual') for every newly-selected playlist and removes
+     * the manual rows for de-selected playlists. Rows imported/confirmed on the
+     * platform (source='remote') are never deleted here — removing a video from the
+     * remote playlist is a separate, opt-in slice. Additions need a resolvable
+     * remote video ID (the junction key); when the media has none, only removals
+     * apply. Never throws — a media save must not fail on playlist bookkeeping.
+     *
+     * @param   integer  $mediafileId         The saved media file's ID.
+     * @param   int[]    $desiredPlaylistIds  Playlist IDs the user selected.
+     * @param   string   $params              The media file's params JSON (holds filename).
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function setManualPlaylistAssignments(int $mediafileId, array $desiredPlaylistIds, string $params): void
+    {
+        if ($mediafileId <= 0) {
+            return;
+        }
+
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $plan = self::planPlaylistAssignments(
+                self::getMediafilePlaylistIds($mediafileId),
+                $desiredPlaylistIds
+            );
+
+            // Removals: only ever local, and only manual rows.
+            if ($plan['remove'] !== []) {
+                $db->setQuery(
+                    $db->getQuery(true)
+                        ->delete($db->quoteName('#__bsms_playlist_items'))
+                        ->where($db->quoteName('mediafile_id') . ' = :mid')
+                        ->where($db->quoteName('source') . ' = ' . $db->quote('manual'))
+                        ->whereIn($db->quoteName('playlist_id'), $plan['remove'], \Joomla\Database\ParameterType::INTEGER)
+                        ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                )->execute();
+            }
+
+            if ($plan['add'] === []) {
+                return;
+            }
+
+            // Additions need the media's remote video ID as the junction key.
+            $decoded = json_decode($params, true);
+            $videoId = \is_array($decoded) && !empty($decoded['filename'])
+                ? self::extractAnyRemoteId((string) $decoded['filename'])
+                : null;
+
+            if ($videoId === null || $videoId === '') {
+                return;
+            }
+
+            $now = Factory::getDate()->toSql();
+
+            foreach ($plan['add'] as $playlistId) {
+                self::upsertManualItem($db, (int) $playlistId, $videoId, $mediafileId, $now);
+            }
+        } catch (\Exception $e) {
+            // Playlist bookkeeping must never fail a media save.
+        }
+    }
+
+    /**
+     * Insert (or link) a manual junction row for a media file's playlist
+     * assignment. If the (playlist, video) row already exists — e.g. imported from
+     * the platform — it is left in place with its source preserved and only its
+     * mediafile_id ensured; otherwise a new source='manual' row is inserted.
+     *
+     * @param   DatabaseInterface  $db           Database driver.
+     * @param   integer            $playlistId   Playlist row ID.
+     * @param   string             $videoId      Remote video ID (junction key).
+     * @param   integer            $mediafileId  Media file ID to link.
+     * @param   string             $now          SQL timestamp.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function upsertManualItem(DatabaseInterface $db, int $playlistId, string $videoId, int $mediafileId, string $now): void
+    {
+        $existingId = (int) ($db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__bsms_playlist_items'))
+                ->where($db->quoteName('playlist_id') . ' = :pid')
+                ->where($db->quoteName('remote_video_id') . ' = :vid')
+                ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER)
+                ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
+        )->loadResult() ?? 0);
+
+        if ($existingId > 0) {
+            // Already a member (imported or manual): just ensure it links here.
+            $db->setQuery(
+                $db->getQuery(true)
+                    ->update($db->quoteName('#__bsms_playlist_items'))
+                    ->set($db->quoteName('mediafile_id') . ' = :mid')
+                    ->where($db->quoteName('id') . ' = :rid')
+                    ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
+                    ->bind(':rid', $existingId, \Joomla\Database\ParameterType::INTEGER)
+            )->execute();
+
+            return;
+        }
+
+        $db->insertObject('#__bsms_playlist_items', (object) [
+            'playlist_id'     => $playlistId,
+            'mediafile_id'    => $mediafileId,
+            'remote_video_id' => $videoId,
+            'title'           => '',
+            'position'        => 0,
+            'source'          => 'manual',
+            'created'         => $now,
+        ]);
     }
 
     /**
@@ -1038,6 +1328,9 @@ final class CwmplaylistSyncHelper
         $query = $db->getQuery(true)
             ->delete($db->quoteName('#__bsms_playlist_items'))
             ->where($db->quoteName('playlist_id') . ' = :pid')
+            // Never prune a manual assignment that has not been pushed yet: it is a
+            // pending local membership the remote playlist does not list yet.
+            ->where($db->quoteName('source') . ' <> ' . $db->quote('manual'))
             ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER);
 
         if ($keepVideos !== []) {
