@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
@@ -258,6 +259,11 @@ class CwmmediafileModel extends AdminModel
 
             $data['params'] = $params->toArray();
 
+            // Capture the desired playlist assignments and keep them off the Table
+            // bind (playlist membership lives in the junction, not a column).
+            $desiredPlaylists = array_map('intval', (array) ($data['playlist_id'] ?? []));
+            unset($data['playlist_id']);
+
             // Clean up old image file when filename changes on an existing record
             if ($oldParams !== null) {
                 $oldFilename = $oldParams->get('filename', '');
@@ -272,6 +278,15 @@ class CwmmediafileModel extends AdminModel
             }
 
             if (parent::save($data)) {
+                // Reconcile manual playlist assignments to the junction now the row
+                // has an ID. Local-only; the video reaches the platform via the
+                // write-back push path, not this save.
+                CwmplaylistSyncHelper::setManualPlaylistAssignments(
+                    (int) $this->getState($this->getName() . '.id'),
+                    $desiredPlaylists,
+                    $params->toString()
+                );
+
                 return true;
             }
         }
@@ -473,6 +488,20 @@ class CwmmediafileModel extends AdminModel
             if (!empty($this->data->podcast_id)) {
                 $this->data->podcast_id = explode(',', $this->data->podcast_id);
             }
+
+            // Playlist assignments are derived from the junction (any source), not
+            // a column. For a NEW media file with a known Message, auto-fill from
+            // the Message's Series so the field is pre-populated rather than blank;
+            // on an existing file we show its real memberships and never re-suggest
+            // (so a deliberately-cleared assignment stays cleared).
+            $mediaId   = (int) ($this->data->id ?? 0);
+            $playlists = CwmplaylistSyncHelper::getMediafilePlaylistIds($mediaId);
+
+            if ($playlists === [] && $mediaId === 0 && !empty($this->data->study_id)) {
+                $playlists = CwmplaylistSyncHelper::getSeriesPlaylistIdsForStudy((int) $this->data->study_id);
+            }
+
+            $this->data->playlist_id = $playlists;
 
             // Convert metadata field to array if not null
             if ($this->data->metadata !== null) {

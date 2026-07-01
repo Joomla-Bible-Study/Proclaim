@@ -35,6 +35,10 @@ if ($input->getInt('id')) {
     $podcast_id = $this->admin_params->get('podcast');
 }
 
+// Playlist memberships are derived from the junction by the model (and may be
+// auto-filled from the Message's Series on a new file) — an array either way.
+$playlist_id = !empty($this->item->playlist_id) ? $this->item->playlist_id : [];
+
 $new = ($this->item->id === '0' || empty($this->item->id));
 
 // Determine if we should show the server picker modal
@@ -122,6 +126,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <?php echo $this->form->renderField('study_id', null, $study_id); ?>
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
+                <?php echo $this->form->renderField('playlist_id', null, $playlist_id); ?>
 
                 <div id="addon-general-container">
                     <?php if ($this->addon !== null) : ?>
