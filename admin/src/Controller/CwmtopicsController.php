@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -27,6 +28,26 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  */
 class CwmtopicsController extends AdminController
 {
+    use CwmActionlogListTrait;
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogType = 'topic';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTable = '#__bsms_topics';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTitleColumn = 'topic_text';
+
     /**
      * Proxy for getModel.
      *

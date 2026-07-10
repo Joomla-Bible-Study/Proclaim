@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
@@ -32,6 +33,26 @@ use Joomla\Utilities\ArrayHelper;
  */
 class CwmmessagesController extends AdminController
 {
+    use CwmActionlogListTrait;
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogType = 'message';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTable = '#__bsms_studies';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTitleColumn = 'studytitle';
+
     /**
      * Proxy for getModel.
      *

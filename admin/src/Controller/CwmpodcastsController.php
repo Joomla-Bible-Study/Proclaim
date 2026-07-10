@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Language\Text;
@@ -32,6 +33,26 @@ use Joomla\CMS\Session\Session;
  */
 class CwmpodcastsController extends AdminController
 {
+    use CwmActionlogListTrait;
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogType = 'podcast';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTable = '#__bsms_podcast';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $actionlogTitleColumn = 'title';
+
     /**
      * Write the XML file Called from admin podcast list page.
      * Used for the Podcasts Page to create xml files.
