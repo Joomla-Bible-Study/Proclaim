@@ -14,8 +14,7 @@ ALTER TABLE `#__bsms_studies`
 -- distinct from a Series. May optionally back a Series via series_id, but also
 -- exists for cross-cutting groupings (e.g. "All Church Services").
 
-CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
-(
+CREATE TABLE IF NOT EXISTS `#__bsms_playlists` (
     `id`                  INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `title`               VARCHAR(250)              DEFAULT NULL,
     `alias`               VARCHAR(400)     NOT NULL DEFAULT '',
@@ -55,8 +54,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
 -- link rather than duplicate. mediafile_id is nullable: a playlist video with no
 -- local media yet is still recorded so the membership/order is preserved.
 
-CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items`
-(
+CREATE TABLE IF NOT EXISTS `#__bsms_playlist_items` (
     `id`               INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `playlist_id`      INT(10) UNSIGNED NOT NULL,
     `mediafile_id`     INT(10) UNSIGNED          DEFAULT NULL,
