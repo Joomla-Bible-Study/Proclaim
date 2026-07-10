@@ -76,6 +76,9 @@ trait CwmActionlogListTrait
     {
         [$value, $key] = $this->actionlogStateForTask();
         $before        = $this->collectActionlogTitles();
+        $beforeStates  = ($before === [] || $key === null)
+            ? []
+            : $this->actionlogPublishedStates(array_keys($before));
 
         parent::publish();
 
@@ -86,6 +89,11 @@ trait CwmActionlogListTrait
         $matched = $this->actionlogFilterIds(array_keys($before), $value);
 
         foreach ($before as $id => $title) {
+            // Skip no-op changes: the item was already at the target state.
+            if (($beforeStates[(int) $id] ?? null) === $value) {
+                continue;
+            }
+
             if (\in_array((int) $id, $matched, true)) {
                 CwmactionlogHelper::log($key, $title, $this->actionlogType, (int) $id);
             }
@@ -151,6 +159,45 @@ trait CwmActionlogListTrait
             }
 
             return $titles;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Read the current published state of the given IDs before the action runs,
+     * so no-op state changes (re-publishing an already-published item) can be
+     * skipped rather than logged.
+     *
+     * @param   int[]  $ids  Candidate IDs.
+     *
+     * @return  array<int,int>  id => published value
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function actionlogPublishedStates(array $ids): array
+    {
+        $ids = array_values(array_filter(array_map('intval', $ids)));
+
+        if ($ids === [] || ($this->actionlogTable ?? '') === '') {
+            return [];
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName(['id', 'published']))
+                ->from($db->quoteName($this->actionlogTable))
+                ->whereIn($db->quoteName('id'), $ids, ParameterType::INTEGER);
+
+            $rows   = $db->setQuery($query)->loadObjectList('id') ?: [];
+            $states = [];
+
+            foreach ($rows as $id => $row) {
+                $states[(int) $id] = (int) $row->published;
+            }
+
+            return $states;
         } catch (\Exception $e) {
             return [];
         }
