@@ -72,6 +72,13 @@
         <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
                size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" filter="int"/>
 
+        <field name="track_downloads" type="radio" default="0"
+               layout="joomla.form.field.radio.switcher"
+               label="JBS_PDC_TRACK_DOWNLOADS" description="JBS_PDC_TRACK_DOWNLOADS_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
         <field name="itunes_category" type="list" default="Religion &amp; Spirituality"
                label="JBS_PDC_ITUNES_CATEGORY" description="JBS_PDC_ITUNES_CATEGORY_DESC">
             <option value="Arts">Arts</option>

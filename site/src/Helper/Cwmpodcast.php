@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -265,7 +266,13 @@ class Cwmpodcast
 		<pubDate>' . $episodedate . '</pubDate>
 		<itunes:duration>' . $duration . '</itunes:duration>';
 
-                $episodedetail .= $this->getEnclosureXml($episode, $protocol, $path);
+                $episodedetail .= $this->getEnclosureXml(
+                    $episode,
+                    $protocol,
+                    $path,
+                    (string) $podinfo->website,
+                    (bool) ($podinfo->track_downloads ?? 0)
+                );
 
                 // Podcasting 2.0: alternate enclosures for additional media formats
                 $episodedetail .= $this->getAlternateEnclosureXml($episode, (int) $podinfo->id, $protocol);
@@ -748,14 +755,16 @@ class Cwmpodcast
     /**
      * Get Enclosure XML
      *
-     * @param   object  $episode   Episode Info
-     * @param   string  $protocol  Protocol
-     * @param   string  $path      Media Path
+     * @param   object  $episode         Episode Info
+     * @param   string  $protocol        Protocol
+     * @param   string  $path            Media Path
+     * @param   string  $website         Podcast website (for the tracking-redirect base)
+     * @param   bool    $trackDownloads  Rewrite the enclosure through the download-tracking redirect
      *
      * @return string
      * @since  8.0.0
      */
-    private function getEnclosureXml($episode, $protocol, $path): string
+    private function getEnclosureXml($episode, $protocol, $path, string $website = '', bool $trackDownloads = false): string
     {
         $articleId = (int) $episode->params->get('article_id');
         $docmanId  = (int) $episode->params->get('docMan_id');
@@ -764,19 +773,41 @@ class Cwmpodcast
         $size      = $episode->params->get('size', '100');
 
         if ($articleId > 1) {
-            $url  = $basePath . '/index.php?option=com_content&amp;view=article&amp;id=' . $articleId;
-            $type = $mimeType ?: 'application/octet-stream';
+            $url          = $basePath . '/index.php?option=com_content&amp;view=article&amp;id=' . $articleId;
+            $type         = $mimeType ?: 'application/octet-stream';
+            $enclosureUrl = $url;
         } elseif ($docmanId > 1) {
-            $url  = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
-            $type = $mimeType;
+            $url          = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
+            $type         = $mimeType;
+            $enclosureUrl = $url;
         } else {
-            $url  = $protocol . $path;
-            $type = $mimeType ?: 'audio/mpeg3';
+            // Direct live-media URL — stays the <guid> so subscribers never re-download.
+            $url          = $protocol . $path;
+            $type         = $mimeType ?: 'audio/mpeg3';
+            $enclosureUrl = $url;
+
+            // Opt-in: route the enclosure through the tracking redirect (#1281).
+            // The <guid> above is deliberately left as the direct URL so toggling
+            // this on/off never changes item identity.
+            if ($trackDownloads && $website !== '') {
+                $enclosureUrl = $this->resolveUrl($website, $protocol)
+                    . '/index.php?option=com_proclaim&amp;task=cwmpodcast.track&amp;media_id=' . (int) $episode->mfid;
+            }
         }
 
+        // Permanent, URL-independent episode identity: emit the frozen guid
+        // (stamped on first build with today's value, so existing subscribers see
+        // no change). $url is the legacy/direct-URL value used as that seed.
+        $guid = CwmpodcastTrackHelper::resolveGuid(
+            Factory::getContainer()->get(DatabaseInterface::class),
+            (int) $episode->mfid,
+            $episode->podcast_guid ?? null,
+            $url
+        );
+
         return '
-		<enclosure url="' . $url . '" length="' . $size . '" type="' . $type . '" />
-		<guid>' . $url . '</guid>';
+		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $type . '" />
+		<guid>' . $guid . '</guid>';
     }
 
     /**
@@ -877,7 +908,7 @@ class Cwmpodcast
             [
                 'p.id AS pid', 'p.podcastlimit',
                 'mf.id AS mfid', 'mf.study_id', 'mf.server_id', 'mf.podcast_id',
-                'mf.published AS mfpub', 'mf.createdate', 'mf.params',
+                'mf.published AS mfpub', 'mf.createdate', 'mf.params', 'mf.podcast_guid',
                 's.id AS sid', 's.alias AS alias', 's.studydate', 's.teacher_id', 's.booknumber', 's.chapter_begin', 's.verse_begin',
                 's.chapter_end', 's.verse_end', 's.studytitle', 's.studyintro', 's.published AS spub',
                 's.studynumber', 's.location_id', 's.series_id',

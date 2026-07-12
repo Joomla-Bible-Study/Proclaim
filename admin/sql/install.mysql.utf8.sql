@@ -215,6 +215,8 @@ CREATE TABLE IF NOT EXISTS `#__bsms_mediafiles`
     `published`        TINYINT(3)       NOT NULL DEFAULT '1',
     `comment`          TEXT,
     `downloads`        INT(10)                   DEFAULT '0',
+    `podcast_downloads` INT(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Podcast-app downloads counted via the tracking redirect (IAB-style 24h dedupe)',
+    `podcast_guid`     VARCHAR(400)              DEFAULT NULL COMMENT 'Frozen RSS <guid> for podcast items; stamped on first feed build',
     `plays`            INT(10)                   DEFAULT '0',
     `content_origin`   TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '0=ministry-created, 1=external/third-party',
     `params`           TEXT,
@@ -296,6 +298,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `editor_email`            VARCHAR(150)              DEFAULT NULL,
     `podcastlimit`            INT(5)                    DEFAULT NULL,
     `published`               TINYINT(3)       NOT NULL DEFAULT '1',
+    `track_downloads`         TINYINT(1)       NOT NULL DEFAULT 0 COMMENT '1 = rewrite feed enclosures through the download-tracking redirect',
     `location_id`             INT(3)                    DEFAULT NULL,
     `episodetitle`            INT(11)                   DEFAULT NULL,
     `custom`                  VARCHAR(200)              DEFAULT NULL,
@@ -445,6 +448,24 @@ CREATE TABLE IF NOT EXISTS `#__bsms_platform_stats`
     KEY `idx_server` (`server_id`),
     KEY `idx_platform` (`platform`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__bsms_podcast_download_log`
+-- 24h dedupe log for the podcast download tracking redirect (#1281).
+-- One row per (media, client-hash); a client re-counts only after 24h.
+--
+
+CREATE TABLE IF NOT EXISTS `#__bsms_podcast_download_log` (
+    `media_id`    INT(10) UNSIGNED NOT NULL,
+    `client_hash` CHAR(40)         NOT NULL COMMENT 'sha1(ip | user-agent)',
+    `logged`      DATETIME         NOT NULL,
+    PRIMARY KEY (`media_id`, `client_hash`),
+    KEY `idx_logged` (`logged`)
+) ENGINE InnoDB
+  DEFAULT CHARSET = utf8mb4
+  DEFAULT COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
