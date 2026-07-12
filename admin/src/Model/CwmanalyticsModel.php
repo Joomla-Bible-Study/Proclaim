@@ -80,7 +80,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
      */
     public function getRecordTotals(int $locationId = 0): array
     {
-        $result = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'platform_plays' => 0, 'external_plays' => 0];
+        $result = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'podcast_downloads' => 0, 'platform_plays' => 0, 'external_plays' => 0];
 
         try {
             $db = $this->getDatabase();
@@ -123,6 +123,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 ->select([
                     'SUM(' . $db->quoteName('m.plays') . ') AS plays',
                     'SUM(' . $db->quoteName('m.downloads') . ') AS downloads',
+                    'SUM(' . $db->quoteName('m.podcast_downloads') . ') AS podcast_downloads',
                 ])
                 ->from($db->quoteName('#__bsms_mediafiles', 'm'));
 
@@ -143,9 +144,10 @@ class CwmanalyticsModel extends BaseDatabaseModel
             }
 
             $db->setQuery($q2);
-            $row                 = $db->loadAssoc() ?? [];
-            $result['plays']     = (int) ($row['plays'] ?? 0);
-            $result['downloads'] = (int) ($row['downloads'] ?? 0);
+            $row                          = $db->loadAssoc() ?? [];
+            $result['plays']              = (int) ($row['plays'] ?? 0);
+            $result['downloads']          = (int) ($row['downloads'] ?? 0);
+            $result['podcast_downloads']  = (int) ($row['podcast_downloads'] ?? 0);
 
             // Platform plays for ministry-created media (external plays = platform - local)
             $q3 = $db->getQuery(true)

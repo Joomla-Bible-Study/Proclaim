@@ -161,7 +161,7 @@ class HtmlView extends BaseHtmlView
     public bool $hasTrackedEvents = false;
 
     /** @var array{views: int, plays: int, downloads: int} All-time totals from live record counters @since 10.1.0 */
-    public array $recordTotals = ['views' => 0, 'plays' => 0, 'downloads' => 0];
+    public array $recordTotals = ['views' => 0, 'plays' => 0, 'downloads' => 0, 'podcast_downloads' => 0];
 
     /** @var string Date of the earliest tracked event, or '' if none @since 10.1.0 */
     public string $firstEventDate = '';

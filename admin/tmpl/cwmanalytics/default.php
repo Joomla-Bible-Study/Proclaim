@@ -301,6 +301,10 @@ $showPeriodKpi       = $hasRealEvents;
     if (($this->recordTotals['external_plays'] ?? 0) > 0) {
         $kpiCards[] = ['icon' => 'icon-globe', 'label' => 'JBS_MED_EXTERNAL_PLAYS', 'value' => $this->recordTotals['external_plays'], 'class' => 'text-info'];
     }
+
+    if (($this->recordTotals['podcast_downloads'] ?? 0) > 0) {
+        $kpiCards[] = ['icon' => 'icon-broadcast', 'label' => 'JBS_ANA_TOTAL_PODCAST_DOWNLOADS', 'value' => $this->recordTotals['podcast_downloads'], 'class' => 'text-info'];
+    }
 ?>
         <?php foreach ($kpiCards as $card) : ?>
             <div class="col-6 col-md-4">
@@ -345,6 +349,10 @@ $showPeriodKpi       = $hasRealEvents;
 
     if (($this->recordTotals['external_plays'] ?? 0) > 0) {
         $kpiCards[] = ['icon' => 'icon-globe', 'label' => 'JBS_MED_EXTERNAL_PLAYS', 'value' => $this->recordTotals['external_plays'], 'class' => 'text-info'];
+    }
+
+    if (($this->recordTotals['podcast_downloads'] ?? 0) > 0) {
+        $kpiCards[] = ['icon' => 'icon-broadcast', 'label' => 'JBS_ANA_TOTAL_PODCAST_DOWNLOADS', 'value' => $this->recordTotals['podcast_downloads'], 'class' => 'text-info'];
     }
 ?>
         <?php foreach ($kpiCards as $card) : ?>
