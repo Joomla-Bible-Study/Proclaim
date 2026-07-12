@@ -112,6 +112,12 @@ $generated = Text::sprintf('JBS_ANA_REPORT_GENERATED', date('Y-m-d H:i'));
             <div class="kpi-label"><?php echo Text::_('JBS_MED_EXTERNAL_PLAYS'); ?></div>
         </div>
         <?php endif; ?>
+        <?php if (($this->recordTotals['podcast_downloads'] ?? 0) > 0) : ?>
+        <div class="kpi-box">
+            <div class="kpi-value"><?php echo number_format($this->recordTotals['podcast_downloads']); ?></div>
+            <div class="kpi-label"><?php echo Text::_('JBS_ANA_TOTAL_PODCAST_DOWNLOADS'); ?></div>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Period Totals -->
