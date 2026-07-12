@@ -72,7 +72,7 @@
         <field name="podcastlimit" type="text" label="JBS_PDC_NUM_RECORDS_INCLUDE"
                size="3" description="JBS_PDC_NUM_RECORDS_INCLUDE_DESC" filter="int"/>
 
-        <field name="track_downloads" type="radio" default="0"
+        <field name="track_downloads" type="radio" default="1"
                layout="joomla.form.field.radio.switcher"
                label="JBS_PDC_TRACK_DOWNLOADS" description="JBS_PDC_TRACK_DOWNLOADS_DESC">
             <option value="0">JNO</option>

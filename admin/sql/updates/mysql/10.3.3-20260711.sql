@@ -17,10 +17,13 @@ ALTER TABLE `#__bsms_mediafiles`
     ADD COLUMN `podcast_guid` VARCHAR(400) DEFAULT NULL
     COMMENT 'Frozen RSS <guid> for podcast items; stamped on first feed build' AFTER `podcast_downloads`;
 
--- Per-podcast opt-in: when 1, the feed rewrites <enclosure> URLs through the redirect.
--- Default 0 so existing feeds are unchanged until a ministry enables it.
+-- Per-podcast switch: when 1, the feed rewrites <enclosure> URLs through the redirect.
+-- Default 1 (on) — download tracking is valuable to every ministry and safe now that
+-- episode GUIDs are frozen (enclosure changes never move item identity, so no
+-- re-download). Existing podcasts get 1 when this column is added; a ministry can
+-- opt out per podcast (e.g. if they already run a prefix like Podtrac).
 ALTER TABLE `#__bsms_podcast`
-    ADD COLUMN `track_downloads` TINYINT(1) NOT NULL DEFAULT 0
+    ADD COLUMN `track_downloads` TINYINT(1) NOT NULL DEFAULT 1
     COMMENT '1 = rewrite feed enclosures through the download-tracking redirect' AFTER `published`;
 
 -- 24h dedupe log: one row per (media, client-hash). A client is counted again
