@@ -298,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `editor_email`            VARCHAR(150)              DEFAULT NULL,
     `podcastlimit`            INT(5)                    DEFAULT NULL,
     `published`               TINYINT(3)       NOT NULL DEFAULT '1',
-    `track_downloads`         TINYINT(1)       NOT NULL DEFAULT 0 COMMENT '1 = rewrite feed enclosures through the download-tracking redirect',
+    `track_downloads`         TINYINT(1)       NOT NULL DEFAULT 1 COMMENT '1 = rewrite feed enclosures through the download-tracking redirect (on by default)',
     `location_id`             INT(3)                    DEFAULT NULL,
     `episodetitle`            INT(11)                   DEFAULT NULL,
     `custom`                  VARCHAR(200)              DEFAULT NULL,
