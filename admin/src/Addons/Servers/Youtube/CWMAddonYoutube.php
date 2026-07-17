@@ -993,8 +993,8 @@ class CWMAddonYoutube extends CWMAddon
             foreach ($response->items as $item) {
                 $videos[] = [
                     'videoId'     => $item->snippet->resourceId->videoId,
-                    'title'       => $item->snippet->title,
-                    'description' => $item->snippet->description,
+                    'title'       => $this->decodeApiText($item->snippet->title),
+                    'description' => $this->decodeApiText($item->snippet->description),
                     'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
@@ -1100,8 +1100,8 @@ class CWMAddonYoutube extends CWMAddon
             foreach ($response->items as $item) {
                 $videos[] = [
                     'videoId'     => $item->id->videoId,
-                    'title'       => $item->snippet->title,
-                    'description' => $item->snippet->description,
+                    'title'       => $this->decodeApiText($item->snippet->title),
+                    'description' => $this->decodeApiText($item->snippet->description),
                     'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
@@ -1189,8 +1189,8 @@ class CWMAddonYoutube extends CWMAddon
             foreach ($response->items as $item) {
                 $playlists[] = [
                     'playlistId'  => $item->id,
-                    'title'       => $item->snippet->title,
-                    'description' => $item->snippet->description ?? '',
+                    'title'       => $this->decodeApiText($item->snippet->title),
+                    'description' => $this->decodeApiText($item->snippet->description),
                     'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                 ];
             }
@@ -1282,8 +1282,8 @@ class CWMAddonYoutube extends CWMAddon
             foreach ($response->items as $item) {
                 $videos[] = [
                     'videoId'     => $item->snippet->resourceId->videoId,
-                    'title'       => $item->snippet->title,
-                    'description' => $item->snippet->description,
+                    'title'       => $this->decodeApiText($item->snippet->title),
+                    'description' => $this->decodeApiText($item->snippet->description),
                     'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                 ];
@@ -1381,8 +1381,8 @@ class CWMAddonYoutube extends CWMAddon
             foreach ($response->items as $item) {
                 $videos[] = [
                     'videoId'     => $item->id->videoId,
-                    'title'       => $item->snippet->title,
-                    'description' => $item->snippet->description,
+                    'title'       => $this->decodeApiText($item->snippet->title),
+                    'description' => $this->decodeApiText($item->snippet->description),
                     'thumbnail'   => $item->snippet->thumbnails?->medium?->url ?? $item->snippet->thumbnails?->default?->url ?? '',
                     'publishedAt' => $item->snippet->publishedAt,
                     'liveBadge'   => $eventType === 'live' ? 'LIVE' : ($eventType === 'upcoming' ? 'UPCOMING' : ''),
@@ -1463,8 +1463,8 @@ class CWMAddonYoutube extends CWMAddon
                 'success' => true,
                 'message' => Text::_('JBS_ADDON_YOUTUBE_API_SUCCESS'),
                 'channel' => [
-                    'title'           => $channel->snippet->title,
-                    'description'     => substr($channel->snippet->description ?? '', 0, 100),
+                    'title'           => $this->decodeApiText($channel->snippet->title),
+                    'description'     => substr($this->decodeApiText($channel->snippet->description), 0, 100),
                     'subscriberCount' => $channel->statistics->subscriberCount ?? null,
                     'videoCount'      => $channel->statistics->videoCount ?? null,
                 ],
@@ -1735,7 +1735,7 @@ class CWMAddonYoutube extends CWMAddon
 
                 // Set Title if empty
                 if (empty($params->get('title'))) {
-                    $params->set('title', $item->snippet->title);
+                    $params->set('title', $this->decodeApiText($item->snippet->title));
                 }
 
                 // Set Duration
@@ -1755,7 +1755,7 @@ class CWMAddonYoutube extends CWMAddon
                 $existingChapters = $params->get('chapters', []);
 
                 if (empty($existingChapters)) {
-                    $description = $item->snippet->description ?? '';
+                    $description = $this->decodeApiText($item->snippet->description);
                     $chapters    = \CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper::parseYouTubeChapters($description);
 
                     if (!empty($chapters)) {
@@ -1784,6 +1784,26 @@ class CWMAddonYoutube extends CWMAddon
                 );
             }
         }
+    }
+
+    /**
+     * Decode HTML entities in text returned by the YouTube Data API.
+     *
+     * The API returns snippet titles/descriptions already HTML-encoded (e.g. an
+     * apostrophe as `&#39;`, a double-quote as `&quot;`). Downstream consumers
+     * escape again when rendering, so the raw value must be decoded to plain text
+     * here at the API boundary to avoid double-escaping in the picker UI and to
+     * store clean titles when a video is imported into a message.
+     *
+     * @param   string|null  $text  Raw API text.
+     *
+     * @return  string  Decoded plain text.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function decodeApiText(?string $text): string
+    {
+        return html_entity_decode($text ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
