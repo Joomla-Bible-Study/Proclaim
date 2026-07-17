@@ -100,21 +100,17 @@
             { "from": "build/language/en-GB/en-GB.pkg_proclaim.sys.ini",
               "to":   "language/en-GB/en-GB.pkg_proclaim.sys.ini" }
         ],
+        "_includes_comment": "The two sibling extensions are independent repos (git submodules) with their own build toolchains — lib_cwmscripture builds via cwm-build, scripturelinks via cwm-package. They are built fresh into their own build/dist by build/build-subpackages.sh (run before cwm-package), and consumed here as `prebuilt` artifacts. The former `subBuild` entries referenced a build/build-package.php that no longer exists in either submodule.",
         "includes": [
             {
-                "type":        "subBuild",
-                "path":        "libraries/lib_cwmscripture",
-                "buildScript": "build/build-package.php",
-                "distGlob":    "build/dist/lib_cwmscripture-*.zip",
-                "outputName":  "lib_cwmscripture.zip"
+                "type":       "prebuilt",
+                "distGlob":   "libraries/lib_cwmscripture/build/dist/lib_cwmscripture-*.zip",
+                "outputName": "lib_cwmscripture.zip"
             },
             {
-                "type":        "subBuild",
-                "path":        "plugins/content/scripturelinks",
-                "buildScript": "build/build-package.php",
-                "args":        ["--plugin-only"],
-                "distGlob":    "build/dist/plg_content_scripturelinks*.zip",
-                "outputName":  "plg_content_scripturelinks.zip"
+                "type":       "prebuilt",
+                "distGlob":   "plugins/content/scripturelinks/build/dist/plg_content_scripturelinks*.zip",
+                "outputName": "plg_content_scripturelinks.zip"
             },
             {
                 "type":       "self",

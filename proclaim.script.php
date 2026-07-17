@@ -376,10 +376,18 @@ class com_proclaimInstallerScript extends InstallerScript
         // our preflight (and the install routines that follow) can
         // resolve the classes.
         if ($type !== 'uninstall') {
-            $libBase = JPATH_LIBRARIES . '/lib_cwmscripture/src';
+            // The library manifest declares <libraryname>cwmscripture</libraryname>,
+            // so Joomla installs it to libraries/cwmscripture — not libraries/
+            // lib_cwmscripture. Check the real install path first, keeping the old
+            // name as a fallback for any environment that still uses it.
+            foreach (['/cwmscripture/src', '/lib_cwmscripture/src'] as $libSuffix) {
+                $libBase = JPATH_LIBRARIES . $libSuffix;
 
-            if (is_dir($libBase) && !class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper', false)) {
-                \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase, false, false, 'psr4');
+                if (is_dir($libBase) && !class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper', false)) {
+                    \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase, false, false, 'psr4');
+
+                    break;
+                }
             }
 
             if (!class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper')) {
@@ -1093,17 +1101,32 @@ class com_proclaimInstallerScript extends InstallerScript
             } catch (\Exception $e) {
                 Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
             }
+        }
 
+        // Legacy data migrations run on UPGRADES only. A fresh install's SQL
+        // already creates the current schema, so there is nothing to migrate —
+        // running these against freshly seeded default rows only produces
+        // spurious warnings (e.g. the podcast-link "could not be matched" notice)
+        // and, historically, fatals when a moved helper no longer exists.
+        if ($type === 'update') {
             // Migrate legacy scripture columns to junction table
             try {
                 $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
                 if (file_exists($migrationPath)) {
                     require_once $migrationPath;
-                    // Also require the helper dependencies
+                    // These helpers moved to lib_cwmscripture in 10.3.0 and the
+                    // migration autoloads the library class via the namespace
+                    // registered in preflight(). Only require a legacy in-component
+                    // copy if one is still present — a bare require_once of the
+                    // (now missing) file is a fatal that the catch below can't trap.
                     $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
-                    require_once $helperDir . 'ScriptureReference.php';
-                    require_once $helperDir . 'CwmscriptureHelper.php';
+
+                    foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
+                        if (is_file($helperDir . $legacyHelper)) {
+                            require_once $helperDir . $legacyHelper;
+                        }
+                    }
 
                     $migrated = CwmscriptureMigration::migrate();
 
@@ -1162,7 +1185,9 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Migrate scripture settings from component params to plugin params
             $this->migrateScriptureParamsToPlugin();
+        }
 
+        if ($type === 'install' || $type === 'update') {
             // Ensure all Proclaim tables have primary keys.
             // Sites upgraded from v7/v8/v9 may lack PKs because the original
             // CREATE TABLE IF NOT EXISTS skipped existing tables.  We check
