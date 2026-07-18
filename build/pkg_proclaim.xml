@@ -24,4 +24,10 @@
     <languages folder="language">
         <language tag="en-GB">en-GB/en-GB.pkg_proclaim.sys.ini</language>
     </languages>
+
+    <updateservers>
+        <server type="extension" priority="1" name="CWM Proclaim Package">
+            https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;format=xml&amp;id=2&amp;dummy=extension.xml
+        </server>
+    </updateservers>
 </extension>
