@@ -1531,7 +1531,14 @@ class com_proclaimInstallerScript extends InstallerScript
                 'result' => $result,
             ];
 
-            if ($published && !$isInstalled) {
+            // The system plugin is required infrastructure (PHP-version guard,
+            // auto-install helpers) and must never be left disabled. Ensure it is
+            // enabled on install AND update. Optional plugins (finder, schemaorg,
+            // task) are only enabled on first install, so an intentional disable
+            // by the site admin is preserved across updates.
+            $isSystemPlugin = ($group === 'system' && $plugin === 'proclaim');
+
+            if (($published && !$isInstalled) || $isSystemPlugin) {
                 $query = $this->dbo->getQuery(true)
                     ->update($this->dbo->qn('#__extensions'))
                     ->set($this->dbo->qn('enabled') . ' = 1')
