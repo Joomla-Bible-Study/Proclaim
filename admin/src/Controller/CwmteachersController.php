@@ -37,19 +37,19 @@ class CwmteachersController extends AdminController
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogType = 'teacher';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTable = '#__bsms_teachers';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTitleColumn = 'teachername';
 

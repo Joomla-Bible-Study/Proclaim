@@ -591,7 +591,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function supportsPlaylists(): bool
     {
@@ -605,7 +605,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylists(Input $input): array
     {
@@ -677,7 +677,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylistItems(Input $input): array
     {

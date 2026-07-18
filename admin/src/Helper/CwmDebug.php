@@ -197,7 +197,7 @@ class CwmDebug
      *
      * @return  void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public static function logApi(
         string $label,

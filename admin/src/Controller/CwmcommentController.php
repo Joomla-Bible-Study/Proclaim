@@ -80,7 +80,7 @@ class CwmcommentController extends FormController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     protected function postSaveHook(BaseDatabaseModel $model, $validData = []): void
     {

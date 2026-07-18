@@ -34,7 +34,7 @@ use Joomla\Database\ParameterType;
  * the new state for a publish) so only real changes are logged. Logging is
  * best-effort and never interrupts the action.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 trait CwmActionlogListTrait
 {
@@ -43,7 +43,7 @@ trait CwmActionlogListTrait
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function delete()
     {
@@ -70,7 +70,7 @@ trait CwmActionlogListTrait
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function publish()
     {
@@ -105,7 +105,7 @@ trait CwmActionlogListTrait
      *
      * @return  array{0:int, 1:?string}  [target published value, message key or null]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function actionlogStateForTask(): array
     {
@@ -123,7 +123,7 @@ trait CwmActionlogListTrait
      *
      * @return  array<int,string>  id => title
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function collectActionlogTitles(): array
     {
@@ -173,7 +173,7 @@ trait CwmActionlogListTrait
      *
      * @return  array<int,int>  id => published value
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function actionlogPublishedStates(array $ids): array
     {
@@ -212,7 +212,7 @@ trait CwmActionlogListTrait
      *
      * @return  int[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function actionlogFilterIds(array $ids, ?int $state = null): array
     {

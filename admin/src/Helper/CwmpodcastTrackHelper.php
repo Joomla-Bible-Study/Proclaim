@@ -27,7 +27,7 @@ use Joomla\Database\ParameterType;
  * bots/crawlers are excluded. All logic is best-effort — a counting failure must
  * never block the redirect.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.3
  */
 class CwmpodcastTrackHelper
 {
@@ -38,7 +38,7 @@ class CwmpodcastTrackHelper
      * genuine app downloads are counted.
      *
      * @var  string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     private const BOT_SIGNATURES = [
         'bot', 'crawl', 'spider', 'slurp', 'headless', 'preview',
@@ -55,7 +55,7 @@ class CwmpodcastTrackHelper
      *
      * @return  boolean
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function isBot(string $userAgent): bool
     {
@@ -83,7 +83,7 @@ class CwmpodcastTrackHelper
      *
      * @return  string  40-char sha1 hash.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function clientHash(string $ip, string $userAgent): string
     {
@@ -109,7 +109,7 @@ class CwmpodcastTrackHelper
      *
      * @return  string  The permanent guid to emit.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function resolveGuid(DatabaseInterface $db, int $mediaId, ?string $stored, string $legacyGuid): string
     {
@@ -156,7 +156,7 @@ class CwmpodcastTrackHelper
      *
      * @return  boolean  True if this hit was counted; false if deduped.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function record(
         DatabaseInterface $db,

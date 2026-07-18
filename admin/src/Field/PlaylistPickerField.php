@@ -31,7 +31,7 @@ use Joomla\CMS\Language\Text;
  * edge case.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.3.3
  */
 class PlaylistPickerField extends TextField
 {
@@ -39,7 +39,7 @@ class PlaylistPickerField extends TextField
      * The form field type.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.3
      */
     protected $type = 'PlaylistPicker';
 
@@ -49,7 +49,7 @@ class PlaylistPickerField extends TextField
      * @return  string  The field input markup.
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     protected function getInput(): string
     {

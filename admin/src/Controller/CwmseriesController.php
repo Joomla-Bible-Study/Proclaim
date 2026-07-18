@@ -33,19 +33,19 @@ class CwmseriesController extends AdminController
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogType = 'serie';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTable = '#__bsms_series';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTitleColumn = 'series_text';
 

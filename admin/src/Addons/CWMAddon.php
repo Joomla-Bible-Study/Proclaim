@@ -647,7 +647,7 @@ abstract class CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function supportsPlaylists(): bool
     {
@@ -662,7 +662,7 @@ abstract class CWMAddon
      *
      * @return  array<int, array{id: mixed, server_name: mixed, type: mixed}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function getPlaylistCapableServers(): array
     {
@@ -695,7 +695,7 @@ abstract class CWMAddon
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylists(Input $input): array
     {
@@ -714,7 +714,7 @@ abstract class CWMAddon
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylistItems(Input $input): array
     {
@@ -732,7 +732,7 @@ abstract class CWMAddon
      *
      * @return  string|null  The platform media ID, or null.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function extractRemoteMediaId(string $text): ?string
     {
@@ -750,7 +750,7 @@ abstract class CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function supportsPlaylistWriteback(): bool
     {
@@ -771,7 +771,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function pushPlaylistTitle(int $serverId, string $remotePlaylistId, string $title): array
     {
@@ -792,7 +792,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function pushPlaylistDescription(int $serverId, string $remotePlaylistId, string $description): array
     {
@@ -815,7 +815,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
@@ -836,7 +836,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
@@ -879,7 +879,7 @@ abstract class CWMAddon
      * @return  Response  The HTTP response (status left for the caller to check)
      *
      * @throws  \Exception  If the request itself fails (connection, TLS, …)
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     protected function apiRequest(
         string $method,

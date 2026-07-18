@@ -37,19 +37,19 @@ class CwmpodcastsController extends AdminController
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogType = 'podcast';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTable = '#__bsms_podcast';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTitleColumn = 'title';
 

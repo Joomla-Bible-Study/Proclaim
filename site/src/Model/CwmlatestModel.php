@@ -35,7 +35,7 @@ class CwmlatestModel extends BaseDatabaseModel
      *
      * @return string|null The "id:alias" slug of the latest study, or null if none found
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public function getLatestStudySlug(): ?string
     {

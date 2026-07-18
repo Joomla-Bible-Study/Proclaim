@@ -24,7 +24,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
  * library, the addon base/local classes, and the podcast helper.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.3.3
  */
 final class Cwmmime
 {
@@ -37,7 +37,7 @@ final class Cwmmime
      *
      * @var array<string, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     private const MAP = [
         // Audio
@@ -86,7 +86,7 @@ final class Cwmmime
      *
      * @return  string|null  The mapped MIME type, or null when the extension is unknown.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public static function fromExtension(string $pathOrFilename): ?string
     {
@@ -104,7 +104,7 @@ final class Cwmmime
      *
      * @return  string|null  The detected MIME type, or null when undetermined.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public static function detect(string $filepath): ?string
     {
@@ -137,7 +137,7 @@ final class Cwmmime
      *
      * @return  string  A non-empty MIME type suitable for a Content-Type header.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public static function forDownload(string $mimeType, string $file): string
     {

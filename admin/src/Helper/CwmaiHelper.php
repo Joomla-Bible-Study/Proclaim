@@ -597,7 +597,7 @@ class CwmaiHelper
      * @return  Response  The HTTP response (status is left for the caller to check)
      *
      * @throws  \Exception  If the request itself fails (connection, TLS, …)
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function postJson(string $provider, string $url, string $payload, array $headers): Response
     {
