@@ -19,6 +19,84 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.3                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.3.3</version>
+        <date>2026-07-18</date>
+        <note>
+            <item>chore: migrate to cwm-build-tools v0.5.x by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1220</item>
+            <item>chore(js): ESLint cleanup — auto-fix + globals + ignore minified vendor by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1234</item>
+            <item>chore(js): migrate Joomla.editors.instances → JoomlaEditor.get by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1235</item>
+            <item>fix(js): replace Joomla.Text._() truthy-key trap with safe helper by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1236</item>
+            <item>chore(build): delete orphan build/cwm-article.sh by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1239</item>
+            <item>chore(build): migrate build:assets to cwm-build-tools template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1238</item>
+            <item>fix(ai-assist): Add Selected appends topics instead of replacing by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1237</item>
+            <item>fix(css): dark-mode contrast for already-selected Choices.js dropdown items by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1240</item>
+            <item>feat(captions): auto-fill subtitle track label/srclang from site default by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1241</item>
+            <item>Epic #1210 integration: caption format support + YouTube Captions API by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1232</item>
+            <item>chore: gitignore media/captions/ runtime upload directory by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1242</item>
+            <item>chore(version): sync versions.json + package.json with shipped 10.3.2 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1243</item>
+            <item>fix(version): retag today&#x27;s captions epic work as @since 10.3.3 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1244</item>
+            <item>chore(submodule): bump lib_cwmscripture + scripturelinks for CSS fix by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1245</item>
+            <item>style(css): drop redundant % unit from zero-width progress bars by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1246</item>
+            <item>test(site): expand CwmsermonsModel filter regression coverage by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1247</item>
+            <item>fix(images): surface low-res warning on all uploads; preserve ratio in migration by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1248</item>
+            <item>chore: untrack Claude local settings + sync lockfiles by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1249</item>
+            <item>test(site): integration-test module-state query path; log mod_proclaim render errors by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1250</item>
+            <item>feat(cpanel): surface content awaiting editorial review on the dashboard by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1251</item>
+            <item>fix(layout-editor): align fields in landing section settings modal by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1252</item>
+            <item>feat(debug): wire CwmDebug::logQuery into the main list query paths by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1253</item>
+            <item>feat(debug): instrument AI provider HTTP calls; add CwmDebug::logApi by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1254</item>
+            <item>feat(debug): instrument podcast HTTP calls with CwmDebug::logApi by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1255</item>
+            <item>feat(debug): shared addon apiRequest() + instrument Vimeo HTTP calls by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1256</item>
+            <item>feat(debug): instrument Wistia and Resi HTTP calls via apiRequest by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1257</item>
+            <item>chore(deps): dependency maintenance — patch bumps, unused dep removal, phan v6, intl-tel-input v29 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1258</item>
+            <item>chore(deps): bump google/apiclient v2.19.3 in YouTube addon by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1259</item>
+            <item>build: add composer release:wiki to sync wiki Home.md version table by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1260</item>
+            <item>refactor: remove dead code flagged by stale TODOs (cluster A) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1261</item>
+            <item>refactor: resolve cluster-B TODOs (slug routing + stale-comment cleanup) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1262</item>
+            <item>refactor: consolidate duplicated MIME detection into Cwmmime helper (B2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1263</item>
+            <item>refactor: resolve cluster-C TODOs (dead code + stale-comment cleanup) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1264</item>
+            <item>refactor: remove stale &#x27;deprecate this override&#x27; TODO on CwmtopicTable::bind() (cluster D) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1265</item>
+            <item>chore: gitignore local .claude/settings.json by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1266</item>
+            <item>test: remove orphaned legacy files from tests/ root by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1267</item>
+            <item>chore(deps-dev): bump @babel/core from 7.29.0 to 7.29.6 by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1269</item>
+            <item>chore(deps): bump guzzlehttp/guzzle from 7.11.1 to 7.12.1 in /admin/src/Addons/Servers/Youtube by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1270</item>
+            <item>chore(deps): bump guzzlehttp/psr7 from 2.11.0 to 2.12.1 in /admin/src/Addons/Servers/Youtube by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1271</item>
+            <item>chore(deps): patch all npm audit vulnerabilities via overrides by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1274</item>
+            <item>chore(deps): refresh dev-only composer dependencies by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1275</item>
+            <item>chore(deps): bump intl-tel-input 29.0.5 -&gt; 29.1.1 (closes #1268) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1276</item>
+            <item>fix(images): sanitize &amp; length-cap generated message image filenames (closes #1272) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1277</item>
+            <item>feat(media): polish the General Items tab — Podcast fancy-select, inline Browse, layout (closes #1278) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1279</item>
+            <item>chore(lang): sync translations after podcast hint change by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1280</item>
+            <item>feat(playlist): scaffold Playlist entity (#1273 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1282</item>
+            <item>feat(playlist): bulk import + reconcile YouTube playlists (#1273 phase 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1283</item>
+            <item>feat(playlist): scheduled YouTube playlist sync task + conflict gate (#1273 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1284</item>
+            <item>feat(playlist): Browse Playlists picker + capability registry (#1273 phase 4) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1285</item>
+            <item>feat(playlist): platform-neutral contract + Vimeo, remote_* columns (#1273 phase 5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1286</item>
+            <item>feat: YouTube/Vimeo Playlist system — import, sync, picker (#1273 phases 1-5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1287</item>
+            <item>feat(playlist): OAuth title write-back — completes the conflict gate (#1273 phase 6.1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1288</item>
+            <item>feat(playlist): membership write-back — series videos into playlists (#1273 phase 6.2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1290</item>
+            <item>feat(playlist): description write-back (#1273 phase 6.3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1291</item>
+            <item>feat(playlist): per-media playlist assignment field (#1273 phase 6.2b, PR A) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1292</item>
+            <item>feat(playlist): bidirectional removal — de-select removes video from platform (#1273 phase 6.2b, PR B) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1293</item>
+            <item>feat(actionlog): cover all content entities + cpanel link to Proclaim logs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1294</item>
+            <item>fix(sql): CREATE TABLE ( on table-name line so Database-fix parses playlist tables by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1296</item>
+            <item>feat(actionlog): log delete + publish-state changes across list views (PR 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1295</item>
+            <item>chore(deps): weekly dependency sweep (#1289) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1297</item>
+            <item>feat(podcast): download tracking redirect + permanent episode GUIDs (#1281) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1299</item>
+            <item>feat(podcast): default download tracking to ON (#1281) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1300</item>
+            <item>feat(analytics): surface podcast downloads on the dashboard (#1281) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1301</item>
+            <item>fix(youtube): decode API-encoded titles to stop double-escaping by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1303</item>
+            <item>fix(release): repair pkg assembly + clean-install install-script bugs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1304</item>
+            <item>test(release): clean-install / upgrade / migration validation harness by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1305</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.2                                                   -->
     <!-- ============================================================ -->
     <changelog>
