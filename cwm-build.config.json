@@ -145,7 +145,7 @@
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
-        "updateStreamId": 2,
+        "updateStreamId": 1,
         "tokenItem": "CWM ARS API Token",
         "tokenVault": "CWM",
         "itemDescription": "pkg_proclaim download"
