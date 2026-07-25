@@ -54,7 +54,10 @@
       "CWM\\Component\\Proclaim\\Api\\": "api/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
       "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
-    }
+    },
+    "exclude-from-classmap": [
+      "/admin/src/Addons/Servers/Youtube/vendor/"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
