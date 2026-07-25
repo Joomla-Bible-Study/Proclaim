@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
 /**
@@ -106,6 +107,22 @@ final class CwmlogHelper
     private const DEBUG_FILE = 'com_proclaim.debug.php';
 
     /**
+     * Severities recorded when debug mode is off: problems only.
+     *
+     * Deliberately excludes DEBUG, INFO and NOTICE. Those describe normal running,
+     * and normal running happens on every request — one routine line per request
+     * is unbounded growth for no diagnostic value. A site that needs them turns
+     * debug mode on, which widens this to Log::ALL.
+     *
+     * This matters more than it looks: registering these categories made ~160
+     * pre-existing Log::add() calls start writing for the first time, including
+     * per-render INFO in the scripture helper.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const PRODUCTION_PRIORITIES = Log::EMERGENCY | Log::ALERT | Log::CRITICAL | Log::ERROR | Log::WARNING;
+
+    /**
      * Whether the loggers have been registered for this request.
      *
      * @var    boolean
@@ -136,20 +153,50 @@ final class CwmlogHelper
         // admin/api.php delegates here rather than registering its own.
         self::$registered = true;
 
-        $files = self::FILES;
+        $files    = self::FILES;
+        $debugOn  = self::isDebugEnabled();
+        $priority = $debugOn ? Log::ALL : self::PRODUCTION_PRIORITIES;
 
         // Only when debug mode is active, so production sites do not accumulate an
         // empty debug log — behaviour inherited from admin/api.php.
-        if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+        if ($debugOn) {
             $files[self::CATEGORY_DEBUG] = self::DEBUG_FILE;
         }
 
         foreach ($files as $category => $file) {
             try {
-                Log::addLogger(['text_file' => $file], Log::ALL, [$category]);
+                Log::addLogger(['text_file' => $file], $priority, [$category]);
             } catch (\Throwable) {
                 // An unwritable log path must never cost the site a response.
             }
+        }
+    }
+
+    /**
+     * Whether verbose logging is switched on for this request.
+     *
+     * JBSMDEBUG is defined by admin/api.php from the component's debug setting, or
+     * by the jbsmdbg query parameter.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function isDebugEnabled(): bool
+    {
+        if (\defined('JBSMDEBUG') && JBSMDEBUG) {
+            return true;
+        }
+
+        // JBSMDEBUG is defined by admin/api.php, which never runs in the API
+        // application — it needs a document for the web asset manager. Without
+        // this fallback the API could never be made verbose at all, which is the
+        // one place a "why did that 404?" line is most wanted. Joomla's global
+        // debug flag comes from configuration.php, so it costs no query.
+        try {
+            return (bool) Factory::getApplication()->get('debug', false);
+        } catch (\Throwable) {
+            return false;
         }
     }
 
@@ -166,6 +213,13 @@ final class CwmlogHelper
      */
     public static function debug(string $message, string $category = self::CATEGORY_GENERAL): void
     {
+        // Skipped entirely unless debug mode is on. These fire on every request,
+        // so without this guard the log grows in step with traffic while saying
+        // the same thing each time.
+        if (!self::isDebugEnabled()) {
+            return;
+        }
+
         self::write($message, Log::DEBUG, $category);
     }
 
@@ -185,6 +239,12 @@ final class CwmlogHelper
      */
     public static function info(string $message, string $category = self::CATEGORY_GENERAL): void
     {
+        // As with debug(): routine activity is only recorded when someone has
+        // asked to see it.
+        if (!self::isDebugEnabled()) {
+            return;
+        }
+
         self::write($message, Log::INFO, $category);
     }
 

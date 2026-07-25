@@ -190,4 +190,69 @@ class CwmlogHelperTest extends ProclaimTestCase
             'Logger registration should happen only in CwmlogHelper'
         );
     }
+
+    /**
+     * Routine severities are gated, so the log does not grow with traffic.
+     *
+     * The API plugin emits a DEBUG line on every request. Ungated, that is one
+     * line per request saying the same thing — measured at 10 lines per 10
+     * requests before this guard existed.
+     */
+    public function testRoutineLevelsAreGatedBehindDebugMode(): void
+    {
+        foreach (['debug', 'info'] as $method) {
+            $ref    = new \ReflectionMethod(CwmlogHelper::class, $method);
+            $lines  = \array_slice(
+                file($ref->getFileName()),
+                $ref->getStartLine() - 1,
+                $ref->getEndLine() - $ref->getStartLine() + 1
+            );
+            $source = implode('', $lines);
+
+            $this->assertStringContainsString(
+                'isDebugEnabled()',
+                $source,
+                "CwmlogHelper::{$method}() must be gated behind debug mode"
+            );
+        }
+    }
+
+    /**
+     * Problems are never gated — an error must record whether or not anyone
+     * switched debug on.
+     */
+    public function testProblemLevelsAreNotGated(): void
+    {
+        foreach (['warning', 'error'] as $method) {
+            $ref    = new \ReflectionMethod(CwmlogHelper::class, $method);
+            $lines  = \array_slice(
+                file($ref->getFileName()),
+                $ref->getStartLine() - 1,
+                $ref->getEndLine() - $ref->getStartLine() + 1
+            );
+            $source = implode('', $lines);
+
+            $this->assertStringNotContainsString(
+                'isDebugEnabled()',
+                $source,
+                "CwmlogHelper::{$method}() must record regardless of debug mode"
+            );
+        }
+    }
+
+    /**
+     * The production priority mask records problems and nothing routine.
+     */
+    public function testProductionPrioritiesExcludeRoutineLevels(): void
+    {
+        $mask = (new \ReflectionClass(CwmlogHelper::class))->getConstant('PRODUCTION_PRIORITIES');
+
+        foreach (['ERROR' => Log::ERROR, 'WARNING' => Log::WARNING, 'CRITICAL' => Log::CRITICAL] as $name => $bit) {
+            $this->assertSame($bit, $mask & $bit, "Production logging must include {$name}");
+        }
+
+        foreach (['DEBUG' => Log::DEBUG, 'INFO' => Log::INFO, 'NOTICE' => Log::NOTICE] as $name => $bit) {
+            $this->assertSame(0, $mask & $bit, "Production logging must exclude {$name} — it grows with traffic");
+        }
+    }
 }
