@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
  * API controller for podcasts.
@@ -29,11 +28,15 @@ use Joomla\CMS\MVC\Controller\ApiController;
  *
  * @since  10.3.0
  */
-class PodcastsController extends ApiController
+class PodcastsController extends AbstractWritableController
 {
     protected $contentType = 'podcasts';
 
     protected $default_view = 'podcasts';
+
+    protected $logType = 'podcast';
+
+    protected $logTitleField = 'title';
 
     /**
      * List podcasts — published and archived only.

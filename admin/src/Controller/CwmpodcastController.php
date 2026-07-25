@@ -102,7 +102,7 @@ class CwmpodcastController extends FormController
     {
         $id    = (int) $model->getState('cwmpodcast.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_PODCAST_ADDED' : 'COM_PROCLAIM_ACTION_LOG_PODCAST_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title = $validData['title'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'podcast', $id);

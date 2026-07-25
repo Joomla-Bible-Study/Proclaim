@@ -536,7 +536,7 @@ class CwmmediafileController extends FormController
     {
         $mediaId = (int) $model->getState('cwmmediafile.id');
         $isNew   = empty($validData['id']);
-        $key     = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MEDIAFILE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MEDIAFILE_UPDATED';
+        $key     = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title   = $validData['params']['filename'] ?? ('#' . $mediaId);
 
         CwmactionlogHelper::log($key, $title, 'mediafile', $mediaId);

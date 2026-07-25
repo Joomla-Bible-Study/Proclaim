@@ -9,6 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -109,26 +110,18 @@ if ($app->isClient('administrator')) {
 // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
 $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 
-// Include the JLog class.
-Log::addLogger(
-    [
-        'text_file' => 'com_proclaim.errors.php',
-    ],
-    Log::ALL,
-    ['com_proclaim']
-);
-
-// Dedicated debug log — only registered when debug mode is active to avoid
-// creating an empty log file in production.
-if (\defined('JBSMDEBUG') && JBSMDEBUG) {
-    Log::addLogger(
-        [
-            'text_file' => 'com_proclaim.debug.php',
-        ],
-        Log::ALL,
-        ['com_proclaim.debug']
-    );
-}
+// Log categories are registered by CwmlogHelper, not here.
+//
+// This file only runs in the administrator and site applications — it needs a
+// document for the web asset manager, which the API application does not have.
+// Registering loggers here therefore left API code with no logger at all, and
+// silently discarded everything it logged.
+//
+// Registration now lives in CwmlogHelper (called from ProclaimComponent::boot(),
+// so every application is covered). The call below is for the paths that reach
+// this file without booting the component, such as the postinstall messages.
+// It is idempotent: registering a category twice would write every entry twice.
+CwmlogHelper::register();
 
 // CWM has been initialized
 const CWM_LOADED = 1;

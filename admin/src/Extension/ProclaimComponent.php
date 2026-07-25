@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
@@ -122,6 +123,16 @@ class ProclaimComponent extends MVCComponent implements
 
     public function boot(ContainerInterface $container): void
     {
+        // Register Proclaim's log categories before anything else runs.
+        //
+        // Log::addLogEntry() only dispatches to loggers matching an entry's
+        // category, so a Log::add() against an unregistered category is built and
+        // silently discarded. Proclaim makes ~160 such calls and previously
+        // registered nothing, so none of them reached a file. Doing it here means
+        // every code path dispatched through the component logs for real, whether
+        // it runs in the administrator, the site or the API.
+        CwmlogHelper::register();
+
         // Check PHP version requirement
         if (PHP_VERSION_ID < self::MIN_PHP_VERSION_ID) {
             // Always load Proclaim API if it exists.

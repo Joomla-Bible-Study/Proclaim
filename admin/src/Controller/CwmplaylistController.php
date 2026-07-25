@@ -50,7 +50,7 @@ class CwmplaylistController extends FormController
     {
         $id    = (int) $model->getState('cwmplaylist.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_PLAYLIST_ADDED' : 'COM_PROCLAIM_ACTION_LOG_PLAYLIST_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
 
         CwmactionlogHelper::log($key, $validData['title'] ?? '', 'playlist', $id);
     }

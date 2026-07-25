@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
@@ -30,11 +29,15 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * @since  __DEPLOY_VERSION__
  */
-class MessagetypesController extends ApiController
+class MessagetypesController extends AbstractWritableController
 {
     protected $contentType = 'messagetypes';
 
     protected $default_view = 'messagetypes';
+
+    protected $logType = 'messagetype';
+
+    protected $logTitleField = 'message_type';
 
     /**
      * List message types — published and archived only.

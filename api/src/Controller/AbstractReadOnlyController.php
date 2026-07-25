@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\Router\Exception\RouteNotFoundException;
 
@@ -91,10 +92,36 @@ abstract class AbstractReadOnlyController extends ApiController
      */
     private function readOnlyMessage(string $verb): string
     {
-        return \sprintf(
+        $message = \sprintf(
             'The %s resource is read-only and cannot be %s through the API.',
             $this->contentType,
             $verb
         );
+
+        // Record the attempt as a WARNING, not an action-log entry. Nothing
+        // changed, so there is nothing to audit — but a write aimed at a resource
+        // that has no write route is either a probe or a client built on wrong
+        // assumptions, and an administrator should be able to see it rather than
+        // only an unexplained 404. The action log would also miss it entirely
+        // when the caller is unauthenticated, since it records nothing without a
+        // user id.
+        try {
+            $user     = $this->app->getIdentity();
+            $identity = $user && $user->id ? $user->username . ' (#' . $user->id . ')' : 'unauthenticated caller';
+
+            CwmlogHelper::warning(
+                \sprintf(
+                    'Blocked write to read-only resource "%s" by %s from %s',
+                    $this->contentType,
+                    $identity,
+                    $this->app->getInput()->server->getString('REMOTE_ADDR', 'unknown address')
+                ),
+                CwmlogHelper::CATEGORY_API
+            );
+        } catch (\Throwable) {
+            // Logging must never be the reason a refusal fails to reach the caller.
+        }
+
+        return $message;
     }
 }
