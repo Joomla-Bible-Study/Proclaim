@@ -426,7 +426,7 @@ HTML;
     {
         $id    = (int) $model->getState('cwmserver.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_SERVER_ADDED' : 'COM_PROCLAIM_ACTION_LOG_SERVER_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title = $validData['server_name'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'server', $id);

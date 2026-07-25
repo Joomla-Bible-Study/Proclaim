@@ -83,7 +83,7 @@ class CwmserieController extends FormController
     {
         $id    = (int) $model->getState('cwmserie.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_SERIES_ADDED' : 'COM_PROCLAIM_ACTION_LOG_SERIES_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
 
         CwmactionlogHelper::log($key, $validData['series_text'] ?? '', 'serie', $id);
 

@@ -14,6 +14,7 @@ namespace CWM\Plugin\WebServices\Proclaim\Extension;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\ApiRouter;
@@ -112,12 +113,29 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
 
         // 0 = Disabled — do not register any routes
         if ($apiAccess === 0) {
+            // Every Proclaim endpoint will 404 from here. Said plainly at DEBUG,
+            // because "the API returns 404" is otherwise indistinguishable from a
+            // routing bug, and this is the most common cause.
+            CwmlogHelper::debug(
+                'api_access is disabled — no Proclaim API routes registered.',
+                CwmlogHelper::CATEGORY_API
+            );
+
             return;
         }
 
         // 1 = Public (no auth), 2 = API key required
         $isPublic = ($apiAccess === 1);
         $router   = $event->getRouter();
+
+        CwmlogHelper::debug(
+            \sprintf(
+                'Registering %d Proclaim API resources (reads %s).',
+                \count(self::RESOURCES),
+                $isPublic ? 'public' : 'require an API key'
+            ),
+            CwmlogHelper::CATEGORY_API
+        );
 
         foreach (self::RESOURCES as $resource => $writable) {
             $this->createReadOnlyRoutes($router, "v1/proclaim/$resource", $resource, $isPublic);
@@ -212,8 +230,16 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
 
                 return (int) $params->get('api_access', 0);
             }
-        } catch (\Throwable) {
-            // Table may not exist yet (fresh install before migration)
+        } catch (\Throwable $e) {
+            // The table may genuinely not exist yet (fresh install, before the
+            // migration runs). Either way this returns 0, which unregisters every
+            // route and makes the whole API 404 — a failure mode indistinguishable
+            // from "the administrator disabled it". ERROR rather than WARNING:
+            // the API is entirely unavailable and somebody has to act.
+            CwmlogHelper::error(
+                'Could not read the api_access setting, so no API routes were registered: ' . $e->getMessage(),
+                CwmlogHelper::CATEGORY_API
+            );
         }
 
         return 0;

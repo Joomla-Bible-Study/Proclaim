@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
@@ -31,7 +30,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * @since  10.3.0
  */
-class SermonsController extends ApiController
+class SermonsController extends AbstractWritableController
 {
     /**
      * List sermons — published and archived only.
@@ -95,6 +94,10 @@ class SermonsController extends ApiController
      * @since  10.3.0
      */
     protected $default_view = 'sermons';
+
+    protected $logType = 'message';
+
+    protected $logTitleField = 'studytitle';
 
     /**
      * Get the model, mapping API names to Cwm-prefixed model classes.

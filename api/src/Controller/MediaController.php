@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
@@ -30,11 +29,15 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * @since  10.3.0
  */
-class MediaController extends ApiController
+class MediaController extends AbstractWritableController
 {
     protected $contentType = 'media';
 
     protected $default_view = 'media';
+
+    protected $logType = 'mediafile';
+
+    protected $logTitleField = '';
 
     /**
      * List media files — published and archived only.

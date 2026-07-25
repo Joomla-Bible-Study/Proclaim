@@ -54,7 +54,7 @@ class CwmmessagetypeController extends FormController
     {
         $id    = (int) $model->getState('cwmmessagetype.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MESSAGETYPE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MESSAGETYPE_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
 
         CwmactionlogHelper::log($key, $validData['message_type'] ?? '', 'messagetype', $id);
     }

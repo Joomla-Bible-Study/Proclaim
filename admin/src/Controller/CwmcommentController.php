@@ -86,7 +86,7 @@ class CwmcommentController extends FormController
     {
         $id    = (int) $model->getState('cwmcomment.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_COMMENT_ADDED' : 'COM_PROCLAIM_ACTION_LOG_COMMENT_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
 
         CwmactionlogHelper::log($key, $validData['full_name'] ?? '', 'comment', $id);
     }

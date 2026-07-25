@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
@@ -33,11 +32,15 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * @since  __DEPLOY_VERSION__
  */
-class LocationsController extends ApiController
+class LocationsController extends AbstractWritableController
 {
     protected $contentType = 'locations';
 
     protected $default_view = 'locations';
+
+    protected $logType = 'location';
+
+    protected $logTitleField = 'location_text';
 
     /**
      * List locations — published and archived only.

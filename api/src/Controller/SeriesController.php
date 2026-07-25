@@ -14,7 +14,6 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
@@ -33,11 +32,15 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * @since  10.3.0
  */
-class SeriesController extends ApiController
+class SeriesController extends AbstractWritableController
 {
     protected $contentType = 'series';
 
     protected $default_view = 'series';
+
+    protected $logType = 'serie';
+
+    protected $logTitleField = 'series_text';
 
     /**
      * Map API model names to Cwm-prefixed Proclaim classes.

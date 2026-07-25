@@ -124,7 +124,7 @@ class CwmlocationController extends FormController
     {
         $id    = (int) $model->getState('cwmlocation.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_LOCATION_ADDED' : 'COM_PROCLAIM_ACTION_LOG_LOCATION_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
 
         CwmactionlogHelper::log($key, $validData['location_text'] ?? '', 'location', $id);
 

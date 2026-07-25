@@ -406,7 +406,7 @@ class CwmmessageController extends FormController
     {
         $id    = (int) $model->getState('cwmmessage.id');
         $isNew = (bool) $validData['id'] === 0 || empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_MESSAGE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_MESSAGE_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title = $validData['studytitle'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'message', $id);
