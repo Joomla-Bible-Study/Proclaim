@@ -188,4 +188,74 @@ class ApiActionLogTest extends ProclaimTestCase
             'Successful writes belong to the action log only, not the operational log'
         );
     }
+
+    /**
+     * Every write verb records an authenticated caller being refused.
+     *
+     * The narrow case this covers: a caller who authenticated successfully and
+     * then attempted something their account is not permitted to do. Failed
+     * authentication is deliberately NOT logged — an anonymous bad key is
+     * unbounded noise and the web server access log already has it.
+     */
+    public function testDeniedActionsAreLogged(): void
+    {
+        $source = (string) file_get_contents(
+            \dirname(__DIR__, 5) . '/api/src/Controller/AbstractWritableController.php'
+        );
+
+        foreach (['add', 'edit', 'delete'] as $verb) {
+            $this->assertMatchesRegularExpression(
+                '/function ' . $verb . '\([^)]*\)\s*\{.*?catch \(NotAllowed/s',
+                $source,
+                "{$verb}() should record a permission refusal"
+            );
+        }
+
+        $this->assertSame(
+            3,
+            substr_count($source, '$this->logDenied('),
+            'Each of add/edit/delete should record exactly one refusal'
+        );
+    }
+
+    /**
+     * A refusal must still reach the caller as a 403 — logging never swallows it.
+     */
+    public function testDeniedActionsRethrow(): void
+    {
+        $source = (string) file_get_contents(
+            \dirname(__DIR__, 5) . '/api/src/Controller/AbstractWritableController.php'
+        );
+
+        $this->assertSame(
+            3,
+            substr_count($source, 'throw $e;'),
+            'Every caught NotAllowed must be rethrown so the caller still gets a 403'
+        );
+    }
+
+    /**
+     * Refusals are operational logging, not audit entries — nothing changed, so
+     * there is nothing to audit.
+     */
+    public function testDeniedActionsDoNotWriteToTheActionLog(): void
+    {
+        $ref    = new \ReflectionMethod(
+            'CWM\\Component\\Proclaim\\Api\\Controller\\AbstractWritableController',
+            'logDenied'
+        );
+        $lines  = \array_slice(
+            file($ref->getFileName()),
+            $ref->getStartLine() - 1,
+            $ref->getEndLine() - $ref->getStartLine() + 1
+        );
+        $source = implode('', $lines);
+
+        $this->assertStringContainsString('CwmlogHelper::warning', $source);
+        $this->assertStringNotContainsString(
+            'CwmactionlogHelper',
+            $source,
+            'A refused action changed nothing, so it does not belong in the audit trail'
+        );
+    }
 }

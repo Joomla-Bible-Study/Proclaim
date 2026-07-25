@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Api\Controller;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
+use Joomla\CMS\Access\Exception\NotAllowed;
 use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
@@ -98,11 +99,93 @@ abstract class AbstractWritableController extends ApiController
         $recordId = (int) ($id ?? $this->input->get('id', 0, 'int'));
         $title    = $this->recordTitle($recordId);
 
-        $result = parent::delete($id);
+        try {
+            $result = parent::delete($id);
+        } catch (NotAllowed $e) {
+            $this->logDenied('delete', $recordId);
+
+            throw $e;
+        }
 
         $this->logApiWrite('DELETED', $recordId, $title);
 
         return $result;
+    }
+
+    /**
+     * Create a record, recording the attempt if permission is refused.
+     *
+     * @return  mixed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function add()
+    {
+        try {
+            return parent::add();
+        } catch (NotAllowed $e) {
+            $this->logDenied('create', 0);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Update a record, recording the attempt if permission is refused.
+     *
+     * @return  mixed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function edit()
+    {
+        try {
+            return parent::edit();
+        } catch (NotAllowed $e) {
+            $this->logDenied('update', $this->input->getInt('id', 0));
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Record an authenticated caller being refused an action.
+     *
+     * This is deliberately narrow. Failed authentication is NOT logged — an
+     * anonymous caller with a bad key is unbounded noise and the web server's
+     * access log already has it. What is worth recording is the opposite case: a
+     * caller who authenticated successfully and then attempted something their
+     * account is not permitted to do. That has a known identity, is bounded by the
+     * number of real integrations, and is a genuine signal — an over-scoped
+     * client, a buggy one, or a key being used for something it should not be.
+     *
+     * @param   string   $verb  create, update or delete.
+     * @param   integer  $id    Record id, 0 when creating.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function logDenied(string $verb, int $id): void
+    {
+        try {
+            $user   = $this->app->getIdentity();
+            $target = $id > 0 ? $this->contentType . ' #' . $id : $this->contentType;
+
+            CwmlogHelper::warning(
+                \sprintf(
+                    'Authenticated user %s (#%d) was refused permission to %s %s from %s',
+                    $user?->username ?? 'unknown',
+                    (int) ($user?->id ?? 0),
+                    $verb,
+                    $target,
+                    $this->app->getInput()->server->getString('REMOTE_ADDR', 'unknown address')
+                ),
+                CwmlogHelper::CATEGORY_API
+            );
+        } catch (\Throwable) {
+            // Logging must never mask the 403 the caller needs to receive.
+        }
     }
 
     /**
