@@ -81,6 +81,9 @@ class com_proclaimInstallerScript extends InstallerScript
             'task'      => [
                 'proclaim' => 1,
             ],
+            // Registers the REST API routes. Installed enabled; the routes stay
+            // inert until the api_access admin setting is set to public or key.
+            'webservices' => ['proclaim' => 1],
         ],
     ];
 

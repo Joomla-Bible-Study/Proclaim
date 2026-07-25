@@ -55,7 +55,7 @@ foreach ($installs as $install) {
     })($configFile);
 
     [$host, $user, $pass, $name, $prefix] = $cfg;
-    $port = 3306;
+    $port                                 = 3306;
 
     if (str_contains($host, ':')) {
         [$host, $portStr] = explode(':', $host, 2);
@@ -165,15 +165,37 @@ foreach ($installs as $install) {
         'administrator/manifests/packages/proclaim',
     ];
 
-    $removed = 0;
+    $removed  = 0;
+    $unlinked = 0;
 
     foreach ($siteDirs as $rel) {
         $abs = $install->path . '/' . $rel;
+
+        // A role=test install must be file-backed, never symlinked back at the
+        // working repo. is_dir() is true for a symlink-to-dir, so a linked path
+        // would otherwise be recursed into and its TARGET emptied — i.e. this
+        // harness would delete the repo's own source. Drop the link only.
+        if (is_link($abs)) {
+            fwrite(
+                STDERR,
+                "  WARNING: {$rel} is a symlink -> " . (readlink($abs) ?: '?') . "\n"
+                . "           role=test sites must not be linked; removing the link"
+                . " (target untouched).\n"
+            );
+            @unlink($abs);
+            $unlinked++;
+
+            continue;
+        }
 
         if (is_dir($abs)) {
             rrmdir($abs);
             $removed++;
         }
+    }
+
+    if ($unlinked > 0) {
+        fwrite(STDERR, "  removed {$unlinked} stray symlink(s) — re-run 'composer symlink' only for role=dev sites\n");
     }
 
     echo "  removed {$removed} on-disk extension dir(s)\n";
@@ -216,10 +238,22 @@ echo "Reset complete.\n";
 /**
  * Recursively delete a directory.
  *
+ * Refuses to recurse through a symlink. is_dir() is true for a symlink that
+ * points at a directory, so without this guard a linked install path (e.g. a
+ * role=test site that was symlinked back at the working repo) would be walked
+ * and its TARGET emptied — deleting source files. Only the link is removed;
+ * whatever it points at is left alone.
+ *
  * @since __DEPLOY_VERSION__
  */
 function rrmdir(string $dir): void
 {
+    if (is_link($dir)) {
+        @unlink($dir);
+
+        return;
+    }
+
     $items = scandir($dir);
 
     if ($items === false) {

@@ -45,6 +45,15 @@
         <folder>tmpl</folder>
     </files>
 
+    <!-- API application files — installed to JPATH_API/components/com_proclaim.
+         Required for the CWM\Component\Proclaim\Api namespace to resolve; the
+         webservices plugin routes are dead without these. -->
+    <api>
+        <files folder="api">
+            <folder>src</folder>
+        </files>
+    </api>
+
     <!-- Media files -->
     <media destination="com_proclaim" folder="media">
         <filename>joomla.asset.json</filename>
