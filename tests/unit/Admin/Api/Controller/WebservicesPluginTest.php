@@ -12,6 +12,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Api\Controller;
 
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use CWM\Plugin\WebServices\Proclaim\Extension\Proclaim;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for Proclaim webservices plugin
@@ -64,9 +65,92 @@ class WebservicesPluginTest extends ProclaimTestCase
     }
 
     /**
-     * Verify all 5 resources are registered in onBeforeApiRoute.
+     * Resources the API exposes, and whether each accepts writes.
+     *
+     * @return array<string, array{0: string, 1: bool}>
      */
-    public function testAllResourcesRegistered(): void
+    public static function resourceProvider(): array
+    {
+        return [
+            'sermons'      => ['sermons', true],
+            'teachers'     => ['teachers', true],
+            'series'       => ['series', true],
+            'podcasts'     => ['podcasts', true],
+            'media'        => ['media', true],
+            'topics'       => ['topics', true],
+            'locations'    => ['locations', true],
+            'messagetypes' => ['messagetypes', true],
+            'playlists'    => ['playlists', false],
+            'comments'     => ['comments', false],
+            'servers'      => ['servers', false],
+            'templates'    => ['templates', false],
+        ];
+    }
+
+    /**
+     * Every expected resource is registered, with the expected write posture.
+     *
+     */
+    #[DataProvider('resourceProvider')]
+    public function testResourceRegisteredWithExpectedWritePosture(string $resource, bool $writable): void
+    {
+        $resources = (new \ReflectionClass(Proclaim::class))->getConstant('RESOURCES');
+
+        $this->assertArrayHasKey($resource, $resources, "Resource '$resource' should be registered");
+        $this->assertSame(
+            $writable,
+            $resources[$resource],
+            "Resource '$resource' should " . ($writable ? '' : 'NOT ') . 'accept writes'
+        );
+    }
+
+    /**
+     * The registry must not grow silently — a new resource has to be a deliberate
+     * change here, so nothing gets exposed without a matching decision on writes.
+     */
+    public function testNoUnexpectedResourcesRegistered(): void
+    {
+        $resources = (new \ReflectionClass(Proclaim::class))->getConstant('RESOURCES');
+
+        $this->assertSame(
+            array_keys(self::resourceProvider()),
+            array_keys($resources),
+            'Registered resources drifted from the expected set'
+        );
+    }
+
+    /**
+     * templatecodes must stay unexposed.
+     *
+     * #__bsms_templatecode has no `access` column, so unlike every other entity
+     * in the registry it cannot honour view levels — and the field worth serving
+     * holds PHP source. Exposing it would publish code that no ACL could scope.
+     * If an `access` column is ever added, this test is the place to revisit.
+     */
+    public function testTemplatecodesIsNotExposed(): void
+    {
+        $resources = (new \ReflectionClass(Proclaim::class))->getConstant('RESOURCES');
+
+        $this->assertArrayNotHasKey(
+            'templatecodes',
+            $resources,
+            'templatecodes cannot be ACL-segmented (no access column) and serves PHP source'
+        );
+
+        $this->assertFalse(
+            class_exists('CWM\\Component\\Proclaim\\Api\\Controller\\TemplatecodesController'),
+            'No API controller should exist for templatecodes'
+        );
+    }
+
+    /**
+     * Write routes are only created for writable resources.
+     *
+     * Guards the loop in onBeforeApiRoute: the createWriteRoutes() call must stay
+     * behind the writable flag, otherwise every read-only resource silently gains
+     * POST/PATCH/DELETE.
+     */
+    public function testWriteRoutesGatedOnWritableFlag(): void
     {
         $ref   = new \ReflectionMethod(Proclaim::class, 'onBeforeApiRoute');
         $lines = \array_slice(
@@ -74,10 +158,12 @@ class WebservicesPluginTest extends ProclaimTestCase
             $ref->getStartLine() - 1,
             $ref->getEndLine() - $ref->getStartLine() + 1
         );
-        $source = implode('', $lines);
+        $source = preg_replace('/\s+/', ' ', implode('', $lines));
 
-        foreach (['sermons', 'teachers', 'series', 'podcasts', 'media'] as $resource) {
-            $this->assertStringContainsString($resource, $source, "Resource '$resource' should be registered");
-        }
+        $this->assertMatchesRegularExpression(
+            '/if \(\$writable\) \{ \$this->createWriteRoutes\(/',
+            $source,
+            'createWriteRoutes() must remain guarded by the $writable flag'
+        );
     }
 }

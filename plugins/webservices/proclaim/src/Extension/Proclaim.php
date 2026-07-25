@@ -30,19 +30,63 @@ use Joomla\Router\Route;
  *   1 = Public reads (GET open, writes require API key)
  *   2 = API Key Required (all operations require Bearer token)
  *
- * Read endpoints (GET):
- *   /api/index.php/v1/proclaim/{sermons|teachers|series|podcasts|media}
+ * Read endpoints (GET) — every resource in self::RESOURCES:
+ *   /api/index.php/v1/proclaim/{resource}
  *   /api/index.php/v1/proclaim/{resource}/:id
  *
- * Write endpoints (always require API key):
+ * Write endpoints (always require an API key) — only resources flagged writable
+ * in self::RESOURCES; see that constant for why the rest are read-only:
  *   POST   /api/index.php/v1/proclaim/{resource}      — Create
  *   PATCH  /api/index.php/v1/proclaim/{resource}/:id  — Update
  *   DELETE /api/index.php/v1/proclaim/{resource}/:id  — Delete
+ *
+ * Regardless of routing, every list query is filtered to the caller's authorised
+ * view levels by the underlying model, so a public read never returns rows a
+ * user could not see in the site itself.
  *
  * @since  10.3.0
  */
 class Proclaim extends CMSPlugin implements SubscriberInterface
 {
+    /**
+     * Exposed resources, mapped to whether write routes are registered.
+     *
+     * Read-only entries are not merely unimplemented — each has a concrete
+     * write-side hazard, and the matching controller extends
+     * AbstractReadOnlyController so the verbs are refused even if a route were
+     * added elsewhere:
+     *
+     *   servers        credentials live in params (api_key, client_secret,
+     *                  access_token); a write would overwrite or exfiltrate them
+     *   templates      site markup — an HTTP write is a defacement vector
+     *   comments       a write would bypass the front-end moderation gate
+     *   playlists      sync_enabled / writeback_enabled arm real mutations
+     *                  against a church's live YouTube account
+     *
+     * Deliberately absent: templatecodes. #__bsms_templatecode has no `access`
+     * column, so unlike every other entity here it cannot honour view levels —
+     * and the field worth serving holds PHP source. Exposing it would mean
+     * publishing code that no ACL could scope. Adding an `access` column to that
+     * table is the prerequisite for reconsidering it.
+     *
+     * @var    array<string, bool>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const RESOURCES = [
+        'sermons'      => true,
+        'teachers'     => true,
+        'series'       => true,
+        'podcasts'     => true,
+        'media'        => true,
+        'topics'       => true,
+        'locations'    => true,
+        'messagetypes' => true,
+        'playlists'    => false,
+        'comments'     => false,
+        'servers'      => false,
+        'templates'    => false,
+    ];
+
     /**
      * @since   10.3.0
      */
@@ -75,11 +119,12 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $isPublic = ($apiAccess === 1);
         $router   = $event->getRouter();
 
-        $resources = ['sermons', 'teachers', 'series', 'podcasts', 'media'];
-
-        foreach ($resources as $resource) {
+        foreach (self::RESOURCES as $resource => $writable) {
             $this->createReadOnlyRoutes($router, "v1/proclaim/$resource", $resource, $isPublic);
-            $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
+
+            if ($writable) {
+                $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
+            }
         }
     }
 
