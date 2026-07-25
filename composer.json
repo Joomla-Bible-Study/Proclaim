@@ -51,7 +51,7 @@
   "autoload": {
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-      "CWM\\Component\\Proclaim\\Api\\": "admin/src/Api/",
+      "CWM\\Component\\Proclaim\\Api\\": "api/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
       "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
     }
@@ -129,7 +129,7 @@
     "test:install": "bash build/test-install.sh",
     "test:upgrade": "bash build/test-upgrade.sh",
     "test:release": ["@test:install", "@test:upgrade"],
-    "lint:syntax": "find admin/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
+    "lint:syntax": "find admin/src api/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "check": ["@lint:syntax", "@lint", "@test"],

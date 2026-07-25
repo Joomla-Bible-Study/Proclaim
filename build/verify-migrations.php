@@ -46,7 +46,7 @@ require $root . '/libraries/vendor/autoload.php';
  */
 $EXPECTATIONS = [
     '10.3.3' => [
-        'tables'  => [
+        'tables' => [
             '#__bsms_playlists',
             '#__bsms_playlist_items',
             '#__bsms_podcast_download_log',
@@ -164,8 +164,8 @@ foreach ($installs as $install) {
 
     // --- tables -----------------------------------------------------------
     foreach ($expected['tables'] ?? [] as $table) {
-        $real = $expand($table);
-        $ok   = tableExists($mysqli, $db['name'], $real);
+        $real      = $expand($table);
+        $ok        = tableExists($mysqli, $db['name'], $real);
         $results[] = [$ok, "table {$table}"];
     }
 
@@ -174,7 +174,7 @@ foreach ($installs as $install) {
         $real = $expand($table);
 
         foreach ($cols as $col) {
-            $ok = columnExists($mysqli, $db['name'], $real, $col);
+            $ok        = columnExists($mysqli, $db['name'], $real, $col);
             $results[] = [$ok, "column {$table}.{$col}"];
         }
     }
@@ -184,7 +184,7 @@ foreach ($installs as $install) {
         $real = $expand($table);
 
         foreach ($idxs as $idx) {
-            $ok = indexExists($mysqli, $db['name'], $real, $idx);
+            $ok        = indexExists($mysqli, $db['name'], $real, $idx);
             $results[] = [$ok, "index {$table}.{$idx}"];
         }
     }
