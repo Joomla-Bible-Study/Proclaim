@@ -288,6 +288,16 @@ class CwmlocationsModel extends ListModel
             $query->where($db->quoteName('location.access') . ' = ' . (int) $access);
         }
 
+        // Restrict non-admin users to their authorised view levels. Required for
+        // security, not just tidiness: this model backs the REST API, where an
+        // unauthenticated caller would otherwise receive locations whose view
+        // level they cannot see.
+        $user = $this->getCurrentUser();
+
+        if (!$user->authorise('core.admin')) {
+            $query->whereIn($db->quoteName('location.access'), $user->getAuthorisedViewLevels());
+        }
+
         // Apply location-based visibility filter (multi-campus support).
         // Super admins get [] from getUserLocations() — no filter added (see all).
         $visibleLocations = CwmlocationHelper::getUserLocations();

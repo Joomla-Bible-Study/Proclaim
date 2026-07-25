@@ -251,7 +251,7 @@ class CwmmessagetypesModel extends ListModel
 
         // Add the list ordering clause.
         $orderCol  = $this->state->get('list.ordering', 'messagetype.message_type');
-        $orderDirn = $this->state->get('list.direction', 'acs');
+        $orderDirn = $this->state->get('list.direction', 'ASC');
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
         return $query;
