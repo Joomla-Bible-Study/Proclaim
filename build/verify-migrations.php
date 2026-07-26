@@ -14,13 +14,24 @@
  *
  * Data-driven: EXPECTATIONS is keyed by version. When a release adds migrations,
  * add an entry describing the tables/columns/indexes it introduces and the
- * #__schemas version it should advance to. Old entries stay as regression cover.
+ * #__schemas version it should advance to.
+ *
+ * Version resolution — a release that ships no migrations must not fail the gate,
+ * but a release that ships migrations nobody described must:
+ *   - exact x.y.z entry exists      => verify it
+ *   - no entry, but update SQL for  => FAIL; the expectations were forgotten
+ *     this version exists
+ *   - no entry and no update SQL    => re-verify the newest earlier entry as
+ *     regression cover. A fresh install of a no-migration release still has to
+ *     carry everything its predecessors introduced, so this is what catches
+ *     install.sql drifting behind the update SQL.
  *
  * Usage:   php build/verify-migrations.php [version]
  *   version  Optional override; defaults to active_development in versions.json.
  *
- * Exit code: 0 = every assertion passed on every test install; 1 = one or more
- * failed (or no test install / no expectations for the version).
+ * Exit code: 0 = every assertion passed on every test install (or there is
+ * genuinely nothing to verify); 1 = one or more failed, no role=test install, or
+ * a version shipped migrations with no expectations describing them.
  *
  * @package  Proclaim.Build
  * @since    __DEPLOY_VERSION__
@@ -46,7 +57,7 @@ require $root . '/libraries/vendor/autoload.php';
  */
 $EXPECTATIONS = [
     '10.3.3' => [
-        'tables'  => [
+        'tables' => [
             '#__bsms_playlists',
             '#__bsms_playlist_items',
             '#__bsms_podcast_download_log',
@@ -81,17 +92,53 @@ if ($version === null) {
 }
 
 // Match a dotted x.y.z prefix so tags like 10.3.3-dev / 10.3.3-beta1 resolve.
-$key = null;
+if (preg_match('/^(\d+\.\d+\.\d+)/', $version, $m) !== 1) {
+    fwrite(STDERR, "Could not parse an x.y.z version from '{$version}'.\n");
 
-if (preg_match('/^(\d+\.\d+\.\d+)/', $version, $m) === 1 && isset($EXPECTATIONS[$m[1]])) {
-    $key = $m[1];
+    exit(1);
+}
+
+$base = $m[1];
+
+/*
+ * Resolve which expectation set to verify.
+ *
+ * An exact match is used when present. Otherwise the version either ships
+ * migrations nobody described — a real gap, so fail — or ships none at all, in
+ * which case the newest earlier set is re-verified rather than skipping the
+ * check. That matters: a fresh install of a no-migration release must still
+ * carry every table/column/index its predecessors introduced, which is what
+ * catches install.sql drifting behind the update SQL.
+ */
+$mode = 'exact';
+
+if (isset($EXPECTATIONS[$base])) {
+    $key = $base;
+} elseif (($shipped = migrationFilesFor($root, $base)) !== []) {
+    fwrite(STDERR, "Version {$base} ships migration SQL but has no \$EXPECTATIONS entry:\n");
+
+    foreach ($shipped as $file) {
+        fwrite(STDERR, '  ' . basename($file) . "\n");
+    }
+
+    fwrite(STDERR, "Describe the tables/columns/indexes they add in " . __FILE__ . ".\n");
+
+    exit(1);
+} else {
+    $earlier = array_filter(
+        array_keys($EXPECTATIONS),
+        static fn (string $k): bool => version_compare($k, $base, '<=')
+    );
+    usort($earlier, 'version_compare');
+
+    $key  = $earlier === [] ? null : end($earlier);
+    $mode = 'regression';
 }
 
 if ($key === null) {
-    fwrite(STDERR, "No migration expectations defined for version '{$version}'.\n");
-    fwrite(STDERR, "Add an entry to \$EXPECTATIONS in " . __FILE__ . " when this release ships migrations.\n");
+    echo "Version {$base} ships no migrations and no earlier expectations exist — nothing to verify.\n";
 
-    exit(1);
+    exit(0);
 }
 
 $expected = $EXPECTATIONS[$key];
@@ -111,6 +158,11 @@ $red     = "\033[31m";
 $yellow  = "\033[33m";
 $reset   = "\033[0m";
 $overall = true;
+
+if ($mode === 'regression') {
+    echo "Version {$base} ships no migrations — re-verifying the {$key} schema as regression cover\n";
+    echo "(a fresh {$base} install must still carry everything {$key} introduced).\n";
+}
 
 echo "Verifying {$key} migrations across " . \count($installs) . " test install(s)\n";
 
@@ -164,8 +216,8 @@ foreach ($installs as $install) {
 
     // --- tables -----------------------------------------------------------
     foreach ($expected['tables'] ?? [] as $table) {
-        $real = $expand($table);
-        $ok   = tableExists($mysqli, $db['name'], $real);
+        $real      = $expand($table);
+        $ok        = tableExists($mysqli, $db['name'], $real);
         $results[] = [$ok, "table {$table}"];
     }
 
@@ -174,7 +226,7 @@ foreach ($installs as $install) {
         $real = $expand($table);
 
         foreach ($cols as $col) {
-            $ok = columnExists($mysqli, $db['name'], $real, $col);
+            $ok        = columnExists($mysqli, $db['name'], $real, $col);
             $results[] = [$ok, "column {$table}.{$col}"];
         }
     }
@@ -184,7 +236,7 @@ foreach ($installs as $install) {
         $real = $expand($table);
 
         foreach ($idxs as $idx) {
-            $ok = indexExists($mysqli, $db['name'], $real, $idx);
+            $ok        = indexExists($mysqli, $db['name'], $real, $idx);
             $results[] = [$ok, "index {$table}.{$idx}"];
         }
     }
@@ -225,6 +277,30 @@ exit(1);
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Update SQL files belonging to a given x.y.z version.
+ *
+ * Joomla schema files here are named `<version>[-suffix].sql` (e.g.
+ * `10.3.3-20260711.sql`), so match the version segment exactly rather than as a
+ * loose prefix — otherwise 10.3.4 would also claim 10.3.40's files.
+ *
+ * @return list<string>
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function migrationFilesFor(string $root, string $version): array
+{
+    $files = glob($root . '/admin/sql/updates/mysql/' . $version . '*.sql') ?: [];
+
+    return array_values(
+        array_filter($files, static function (string $file) use ($version): bool {
+            $name = basename($file, '.sql');
+
+            return $name === $version || str_starts_with($name, $version . '-');
+        })
+    );
+}
 
 /**
  * @since __DEPLOY_VERSION__

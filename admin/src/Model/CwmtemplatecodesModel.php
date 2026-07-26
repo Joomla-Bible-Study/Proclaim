@@ -121,6 +121,19 @@ class CwmtemplatecodesModel extends ListModel
         $query->select($db->quoteName('uc.name', 'editor'))
             ->join('LEFT', $db->quoteName('#__users', 'uc') . ' ON ' . $db->quoteName('uc.id') . ' = ' . $db->quoteName('templatecode.checked_out'));
 
+        // NOTE: this entity has no view-level filter, and cannot have one —
+        // #__bsms_templatecode has no `access` column, so it cannot carry a view
+        // level the way every other Proclaim entity does. The campus filter
+        // further down (location_id, NULL-tolerant) is the only segmentation this
+        // table can express.
+        //
+        // That is why templatecodes is deliberately NOT exposed over the REST API
+        // while every sibling entity is. Two separate reasons: the column holds
+        // PHP source that no ACL here could scope for reading, and
+        // CwmtemplatecodeTable::store() writes it to an executable PHP file in the
+        // web root, so a write endpoint would be remote code execution. Adding an
+        // `access` column would address only the first.
+
         // Filter by search in filename or study title
         $search = $this->getState('filter.search');
 

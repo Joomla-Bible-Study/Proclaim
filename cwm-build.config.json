@@ -78,7 +78,7 @@
         "excludeExtensions": ["map"],
         "excludePaths": ["media/backup/*.sql"],
         "vendorPrune": true,
-        "includeRoots": ["admin/", "media/", "modules/", "plugins/", "site/", "libraries/"],
+        "includeRoots": ["admin/", "api/", "media/", "modules/", "plugins/", "site/", "libraries/"],
         "includeRootExtensions": ["php", "xml", "txt", "md"],
         "preBuild": {
             "mode": "run",
@@ -145,14 +145,14 @@
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
-        "updateStreamId": 2,
+        "updateStreamId": 1,
         "tokenItem": "CWM ARS API Token",
         "tokenVault": "CWM",
         "itemDescription": "pkg_proclaim download"
     },
     "versionTracking": {
         "substituteTokens": {
-            "paths": ["admin/", "site/", "modules/", "plugins/"]
+            "paths": ["admin/", "api/", "site/", "modules/", "plugins/"]
         }
     },
     "github": {

@@ -35,6 +35,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in(
         [
             __DIR__ . '/admin',
+            __DIR__ . '/api',
             __DIR__ . '/build',
             __DIR__ . '/site',
             __DIR__ . '/modules',
@@ -48,6 +49,11 @@ $finder = PhpCsFixer\Finder::create()
     ->notPath('/layouts/')
     // Ignore third-party vendor directories
     ->notPath('#vendor/#')
+    // Ignore generated build output. build/dist is gitignored, but Finder does
+    // not read .gitignore, so packaged copies of our own sources (and the
+    // install_* temp dirs cwm-package leaves behind) would be linted as if
+    // they were source and fail the check.
+    ->notPath('#^dist/#')
     // Ignore psr12 scripts because they contain invalid syntax
     ->notPath('/psr12/')
     ->notName('github_rebase.php');

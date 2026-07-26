@@ -324,7 +324,7 @@ class CwmtemplateController extends FormController
     {
         $id    = (int) $model->getState('cwmtemplate.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TEMPLATE_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TEMPLATE_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title = $validData['title'] ?? '';
 
         CwmactionlogHelper::log($key, $title, 'template', $id);

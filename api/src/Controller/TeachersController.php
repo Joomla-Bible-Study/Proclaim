@@ -14,31 +14,35 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
- * API controller for podcasts.
+ * API controller for teachers.
  *
- * GET    /api/index.php/v1/proclaim/podcasts       — list (published + archived)
- * GET    /api/index.php/v1/proclaim/podcasts/:id   — detail
- * POST   /api/index.php/v1/proclaim/podcasts       — create
- * PATCH  /api/index.php/v1/proclaim/podcasts/:id   — update
- * DELETE /api/index.php/v1/proclaim/podcasts/:id   — delete
+ * GET    /api/index.php/v1/proclaim/teachers       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/teachers/:id   — detail
+ * POST   /api/index.php/v1/proclaim/teachers       — create
+ * PATCH  /api/index.php/v1/proclaim/teachers/:id   — update
+ * DELETE /api/index.php/v1/proclaim/teachers/:id   — delete
  *
- * Filters: ?filter[search]=&filter[location]=&filter[language]=
+ * Filters: ?filter[search]=&filter[language]=
  *
  * @since  10.3.0
  */
-class PodcastsController extends ApiController
+class TeachersController extends AbstractWritableController
 {
-    protected $contentType = 'podcasts';
+    protected $contentType = 'teachers';
 
-    protected $default_view = 'podcasts';
+    protected $default_view = 'teachers';
+
+    protected $logType = 'teacher';
+
+    protected $logTitleField = 'teachername';
 
     /**
-     * List podcasts — published and archived only.
+     * List teachers — published and archived only.
      *
-     * Supports query filters: ?filter[search]=keyword&filter[location]=1&filter[language]=en-GB
+     * Supports query filters: ?filter[search]=keyword&filter[language]=en-GB
      *
      * @return  static
      *
@@ -55,10 +59,6 @@ class PodcastsController extends ApiController
             $this->modelState->set('filter.search', $clean->clean($apiFilter['search'], 'STRING'));
         }
 
-        if (\array_key_exists('location', $apiFilter)) {
-            $this->modelState->set('filter.location', $clean->clean($apiFilter['location'], 'INT'));
-        }
-
         if (\array_key_exists('language', $apiFilter)) {
             $this->modelState->set('filter.language', $clean->clean($apiFilter['language'], 'CMD'));
         }
@@ -73,15 +73,15 @@ class PodcastsController extends ApiController
      * @param   string  $prefix  Model prefix
      * @param   array   $config  Configuration
      *
-     * @return  \Joomla\CMS\MVC\Model\BaseDatabaseModel|false
+     * @return  BaseDatabaseModel|false
      *
      * @since   10.3.0
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
         $map = [
-            'podcasts' => 'Cwmpodcasts',
-            'podcast'  => 'Cwmpodcast',
+            'teachers' => 'Cwmteachers',
+            'teacher'  => 'Cwmteacher',
         ];
 
         $name = $map[strtolower($name)] ?? $name;
@@ -90,16 +90,20 @@ class PodcastsController extends ApiController
     }
 
     /**
-     * Strip protected fields from API input.
+     * Normalize API JSON input for the teacher model.
      *
      * @param   array  $data  The incoming data
      *
-     * @return  array  The cleaned data
+     * @return  array  The processed data
      *
      * @since   10.3.0
      */
     protected function preprocessSaveData(array $data): array
     {
+        if (!isset($data['image'])) {
+            $data['image'] = '';
+        }
+
         $user = $this->app->getIdentity();
 
         // Strip internal system fields — prevent mass assignment

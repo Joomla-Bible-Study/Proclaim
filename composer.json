@@ -51,10 +51,13 @@
   "autoload": {
     "psr-4": {
       "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-      "CWM\\Component\\Proclaim\\Api\\": "admin/src/Api/",
+      "CWM\\Component\\Proclaim\\Api\\": "api/src/",
       "CWM\\Component\\Proclaim\\Site\\": "site/src/",
       "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
-    }
+    },
+    "exclude-from-classmap": [
+      "/admin/src/Addons/Servers/Youtube/vendor/"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -82,7 +85,7 @@
     "roave/security-advisories": "dev-latest",
     "pdepend/pdepend": "^2.16",
     "phpmd/phpmd": "^2.15",
-    "cwm/build-tools": "^1.6.0",
+    "cwm/build-tools": "^1.7.0",
     "joomla/database": "^4.0",
     "joomla/registry": "^4.0",
     "joomla/di": "^4.0",
@@ -129,7 +132,7 @@
     "test:install": "bash build/test-install.sh",
     "test:upgrade": "bash build/test-upgrade.sh",
     "test:release": ["@test:install", "@test:upgrade"],
-    "lint:syntax": "find admin/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
+    "lint:syntax": "find admin/src api/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "check": ["@lint:syntax", "@lint", "@test"],

@@ -133,7 +133,7 @@ class CwmteacherController extends FormController
     {
         $id    = (int) $model->getState('cwmteacher.id');
         $isNew = empty($validData['id']);
-        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_TEACHER_ADDED' : 'COM_PROCLAIM_ACTION_LOG_TEACHER_UPDATED';
+        $key   = $isNew ? 'COM_PROCLAIM_ACTION_LOG_ITEM_ADDED' : 'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED';
         $title = trim(($validData['teachername'] ?? '') . ' ' . ($validData['title'] ?? ''));
 
         CwmactionlogHelper::log($key, $title, 'teacher', $id);

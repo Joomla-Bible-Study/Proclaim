@@ -14,36 +14,37 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
- * API controller for media files.
+ * API controller for topics.
  *
- * GET    /api/index.php/v1/proclaim/media       — list (published + archived)
- * GET    /api/index.php/v1/proclaim/media/:id   — detail
- * POST   /api/index.php/v1/proclaim/media       — create
- * PATCH  /api/index.php/v1/proclaim/media/:id   — update
- * DELETE /api/index.php/v1/proclaim/media/:id   — delete
+ * GET    /api/index.php/v1/proclaim/topics       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/topics/:id   — detail
+ * POST   /api/index.php/v1/proclaim/topics       — create
+ * PATCH  /api/index.php/v1/proclaim/topics/:id   — update
+ * DELETE /api/index.php/v1/proclaim/topics/:id   — delete
  *
- * Filters: ?filter[search]=&filter[study_id]=&filter[language]=
+ * Filters: ?filter[search]=&filter[language]=
  *
- * @since  10.3.0
+ * @since  __DEPLOY_VERSION__
  */
-class MediaController extends ApiController
+class TopicsController extends AbstractWritableController
 {
-    protected $contentType = 'media';
+    protected $contentType = 'topics';
 
-    protected $default_view = 'media';
+    protected $default_view = 'topics';
+
+    protected $logType = 'topic';
+
+    protected $logTitleField = 'topic_text';
 
     /**
-     * List media files — published and archived only.
-     *
-     * Supports query filters: ?filter[study_id]=42&filter[search]=keyword&filter[language]=en-GB
+     * List topics — published and archived only.
      *
      * @return  static
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     public function displayList()
     {
@@ -54,10 +55,6 @@ class MediaController extends ApiController
 
         if (\array_key_exists('search', $apiFilter)) {
             $this->modelState->set('filter.search', $clean->clean($apiFilter['search'], 'STRING'));
-        }
-
-        if (\array_key_exists('study_id', $apiFilter)) {
-            $this->modelState->set('filter.study_id', $clean->clean($apiFilter['study_id'], 'INT'));
         }
 
         if (\array_key_exists('language', $apiFilter)) {
@@ -76,15 +73,13 @@ class MediaController extends ApiController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
         $map = [
-            'media'      => 'Cwmmediafiles',
-            'medium'     => 'Cwmmediafile',
-            'mediafile'  => 'Cwmmediafile',
-            'mediafiles' => 'Cwmmediafiles',
+            'topics' => 'Cwmtopics',
+            'topic'  => 'Cwmtopic',
         ];
 
         $name = $map[strtolower($name)] ?? $name;
@@ -93,21 +88,16 @@ class MediaController extends ApiController
     }
 
     /**
-     * Normalize API JSON input for the media file model.
+     * Normalize API JSON input for the topic model.
      *
      * @param   array  $data  The incoming data
      *
      * @return  array  The processed data
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     protected function preprocessSaveData(array $data): array
     {
-        // Model expects podcast_id as an array for implode to CSV
-        if (isset($data['podcast_id']) && \is_string($data['podcast_id'])) {
-            $data['podcast_id'] = explode(',', $data['podcast_id']);
-        }
-
         $user = $this->app->getIdentity();
 
         // Strip internal system fields — prevent mass assignment

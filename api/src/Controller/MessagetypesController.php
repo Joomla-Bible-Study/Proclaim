@@ -14,36 +14,37 @@ namespace CWM\Component\Proclaim\Api\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Filter\InputFilter;
-use Joomla\CMS\MVC\Controller\ApiController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 /**
- * API controller for teachers.
+ * API controller for message types (study types).
  *
- * GET    /api/index.php/v1/proclaim/teachers       — list (published + archived)
- * GET    /api/index.php/v1/proclaim/teachers/:id   — detail
- * POST   /api/index.php/v1/proclaim/teachers       — create
- * PATCH  /api/index.php/v1/proclaim/teachers/:id   — update
- * DELETE /api/index.php/v1/proclaim/teachers/:id   — delete
+ * GET    /api/index.php/v1/proclaim/messagetypes       — list (published + archived)
+ * GET    /api/index.php/v1/proclaim/messagetypes/:id   — detail
+ * POST   /api/index.php/v1/proclaim/messagetypes       — create
+ * PATCH  /api/index.php/v1/proclaim/messagetypes/:id   — update
+ * DELETE /api/index.php/v1/proclaim/messagetypes/:id   — delete
  *
- * Filters: ?filter[search]=&filter[language]=
+ * Filters: ?filter[search]=
  *
- * @since  10.3.0
+ * @since  __DEPLOY_VERSION__
  */
-class TeachersController extends ApiController
+class MessagetypesController extends AbstractWritableController
 {
-    protected $contentType = 'teachers';
+    protected $contentType = 'messagetypes';
 
-    protected $default_view = 'teachers';
+    protected $default_view = 'messagetypes';
+
+    protected $logType = 'messagetype';
+
+    protected $logTitleField = 'message_type';
 
     /**
-     * List teachers — published and archived only.
-     *
-     * Supports query filters: ?filter[search]=keyword&filter[language]=en-GB
+     * List message types — published and archived only.
      *
      * @return  static
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     public function displayList()
     {
@@ -54,10 +55,6 @@ class TeachersController extends ApiController
 
         if (\array_key_exists('search', $apiFilter)) {
             $this->modelState->set('filter.search', $clean->clean($apiFilter['search'], 'STRING'));
-        }
-
-        if (\array_key_exists('language', $apiFilter)) {
-            $this->modelState->set('filter.language', $clean->clean($apiFilter['language'], 'CMD'));
         }
 
         return parent::displayList();
@@ -72,13 +69,13 @@ class TeachersController extends ApiController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
         $map = [
-            'teachers' => 'Cwmteachers',
-            'teacher'  => 'Cwmteacher',
+            'messagetypes' => 'Cwmmessagetypes',
+            'messagetype'  => 'Cwmmessagetype',
         ];
 
         $name = $map[strtolower($name)] ?? $name;
@@ -87,20 +84,16 @@ class TeachersController extends ApiController
     }
 
     /**
-     * Normalize API JSON input for the teacher model.
+     * Normalize API JSON input for the message type model.
      *
      * @param   array  $data  The incoming data
      *
      * @return  array  The processed data
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
     protected function preprocessSaveData(array $data): array
     {
-        if (!isset($data['image'])) {
-            $data['image'] = '';
-        }
-
         $user = $this->app->getIdentity();
 
         // Strip internal system fields — prevent mass assignment
