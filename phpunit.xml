@@ -22,6 +22,9 @@
 		-->
 
 		<!-- Unit suites: one per tests/unit subtree -->
+		<testsuite name="Admin Field Tests">
+			<directory>tests/unit/Admin/Field</directory>
+		</testsuite>
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
 		</testsuite>

@@ -16,7 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Extension;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -172,29 +174,82 @@ class Cwmparams
      */
     public static function setCompParams(array $paramArray): void
     {
-        if (\count($paramArray) > 0) {
-            // Read the existing component value(s)
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
-            $query->select($db->quoteName('params'))
+        if (\count($paramArray) === 0) {
+            return;
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        /** @var Extension $table */
+        $table = new Extension($db);
+
+        // Identify the row the way ComponentHelper does — element + type. The
+        // previous implementation matched on `name`, which holds the manifest
+        // <name> and is neither guaranteed to equal the element nor unique across
+        // extension types.
+        $id = (int) $db->setQuery(
+            $db->getQuery(true)
+                ->select($db->quoteName('extension_id'))
                 ->from($db->quoteName('#__extensions'))
-                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
-            $db->setQuery($query);
-            $params = json_decode($db->loadResult(), true, 512, JSON_THROW_ON_ERROR);
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+        )->loadResult();
 
-            // Add the new variable(s) to the existing one(s)
-            foreach ($paramArray as $name => $value) {
-                $params[(string)$name] = (string)$value;
-            }
+        if ($id === 0 || !$table->load($id)) {
+            throw new \RuntimeException(
+                'Cannot save Proclaim component params: no com_proclaim component row in #__extensions.'
+            );
+        }
 
-            // Store the combined new and existing values back as a JSON string
-            $paramsString = json_encode($params, JSON_THROW_ON_ERROR);
-            $query->clear();
-            $query->update($db->quoteName('#__extensions'))
-                ->set($db->quoteName('params') . ' = ' . $db->q($paramsString))
-                ->where($db->quoteName('name') . ' = ' . $db->q('com_proclaim'));
-            $db->setQuery($query);
-            $db->execute();
+        // Registry tolerates an empty or malformed params column; a raw
+        // json_decode() with JSON_THROW_ON_ERROR turned that recoverable state
+        // into a fatal.
+        $params = new Registry($table->params);
+
+        foreach ($paramArray as $name => $value) {
+            $params->set((string) $name, (string) $value);
+        }
+
+        $table->params = $params->toString();
+
+        if (!$table->store()) {
+            throw new \RuntimeException('Cannot save Proclaim component params: ' . $table->getError());
+        }
+
+        // Clear the component cache — the step whose absence caused the outage.
+        //
+        // ComponentHelper::load() caches every component's params in the _system
+        // group, so ComponentHelper::getParams() keeps serving the pre-write value
+        // until that cache is cleared. Writing straight to the database without
+        // this looks like it worked and changes nothing observable.
+        //
+        // The symptom was severe: accepting the licence stored the flag, showed
+        // its success message, redirected — and the dispatcher, reading the stale
+        // cache, sent the administrator back to the licence screen. No error
+        // anywhere, and no way out of the loop.
+        //
+        // com_config does the same thing after storing this table
+        // (ComponentModel::save() -> cleanCache('_system')).
+        self::cleanComponentCache();
+    }
+
+    /**
+     * Clear the _system cache group so component params are re-read.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function cleanComponentCache(): void
+    {
+        try {
+            Factory::getContainer()
+                ->get(CacheControllerFactoryInterface::class)
+                ->createCacheController('callback', ['defaultgroup' => '_system'])
+                ->clean();
+        } catch (\Throwable) {
+            // A cache backend that cannot be cleared must not fail the save. The
+            // value is committed; the worst case is the old behaviour.
         }
     }
 }

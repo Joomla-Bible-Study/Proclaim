@@ -4,6 +4,27 @@
     <fieldset
             name="component"
             label="JBS_ADM_FIELDSET_OPTIONS_LABEL">
+        <!--
+            Round-trips the license-acceptance flag through the options form.
+
+            The admin dispatcher gates ALL admin access on this param and
+            redirects to the license view when it is falsy. It is written by
+            CwmlicenseController via Cwmparams::setCompParams(), which merges —
+            but com_config does not merge. Saving this form replaces the whole
+            params object with only the fields declared here, so a param that is
+            absent from this file is silently dropped on every save.
+
+            Without this field, saving Options wiped license_accepted and the
+            dispatcher immediately redirected back to the license screen — an
+            administrator could not leave it without re-accepting. Keep it
+            hidden: it is state, not a setting anyone should toggle here.
+        -->
+        <field
+                name="license_accepted"
+                type="hidden"
+                default="0"
+                filter="string"
+        />
         <field
                 name="captcha"
                 type="plugins"
