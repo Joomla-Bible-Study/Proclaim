@@ -122,10 +122,15 @@ class WebservicesPluginTest extends ProclaimTestCase
     /**
      * templatecodes must stay unexposed.
      *
-     * #__bsms_templatecode has no `access` column, so unlike every other entity
-     * in the registry it cannot honour view levels — and the field worth serving
-     * holds PHP source. Exposing it would publish code that no ACL could scope.
-     * If an `access` column is ever added, this test is the place to revisit.
+     * CwmtemplatecodeTable::store() writes the `templatecode` column to a real
+     * PHP file under components/com_proclaim/tmpl/, which the front end executes.
+     * A write endpoint would let a caller put arbitrary PHP in the web root, so
+     * this is a code-execution boundary rather than a content decision.
+     *
+     * Reads are separately unsafe: the column holds PHP source and the table has
+     * no `access` column, so it cannot honour view levels. Adding that column
+     * would fix the read side only — it would NOT make writes safe. Do not treat
+     * this test as waiting on a schema change.
      */
     public function testTemplatecodesIsNotExposed(): void
     {

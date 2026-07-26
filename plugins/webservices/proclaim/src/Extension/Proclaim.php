@@ -64,11 +64,21 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *   playlists      sync_enabled / writeback_enabled arm real mutations
      *                  against a church's live YouTube account
      *
-     * Deliberately absent: templatecodes. #__bsms_templatecode has no `access`
-     * column, so unlike every other entity here it cannot honour view levels —
-     * and the field worth serving holds PHP source. Exposing it would mean
-     * publishing code that no ACL could scope. Adding an `access` column to that
-     * table is the prerequisite for reconsidering it.
+     * Deliberately absent, and not merely pending: templatecodes.
+     *
+     * CwmtemplatecodeTable::store() writes the `templatecode` column to a real
+     * PHP file under components/com_proclaim/tmpl/ via File::write(), which the
+     * front end then executes as a template. A write endpoint would therefore let
+     * a caller put arbitrary PHP in the web root — remote code execution, not a
+     * content problem, and no ACL makes that acceptable.
+     *
+     * Reads are separately unsafe: the column holds PHP source, and
+     * #__bsms_templatecode has no `access` column, so unlike every other entity
+     * here it cannot honour view levels at all.
+     *
+     * Adding an `access` column would address the read side ONLY. It would not
+     * make writes safe. Do not treat that column as the single prerequisite for
+     * exposing this resource.
      *
      * @var    array<string, bool>
      * @since  __DEPLOY_VERSION__

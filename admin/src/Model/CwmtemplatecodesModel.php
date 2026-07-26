@@ -128,9 +128,11 @@ class CwmtemplatecodesModel extends ListModel
         // table can express.
         //
         // That is why templatecodes is deliberately NOT exposed over the REST API
-        // while every sibling entity is: the field worth serving holds PHP source,
-        // and no ACL here could scope who reads it. Adding an `access` column is
-        // the prerequisite for exposing this entity.
+        // while every sibling entity is. Two separate reasons: the column holds
+        // PHP source that no ACL here could scope for reading, and
+        // CwmtemplatecodeTable::store() writes it to an executable PHP file in the
+        // web root, so a write endpoint would be remote code execution. Adding an
+        // `access` column would address only the first.
 
         // Filter by search in filename or study title
         $search = $this->getState('filter.search');
