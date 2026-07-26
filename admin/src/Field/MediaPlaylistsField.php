@@ -32,7 +32,7 @@ use Joomla\Database\DatabaseInterface;
  * not to a column on this field.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.3.3
  */
 class MediaPlaylistsField extends ListField
 {
@@ -41,7 +41,7 @@ class MediaPlaylistsField extends ListField
      *
      * @var  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected $type = 'MediaPlaylists';
 
@@ -57,7 +57,7 @@ class MediaPlaylistsField extends ListField
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function setup(\SimpleXMLElement $element, $value, $group = null): bool
@@ -84,7 +84,7 @@ class MediaPlaylistsField extends ListField
      *
      * @return  array  An array of JHtml options.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     #[\Override]
     protected function getOptions(): array

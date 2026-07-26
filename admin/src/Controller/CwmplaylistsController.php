@@ -35,19 +35,19 @@ class CwmplaylistsController extends AdminController
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogType = 'playlist';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTable = '#__bsms_playlists';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTitleColumn = 'title';
 
@@ -74,7 +74,7 @@ class CwmplaylistsController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function import(): void
     {
@@ -129,7 +129,7 @@ class CwmplaylistsController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function push(): void
     {
@@ -143,7 +143,7 @@ class CwmplaylistsController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function pushpreview(): void
     {
@@ -158,7 +158,7 @@ class CwmplaylistsController extends AdminController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function runPush(bool $dryRun): void
     {

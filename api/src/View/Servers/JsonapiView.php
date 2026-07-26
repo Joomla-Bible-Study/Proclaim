@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * the only thing keeping those out of an HTTP response. The list query does not
  * select it, but the item query does. Do not add it.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -32,7 +32,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -49,7 +49,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the list response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',

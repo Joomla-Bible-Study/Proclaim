@@ -15,22 +15,24 @@ namespace CWM\Plugin\WebServices\Proclaim\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\ApiRouter;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
-use Joomla\Registry\Registry;
 use Joomla\Router\Route;
 
 /**
  * Web Services plugin for Proclaim REST API.
  *
- * Controlled by the `api_access` admin setting:
- *   0 = Disabled (no routes registered)
- *   1 = Public reads (GET open, writes require API key)
- *   2 = API Key Required (all operations require Bearer token)
+ * Enabling or disabling this plugin is the API's on/off switch — there is no
+ * separate Proclaim setting duplicating it. That is where a Joomla administrator
+ * looks first, and it needs no product-specific knowledge.
+ *
+ * One plugin parameter, `public_reads`, decides whether GET requires a token.
+ * It defaults to off, so enabling the plugin yields an authenticated API rather
+ * than an open one. Writes always require a token regardless, and every read is
+ * filtered to the caller's authorised view levels — "public" never means
+ * "unfiltered".
  *
  * Read endpoints (GET) — every resource in self::RESOURCES:
  *   /api/index.php/v1/proclaim/{resource}
@@ -82,7 +84,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      * exposing this resource.
      *
      * @var    array<string, bool>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private const RESOURCES = [
         'sermons'      => true,
@@ -110,7 +112,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
     }
 
     /**
-     * Register Proclaim API routes based on the admin api_access setting.
+     * Register Proclaim API routes.
      *
      * @param   mixed  $event  The API route event
      *
@@ -120,23 +122,13 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     public function onBeforeApiRoute($event): void
     {
-        $apiAccess = $this->getApiAccessSetting();
-
-        // 0 = Disabled — do not register any routes
-        if ($apiAccess === 0) {
-            // Every Proclaim endpoint will 404 from here. Said plainly at DEBUG,
-            // because "the API returns 404" is otherwise indistinguishable from a
-            // routing bug, and this is the most common cause.
-            CwmlogHelper::debug(
-                'api_access is disabled — no Proclaim API routes registered.',
-                CwmlogHelper::CATEGORY_API
-            );
-
-            return;
-        }
-
-        // 1 = Public (no auth), 2 = API key required
-        $isPublic = ($apiAccess === 1);
+        // No on/off setting of our own: this plugin being enabled IS the switch.
+        // If it is disabled, this method never runs and nothing is registered.
+        //
+        // Reads require a token unless an administrator opts into public reads.
+        // Safe by default — a site that enables the plugin without reading any
+        // documentation gets an authenticated API, not an open one.
+        $isPublic = (bool) $this->params->get('public_reads', 0);
         $router   = $event->getRouter();
 
         CwmlogHelper::debug(
@@ -174,7 +166,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function explainUnroutableRequest(): void
     {
@@ -227,7 +219,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function currentPath(): string
     {
@@ -299,41 +291,4 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         $router->addRoutes($routes);
     }
 
-    /**
-     * Read the api_access setting from the Proclaim admin params.
-     *
-     * @return  int  0 = disabled, 1 = public, 2 = API key required
-     *
-     * @since   10.3.0
-     */
-    private function getApiAccessSetting(): int
-    {
-        try {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
-                ->select($db->quoteName('params'))
-                ->from($db->quoteName('#__bsms_admin'))
-                ->where($db->quoteName('id') . ' = 1');
-            $db->setQuery($query, 0, 1);
-            $json = $db->loadResult();
-
-            if ($json) {
-                $params = new Registry($json);
-
-                return (int) $params->get('api_access', 0);
-            }
-        } catch (\Throwable $e) {
-            // The table may genuinely not exist yet (fresh install, before the
-            // migration runs). Either way this returns 0, which unregisters every
-            // route and makes the whole API 404 — a failure mode indistinguishable
-            // from "the administrator disabled it". ERROR rather than WARNING:
-            // the API is entirely unavailable and somebody has to act.
-            CwmlogHelper::error(
-                'Could not read the api_access setting, so no API routes were registered: ' . $e->getMessage(),
-                CwmlogHelper::CATEGORY_API
-            );
-        }
-
-        return 0;
-    }
 }

@@ -470,7 +470,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function supportsPlaylists(): bool
     {
@@ -485,7 +485,7 @@ class CWMAddonYoutube extends CWMAddon
      * @return  array
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylists(Input $input): array
     {
@@ -500,7 +500,7 @@ class CWMAddonYoutube extends CWMAddon
      * @return  array
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public function fetchRemotePlaylistItems(Input $input): array
     {
@@ -1799,7 +1799,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  string  Decoded plain text.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function decodeApiText(?string $text): string
     {
@@ -2189,7 +2189,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function supportsPlaylistWriteback(): bool
@@ -2209,7 +2209,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function pushPlaylistTitle(int $serverId, string $remotePlaylistId, string $title): array
@@ -2274,7 +2274,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function pushPlaylistDescription(int $serverId, string $remotePlaylistId, string $description): array
@@ -2336,7 +2336,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
@@ -2396,7 +2396,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     #[\Override]
     public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array

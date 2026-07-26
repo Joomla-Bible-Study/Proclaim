@@ -238,7 +238,7 @@ class Cwmparams
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.5
      */
     private static function cleanComponentCache(): void
     {

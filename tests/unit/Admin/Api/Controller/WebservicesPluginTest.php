@@ -249,4 +249,68 @@ class WebservicesPluginTest extends ProclaimTestCase
             'Only resources flagged read-only should be explained'
         );
     }
+
+    /**
+     * Enabling the plugin must not open the API to anonymous callers.
+     *
+     * The plugin being enabled is the API's on/off switch — there is no separate
+     * Proclaim setting. So the read posture is decided entirely by one parameter,
+     * and it has to default closed: an administrator who enables the plugin
+     * without reading anything gets an authenticated API, not an open one.
+     */
+    public function testPublicReadsDefaultsToOff(): void
+    {
+        $xml = simplexml_load_file(
+            \dirname(__DIR__, 5) . '/plugins/webservices/proclaim/proclaim.xml'
+        );
+
+        $this->assertNotFalse($xml, 'Plugin manifest should parse');
+
+        $field = $xml->xpath('//field[@name="public_reads"]');
+
+        $this->assertNotEmpty($field, 'public_reads parameter should exist');
+        $this->assertSame('0', (string) $field[0]['default'], 'public_reads must default to off');
+    }
+
+    /**
+     * The read posture comes from the plugin parameter, not a component setting.
+     *
+     * api_access was a tri-state in #__bsms_admin.params whose "disabled" third
+     * duplicated the plugin's own enabled state, and which was never rendered in
+     * any template — so the API could not be switched on at all (#1328).
+     */
+    public function testReadPostureComesFromThePluginParameter(): void
+    {
+        $ref   = new \ReflectionMethod(Proclaim::class, 'onBeforeApiRoute');
+        $lines = \array_slice(
+            file($ref->getFileName()),
+            $ref->getStartLine() - 1,
+            $ref->getEndLine() - $ref->getStartLine() + 1
+        );
+        $source = implode('', $lines);
+
+        $this->assertStringContainsString("params->get('public_reads'", $source);
+        $this->assertStringNotContainsString('api_access', $source);
+        $this->assertStringNotContainsString(
+            'getApiAccessSetting',
+            $source,
+            'The per-request component-params query should be gone'
+        );
+    }
+
+    /**
+     * No api_access anywhere — a leftover would imply a second, invisible switch.
+     */
+    public function testApiAccessIsFullyRemoved(): void
+    {
+        $root = \dirname(__DIR__, 5);
+
+        foreach (['/admin/forms/admin.xml', '/plugins/webservices/proclaim/src/Extension/Proclaim.php'] as $file) {
+            $this->assertStringNotContainsString(
+                'api_access',
+                (string) file_get_contents($root . $file),
+                "api_access should not survive in {$file}"
+            );
+        }
+    }
 }

@@ -32,19 +32,19 @@ class CwmcommentsController extends AdminController
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogType = 'comment';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTable = '#__bsms_comments';
 
     /**
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     protected string $actionlogTitleColumn = 'full_name';
 

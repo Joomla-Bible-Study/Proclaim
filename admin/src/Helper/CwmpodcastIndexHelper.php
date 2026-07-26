@@ -105,7 +105,7 @@ class CwmpodcastIndexHelper
      * @return  Response  The HTTP response (status left for the caller to check)
      *
      * @throws  \Exception  If the request itself fails (connection, TLS, …)
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function apiGet(string $label, string $url): Response
     {

@@ -29,7 +29,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * change what every visitor sees on the front end. The `params` column is
  * withheld by the view as it carries template configuration, not content.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class TemplatesController extends AbstractReadOnlyController
 {
@@ -42,7 +42,7 @@ class TemplatesController extends AbstractReadOnlyController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -71,7 +71,7 @@ class TemplatesController extends AbstractReadOnlyController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

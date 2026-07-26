@@ -36,7 +36,7 @@ use Joomla\Input\Input;
  * scheduled task (#1273 phase 3) both call the same code path.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.3.3
  */
 final class CwmplaylistSyncHelper
 {
@@ -44,7 +44,7 @@ final class CwmplaylistSyncHelper
      * Page size for the YouTube playlistItems pagination (API max is 50).
      *
      * @var integer
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     private const PAGE_SIZE = 50;
 
@@ -76,7 +76,7 @@ final class CwmplaylistSyncHelper
      * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], membershipsRemoved:int, membershipsWouldRemove:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function import(int $serverId = 0, bool $discoverNew = true, bool $pushChanges = false, bool $dryRun = false): array
     {
@@ -210,7 +210,7 @@ final class CwmplaylistSyncHelper
      * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function importChannelPlaylists(DatabaseInterface $db, CWMAddon $addon, int $serverId, bool $discoverNew = true, bool $pushChanges = false, bool $dryRun = false): array
     {
@@ -439,7 +439,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  string  One of 'none', 'pull', 'push', 'conflict'.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function fieldPushDecision(string $localValue, string $remoteValue, bool $locallyEdited, bool $writebackEnabled): string
     {
@@ -465,7 +465,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  string  One of 'none', 'pull', 'push', 'conflict'.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function titlePushDecision(string $localTitle, string $remoteTitle, bool $locallyEdited, bool $writebackEnabled): string
     {
@@ -484,7 +484,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  boolean
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function isLocallyEdited(CwmplaylistTable $table): bool
     {
@@ -510,7 +510,7 @@ final class CwmplaylistSyncHelper
      * @return  array{items:int, matched:int, unmatched:int, error:?string}
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function reconcilePlaylist(DatabaseInterface $db, CWMAddon $addon, int $playlistId, array $videoMap): array
     {
@@ -605,7 +605,7 @@ final class CwmplaylistSyncHelper
      * @return  array{pushed:int, wouldPush:string[], removed:int, wouldRemove:string[], errors:string[]}
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function pushMemberships(DatabaseInterface $db, CWMAddon $addon, int $playlistId, bool $dryRun = false): array
     {
@@ -832,7 +832,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function deleteItemById(DatabaseInterface $db, int $itemId): void
     {
@@ -864,7 +864,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  integer  Number of junction rows linked to this media file.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function linkMediafileToPlaylists(int $mediafileId, string $params): int
     {
@@ -928,7 +928,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function unlinkMediafile(int $mediafileId): void
     {
@@ -959,7 +959,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  int[]  Playlist row IDs.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function getMediafilePlaylistIds(int $mediafileId): array
     {
@@ -996,7 +996,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  int[]  Published playlist row IDs linked to the study's series.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function getSeriesPlaylistIdsForStudy(int $studyId): array
     {
@@ -1044,7 +1044,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  array{add:int[], remove:int[]}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function planPlaylistAssignments(array $currentIds, array $desiredIds): array
     {
@@ -1080,7 +1080,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function setManualPlaylistAssignments(int $mediafileId, array $desiredPlaylistIds, string $params, bool $deleteSync = false): void
     {
@@ -1161,7 +1161,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function upsertManualItem(DatabaseInterface $db, int $playlistId, string $videoId, int $mediafileId, string $now): void
     {
@@ -1219,7 +1219,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  array<string,array<string,int>>  type => (videoId => mediafileId).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function buildLocalVideoMap(DatabaseInterface $db): array
     {
@@ -1267,7 +1267,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  array<string,int>  videoId => mediafileId (first match wins).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function extractVideoMapFromRows(array $rows, callable $extractor): array
     {
@@ -1309,7 +1309,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  array<int,array{mediafileId:int,videoId:string,title:string}>  Videos to push (deduped).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     public static function membershipsToPush(array $rows, callable $extractor, array $existingVideoIds): array
     {
@@ -1359,7 +1359,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  string|null  The remote media ID, or null if no platform matched.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function extractAnyRemoteId(string $url): ?string
     {
@@ -1396,7 +1396,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function upsertItem(DatabaseInterface $db, int $playlistId, string $videoId, string $title, ?int $mediafileId, int $position, string $now): void
     {
@@ -1438,7 +1438,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function pruneItems(DatabaseInterface $db, int $playlistId, array $keepVideos): void
     {
@@ -1467,7 +1467,7 @@ final class CwmplaylistSyncHelper
      *
      * @return  integer  The playlist row ID, or 0 if none.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private static function findPlaylistId(DatabaseInterface $db, string $remoteId, int $serverId): int
     {

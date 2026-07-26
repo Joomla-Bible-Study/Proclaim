@@ -55,7 +55,7 @@ class HtmlView extends BaseHtmlView
      * sit unnoticed. 0 when the current user lacks core.edit.state.
      *
      * @var    int
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.3
      */
     public int $pendingReview = 0;
 

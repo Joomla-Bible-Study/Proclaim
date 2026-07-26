@@ -544,7 +544,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      * @return  int
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.3
      */
     private function playlistSyncTask(ExecuteTaskEvent $event): int
     {

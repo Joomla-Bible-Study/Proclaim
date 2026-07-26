@@ -22,10 +22,11 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * is the substance of the resource, but large and pointless to repeat per row.
  * `params` is withheld as it carries template configuration.
  *
- * Sites that would rather not publish their markup at all should set the
- * `api_access` option to "API Key Required" rather than public reads.
+ * Sites that would rather not publish their markup at all should leave the
+ * webservices plugin's "Allow public reads" parameter off, so a token is
+ * required — which is the default.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -33,7 +34,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -51,7 +52,7 @@ class JsonapiView extends BaseApiView
      * Limited to what the templates list query selects.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',

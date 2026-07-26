@@ -119,7 +119,7 @@ class CwmplaylistTable extends Table
      * Whether local title changes are pushed back to the remote platform
      *
      * @var int|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.3.3
      */
     public ?int $writeback_enabled = 0;
 

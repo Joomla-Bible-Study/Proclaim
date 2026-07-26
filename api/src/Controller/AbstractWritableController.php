@@ -37,7 +37,7 @@ use Joomla\CMS\MVC\Controller\ApiController;
  * else — operational logging for the API lives in {@see CwmlogHelper}, which
  * deliberately does not repeat content changes.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 abstract class AbstractWritableController extends ApiController
 {
@@ -46,7 +46,7 @@ abstract class AbstractWritableController extends ApiController
      * COM_PROCLAIM_ACTION_LOG_TYPE_* language key. Empty disables logging.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $logType = '';
 
@@ -55,7 +55,7 @@ abstract class AbstractWritableController extends ApiController
      * (media files, for instance) — the log then identifies the record by id.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $logTitleField = '';
 
@@ -70,7 +70,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  integer  The record id.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     protected function save($recordKey = null)
     {
@@ -92,7 +92,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  mixed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function delete($id = null)
     {
@@ -117,7 +117,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  mixed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function add()
     {
@@ -135,7 +135,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  mixed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function edit()
     {
@@ -164,7 +164,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function logDenied(string $verb, int $id): void
     {
@@ -197,7 +197,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function logApiWrite(string $verb, int $id, ?string $title = null): void
     {
@@ -229,7 +229,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function recordTitle(int $id): string
     {
