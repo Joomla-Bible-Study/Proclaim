@@ -189,7 +189,7 @@ class FiltersField extends FormField
      *
      * @return  array<array-key, mixed>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.5
      */
     protected static function normaliseStoredValue(mixed $value): array
     {
@@ -213,7 +213,7 @@ class FiltersField extends FormField
      *
      * @return  array{filter_type: string, filter_tags: string, filter_attributes: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.5
      */
     protected static function normaliseGroupFilter(mixed $entry): array
     {
