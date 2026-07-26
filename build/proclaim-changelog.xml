@@ -19,6 +19,32 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.4                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.3.4</version>
+        <date>2026-07-26</date>
+        <note>
+            <item>fix(api): install webservices plugin and ship API files to the api app by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1311</item>
+            <item>chore(deps): bump cwm/build-tools to ^1.6.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1312</item>
+            <item>fix(build): don&#x27;t fail the release gate on migration-free versions by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1313</item>
+            <item>feat(api): expose 7 more resources, read-only where writes are unsafe by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1314</item>
+            <item>feat(logging): record API activity, and make Proclaim&#x27;s logging actually work by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1315</item>
+            <item>feat(api): log authenticated callers refused an action by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1316</item>
+            <item>chore(composer): exclude YouTube addon vendor from classmap scan by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1317</item>
+            <item>chore(deps): refresh composer.lock by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1318</item>
+            <item>fix(youtube): bump bundled Guzzle to 7.15.1 for 4 security advisories by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1319</item>
+            <item>fix(deps): bump brace-expansion to 5.0.8 for GHSA-3jxr-9vmj-r5cp by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1320</item>
+            <item>chore(deps): bump cwm/build-tools to ^1.6.2 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1321</item>
+            <item>docs(api): record that templatecode writes would be code execution by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1324</item>
+            <item>chore(deps): bump cwm/build-tools to ^1.7.0 and sync build.dist.properties by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1325</item>
+            <item>feat(api): explain why a write request will not route by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1326</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.3                                                   -->
     <!-- ============================================================ -->
     <changelog>
