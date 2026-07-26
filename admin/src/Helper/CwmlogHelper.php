@@ -48,35 +48,35 @@ use Joomla\CMS\Log\Log;
  * that run before the component boots, such as the webservices plugin during
  * route registration.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 final class CwmlogHelper
 {
     /**
      * General component activity — the category most of Proclaim already uses.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     public const CATEGORY_GENERAL = 'com_proclaim';
 
     /**
      * REST API operational and security events.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     public const CATEGORY_API = 'com_proclaim.api';
 
     /**
      * Bible / scripture lookups.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     public const CATEGORY_BIBLE = 'com_proclaim.bible';
 
     /**
      * Verbose developer diagnostics.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     public const CATEGORY_DEBUG = 'com_proclaim.debug';
 
@@ -89,7 +89,7 @@ final class CwmlogHelper
      * rotation pointed at them, so the names are kept.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private const FILES = [
         self::CATEGORY_GENERAL => 'com_proclaim.errors.php',
@@ -102,7 +102,7 @@ final class CwmlogHelper
      *
      * Kept out of FILES so production sites do not accumulate an empty debug log.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private const DEBUG_FILE = 'com_proclaim.debug.php';
 
@@ -118,7 +118,7 @@ final class CwmlogHelper
      * pre-existing Log::add() calls start writing for the first time, including
      * per-render INFO in the scripture helper.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private const PRODUCTION_PRIORITIES = Log::EMERGENCY | Log::ALERT | Log::CRITICAL | Log::ERROR | Log::WARNING;
 
@@ -126,7 +126,7 @@ final class CwmlogHelper
      * Whether the loggers have been registered for this request.
      *
      * @var    boolean
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private static bool $registered = false;
 
@@ -137,7 +137,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public static function register(): void
     {
@@ -180,7 +180,7 @@ final class CwmlogHelper
      *
      * @return  boolean
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private static function isDebugEnabled(): bool
     {
@@ -209,7 +209,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public static function debug(string $message, string $category = self::CATEGORY_GENERAL): void
     {
@@ -235,7 +235,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public static function info(string $message, string $category = self::CATEGORY_GENERAL): void
     {
@@ -257,7 +257,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public static function warning(string $message, string $category = self::CATEGORY_GENERAL): void
     {
@@ -273,7 +273,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public static function error(string $message, string $category = self::CATEGORY_GENERAL): void
     {
@@ -289,7 +289,7 @@ final class CwmlogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private static function write(string $message, int $priority, string $category): void
     {

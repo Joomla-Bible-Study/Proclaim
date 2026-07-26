@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * it would be a personal-data breach, and user_id would let a caller correlate
  * commenters with site accounts. Do not add them.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -32,7 +32,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -51,7 +51,7 @@ class JsonapiView extends BaseApiView
      * Note that study_id is absent: the comments list query does not select it.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',

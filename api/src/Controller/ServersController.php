@@ -30,7 +30,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * caller overwrite or exfiltrate those, so no write route is registered and
  * AbstractReadOnlyController refuses the verbs outright.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class ServersController extends AbstractReadOnlyController
 {
@@ -43,7 +43,7 @@ class ServersController extends AbstractReadOnlyController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -72,7 +72,7 @@ class ServersController extends AbstractReadOnlyController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

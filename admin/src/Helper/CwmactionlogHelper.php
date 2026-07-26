@@ -94,7 +94,7 @@ class CwmactionlogHelper
      *
      * @return  string  A COM_PROCLAIM_ACTION_LOG_ORIGIN_* language key.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private static function originLabel(CMSApplicationInterface $app): string
     {

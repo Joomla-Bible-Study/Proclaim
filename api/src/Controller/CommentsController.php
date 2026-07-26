@@ -33,7 +33,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * Unlike other resources this lists published comments only — an archived or
  * unpublished comment is one a moderator has deliberately withheld.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class CommentsController extends AbstractReadOnlyController
 {
@@ -46,7 +46,7 @@ class CommentsController extends AbstractReadOnlyController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -75,7 +75,7 @@ class CommentsController extends AbstractReadOnlyController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

@@ -82,7 +82,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      * exposing this resource.
      *
      * @var    array<string, bool>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     private const RESOURCES = [
         'sermons'      => true,
@@ -174,7 +174,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function explainUnroutableRequest(): void
     {
@@ -227,7 +227,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function currentPath(): string
     {

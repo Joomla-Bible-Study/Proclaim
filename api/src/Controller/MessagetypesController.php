@@ -27,7 +27,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  *
  * Filters: ?filter[search]=
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class MessagetypesController extends AbstractWritableController
 {
@@ -44,7 +44,7 @@ class MessagetypesController extends AbstractWritableController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -69,7 +69,7 @@ class MessagetypesController extends AbstractWritableController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
@@ -90,7 +90,7 @@ class MessagetypesController extends AbstractWritableController
      *
      * @return  array  The processed data
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     protected function preprocessSaveData(array $data): array
     {

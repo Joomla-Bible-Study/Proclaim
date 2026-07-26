@@ -30,7 +30,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * mutations against a church's live YouTube account. Playlist state is changed
  * deliberately in the admin UI, never as a side effect of an HTTP call.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class PlaylistsController extends AbstractReadOnlyController
 {
@@ -43,7 +43,7 @@ class PlaylistsController extends AbstractReadOnlyController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -76,7 +76,7 @@ class PlaylistsController extends AbstractReadOnlyController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

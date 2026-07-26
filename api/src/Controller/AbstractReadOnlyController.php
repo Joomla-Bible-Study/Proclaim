@@ -33,7 +33,7 @@ use Joomla\CMS\Router\Exception\RouteNotFoundException;
  * into a 404, which is the honest answer — for these resources the write route
  * genuinely does not exist.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 abstract class AbstractReadOnlyController extends ApiController
 {
@@ -44,7 +44,7 @@ abstract class AbstractReadOnlyController extends ApiController
      *
      * @throws  RouteNotFoundException  Always.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function add()
     {
@@ -58,7 +58,7 @@ abstract class AbstractReadOnlyController extends ApiController
      *
      * @throws  RouteNotFoundException  Always.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function edit()
     {
@@ -74,7 +74,7 @@ abstract class AbstractReadOnlyController extends ApiController
      *
      * @throws  RouteNotFoundException  Always.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function delete($id = null)
     {
@@ -88,7 +88,7 @@ abstract class AbstractReadOnlyController extends ApiController
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     private function readOnlyMessage(string $verb): string
     {

@@ -30,7 +30,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * Note that the list model also applies Proclaim's multi-campus visibility
  * filter, so a caller only ever sees locations they are entitled to.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class LocationsController extends AbstractWritableController
 {
@@ -47,7 +47,7 @@ class LocationsController extends AbstractWritableController
      *
      * @return  static
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function displayList()
     {
@@ -76,7 +76,7 @@ class LocationsController extends AbstractWritableController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {
@@ -97,7 +97,7 @@ class LocationsController extends AbstractWritableController
      *
      * @return  array  The processed data
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.3.4
      */
     protected function preprocessSaveData(array $data): array
     {

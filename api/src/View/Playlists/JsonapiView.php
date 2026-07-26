@@ -22,7 +22,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * rather than content. `remote_playlist_id` is rendered because it is the public
  * platform identifier that already appears in a playlist's own share URL.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -30,7 +30,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -56,7 +56,7 @@ class JsonapiView extends BaseApiView
      * alias, description, writeback_enabled or language.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',

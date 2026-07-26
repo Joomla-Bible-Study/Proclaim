@@ -18,7 +18,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
 /**
  * JSON:API view for topics.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -26,7 +26,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -44,7 +44,7 @@ class JsonapiView extends BaseApiView
      * access or language.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',

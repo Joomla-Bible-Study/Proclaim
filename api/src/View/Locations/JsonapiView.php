@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * accounts), and `fax` / `mobile` / `misc` / `sortname1-3`, which are internal
  * or personal rather than published contact info.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.3.4
  */
 class JsonapiView extends BaseApiView
 {
@@ -32,7 +32,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderItem = [
         'id',
@@ -58,7 +58,7 @@ class JsonapiView extends BaseApiView
      * Limited to what the locations list query selects.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.3.4
      */
     protected $fieldsToRenderList = [
         'id',
