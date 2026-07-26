@@ -19,6 +19,20 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.3.6                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.3.6</version>
+        <date>2026-07-26</date>
+        <note>
+            <item>fix(api): make the API switchable — drop api_access for the plugin&#x27;s own state by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1331</item>
+            <item>chore: bump active_development to 10.3.6 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1332</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.5                                                   -->
     <!-- ============================================================ -->
     <changelog>
