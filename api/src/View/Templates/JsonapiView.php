@@ -22,8 +22,9 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
  * is the substance of the resource, but large and pointless to repeat per row.
  * `params` is withheld as it carries template configuration.
  *
- * Sites that would rather not publish their markup at all should set the
- * `api_access` option to "API Key Required" rather than public reads.
+ * Sites that would rather not publish their markup at all should leave the
+ * webservices plugin's "Allow public reads" parameter off, so a token is
+ * required — which is the default.
  *
  * @since  10.3.4
  */
