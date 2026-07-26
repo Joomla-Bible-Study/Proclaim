@@ -170,6 +170,9 @@
         "bulletsDir": "build",
         "command": "cwm-article"
     },
+    "release": {
+        "notesFile": "build/release-notes-{version}.md"
+    },
     "dev": {
         "deriveLinks": true
     },

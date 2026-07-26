@@ -1,0 +1,9 @@
+The REST API now works. On every earlier 10.3.x release it returned "not found" on every address, on every site — so if you tried it and gave up, that was not your configuration.
+Turning it on is one step: enable the "Web Services - Proclaim" plugin under System, Plugins. There is no separate Proclaim setting to hunt for.
+Reads require an API token by default. If you want an open read-only feed, switch on "Allow public reads" in that same plugin. Creating, updating and deleting always require a token either way.
+Twelve kinds of content are available: sermons, teachers, series, podcasts, media files, topics, locations and study types can be read and written; playlists, comments, servers and templates are read-only on purpose.
+Nothing is exposed that a visitor could not already see. Every response is limited to the access levels of whoever is asking, so restricted content stays restricted. Media-server credentials and commenter email addresses are never returned to anyone.
+Changes made through the API are recorded in Joomla's Action Logs alongside changes made in the admin, each marked with where it came from, so an audit shows both together.
+Fixed: Proclaim's Options screen could fail to open with a "Cannot access offset" error, depending on how a site's text-filter settings were stored.
+Fixed: saving Options could lock you out of Proclaim entirely, sending you back to the licence screen no matter how many times you accepted it. Sites already stuck can clear the Joomla cache and accept once more.
+Upgrading from 10.3.4 or 10.3.5 is recommended for every site — both faults above affect the admin, and the API is unusable before this release.
