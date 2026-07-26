@@ -171,4 +171,82 @@ class WebservicesPluginTest extends ProclaimTestCase
             'createWriteRoutes() must remain guarded by the $writable flag'
         );
     }
+
+    /**
+     * Unroutable write requests are explained, at DEBUG.
+     *
+     * A request the router cannot match gets a bare 404 with nothing saying
+     * whether the endpoint was misspelled, absent, or read-only — the hardest
+     * kind of API problem to diagnose from outside, and the answer is known in
+     * the plugin. DEBUG keeps it free in production; CwmlogHelper::debug() is a
+     * no-op unless debug mode is on.
+     */
+    public function testUnroutableWritesAreExplainedAtDebugLevel(): void
+    {
+        $ref    = new \ReflectionMethod(Proclaim::class, 'explainUnroutableRequest');
+        $lines  = \array_slice(
+            file($ref->getFileName()),
+            $ref->getStartLine() - 1,
+            $ref->getEndLine() - $ref->getStartLine() + 1
+        );
+        $source = implode('', $lines);
+
+        // DEBUG only — never info/warning/error, which would record in production.
+        $this->assertStringContainsString('CwmlogHelper::debug(', $source);
+
+        foreach (['info', 'warning', 'error'] as $louder) {
+            $this->assertStringNotContainsString(
+                'CwmlogHelper::' . $louder . '(',
+                $source,
+                "Route diagnostics must stay at DEBUG, not {$louder}"
+            );
+        }
+
+        // Both failure modes are distinguished for the reader.
+        $this->assertStringContainsString('no such Proclaim API resource', $source);
+        $this->assertStringContainsString('read-only by design', $source);
+    }
+
+    /**
+     * Only write verbs are explained. A GET that 404s is a missing record, which
+     * the response already conveys.
+     */
+    public function testOnlyWriteVerbsAreExplained(): void
+    {
+        $ref    = new \ReflectionMethod(Proclaim::class, 'explainUnroutableRequest');
+        $lines  = \array_slice(
+            file($ref->getFileName()),
+            $ref->getStartLine() - 1,
+            $ref->getEndLine() - $ref->getStartLine() + 1
+        );
+        $source = implode('', $lines);
+
+        foreach (['POST', 'PATCH', 'PUT', 'DELETE'] as $verb) {
+            $this->assertStringContainsString("'$verb'", $source, "$verb should be explained");
+        }
+
+        $this->assertStringNotContainsString("'GET'", $source, 'GET should not be explained');
+    }
+
+    /**
+     * A writable resource must not be explained — its write route exists, so a
+     * failure there is authentication or validation, not routing. Guards against
+     * the diagnostic misattributing a 401 as a routing problem.
+     */
+    public function testWritableResourcesAreNotExplained(): void
+    {
+        $ref    = new \ReflectionMethod(Proclaim::class, 'explainUnroutableRequest');
+        $lines  = \array_slice(
+            file($ref->getFileName()),
+            $ref->getStartLine() - 1,
+            $ref->getEndLine() - $ref->getStartLine() + 1
+        );
+        $source = preg_replace('/\s+/', ' ', implode('', $lines));
+
+        $this->assertMatchesRegularExpression(
+            '/self::RESOURCES\[\$resource\] === false/',
+            $source,
+            'Only resources flagged read-only should be explained'
+        );
+    }
 }

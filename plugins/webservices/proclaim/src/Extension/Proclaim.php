@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\ApiRouter;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
@@ -153,6 +154,87 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
             if ($writable) {
                 $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
             }
+        }
+
+        $this->explainUnroutableRequest();
+    }
+
+    /**
+     * Say why the current request will not match a route, if it will not.
+     *
+     * A request the router cannot match gets a bare 404 with nothing indicating
+     * whether the endpoint was misspelled, deliberately absent, or read-only.
+     * That is the hardest kind of API problem to diagnose from the outside, and
+     * the answer is known right here.
+     *
+     * DEBUG level, so it costs nothing in production and appears as soon as an
+     * administrator turns debug on to find out why their client is failing. This
+     * deliberately does not care who is calling — it is diagnosing the API, not
+     * policing it, and it runs before authentication anyway.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function explainUnroutableRequest(): void
+    {
+        $method = strtoupper($this->getApplication()->getInput()->getMethod());
+
+        if (!\in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE'], true)) {
+            return;
+        }
+
+        // Match the resource segment of a Proclaim API path, whatever the site's
+        // base URI or whether index.php is present.
+        if (preg_match('#/v1/proclaim/([a-z0-9_-]+)#i', $this->currentPath(), $m) !== 1) {
+            return;
+        }
+
+        $resource = strtolower($m[1]);
+
+        if (!\array_key_exists($resource, self::RESOURCES)) {
+            CwmlogHelper::debug(
+                \sprintf(
+                    '%s /v1/proclaim/%s will 404: no such Proclaim API resource. Available: %s.',
+                    $method,
+                    $resource,
+                    implode(', ', array_keys(self::RESOURCES))
+                ),
+                CwmlogHelper::CATEGORY_API
+            );
+
+            return;
+        }
+
+        if (self::RESOURCES[$resource] === false) {
+            CwmlogHelper::debug(
+                \sprintf(
+                    '%s /v1/proclaim/%s will 404: this resource is read-only by design, so no write'
+                    . ' route is registered. See the RESOURCES constant for why.',
+                    $method,
+                    $resource
+                ),
+                CwmlogHelper::CATEGORY_API
+            );
+        }
+    }
+
+    /**
+     * The requested path, or an empty string if it cannot be determined.
+     *
+     * Uri::getInstance() is what ApiRouter itself uses to resolve the route, so
+     * this sees the same value the router will.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function currentPath(): string
+    {
+        try {
+            return (string) urldecode(Uri::getInstance()->getPath());
+        } catch (\Throwable) {
+            return '';
         }
     }
 
