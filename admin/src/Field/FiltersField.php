@@ -54,6 +54,10 @@ class FiltersField extends FormField
         // Get the available user groups.
         $groups = $this->getUserGroups();
 
+        // The field declares filter="" so the stored param arrives untouched, and
+        // it is not always the array the markup below assumes.
+        $this->value = self::normaliseStoredValue($this->value);
+
         // Build the form control.
         $html = [];
 
@@ -99,14 +103,9 @@ class FiltersField extends FormField
         $html[] = '	<tbody>';
 
         foreach ($groups as $group) {
-            if (!isset($this->value[$group->value])) {
-                $this->value[$group->value] = ['filter_type' => 'BL', 'filter_tags' => '', 'filter_attributes' => ''];
-            }
+            $this->value[$group->value] = self::normaliseGroupFilter($this->value[$group->value] ?? null);
 
             $group_filter = $this->value[$group->value];
-
-            $group_filter['filter_tags']       = !empty($group_filter['filter_tags']) ? $group_filter['filter_tags'] : '';
-            $group_filter['filter_attributes'] = !empty($group_filter['filter_attributes']) ? $group_filter['filter_attributes'] : '';
 
             $html[] = '	<tr>';
             $html[] = '		<th class="acl-groups left" scope="row">';
@@ -167,6 +166,72 @@ class FiltersField extends FormField
         $html[] = '</div>';
 
         return implode("\n", $html);
+    }
+
+    /**
+     * Coerce the stored field value into an array keyed by user group id.
+     *
+     * The field declares `filter=""`, so whatever sits in the component params
+     * reaches getInput() untouched — and it is not reliably an array. Registry
+     * returns a stdClass when the stored JSON is an object, and a plain string
+     * when the param was saved as one.
+     *
+     * A string is the dangerous case: indexing it with a numeric group id yields
+     * a single character rather than failing, and reading a named key off that
+     * character is fatal —
+     *
+     *     Cannot access offset of type string on string
+     *
+     * which is how this surfaced, as a production site unable to open its own
+     * settings screen at all.
+     *
+     * @param   mixed  $value  Raw value from the form/params.
+     *
+     * @return  array<array-key, mixed>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function normaliseStoredValue(mixed $value): array
+    {
+        if (\is_object($value)) {
+            $value = get_object_vars($value);
+        }
+
+        return \is_array($value) ? $value : [];
+    }
+
+    /**
+     * Coerce one group's stored entry into a complete filter array.
+     *
+     * Presence is not enough to rely on: an entry saved as a string passes an
+     * isset() check and then fatals on the first named-key read. An object entry
+     * is converted rather than replaced, so a site's saved filters are not
+     * silently discarded, and any missing key is defaulted so a partial entry is
+     * as safe as an absent one.
+     *
+     * @param   mixed  $entry  Raw per-group entry.
+     *
+     * @return  array{filter_type: string, filter_tags: string, filter_attributes: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function normaliseGroupFilter(mixed $entry): array
+    {
+        if (\is_object($entry)) {
+            $entry = get_object_vars($entry);
+        }
+
+        if (!\is_array($entry)) {
+            $entry = [];
+        }
+
+        return [
+            'filter_type' => \is_string($entry['filter_type'] ?? null) && $entry['filter_type'] !== ''
+                ? $entry['filter_type']
+                : 'BL',
+            'filter_tags'       => \is_string($entry['filter_tags'] ?? null) ? $entry['filter_tags'] : '',
+            'filter_attributes' => \is_string($entry['filter_attributes'] ?? null) ? $entry['filter_attributes'] : '',
+        ];
     }
 
     /**
