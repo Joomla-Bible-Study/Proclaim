@@ -131,6 +131,13 @@ jobs:
           # and $live_site is the supported way to stop it guessing.
           sed -i "s#public \$live_site = '';#public \$live_site = '${SITE_URL}';#" "$SITE_DIR/configuration.php"
           grep -n "live_site" "$SITE_DIR/configuration.php"
+          # A fresh install auto-starts the "Welcome to Joomla!" guided tour
+          # on first admin visit, and the tour JS navigates every page back
+          # to its step-1 location (the dashboard) — which read exactly like
+          # "all form views bounce to home" until the failure screenshot
+          # showed the tour modal. No tours for a disposable site.
+          mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci \
+            -e "UPDATE jos_extensions SET enabled = 0 WHERE folder = 'system' AND element = 'guidedtours';"
 
       - name: Write build.properties for the disposable site
         # The harness discovers the test site by role, not by name (#1353),
