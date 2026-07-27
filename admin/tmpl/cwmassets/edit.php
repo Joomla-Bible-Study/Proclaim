@@ -111,17 +111,17 @@ Text::script('JCLOSE');
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['needs_cleanup'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                    <span class="<?php echo $asset['needs_cleanup'] > 0 ? 'text-warning-emphasis fw-bold' : 'text-muted'; ?>">
                                         <?php echo $asset['needs_cleanup']; ?>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['drifted'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                    <span class="<?php echo $asset['drifted'] > 0 ? 'text-warning-emphasis fw-bold' : 'text-muted'; ?>">
                                         <?php echo $asset['drifted']; ?>
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="<?php echo $asset['orphans'] > 0 ? 'text-warning fw-bold' : 'text-muted'; ?>">
+                                    <span class="<?php echo $asset['orphans'] > 0 ? 'text-warning-emphasis fw-bold' : 'text-muted'; ?>">
                                         <?php echo $asset['orphans']; ?>
                                     </span>
                                 </td>
@@ -162,9 +162,12 @@ Text::script('JCLOSE');
             </div>
             <div class="col-md-6">
                 <ul class="list-unstyled mb-0">
-                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP_DESC'); ?></li>
-                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_DRIFTED'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_DRIFTED_DESC'); ?></li>
-                    <li><span class="text-warning"><?php echo Text::_('JBS_ADM_ASSET_ORPHANS'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_ORPHANS_DESC'); ?></li>
+                    <?php // text-warning-emphasis: Atum's text-warning is 1.72:1 on
+                          // the card background — decorative amber, unreadable text.
+                          // The emphasis variant is the contrast-safe one. ?>
+                    <li><span class="text-warning-emphasis"><?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_NEEDS_CLEANUP_DESC'); ?></li>
+                    <li><span class="text-warning-emphasis"><?php echo Text::_('JBS_ADM_ASSET_DRIFTED'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_DRIFTED_DESC'); ?></li>
+                    <li><span class="text-warning-emphasis"><?php echo Text::_('JBS_ADM_ASSET_ORPHANS'); ?>:</span> <?php echo Text::_('JBS_ADM_ASSET_ORPHANS_DESC'); ?></li>
                 </ul>
             </div>
         </div>

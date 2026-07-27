@@ -17,6 +17,17 @@
             }
         },
         {
+            "name": "com_proclaim.modal-iframe-a11y",
+            "type": "script",
+            "uri": "com_proclaim/modal-iframe-a11y.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwm-archive",
             "type": "script",
             "uri": "com_proclaim/cwm-archive.min.js",

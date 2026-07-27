@@ -66,6 +66,7 @@ $steps = [
         </div>
         <div class="progress" style="height: 4px;">
             <div class="progress-bar" id="wizard-progress-bar" role="progressbar" style="width: 16.6%;"
+                 aria-label="<?php echo Text::_('JBS_WIZARD_PROGRESS'); ?>"
                  aria-valuenow="1" aria-valuemin="1" aria-valuemax="6"></div>
         </div>
     </div>

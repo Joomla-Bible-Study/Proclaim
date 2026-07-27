@@ -58,7 +58,9 @@ echo Route::_('index.php?option=com_proclaim&layout=edit&id=' . (int)$this->item
         <div class="row">
             <div class="col-lg-9">
                 <?php
-                $string = $this->form->getValue('topic_text');
+                // Cast: on a fresh add topic_text is null, and str_starts_with()
+                // deprecates null input straight into the page output.
+                $string = (string) $this->form->getValue('topic_text');
 if (str_starts_with($string, 'JBS')) { ?>
                     <div class="mb-3">
                         <label id="topic_text-lbl" for="topic_text" class="form-label">Translated:</label>

@@ -80,6 +80,7 @@ $wa->addInlineScript(
                     <div class="progress-bar bg-primary transition-all"
                          id="wizard-progress-bar"
                          role="progressbar"
+                         aria-label="<?php echo Text::_('JBS_WIZARD_PROGRESS'); ?>"
                          style="width: 14%;"
                          aria-valuenow="14"
                          aria-valuemin="0"
@@ -118,7 +119,7 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step active card shadow-sm" data-step="1">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-location-dot me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP1_TITLE'); ?>
                 </h4>
@@ -131,7 +132,10 @@ $wa->addInlineScript(
                     <i class="fa-solid fa-<?php echo $this->scenario === '2C' ? 'circle-info' : 'triangle-exclamation'; ?> me-3 mt-1 fa-lg"></i>
                     <div>
                         <strong><?php echo Text::sprintf('JBS_WIZARD_DETECTED', $scenarioLabel); ?></strong><br>
-                        <span class="small opacity-75" id="wizard-scenario-desc">
+                        <?php // No opacity-75: stacked on the alert's text colour it
+                              // lands at 2.98:1 — the same opacity trap as Atum's
+                              // .text-muted (WCAG 1.4.3). ?>
+                        <span class="small" id="wizard-scenario-desc">
                             <?php echo Text::_($this->detectionInfo['description_key']); ?>
                         </span>
                     </div>
@@ -178,7 +182,7 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="2">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-users me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP2_TITLE'); ?>
                 </h4>
@@ -234,7 +238,7 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="3">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-sitemap me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP3_TITLE'); ?>
                 </h4>
@@ -311,7 +315,7 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="4">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-shield-halved me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP4_TITLE'); ?>
                 </h4>
@@ -345,7 +349,7 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="5">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-eye me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP5_TITLE'); ?>
                 </h4>
@@ -394,6 +398,7 @@ $wa->addInlineScript(
                 <div class="progress mt-3 mx-auto" style="max-width: 400px; height: 8px;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
                          role="progressbar"
+                         aria-label="<?php echo Text::_('JBS_WIZARD_PROCESSING'); ?>"
                          style="width: 100%;"></div>
                 </div>
                 <p class="text-body-secondary small mt-3"><?php echo Text::_('JBS_WIZARD_DO_NOT_CLOSE'); ?></p>
@@ -405,7 +410,9 @@ $wa->addInlineScript(
              ============================================================ -->
         <div class="wizard-step card shadow-sm" data-step="7">
             <div class="card-header bg-success text-white">
-                <h4 class="mb-0">
+                <?php // text-white on the h4 itself: Atum's heading colour
+                      // overrides the card-header's and lands 2.74:1 on green. ?>
+                <h4 class="mb-0 text-white">
                     <i class="fa-solid fa-circle-check me-2"></i>
                     <?php echo Text::_('JBS_WIZARD_STEP7_TITLE'); ?>
                 </h4>

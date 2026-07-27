@@ -39,7 +39,10 @@
 }
 
 .wizard-step-label {
-    color: var(--bs-secondary-color, #6c757d);
+    /* secondary-text-emphasis, not secondary-color: #6c757d lands at 4.25:1 on
+       Atum's #f0f4fb page background (WCAG 1.4.3 needs 4.5). The emphasis
+       variant is the contrast-safe muted tone and adapts in dark mode. */
+    color: var(--bs-secondary-text-emphasis, #495057);
     font-size: 0.75rem;
 }
 

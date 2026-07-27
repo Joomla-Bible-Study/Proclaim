@@ -102,6 +102,7 @@ if ($this->more) {
                 <div class="progress mb-4" style="height: 30px;">
                     <div class="progress-bar progress-bar-striped <?php echo $this->more ? 'progress-bar-animated' : ''; ?> <?php echo $progressClass; ?>"
                          role="progressbar"
+                         aria-label="<?php echo Text::_('JBS_MIG_PROGRESS'); ?>"
                          style="width: <?php echo $this->percentage; ?>%;"
                          aria-valuenow="<?php echo $this->percentage; ?>"
                          aria-valuemin="0"

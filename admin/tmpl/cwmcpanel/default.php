@@ -276,8 +276,12 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <p class="mb-1">
                         <?php echo Text::plural('JBS_CPL_PENDING_REVIEW_DESC_N', $this->pendingReview); ?>
                     </p>
+                    <?php // btn-primary, not btn-info: inside an .alert Atum's link
+                          // colour overrides the button text and lands dark-on-blue
+                          // at 1.68:1. The PIM alert above uses btn-primary and
+                          // passes; match it. ?>
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[published]=0'); ?>"
-                       class="btn btn-info btn-sm">
+                       class="btn btn-primary btn-sm">
                         <?php echo Text::_('JBS_CPL_PENDING_REVIEW_BUTTON'); ?>
                     </a>
                 </div>
