@@ -1318,11 +1318,24 @@
             const { label } = element;
             const toggleId = `landing-toggle-${element.id}`;
 
+            const upText = this.trans('JBS_TPL_MOVE_UP') || 'Move up';
+            const downText = this.trans('JBS_TPL_MOVE_DOWN') || 'Move down';
+
             card.innerHTML = `
                 <span class="section-handle">
                     <span class="icon-menu" aria-hidden="true"></span>
                 </span>
                 <span class="section-name">${label}</span>
+                <span class="section-move" role="group">
+                    <button type="button" class="btn btn-sm btn-secondary btn-section-move" data-move="up"
+                            aria-label="${upText}: ${label}" title="${upText}">
+                        <span class="icon-chevron-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary btn-section-move" data-move="down"
+                            aria-label="${downText}: ${label}" title="${downText}">
+                        <span class="icon-chevron-down" aria-hidden="true"></span>
+                    </button>
+                </span>
                 <div class="section-toggle">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="${toggleId}"
@@ -2013,6 +2026,7 @@
                 <span class="element-name">${element.label}${deprecatedBadge}</span>
                 ${!isPalette ? `
                     <span class="element-info">Col 1</span>
+                    ${this.moveButtonsHtml(element.label)}
                     <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
                         <span class="icon-options" aria-hidden="true"></span>
                     </button>
@@ -2023,6 +2037,34 @@
             `;
 
             return card;
+        }
+
+        /**
+             * The non-drag movement controls for an element card — the
+             * single-pointer, keyboard-operable alternative WCAG 2.2
+             * SC 2.5.7 requires for every dragging operation. Left/right
+             * reorder within the row; up/down move across rows.
+             *
+             * @param {string} label - The element's display label, for the
+             *                         accessible names
+             * @returns {string}
+             */
+        moveButtonsHtml(label) {
+            const directions = [
+                ['left', 'icon-chevron-left', this.trans('JBS_TPL_MOVE_LEFT') || 'Move left'],
+                ['right', 'icon-chevron-right', this.trans('JBS_TPL_MOVE_RIGHT') || 'Move right'],
+                ['up', 'icon-chevron-up', this.trans('JBS_TPL_MOVE_UP') || 'Move to previous row'],
+                ['down', 'icon-chevron-down', this.trans('JBS_TPL_MOVE_DOWN') || 'Move to next row'],
+            ];
+
+            const buttons = directions.map(([dir, icon, text]) => `
+                <button type="button" class="btn-move" data-move="${dir}"
+                        aria-label="${text}: ${label}" title="${text}">
+                    <span class="${icon}" aria-hidden="true"></span>
+                </button>
+            `).join('');
+
+            return `<span class="element-move" role="group">${buttons}</span>`;
         }
 
         /**
@@ -2430,6 +2472,7 @@
                         <span class="element-handle"><span class="icon-menu" aria-hidden="true"></span></span>
                         <span class="element-name">${element.label}${depBadge}</span>
                         <span class="element-info">Col ${col}</span>
+                        ${this.moveButtonsHtml(element.label)}
                         <button type="button" class="btn-settings" title="${this.trans('JBS_TPL_ELEMENT_SETTINGS') || 'Settings'}">
                             <span class="icon-options" aria-hidden="true"></span>
                         </button>
@@ -2604,6 +2647,118 @@
         }
 
         /**
+             * Announce a movement to assistive technology. Lazily creates a
+             * visually-hidden aria-live region inside the editor container.
+             *
+             * @param {string} message
+             */
+        announce(message) {
+            if (!this.announcer) {
+                this.announcer = document.createElement('div');
+                this.announcer.setAttribute('aria-live', 'polite');
+                this.announcer.className = 'visually-hidden';
+                this.container.appendChild(this.announcer);
+            }
+            this.announcer.textContent = message;
+        }
+
+        /**
+             * Move an element card without dragging (WCAG 2.2 SC 2.5.7).
+             *
+             * left/right reorder within the row's elements; up/down move the
+             * card to the previous/next row. After the DOM move, state is
+             * refreshed exactly as a drop would: colspans redistributed,
+             * row/col recalculated from the DOM, empty drop rows cleaned up,
+             * and the layout marked dirty.
+             *
+             * @param {HTMLElement} card - The element card to move
+             * @param {string} dir - 'left' | 'right' | 'up' | 'down'
+             */
+        moveElementCard(card, dir) {
+            const rowEl = card.closest('.row-elements');
+            if (!rowEl) { return; }
+
+            let moved = false;
+            let targetRow = rowEl;
+
+            if (dir === 'left' || dir === 'right') {
+                const sibling = dir === 'left' ? card.previousElementSibling : card.nextElementSibling;
+                if (sibling && sibling.classList.contains('element-card')) {
+                    this.saveStateForUndo();
+                    if (dir === 'left') {
+                        rowEl.insertBefore(card, sibling);
+                    } else {
+                        rowEl.insertBefore(sibling, card);
+                    }
+                    moved = true;
+                }
+            } else {
+                const layoutRow = rowEl.closest('.layout-row');
+                const neighbour = dir === 'up' ? layoutRow?.previousElementSibling : layoutRow?.nextElementSibling;
+                targetRow = neighbour?.querySelector('.row-elements');
+                if (targetRow) {
+                    this.saveStateForUndo();
+                    targetRow.appendChild(card);
+                    moved = true;
+                }
+            }
+
+            if (!moved) { return; }
+
+            // The same bookkeeping a Sortable drop triggers.
+            this.distributeColspans(targetRow);
+            if (targetRow !== rowEl) {
+                this.distributeColspans(rowEl);
+            }
+            this.recalculateColumns(targetRow);
+            if (targetRow !== rowEl) {
+                this.recalculateColumns(rowEl);
+            }
+            this.cleanupRows();
+            this.markDirty();
+
+            // Keep focus on the control the user is holding — it moved with
+            // the card (cleanupRows can rebuild rows, so re-query).
+            card.querySelector(`.btn-move[data-move="${dir}"]`)?.focus();
+
+            const data = this.state.get(card.dataset.element);
+            const name = card.querySelector('.element-name')?.textContent?.trim() || card.dataset.element;
+            this.announce(`${name}: ${this.trans('JBS_TPL_ROW') || 'Row'} ${data?.row ?? '?'}, Col ${data?.col ?? '?'}`);
+        }
+
+        /**
+             * Move a landing-page section card up or down without dragging
+             * (WCAG 2.2 SC 2.5.7) — the button counterpart of the section
+             * drag handle, ending in the same updateLandingPageOrder() the
+             * drag path runs.
+             *
+             * @param {HTMLElement} card - The landing-section-card
+             * @param {string} dir - 'up' | 'down'
+             */
+        moveLandingSection(card, dir) {
+            const list = card.parentElement;
+            const sibling = dir === 'up' ? card.previousElementSibling : card.nextElementSibling;
+
+            if (!list || !sibling) { return; }
+
+            this.saveStateForUndo();
+
+            if (dir === 'up') {
+                list.insertBefore(card, sibling);
+            } else {
+                list.insertBefore(sibling, card);
+            }
+
+            this.updateLandingPageOrder();
+
+            card.querySelector(`.btn-section-move[data-move="${dir}"]`)?.focus();
+
+            const cards = Array.from(list.children);
+            const name = card.querySelector('.section-name')?.textContent?.trim() || card.dataset.section;
+            this.announce(`${name}: ${cards.indexOf(card) + 1} / ${cards.length}`);
+        }
+
+        /**
              * Bind event listeners
              */
         bindEvents() {
@@ -2623,6 +2778,23 @@
                     if (card) {
                         this.saveStateForUndo();
                         this.removeElement(card);
+                    }
+                }
+
+                // Non-drag movement (WCAG 2.2 SC 2.5.7)
+                const moveBtn = e.target.closest('.btn-move');
+                if (moveBtn) {
+                    const card = moveBtn.closest('.element-card');
+                    if (card) {
+                        this.moveElementCard(card, moveBtn.dataset.move);
+                    }
+                }
+
+                const sectionMoveBtn = e.target.closest('.btn-section-move');
+                if (sectionMoveBtn) {
+                    const card = sectionMoveBtn.closest('.landing-section-card');
+                    if (card) {
+                        this.moveLandingSection(card, sectionMoveBtn.dataset.move);
                     }
                 }
             });

@@ -292,6 +292,16 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             // title (WCAG 4.1.2, axe frame-title). Copies name back to title;
             // no-ops when the iframe already has one.
             $wa->useScript('com_proclaim.modal-iframe-a11y');
+
+            // Non-drag list reordering (WCAG 2.2 SC 2.5.7): Joomla 4+ list
+            // ordering is drag-only, so this injects Move Up / Move Down
+            // buttons beside the grip on every Proclaim list with ordering
+            // active, persisting through the same saveOrderAjax endpoint the
+            // drag path uses. No-ops on pages without an orderable list.
+            $wa->useScript('com_proclaim.list-order-a11y');
+            Text::script('JBS_CMN_ORDER_MOVE_UP');
+            Text::script('JBS_CMN_ORDER_MOVE_DOWN');
+            Text::script('JBS_CMN_ORDER_MOVED');
         }
 
         $hiddenViews = [];
