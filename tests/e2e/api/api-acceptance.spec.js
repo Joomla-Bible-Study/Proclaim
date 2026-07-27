@@ -68,22 +68,37 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
 
     test('a token from the admin profile reaches the API and gets JSON:API', async ({ page, request }) => {
         // Obtain the token the way an administrator does: from their own
-        // account, reached through the header user menu's own "Edit Account"
-        // link — the URL shape varies across Joomla versions (com_admin's
-        // profile view 404s on J6), the link is always there. The token
-        // field shows the full header-ready value; a first-ever visit shows
-        // it empty until the account is saved once (the token plugin
-        // generates on save).
+        // account. Two routes, because Joomla moved the furniture: the
+        // header's "Edit Account" link (all versions; on some fresh installs
+        // the direct GET bounces back to the dashboard), and com_admin's own
+        // profile view (J4/J5; removed in J6). Try the link first, fall back
+        // to the profile view. The token field shows the full header-ready
+        // value; a first-ever visit shows it empty until the account is
+        // saved once (the token plugin generates on save).
         await page.goto('/administrator/index.php', { waitUntil: 'networkidle' });
 
         const editAccount = page.locator('a[href*="task=user.edit"]', { hasText: 'Edit Account' }).first();
         await expect(editAccount, 'No "Edit Account" link in the admin header').toBeAttached();
         await page.goto(await editAccount.getAttribute('href'), { waitUntil: 'networkidle' });
 
+        if (!(await page.locator('#jform_joomlatoken_token').count())) {
+            await page.goto('/administrator/index.php?option=com_admin&view=profile&layout=edit', {
+                waitUntil: 'networkidle',
+            });
+        }
+
         const tokenField = page.locator('#jform_joomlatoken_token');
+
+        // Diagnostics worth their weight when this fails on a machine no one
+        // can attach a debugger to: where each route actually landed, and
+        // what Joomla had to say about it.
+        const alerts = (await page.locator('joomla-alert, .alert').allInnerTexts())
+            .join(' | ').replace(/\s+/g, ' ').slice(0, 300);
+
         await expect(
             tokenField,
-            'No Joomla API Token field on the profile — is the "User - Token" plugin disabled?',
+            'No Joomla API Token field via either the Edit Account link or the com_admin profile view. '
+            + `Landed on: ${page.url()} — messages: ${alerts || '(none)'}`,
         ).toBeAttached();
 
         let token = await tokenField.inputValue();
