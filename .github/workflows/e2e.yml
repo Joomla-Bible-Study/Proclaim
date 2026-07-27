@@ -131,7 +131,6 @@ jobs:
         # so this one file is the only wiring the whole chain needs.
         run: |
           cat > build.properties <<EOF
-          builder.joomla_dir=${GITHUB_WORKSPACE}/../joomla-cms
           builder.installs=ci
           builder.ci.role=test
           builder.ci.path=${SITE_DIR}
