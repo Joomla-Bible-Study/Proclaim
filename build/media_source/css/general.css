@@ -1077,3 +1077,34 @@ button.cwmadmin-action-card {
   }
 }
 
+
+/* ==========================================================================
+   WCAG 2.2 AA: muted text contrast
+   ========================================================================== */
+
+/* Atum's `.text-muted` applies BOTH a translucent colour and a further
+   `opacity: 0.7`:
+
+     .text-muted { color: var(--secondary-color) !important; opacity: 0.7; }
+     --secondary-color: #212529bf   (light)
+                        #dee2e6bf   (dark)
+
+   The colour on its own is fine — #212529bf over the card background #fbfcfe
+   resolves to #585b5e, which is 6.66:1. It is the extra 0.7 opacity stacked on
+   top that takes the effective colour to #898b8e and the ratio to 3.32:1,
+   below the 4.5:1 WCAG 1.4.3 requires for normal text. axe reports it as
+   `color-contrast` on the analytics KPI cards, and `text-muted small` appears
+   in 24 Proclaim templates, so the same failure is latent throughout.
+
+   So the fix is to drop the opacity, not to change the colour. Removing it
+   restores Atum's intended hue and clears the threshold in both themes:
+
+     light  #585b5e on #fbfcfe   6.66:1  PASS
+     dark   #afb3b7 on #212529   7.31:1  PASS
+
+   Scoped to Proclaim's own body class. This is arguably an Atum bug, but it is
+   not ours to fix globally, and every other component on the page keeps
+   Joomla's styling untouched. */
+body.com_proclaim .text-muted {
+  opacity: 1;
+}

@@ -178,17 +178,20 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                 </div>
 
                 <!-- Custom date range -->
-                <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_FROM'); ?></label>
-                <input type="date" name="date_start" class="form-control form-control-sm" style="width:140px"
+                <?php // Each label needs `for` and each control an `id`: without the pair the
+                      // label is decorative text, and a screen reader announces the field as
+                      // unnamed. WCAG 4.1.2, reported by axe as `label`. ?>
+                <label for="cwm-ana-date-start" class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_FROM'); ?></label>
+                <input type="date" name="date_start" id="cwm-ana-date-start" class="form-control form-control-sm" style="width:140px"
                        value="<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?>">
-                <label class="me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_TO'); ?></label>
-                <input type="date" name="date_end" class="form-control form-control-sm" style="width:140px"
+                <label for="cwm-ana-date-end" class="me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_TO'); ?></label>
+                <input type="date" name="date_end" id="cwm-ana-date-end" class="form-control form-control-sm" style="width:140px"
                        value="<?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>">
 
                 <!-- Campus filter (super-admin or multi-campus user) -->
                 <?php if ($this->showCampusDropdown && !empty($this->locations)) : ?>
-                    <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_CAMPUS'); ?></label>
-                    <select name="location_id" class="form-select form-select-sm" style="width:160px">
+                    <label for="cwm-ana-campus" class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_CAMPUS'); ?></label>
+                    <select name="location_id" id="cwm-ana-campus" class="form-select form-select-sm" style="width:160px">
                         <?php if ($this->isSuperAdmin) : ?>
                             <option value="0"><?php echo Text::_('JBS_ANA_ALL_CAMPUSES'); ?></option>
                         <?php endif; ?>
@@ -202,8 +205,8 @@ $navParams      = '&preset=' . htmlspecialchars($this->preset, ENT_QUOTES) . '&l
                 <?php endif; ?>
 
                 <!-- Status filter -->
-                <label class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_STATUS_FILTER'); ?></label>
-                <select name="status" class="form-select form-select-sm" style="width:140px">
+                <label for="cwm-ana-status" class="ms-2 me-1 fw-semibold small"><?php echo Text::_('JBS_ANA_STATUS_FILTER'); ?></label>
+                <select name="status" id="cwm-ana-status" class="form-select form-select-sm" style="width:140px">
                     <option value=""<?php echo $this->statusFilter === '' ? ' selected' : ''; ?>>
                         <?php echo Text::_('JBS_ANA_STATUS_ALL'); ?>
                     </option>

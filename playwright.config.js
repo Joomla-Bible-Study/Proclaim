@@ -69,12 +69,44 @@ module.exports = defineConfig({
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
+
+        // Run new headless — real Chromium with no window — rather than
+        // Playwright's default, which for `headless: true` is
+        // chrome-headless-shell.
+        //
+        // That shell is the *old* headless implementation. Google removed old
+        // headless from the Chrome binary in Chrome 132 and republished it as
+        // a standalone binary for automation that wants its speed, so it is
+        // supported and current — but it is not the renderer anyone visiting
+        // the site is using.
+        //
+        // The distinction is not academic here, because two of the WCAG rules
+        // we gate on measure rendered output rather than markup:
+        //
+        //   target-size    2.5.8, new in WCAG 2.2 — element dimensions in CSS px
+        //   color-contrast 1.4.3 — computed foreground/background colours
+        //
+        // A pass from a renderer users do not run is a weak basis for a
+        // conformance claim, and a target-size failure that only reproduces in
+        // the shell would waste a morning. Accuracy is worth more than the
+        // speed difference across 28 tests.
+        channel: 'chromium',
     },
 
     projects: [
+        // The J5 projects skip the accessibility specs. Proclaim renders the
+        // same markup on both platforms, so scanning it twice costs a full
+        // second pass of every page and reports the same violations twice.
+        // What J5 is actually here to catch is Joomla-version behaviour
+        // differences, which is what the functional specs cover.
+        //
+        // If a violation ever turns out to be J5-only, it will be a Joomla
+        // template difference outside the scanned region — drop the
+        // testIgnore then, deliberately.
         {
             name: 'admin-j5',
             testMatch: '**/admin/**/*.spec.js',
+            testIgnore: '**/a11y.spec.js',
             use: {
                 ...devices['Desktop Chrome'],
                 baseURL: j5Url,
@@ -84,6 +116,7 @@ module.exports = defineConfig({
         {
             name: 'site-j5',
             testMatch: '**/site/**/*.spec.js',
+            testIgnore: '**/a11y.spec.js',
             use: {
                 ...devices['Desktop Chrome'],
                 baseURL: j5Url,
