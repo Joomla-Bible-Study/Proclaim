@@ -425,7 +425,8 @@
 
 /* Element Action Buttons */
 .row-elements .element-card .btn-settings,
-.row-elements .element-card .btn-remove {
+.row-elements .element-card .btn-remove,
+.row-elements .element-card .btn-move {
     padding: .25rem .375rem;
     background: rgba(255, 255, 255, 0.15);
     border: none;
@@ -443,9 +444,29 @@
 }
 
 .row-elements .element-card .btn-settings:hover,
-.row-elements .element-card .btn-remove:hover {
+.row-elements .element-card .btn-remove:hover,
+.row-elements .element-card .btn-move:hover {
     background: rgba(255, 255, 255, 0.3);
     color: #fff;
+}
+
+/* Non-drag movement controls (WCAG 2.2 SC 2.5.7) — hidden in the palette,
+   where cards are add-sources rather than arranged elements. */
+.element-palette-items .element-card .element-move {
+    display: none !important;
+}
+
+.row-elements .element-card .element-move {
+    display: inline-flex;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+/* The landing section list's counterpart. */
+.landing-section-card .section-move {
+    display: inline-flex;
+    gap: 2px;
+    margin-inline-end: .5rem;
 }
 
 .row-elements .element-card .btn-settings:focus,
