@@ -56,36 +56,27 @@ test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
 
         await expect(page.locator(PROCLAIM_CONTENT)).toBeVisible({ timeout: 15000 });
 
-        // Three widgets on this page are rendered by Joomla and TinyMCE, not by
-        // Proclaim, and each fails WCAG in markup we cannot change:
+        // Two widgets here are rendered by TinyMCE and Joomla's Choices.js —
+        // third-party code we neither author nor can patch:
         //
-        //   .tox-tinymce        role="application" without its required ARIA
-        //                       attributes, and editor iframes with no title
-        //   .choices            Joomla's Choices.js remove-button is under the
-        //                       24x24 minimum of SC 2.5.8
-        //   subform <thead>     Joomla core emits
-        //                       <span class="icon-info-circle" aria-hidden="true"
-        //                       tabindex="0"> for any subform field carrying a
-        //                       description — simultaneously hidden from assistive
-        //                       tech and keyboard focusable. See
-        //                       layouts/joomla/form/field/subform/repeatable-table.php
+        //   .tox-tinymce   role="application" without its required ARIA
+        //                  attributes, and editor iframes with no title
+        //   .choices       the remove-button is under the 24x24 minimum of
+        //                  SC 2.5.8
         //
-        // The subform exclusion is the uncomfortable one, because the markup is
-        // Joomla's but the decision to render it is ours twice over: message.xml
-        // selects layout="joomla.form.field.subform.repeatable-table", and the
-        // description on scripture_row.xml's bible_version field is what makes the
-        // icon appear at all. Proclaim already ships admin/layouts/, so a scoped
-        // override that drops the tabindex and wires the tooltip through
-        // aria-describedby is available to us — at the cost of maintaining a fork
-        // of a core layout across Joomla versions. Excluded here so the gate is
-        // usable; tracked in #1339 as a decision to make, not a fact of life.
+        // Both are reported upstream. Excluded by selector rather than by
+        // disabling the rules, so `aria-required-attr`, `frame-title` and
+        // `target-size` still apply to Proclaim's own markup on this page.
         //
-        // Exclusions are by selector rather than by disabling rules, so the same
-        // rules still apply to Proclaim's own markup on this page. Remove an entry
-        // when the corresponding fix lands.
+        // The subform tooltip icon is deliberately NOT excluded. Joomla core
+        // emits it with aria-hidden="true" and tabindex="0" at once, but the
+        // decision to render it is ours — message.xml selects the
+        // repeatable-table layout and scripture_row.xml gives bible_version a
+        // description. com_proclaim.subform-tooltip-a11y repairs it at runtime,
+        // and this assertion is what proves the repair still works.
         await expectNoViolations(page, expect, {
             include: PROCLAIM_CONTENT,
-            exclude: ['.tox-tinymce', '.choices', 'table[id^="subfieldList_"] thead'],
+            exclude: ['.tox-tinymce', '.choices'],
         });
     });
 });

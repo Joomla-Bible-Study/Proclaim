@@ -270,9 +270,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         if ($option === 'com_proclaim') {
-            $this->getApplication()->getDocument()
-                ->getWebAssetManager()
-                ->useScript('com_proclaim.admin-shortcuts');
+            $wa = $this->getApplication()->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.admin-shortcuts');
+
+            // Repairs the subform header tooltips Joomla renders with both
+            // aria-hidden="true" and tabindex="0" — focusable, yet hidden from
+            // assistive technology (WCAG 4.1.2). Present in Joomla 5.4.7 through
+            // 7.0.0 and reported upstream; the script no-ops once that is fixed.
+            //
+            // Loaded here rather than from the four views whose forms contain a
+            // subform. Those views do not share an asset or a base class, so
+            // per-view loading means four edits that a fifth subform would
+            // silently not inherit. One hook covers every current and future
+            // Proclaim admin view, and the script costs nothing on pages with no
+            // subform — it finds no matching elements and returns.
+            $wa->useScript('com_proclaim.subform-tooltip-a11y');
         }
 
         $hiddenViews = [];
