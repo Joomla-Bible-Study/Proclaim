@@ -17,7 +17,7 @@
   --color-background-alt: #eeeeee;     /* Alternating row / hover fills */
   --color-background-row0: #F7F8F9;    /* Zebra-stripe even rows */
   --color-accent: #7F9DB9;             /* Headings, feature highlights */
-  --color-link: #08c;                  /* Hyperlinks */
+  --color-link: #006da3;               /* Hyperlinks — 5.1:1 on Atum's #f0f4fb, 5.7:1 on white (WCAG 1.4.3); #08c was 3.5:1 */
   --color-install-border: #99CCFF;     /* Installer step borders */
   --color-install-bg: #D9D9FF;         /* Installer step backgrounds */
   --color-shadow: rgba(0, 0, 0, 0.15); /* Drop shadows */
@@ -1107,4 +1107,13 @@ button.cwmadmin-action-card {
    Joomla's styling untouched. */
 body.com_proclaim .text-muted {
   opacity: 1;
+}
+
+/* A button-styled link inside an alert inherits Atum's alert link colour, and
+   that dark blue lands on the button's own blue background at 1.46:1 (axe
+   color-contrast, WCAG 1.4.3) — the button variant doesn't matter, the alert
+   link rule outranks them all. Seen on the control panel's pending-review
+   action. Scoped the same way as the .text-muted repair above. */
+body.com_proclaim .alert a.btn-primary {
+  color: #fff;
 }

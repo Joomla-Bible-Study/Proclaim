@@ -144,6 +144,21 @@ async function expectNoViolations(page, expect, options = {}) {
     expect(title, `Page is an error page, not the view under test: "${title}"`)
         .not.toMatch(/^Error:?\s*\d*/i);
 
+    // Inline PHP diagnostics are a second way a scan lies. A dev site with
+    // display_errors on prints "Deprecated: …" (or an Xdebug trace table)
+    // straight into the markup, and axe then judges the error dump instead of
+    // the view — this suite once reported the topic form's colours wrong when
+    // the "violation" was Xdebug's own green-on-grey stack trace. Real bugs
+    // both times, but the failure should say "PHP error leaked into the page",
+    // not "contrast".
+    const phpError = await page.locator('body').innerText().then((text) => {
+        const match = text.match(/^(Deprecated|Warning|Notice|Fatal error): .{0,200}/m);
+
+        return match ? match[0] : null;
+    });
+
+    expect(phpError, 'PHP error output leaked into the page').toBeNull();
+
     const results = await scan(page, options);
 
     expect(formatViolations(results.violations)).toBe('No WCAG A/AA violations.');

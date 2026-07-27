@@ -73,20 +73,21 @@ $teacher = $this->listing;
 
     <div class="row">
         <div class="col-12">
-            <a href="<?php
-            echo Route::_('index.php?option=com_proclaim&view=cwmteachers&t=' . $this->template->id) ?>">
-                <button class="btn btn-primary"><?php
-                echo '&lt;-- ' . Text::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></button>
-            </a>
+            <?php // The link IS the button — a <button> nested inside an <a> is
+                  // invalid interactive nesting, and the wrapping anchor is a
+                  // separate, near-zero-size tab stop (WCAG 2.5.8 target-size). ?>
+            <a class="btn btn-primary" href="<?php
+            echo Route::_('index.php?option=com_proclaim&view=cwmteachers&t=' . $this->template->id) ?>"><?php
+                echo '&lt;-- ' . Text::_('JBS_TCH_RETURN_TEACHER_LIST'); ?></a>
             <?php
             if ($this->params->get('teacherlink', '1') > 0) {
-                echo '<a href="' .
+                echo '<a class="btn btn-primary" href="' .
                     Route::_(
                         'index.php?option=com_proclaim&view=cwmsermons&filter_teacher=' . (int)$this->item->id . '&t=' . (int)$this->template->id
                     ) .
-                    '"><button class="btn btn-primary">' . Text::_(
+                    '">' . Text::_(
                         'JBS_TCH_MORE_FROM_THIS_TEACHER'
-                    ) . ' --></button></a>';
+                    ) . ' --></a>';
             }
             ?>
         </div>

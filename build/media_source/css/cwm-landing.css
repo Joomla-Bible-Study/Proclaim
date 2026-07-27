@@ -417,7 +417,8 @@
 
 .proclaim-landing-accordion__count {
     background: #e9ecef;
-    color: #6c757d;
+    /* 6.9:1 on the #e9ecef pill — #6c757d was 3.95:1 (WCAG 1.4.3). */
+    color: #495057;
     font-size: 0.75rem;
     padding: 0.15rem 0.6rem;
     border-radius: 1rem;

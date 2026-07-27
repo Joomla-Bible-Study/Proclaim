@@ -50,20 +50,23 @@ if (!empty($this->seriesstudies)) {
         <div class="col-12">
             <?php
 if ($this->params->get('series_list_return') > 0) {
-    echo '<a href="'
+    // The link IS the button — a <button> nested inside an <a> is invalid
+    // interactive nesting, and the wrapping anchor is a separate,
+    // near-zero-size tab stop (WCAG 2.5.8 target-size).
+    echo '<a class="btn" href="'
         . Route::_(
             'index.php?option=com_proclaim&view=cwmseriesdisplays&t=' . $t->id
-        ) . '"><button class="btn"><< '
-        . Text::_('JBS_SER_RETURN_SERIES_LIST') . '</button></a>'; ?>
+        ) . '"><< '
+        . Text::_('JBS_SER_RETURN_SERIES_LIST') . '</a>'; ?>
                 <?php
-                echo '<a href="'
+                echo '<a class="btn" href="'
         . Route::_(
             'index.php?option=com_proclaim&view=cwmsermons&filter_series=' . $this->items->id . '&t=' . $t->id
         )
-        . '"><button class="btn">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_(
+        . '">' . Text::_('JBS_CMN_SHOW_ALL') . ' ' . Text::_(
             'JBS_SER_STUDIES_FROM_THIS_SERIES'
         )
-        . ' >></button></a>'; ?>
+        . ' >></a>'; ?>
                 <?php
 }
 ?>

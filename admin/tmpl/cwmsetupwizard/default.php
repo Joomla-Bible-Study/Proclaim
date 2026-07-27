@@ -26,6 +26,7 @@ use Joomla\CMS\Language\Text;
     <div class="wizard-progress mb-4">
         <div class="progress" style="height: 6px;">
             <div class="progress-bar bg-success" role="progressbar" style="width: 20%;"
+                 aria-label="<?php echo Text::_('JBS_WIZARD_PROGRESS'); ?>"
                  aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" id="wizard-progress-bar"></div>
         </div>
         <div class="d-flex justify-content-between mt-2">

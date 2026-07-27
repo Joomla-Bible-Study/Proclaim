@@ -56,9 +56,12 @@ echo Route::_('index.php?option=com_proclaim&view=cwmplaylists'); ?>" method="po
                 </caption>
                 <thead>
                 <tr>
-                    <td class="w-1 text-center">
+                    <?php // th, not td: the list default-sorts on ordering, and the
+                          // searchtools JS stamps aria-sort on this cell — an
+                          // attribute only a columnheader may carry (WCAG 4.1.2). ?>
+                    <th scope="col" class="w-1 text-center">
                         <?php echo HTMLHelper::_('searchtools.sort', '', 'playlist.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-sort'); ?>
-                    </td>
+                    </th>
                     <th class="w-1 text-center">
                         <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
