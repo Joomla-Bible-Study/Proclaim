@@ -55,15 +55,23 @@ $page       = $this->messagesPage;
                 <input type="hidden" name="date_start" value="<?php echo htmlspecialchars($this->dateStart, ENT_QUOTES); ?>">
                 <input type="hidden" name="date_end" value="<?php echo htmlspecialchars($this->dateEnd, ENT_QUOTES); ?>">
             <?php endif; ?>
+            <?php // These controls have no visible label to pair an `id`/`for` with, so the
+                  // name is supplied directly. A placeholder is not a reliable accessible
+                  // name — it disappears on input and is not exposed consistently — and the
+                  // submit button's icon is aria-hidden, leaving it nameless without this.
+                  // WCAG 4.1.2. ?>
             <div class="input-group" style="max-width:400px">
                 <input type="text" name="search" class="form-control form-control-sm"
+                       aria-label="<?php echo Text::_('JBS_ANA_MESSAGES_SEARCH_PLACEHOLDER'); ?>"
                        placeholder="<?php echo Text::_('JBS_ANA_MESSAGES_SEARCH_PLACEHOLDER'); ?>"
                        value="<?php echo htmlspecialchars($this->messagesSearch, ENT_QUOTES); ?>">
-                <button type="submit" class="btn btn-sm btn-primary">
+                <button type="submit" class="btn btn-sm btn-primary"
+                        aria-label="<?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>">
                     <i class="icon-search" aria-hidden="true"></i>
                 </button>
             </div>
             <select name="status" class="form-select form-select-sm" style="width:140px"
+                    aria-label="<?php echo Text::_('JBS_ANA_STATUS_FILTER'); ?>"
                     onchange="this.form.submit()">
                 <option value=""<?php echo $this->statusFilter === '' ? ' selected' : ''; ?>>
                     <?php echo Text::_('JBS_ANA_STATUS_ALL'); ?>

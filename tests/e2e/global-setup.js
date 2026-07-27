@@ -113,7 +113,16 @@ module.exports = async function globalSetup() {
         fs.mkdirSync(authDir, { recursive: true });
     }
 
-    const browser = await chromium.launch();
+    // globalSetup runs outside the project fixtures, so the `use.channel`
+    // setting in playwright.config.js does not reach this call — it has to be
+    // repeated. Without it this launches Playwright's default headless
+    // browser, chrome-headless-shell, while every test runs real Chromium.
+    //
+    // Two reasons that matters: the shell may not be installed at all (this
+    // failed here with "Executable doesn't exist"), and authenticating in one
+    // browser while testing in another is a difference worth not having in a
+    // login flow.
+    const browser = await chromium.launch({ channel: 'chromium' });
 
     try {
         console.log(`\nAuthenticating against j5-dev (${j5Url})…`);
