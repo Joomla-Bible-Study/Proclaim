@@ -2,9 +2,11 @@
 
 Browser tests (Playwright) covering the admin and site halves of the
 component, including the WCAG 2.2 AA accessibility gate. They run against
-**real local Joomla installs**, not fixtures — which is why they are not in
-CI (nothing there to point them at) and instead gate releases via
-`composer test:release`.
+**real Joomla installs**, not fixtures. Locally that means the dev sites
+below, gating releases via `composer test:release`; in CI, the
+`.github/workflows/e2e.yml` job stands up a disposable Joomla + MySQL from
+nothing and runs the package-install + API acceptance chain nightly, on
+dispatch, and on pull requests that touch what it guards (#1342).
 
 ## Prerequisites
 
