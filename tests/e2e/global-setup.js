@@ -28,32 +28,7 @@
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('@playwright/test');
-
-function parseProperties(filePath) {
-    const props = {};
-    if (!fs.existsSync(filePath)) {
-        return props;
-    }
-    const lines = fs.readFileSync(filePath, 'utf8').split('\n');
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) {
-            continue;
-        }
-        const eq = trimmed.indexOf('=');
-        if (eq === -1) {
-            continue;
-        }
-        props[trimmed.slice(0, eq).trim()] = trimmed.slice(eq + 1).trim();
-    }
-    return props;
-}
-
-function loadProps(root) {
-    const dist = parseProperties(path.join(root, 'build.dist.properties'));
-    const local = parseProperties(path.join(root, 'build.properties'));
-    return { ...dist, ...local };
-}
+const { loadProps, installForRole } = require('./helpers/properties');
 
 /**
  * Project names passed on the command line, e.g. --project=admin-j6.
@@ -97,13 +72,16 @@ async function stateStillValid(browser, baseUrl, storageStatePath) {
             timeout: 15000,
         });
 
-        // The login form appearing means the session expired; treat any
-        // navigation failure the same way and fall through to a fresh login.
-        const loginVisible = await page.locator('#form-login')
-            .isVisible({ timeout: 3000 })
-            .catch(() => true);
+        // Valid means the sidebar toggle rendered — a positive signal only an
+        // authenticated backend produces (the login page has no sidebar). "No
+        // login form" would also be true of an error page, and treating that
+        // as a live session skips the login that would surface the problem.
+        //
+        // waitFor, not isVisible: isVisible() answers for the instant it is
+        // called and ignores its timeout option.
+        await page.locator('#menu-collapse').waitFor({ state: 'visible', timeout: 5000 });
 
-        return !loginVisible;
+        return true;
     } catch {
         return false;
     } finally {
@@ -120,12 +98,20 @@ async function loginAdmin(browser, baseUrl, username, password, storageStatePath
         // Load the login page
         await page.goto(`${baseUrl}/administrator/index.php`, { waitUntil: 'networkidle' });
 
-        // Confirm the login form is present
-        const loginVisible = await page.locator('#form-login').isVisible({ timeout: 10000 }).catch(() => false);
+        // Confirm the login form is present. Already-authenticated is only
+        // claimed on the positive signal (the admin sidebar), never on the
+        // form's mere absence.
+        const loginVisible = await page.locator('#form-login').isVisible().catch(() => false);
         if (!loginVisible) {
-            console.log(`  Already authenticated at ${baseUrl}, saving state.`);
-            await ctx.storageState({ path: storageStatePath });
-            return;
+            const authed = await page.locator('#menu-collapse')
+                .waitFor({ state: 'visible', timeout: 5000 })
+                .then(() => true, () => false);
+            if (authed) {
+                console.log(`  Already authenticated at ${baseUrl}, saving state.`);
+                await ctx.storageState({ path: storageStatePath });
+                return;
+            }
+            throw new Error(`Neither the login form nor the admin UI rendered at ${baseUrl}/administrator/`);
         }
 
         // Fill credentials
@@ -137,15 +123,27 @@ async function loginAdmin(browser, baseUrl, username, password, storageStatePath
         // onsubmit handler but correctly includes all hidden fields (CSRF token).
         await page.evaluate(() => document.getElementById('form-login').submit());
 
-        // Wait for the resulting page to be fully loaded
-        await page.waitForLoadState('networkidle', { timeout: 25000 });
+        // Success must be a POSITIVE signal — the sidebar toggle, which only
+        // an authenticated backend renders (the login page has no sidebar).
+        // "The login form is gone" is not enough: mid-redirect the form is
+        // absent from a page that is not logged in either, and that false
+        // success once saved a guest session as auth state while the real
+        // problem (stale credentials in build.properties) went unreported.
+        //
+        // waitFor, not waitForLoadState-then-isVisible: networkidle can
+        // resolve on the *old* page before the submit's navigation begins,
+        // and isVisible() answers for that instant without waiting.
+        const authed = await page.locator('#menu-collapse')
+            .waitFor({ state: 'visible', timeout: 25000 })
+            .then(() => true, () => false);
 
-        // Verify we're no longer on the login page
-        const stillOnLogin = await page.locator('#form-login').isVisible({ timeout: 2000 }).catch(() => false);
-        if (stillOnLogin) {
+        if (!authed) {
+            const rejected = await page.locator('#form-login').isVisible().catch(() => false);
             throw new Error(
-                `Login failed for ${baseUrl} — credentials rejected or form not submitted.\n` +
-                `Check builder.j5dev.username / builder.j5dev.password (or j6dev) in build.properties.\n` +
+                `Login failed for ${baseUrl} — ` +
+                (rejected
+                    ? 'credentials rejected (check this site\'s username/password in build.properties).\n'
+                    : 'no admin UI appeared after submit.\n') +
                 `Current URL: ${page.url()}`
             );
         }
@@ -193,7 +191,11 @@ module.exports = async function globalSetup(config) {
     }
 
     // The sites this repo can authenticate against, keyed by the storage
-    // state file the Playwright projects reference.
+    // state file the Playwright projects reference. The two dev sites have
+    // fixed property keys; the test site is discovered by role, because
+    // install naming is local to each build.properties.
+    const testInstall = installForRole(props, 'test');
+
     const sites = [
         {
             label: 'j5-dev',
@@ -209,6 +211,13 @@ module.exports = async function globalSetup(config) {
             password: props['builder.j6dev.password'] || props['builder.joomla_password'],
             stateFile: 'admin-j6.json',
         },
+        ...(testInstall ? [{
+            label: testInstall.id,
+            url: testInstall.url,
+            username: testInstall.username,
+            password: testInstall.password,
+            stateFile: 'admin-test.json',
+        }] : []),
     ];
 
     // Authenticate only the sites the selected projects consume. A project

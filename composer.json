@@ -128,6 +128,7 @@
     "test:js": "npm test",
     "test:e2e": "npm run test:e2e",
     "test:a11y": "npx playwright test --grep @a11y --project=admin-j6 --project=site-j6",
+    "test:api": ["@test:install", "npx playwright test --project=api-test"],
     "test:all": ["@test", "@test:js"],
     "test:reset-testsite": "@php build/reset-testsite.php",
     "test:migrations": "@php build/verify-migrations.php",
