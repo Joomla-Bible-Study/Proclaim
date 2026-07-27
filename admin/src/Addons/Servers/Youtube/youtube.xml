@@ -35,6 +35,21 @@
             <field name="oauth_status" type="YoutubeOAuthStatus" label="JBS_ADDON_YOUTUBE_OAUTH_STATUS"
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
+        <fieldset name="youtube_live" label="JBS_ADDON_YOUTUBE_LIVE_SETTINGS">
+            <field name="stream_mode" type="radio" layout="joomla.form.field.radio.switcher"
+                   label="JBS_ADDON_YOUTUBE_STREAM_MODE" description="JBS_ADDON_YOUTUBE_STREAM_MODE_DESC"
+                   default="external">
+                <option value="external">JBS_ADDON_YOUTUBE_STREAM_MODE_EXTERNAL</option>
+                <option value="direct">JBS_ADDON_YOUTUBE_STREAM_MODE_DIRECT</option>
+            </field>
+            <field name="live_default_privacy" type="list"
+                   label="JBS_ADDON_YOUTUBE_LIVE_DEFAULT_PRIVACY" description="JBS_ADDON_YOUTUBE_LIVE_DEFAULT_PRIVACY_DESC"
+                   default="unlisted" showon="stream_mode:direct">
+                <option value="public">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PUBLIC</option>
+                <option value="unlisted">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_UNLISTED</option>
+                <option value="private">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PRIVATE</option>
+            </field>
+        </fieldset>
         <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"
                    default="{title} — {series}&#10;{teachers}&#10;{date}&#10;{scriptures}&#10;&#10;{studyintro}&#10;&#10;{chapters}&#10;&#10;Topics: {topics}&#10;&#10;{url}"

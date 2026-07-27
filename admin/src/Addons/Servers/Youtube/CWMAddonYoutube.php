@@ -31,6 +31,10 @@ use Google\Service\Exception;
 use Google\Service\YouTube;
 use Google\Service\YouTube\Caption;
 use Google\Service\YouTube\CaptionSnippet;
+use Google\Service\YouTube\LiveBroadcast;
+use Google\Service\YouTube\LiveBroadcastContentDetails;
+use Google\Service\YouTube\LiveBroadcastSnippet;
+use Google\Service\YouTube\LiveBroadcastStatus;
 use Google\Service\YouTube\PlaylistItem;
 use Google\Service\YouTube\PlaylistItemSnippet;
 use Google\Service\YouTube\ResourceId;
@@ -38,6 +42,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -146,6 +151,50 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             $html .= $field->renderField();
+        }
+
+        // Live broadcast panel (#1298): only on NEW media, and only when
+        // this server streams Direct — an External/restreamer setup never
+        // sees it, because the restreamer owns the broadcast there. The
+        // scheduled start is the record's Media Date; say so where the
+        // administrator is looking.
+        if ($new && ($media_form->s_params['stream_mode'] ?? 'external') === 'direct') {
+            $html .= '<fieldset class="options-form"><legend>'
+                . Text::_('JBS_ADDON_YOUTUBE_LIVE_BROADCAST') . '</legend>';
+
+            // The feature needs the server's YouTube account connection
+            // (OAuth) before it can do anything. Without it, a toggle would
+            // only be a save-time failure waiting to happen — show where to
+            // connect instead. s_params carries the same oauth_token
+            // isOAuthConnected() reads, so this is the same test.
+            if (empty($media_form->s_params['oauth_token'])) {
+                $serverId  = (int) $media_form->getValue('server_id');
+                $serverUrl = $serverId > 0
+                    ? Route::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . $serverId)
+                    : Route::_('index.php?option=com_proclaim&view=cwmservers');
+
+                $html .= '<div class="alert alert-info d-flex align-items-start">'
+                    . '<span class="icon-info-circle me-2 mt-1" aria-hidden="true"></span>'
+                    . '<div>' . Text::_('JBS_ADDON_YOUTUBE_LIVE_CONNECT_PROMPT') . ' '
+                    . '<a href="' . $serverUrl . '" class="alert-link">'
+                    . Text::_('JBS_ADDON_YOUTUBE_LIVE_CONNECT_LINK') . '</a></div>'
+                    . '</div></fieldset>';
+
+                return $html;
+            }
+
+            $liveFields = $media_form->getFieldset('live_broadcast');
+
+            if ($liveFields) {
+                $html .= '<p class="small text-body-secondary">'
+                    . Text::_('JBS_ADDON_YOUTUBE_LIVE_BROADCAST_NOTE') . '</p>';
+
+                foreach ($liveFields as $field) {
+                    $html .= $field->renderField();
+                }
+            }
+
+            $html .= '</fieldset>';
         }
 
         return $html;
@@ -2195,6 +2244,119 @@ class CWMAddonYoutube extends CWMAddon
     public function supportsPlaylistWriteback(): bool
     {
         return true;
+    }
+
+    /**
+     * YouTube can create live broadcasts (#1298). Capability only — the
+     * server's Direct stream mode and the per-record opt-in are separate
+     * gates enforced by the caller and re-checked in createLiveEvent().
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsLiveEvents(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Create a scheduled YouTube live broadcast via liveBroadcasts.insert
+     * (#1298 phase 1 — broadcast only; the ingestion stream and bind are
+     * phase 2).
+     *
+     * Requires OAuth — youtube.force-ssl already covers liveBroadcasts.*,
+     * so a connected server needs no re-authorisation. Re-checks the
+     * server's Direct stream mode: a broadcast must never be created for a
+     * restreamer-managed setup, even by a confused caller.
+     *
+     * @param   Input  $input  serverId, title, description, scheduledStart
+     *                         (RFC3339), privacy (public|unlisted|private).
+     *
+     * @return  array{success: bool, broadcast_id?: string, watch_url?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function createLiveEvent(Input $input): array
+    {
+        $serverId       = $input->getInt('serverId');
+        $title          = trim($input->getString('title', ''));
+        $description    = $input->getString('description', '');
+        $scheduledStart = $input->getString('scheduledStart', '');
+        $privacy        = $input->getCmd('privacy', 'unlisted');
+
+        if ($serverId === 0 || $title === '' || $scheduledStart === '') {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_LIVE_MISSING_INPUT')];
+        }
+
+        if (!\in_array($privacy, ['public', 'unlisted', 'private'], true)) {
+            $privacy = 'unlisted';
+        }
+
+        // Defence in depth: never create a broadcast for an External /
+        // restreamer server — the restreamer owns the broadcast there.
+        $serverConfig = $this->getServerConfig($serverId);
+
+        if (($serverConfig['stream_mode'] ?? 'external') !== 'direct') {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_LIVE_NOT_DIRECT')];
+        }
+
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED')];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_BROADCAST_INSERT)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            $snippet = new LiveBroadcastSnippet();
+            $snippet->setTitle($title);
+            $snippet->setScheduledStartTime($scheduledStart);
+
+            if ($description !== '') {
+                $snippet->setDescription($description);
+            }
+
+            $status = new LiveBroadcastStatus();
+            $status->setPrivacyStatus($privacy);
+            // Not made-for-kids by default; a church can adjust on YouTube.
+            $status->setSelfDeclaredMadeForKids(false);
+
+            $contentDetails = new LiveBroadcastContentDetails();
+            $contentDetails->setEnableAutoStart(false);
+            $contentDetails->setEnableAutoStop(true);
+
+            $broadcast = new LiveBroadcast();
+            $broadcast->setSnippet($snippet);
+            $broadcast->setStatus($status);
+            $broadcast->setContentDetails($contentDetails);
+
+            $response = $youtube->liveBroadcasts->insert('snippet,status,contentDetails', $broadcast);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_BROADCAST_INSERT);
+
+            $broadcastId = (string) $response->getId();
+
+            return [
+                'success'      => true,
+                'broadcast_id' => $broadcastId,
+                'watch_url'    => 'https://www.youtube.com/watch?v=' . $broadcastId,
+            ];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 
     /**
