@@ -188,3 +188,34 @@ jobs:
 
       - name: Run Jest tests
         run: npm test
+
+  spellcheck:
+    name: Spelling (user-facing text)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install codespell
+        run: pip install codespell
+
+      # Scope is English text users and contributors actually read. The
+      # translated language files are deliberately excluded — codespell against
+      # Czech or Hungarian is noise, and those files are generated from en-GB
+      # by cwm-sync-languages anyway, so fixing the source fixes them.
+      #
+      # A typo here ships to every site's admin screen; "occured", "Commments",
+      # "Resposive", "seperator", "Overide" and "Menue" all did exactly that
+      # until 2026-07-27.
+      #
+      # Ignore list: SER is the key-prefix legend for Series in the ini
+      # comments; pre-selected is legitimate English codespell would "fix".
+      - name: Spellcheck en-GB strings and documentation
+        run: >
+          codespell
+          --ignore-words-list ser,pre-selected
+          admin/language/en-GB
+          site/language/en-GB
+          plugins/*/proclaim/language/en-GB
+          modules/*/*/language/en-GB
+          README.md CLAUDE.md build/*.md
