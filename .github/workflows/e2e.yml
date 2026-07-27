@@ -125,6 +125,12 @@ jobs:
             --db-prefix=jos_ \
             --db-encryption=0
           rm -rf "$SITE_DIR/installation"
+          # Pin the site URL. Under PHP's built-in server Joomla mis-derives
+          # its root — admin pages emitted assets under /administrator/media/
+          # and the login form POSTed to /administrator/administrator/ —
+          # and $live_site is the supported way to stop it guessing.
+          sed -i "s#public \$live_site = '';#public \$live_site = '${SITE_URL}';#" "$SITE_DIR/configuration.php"
+          grep -n "live_site" "$SITE_DIR/configuration.php"
 
       - name: Write build.properties for the disposable site
         # The harness discovers the test site by role, not by name (#1353),
