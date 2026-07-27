@@ -130,6 +130,20 @@ function formatViolations(violations) {
  * @param {object} [options] Passed through to scan().
  */
 async function expectNoViolations(page, expect, options = {}) {
+    // Joomla renders its error pages inside the same content region as a real
+    // view, so "the container is visible" is true on a 404 and a scan of an
+    // error page reports no violations and passes.
+    //
+    // That is not hypothetical. A wrong admin view name (cwmsermons, which does
+    // not exist — the admin view is cwmmessages) made this suite report "sermon
+    // list meets WCAG AA" while scanning a 404. A silent false pass on an
+    // accessibility gate is worse than no gate, because it is quoted as
+    // evidence of compliance.
+    const title = await page.title();
+
+    expect(title, `Page is an error page, not the view under test: "${title}"`)
+        .not.toMatch(/^Error:?\s*\d*/i);
+
     const results = await scan(page, options);
 
     expect(formatViolations(results.violations)).toBe('No WCAG A/AA violations.');

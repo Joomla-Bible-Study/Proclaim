@@ -34,7 +34,7 @@ test.describe('Admin edit forms', () => {
     test('opening a sermon from the list loads it into the edit form', async ({ page }) => {
         // The one admin round-trip worth driving through a browser: list →
         // click → form, with a record id in play rather than a blank form.
-        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmsermons');
+        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmmessages');
 
         const firstRow = page.locator('table a[href*="task=cwmmessage.edit"]').first();
 

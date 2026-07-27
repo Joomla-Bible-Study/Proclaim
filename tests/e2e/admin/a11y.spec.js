@@ -25,7 +25,7 @@ const PROCLAIM_CONTENT = 'section#content';
  */
 const SCREENS = [
     ['control panel', 'cwmadmin'],
-    ['sermon list', 'cwmsermons'],
+    ['sermon list', 'cwmmessages'],
     ['teacher list', 'cwmteachers'],
     ['series list', 'cwmseries'],
     ['media file list', 'cwmmediafiles'],
