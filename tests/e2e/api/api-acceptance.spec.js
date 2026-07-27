@@ -68,31 +68,43 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
 
     test('a token from the admin profile reaches the API and gets JSON:API', async ({ page, request }) => {
         // Obtain the token the way an administrator does: from their own
-        // account, reached through the header user menu's own "Edit Account"
-        // link — the URL shape varies across Joomla versions (com_admin's
-        // profile view 404s on J6), the link is always there. The token
-        // field shows the full header-ready value; a first-ever visit shows
-        // it empty until the account is saved once (the token plugin
-        // generates on save).
+        // account, via the header's "Edit Account" link (the com_users.user
+        // form — the only backend context the token plugin injects into;
+        // com_admin's profile view is not on its list).
+        //
+        // On a pristine account the plugin REMOVES its token fields from the
+        // form entirely — the seed they display is only generated when the
+        // user is saved with the plugin active, so a fresh install's
+        // installer-created admin has no field at all until saved once.
+        // That is the state every CI run starts from.
         await page.goto('/administrator/index.php', { waitUntil: 'networkidle' });
 
         const editAccount = page.locator('a[href*="task=user.edit"]', { hasText: 'Edit Account' }).first();
         await expect(editAccount, 'No "Edit Account" link in the admin header').toBeAttached();
         await page.goto(await editAccount.getAttribute('href'), { waitUntil: 'networkidle' });
 
-        const tokenField = page.locator('#jform_joomlatoken_token');
-        await expect(
-            tokenField,
-            'No Joomla API Token field on the profile — is the "User - Token" plugin disabled?',
-        ).toBeAttached();
-
-        let token = await tokenField.inputValue();
-
-        if (!token) {
+        if (!(await page.locator('#jform_joomlatoken_token').count())) {
+            // Pristine account: save once to generate the seed, which lands
+            // back on the edit form with the token fields present.
             await page.click('.button-apply');
             await page.waitForLoadState('networkidle');
-            token = await page.locator('#jform_joomlatoken_token').inputValue();
         }
+
+        const tokenField = page.locator('#jform_joomlatoken_token');
+
+        // Diagnostics worth their weight when this fails on a machine no one
+        // can attach a debugger to: where we actually landed, and what
+        // Joomla had to say about it.
+        const alerts = (await page.locator('joomla-alert, .alert').allInnerTexts())
+            .join(' | ').replace(/\s+/g, ' ').slice(0, 300);
+
+        await expect(
+            tokenField,
+            'No Joomla API Token field on the account form, even after a seed-generating save. '
+            + `Landed on: ${page.url()} — messages: ${alerts || '(none)'}`,
+        ).toBeAttached();
+
+        const token = await tokenField.inputValue();
 
         expect(token, 'The profile never produced a token value').not.toBe('');
 
