@@ -127,7 +127,7 @@
     "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Api Tests,Integration Admin Table Tests'",
     "test:js": "npm test",
     "test:e2e": "npm run test:e2e",
-    "test:a11y": "npx playwright test --grep @a11y",
+    "test:a11y": "npx playwright test --grep @a11y --project=admin-j6 --project=site-j6",
     "test:all": ["@test", "@test:js"],
     "test:reset-testsite": "@php build/reset-testsite.php",
     "test:migrations": "@php build/verify-migrations.php",
