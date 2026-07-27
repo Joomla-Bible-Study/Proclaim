@@ -44,10 +44,13 @@ fi
 echo "-- [3/5] install ${ZIP} (fresh)"
 "$BIN/cwm-install-zip" --zip "$ZIP"
 
-echo "-- [4/5] verify extension registration"
+echo "-- [4/6] verify extension registration"
 "$BIN/cwm-verify" --target test
 
-echo "-- [5/5] verify migrations landed"
+echo "-- [5/6] verify migrations landed"
 php build/verify-migrations.php "$VERSION"
+
+echo "-- [6/6] verify the REST API landed (#1309/#1310/#1331 guards)"
+php build/verify-api-install.php
 
 echo "CLEAN-INSTALL TEST PASSED for ${VERSION}."

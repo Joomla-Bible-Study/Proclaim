@@ -9,47 +9,18 @@
  * per-site credentials (builder.j5dev.username, etc.) and site URLs.
  */
 
-const fs = require('fs');
-const path = require('path');
 const { defineConfig, devices } = require('@playwright/test');
+const { loadProps, installForRole } = require('./tests/e2e/helpers/properties');
 
-/** Parse a Java-style .properties file into a plain object. */
-function parseProperties(filePath) {
-    const props = {};
-    if (!fs.existsSync(filePath)) {
-        return props;
-    }
-    const lines = fs.readFileSync(filePath, 'utf8').split('\n');
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) {
-            continue;
-        }
-        const eq = trimmed.indexOf('=');
-        if (eq === -1) {
-            continue;
-        }
-        const key = trimmed.slice(0, eq).trim();
-        const value = trimmed.slice(eq + 1).trim();
-        props[key] = value;
-    }
-    return props;
-}
-
-/**
- * Load properties with dist-file defaults overridden by local build.properties.
- * Keys present in build.properties always take precedence.
- */
-function loadProps() {
-    const dist = parseProperties(path.join(__dirname, 'build.dist.properties'));
-    const local = parseProperties(path.join(__dirname, 'build.properties'));
-    return { ...dist, ...local };
-}
-
-const props = loadProps();
+const props = loadProps(__dirname);
 
 const j5Url = props['builder.j5dev.url'] || 'https://j5-dev.local:8890';
 const j6Url = props['builder.j6dev.url'] || 'https://j6-dev.local:8890';
+
+// The role=test install — the site `composer test:install` provisions from
+// the built package. Discovered by role, not by name: install naming is
+// local to each build.properties. No role=test install, no API project.
+const testInstall = installForRole(props, 'test');
 
 module.exports = defineConfig({
     testDir: './tests/e2e',
@@ -139,5 +110,19 @@ module.exports = defineConfig({
                 baseURL: j6Url,
             },
         },
+
+        // The API acceptance spec (#1330) runs against the role=test install
+        // and nowhere else: its whole point is asserting the state the
+        // installer produces, which the symlinked dev sites cannot represent.
+        // Omitted entirely when build.properties declares no role=test site.
+        ...(testInstall ? [{
+            name: 'api-test',
+            testMatch: '**/api/**/*.spec.js',
+            use: {
+                ...devices['Desktop Chrome'],
+                baseURL: testInstall.url,
+                storageState: 'tests/e2e/.auth/admin-test.json',
+            },
+        }] : []),
     ],
 });

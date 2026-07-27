@@ -39,8 +39,9 @@ CI (nothing there to point them at) and instead gate releases via
 ## Running
 
 ```bash
-composer test:e2e     # everything, all four projects (admin/site × J5/J6)
+composer test:e2e     # everything (admin/site × J5/J6, plus api-test if configured)
 composer test:a11y    # WCAG 2.2 AA scans only — J6 projects only
+composer test:api     # clean package install + REST API acceptance (#1330)
 npx playwright test --project=admin-j6        # one project
 npx playwright test --ui                      # interactive debugging
 npm run test:e2e:report                       # open the last HTML report
@@ -51,6 +52,18 @@ both platforms; J5 exists to catch Joomla-version behaviour differences,
 which the functional specs cover). `composer test:a11y` passes
 `--project=admin-j6 --project=site-j6` so a J5 hiccup can never block an
 accessibility run.
+
+## The API acceptance project
+
+`tests/e2e/api/` runs against the **role=test** install — whichever entry in
+`build.properties` carries `builder.<id>.role = test`, discovered by role
+rather than by name. That is the site `composer test:install` provisions
+from the built package, which is the whole point: #1309/#1310/#1328 all
+shipped because every other layer tested a site assembled by something
+other than the installer. `composer test:api` chains the clean install and
+the spec; with no role=test install configured, the project simply doesn't
+exist. The DB-row and on-disk halves of the assertion live in
+`build/verify-api-install.php`, inside `composer test:install` itself.
 
 ## Authentication
 
