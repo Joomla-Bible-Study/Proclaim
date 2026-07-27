@@ -42,6 +42,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\Registry\Registry;
@@ -158,20 +159,42 @@ class CWMAddonYoutube extends CWMAddon
         // scheduled start is the record's Media Date; say so where the
         // administrator is looking.
         if ($new && ($media_form->s_params['stream_mode'] ?? 'external') === 'direct') {
+            $html .= '<fieldset class="options-form"><legend>'
+                . Text::_('JBS_ADDON_YOUTUBE_LIVE_BROADCAST') . '</legend>';
+
+            // The feature needs the server's YouTube account connection
+            // (OAuth) before it can do anything. Without it, a toggle would
+            // only be a save-time failure waiting to happen — show where to
+            // connect instead. s_params carries the same oauth_token
+            // isOAuthConnected() reads, so this is the same test.
+            if (empty($media_form->s_params['oauth_token'])) {
+                $serverId  = (int) $media_form->getValue('server_id');
+                $serverUrl = $serverId > 0
+                    ? Route::_('index.php?option=com_proclaim&task=cwmserver.edit&id=' . $serverId)
+                    : Route::_('index.php?option=com_proclaim&view=cwmservers');
+
+                $html .= '<div class="alert alert-info d-flex align-items-start">'
+                    . '<span class="icon-info-circle me-2 mt-1" aria-hidden="true"></span>'
+                    . '<div>' . Text::_('JBS_ADDON_YOUTUBE_LIVE_CONNECT_PROMPT') . ' '
+                    . '<a href="' . $serverUrl . '" class="alert-link">'
+                    . Text::_('JBS_ADDON_YOUTUBE_LIVE_CONNECT_LINK') . '</a></div>'
+                    . '</div></fieldset>';
+
+                return $html;
+            }
+
             $liveFields = $media_form->getFieldset('live_broadcast');
 
             if ($liveFields) {
-                $html .= '<fieldset class="options-form"><legend>'
-                    . Text::_('JBS_ADDON_YOUTUBE_LIVE_BROADCAST') . '</legend>'
-                    . '<p class="small text-body-secondary">'
+                $html .= '<p class="small text-body-secondary">'
                     . Text::_('JBS_ADDON_YOUTUBE_LIVE_BROADCAST_NOTE') . '</p>';
 
                 foreach ($liveFields as $field) {
                     $html .= $field->renderField();
                 }
-
-                $html .= '</fieldset>';
             }
+
+            $html .= '</fieldset>';
         }
 
         return $html;
