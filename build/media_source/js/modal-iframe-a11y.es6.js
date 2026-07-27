@@ -17,10 +17,17 @@
  * axe reports the result as `frame-title` (WCAG 4.1.2): a screen reader
  * announcing the frame has nothing to call it.
  *
+ * The root cause is the sanitizer allowlist in
+ * build/media_source/vendor/bootstrap/js/modal.es6.js —
+ * `iframe: ['src', 'name', 'width', 'height']` — which strips the title the
+ * layout set. Reported upstream as joomla/joomla-cms#48152
+ * (https://github.com/joomla/joomla-cms/issues/48152); this runs until that
+ * lands and the oldest supported Joomla carries it.
+ *
  * Seen on every Proclaim modal-picker field (e.g. the server-type selector on
  * the server form). The name attribute survives the trip, so the repair is to
  * copy it back into title. No-ops on iframes that already carry one, so this
- * retires silently if Joomla fixes the injection.
+ * retires silently the day the fix ships upstream.
  */
 (() => {
     /**

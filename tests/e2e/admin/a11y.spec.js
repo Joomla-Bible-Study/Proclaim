@@ -25,7 +25,8 @@ const PROCLAIM_CONTENT = 'section#content';
  *                  and editor iframes with no title
  *   .cm-editor     CodeMirror 6 (Joomla's code editor plugin) renders its
  *                  contenteditable with role="textbox" and no accessible
- *                  name; the template-code form uses editor="codemirror"
+ *                  name; the template-code form uses editor="codemirror".
+ *                  Reported upstream as joomla/joomla-cms#48153
  *   .choices       the remove-button is under the 24x24 minimum of SC 2.5.8
  *
  * All are reported upstream. Excluded by selector rather than by disabling
@@ -148,4 +149,26 @@ test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
             });
         });
     }
+
+    // mod_proclaimicon renders on Joomla's Home Dashboard, outside any
+    // com_proclaim view, so none of the scans above ever reach it. Scan the
+    // dashboard confined to the module's own nav — the rest of the dashboard
+    // is Joomla's. The site modules need no counterpart here: they wrap in
+    // .com-proclaim, so the site scans pick them up wherever they are
+    // published.
+    test('quick-icons module meets WCAG AA', async ({ page }) => {
+        await page.goto('/administrator/index.php', { waitUntil: 'networkidle' });
+
+        const module = page.locator('nav.quick-icons[aria-label*="Proclaim"]');
+
+        // Not published on this dashboard — nothing to scan, and axe errors
+        // on an include selector that matches nothing.
+        if (!(await module.count())) {
+            test.skip(true, 'mod_proclaimicon is not published on this dashboard');
+        }
+
+        await expectNoViolations(page, expect, {
+            include: 'nav.quick-icons[aria-label*="Proclaim"]',
+        });
+    });
 });
