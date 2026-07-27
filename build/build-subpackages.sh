@@ -35,13 +35,21 @@ fi
 # gitignored, so a fresh clone (CI, a new contributor) has none, and each
 # submodule's ensure-minified gate rightly refuses to package without them.
 # Local working trees usually carry them already — then this is just the
-# submodule's incremental `npm run build`. npm ci only when node_modules is
-# absent, so the local loop stays fast.
+# submodule's incremental `npm run build`. The dependency installs run only
+# when their targets are absent, so the local loop stays fast:
+#   - composer install: the submodule's rollup/css build configs live in its
+#     own vendored cwm/build-tools (a require-dev), not the parent's
+#   - npm ci: rollup and friends
 build_npm_assets() {
     local dir="$1"
 
     if [ ! -f "${dir}/package.json" ]; then
         return 0
+    fi
+
+    if [ -f "${dir}/composer.json" ] && [ ! -d "${dir}/vendor/cwm/build-tools" ]; then
+        echo "   composer install (${dir#"${ROOT}"/})"
+        ( cd "${dir}" && composer install --no-interaction --prefer-dist --quiet )
     fi
 
     if [ ! -d "${dir}/node_modules" ]; then
