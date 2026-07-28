@@ -31,7 +31,7 @@ use Joomla\Registry\Registry;
  * broadcast provisions the stream, the field just says so.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.4.0
  */
 class YoutubeStreamKeyField extends FormField
 {
@@ -40,7 +40,7 @@ class YoutubeStreamKeyField extends FormField
      *
      * @var  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.4.0
      */
     protected $type = 'YoutubeStreamKey';
 
@@ -50,7 +50,7 @@ class YoutubeStreamKeyField extends FormField
      * @return  string  The field input markup.
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     protected function getInput(): string
     {

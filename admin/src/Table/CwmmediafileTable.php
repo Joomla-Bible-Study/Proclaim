@@ -358,7 +358,7 @@ class CwmmediafileTable extends Table
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     private function cancelLiveBroadcast(): void
     {

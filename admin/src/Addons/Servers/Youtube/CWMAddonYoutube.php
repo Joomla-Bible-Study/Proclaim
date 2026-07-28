@@ -2007,7 +2007,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, deleted?: bool, kept_reason?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     #[\Override]
     public function cancelLiveEvent(Input $input): array
@@ -2087,7 +2087,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @throws  \Exception  When the stream cannot be created.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     protected function ensurePersistentStream(int $serverId, YouTube $youtube): array
     {
@@ -2415,7 +2415,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     #[\Override]
     public function supportsLiveEvents(): bool
@@ -2438,7 +2438,7 @@ class CWMAddonYoutube extends CWMAddon
      *
      * @return  array{success: bool, broadcast_id?: string, watch_url?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     #[\Override]
     public function createLiveEvent(Input $input): array

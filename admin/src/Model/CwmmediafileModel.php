@@ -384,7 +384,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     protected function getStudyTitle(int $studyId): string
     {

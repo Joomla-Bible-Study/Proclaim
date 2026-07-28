@@ -861,7 +861,7 @@ abstract class CWMAddon
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     public function supportsLiveEvents(): bool
     {
@@ -890,7 +890,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, broadcast_id?: string, watch_url?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     public function createLiveEvent(Input $input): array
     {
@@ -921,7 +921,7 @@ abstract class CWMAddon
      *
      * @return  array{success: bool, deleted?: bool, kept_reason?: string, error?: string}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.0
      */
     public function cancelLiveEvent(Input $input): array
     {
