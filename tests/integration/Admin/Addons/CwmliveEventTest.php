@@ -142,6 +142,45 @@ class CwmliveEventTest extends IntegrationTestCase
     }
 
     #[Test]
+    public function theBaseAddonDeclinesCancellationToo(): void
+    {
+        $result = $this->minimalAddon()->cancelLiveEvent(new Input(['serverId' => 1, 'broadcastId' => 'x']));
+
+        $this->assertFalse($result['success']);
+        $this->assertNotSame('', (string) ($result['error'] ?? ''));
+    }
+
+    #[Test]
+    public function cancellingWithoutABroadcastIdIsRefused(): void
+    {
+        $serverId = $this->insertServer(['stream_mode' => 'direct']);
+
+        $result = $this->youtubeAddon()->cancelLiveEvent(new Input([
+            'serverId'    => $serverId,
+            'broadcastId' => '',
+        ]));
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_MISSING_INPUT', $this->keyOf($result));
+    }
+
+    #[Test]
+    public function cancellingWithoutOauthIsRefusedBeforeAnyStatusCheck(): void
+    {
+        // The status check needs the API; without OAuth the refusal must
+        // come first — this test cannot reach the network by construction.
+        $serverId = $this->insertServer(['stream_mode' => 'direct']);
+
+        $result = $this->youtubeAddon()->cancelLiveEvent(new Input([
+            'serverId'    => $serverId,
+            'broadcastId' => 'abc123def45',
+        ]));
+
+        $this->assertFalse($result['success']);
+        $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED', $this->keyOf($result));
+    }
+
+    #[Test]
     public function anAlreadyProvisionedStreamIsReusedWithoutAnyApiCall(): void
     {
         // The "configure the encoder once" contract (#1298 phase 2): a
