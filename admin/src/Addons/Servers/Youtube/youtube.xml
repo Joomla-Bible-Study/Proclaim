@@ -36,9 +36,10 @@
                    addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
         <fieldset name="youtube_live" label="JBS_ADDON_YOUTUBE_LIVE_SETTINGS">
-            <field name="stream_mode" type="radio" layout="joomla.form.field.radio.switcher"
+            <field name="stream_mode" type="YoutubeStreamMode" layout="joomla.form.field.radio.switcher"
                    label="JBS_ADDON_YOUTUBE_STREAM_MODE" description="JBS_ADDON_YOUTUBE_STREAM_MODE_DESC"
-                   default="external">
+                   default="external"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field">
                 <option value="external">JBS_ADDON_YOUTUBE_STREAM_MODE_EXTERNAL</option>
                 <option value="direct">JBS_ADDON_YOUTUBE_STREAM_MODE_DIRECT</option>
             </field>
