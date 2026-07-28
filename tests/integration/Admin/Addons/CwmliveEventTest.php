@@ -141,6 +141,31 @@ class CwmliveEventTest extends IntegrationTestCase
         $this->assertStringContainsString('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED', $this->keyOf($result));
     }
 
+    #[Test]
+    public function anAlreadyProvisionedStreamIsReusedWithoutAnyApiCall(): void
+    {
+        // The "configure the encoder once" contract (#1298 phase 2): a
+        // server that already carries its persistent stream must get those
+        // exact details back with no network involvement. The YouTube
+        // service passed here has no credentials — any API call would
+        // throw, so a pass proves none happened.
+        $serverId = $this->insertServer([
+            'stream_mode'     => 'direct',
+            'live_stream_id'  => 'stream-abc',
+            'live_stream_key' => 'key-xyz',
+            'live_rtmp_url'   => 'rtmp://a.rtmp.youtube.com/live2',
+        ]);
+
+        $addon  = $this->youtubeAddon();
+        $method = new \ReflectionMethod($addon, 'ensurePersistentStream');
+
+        $details = $method->invoke($addon, $serverId, new \Google\Service\YouTube(new \Google\Client()));
+
+        $this->assertSame('stream-abc', $details['stream_id']);
+        $this->assertSame('key-xyz', $details['stream_key']);
+        $this->assertSame('rtmp://a.rtmp.youtube.com/live2', $details['rtmp_url']);
+    }
+
     /**
      * Full, valid createLiveEvent input for a server.
      *

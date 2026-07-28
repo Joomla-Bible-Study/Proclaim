@@ -31,10 +31,13 @@ use Google\Service\Exception;
 use Google\Service\YouTube;
 use Google\Service\YouTube\Caption;
 use Google\Service\YouTube\CaptionSnippet;
+use Google\Service\YouTube\CdnSettings;
 use Google\Service\YouTube\LiveBroadcast;
 use Google\Service\YouTube\LiveBroadcastContentDetails;
 use Google\Service\YouTube\LiveBroadcastSnippet;
 use Google\Service\YouTube\LiveBroadcastStatus;
+use Google\Service\YouTube\LiveStream;
+use Google\Service\YouTube\LiveStreamSnippet;
 use Google\Service\YouTube\PlaylistItem;
 use Google\Service\YouTube\PlaylistItemSnippet;
 use Google\Service\YouTube\ResourceId;
@@ -1991,6 +1994,87 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * The server's persistent ingestion stream — created once, reused for
+     * every broadcast (#1298 phase 2).
+     *
+     * One stream per server means one RTMP URL + stream key the church
+     * configures into their encoder once and never touches again — the way
+     * YouTube Studio's own reusable key works. A fresh stream per broadcast
+     * would hand the AV volunteers a new key every week.
+     *
+     * @param   int      $serverId  The server record ID.
+     * @param   YouTube  $youtube   An authorised YouTube service.
+     *
+     * @return  array{stream_id: string, stream_key: string, rtmp_url: string}
+     *
+     * @throws  \Exception  When the stream cannot be created.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function ensurePersistentStream(int $serverId, YouTube $youtube): array
+    {
+        $config = $this->getServerConfig($serverId);
+
+        if (!empty($config['live_stream_id']) && !empty($config['live_stream_key'])) {
+            return [
+                'stream_id'  => (string) $config['live_stream_id'],
+                'stream_key' => (string) $config['live_stream_key'],
+                'rtmp_url'   => (string) ($config['live_rtmp_url'] ?? ''),
+            ];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_STREAM_INSERT)) {
+            throw new \RuntimeException('YouTube daily quota exhausted');
+        }
+
+        $snippet = new LiveStreamSnippet();
+        $snippet->setTitle('Proclaim persistent stream');
+
+        $cdn = new CdnSettings();
+        $cdn->setIngestionType('rtmp');
+        $cdn->setResolution('variable');
+        $cdn->setFrameRate('variable');
+
+        $stream = new LiveStream();
+        $stream->setSnippet($snippet);
+        $stream->setCdn($cdn);
+
+        $created = $youtube->liveStreams->insert('snippet,cdn', $stream);
+        CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_STREAM_INSERT);
+
+        $ingestion = $created->getCdn()->getIngestionInfo();
+
+        $details = [
+            'stream_id'  => (string) $created->getId(),
+            'stream_key' => (string) $ingestion->getStreamName(),
+            'rtmp_url'   => (string) $ingestion->getIngestionAddress(),
+        ];
+
+        // Persist on the server so every later broadcast reuses it — the
+        // same params-write pattern as saveOAuthTokens() below.
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('params'))
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($query);
+        $params = new Registry($db->loadResult() ?: '{}');
+
+        $params->set('live_stream_id', $details['stream_id']);
+        $params->set('live_stream_key', $details['stream_key']);
+        $params->set('live_rtmp_url', $details['rtmp_url']);
+
+        $update = $db->getQuery(true)
+            ->update($db->quoteName('#__bsms_servers'))
+            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+            ->where($db->quoteName('id') . ' = ' . (int) $serverId);
+        $db->setQuery($update);
+        $db->execute();
+
+        return $details;
+    }
+
+    /**
      * Save OAuth tokens to server params.
      *
      * @param   int    $serverId   Server ID
@@ -2343,11 +2427,36 @@ class CWMAddonYoutube extends CWMAddon
 
             $broadcastId = (string) $response->getId();
 
-            return [
+            $result = [
                 'success'      => true,
                 'broadcast_id' => $broadcastId,
                 'watch_url'    => 'https://www.youtube.com/watch?v=' . $broadcastId,
             ];
+
+            // Phase 2: bind the server's persistent ingestion stream so the
+            // encoder can actually go live. The broadcast already exists at
+            // this point, so stream/bind trouble degrades to a warning
+            // rather than failing — the administrator can still bind in
+            // YouTube Studio, and a failed save here would leak an orphaned
+            // broadcast the record knows nothing about.
+            try {
+                $stream = $this->ensurePersistentStream($serverId, $youtube);
+
+                if (CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_BROADCAST_BIND)) {
+                    $youtube->liveBroadcasts->bind($broadcastId, 'id,contentDetails', ['streamId' => $stream['stream_id']]);
+                    CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_BROADCAST_BIND);
+
+                    $result['stream_id']  = $stream['stream_id'];
+                    $result['rtmp_url']   = $stream['rtmp_url'];
+                    $result['stream_key'] = $stream['stream_key'];
+                } else {
+                    $result['warning'] = Text::_('JBS_ADDON_YOUTUBE_LIVE_BIND_QUOTA');
+                }
+            } catch (\Exception $e) {
+                $result['warning'] = Text::sprintf('JBS_ADDON_YOUTUBE_LIVE_BIND_FAILED', $e->getMessage());
+            }
+
+            return $result;
         } catch (Exception $e) {
             if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
                 CwmyoutubeQuota::markExhausted($serverId);
