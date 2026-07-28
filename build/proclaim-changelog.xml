@@ -19,6 +19,22 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.4.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.4.0</version>
+        <date>2026-07-28</date>
+        <fix>
+            <item>The media file Options tab no longer shows a stray, non-functional</item>
+            <item>Opening a brand-new Topic no longer prints a PHP deprecation notice on</item>
+            <item>The Terms of Use page no longer prints PHP warnings when opened without</item>
+            <item>Assorted spelling corrections in admin text.</item>
+        </fix>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.6                                                   -->
     <!-- ============================================================ -->
     <changelog>
