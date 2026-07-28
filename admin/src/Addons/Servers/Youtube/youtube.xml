@@ -49,6 +49,10 @@
                 <option value="unlisted">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_UNLISTED</option>
                 <option value="private">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PRIVATE</option>
             </field>
+            <field name="stream_key_display" type="YoutubeStreamKey"
+                   label="JBS_ADDON_YOUTUBE_STREAM_KEY_LABEL" description="JBS_ADDON_YOUTUBE_STREAM_KEY_DESC"
+                   showon="stream_mode:direct"
+                   addfieldprefix="CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\Field" />
         </fieldset>
         <fieldset name="youtube_sync" label="JBS_ADDON_YOUTUBE_SYNC_SETTINGS">
             <field name="description_format" type="DescriptionFormat" rows="6"

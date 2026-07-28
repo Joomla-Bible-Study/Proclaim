@@ -225,6 +225,23 @@ class CwmmediafileModel extends AdminModel
                     Text::sprintf('JBS_MED_LIVE_BROADCAST_CREATED', $result['watch_url']),
                     'message'
                 );
+
+                // Phase 2: the ingestion stream is bound and the encoder
+                // details (RTMP URL + stream key) live on the server's Live
+                // Streaming settings — point there rather than splashing a
+                // secret into a status message.
+                if (!empty($result['stream_key'])) {
+                    Factory::getApplication()->enqueueMessage(
+                        Text::_('JBS_MED_LIVE_BROADCAST_ENCODER_HINT'),
+                        'message'
+                    );
+                }
+
+                // Stream/bind trouble degrades to a warning: the broadcast
+                // exists, the administrator can bind in YouTube Studio.
+                if (!empty($result['warning'])) {
+                    Factory::getApplication()->enqueueMessage($result['warning'], 'warning');
+                }
             }
 
             // Consumed or not applicable either way — never persist the trigger.
