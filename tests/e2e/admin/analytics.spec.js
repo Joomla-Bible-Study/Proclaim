@@ -1,77 +1,45 @@
 /**
- * E2E — Admin Analytics Dashboard
+ * E2E — Admin Analytics
  *
- * Verifies that the Proclaim analytics dashboard loads, renders its
- * Chart.js canvases, and displays the KPI summary cards.
+ * Pared down to the one thing only a browser can answer: did Chart.js run and
+ * draw. The page-loads and container-visible assertions moved to the a11y
+ * scan, which navigates here and fails if the page does not render.
+ *
+ * The KPI-card and navigation-tab tests were dropped rather than moved. Both
+ * skipped whenever analytics had no data, so on a fresh install they asserted
+ * nothing at all; when they did run, they restated "the page rendered" in a
+ * form tied to specific class names.
  *
  * Key selectors:
- *   body.com_proclaim       — component body class
- *   section#content         — main content wrapper
- *   canvas[data-cwm-chart]  — Chart.js canvas elements
- *   .cwm-analytics-kpi      — KPI summary cards
+ *   canvas#cwm-chart-timeseries  — Overview timeseries chart
+ *   canvas[data-cwm-chart]       — any Chart.js canvas
  */
 
 const { test, expect } = require('@playwright/test');
 
-test.describe('Admin Analytics Dashboard', () => {
-    test('loads the analytics page', async ({ page }) => {
-        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmanalytics');
-
-        await expect(page).toHaveURL(/option=com_proclaim/);
-        await expect(page.locator('body.com_proclaim')).toBeVisible();
-        await expect(page.locator('section#content')).toBeVisible();
-    });
-
-    test('renders Chart.js canvas elements', async ({ page }) => {
+test.describe('Admin Analytics', () => {
+    test('Chart.js renders a chart canvas', async ({ page }) => {
         await page.goto('/administrator/index.php?option=com_proclaim&view=cwmanalytics', {
             waitUntil: 'networkidle',
         });
 
-        // The timeseries chart should always be present on the Overview tab
         const timeseries = page.locator('canvas#cwm-chart-timeseries');
 
-        if (await timeseries.count() === 0) {
-            test.skip(true, 'No analytics canvas found — analytics may be disabled');
-            return;
+        // Analytics can be switched off, and an install with no data draws
+        // nothing. Neither is a failure of the chart pipeline.
+        if (!(await timeseries.count())) {
+            test.skip(true, 'No analytics canvas — analytics disabled or no data');
         }
 
         await expect(timeseries).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('canvas[data-cwm-chart]').first()).toBeVisible();
 
-        // At least one chart canvas with data-cwm-chart attribute should exist
-        const canvases = page.locator('canvas[data-cwm-chart]');
-        const count = await canvases.count();
-        expect(count).toBeGreaterThanOrEqual(1);
-    });
+        // A canvas element only proves the markup. Non-zero dimensions prove
+        // Chart.js initialised it rather than leaving an empty placeholder —
+        // the failure mode a missing or broken chart bundle actually produces.
+        const box = await timeseries.boundingBox();
 
-    test('displays KPI summary cards', async ({ page }) => {
-        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmanalytics', {
-            waitUntil: 'networkidle',
-        });
-
-        // KPI cards are rendered in .cwm-analytics-kpi containers
-        const kpiCards = page.locator('.cwm-analytics-kpi');
-
-        if (await kpiCards.count() === 0) {
-            test.skip(true, 'No KPI cards found — analytics data may be empty');
-            return;
-        }
-
-        await expect(kpiCards.first()).toBeVisible();
-    });
-
-    test('navigation tabs are present', async ({ page }) => {
-        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmanalytics', {
-            waitUntil: 'networkidle',
-        });
-
-        // Analytics dashboard has Overview, By Series, By Media tabs
-        const tabs = page.locator('[role="tab"], .nav-link');
-
-        if (await tabs.count() === 0) {
-            test.skip(true, 'No navigation tabs found');
-            return;
-        }
-
-        await expect(tabs.first()).toBeVisible();
+        expect(box.width).toBeGreaterThan(0);
+        expect(box.height).toBeGreaterThan(0);
     });
 });

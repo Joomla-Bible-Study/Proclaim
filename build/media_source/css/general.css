@@ -17,7 +17,7 @@
   --color-background-alt: #eeeeee;     /* Alternating row / hover fills */
   --color-background-row0: #F7F8F9;    /* Zebra-stripe even rows */
   --color-accent: #7F9DB9;             /* Headings, feature highlights */
-  --color-link: #08c;                  /* Hyperlinks */
+  --color-link: #006da3;               /* Hyperlinks — 5.1:1 on Atum's #f0f4fb, 5.7:1 on white (WCAG 1.4.3); #08c was 3.5:1 */
   --color-install-border: #99CCFF;     /* Installer step borders */
   --color-install-bg: #D9D9FF;         /* Installer step backgrounds */
   --color-shadow: rgba(0, 0, 0, 0.15); /* Drop shadows */
@@ -1077,3 +1077,72 @@ button.cwmadmin-action-card {
   }
 }
 
+
+/* ==========================================================================
+   WCAG 2.2 AA: muted text contrast
+   ========================================================================== */
+
+/* Atum's `.text-muted` applies BOTH a translucent colour and a further
+   `opacity: 0.7`:
+
+     .text-muted { color: var(--secondary-color) !important; opacity: 0.7; }
+     --secondary-color: #212529bf   (light)
+                        #dee2e6bf   (dark)
+
+   The colour on its own is fine — #212529bf over the card background #fbfcfe
+   resolves to #585b5e, which is 6.66:1. It is the extra 0.7 opacity stacked on
+   top that takes the effective colour to #898b8e and the ratio to 3.32:1,
+   below the 4.5:1 WCAG 1.4.3 requires for normal text. axe reports it as
+   `color-contrast` on the analytics KPI cards, and `text-muted small` appears
+   in 24 Proclaim templates, so the same failure is latent throughout.
+
+   So the fix is to drop the opacity, not to change the colour. Removing it
+   restores Atum's intended hue and clears the threshold in both themes:
+
+     light  #585b5e on #fbfcfe   6.66:1  PASS
+     dark   #afb3b7 on #212529   7.31:1  PASS
+
+   Scoped to Proclaim's own body class. This is arguably an Atum bug, but it is
+   not ours to fix globally, and every other component on the page keeps
+   Joomla's styling untouched. */
+body.com_proclaim .text-muted {
+  opacity: 1;
+}
+
+/* A button-styled link inside an alert inherits Atum's alert link colour, and
+   that dark blue lands on the button's own blue background at 1.46:1 (axe
+   color-contrast, WCAG 1.4.3) — the button variant doesn't matter, the alert
+   link rule outranks them all. Seen on the control panel's pending-review
+   action. Scoped the same way as the .text-muted repair above. */
+body.com_proclaim .alert a.btn-primary {
+  color: #fff;
+}
+
+/* Non-drag list reordering (WCAG 2.2 SC 2.5.7). Joomla 4+ list ordering is
+   drag-only — the ordering cell renders a grip and nothing else — so
+   com_proclaim.list-order-a11y injects Move Up / Move Down buttons beside
+   the grip on every Proclaim list with ordering active. Sized to the 24px
+   minimum SC 2.5.8 asks of touch targets. */
+body.com_proclaim .proclaim-order-buttons {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  margin-inline-start: 2px;
+}
+
+body.com_proclaim .proclaim-order-buttons button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 3px;
+}
+
+body.com_proclaim .proclaim-order-buttons button:hover,
+body.com_proclaim .proclaim-order-buttons button:focus-visible {
+  background: var(--template-bg-dark-10, rgba(0, 0, 0, 0.1));
+}

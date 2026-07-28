@@ -270,9 +270,38 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         }
 
         if ($option === 'com_proclaim') {
-            $this->getApplication()->getDocument()
-                ->getWebAssetManager()
-                ->useScript('com_proclaim.admin-shortcuts');
+            $wa = $this->getApplication()->getDocument()->getWebAssetManager();
+            $wa->useScript('com_proclaim.admin-shortcuts');
+
+            // Repairs the subform header tooltips Joomla renders with both
+            // aria-hidden="true" and tabindex="0" — focusable, yet hidden from
+            // assistive technology (WCAG 4.1.2). Present in Joomla 5.4.7 through
+            // 7.0.0 and reported upstream; the script no-ops once that is fixed.
+            //
+            // Loaded here rather than from the four views whose forms contain a
+            // subform. Those views do not share an asset or a base class, so
+            // per-view loading means four edits that a fifth subform would
+            // silently not inherit. One hook covers every current and future
+            // Proclaim admin view, and the script costs nothing on pages with no
+            // subform — it finds no matching elements and returns.
+            $wa->useScript('com_proclaim.subform-tooltip-a11y');
+
+            // Same shape of repair for modal-picker iframes: renderModal's PHP
+            // template carries name and title together, but the client-side
+            // injection that builds the live iframe when a modal opens drops
+            // title (WCAG 4.1.2, axe frame-title). Copies name back to title;
+            // no-ops when the iframe already has one.
+            $wa->useScript('com_proclaim.modal-iframe-a11y');
+
+            // Non-drag list reordering (WCAG 2.2 SC 2.5.7): Joomla 4+ list
+            // ordering is drag-only, so this injects Move Up / Move Down
+            // buttons beside the grip on every Proclaim list with ordering
+            // active, persisting through the same saveOrderAjax endpoint the
+            // drag path uses. No-ops on pages without an orderable list.
+            $wa->useScript('com_proclaim.list-order-a11y');
+            Text::script('JBS_CMN_ORDER_MOVE_UP');
+            Text::script('JBS_CMN_ORDER_MOVE_DOWN');
+            Text::script('JBS_CMN_ORDER_MOVED');
         }
 
         $hiddenViews = [];

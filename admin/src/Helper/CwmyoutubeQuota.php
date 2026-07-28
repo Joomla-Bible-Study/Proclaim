@@ -57,6 +57,10 @@ class CwmyoutubeQuota
     public const COST_PLAYLIST_DELETE   = 50;
     public const COST_CAPTIONS_LIST     = 50;
     public const COST_CAPTIONS_DOWNLOAD = 200;
+    public const COST_BROADCAST_INSERT  = 50;
+    public const COST_STREAM_INSERT     = 50;
+    public const COST_BROADCAST_BIND    = 50;
+    public const COST_BROADCAST_DELETE  = 50;
 
     /**
      * In-memory cache for server params to avoid repeated DB queries

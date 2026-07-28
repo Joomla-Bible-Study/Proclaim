@@ -25,6 +25,23 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
         </fieldset>
+        <fieldset name="live_broadcast" label="JBS_ADDON_YOUTUBE_LIVE_BROADCAST" addon_section="general">
+            <field name="create_live_broadcast" type="radio" layout="joomla.form.field.radio.switcher"
+                   label="JBS_ADDON_YOUTUBE_CREATE_LIVE_BROADCAST"
+                   description="JBS_ADDON_YOUTUBE_CREATE_LIVE_BROADCAST_DESC"
+                   default="0">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="live_privacy" type="list"
+                   label="JBS_ADDON_YOUTUBE_LIVE_PRIVACY" description="JBS_ADDON_YOUTUBE_LIVE_PRIVACY_DESC"
+                   default="" showon="create_live_broadcast:1">
+                <option value="">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_SERVER_DEFAULT</option>
+                <option value="public">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PUBLIC</option>
+                <option value="unlisted">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_UNLISTED</option>
+                <option value="private">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PRIVATE</option>
+            </field>
+        </fieldset>
         <fieldset name="details"
                   label="JBS_ADDON_YOUTUBE_DETAILS"
                   description="JBS_ADDON_YOUTUBE_DETAILS_DESC">

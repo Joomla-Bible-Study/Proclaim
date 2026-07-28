@@ -1,0 +1,155 @@
+/**
+ * E2E — REST API acceptance on a package-installed site (#1330)
+ *
+ * Runs against the role=test install (`api-j6test` project), the site
+ * `composer test:install` provisions from the built package — not a dev site
+ * assembled by symlinks or file copying, which is exactly what hid #1309 and
+ * #1310 for three releases. The DB-row and on-disk assertions live in
+ * build/verify-api-install.php inside the install harness; this spec covers
+ * everything an administrator or API consumer actually touches:
+ *
+ *   - the plugin is visible and manageable in the Plugins screen
+ *   - an unauthenticated request gets 401, NOT 404 — 404 is the signature
+ *     all three shipped bugs produce (routes never registered)
+ *   - a Joomla API token obtained the way an admin obtains one (their
+ *     profile) reaches the API and gets a JSON:API document
+ *   - the one remaining setting, public_reads, works when set the way an
+ *     admin sets it — through the plugin's own edit form. #1328's lesson:
+ *     writing the value straight to the database would pass while the UI
+ *     path is broken, so the UI path is the one exercised.
+ *
+ * Serial: the token test feeds the authenticated request, and the
+ * public_reads test must restore the shipped default for the 401 assertion
+ * to stay meaningful on re-runs.
+ */
+
+const { test, expect } = require('@playwright/test');
+
+const API_SERMONS = '/api/index.php/v1/proclaim/sermons';
+
+test.describe.serial('REST API acceptance (package install) @api', () => {
+    test('Proclaim and its webservices plugin are installed and enabled', async ({ page }) => {
+        await page.goto(
+            '/administrator/index.php?option=com_plugins&filter[search]=proclaim&filter[folder]=webservices',
+            { waitUntil: 'networkidle' },
+        );
+
+        const rows = page.locator('#pluginList tbody tr');
+
+        expect(
+            await rows.count(),
+            'plg_webservices_proclaim is not in the Plugins screen. If this site has no '
+            + 'Proclaim at all, run `composer test:install` first — this suite asserts the '
+            + 'state that harness produces.',
+        ).toBeGreaterThan(0);
+
+        // The publish toggle in the row reports state via its icon/task.
+        const firstRow = rows.first();
+        await expect(firstRow).toContainText(/proclaim/i);
+        await expect(
+            firstRow.locator('.tbody-icon .icon-publish, a[data-bs-original-title*="Unpublish"], .icon-publish'),
+            'plg_webservices_proclaim exists but is disabled — a clean install must come up '
+            + 'with the API reachable (#1331).',
+        ).toHaveCount(1);
+    });
+
+    test('unauthenticated request is denied with 401, not 404', async ({ request }) => {
+        const response = await request.get(API_SERMONS);
+
+        expect(
+            response.status(),
+            '404 from the sermons route means the API routes were never registered — the '
+            + 'failure signature of #1309/#1310, which shipped in 10.3.0–10.3.3. 401 is the '
+            + 'only acceptable "no" here.',
+        ).not.toBe(404);
+
+        expect(response.status()).toBe(401);
+    });
+
+    test('a token from the admin profile reaches the API and gets JSON:API', async ({ page, request }) => {
+        // Obtain the token the way an administrator does: from their own
+        // account, via the header's "Edit Account" link (the com_users.user
+        // form — the only backend context the token plugin injects into;
+        // com_admin's profile view is not on its list).
+        //
+        // On a pristine account the plugin REMOVES its token fields from the
+        // form entirely — the seed they display is only generated when the
+        // user is saved with the plugin active, so a fresh install's
+        // installer-created admin has no field at all until saved once.
+        // That is the state every CI run starts from.
+        await page.goto('/administrator/index.php', { waitUntil: 'networkidle' });
+
+        const editAccount = page.locator('a[href*="task=user.edit"]', { hasText: 'Edit Account' }).first();
+        await expect(editAccount, 'No "Edit Account" link in the admin header').toBeAttached();
+        await page.goto(await editAccount.getAttribute('href'), { waitUntil: 'networkidle' });
+
+        if (!(await page.locator('#jform_joomlatoken_token').count())) {
+            // Pristine account: save once to generate the seed, which lands
+            // back on the edit form with the token fields present.
+            await page.click('.button-apply');
+            await page.waitForLoadState('networkidle');
+        }
+
+        const tokenField = page.locator('#jform_joomlatoken_token');
+
+        // Diagnostics worth their weight when this fails on a machine no one
+        // can attach a debugger to: where we actually landed, and what
+        // Joomla had to say about it.
+        const alerts = (await page.locator('joomla-alert, .alert').allInnerTexts())
+            .join(' | ').replace(/\s+/g, ' ').slice(0, 300);
+
+        await expect(
+            tokenField,
+            'No Joomla API Token field on the account form, even after a seed-generating save. '
+            + `Landed on: ${page.url()} — messages: ${alerts || '(none)'}`,
+        ).toBeAttached();
+
+        const token = await tokenField.inputValue();
+
+        expect(token, 'The profile never produced a token value').not.toBe('');
+
+        const response = await request.get(API_SERMONS, {
+            headers: { 'X-Joomla-Token': token },
+        });
+
+        expect(response.status()).toBe(200);
+
+        const body = await response.json();
+
+        // A JSON:API document carries its resources under `data`.
+        expect(Array.isArray(body.data), 'Expected a JSON:API document with a data array').toBe(true);
+    });
+
+    test('public_reads set through the plugin UI opens and closes anonymous reads', async ({ page, request }) => {
+        // Open the plugin's edit form from the Plugins screen — the same
+        // path an administrator walks.
+        await page.goto(
+            '/administrator/index.php?option=com_plugins&filter[search]=proclaim&filter[folder]=webservices',
+            { waitUntil: 'networkidle' },
+        );
+        await page.locator('#pluginList tbody tr a[href*="task=plugin.edit"]').first().click();
+        await page.waitForLoadState('networkidle');
+
+        const setPublicReads = async (value) => {
+            await page.locator(`label[for="jform_params_public_reads${value}"]`).click();
+            await page.click('.button-apply');
+            await page.waitForLoadState('networkidle');
+        };
+
+        // Open anonymous reads…
+        await setPublicReads(1);
+        let response = await request.get(API_SERMONS);
+        expect(
+            response.status(),
+            'public_reads=Yes saved through the UI, but an anonymous read is still rejected',
+        ).toBe(200);
+
+        // …and restore the shipped default, which must close them again.
+        await setPublicReads(0);
+        response = await request.get(API_SERMONS);
+        expect(
+            response.status(),
+            'public_reads=No saved through the UI, but anonymous reads stayed open',
+        ).toBe(401);
+    });
+});

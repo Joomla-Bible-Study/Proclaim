@@ -6,6 +6,39 @@
     "license": "GPL-2.0-or-later",
     "assets": [
         {
+            "name": "com_proclaim.subform-tooltip-a11y",
+            "type": "script",
+            "uri": "com_proclaim/subform-tooltip-a11y.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.modal-iframe-a11y",
+            "type": "script",
+            "uri": "com_proclaim/modal-iframe-a11y.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
+            "name": "com_proclaim.list-order-a11y",
+            "type": "script",
+            "uri": "com_proclaim/list-order-a11y.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwm-archive",
             "type": "script",
             "uri": "com_proclaim/cwm-archive.min.js",

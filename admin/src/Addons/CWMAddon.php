@@ -249,6 +249,14 @@ abstract class CWMAddon
                 continue;
             }
 
+            // A fieldset can claim the general tab (addon_section="general"
+            // in the media XML) — renderGeneral owns it, with its own
+            // gating; rendering it here too would duplicate it into the
+            // Options tab for every server, gate or no gate.
+            if ((string) ($fieldset->addon_section ?? '') === 'general') {
+                continue;
+            }
+
             $fields = $media_form->getFieldset($name);
 
             if (empty($fields)) {
@@ -841,6 +849,83 @@ abstract class CWMAddon
     public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
         return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+    }
+
+    /**
+     * Whether this addon can create live broadcasts on its platform (#1298).
+     *
+     * A capable platform is only the first of three gates — a broadcast is
+     * created solely when the server is in Direct stream mode AND the
+     * administrator explicitly opted the specific media record in. Both of
+     * those live with the caller; this answers only "could the platform".
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsLiveEvents(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Create a scheduled live broadcast on the platform (#1298 phase 1).
+     *
+     * Called from the media-file save path when all three gates pass
+     * (capability, server Direct mode, per-record opt-in). Override in a
+     * capable addon. Expected input keys:
+     *
+     *   serverId        int     the server record ID
+     *   title           string  broadcast title (the study's title)
+     *   description     string  broadcast description (may be empty)
+     *   scheduledStart  string  RFC3339 start time (from the media date)
+     *   privacy         string  public | unlisted | private
+     *
+     * Must return ['success' => bool, ...] — on success also
+     * 'broadcast_id' (platform ID) and 'watch_url' (public watch URL);
+     * on failure 'error' (human-readable). The addon re-checks its own
+     * server-mode gate: defence in depth against a caller that forgot one.
+     *
+     * @param   Input  $input  The request input, see keys above.
+     *
+     * @return  array{success: bool, broadcast_id?: string, watch_url?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function createLiveEvent(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_ADDON_LIVE_NOT_SUPPORTED')];
+    }
+
+    /**
+     * Cancel a platform live broadcast that has not yet gone live
+     * (#1298 phase 3).
+     *
+     * Called from the media-file delete path when the record carries a
+     * broadcast the platform still lists as upcoming. Override in a capable
+     * addon. Expected input keys:
+     *
+     *   serverId     int     the server record ID
+     *   broadcastId  string  the platform broadcast ID
+     *
+     * Contract the implementation MUST honour: only an upcoming broadcast
+     * may be removed. A broadcast that is live or completed is someone's
+     * stream or someone's recording — deleting it destroys the video, so a
+     * capable addon reports it kept ('kept_reason') rather than touching
+     * it. A broadcast already absent is success (idempotent).
+     *
+     * Must return ['success' => bool, ...] — with 'deleted' => bool, and
+     * either 'kept_reason' (left in place, and why) or 'error'.
+     *
+     * @param   Input  $input  The request input, see keys above.
+     *
+     * @return  array{success: bool, deleted?: bool, kept_reason?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function cancelLiveEvent(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_ADDON_LIVE_NOT_SUPPORTED')];
     }
 
     /**

@@ -31,7 +31,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\Path;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -173,6 +175,79 @@ class CwmmediafileModel extends AdminModel
                 }
             }
 
+            // Create a platform live broadcast when all three gates pass
+            // (#1298 phase 1): the addon is capable, the server streams
+            // Direct, and the administrator opted this record in. Platform-
+            // agnostic here — the addon owns the API. The opt-in is a
+            // transient trigger, not a setting: it is consumed on success
+            // and never persisted.
+            $wantsBroadcast = (int) $params->get('create_live_broadcast', 0) === 1
+                && empty($data['id'])
+                && $addon
+                && $addon->supportsLiveEvents()
+                && $path->get('stream_mode', 'external') === 'direct';
+
+            if ($wantsBroadcast) {
+                $privacy = (string) $params->get('live_privacy', '');
+
+                if ($privacy === '') {
+                    $privacy = (string) $path->get('live_default_privacy', 'unlisted');
+                }
+
+                $liveInput = new Input([
+                    'serverId'       => (int) $data['server_id'],
+                    'title'          => $this->getStudyTitle((int) ($data['study_id'] ?? 0)),
+                    'description'    => '',
+                    'scheduledStart' => (new Date($data['createdate'] ?? 'now'))->toISO8601(),
+                    'privacy'        => $privacy,
+                ]);
+
+                $result = $addon->createLiveEvent($liveInput);
+
+                if (empty($result['success'])) {
+                    // The administrator asked for a broadcast; a record
+                    // saved without one would report success while quietly
+                    // not doing the thing. Fail loudly instead.
+                    $this->setError(Text::sprintf(
+                        'JBS_MED_LIVE_BROADCAST_FAILED',
+                        $result['error'] ?? Text::_('JERROR_AN_ERROR_HAS_OCCURRED')
+                    ));
+
+                    return false;
+                }
+
+                // The broadcast IS this record's media: watch URL becomes
+                // the filename, the platform ID rides along for phases 2-3.
+                $params->set('filename', $result['watch_url']);
+                $params->set('live_broadcast_id', $result['broadcast_id']);
+
+                Factory::getApplication()->enqueueMessage(
+                    Text::sprintf('JBS_MED_LIVE_BROADCAST_CREATED', $result['watch_url']),
+                    'message'
+                );
+
+                // Phase 2: the ingestion stream is bound and the encoder
+                // details (RTMP URL + stream key) live on the server's Live
+                // Streaming settings — point there rather than splashing a
+                // secret into a status message.
+                if (!empty($result['stream_key'])) {
+                    Factory::getApplication()->enqueueMessage(
+                        Text::_('JBS_MED_LIVE_BROADCAST_ENCODER_HINT'),
+                        'message'
+                    );
+                }
+
+                // Stream/bind trouble degrades to a warning: the broadcast
+                // exists, the administrator can bind in YouTube Studio.
+                if (!empty($result['warning'])) {
+                    Factory::getApplication()->enqueueMessage($result['warning'], 'warning');
+                }
+            }
+
+            // Consumed or not applicable either way — never persist the trigger.
+            $params->remove('create_live_broadcast');
+            $params->remove('live_privacy');
+
             // Load old params once — used for both change detection and image cleanup
             $recordId      = (int) ($data['id'] ?? 0);
             $oldParams     = null;
@@ -300,6 +375,35 @@ class CwmmediafileModel extends AdminModel
 
     /**
      * Auto-detect missing metadata for a media file.
+     * The study's title, for naming a live broadcast after its sermon
+     * (#1298). Empty string when the study cannot be found — the addon
+     * treats a missing title as invalid input rather than creating an
+     * unnamed broadcast.
+     *
+     * @param   int  $studyId  The study record ID.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function getStudyTitle(int $studyId): string
+    {
+        if ($studyId === 0) {
+            return '';
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('studytitle'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('id') . ' = :studyId')
+            ->bind(':studyId', $studyId, ParameterType::INTEGER);
+        $db->setQuery($query);
+
+        return (string) $db->loadResult();
+    }
+
+    /**
      * Detects file size, MIME type, and duration when not already set.
      *
      * @param   Registry  $params    Media file params (modified in place)

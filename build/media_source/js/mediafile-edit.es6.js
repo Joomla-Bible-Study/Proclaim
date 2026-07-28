@@ -119,6 +119,9 @@
         input.value = displayText;
         input.readOnly = true;
         input.style.cursor = 'pointer';
+        // The visible label belongs to the hidden server_id field; without this
+        // the picker input has no accessible name at all (WCAG 4.1.2).
+        input.setAttribute('aria-labelledby', 'jform_server_id-lbl');
         input.addEventListener('click', () => {
             showServerPickerModal();
         });

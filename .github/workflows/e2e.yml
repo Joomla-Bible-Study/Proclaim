@@ -1,0 +1,198 @@
+# E2E against a disposable Joomla install (#1342).
+#
+# The browser and API suites always ran against hand-configured dev sites on
+# one laptop, so between releases regressions accumulated unseen — the suite
+# had rotted for months before the WCAG work revived it, and the REST API
+# shipped broken three releases running because nothing installed the real
+# package anywhere automatic.
+#
+# This job stands up everything from nothing: a MySQL service, a Joomla site
+# installed headlessly by core's own CLI installer, the built pkg_proclaim
+# zip deployed by the same `composer test:install` harness a release uses,
+# and the API acceptance suite (#1330) driven by Playwright against PHP's
+# built-in server. No secrets, no persistent state, reproducible by any
+# contributor's fork.
+#
+# Scheduled nightly (regressions surface within a day, not at release time),
+# manually dispatchable, and run on pull requests that touch what it guards.
+
+name: E2E
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Nightly, 05:17 UTC — off the busy top-of-hour cron load.
+    - cron: '17 5 * * *'
+  pull_request:
+    branches: [ "development", "10.x" ]
+    paths:
+      - 'api/**'
+      - 'plugins/webservices/**'
+      - 'tests/e2e/**'
+      - 'build/test-install.sh'
+      - 'build/build-package.sh'
+      - 'build/build-subpackages.sh'
+      - 'build/reset-testsite.php'
+      - 'build/verify-api-install.php'
+      - 'build/verify-migrations.php'
+      - 'playwright.config.js'
+      - '.github/workflows/e2e.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  JOOMLA_VERSION: '5.4.3'
+  SITE_DIR: /home/runner/joomla-site
+  SITE_URL: http://127.0.0.1:8890
+
+jobs:
+  api-acceptance:
+    name: Package install + API acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: joomla_ci
+          MYSQL_DATABASE: joomla_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, json, xml, mysqli, zip, gd, intl, curl
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/composer/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --dev --no-interaction --prefer-dist
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install npm dependencies and build assets
+        # media/ is generated and gitignored; the package build zips it.
+        run: |
+          npm ci
+          npm run build
+
+      - name: Download and install Joomla ${{ env.JOOMLA_VERSION }}
+        # Core's own CLI installer (4.3+) — the same install path a site
+        # admin's web install runs, headless. The installation directory is
+        # removed afterwards so Joomla serves the site, not the installer.
+        run: |
+          mkdir -p "$SITE_DIR"
+          curl -sSL -o /tmp/joomla.zip \
+            "https://github.com/joomla/joomla-cms/releases/download/${JOOMLA_VERSION}/Joomla_${JOOMLA_VERSION}-Stable-Full_Package.zip"
+          unzip -q /tmp/joomla.zip -d "$SITE_DIR"
+          php "$SITE_DIR/installation/joomla.php" install -n \
+            --site-name="Proclaim CI" \
+            --admin-user="CI Admin" \
+            --admin-username=admin \
+            --admin-password=admin1234567 \
+            --admin-email=admin@example.com \
+            --db-type=mysqli \
+            --db-host=127.0.0.1 \
+            --db-user=root \
+            --db-pass=joomla_ci \
+            --db-name=joomla_ci \
+            --db-prefix=jos_ \
+            --db-encryption=0
+          rm -rf "$SITE_DIR/installation"
+          # Pin the site URL. Under PHP's built-in server Joomla mis-derives
+          # its root — admin pages emitted assets under /administrator/media/
+          # and the login form POSTed to /administrator/administrator/ —
+          # and $live_site is the supported way to stop it guessing.
+          sed -i "s#public \$live_site = '';#public \$live_site = '${SITE_URL}';#" "$SITE_DIR/configuration.php"
+          grep -n "live_site" "$SITE_DIR/configuration.php"
+          # A fresh install auto-starts the "Welcome to Joomla!" guided tour
+          # on first admin visit, and the tour JS navigates every page back
+          # to its step-1 location (the dashboard) — which read exactly like
+          # "all form views bounce to home" until the failure screenshot
+          # showed the tour modal. No tours for a disposable site.
+          mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci \
+            -e "UPDATE jos_extensions SET enabled = 0 WHERE folder = 'system' AND element = 'guidedtours';"
+
+      - name: Write build.properties for the disposable site
+        # The harness discovers the test site by role, not by name (#1353),
+        # so this one file is the only wiring the whole chain needs.
+        run: |
+          cat > build.properties <<EOF
+          builder.installs=ci
+          builder.ci.role=test
+          builder.ci.path=${SITE_DIR}
+          builder.ci.url=${SITE_URL}
+          builder.ci.db_host=127.0.0.1
+          builder.ci.db_user=root
+          builder.ci.db_pass=joomla_ci
+          builder.ci.db_name=joomla_ci
+          builder.ci.username=admin
+          builder.ci.password=admin1234567
+          builder.ci.email=admin@example.com
+          builder.ci.version=${JOOMLA_VERSION}
+          EOF
+
+      - name: Serve the site
+        run: |
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8890 -t "$SITE_DIR" &> /tmp/php-server.log &
+          sleep 2
+          curl -sSf -o /dev/null "$SITE_URL/index.php"
+
+      - name: Clean install of the built package
+        # reset → build pkg_proclaim zip → install via Joomla's CLI → verify
+        # extension registration, migrations, and the REST API assertions
+        # (#1309/#1310/#1331 guards) — build/test-install.sh, unchanged.
+        run: composer test:install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: REST API acceptance suite
+        # The #1330 spec: plugin visible in the admin UI, 401-not-404 without
+        # a token, 200 + JSON:API with one obtained through the admin
+        # profile, public_reads round-tripped through the plugin edit form.
+        run: npx playwright test --project=api-test
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: |
+            build/reports/e2e
+            test-results
+          retention-days: 7
+
+      - name: Upload PHP server log on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: php-server-log
+          path: /tmp/php-server.log
+          retention-days: 7

@@ -1,0 +1,5 @@
+**YouTube live broadcasts** — churches streaming directly to YouTube can have Proclaim schedule the weekly broadcast: tick a box on the media file, start your encoder. Configure the encoder once from the new Live Streaming server settings; optional auto-start means no YouTube Studio at any step
+The recording, playlists, and descriptions take care of themselves — the broadcast becomes the sermon's video automatically when the stream ends
+**WCAG 2.2 AA accessibility** across every admin screen and public page, verified by automated scans on every release
+Reordering without dragging — Move Up/Down buttons on every orderable list and in the layout editor, for full keyboard and touch support
+A REST API acceptance gate now proves the shipped package produces a working API before any release goes out

@@ -21,10 +21,12 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Path;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -330,6 +332,10 @@ class CwmmediafileTable extends Table
         // Attempt physical file deletion — never block DB deletion
         $this->deletePhysicalFile();
 
+        // Cancel an upcoming platform live broadcast this record owns
+        // (#1298 phase 3) — same best-effort rule as the physical file
+        $this->cancelLiveBroadcast();
+
         // Clean up locally stored caption/subtitle VTT files
         $this->deleteCaptionFiles();
 
@@ -337,6 +343,75 @@ class CwmmediafileTable extends Table
         CwmplaylistSyncHelper::unlinkMediafile((int) $pk);
 
         return parent::delete($pk);
+    }
+
+    /**
+     * Cancel this record's upcoming platform live broadcast, best-effort
+     * (#1298 phase 3).
+     *
+     * Deleting a Proclaim record that owns a scheduled broadcast would
+     * otherwise leave an orphan on the platform — the exact mess the live
+     * feature exists to prevent. The addon enforces the safety contract:
+     * only an upcoming broadcast is removed; anything live or completed is
+     * someone's stream or recording and stays. Failures warn, never block
+     * the deletion — same rule as the physical file above.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function cancelLiveBroadcast(): void
+    {
+        try {
+            $mediaParams = new Registry($this->params ?: '{}');
+            $broadcastId = (string) $mediaParams->get('live_broadcast_id', '');
+
+            if ($broadcastId === '' || empty($this->server_id)) {
+                return;
+            }
+
+            $db    = $this->getDatabase();
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('type'))
+                ->from($db->quoteName('#__bsms_servers'))
+                ->where($db->quoteName('id') . ' = ' . (int) $this->server_id);
+            $db->setQuery($query);
+            $type = (string) $db->loadResult();
+
+            if ($type === '') {
+                return;
+            }
+
+            $addon = CWMAddon::getInstance($type);
+
+            if (!$addon || !$addon->supportsLiveEvents()) {
+                return;
+            }
+
+            $result = $addon->cancelLiveEvent(new Input([
+                'serverId'    => (int) $this->server_id,
+                'broadcastId' => $broadcastId,
+            ]));
+
+            $app = Factory::getApplication();
+
+            if (!empty($result['deleted'])) {
+                $app->enqueueMessage(Text::_('JBS_MED_LIVE_BROADCAST_CANCELLED'), 'message');
+            } elseif (!empty($result['kept_reason'])) {
+                $app->enqueueMessage($result['kept_reason'], 'info');
+            } elseif (empty($result['success'])) {
+                $app->enqueueMessage(
+                    Text::sprintf('JBS_MED_LIVE_BROADCAST_CANCEL_FAILED', $result['error'] ?? ''),
+                    'warning'
+                );
+            }
+        } catch (\Exception $e) {
+            Log::add(
+                'Media file #' . ($this->id ?? '?') . ': live broadcast cancel failed: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
     }
 
     /**
