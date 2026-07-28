@@ -9,6 +9,8 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 **PHP Requirement:** 8.3.0+
 **Namespace:** `CWM\Component\Proclaim`
 
+> **Claude Code:** load the `joomla` skill (Skill tool) at the start of any session touching this project's PHP, forms, manifests, or extension structure — it carries the J5/J6 API rules, canonical upstream references, and the gotchas this codebase is built against.
+
 ## Build Commands
 
 ```bash

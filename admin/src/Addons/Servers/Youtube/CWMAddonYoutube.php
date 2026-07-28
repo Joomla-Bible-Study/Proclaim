@@ -1994,6 +1994,84 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * Cancel an upcoming YouTube broadcast (#1298 phase 3).
+     *
+     * Status is checked FIRST, and only 'created' or 'ready' broadcasts are
+     * deleted. Anything else — testing, live, complete — is someone's
+     * stream or someone's recording; liveBroadcasts.delete on a completed
+     * broadcast deletes the video itself, so those are reported kept, never
+     * touched. A broadcast YouTube no longer lists is success: the goal
+     * (no orphaned upcoming broadcast) is already met.
+     *
+     * @param   Input  $input  serverId, broadcastId.
+     *
+     * @return  array{success: bool, deleted?: bool, kept_reason?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function cancelLiveEvent(Input $input): array
+    {
+        $serverId    = $input->getInt('serverId');
+        $broadcastId = $input->getString('broadcastId', '');
+
+        if ($serverId === 0 || $broadcastId === '') {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_LIVE_MISSING_INPUT')];
+        }
+
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return ['success' => false, 'error' => Text::_('JBS_ADDON_YOUTUBE_LIVE_OAUTH_REQUIRED')];
+        }
+
+        if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_VIDEOS)) {
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+        }
+
+        try {
+            $youtube = new YouTube($client);
+
+            $list = $youtube->liveBroadcasts->listLiveBroadcasts('status', ['id' => $broadcastId]);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
+
+            $items = $list->getItems();
+
+            if (empty($items)) {
+                // Already gone — the outcome this call exists to produce.
+                return ['success' => true, 'deleted' => false, 'kept_reason' => ''];
+            }
+
+            $status = (string) $items[0]->getStatus()->getLifeCycleStatus();
+
+            if (!\in_array($status, ['created', 'ready'], true)) {
+                return [
+                    'success'     => true,
+                    'deleted'     => false,
+                    'kept_reason' => Text::sprintf('JBS_ADDON_YOUTUBE_LIVE_KEPT', $status),
+                ];
+            }
+
+            if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_BROADCAST_DELETE)) {
+                return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+            }
+
+            $youtube->liveBroadcasts->delete($broadcastId);
+            CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_BROADCAST_DELETE);
+
+            return ['success' => true, 'deleted' => true];
+        } catch (Exception $e) {
+            if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
+                CwmyoutubeQuota::markExhausted($serverId);
+            }
+
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
      * The server's persistent ingestion stream — created once, reused for
      * every broadcast (#1298 phase 2).
      *
@@ -2414,7 +2492,12 @@ class CWMAddonYoutube extends CWMAddon
             $status->setSelfDeclaredMadeForKids(false);
 
             $contentDetails = new LiveBroadcastContentDetails();
-            $contentDetails->setEnableAutoStart(false);
+            // Auto-start is a per-server opt-in (#1298 phase 3): with it on,
+            // the broadcast goes live the moment the encoder starts sending —
+            // no Studio visit, which is the whole point for a volunteer AV
+            // team. Off by default, because an encoder started early for a
+            // sound check would go live early too.
+            $contentDetails->setEnableAutoStart(((string) ($serverConfig['live_auto_start'] ?? '0')) === '1');
             $contentDetails->setEnableAutoStop(true);
 
             $broadcast = new LiveBroadcast();

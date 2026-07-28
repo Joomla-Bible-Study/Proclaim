@@ -49,6 +49,12 @@
                 <option value="unlisted">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_UNLISTED</option>
                 <option value="private">JBS_ADDON_YOUTUBE_LIVE_PRIVACY_PRIVATE</option>
             </field>
+            <field name="live_auto_start" type="radio" layout="joomla.form.field.radio.switcher"
+                   label="JBS_ADDON_YOUTUBE_LIVE_AUTO_START" description="JBS_ADDON_YOUTUBE_LIVE_AUTO_START_DESC"
+                   default="0" showon="stream_mode:direct">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
             <field name="stream_key_display" type="YoutubeStreamKey"
                    label="JBS_ADDON_YOUTUBE_STREAM_KEY_LABEL" description="JBS_ADDON_YOUTUBE_STREAM_KEY_DESC"
                    showon="stream_mode:direct"

@@ -898,6 +898,37 @@ abstract class CWMAddon
     }
 
     /**
+     * Cancel a platform live broadcast that has not yet gone live
+     * (#1298 phase 3).
+     *
+     * Called from the media-file delete path when the record carries a
+     * broadcast the platform still lists as upcoming. Override in a capable
+     * addon. Expected input keys:
+     *
+     *   serverId     int     the server record ID
+     *   broadcastId  string  the platform broadcast ID
+     *
+     * Contract the implementation MUST honour: only an upcoming broadcast
+     * may be removed. A broadcast that is live or completed is someone's
+     * stream or someone's recording — deleting it destroys the video, so a
+     * capable addon reports it kept ('kept_reason') rather than touching
+     * it. A broadcast already absent is success (idempotent).
+     *
+     * Must return ['success' => bool, ...] — with 'deleted' => bool, and
+     * either 'kept_reason' (left in place, and why) or 'error'.
+     *
+     * @param   Input  $input  The request input, see keys above.
+     *
+     * @return  array{success: bool, deleted?: bool, kept_reason?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function cancelLiveEvent(Input $input): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_ADDON_LIVE_NOT_SUPPORTED')];
+    }
+
+    /**
      * Detect metadata for a file.
      *
      * @param   Registry    $params      Media params (modified in place)
