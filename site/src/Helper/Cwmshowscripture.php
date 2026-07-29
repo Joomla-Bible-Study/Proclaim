@@ -217,6 +217,7 @@ class Cwmshowscripture
     public function renderTextPassage(BiblePassageResult $result, int $choice, Registry $params, string $switcherHtml = ''): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
         $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $copyrightHtml = '';
@@ -363,6 +364,7 @@ class Cwmshowscripture
     {
         $app = Factory::getApplication();
         $wa  = $app->getDocument()->getWebAssetManager();
+        $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
         $wa->useScript('lib_cwmscripture.scripture-switcher');
         $wa->useStyle('lib_cwmscripture.scripture-switcher-css');
 
@@ -631,6 +633,7 @@ class Cwmshowscripture
     private function renderUnavailableNotice(object $row, string $reference, string $version): string
     {
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
         $wa->useScript('lib_cwmscripture.scripture-switcher');
         $wa->useStyle('lib_cwmscripture.scripture-text');
 

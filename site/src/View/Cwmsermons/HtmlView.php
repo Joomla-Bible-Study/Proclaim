@@ -301,6 +301,7 @@ class HtmlView extends BaseHtmlView
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
         // if no elements have show_tooltip enabled)
+        $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
         $wa->useScript('lib_cwmscripture.scripture-tooltip');
         $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
