@@ -100,7 +100,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $wa->useScript('lib_cwmscripture.scripture-tooltip');
         $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
-        $this->app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+        $this->app->getDocument()->addScriptOptions('cwmscripture.options', [
             'ajaxUrl' => Route::_(
                 'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
                 false

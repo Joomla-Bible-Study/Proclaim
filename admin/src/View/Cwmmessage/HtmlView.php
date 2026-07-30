@@ -156,10 +156,10 @@ class HtmlView extends BaseHtmlView
         $document = Factory::getApplication()->getDocument();
         $wa       = $document->getWebAssetManager();
         $wa->useScript('lib_cwmscripture.scripture-autocomplete');
-        $document->addScriptOptions('com_proclaim.books', CwmscriptureHelper::getAllBooks());
-        $document->addScriptOptions('com_proclaim.bibleStructure', BibleStructure::getStructureForJs());
+        $document->addScriptOptions('cwmscripture.books', CwmscriptureHelper::getAllBooks());
+        $document->addScriptOptions('cwmscripture.bibleStructure', BibleStructure::getStructureForJs());
         $document->addScriptOptions(
-            'com_proclaim.defaultBibleVersion',
+            'cwmscripture.defaultBibleVersion',
             ScriptureParamsHelper::getParams()->get('default_version', 'kjv')
         );
 
