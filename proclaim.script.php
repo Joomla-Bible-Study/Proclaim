@@ -94,14 +94,6 @@ class com_proclaimInstallerScript extends InstallerScript
     public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
 
     /**
-     * The version number of the extension. Max 20 characters
-     *
-     * @var    string
-     * @since  3.6
-     */
-    protected $release = '10.1.0';
-
-    /**
      * @var   DatabaseInterface|null
      *
      * @since 7.2.0
