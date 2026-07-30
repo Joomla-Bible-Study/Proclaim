@@ -1105,3 +1105,40 @@ p.expand {
     padding-bottom: 0;
   }
 }
+
+/*
+ * Buttons inside alerts must keep their own text colour.
+ *
+ * Atum colours links inside an alert with the alert's emphasis colour:
+ *
+ *     .alert.alert-warning a { color: var(--state-warning-text) }   (0,2,1)
+ *
+ * A `.btn` rendered as an anchor is caught by that rule, and Atum sets no
+ * explicit colour on several button variants, so the button ends up wearing the
+ * alert's text colour over its own background. Inside .alert-warning that gives
+ * #996901 on #ffb514 — 2.71:1 — which is how the control panel's schema-fix
+ * button failed WCAG AA (#1375), and #996901 on the secondary blue is worse
+ * still at 1.32:1.
+ *
+ * The colours below are the ones each variant already computes when rendered
+ * outside an alert, read off a live admin page — so this restores the intended
+ * appearance rather than inventing one, and buttons look the same wherever they
+ * sit. Specificity is (0,3,0) to clear Atum's (0,2,1); `a.btn` would also work
+ * but would leave `<button>` elements out if Atum ever colours those too.
+ *
+ * tests/e2e/admin/a11y.spec.js scans every variant in every alert context, so a
+ * combination that regresses here is caught even though no view renders it yet.
+ */
+.alert .btn.btn-warning,
+.alert .btn.btn-light {
+  color: #000000;
+}
+
+.alert .btn.btn-primary,
+.alert .btn.btn-secondary,
+.alert .btn.btn-success,
+.alert .btn.btn-danger,
+.alert .btn.btn-info,
+.alert .btn.btn-dark {
+  color: #ffffff;
+}
