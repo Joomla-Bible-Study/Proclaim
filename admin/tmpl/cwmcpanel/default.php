@@ -299,8 +299,15 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <p class="mb-1">
                         <?php echo Text::sprintf('JBS_CPL_SCHEMA_OUT_OF_SYNC_DESC', $schemaGap['current'], $schemaGap['expected']); ?>
                     </p>
+                    <?php
+                        // btn-primary, not btn-warning: Atum's warning yellow (#ffb514) with
+                        // Bootstrap's derived text colour (#996901) is 2.71:1, which fails WCAG
+                        // AA at this size — @a11y catches it. The alert already carries the
+                        // warning semantics, so the action inside it does not need to repeat
+                        // them, and core uses primary the same way.
+                    ?>
                     <a href="<?php echo Route::_('index.php?option=com_installer&view=database'); ?>"
-                       class="btn btn-warning btn-sm">
+                       class="btn btn-primary btn-sm">
                         <?php echo Text::_('JBS_CPL_SCHEMA_FIX_BUTTON'); ?>
                     </a>
                 </div>
