@@ -85,6 +85,11 @@
             "command": "npm install && npm run build"
         },
         "verifyAssets": true,
+        "_verifyMediaSources_comment": "The inverse of verifyAssets: catches built files whose source is gone. media/js and media/css only — media/vendor, media/images, media/fancybox, media/backup, media/captions and media/youtube_cache are copied or runtime dirs with no media_source counterpart. Needs cwm/build-tools >= 1.12; older versions ignore the key and the check silently does not run. Background: lib_cwmscripture#25.",
+        "verifyMediaSources": [
+            { "source": "build/media_source/js",  "output": "media/js" },
+            { "source": "build/media_source/css", "output": "media/css" }
+        ],
         "versionPrompt": {
             "enabled": true,
             "timeout": 10
