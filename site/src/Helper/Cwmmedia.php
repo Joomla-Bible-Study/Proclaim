@@ -54,7 +54,7 @@ class Cwmmedia
      *
      * Extend this when a new brand icon starts being stored.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     private const BRAND_ICONS = [
         'fa-youtube', 'fa-square-youtube', 'fa-vimeo', 'fa-vimeo-v', 'fa-square-vimeo',
@@ -68,7 +68,7 @@ class Cwmmedia
      * Style classes that select a non-brand family, and so must be replaced when
      * the icon turns out to be a brand.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     private const NON_BRAND_STYLES = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa', 'fas', 'far'];
 
@@ -155,7 +155,7 @@ class Cwmmedia
      *
      * @return  string  Class string whose style token is fa-brands when appropriate
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     private static function applyBrandFamily(string $class): string
     {

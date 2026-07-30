@@ -268,7 +268,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     private function disarmLegacyScriptureUninstallSql(): void
     {

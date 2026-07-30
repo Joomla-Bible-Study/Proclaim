@@ -32,7 +32,7 @@ use Joomla\Registry\Registry;
  * stated where the administrator is deciding.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.4.1
  */
 class YoutubeStreamModeField extends RadioField
 {
@@ -41,7 +41,7 @@ class YoutubeStreamModeField extends RadioField
      *
      * @var  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.4.1
      */
     protected $type = 'YoutubeStreamMode';
 
@@ -56,7 +56,7 @@ class YoutubeStreamModeField extends RadioField
      * @return  boolean
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     public function isServerConnected(): bool
     {
@@ -83,7 +83,7 @@ class YoutubeStreamModeField extends RadioField
      * @return  string  The field input markup.
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     protected function getInput(): string
     {

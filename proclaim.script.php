@@ -731,7 +731,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.4.1
      */
     private function scriptureConsumer(string $action): void
     {
