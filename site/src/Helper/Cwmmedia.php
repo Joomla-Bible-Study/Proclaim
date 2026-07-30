@@ -44,11 +44,56 @@ class Cwmmedia
     private int $fsize = 0;
 
     /**
-     * Normalize a Font Awesome icon class from FA5 shorthand to FA6 canonical.
+     * Icon names that live in the Font Awesome Brands font, not Free/solid.
      *
-     * Converts legacy DB values like "fas fa-play" or "fab fa-youtube" to
-     * their FA6 equivalents ("fa-solid fa-play", "fa-brands fa-youtube").
-     * Safe to call on values that are already FA6 — returns them unchanged.
+     * The family comes from the style class, not the icon name: `.fa-brands`
+     * selects "Font Awesome 6 Brands" while `.fa-solid` selects "Font Awesome 6
+     * Free" at weight 900. A brand codepoint has no glyph in the Free font, so
+     * `fa-solid fa-youtube` renders as tofu even though `.fa-youtube` exists and
+     * carries the right codepoint.
+     *
+     * Extend this when a new brand icon starts being stored.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private const BRAND_ICONS = [
+        'fa-youtube', 'fa-square-youtube', 'fa-vimeo', 'fa-vimeo-v', 'fa-square-vimeo',
+        'fa-apple', 'fa-itunes', 'fa-itunes-note', 'fa-spotify', 'fa-soundcloud',
+        'fa-google', 'fa-google-drive', 'fa-google-play', 'fa-facebook', 'fa-facebook-f',
+        'fa-square-facebook', 'fa-twitter', 'fa-x-twitter', 'fa-instagram', 'fa-twitch',
+        'fa-dropbox', 'fa-amazon', 'fa-mixcloud', 'fa-deezer', 'fa-rumble',
+    ];
+
+    /**
+     * Style classes that select a non-brand family, and so must be replaced when
+     * the icon turns out to be a brand.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private const NON_BRAND_STYLES = ['fa-solid', 'fa-regular', 'fa-light', 'fa-thin', 'fa', 'fas', 'far'];
+
+    /**
+     * Normalize a Font Awesome icon class from FA4/FA5 shorthand to FA6 canonical.
+     *
+     * Converts legacy DB values like "fas fa-play" or "fab fa-youtube" to their
+     * FA6 equivalents ("fa-solid fa-play", "fa-brands fa-youtube"). Safe to call
+     * on values that are already FA6 — returns them unchanged.
+     *
+     * Two things this has to get right, both of which it originally did not:
+     *
+     * 1. Brands need the brand family. Rewriting the FA4 prefix `fa fa-` to
+     *    `fa-solid fa-` produced `fa-solid fa-youtube`, which is tofu — the Free
+     *    font has no glyph at the YouTube codepoint. Worse, the FA4 form was
+     *    *working* before the rewrite, because Joomla's v4 shim
+     *    (`.fa.fa-youtube { font-family: "Font Awesome 6 Brands" }`) keys on the
+     *    bare `.fa` class that the rewrite strips.
+     * 2. Some FA4 names only exist as shims. `fa-video-camera` has no plain rule
+     *    in joomla-fontawesome.css, only `.fa.fa-video-camera`, so it must be
+     *    renamed to the FA6 name `fa-video` rather than merely re-prefixed.
+     *
+     * Because the brand fix-up runs on the final token list, it also repairs
+     * values already damaged in the database by the 10.3.0 migration: a stored
+     * `fa-solid fa-youtube` comes back out as `fa-brands fa-youtube`.
      *
      * @param   string  $class  Icon CSS class string
      *
@@ -86,9 +131,53 @@ class Cwmmedia
             'fa-bible'                => 'fa-book-bible',
             'fa-sticky-note'          => 'fa-note-sticky',
             'fa-word'                 => 'fa-file-word',
+            // FA4 names with no plain FA6 rule — shim-only, so they must be renamed
+            'fa-video-camera'    => 'fa-video',
+            'fa-youtube-play'    => 'fa-youtube',
+            'fa-youtube-square'  => 'fa-square-youtube',
+            'fa-vimeo-square'    => 'fa-square-vimeo',
+            'fa-facebook-square' => 'fa-square-facebook',
         ];
 
-        return strtr($class, $renames);
+        $class = strtr($class, $renames);
+
+        return self::applyBrandFamily($class);
+    }
+
+    /**
+     * Force the brand family when the icon is a brand.
+     *
+     * Operates on whole class tokens rather than substrings: `fa-vimeo` is a
+     * prefix of `fa-vimeo-v`, so a naive str_replace would corrupt one while
+     * fixing the other.
+     *
+     * @param   string  $class  Icon CSS class string, already prefix- and rename-normalized
+     *
+     * @return  string  Class string whose style token is fa-brands when appropriate
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function applyBrandFamily(string $class): string
+    {
+        $tokens = preg_split('/\s+/', trim($class), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        if ($tokens === [] || array_intersect($tokens, self::BRAND_ICONS) === []) {
+            return $class;
+        }
+
+        foreach ($tokens as &$token) {
+            if (\in_array($token, self::NON_BRAND_STYLES, true)) {
+                $token = 'fa-brands';
+            }
+        }
+
+        unset($token);
+
+        if (!\in_array('fa-brands', $tokens, true)) {
+            array_unshift($tokens, 'fa-brands');
+        }
+
+        return implode(' ', array_values(array_unique($tokens)));
     }
 
     /**
