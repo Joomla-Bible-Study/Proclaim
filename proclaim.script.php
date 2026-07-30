@@ -13,6 +13,8 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
+use Joomla\CMS\Event\Cache\AfterPurgeEvent;
+use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -23,6 +25,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
@@ -714,6 +717,124 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Clear caches after an install or update, and say so when something outside
+     * our reach still needs clearing.
+     *
+     * Joomla's installer only calls flushAssets(), which regenerates the media
+     * version so browsers re-request asset URLs. Nothing clears server-side page
+     * caches, and nothing tells an optimisation plugin that the files it combined
+     * have been replaced.
+     *
+     * That gap is not theoretical. On a live site running JCH Optimize, updating
+     * the scripture library deleted the combined JS bundles while the cached HTML
+     * kept referencing them by filename. Every bundled script — including the
+     * Bible version switcher — returned a 404 HTML error page, so the switcher
+     * rendered and did nothing. No error was visible anywhere; the markup was
+     * correct and the JavaScript simply never arrived. Clearing both caches fixed
+     * it.
+     *
+     * What we can do:
+     *
+     *   - Clean every Joomla cache group, which is what com_cache's "Delete all"
+     *     does (Factory::getCache('')->clean()).
+     *   - Dispatch the two events core dispatches when caches are cleaned, so a
+     *     plugin holding derived caches gets its cue: onContentCleanCache (from
+     *     BaseDatabaseModel::cleanCache) and onAfterPurge (from com_cache).
+     *
+     * What we cannot do: make a third-party plugin act. Whether it purges is its
+     * decision, and reaching into another extension's cache directory would break
+     * on its next release. So when a known aggressive cache plugin is installed
+     * and enabled, the administrator is told to clear it — a message they can act
+     * on beats a silence they cannot.
+     *
+     * Never fatal: an update must not fail over cache hygiene.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function clearCaches(): void
+    {
+        $app = Factory::getApplication();
+
+        try {
+            // No group argument = every group, matching com_cache's Delete all.
+            Factory::getCache('')->clean();
+        } catch (\Throwable $e) {
+            Log::add('Proclaim: cache clean skipped — ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        try {
+            $dispatcher = $app->getDispatcher();
+
+            $dispatcher->dispatch('onContentCleanCache', new AfterCleanCacheEvent('onContentCleanCache', [
+                'defaultgroup' => '',
+                'cachebase'    => $app->get('cache_path', JPATH_CACHE),
+                'result'       => true,
+            ]));
+
+            $dispatcher->dispatch('onAfterPurge', new AfterPurgeEvent('onAfterPurge', ['subject' => '']));
+        } catch (\Throwable $e) {
+            Log::add('Proclaim: cache events not dispatched — ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        $this->warnAboutExternalCaches($app);
+    }
+
+    /**
+     * Tell the administrator when a cache plugin we cannot clear is running.
+     *
+     * Keyed on the plugin element, so a plugin that is absent or disabled costs a
+     * single query and says nothing. The list is deliberately short: only plugins
+     * that combine or cache whole pages, where a stale entry can reference assets
+     * that no longer exist.
+     *
+     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app  The application
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function warnAboutExternalCaches($app): void
+    {
+        $known = [
+            'jchoptimize'   => 'JCH Optimize',
+            'litespeedcache' => 'LiteSpeed Cache',
+            'cache'         => 'System - Page Cache',
+        ];
+
+        try {
+            $db    = $this->dbo ?? Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('element'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+                ->where($db->quoteName('enabled') . ' = 1')
+                ->whereIn($db->quoteName('element'), array_keys($known), ParameterType::STRING);
+            $db->setQuery($query);
+
+            $found = array_map(
+                static fn (string $element): string => $known[$element] ?? $element,
+                (array) $db->loadColumn()
+            );
+
+            if ($found === []) {
+                return;
+            }
+
+            $app->enqueueMessage(
+                Text::sprintf(
+                    'COM_PROCLAIM_CLEAR_EXTERNAL_CACHE',
+                    implode(', ', $found)
+                ),
+                'warning'
+            );
+        } catch (\Throwable $e) {
+            Log::add('Proclaim: external cache check skipped — ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
+    /**
      * Declare, or withdraw, com_proclaim's dependency on lib_cwmscripture.
      *
      * Joomla tracks no dependencies between extensions, so the library cannot
@@ -1113,6 +1234,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // Declare our dependency on lib_cwmscripture so its uninstall guard and
         // shared-table cleanup can see us
         $this->scriptureConsumer('register');
+
+        // Stale caches survive an update and can serve markup that references
+        // assets this update replaced — see the method for what happened on a
+        // live site.
+        $this->clearCaches();
 
         if ($type === 'install' || $type === 'update') {
             // This is a fresh install. Register for the guided tour directly.
