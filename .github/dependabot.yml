@@ -1,0 +1,62 @@
+# Dependabot version updates.
+#
+# Security updates run without this file; version updates need it.
+#
+# Minor and patch bumps are grouped into a single PR per ecosystem — most of
+# the Composer dev dependencies are joomla/* packages that move together, and
+# ungrouped they would open nine PRs for one Joomla release. Major bumps stay
+# separate, since those want reading.
+version: 2
+
+updates:
+  - package-ecosystem: composer
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      composer-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # cwm/build-tools is sourced from a Composer VCS repository (see
+      # composer.json "repositories"). Dependabot's Composer support does not
+      # resolve VCS repositories — it looks the package up on Packagist, where
+      # it does not exist — so it would never open a PR for it regardless.
+      # Listed explicitly so its absence reads as a decision, not an oversight.
+      # Bump it by hand: composer update cwm/build-tools
+      - dependency-name: "cwm/build-tools"
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - minor
+          - patch
