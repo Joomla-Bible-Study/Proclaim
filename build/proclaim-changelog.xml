@@ -19,6 +19,37 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.4.1                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.4.1</version>
+        <date>2026-07-30</date>
+        <note>
+            <item>The two translations Proclaim ships with — King James Version and World English</item>
+            <item>Anything else you had downloaded needs downloading again, from</item>
+            <item>Release packages are now checked against their sources, so a file left behind</item>
+            <item>The upgrade test suite now plants a downloaded translation, cached passages and</item>
+            <item>fix(release): pin ars.environments so published items carry real requirements by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1360</item>
+            <item>chore(deps): cwm/build-tools 1.9.1 — ARS publish refuses null environments by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1361</item>
+            <item>feat(youtube): disable Direct streaming until the account is connected by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1362</item>
+            <item>chore(language): sync the stream-mode OAuth notice to all locales by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1363</item>
+            <item>chore(language): translate the live-broadcast strings in all six locales by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1364</item>
+            <item>test(install): assert the scripture library actually lands on clean installs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1365</item>
+            <item>fix(scripture): publish script options under the keys the library JS reads by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1370</item>
+            <item>build: fail the build when media output has no source by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1371</item>
+            <item>fix: protect downloaded Bibles across every scripture library upgrade path by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1369</item>
+            <item>fix(media): give Font Awesome brand icons the brand family by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1372</item>
+            <item>chore(submodule): bump lib_cwmscripture to main (#27) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1373</item>
+            <item>fix(submodule): point scripturelinks at main, not the deleted branch by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1374</item>
+            <item>fix(a11y): give the schema-fix button enough contrast to pass WCAG AA by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1375</item>
+            <item>fix(a11y): stop buttons inside alerts inheriting the alert&#x27;s text colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1376</item>
+            <item>chore(install): drop the dead $release property by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1377</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.4.0                                                   -->
     <!-- ============================================================ -->
     <changelog>
