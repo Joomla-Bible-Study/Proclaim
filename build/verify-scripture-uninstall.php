@@ -54,6 +54,9 @@ $modes = [
     'seed-consumer',
     'seed-translation',
     'assert-library-present',
+    'assert-first-party-registered',
+    'assert-detected-consumer',
+    'seed-detected-consumer',
     'assert-tables-present',
     'assert-tables-gone',
     'assert-sql-armed',
@@ -82,6 +85,13 @@ const FAKE_NAME    = 'Third Party Probe';
  */
 const PROBE_ABBR  = 'uninstallprobe';
 const PROBE_ROWS  = 3;
+
+/**
+ * Provider cache rows, seeded live (expiry in the future). The old uninstall SQL
+ * dropped this table alongside the verse tables; losing it on an upgrade sends
+ * every cached passage back out to GetBible / API.Bible to be re-fetched.
+ */
+const PROBE_CACHE_ROWS = 2;
 
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
@@ -213,6 +223,7 @@ foreach ($installs as $install) {
     $consumers    = $prefix . 'bsms_scripture_consumers';
     $translations = $prefix . 'bsms_bible_translations';
     $verses       = $prefix . 'bsms_bible_verses';
+    $cache        = $prefix . 'bsms_scripture_cache';
     $extensions   = $prefix . 'extensions';
 
     $tableExists = static function (mysqli $db, string $table): bool {
@@ -314,14 +325,25 @@ foreach ($installs as $install) {
                 ) or fwrite(STDERR, '  WARN seeding verse: ' . mysqli_error($db) . "\n");
             }
 
-            echo '  OK   seeded ' . PROBE_ROWS . " probe verses\n";
+            for ($i = 1; $i <= PROBE_CACHE_ROWS; $i++) {
+                mysqli_query(
+                    $db,
+                    "INSERT IGNORE INTO `{$cache}`
+                        (`provider`, `translation`, `reference`, `text`, `expires_at`)
+                     VALUES ('getbible', '" . PROBE_ABBR . "', 'Probe {$i}:1', 'probe cached text',
+                             DATE_ADD(NOW(), INTERVAL 30 DAY))"
+                ) or fwrite(STDERR, '  WARN seeding cache row: ' . mysqli_error($db) . "\n");
+            }
+
+            echo '  OK   seeded ' . PROBE_ROWS . ' probe verses and '
+                . PROBE_CACHE_ROWS . " provider cache rows\n";
 
             break;
 
         case 'assert-tables-present':
             $allPresent = true;
 
-            foreach ([$translations, $verses] as $table) {
+            foreach ([$translations, $verses, $cache] as $table) {
                 if ($tableExists($db, $table)) {
                     echo "  OK   {$table} survived — a registered consumer kept it\n";
                 } else {
@@ -350,6 +372,20 @@ foreach ($installs as $install) {
             } else {
                 fwrite(STDERR, "  FAIL {$found}/" . PROBE_ROWS . " probe verses left — the tables survived\n");
                 fwrite(STDERR, "       but their contents did not.\n");
+                $failures++;
+            }
+
+            $cachedLeft = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
+            ) ?: null);
+
+            $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
+
+            if ($cachedFound === PROBE_CACHE_ROWS) {
+                echo '  OK   all ' . PROBE_CACHE_ROWS . " provider cache rows survived the package removal\n";
+            } else {
+                fwrite(STDERR, "  FAIL {$cachedFound}/" . PROBE_CACHE_ROWS . " cache rows left in {$cache}.\n");
                 $failures++;
             }
 
@@ -416,7 +452,22 @@ foreach ($installs as $install) {
 
             $found = ($left === null || $left === false) ? 0 : (int) $left[0];
 
+            $cachedLeft = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
+            ) ?: null);
+
+            $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
+
             if ($mode === 'assert-translation-survived') {
+                if ($cachedFound === PROBE_CACHE_ROWS) {
+                    echo '  OK   all ' . PROBE_CACHE_ROWS . " provider cache rows survived too\n";
+                } else {
+                    fwrite(STDERR, "  FAIL {$cachedFound}/" . PROBE_CACHE_ROWS . " cache rows left after a\n");
+                    fwrite(STDERR, "       library-only update — cached passages are being discarded.\n");
+                    $failures++;
+                }
+
                 if ($found === PROBE_ROWS) {
                     echo '  OK   all ' . PROBE_ROWS . " verses survived the library-only update\n";
                 } else {
@@ -425,6 +476,14 @@ foreach ($installs as $install) {
                     $failures++;
                 }
             } else {
+                if ($cachedFound === 0) {
+                    echo "  OK   provider cache destroyed as expected — the hazard covers it too\n";
+                } else {
+                    fwrite(STDERR, "  FAIL expected the un-disarmed update to destroy the cache rows,\n");
+                    fwrite(STDERR, "       but {$cachedFound} survived.\n");
+                    $failures++;
+                }
+
                 if ($found === 0) {
                     echo "  OK   verses destroyed as expected — the hazard is real and detectable\n";
                 } else {
@@ -436,8 +495,183 @@ foreach ($installs as $install) {
 
             break;
 
+        case 'assert-first-party-registered':
+            // #1368 / CWMScriptureLinks#12: the extensions that ship with the
+            // packages must put themselves on the register, rather than leaning on
+            // the library's hardcoded FIRST_PARTY fallback. Only assert for the
+            // ones actually installed here — pkg_proclaim does not ship the task
+            // plugin, so its absence is normal, not a failure.
+            if (!$tableExists($db, $consumers)) {
+                fwrite(STDERR, "  FAIL {$consumers} does not exist — the 1.1.6 schema update never ran.\n");
+                $failures++;
+
+                break;
+            }
+
+            $expected = [
+                ['element' => 'com_proclaim',   'type' => 'component', 'folder' => ''],
+                ['element' => 'scripturelinks', 'type' => 'plugin',    'folder' => 'content'],
+                ['element' => 'cwmscripture',   'type' => 'plugin',    'folder' => 'task'],
+            ];
+
+            foreach ($expected as $consumer) {
+                $label = $consumer['element'] . ($consumer['folder'] !== '' ? " ({$consumer['folder']})" : '');
+
+                $installedQuery = "SELECT COUNT(*) FROM `{$extensions}`"
+                    . " WHERE `type` = '{$consumer['type']}' AND `element` = '{$consumer['element']}'"
+                    . ($consumer['folder'] !== '' ? " AND `folder` = '{$consumer['folder']}'" : '');
+
+                $isInstalled = mysqli_fetch_row(mysqli_query($db, $installedQuery) ?: null);
+
+                if ($isInstalled === null || $isInstalled === false || (int) $isInstalled[0] === 0) {
+                    echo "  --   {$label} is not installed here, nothing to register\n";
+
+                    continue;
+                }
+
+                $registeredQuery = "SELECT COUNT(*) FROM `{$consumers}`"
+                    . " WHERE `type` = '{$consumer['type']}' AND `element` = '{$consumer['element']}'"
+                    . " AND `folder` = '{$consumer['folder']}'";
+
+                $row = mysqli_fetch_row(mysqli_query($db, $registeredQuery) ?: null);
+
+                if ($row !== null && $row !== false && (int) $row[0] > 0) {
+                    echo "  OK   {$label} registered itself as a consumer\n";
+
+                    continue;
+                }
+
+                fwrite(STDERR, "  FAIL {$label} is installed but has no row in {$consumers}.\n");
+                fwrite(STDERR, "       Its install script never called the library's consumer entry point,\n");
+                fwrite(STDERR, "       so protection depends entirely on the FIRST_PARTY fallback.\n");
+                $failures++;
+            }
+
+            break;
+
+        case 'seed-detected-consumer':
+            // The CWMLivingWord scenario: an extension that uses the library, is in
+            // #__extensions, and is in neither the registry nor FIRST_PARTY. Only
+            // ConsumerScanner can see it — it has to find the namespace reference on
+            // disk. Deliberately NOT registered, or this would test the registry again.
+            //
+            // First clear phase 12's registered fixture. Leaving it behind made this
+            // phase pass with the scanner stubbed out: com_thirdpartyprobe was still
+            // registered and installed, so the tables were kept for it rather than for
+            // the extension under test. A vacuous pass is worse than no test.
+            mysqli_query($db, "DELETE FROM `{$consumers}` WHERE `element` = '" . FAKE_ELEMENT . "'");
+            mysqli_query($db, "DELETE FROM `{$extensions}` WHERE `element` = '" . FAKE_ELEMENT . "'");
+
+            // Precondition: nothing OTHER than this package's own children may be able
+            // to account for the tables surviving. com_proclaim and scripturelinks are
+            // fine — they register themselves, and the package excludes them from its
+            // own "is anyone left" question. Anything else (a leftover fixture, or a
+            // FIRST_PARTY entry that happens to be installed) would keep the tables on
+            // its own and make this phase vacuous.
+            $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
+
+            $others = mysqli_query(
+                $db,
+                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
+            );
+
+            $blockers = [];
+
+            while ($row = mysqli_fetch_row($others ?: null)) {
+                $blockers[] = $row[0] . ' (registered)';
+            }
+
+            // FIRST_PARTY members are recognised without a registry row, so an installed
+            // one is just as much of a confound.
+            $firstParty = mysqli_query(
+                $db,
+                "SELECT `element` FROM `{$extensions}`
+                 WHERE (`type` = 'component' AND `element` = 'com_livingword')
+                    OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
+            );
+
+            while ($row = mysqli_fetch_row($firstParty ?: null)) {
+                $blockers[] = $row[0] . ' (first-party, installed)';
+            }
+
+            if ($blockers !== []) {
+                fwrite(STDERR, '  FAIL something else already keeps the tables: ' . implode(', ', $blockers) . ".\n");
+                fwrite(STDERR, "       This phase would then pass without ConsumerScanner doing anything.\n");
+                $failures++;
+
+                break;
+            }
+
+            $dir = $install->path . '/administrator/components/com_detectedprobe';
+
+            if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+                fwrite(STDERR, "  FAIL could not create {$dir}.\n");
+                $failures++;
+
+                break;
+            }
+
+            file_put_contents(
+                $dir . '/probe.php',
+                "<?php\n// Fixture for the upgrade harness. References the library the way a real\n"
+                . "// consumer would, which is the only signal ConsumerScanner has.\n"
+                . "use CWM\\Library\\Scripture\\Helper\\ScriptureHelper;\n"
+            );
+
+            mysqli_query(
+                $db,
+                "INSERT IGNORE INTO `{$extensions}`
+                    (`name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`,
+                     `protected`, `locked`, `manifest_cache`, `params`)
+                 VALUES ('Detected Probe', 'component', 'com_detectedprobe', '', 1, 1, 1, 0, 0, '{}', '{}')"
+            ) or fwrite(STDERR, '  WARN seeding extension row: ' . mysqli_error($db) . "\n");
+
+            $registered = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = 'com_detectedprobe'"
+            ) ?: null);
+
+            if ($registered !== null && $registered !== false && (int) $registered[0] > 0) {
+                fwrite(STDERR, "  FAIL com_detectedprobe is in the registry — this phase must prove\n");
+                fwrite(STDERR, "       detection, not registration.\n");
+                $failures++;
+
+                break;
+            }
+
+            echo "  OK   planted an unregistered consumer that references the library namespace\n";
+
+            break;
+
+        case 'assert-detected-consumer':
+            // Cleanup runs whatever the outcome: a leftover fixture would silently
+            // pin the tables for every later phase.
+            $dir      = $install->path . '/administrator/components/com_detectedprobe';
+            $survived = $tableExists($db, $translations) && $tableExists($db, $verses);
+
+            if ($survived) {
+                echo "  OK   tables kept for an unregistered consumer — ConsumerScanner saw it\n";
+            } else {
+                fwrite(STDERR, "  FAIL the shared tables were dropped while com_detectedprobe still\n");
+                fwrite(STDERR, "       referenced the library. ConsumerScanner did not detect it, so a\n");
+                fwrite(STDERR, "       third party that never registered loses its translations.\n");
+                $failures++;
+            }
+
+            if (is_file($dir . '/probe.php')) {
+                @unlink($dir . '/probe.php');
+            }
+
+            if (is_dir($dir)) {
+                @rmdir($dir);
+            }
+
+            mysqli_query($db, "DELETE FROM `{$extensions}` WHERE `element` = 'com_detectedprobe'");
+
+            break;
+
         case 'assert-tables-gone':
-            foreach ([$translations, $verses, $consumers] as $table) {
+            foreach ([$translations, $verses, $cache, $consumers] as $table) {
                 if ($tableExists($db, $table)) {
                     fwrite(STDERR, "  FAIL {$table} still exists after the last consumer was removed.\n");
                     $failures++;

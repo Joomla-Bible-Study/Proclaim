@@ -52,6 +52,16 @@ const PROBE_BOOK  = 1;
 const PROBE_VERSE = 'In the beginning God created the heaven and the earth.';
 const PROBE_ROWS  = 5;
 
+/**
+ * The provider cache is the third table the old uninstall SQL dropped. Its rows
+ * are rebuildable, but only by going back out to GetBible / API.Bible — so
+ * losing them on a routine upgrade means a latency and API-quota hit on every
+ * cached passage, and on API.Bible a fresh round of billable FUMS calls. Seeded
+ * with an expiry in the future so a live row is being checked, not an expired
+ * one the cache would discard anyway.
+ */
+const PROBE_CACHE_ROWS = 3;
+
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
 
@@ -100,6 +110,7 @@ foreach ($installs as $install) {
 
     $translations = $prefix . 'bsms_bible_translations';
     $verses       = $prefix . 'bsms_bible_verses';
+    $cache        = $prefix . 'bsms_scripture_cache';
 
     if ($mode === 'seed') {
         $text = mysqli_real_escape_string($db, PROBE_VERSE);
@@ -131,6 +142,29 @@ foreach ($installs as $install) {
             $failures++;
         } else {
             echo '  OK   seeded ' . PROBE_ROWS . " probe verses marked as locally installed\n";
+        }
+
+        // Provider cache — the third table the old uninstall SQL dropped.
+        for ($i = 1; $i <= PROBE_CACHE_ROWS; $i++) {
+            mysqli_query(
+                $db,
+                "INSERT IGNORE INTO `{$cache}`
+                    (`provider`, `translation`, `reference`, `text`, `expires_at`)
+                 VALUES ('getbible', '" . PROBE_ABBR . "', 'Probe {$i}:1', '{$text}',
+                         DATE_ADD(NOW(), INTERVAL 30 DAY))"
+            ) or fwrite(STDERR, '  WARN seeding cache row: ' . mysqli_error($db) . "\n");
+        }
+
+        $cached = mysqli_fetch_row(mysqli_query(
+            $db,
+            "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
+        ) ?: null);
+
+        if ($cached === null || $cached === false || (int) $cached[0] !== PROBE_CACHE_ROWS) {
+            fwrite(STDERR, "  FAIL could not seed the provider cache — {$cache} is missing.\n");
+            $failures++;
+        } else {
+            echo '  OK   seeded ' . PROBE_CACHE_ROWS . " live provider cache rows\n";
         }
 
         mysqli_close($db);
@@ -172,7 +206,24 @@ foreach ($installs as $install) {
         $failures++;
     }
 
+    $cachedLeft = mysqli_fetch_row(mysqli_query(
+        $db,
+        "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
+    ) ?: null);
+
+    $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
+
+    if ($cachedFound === PROBE_CACHE_ROWS) {
+        echo '  OK   all ' . PROBE_CACHE_ROWS . " provider cache rows survived the upgrade\n";
+    } else {
+        fwrite(STDERR, "  FAIL {$cachedFound}/" . PROBE_CACHE_ROWS . " cache rows left in {$cache} —\n");
+        fwrite(STDERR, "       the upgrade is discarding cached passages, so every one of them costs\n");
+        fwrite(STDERR, "       another provider round trip (and API.Bible FUMS calls) to rebuild.\n");
+        $failures++;
+    }
+
     // Leave the site clean for whatever runs next.
+    mysqli_query($db, "DELETE FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
     mysqli_query($db, "DELETE FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
     mysqli_query($db, "DELETE FROM `{$translations}` WHERE `abbreviation` = '" . PROBE_ABBR . "'");
 
