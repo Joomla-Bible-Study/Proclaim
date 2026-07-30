@@ -94,14 +94,6 @@ class com_proclaimInstallerScript extends InstallerScript
     public string $filePath = '/components/com_proclaim/install/sql/updates/mysql';
 
     /**
-     * The version number of the extension. Max 20 characters
-     *
-     * @var    string
-     * @since  3.6
-     */
-    protected $release = '10.1.0';
-
-    /**
      * @var   DatabaseInterface|null
      *
      * @since 7.2.0
@@ -712,10 +704,51 @@ class com_proclaimInstallerScript extends InstallerScript
         // Clean up post-install messages
         $this->cleanupPostInstallMessages();
 
+        // We no longer depend on lib_cwmscripture — stop blocking its removal
+        $this->scriptureConsumer('unregister');
+
         // Show the post-uninstalling page
         $this->renderPostUninstallation($this->status, $parent);
 
         return true;
+    }
+
+    /**
+     * Declare, or withdraw, com_proclaim's dependency on lib_cwmscripture.
+     *
+     * Joomla tracks no dependencies between extensions, so the library cannot
+     * discover who relies on it. Registering means an administrator is stopped
+     * from uninstalling the library out from under us, and the shared
+     * #__bsms_bible_* tables are not dropped while we still read them.
+     *
+     * The library's own entry point does the work — autoloading, version
+     * tolerance and error handling all live there, so this stays two lines. It is
+     * not load-bearing either way: an unregistered consumer is still found by the
+     * library's on-disk scan, and a stale row is pruned when the extension is
+     * gone.
+     *
+     * @param   string  $action  'register' on install/update, 'unregister' on removal
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function scriptureConsumer(string $action): void
+    {
+        if (!is_file($helper = JPATH_LIBRARIES . '/cwmscripture/src/consumer.php')) {
+            return;
+        }
+
+        $consumer = require $helper;
+
+        // Not one dynamic call: unregister() takes no display name.
+        if ($action === 'register') {
+            $consumer->register('com_proclaim', 'component', name: 'Proclaim (com_proclaim)');
+
+            return;
+        }
+
+        $consumer->unregister('com_proclaim', 'component');
     }
 
     /**
@@ -1076,6 +1109,10 @@ class com_proclaimInstallerScript extends InstallerScript
 
         //Remove old com_biblestudy menu items on the admin side
         $this->removeBibleStudyVersion($parent);
+
+        // Declare our dependency on lib_cwmscripture so its uninstall guard and
+        // shared-table cleanup can see us
+        $this->scriptureConsumer('register');
 
         if ($type === 'install' || $type === 'update') {
             // This is a fresh install. Register for the guided tour directly.

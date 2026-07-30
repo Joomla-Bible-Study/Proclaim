@@ -368,7 +368,7 @@ class Cwmshowscripture
 
         // Provide the AJAX endpoint URL to JS (SEF-safe, avoids redirect)
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
-        $app->getDocument()->addScriptOptions('com_proclaim.scripture', [
+        $app->getDocument()->addScriptOptions('cwmscripture.options', [
             'ajaxUrl' => $ajaxUrl,
         ]);
 
@@ -635,7 +635,7 @@ class Cwmshowscripture
         $wa->useStyle('lib_cwmscripture.scripture-text');
 
         $ajaxUrl = Route::_('index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw', false);
-        Factory::getApplication()->getDocument()->addScriptOptions('com_proclaim.scripture', [
+        Factory::getApplication()->getDocument()->addScriptOptions('cwmscripture.options', [
             'ajaxUrl' => $ajaxUrl,
         ]);
 

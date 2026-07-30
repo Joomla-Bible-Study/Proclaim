@@ -30,10 +30,10 @@ echo "========================================================================"
 echo " CLEAN-INSTALL TEST — pkg_proclaim ${VERSION}"
 echo "========================================================================"
 
-echo "-- [1/5] reset test site(s) to a clean slate"
+echo "-- [1/7] reset test site(s) to a clean slate"
 php build/reset-testsite.php
 
-echo "-- [2/5] build full package ${VERSION}"
+echo "-- [2/7] build full package ${VERSION}"
 bash build/build-package.sh "$VERSION"
 
 if [ ! -f "$ZIP" ]; then
@@ -41,16 +41,19 @@ if [ ! -f "$ZIP" ]; then
     exit 1
 fi
 
-echo "-- [3/5] install ${ZIP} (fresh)"
+echo "-- [3/7] install ${ZIP} (fresh)"
 "$BIN/cwm-install-zip" --zip "$ZIP"
 
-echo "-- [4/6] verify extension registration"
+echo "-- [4/7] verify extension registration"
 "$BIN/cwm-verify" --target test
 
-echo "-- [5/6] verify migrations landed"
+echo "-- [5/7] verify migrations landed"
 php build/verify-migrations.php "$VERSION"
 
-echo "-- [6/6] verify the REST API landed (#1309/#1310/#1331 guards)"
+echo "-- [6/7] verify the REST API landed (#1309/#1310/#1331 guards)"
 php build/verify-api-install.php
+
+echo "-- [7/7] verify the scripture library landed (tables, seed, plugin enabled)"
+php build/verify-scripture-install.php
 
 echo "CLEAN-INSTALL TEST PASSED for ${VERSION}."

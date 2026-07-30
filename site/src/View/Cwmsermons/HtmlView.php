@@ -304,7 +304,7 @@ class HtmlView extends BaseHtmlView
         $wa->useScript('lib_cwmscripture.scripture-tooltip');
         $wa->useStyle('lib_cwmscripture.scripture-tooltip');
 
-        $mainframe->getDocument()->addScriptOptions('com_proclaim.scripture', [
+        $mainframe->getDocument()->addScriptOptions('cwmscripture.options', [
             'ajaxUrl' => Route::_(
                 'index.php?option=com_proclaim&task=cwmscripture.getPassageXHR&format=raw',
                 false

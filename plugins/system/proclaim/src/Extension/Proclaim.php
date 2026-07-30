@@ -241,6 +241,60 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         // Rate limiting for POST requests to com_proclaim
         $this->checkRateLimit();
+
+        // About to install/update something? Make sure the scripture library
+        // cannot take the downloaded Bibles with it.
+        if ($app->getInput()->getCmd('option', '') === 'com_installer') {
+            $this->disarmLegacyScriptureUninstallSql();
+        }
+    }
+
+    /**
+     * Blank the scripture library's legacy, destructive uninstall SQL.
+     *
+     * lib_cwmscripture up to 1.1.4 declared <uninstall><sql> pointing at DROP
+     * TABLE statements. Joomla's LibraryAdapter uninstalls the installed library
+     * before writing the new one, so that SQL ran on every UPDATE and wiped
+     * #__bsms_bible_verses / #__bsms_bible_translations — the Local Translations
+     * panel came back empty and every downloaded translation had to be fetched
+     * again.
+     *
+     * pkg_proclaim's installer disarms the file for package updates, but Joomla
+     * lists lib_cwmscripture separately in the Update Manager (it carries its own
+     * update server), and a library-only update runs no Proclaim code at all. So
+     * this fires while the admin is on com_installer — before they click Update —
+     * which is the only place left to intervene. It is a one-shot repair: once the
+     * file holds no statements the DROP TABLE check below short-circuits.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function disarmLegacyScriptureUninstallSql(): void
+    {
+        $sqlFile = JPATH_LIBRARIES . '/cwmscripture/sql/uninstall.mysql.utf8.sql';
+
+        if (!is_file($sqlFile)) {
+            return;
+        }
+
+        $buffer = @file_get_contents($sqlFile);
+
+        if ($buffer === false || stripos($buffer, 'DROP TABLE') === false) {
+            return;
+        }
+
+        @file_put_contents(
+            $sqlFile,
+            "--\n"
+            . "-- Neutralised by plg_system_proclaim.\n"
+            . "--\n"
+            . "-- Joomla runs a library's uninstall SQL on every update, so the DROP TABLE\n"
+            . "-- statements this file used to hold wiped every downloaded Bible translation\n"
+            . "-- each time lib_cwmscripture was upgraded. Table removal now lives in the\n"
+            . "-- library's script.php, which can tell an upgrade from a real uninstall.\n"
+            . "--\n"
+        );
     }
 
     /**

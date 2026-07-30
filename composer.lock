@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.9.0",
+            "version": "v1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "368bcfed99427dfc39f1d4472b1feb069e84d4b9"
+                "reference": "abfe913276c90b3bfeb67edc0c851783c84e32c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/368bcfed99427dfc39f1d4472b1feb069e84d4b9",
-                "reference": "368bcfed99427dfc39f1d4472b1feb069e84d4b9",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/abfe913276c90b3bfeb67edc0c851783c84e32c3",
+                "reference": "abfe913276c90b3bfeb67edc0c851783c84e32c3",
                 "shasum": ""
             },
             "require": {
@@ -626,13 +626,17 @@
             "scripts": {
                 "test": [
                     "@test:php",
-                    "@test:python"
+                    "@test:python",
+                    "@test:shell"
                 ],
                 "test:php": [
                     "phpunit"
                 ],
                 "test:python": [
                     "python3 -m unittest discover -s tests/python -v"
+                ],
+                "test:shell": [
+                    "rc=0; for t in tests/shell/*.test.sh; do bash \"$t\" || rc=1; done; exit $rc"
                 ]
             },
             "license": [
@@ -653,10 +657,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.9.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.12.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-07-27T11:11:44+00:00"
+            "time": "2026-07-30T03:23:06+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",

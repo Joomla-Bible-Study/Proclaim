@@ -85,6 +85,11 @@
             "command": "npm install && npm run build"
         },
         "verifyAssets": true,
+        "_verifyMediaSources_comment": "The inverse of verifyAssets: catches built files whose source is gone. media/js and media/css only — media/vendor, media/images, media/fancybox, media/backup, media/captions and media/youtube_cache are copied or runtime dirs with no media_source counterpart. Needs cwm/build-tools >= 1.12; older versions ignore the key and the check silently does not run. Background: lib_cwmscripture#25.",
+        "verifyMediaSources": [
+            { "source": "build/media_source/js",  "output": "media/js" },
+            { "source": "build/media_source/css", "output": "media/css" }
+        ],
         "versionPrompt": {
             "enabled": true,
             "timeout": 10
@@ -146,6 +151,8 @@
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
         "updateStreamId": 1,
+        "_environments_comment": "ARS environment ids driving the update XML: Joomla 5 + Joomla 6 + PHP 8.3/8.4/8.5. Publishing with NO environments makes ARS emit php_minimum 8.5 / Joomla 6.1+ requirements that block every real site (bit us for 10.3.4-10.4.0).",
+        "environments": ["45", "46", "48", "49", "50"],
         "tokenItem": "CWM ARS API Token",
         "tokenVault": "CWM",
         "itemDescription": "pkg_proclaim download"

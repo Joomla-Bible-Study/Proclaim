@@ -74,6 +74,15 @@ $EXPECTATIONS = [
         ],
         'schemaMin' => '10.3.3',
     ],
+    // 10.4.1-20260729.sql repairs Font Awesome brand icons in stored params. It is
+    // pure DML — REPLACE() over #__bsms_mediafiles.params, #__bsms_servers.media and
+    // #__bsms_admin.params — so there is no table, column or index to assert; only
+    // that the migration ran and #__schemas advanced. Asserting the repair itself
+    // needs a damaged-row fixture seeded before the upgrade, which this gate has no
+    // vocabulary for yet.
+    '10.4.1' => [
+        'schemaMin' => '10.4.1',
+    ],
 ];
 
 // ---------------------------------------------------------------------------

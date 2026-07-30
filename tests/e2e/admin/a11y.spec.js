@@ -109,6 +109,68 @@ const WIZARDS = [
 ];
 
 test.describe('Admin accessibility (WCAG 2.2 AA) @a11y', () => {
+    /**
+     * Button contrast, scanned as a matrix rather than wherever buttons happen to
+     * appear.
+     *
+     * The page scans below only judge markup that actually renders. The
+     * .btn-warning that failed first — the control panel's schema-fix action — sits
+     * in a block that renders only when a site's database is behind the component,
+     * so this suite never saw it until a new migration file put a dev site in that
+     * state. Every user whose schema was behind had been seeing it.
+     *
+     * The mechanism turned out to be inheritance, not the variant: Atum sets no
+     * explicit `color` on .btn-warning, so standalone it takes the body colour
+     * (black on #ffb514, 11.9:1, fine) while inside .alert-warning it takes the
+     * alert's #996901 and drops to 2.71:1. A scan of a bare button therefore proves
+     * nothing about the case that fails.
+     *
+     * So every variant is injected in every alert context as well as bare, into a
+     * real admin page so the whole Atum + Bootstrap + com_proclaim cascade applies,
+     * and axe judges the result. That covers combinations no view uses yet.
+     */
+    test('button variants meet WCAG AA contrast in every alert context', async ({ page }) => {
+        await page.goto('/administrator/index.php?option=com_proclaim&view=cwmcpanel', {
+            waitUntil: 'networkidle',
+        });
+
+        await expect(page.locator(PROCLAIM_CONTENT)).toBeVisible({ timeout: 15000 });
+
+        await page.evaluate(() => {
+            const variants = ['warning', 'primary', 'secondary', 'success', 'danger', 'info', 'light', 'dark'];
+            const contexts = ['', 'alert alert-warning', 'alert alert-info', 'alert alert-danger', 'alert alert-success'];
+            const host = document.createElement('div');
+            host.id = 'a11y-button-contrast-probe';
+
+            for (const context of contexts) {
+                const wrap = document.createElement('div');
+
+                if (context) {
+                    wrap.className = context;
+                    wrap.appendChild(document.createTextNode('context text '));
+                }
+
+                for (const variant of variants) {
+                    // Both sizes: the thresholds differ (4.5:1 normal, 3:1 large)
+                    // and the original failure was on a btn-sm.
+                    for (const size of ['', 'btn-sm']) {
+                        const btn = document.createElement('a');
+                        btn.href = '#';
+                        btn.className = ['btn', `btn-${variant}`, size].filter(Boolean).join(' ');
+                        btn.textContent = `${variant} ${size || 'default'}`;
+                        wrap.appendChild(btn);
+                    }
+                }
+
+                host.appendChild(wrap);
+            }
+
+            document.querySelector('section#content').appendChild(host);
+        });
+
+        await expectNoViolations(page, expect, { include: '#a11y-button-contrast-probe' });
+    });
+
     for (const [label, view] of SCREENS) {
         test(`${label} meets WCAG AA`, async ({ page }) => {
             await page.goto(`/administrator/index.php?option=com_proclaim&view=${view}`, {
