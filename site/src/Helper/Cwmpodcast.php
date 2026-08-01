@@ -1047,7 +1047,10 @@ class Cwmpodcast
             ->where('FIND_IN_SET(' . $id . ', ' . $db->quoteName('mf.podcast_id') . ')')
             ->where($db->quoteName('mf.published') . ' = 1')
             ->where($db->quoteName('s.published') . ' = 1')
-            ->where('(' . $db->quoteName('se.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' = -1)')
+            ->where(
+                '(' . $db->quoteName('se.published') . ' = 1 OR ' . $db->quoteName('s.series_id') . ' IS NULL OR '
+                . $db->quoteName('s.series_id') . ' <= 0)'
+            )
             ->order($db->quoteName('createdate') . ' DESC');
 
         $db->setQuery($query, 0, $set_limit);
