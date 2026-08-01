@@ -95,7 +95,6 @@ class Cwmpodcast
         // bare date() reports the host's zone and ignores Global Configuration
         // entirely. See the comment on formatFeedDate().
         $siteTz = new \DateTimeZone(Factory::getApplication()->get('offset', 'UTC'));
-        $year   = '(' . Factory::getDate('now', $siteTz)->format('Y', true, false) . ')';
         $date   = $this->formatFeedDate('now', $siteTz);
 
         // Get English language file as fallback
@@ -170,7 +169,7 @@ class Cwmpodcast
 	<description><![CDATA[' . $sanitizedDescription . ']]></description>
 	<language>' . $podlanguage . '</language>
 	<itunes:type>' . $this->escapeHTML($podinfo->itunes_type ?: 'episodic') . '</itunes:type>
-	<copyright>© ' . $year . ' All rights reserved.</copyright>
+	<copyright>' . $this->escapeHTML($this->getCopyrightLine($podinfo, $siteTz)) . '</copyright>
 	<atom:link href="' . $this->resolveUrl($podinfo->website, $protocol) . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
 	<lastBuildDate>' . $date . '</lastBuildDate>
 	<itunes:author>' . $this->escapeHTML($podinfo->author ?: $podinfo->editor_name) . '</itunes:author>
@@ -398,6 +397,36 @@ class Cwmpodcast
                 return $episode->bookname . ' ' . $episode->chapter_begin;
         }
         return '';
+    }
+
+    /**
+     * Build the feed's copyright line.
+     *
+     * The line was hardcoded as "© (2026) All rights reserved." — stray
+     * parentheses, and naming nobody, which is the one thing a copyright notice
+     * exists to say (#1412). The holder now comes from the podcast, falling back
+     * to the site name so existing feeds gain a real one without anyone having
+     * to edit a record.
+     *
+     * @param   object         $podinfo  The podcast row.
+     * @param   \DateTimeZone  $siteTz   The site's configured time zone.
+     *
+     * @return  string  e.g. © 2026 Nashville First Seventh-Day Adventist Church
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function getCopyrightLine(object $podinfo, \DateTimeZone $siteTz): string
+    {
+        $year   = Factory::getDate('now', $siteTz)->format('Y', true, false);
+        $holder = trim((string) ($podinfo->copyright ?? ''));
+
+        if ($holder === '') {
+            $holder = trim((string) Factory::getApplication()->get('sitename', ''));
+        }
+
+        return $holder === ''
+            ? \sprintf('© %s All rights reserved.', $year)
+            : \sprintf('© %s %s', $year, $holder);
     }
 
     /**

@@ -596,4 +596,101 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
             "date('r', strtotime(...)) reads and labels dates in the server's zone"
         );
     }
+
+    // -------------------------------------------------------------------------
+    // 8. copyright holder and feed language (#1411, #1412)
+    // -------------------------------------------------------------------------
+
+    /**
+     * The copyright line names the holder and drops the stray parentheses.
+     *
+     * @return  void
+     */
+    public function testCopyrightNamesTheHolder(): void
+    {
+        $ref     = new \ReflectionMethod(Cwmpodcast::class, 'getCopyrightLine');
+        $podinfo = (object) ['copyright' => 'Nashville First Seventh-Day Adventist Church'];
+
+        $result = $ref->invoke($this->podcast, $podinfo, new \DateTimeZone('America/Chicago'));
+
+        $this->assertStringContainsString('Nashville First Seventh-Day Adventist Church', $result);
+        $this->assertStringStartsWith('©', $result);
+        $this->assertDoesNotMatchRegularExpression(
+            '/\(\d{4}\)/',
+            $result,
+            'The year must not be wrapped in parentheses'
+        );
+        $this->assertStringNotContainsString(
+            'All rights reserved',
+            $result,
+            'Naming a holder replaces the anonymous boilerplate'
+        );
+    }
+
+    /**
+     * An empty holder falls back rather than publishing a bare year.
+     *
+     * @return  void
+     */
+    public function testCopyrightFallsBackWhenNoHolderIsSet(): void
+    {
+        $ref = new \ReflectionMethod(Cwmpodcast::class, 'getCopyrightLine');
+
+        foreach ([(object) ['copyright' => ''], (object) ['copyright' => '   '], (object) []] as $podinfo) {
+            $result = $ref->invoke($this->podcast, $podinfo, new \DateTimeZone('UTC'));
+
+            $this->assertStringStartsWith('©', $result);
+            $this->assertMatchesRegularExpression('/© \d{4}/', $result, 'A year is always present');
+            $this->assertDoesNotMatchRegularExpression('/\(\d{4}\)/', $result);
+        }
+    }
+
+    /**
+     * The feed language field offers codes Joomla does not install.
+     *
+     * Bound to contentlanguage, the picker could only offer what Joomla had
+     * installed — en-GB — so a US church could not declare en-us (#1411).
+     *
+     * @return  void
+     */
+    public function testFeedLanguageOffersCodesJoomlaDoesNotInstall(): void
+    {
+        $field = new \CWM\Component\Proclaim\Administrator\Field\FeedLanguageField();
+
+        // Joomla's ListField::getOptions() reads the field's XML element, so the
+        // field has to be set up the way a form would.
+        $setup = new \ReflectionMethod($field, 'setup');
+        $setup->invoke(
+            $field,
+            new \SimpleXMLElement('<field name="language" type="FeedLanguage" />'),
+            ''
+        );
+
+        $ref     = new \ReflectionMethod($field, 'getOptions');
+        $options = $ref->invoke($field);
+        $values  = array_column($options, 'value');
+
+        $this->assertContains('en-us', $values, 'en-us must be selectable without installing it in Joomla');
+        $this->assertContains('en-gb', $values);
+        $this->assertContains('*', $values, 'The site-default option must remain');
+    }
+
+    /**
+     * The podcast form no longer binds the feed language to Joomla's installed
+     * content languages.
+     *
+     * @return  void
+     */
+    public function testPodcastFormUsesTheFeedLanguageField(): void
+    {
+        $xml = file_get_contents(\dirname(__DIR__, 4) . '/admin/forms/podcast.xml');
+
+        $this->assertStringNotContainsString(
+            'name="language" type="contentlanguage"',
+            $xml,
+            'contentlanguage offers only what Joomla has installed'
+        );
+        $this->assertStringContainsString('name="language" type="FeedLanguage"', $xml);
+        $this->assertStringContainsString('name="copyright"', $xml);
+    }
 }

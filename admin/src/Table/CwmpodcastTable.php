@@ -176,6 +176,15 @@ class CwmpodcastTable extends Table
     public ?string $editor_email = null;
 
     /**
+     * Rights holder for the feed's copyright tag. Empty falls back to the site name.
+     *
+     * @var string|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public ?string $copyright = null;
+
+    /**
      * Limit of the episodes in the podcast
      *
      * @var string|null
