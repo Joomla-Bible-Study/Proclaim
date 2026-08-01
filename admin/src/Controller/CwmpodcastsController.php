@@ -292,9 +292,14 @@ class CwmpodcastsController extends AdminController
             return;
         }
 
+        // force=1 re-reads every value from the file instead of only the missing
+        // ones — what the media edit form's re-detect button asks for when a file
+        // has been replaced on disk under the same name.
+        $force = (bool) $this->input->getInt('force', 0);
+
         try {
             $podcasts = new Cwmpodcast();
-            $result   = $podcasts->fixSingleMediaMetadata($mediaId);
+            $result   = $podcasts->fixSingleMediaMetadata($mediaId, $force);
 
             echo new JsonResponse($result);
         } catch (\Exception $e) {

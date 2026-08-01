@@ -2224,7 +2224,7 @@ class Cwmpodcast
      *
      * @since 10.1.0
      */
-    public function fixSingleMediaMetadata(int $mediaId): array
+    public function fixSingleMediaMetadata(int $mediaId, bool $force = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -2256,6 +2256,13 @@ class Cwmpodcast
         $minutes       = (int) $params->get('media_minutes', '00');
         $seconds       = (int) $params->get('media_seconds', '00');
         $needsDuration = (!$hours && !$minutes && !$seconds);
+
+        // Forced: re-read every value from the file regardless of what is stored.
+        // A file replaced on disk under the same name leaves stale values that are
+        // present rather than missing, so the needs-based path would skip it.
+        if ($force) {
+            $needsSize = $needsMimeType = $needsDuration = true;
+        }
 
         if (!$needsSize && !$needsMimeType && !$needsDuration) {
             return [
@@ -2591,6 +2598,15 @@ class Cwmpodcast
                 'message' => Text::sprintf($langKey, $title, implode(', ', $fixedLabels)),
                 'fixed'   => $fixed,
                 'type'    => 'fixed',
+                // The detected values, so a caller editing the record can put them
+                // into the open form rather than making the user reload to see them.
+                'values' => [
+                    'size'          => (string) $params->get('size', ''),
+                    'mime_type'     => (string) $params->get('mime_type', ''),
+                    'media_hours'   => (string) $params->get('media_hours', ''),
+                    'media_minutes' => (string) $params->get('media_minutes', ''),
+                    'media_seconds' => (string) $params->get('media_seconds', ''),
+                ],
             ];
         } catch (\Exception $e) {
             return [
