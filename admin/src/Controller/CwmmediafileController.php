@@ -379,6 +379,10 @@ class CwmmediafileController extends FormController
                 'generalHtml' => $generalHtml,
                 'optionsHtml' => $optionsHtml,
                 'serverType'  => $serverType,
+                // The playlist picker lives outside the swapped containers, so the
+                // capability has to travel with the response for the client to
+                // show or hide it on a server change. See #1392.
+                'supportsPlaylists' => $addon->supportsPlaylists(),
             ]);
         } catch (\Exception $e) {
             CWMAddon::outputJson(['success' => false, 'error' => $e->getMessage()]);
