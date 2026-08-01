@@ -126,7 +126,18 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <?php echo $this->form->renderField('study_id', null, $study_id); ?>
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
-                <?php echo $this->form->renderField('playlist_id', null, $playlist_id); ?>
+
+                <?php
+                // Playlists exist only for platforms whose addon reports the capability
+                // (YouTube, Vimeo) — elsewhere the picker can only ever come up empty.
+                // Rendered hidden rather than omitted so an existing assignment still
+                // posts back instead of being silently cleared, and so the server-change
+                // handler can reveal it without a page reload. See #1392.
+                $supportsPlaylists = $this->addon !== null && $this->addon->supportsPlaylists();
+                ?>
+                <div id="playlist-field-container"<?php echo $supportsPlaylists ? '' : ' class="d-none"'; ?>>
+                    <?php echo $this->form->renderField('playlist_id', null, $playlist_id); ?>
+                </div>
 
                 <div id="addon-general-container">
                     <?php if ($this->addon !== null) : ?>

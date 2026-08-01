@@ -261,6 +261,13 @@
                             optionsContent.innerHTML = data.optionsHtml || '';
                         }
 
+                        // The playlist picker sits outside both swapped containers, so
+                        // follow the new server's capability explicitly (#1392).
+                        const playlistContainer = document.getElementById('playlist-field-container');
+                        if (playlistContainer) {
+                            playlistContainer.classList.toggle('d-none', !data.supportsPlaylists);
+                        }
+
                         // Update tracked server type
                         const serverTypes = getServerTypes();
                         previousServerType = serverTypes[serverId] || '';
