@@ -237,7 +237,7 @@ class Cwmhelper
                 return $protocol . $path;
             }
 
-            $protocol = $params->get('protocol', 'http://');
+            $protocol = $params->get('protocol', 'https://');
 
             if ((substr_count($spath, '://') || substr_count($spath, '//')) && !empty($spath)) {
                 if (substr_count($spath, '//')) {

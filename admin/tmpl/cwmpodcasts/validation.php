@@ -21,9 +21,9 @@ use Joomla\CMS\Router\Route;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmpodcasts\HtmlView $this */
 
-$app = Factory::getApplication();
-$wa = $app->getDocument()->getWebAssetManager();
-$validationResults = $app->getUserState('com_proclaim.podcasts.validation', []);
+$app                = Factory::getApplication();
+$wa                 = $app->getDocument()->getWebAssetManager();
+$validationResults  = $app->getUserState('com_proclaim.podcasts.validation', []);
 $metadataFixResults = $app->getUserState('com_proclaim.podcasts.metadata_fix', null);
 
 // Clear the metadata fix results after reading (one-time display)
@@ -32,7 +32,7 @@ if ($metadataFixResults !== null) {
 }
 
 // Generate the report
-$podcast = new Cwmpodcast();
+$podcast    = new Cwmpodcast();
 $reportHtml = $podcast->getValidationReport($validationResults);
 
 // Add JavaScript for metadata fix progress
@@ -40,30 +40,32 @@ $wa->useScript('com_proclaim.cwmadmin-metadata-fix');
 
 // Pass translations to JavaScript
 $translations = [
-    'JBS_PDC_FIX_METADATA_PROGRESS_TITLE' => Text::_('JBS_PDC_FIX_METADATA_PROGRESS_TITLE'),
-    'JBS_PDC_FIX_METADATA_PROGRESS' => Text::_('JBS_PDC_FIX_METADATA_PROGRESS'),
+    'JBS_PDC_FIX_METADATA_PROGRESS_TITLE'    => Text::_('JBS_PDC_FIX_METADATA_PROGRESS_TITLE'),
+    'JBS_PDC_FIX_METADATA_PROGRESS'          => Text::_('JBS_PDC_FIX_METADATA_PROGRESS'),
     'JBS_PDC_FIX_METADATA_COMPLETE_PROGRESS' => Text::_('JBS_PDC_FIX_METADATA_COMPLETE_PROGRESS'),
-    'JBS_PDC_FIX_METADATA_CANCELLED' => Text::_('JBS_PDC_FIX_METADATA_CANCELLED'),
-    'JBS_PDC_FIX_METADATA_CANCEL' => Text::_('JBS_PDC_FIX_METADATA_CANCEL'),
-    'JBS_PDC_FIX_METADATA_CLOSE' => Text::_('JBS_PDC_FIX_METADATA_CLOSE'),
-    'JBS_PDC_FIX_METADATA_NO_FILES' => Text::_('JBS_PDC_FIX_METADATA_NO_FILES'),
-    'JBS_PDC_FIX_METADATA_FILES_FOUND' => Text::_('JBS_PDC_FIX_METADATA_FILES_FOUND'),
-    'JBS_PDC_FIX_METADATA_FIXED' => Text::_('JBS_PDC_FIX_METADATA_FIXED'),
-    'JBS_PDC_FIX_METADATA_FAILED' => Text::_('JBS_PDC_FIX_METADATA_FAILED'),
-    'JBS_PDC_FIX_METADATA_SKIPPED' => Text::_('JBS_PDC_FIX_METADATA_SKIPPED'),
+    'JBS_PDC_FIX_METADATA_CANCELLED'         => Text::_('JBS_PDC_FIX_METADATA_CANCELLED'),
+    'JBS_PDC_FIX_METADATA_CANCEL'            => Text::_('JBS_PDC_FIX_METADATA_CANCEL'),
+    'JBS_PDC_FIX_METADATA_CLOSE'             => Text::_('JBS_PDC_FIX_METADATA_CLOSE'),
+    'JBS_PDC_FIX_METADATA_NO_FILES'          => Text::_('JBS_PDC_FIX_METADATA_NO_FILES'),
+    'JBS_PDC_FIX_METADATA_FILES_FOUND'       => Text::_('JBS_PDC_FIX_METADATA_FILES_FOUND'),
+    'JBS_PDC_FIX_METADATA_FIXED'             => Text::_('JBS_PDC_FIX_METADATA_FIXED'),
+    'JBS_PDC_FIX_METADATA_FAILED'            => Text::_('JBS_PDC_FIX_METADATA_FAILED'),
+    'JBS_PDC_FIX_METADATA_SKIPPED'           => Text::_('JBS_PDC_FIX_METADATA_SKIPPED'),
 ];
 $token = $app->getSession()->getFormToken();
 
 $translationsJson = json_encode($translations, JSON_THROW_ON_ERROR);
-$inlineJs = <<<JS
+$inlineJs         = <<<JS
 document.addEventListener('DOMContentLoaded', function() {
     var fixProblemsBtn = document.getElementById('fixProblemsBtn');
     if (fixProblemsBtn) {
         fixProblemsBtn.addEventListener('click', function() {
+            var forceBox = document.getElementById('metadataFixForce');
             var progress = new MetadataFixProgress({
                 baseUrl: 'index.php',
                 token: '{$token}',
-                translations: {$translationsJson}
+                translations: {$translationsJson},
+                force: !!(forceBox && forceBox.checked)
             });
             progress.init();
         });
@@ -87,6 +89,13 @@ $wa->addInlineScript($inlineJs);
                 <span class="icon-wrench" aria-hidden="true"></span>
                 <?php echo Text::_('JBS_PDC_FIX_PROBLEMS'); ?>
             </button>
+            <div class="form-check mt-2 text-start">
+                <input class="form-check-input" type="checkbox" value="1" id="metadataFixForce">
+                <label class="form-check-label" for="metadataFixForce">
+                    <?php echo Text::_('JBS_PDC_FIX_METADATA_FORCE'); ?>
+                </label>
+                <div class="form-text"><?php echo Text::_('JBS_PDC_FIX_METADATA_FORCE_DESC'); ?></div>
+            </div>
             <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmpodcasts.writeXMLFile&' . $app->getSession()->getFormToken() . '=1'); ?>" class="btn btn-success">
                 <span class="icon-upload" aria-hidden="true"></span>
                 <?php echo Text::_('JBS_PDC_WRITE_XML_FILES'); ?>
@@ -97,8 +106,8 @@ $wa->addInlineScript($inlineJs);
     <?php
     // Show available metadata detection methods
     $methods = $podcast->getAvailableDurationMethods();
-    $formats = $podcast->getSupportedDurationFormats();
-    ?>
+$formats     = $podcast->getSupportedDurationFormats();
+?>
     <div class="card mb-3">
         <div class="card-header">
             <strong><?php echo Text::_('JBS_PDC_METADATA_DETECTION'); ?></strong>

@@ -21,6 +21,12 @@
             this.token = options.token || '';
             this.translations = options.translations || {};
 
+            // Re-read every value rather than only the missing ones, over every
+            // published file rather than only the incomplete ones. Costs a read
+            // per file — a platform API call on the remote addons — so it is
+            // opt-in per run rather than the default.
+            this.force = options.force === true;
+
             this.files = [];
             this.currentIndex = 0;
             this.results = {
@@ -150,7 +156,7 @@
         async loadFiles() {
             try {
                 const response = await fetch(
-                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.getMediaFilesForMetadata&${this.token}=1&format=json`,
+                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.getMediaFilesForMetadata&${this.token}=1&format=json${this.force ? '&all=1' : ''}`,
                     { method: 'GET', headers: { Accept: 'application/json' } },
                 );
 
@@ -241,7 +247,7 @@
         async processFile(mediaId) {
             try {
                 const response = await fetch(
-                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.fixSingleMetadata&media_id=${mediaId}&${this.token}=1&format=json`,
+                    `${this.baseUrl}?option=com_proclaim&task=cwmpodcasts.fixSingleMetadata&media_id=${mediaId}&${this.token}=1&format=json${this.force ? '&force=1' : ''}`,
                     { method: 'GET', headers: { Accept: 'application/json' } },
                 );
 

@@ -726,7 +726,8 @@
             "dependencies": [
                 "core",
                 "form.validate",
-                "com_proclaim.cwm-dialog"
+                "com_proclaim.cwm-dialog",
+                "lib_cwmscripture.cwm-fetch"
             ],
             "attributes": {
                 "type": "module"
