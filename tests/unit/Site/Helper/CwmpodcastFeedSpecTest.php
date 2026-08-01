@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -40,6 +41,19 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
     {
         parent::setUp();
         $this->podcast = new Cwmpodcast();
+
+        // Factory::getDate() reaches for the language tag, and the test
+        // application's Language carries null metadata — a documented CI-only
+        // warning. Force a tag on so date formatting can run.
+        $lang = Factory::getApplication()->getLanguage();
+        $prop = new \ReflectionProperty($lang, 'metadata');
+        $meta = $prop->getValue($lang);
+
+        if (!\is_array($meta) || ($meta['tag'] ?? null) === null) {
+            $prop->setValue($lang, array_merge(\is_array($meta) ? $meta : [], ['tag' => 'en-GB']));
+        }
+
+        Factory::$language = $lang;
     }
 
     // -------------------------------------------------------------------------
@@ -505,5 +519,81 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
                 \sprintf('%s must be emitted alongside its podcast: counterpart', $tag)
             );
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. feed dates follow the site time zone, not the server's
+    // -------------------------------------------------------------------------
+
+    /**
+     * A stored UTC date renders in the site's zone, at the right instant.
+     *
+     * The old `date('r', strtotime($stored))` was wrong twice: strtotime() read
+     * the UTC value in PHP's default zone — the host's, since Joomla never sets
+     * one globally — and date() then labelled it with that same zone. On a site
+     * configured Chicago but hosted Los Angeles, every pubDate claimed -0800 and
+     * sat eight hours from the real instant.
+     *
+     * @return  void
+     */
+    public function testFeedDateUsesTheSiteTimeZone(): void
+    {
+        $ref = new \ReflectionMethod(Cwmpodcast::class, 'formatFeedDate');
+
+        $result = $ref->invoke(
+            $this->podcast,
+            '2025-11-15 16:00:00',
+            new \DateTimeZone('America/Chicago')
+        );
+
+        $this->assertStringContainsString('-0600', $result, 'Should carry the Chicago offset');
+        $this->assertStringContainsString('10:00:00', $result, '16:00 UTC is 10:00 in Chicago');
+        $this->assertSame(
+            strtotime('2025-11-15 16:00:00 UTC'),
+            strtotime($result),
+            'The instant must survive the conversion'
+        );
+    }
+
+    /**
+     * The same stored value in a different site zone moves the wall clock but
+     * not the instant.
+     *
+     * @return  void
+     */
+    public function testFeedDateConvertsRatherThanRelabels(): void
+    {
+        $ref      = new \ReflectionMethod(Cwmpodcast::class, 'formatFeedDate');
+        $stored   = '2025-11-15 16:00:00';
+        $expected = strtotime($stored . ' UTC');
+
+        foreach (['America/Chicago', 'America/Los_Angeles', 'UTC', 'Europe/London'] as $zone) {
+            $this->assertSame(
+                $expected,
+                strtotime($ref->invoke($this->podcast, $stored, new \DateTimeZone($zone))),
+                \sprintf('Instant changed when rendered for %s', $zone)
+            );
+        }
+    }
+
+    /**
+     * No naive date() call should reach the feed again.
+     *
+     * @return  void
+     */
+    public function testFeedDoesNotFormatDatesWithTheServerZone(): void
+    {
+        // Scan code only — the docblock on formatFeedDate() quotes the old call
+        // to explain why it was wrong, and must not trip this.
+        $code = array_filter(
+            file(\dirname(__DIR__, 4) . '/site/src/Helper/Cwmpodcast.php'),
+            static fn (string $line): bool => !preg_match('/^\s*(\*|\/\/|\/\*)/', $line)
+        );
+
+        $this->assertStringNotContainsString(
+            "date('r', strtotime(",
+            implode('', $code),
+            "date('r', strtotime(...)) reads and labels dates in the server's zone"
+        );
     }
 }
