@@ -1376,7 +1376,7 @@ class Cwmmedia
             'wmv'          => 'video/x-ms-wmv',
             'wmx'          => 'video/x-ms-wmx',
             'wm'           => 'video/x-ms-wm',
-            'avi'          => 'video/avi',
+            'avi'          => 'video/x-msvideo',
             'divx'         => 'video/divx',
             'flv'          => 'video/x-flv',
             'mov|qt'       => 'video/quicktime',
@@ -1396,8 +1396,11 @@ class Cwmmedia
             'htm|html'       => 'text/html',
 
             // Audio formats
-            'm4a|m4b'  => 'audio/mpeg',
-            'mp3'      => 'audio/mp3',
+            // Registered types, matching Cwmmime::MAP. 'audio/mp3' was offered here
+            // for years and is not IANA-registered — it is how feeds came to declare
+            // it on every episode. M4A is MPEG-4 audio, not MPEG audio (#1397).
+            'm4a|m4b'  => 'audio/mp4',
+            'mp3'      => 'audio/mpeg',
             'ra|ram'   => 'audio/x-realaudio',
             'wav'      => 'audio/wav',
             'ogg|oga'  => 'audio/ogg',
@@ -1417,7 +1420,7 @@ class Cwmmedia
             'gz|gzip' => 'application/x-gzip',
             'rar'     => 'application/rar',
             '7z'      => 'application/x-7z-compressed',
-            'exe'     => 'application/x-msdownload',
+            'exe'     => 'application/octet-stream',
 
             // MS Office formats
             'doc'                          => 'application/msword',

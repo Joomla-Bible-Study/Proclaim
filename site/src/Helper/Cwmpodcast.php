@@ -1397,6 +1397,22 @@ class Cwmpodcast
             $mimeType = $params->get('mime_type');
             if (empty($mimeType)) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
+            } elseif (!$isYouTube && !empty($filename)) {
+                // A stored type that contradicts the file. The feed no longer trusts
+                // it — the enclosure type is derived from the extension (#1391) — but
+                // the stored value is still wrong, and is a sign the record was
+                // created or imported incorrectly. YouTube URLs have no meaningful
+                // extension, so they are skipped rather than warned about (#1396).
+                $derived = Cwmmime::fromExtension($filename);
+
+                if ($derived !== null && $derived !== $mimeType) {
+                    $warnings[] = Text::sprintf(
+                        'JBS_PDC_VALIDATE_MEDIA_MIME_MISMATCH',
+                        $media->studytitle ?: 'ID: ' . $media->id,
+                        $mimeType,
+                        $derived
+                    );
+                }
             }
 
             // Check for missing duration. Compare numerically: a value stored as
@@ -2190,9 +2206,10 @@ class Cwmpodcast
                 }
             }
 
-            // Check for missing MIME type
+            // Check for missing MIME type, or one that contradicts the file — both
+            // are fixed by re-detection, so both belong in the queue (#1396).
             $mimeType = $params->get('mime_type');
-            if (empty($mimeType)) {
+            if (empty($mimeType) || $this->mimeTypeContradictsFile($params)) {
                 $missing[] = 'mime_type';
             }
 
@@ -2219,6 +2236,34 @@ class Cwmpodcast
         }
 
         return $result;
+    }
+
+    /**
+     * Whether a stored mime_type disagrees with what the filename implies.
+     *
+     * Detection is the authority — the feed derives the enclosure type from the
+     * extension since #1391 — so a disagreement means the stored value is wrong
+     * and worth replacing. YouTube URLs carry no meaningful extension and are
+     * never a mismatch.
+     *
+     * @param   Registry  $params  Media file params.
+     *
+     * @return  bool  True when the stored type contradicts the file.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function mimeTypeContradictsFile(Registry $params): bool
+    {
+        $filename = (string) $params->get('filename', '');
+        $stored   = (string) $params->get('mime_type', '');
+
+        if ($filename === '' || $stored === '' || $this->isYouTubeUrl($filename)) {
+            return false;
+        }
+
+        $derived = Cwmmime::fromExtension($filename);
+
+        return $derived !== null && $derived !== $stored;
     }
 
     /**
@@ -2258,7 +2303,8 @@ class Cwmpodcast
 
         // Determine what needs to be fixed
         $needsSize     = empty($params->get('size', 0)) || $params->get('size', 0) < 1000;
-        $needsMimeType = empty($params->get('mime_type'));
+        $needsMimeType = empty($params->get('mime_type'))
+            || $this->mimeTypeContradictsFile($params);
         $hours         = (int) $params->get('media_hours', '00');
         $minutes       = (int) $params->get('media_minutes', '00');
         $seconds       = (int) $params->get('media_seconds', '00');

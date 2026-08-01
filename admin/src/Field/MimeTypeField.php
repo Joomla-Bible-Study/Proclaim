@@ -56,6 +56,19 @@ class MimeTypeField extends ListField
             $options[] = HTMLHelper::_('select.option', $message, $key);
         }
 
-        return array_merge(parent::getOptions(), $options);
+        $options = array_merge(parent::getOptions(), $options);
+
+        // A stored value the catalogue no longer offers must still be selectable,
+        // or the field silently renders blank and the next save wipes it. Records
+        // written before the audio/mp3 correction (#1397) are exactly that case,
+        // as is any type filled in by metadata detection, which draws on the wider
+        // Cwmmime map.
+        $value = (string) $this->value;
+
+        if ($value !== '' && !\in_array($value, array_column($options, 'value'), true)) {
+            $options[] = HTMLHelper::_('select.option', $value, $value);
+        }
+
+        return $options;
     }
 }

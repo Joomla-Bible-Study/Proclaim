@@ -390,4 +390,68 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
             );
         }
     }
+    // -------------------------------------------------------------------------
+    // 5. validator: stored MIME contradicting the file (#1396)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Filenames, stored types, and whether the validator should warn.
+     *
+     * @return  array<string, array{0: string, 1: string, 2: bool}>
+     */
+    public static function mimeMismatchProvider(): array
+    {
+        return [
+            'm4a stored as mp3'    => ['media/ep1.m4a', 'audio/mp3', true],
+            'm4a stored as mpeg'   => ['media/ep1.m4a', 'audio/mpeg', true],
+            'mp3 stored as mp3'    => ['media/ep1.mp3', 'audio/mp3', true],
+            'mp3 stored correctly' => ['media/ep1.mp3', 'audio/mpeg', false],
+            'm4a stored correctly' => ['media/ep1.m4a', 'audio/mp4', false],
+            'mp4 stored correctly' => ['media/ep1.mp4', 'video/mp4', false],
+            // Unknown extension yields no opinion, so no warning either way.
+            'unknown extension' => ['media/ep1.xyz', 'audio/mpeg', false],
+            'no extension'      => ['media/ep1', 'audio/mpeg', false],
+        ];
+    }
+
+    /**
+     * The warning fires only when detection genuinely disagrees with storage.
+     *
+     * Mirrors the comparison validatePodcastMedia() performs; a false positive
+     * here would put a warning on every well-formed record in the report.
+     *
+     * @param   string  $filename  Stored filename.
+     * @param   string  $stored    Stored mime_type.
+     * @param   bool    $expected  Whether a warning is expected.
+     *
+     * @return  void
+     */
+    #[DataProvider('mimeMismatchProvider')]
+    public function testValidatorFlagsOnlyGenuineMimeMismatches(
+        string $filename,
+        string $stored,
+        bool $expected
+    ): void {
+        $derived = \CWM\Component\Proclaim\Administrator\Helper\Cwmmime::fromExtension($filename);
+        $warns   = $derived !== null && $derived !== $stored;
+
+        $this->assertSame($expected, $warns);
+    }
+
+    /**
+     * YouTube URLs have no meaningful extension, so they must be skipped rather
+     * than warned about on every episode.
+     *
+     * @return  void
+     */
+    public function testValidatorSkipsYouTubeRecords(): void
+    {
+        $source = file_get_contents(\dirname(__DIR__, 4) . '/site/src/Helper/Cwmpodcast.php');
+
+        $this->assertStringContainsString(
+            '} elseif (!$isYouTube && !empty($filename)) {',
+            $source,
+            'The mismatch check must be gated on the record not being a YouTube URL'
+        );
+    }
 }
