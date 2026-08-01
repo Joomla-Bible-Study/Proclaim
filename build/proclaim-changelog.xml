@@ -19,6 +19,19 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.2                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.2</version>
+        <date>2026-08-01</date>
+        <fix>
+            <item>Podcast feed: messages with no series attached were silently excluded from every podcast, even when correctly published and tagged for that podcast. The feed's series filter only recognized one placeholder value for "no series"; the message form saves a different one, so seriesless messages never matched and never appeared</item>
+        </fix>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.1                                                   -->
     <!-- ============================================================ -->
     <changelog>
