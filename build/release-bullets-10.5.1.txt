@@ -1,0 +1,8 @@
+**Episode dates now use your time zone.** Dates were written in the server's zone rather than the one set in Global Configuration — on a site configured for Chicago but hosted elsewhere, every episode was published eight hours from the correct moment, which is what podcast apps sort by.
+**Your feed's web address is complete.** If your podcast link points at a menu item, Proclaim wrote a partial address such as /resources/sermons.html. RSS does not allow that and feed validators reject it.
+**Seasons now work in Apple Podcasts.** Season and episode numbers were written in a form Apple ignores, so episodes never grouped into seasons there.
+**The copyright line names you.** Every feed said "© (2026) All rights reserved." — stray brackets, naming nobody. Podcasts gain a Copyright Holder field; leave it empty and Proclaim uses your site name, so existing feeds gain a real owner without you editing anything.
+**The feed language is no longer tied to Joomla's.** Joomla installs British English, and the feed could only offer what Joomla had installed — so churches outside the UK published their sermons as British English with no way to correct it. Podcasts now have a Feed Language covering the codes directories act on, which Apple and Spotify use for language and territory targeting.
+**A successful update no longer reports a failure.** Updating showed a red "Could not delete folder" warning beside the success message. Joomla cannot remove a cache folder the page doing the clearing is still using, and said so in a way that looked like something had gone wrong. Nothing had.
+The notice naming a caching plugin Proclaim cannot clear for you no longer lists the same plugin twice.
+Rebuild your podcast feed after updating and the corrections above are in it.
