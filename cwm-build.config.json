@@ -3,7 +3,7 @@
         "type": "package",
         "name": "pkg_proclaim"
     },
-    "_profile_comment": "Component-shaped versionTracking despite the package wrapper — Proclaim owns its own versions.json + package.json on a single cadence. The substituteTokens.paths override drops 'language/' (no top-level language/ here) and matches what was previously hand-authored.",
+    "_profile_comment": "Component-shaped versionTracking despite the package wrapper — Proclaim owns its own versions.json + package.json on a single cadence. The substituteTokens.paths override drops 'language/' (no top-level language/ here) and matches what was previously hand-authored. plugins/ is enumerated per plugin-type directory rather than as a bare prefix so it never walks into plugins/content/scripturelinks — a separate repo's git submodule, versioned on its own cadence (#1419).",
     "profile": "component",
     "manifests": {
         "package": "build/pkg_proclaim.xml",
@@ -159,7 +159,17 @@
     },
     "versionTracking": {
         "substituteTokens": {
-            "paths": ["admin/", "api/", "site/", "modules/", "plugins/"]
+            "paths": [
+                "admin/",
+                "api/",
+                "site/",
+                "modules/",
+                "plugins/finder/",
+                "plugins/schemaorg/",
+                "plugins/system/",
+                "plugins/task/",
+                "plugins/webservices/"
+            ]
         }
     },
     "github": {
