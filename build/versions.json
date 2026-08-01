@@ -11,7 +11,7 @@
         "major": "11.0.0"
     },
     "active_development": {
-        "version": "10.5.3",
+        "version": "10.5.4",
         "description": "Use this for @since tags and migrations"
     },
     "notes": {
