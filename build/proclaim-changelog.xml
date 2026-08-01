@@ -19,6 +19,102 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.0</version>
+        <date>2026-08-01</date>
+        <addition>
+            <item>Re-detect Metadata button on the media file edit form, re-reading size, MIME type and duration from the file — for files replaced on disk under the same name, where the stored values are stale rather than missing</item>
+            <item>Re-read every file option on the Fix Missing Metadata tool, applying the same re-read in bulk. Opt-in per run: it reads every file, and on hosted platforms costs one API call per video</item>
+            <item>Clearing a detected field and saving now re-runs detection for it, so emptying the file size is enough to have it worked out again</item>
+        </addition>
+        <fix>
+            <item>Podcast feed: itunes:duration is zero-padded. A single-digit seconds value was emitted bare (00:27:7), which Apple's validator rejects and several clients ignore</item>
+            <item>Podcast feed: the enclosure type is derived from the file rather than trusted from the record, and no longer defaults to the unregistered audio/mpeg3. Feeds declaring .m4a files as MP3 are corrected</item>
+            <item>Podcast feed: guid carries isPermaLink="false". RSS 2.0 defaults it to true, inviting readers to fetch the guid as a web page</item>
+            <item>Podcast feed: URLs default to https rather than http, and a root-relative podcast link no longer produces a malformed https:///path</item>
+            <item>Media durations are stored zero-padded when entered by hand. A value typed as 7 persisted as 7, and then read as "already set" to every repair and detection routine, leaving those records invisible to the tools meant to fix them</item>
+            <item>The MIME picker offered audio/mp3, which is not a registered media type and was the only MP3 option available. mp3, m4a, avi and exe now match what detection resolves</item>
+            <item>Podcast validation reports a stored MIME type that contradicts the file, and the Fix Missing Metadata tool now corrects it rather than reporting the record as already set</item>
+            <item>Sermons list: the filter panel no longer renders open on every visit, and a filter change issues one AJAX request rather than two</item>
+            <item>Media file edit: Choose Playlist(s) is hidden for server types that cannot host playlists, where it could only ever be empty</item>
+        </fix>
+        <change>
+            <item>Queries are built with createQuery() throughout — 666 call sites — with a CI check to keep it that way</item>
+            <item>Caches are cleared after an update, and third-party caches Proclaim cannot clear are named so they can be cleared by hand</item>
+        </change>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.4.1                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.4.1</version>
+        <date>2026-07-30</date>
+        <fix>
+            <item>Downloaded Bible translations are no longer deleted when Proclaim updates, along with the cached passages fetched from online providers by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1369</item>
+            <item>fix(scripture): publish script options under the keys the library JS reads by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1370</item>
+            <item>fix(media): give Font Awesome brand icons the brand family by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1372</item>
+            <item>fix(a11y): give the schema-fix button enough contrast to pass WCAG AA by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1375</item>
+            <item>fix(a11y): stop buttons inside alerts inheriting the alert's text colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1376</item>
+            <item>fix(release): pin ars.environments so published items carry real requirements by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1360</item>
+            <item>fix(submodule): point scripturelinks at main, not the deleted branch by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1374</item>
+        </fix>
+        <addition>
+            <item>feat(youtube): disable Direct streaming until the account is connected by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1362</item>
+        </addition>
+        <note>
+            <item>test(install): assert the scripture library actually lands on clean installs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1365</item>
+            <item>build: fail the build when media output has no source by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1371</item>
+            <item>chore(language): translate the live-broadcast and stream-mode strings in all six locales by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1363</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.4.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.4.0</version>
+        <date>2026-07-28</date>
+        <addition>
+            <item>Live broadcasts on YouTube: Proclaim schedules the weekly broadcast from the media form, binds a persistent ingestion stream and hands back the encoder connection by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1356</item>
+            <item>feat(youtube): bind a persistent ingestion stream, and hand back the encoder connection by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1357</item>
+            <item>feat(a11y): non-drag movement for the layout editor and list ordering by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1354</item>
+        </addition>
+        <fix>
+            <item>The admin area meets WCAG 2.2 AA, verified by automated scans on every view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1340</item>
+            <item>feat(a11y): scan every admin and site view, and fix what the wider net caught by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1348</item>
+            <item>fix(language): sync action-log keys into translations, and repair what the sync mangled by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1338</item>
+            <item>fix(language): correct six typos in user-facing strings by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1343</item>
+        </fix>
+        <note>
+            <item>test(api): REST API acceptance on a clean package install by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1353</item>
+            <item>ci(e2e): run the package-install + API acceptance chain against a disposable Joomla by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1355</item>
+            <item>fix(e2e): retry logins, authenticate only the sites in play, reuse sessions by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1351</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.3.6                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.3.6</version>
+        <date>2026-07-26</date>
+        <fix>
+            <item>fix(api): make the API switchable — drop api_access for the plugin's own state by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1331</item>
+        </fix>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.3.5                                                   -->
     <!-- ============================================================ -->
     <changelog>
