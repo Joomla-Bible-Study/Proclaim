@@ -51,23 +51,34 @@ trait UpdateFiltersTrait
             $this->params->set('show_language_search', (int) $lang);
         }
 
+        $this->activeFilters ??= [];
+
         foreach ($filters as $filter) {
-            $set  = $input->getInt('filter_' . $filter);
+            // Default to 0 explicitly: Input::getInt() hands back null when the request has
+            // no such key, and null passes the "was it set?" test below, which would blank
+            // out every filter the form had loaded from the user state.
+            $set  = $input->getInt('filter_' . $filter, 0);
             $from = $this->filterForm->getValue($filter, 'filter');
 
             // Update the value from a landing page call.
             if ($set !== 0) {
                 $this->filterForm->setValue($filter, 'filter', $set);
+                $from = $set;
             }
 
-            // Catch active filters and update them.
-            if ($from !== null) {
-                $this->activeFilters[] = $filter;
+            // Catch active filters and update them. Keep the shape ListModel::getActiveFilters()
+            // uses — an associative array of field name => value — because the searchtools layout
+            // keys off it. The filter form is populated from user state, which holds an empty
+            // string for every unused filter, so only a real selection counts as active here;
+            // 0 is the component's "nothing selected" marker for the id based filters.
+            if ($from !== null && $from !== '' && $from !== '0' && $from !== 0 && $from !== []) {
+                $this->activeFilters[$filter] = $from;
             }
 
             // Remove from view if set to hide in the template.
             if ((int) $this->params->get('show_' . $filter . '_search', 1) === 0 && $filter !== 'language') {
                 $this->filterForm->removeField($filter, 'filter');
+                unset($this->activeFilters[$filter]);
             }
         }
 
