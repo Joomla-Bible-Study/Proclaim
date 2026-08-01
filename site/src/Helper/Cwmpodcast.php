@@ -133,7 +133,7 @@ class Cwmpodcast
             $registry->merge(Cwmparams::getTemplateparams()->params);
             $params = $registry;
             $params->set('show_verses', '1');
-            $protocol          = $params->get('protocol', 'http://');
+            $protocol          = $params->get('protocol', 'https://');
             $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
 
             if (empty($podinfo->podcastlink)) {
@@ -407,6 +407,13 @@ class Cwmpodcast
         // Numeric = Joomla menu item ID
         if (ctype_digit($value)) {
             return Route::link('site', 'index.php?Itemid=' . $value);
+        }
+
+        // Root-relative path — the admin field accepts these, and concatenating
+        // one onto a bare protocol yields "https:///path" (empty authority), so
+        // join it against the site root instead.
+        if (str_starts_with($value, '/')) {
+            return rtrim(Uri::root(), '/') . '/' . ltrim(rtrim($value, '/'), '/');
         }
 
         // Legacy bare domain — prepend protocol
@@ -741,12 +748,12 @@ class Cwmpodcast
      */
     private function getEpisodeDuration($episode): string
     {
-        $hours   = $episode->params->get('media_hours', '00');
-        $minutes = $episode->params->get('media_minutes', '00');
-        $seconds = $episode->params->get('media_seconds', '00');
+        $hours   = (int) $episode->params->get('media_hours', '00');
+        $minutes = (int) $episode->params->get('media_minutes', '00');
+        $seconds = (int) $episode->params->get('media_seconds', '00');
 
-        if ($hours !== '00' || $minutes !== '00' || $seconds !== '00') {
-            return $hours . ':' . $minutes . ':' . $seconds;
+        if ($hours || $minutes || $seconds) {
+            return \sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
         }
 
         return '';
@@ -777,13 +784,14 @@ class Cwmpodcast
             $type         = $mimeType ?: 'application/octet-stream';
             $enclosureUrl = $url;
         } elseif ($docmanId > 1) {
-            $url          = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
-            $type         = $mimeType;
+            $url = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
+            // No filename to derive from, and an empty type="" is invalid.
+            $type         = $mimeType ?: 'application/octet-stream';
             $enclosureUrl = $url;
         } else {
             // Direct live-media URL — stays the <guid> so subscribers never re-download.
             $url          = $protocol . $path;
-            $type         = $mimeType ?: 'audio/mpeg3';
+            $type         = $this->resolveEnclosureType($path, $mimeType);
             $enclosureUrl = $url;
 
             // Opt-in: route the enclosure through the tracking redirect (#1281).
@@ -805,9 +813,40 @@ class Cwmpodcast
             $url
         );
 
+        // isPermaLink defaults to true in RSS 2.0, which would invite readers to
+        // fetch the guid as the episode's web page. Since #1299 froze guids and
+        // decoupled them from the enclosure URL, it is an identity token only.
         return '
-		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $type . '" />
-		<guid>' . $guid . '</guid>';
+		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $this->escapeHTML($type) . '" />
+		<guid isPermaLink="false">' . $guid . '</guid>';
+    }
+
+    /**
+     * Resolve the MIME type to declare for a media enclosure.
+     *
+     * Derived from the file extension first: the stored mime_type is admin-entered
+     * and free to contradict the file it describes (the audit behind #1391 found
+     * .m4a files declared as audio/mp3, itself not a registered type). The stored
+     * value is honoured only where the extension yields nothing.
+     *
+     * @param   string   $path       Media path or URL the enclosure points at.
+     * @param   ?string  $storedType  The mime_type stored on the media file, if any.
+     *
+     * @return  string  A MIME type suitable for the enclosure's type attribute.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function resolveEnclosureType(string $path, ?string $storedType): string
+    {
+        $derived = $path !== '' ? Cwmmime::fromExtension($path) : null;
+
+        if ($derived !== null) {
+            return $derived;
+        }
+
+        // audio/mpeg is the registered type for MP3; the previous audio/mpeg3
+        // fallback here was never IANA-registered.
+        return !empty($storedType) ? $storedType : 'audio/mpeg';
     }
 
     /**
@@ -855,12 +894,14 @@ class Cwmpodcast
             $altParams  = new Registry($alt->params);
             $altSrParms = new Registry($alt->srparams);
             $filename   = $altParams->get('filename', '');
-            $mimeType   = $altParams->get('mime_type', 'audio/mpeg');
             $size       = $altParams->get('size', '');
 
             if (empty($filename)) {
                 continue;
             }
+
+            // Same derive-from-extension rule as the primary enclosure (#1391).
+            $mimeType = $this->resolveEnclosureType($filename, $altParams->get('mime_type'));
 
             $url = $protocol . Cwmhelper::mediaBuildUrl(
                 $altSrParms->get('path'),
@@ -1358,11 +1399,13 @@ class Cwmpodcast
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
             }
 
-            // Check for missing duration
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            // Check for missing duration. Compare numerically: a value stored as
+            // '0' rather than '00' is still no duration, but slips past a strict
+            // string comparison and goes unreported (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
+            if (!$hours && !$minutes && !$seconds) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_DURATION', $media->studytitle ?: 'ID: ' . $media->id);
             }
 
@@ -2146,11 +2189,13 @@ class Cwmpodcast
                 $missing[] = 'mime_type';
             }
 
-            // Check for missing duration
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            // Check for missing duration. Compare numerically: a value stored as
+            // '0' rather than '00' is still no duration, but slips past a strict
+            // string comparison and goes unreported (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
+            if (!$hours && !$minutes && !$seconds) {
                 $missing[] = 'duration';
             }
 

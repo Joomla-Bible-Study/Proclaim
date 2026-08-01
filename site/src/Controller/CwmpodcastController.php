@@ -141,7 +141,7 @@ class CwmpodcastController extends BaseController
         $config = new Registry();
         $config->loadString(Cwmparams::getAdmin()->params);
         $config->merge(Cwmparams::getTemplateparams()->params);
-        $protocol = (string) $config->get('protocol', 'http://');
+        $protocol = (string) $config->get('protocol', 'https://');
 
         $sreg = new Registry($media->sparams);
         $mreg = new Registry($media->params);
