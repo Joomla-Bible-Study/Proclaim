@@ -83,6 +83,32 @@ $EXPECTATIONS = [
     '10.4.1' => [
         'schemaMin' => '10.4.1',
     ],
+    // 10.5.1-20260801.sql adds the podcast copyright/rights-holder column (#1412).
+    '10.5.1' => [
+        'columns' => [
+            '#__bsms_podcast' => ['copyright'],
+        ],
+        'schemaMin' => '10.5.1',
+    ],
+    // 10.5.3-20260801.sql closes the gap #1189 (Podcasting 2.0) and #1188
+    // (teacher-user linking) left behind: both added columns to
+    // install.mysql.utf8.sql without a matching update SQL file, so any site
+    // that existed before 2026-03-19 never got them (#1416).
+    '10.5.3' => [
+        'columns' => [
+            '#__bsms_podcast' => [
+                'funding_url',
+                'funding_text',
+                'podcast_license',
+                'podcast_license_url',
+                'podcast_publisher',
+                'podcast_txt_verify',
+                'update_frequency',
+            ],
+            '#__bsms_teachers' => ['user_id'],
+        ],
+        'schemaMin' => '10.5.3',
+    ],
 ];
 
 // ---------------------------------------------------------------------------
