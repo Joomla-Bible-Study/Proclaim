@@ -517,7 +517,7 @@ final class CwmplaylistSyncHelper
         $out = ['items' => 0, 'matched' => 0, 'unmatched' => 0, 'error' => null];
 
         $playlist = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName(['p.remote_playlist_id', 'p.server_id', 's.type']))
                 ->from($db->quoteName('#__bsms_playlists', 'p'))
                 ->join('INNER', $db->quoteName('#__bsms_servers', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('p.server_id'))
@@ -612,7 +612,7 @@ final class CwmplaylistSyncHelper
         $out = ['pushed' => 0, 'wouldPush' => [], 'removed' => 0, 'wouldRemove' => [], 'errors' => []];
 
         $pl = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName(['remote_playlist_id', 'server_id', 'series_id', 'writeback_enabled', 'title']))
                 ->from($db->quoteName('#__bsms_playlists'))
                 ->where($db->quoteName('id') . ' = :id')
@@ -656,7 +656,7 @@ final class CwmplaylistSyncHelper
             $seriesId = (int) $pl->series_id;
 
             $rows = $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->select([
                         $db->quoteName('mf.id', 'id'),
                         $db->quoteName('mf.params', 'params'),
@@ -677,7 +677,7 @@ final class CwmplaylistSyncHelper
             if ($rows !== []) {
                 // Video IDs already recorded as members of this playlist.
                 $existing = $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select($db->quoteName('remote_video_id'))
                         ->from($db->quoteName('#__bsms_playlist_items'))
                         ->where($db->quoteName('playlist_id') . ' = :id')
@@ -717,7 +717,7 @@ final class CwmplaylistSyncHelper
         // yet confirmed on the platform. Push each, then flip to 'remote' so a
         // repeat run does not re-push it.
         $manual = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName(['remote_video_id', 'title']))
                 ->from($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('playlist_id') . ' = :id')
@@ -750,7 +750,7 @@ final class CwmplaylistSyncHelper
 
             if ($doPush($videoId)) {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->update($db->quoteName('#__bsms_playlist_items'))
                         ->set($db->quoteName('source') . ' = ' . $db->quote('remote'))
                         ->where($db->quoteName('playlist_id') . ' = :pid')
@@ -768,7 +768,7 @@ final class CwmplaylistSyncHelper
         // media file when platform-side removal is enabled. Remove each from the
         // platform then drop the junction row.
         $removePending = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName(['id', 'remote_video_id', 'title']))
                 ->from($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('playlist_id') . ' = :id')
@@ -841,7 +841,7 @@ final class CwmplaylistSyncHelper
         }
 
         $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->delete($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('id') . ' = :rid')
                 ->bind(':rid', $itemId, ParameterType::INTEGER)
@@ -892,7 +892,7 @@ final class CwmplaylistSyncHelper
 
             // Clear links that no longer match (the media file's URL changed).
             $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->update($db->quoteName('#__bsms_playlist_items'))
                     ->set($db->quoteName('mediafile_id') . ' = NULL')
                     ->where($db->quoteName('mediafile_id') . ' = :mid')
@@ -903,7 +903,7 @@ final class CwmplaylistSyncHelper
 
             // Backfill every still-unmatched junction row for this video.
             $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->update($db->quoteName('#__bsms_playlist_items'))
                     ->set($db->quoteName('mediafile_id') . ' = :mid')
                     ->where($db->quoteName('remote_video_id') . ' = :vid')
@@ -940,7 +940,7 @@ final class CwmplaylistSyncHelper
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->update($db->quoteName('#__bsms_playlist_items'))
                     ->set($db->quoteName('mediafile_id') . ' = NULL')
                     ->where($db->quoteName('mediafile_id') . ' = :mid')
@@ -971,7 +971,7 @@ final class CwmplaylistSyncHelper
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $ids = $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->select($db->quoteName('playlist_id'))
                     ->from($db->quoteName('#__bsms_playlist_items'))
                     ->where($db->quoteName('mediafile_id') . ' = :mid')
@@ -1008,7 +1008,7 @@ final class CwmplaylistSyncHelper
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $seriesId = (int) ($db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->select($db->quoteName('series_id'))
                     ->from($db->quoteName('#__bsms_studies'))
                     ->where($db->quoteName('id') . ' = :id')
@@ -1020,7 +1020,7 @@ final class CwmplaylistSyncHelper
             }
 
             $ids = $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->select($db->quoteName('id'))
                     ->from($db->quoteName('#__bsms_playlists'))
                     ->where($db->quoteName('series_id') . ' = :sid')
@@ -1100,7 +1100,7 @@ final class CwmplaylistSyncHelper
                 // A pending manual row (never pushed) is just dropped — nothing on
                 // the platform to remove.
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->delete($db->quoteName('#__bsms_playlist_items'))
                         ->where($db->quoteName('mediafile_id') . ' = :mid')
                         ->where($db->quoteName('source') . ' = ' . $db->quote('manual'))
@@ -1112,7 +1112,7 @@ final class CwmplaylistSyncHelper
                     // Queue de-selected on-platform memberships for removal; the
                     // write-back push calls the platform then drops the row.
                     $db->setQuery(
-                        $db->getQuery(true)
+                        $db->createQuery()
                             ->update($db->quoteName('#__bsms_playlist_items'))
                             ->set($db->quoteName('source') . ' = ' . $db->quote('remove_pending'))
                             ->where($db->quoteName('mediafile_id') . ' = :mid')
@@ -1166,7 +1166,7 @@ final class CwmplaylistSyncHelper
     private static function upsertManualItem(DatabaseInterface $db, int $playlistId, string $videoId, int $mediafileId, string $now): void
     {
         $existingId = (int) ($db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('playlist_id') . ' = :pid')
@@ -1179,7 +1179,7 @@ final class CwmplaylistSyncHelper
             // Already a member (imported or manual): ensure it links here. If it was
             // queued for removal, re-selecting it cancels that — it is confirmed on
             // the platform, so restore it to 'remote'.
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_playlist_items'))
                 ->set($db->quoteName('mediafile_id') . ' = :mid')
                 ->set(
@@ -1238,7 +1238,7 @@ final class CwmplaylistSyncHelper
         // URL, not the server record); a platform's extractor returns null for
         // other platforms' URLs, so the maps stay disjoint.
         $rows = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName(['id', 'params']))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%http%'))
@@ -1401,7 +1401,7 @@ final class CwmplaylistSyncHelper
     private static function upsertItem(DatabaseInterface $db, int $playlistId, string $videoId, string $title, ?int $mediafileId, int $position, string $now): void
     {
         $existingId = (int) ($db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_playlist_items'))
                 ->where($db->quoteName('playlist_id') . ' = :pid')
@@ -1442,7 +1442,7 @@ final class CwmplaylistSyncHelper
      */
     private static function pruneItems(DatabaseInterface $db, int $playlistId, array $keepVideos): void
     {
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_playlist_items'))
             ->where($db->quoteName('playlist_id') . ' = :pid')
             // Never prune a local-only pending row: a manual assignment not yet
@@ -1472,7 +1472,7 @@ final class CwmplaylistSyncHelper
     private static function findPlaylistId(DatabaseInterface $db, string $remoteId, int $serverId): int
     {
         return (int) ($db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_playlists'))
                 ->where($db->quoteName('remote_playlist_id') . ' = :rid')

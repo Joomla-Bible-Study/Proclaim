@@ -51,21 +51,25 @@ $wa->useScript('keepalive')
 
 // Pass config to JavaScript
 $this->getDocument()->addScriptOptions('com_proclaim.mediafile', [
-    'token'            => Session::getFormToken(),
-    'isNew'            => $new,
-    'showServerPicker' => $showServerPicker,
-    'validationFailed' => Text::_('JGLOBAL_VALIDATION_FORM_FAILED'),
-    'switchWarning'    => Text::_('JBS_MED_SERVER_TYPE_CHANGE_WARNING'),
-    'loadingAddon'     => Text::_('JBS_MED_LOADING_ADDON'),
-    'switchLoading'    => Text::_('JBS_MED_SERVER_SWITCH_LOADING'),
-    'selectServerTitle' => Text::_('JBS_MED_SELECT_SERVER_TITLE'),
-    'selectServerDesc'  => Text::_('JBS_MED_SELECT_SERVER_DESC'),
-    'serverTypeLocalDesc'  => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
-    'serverTypeDirectDesc' => Text::_('JBS_MED_SERVER_TYPE_DIRECT_DESC'),
+    'token'                 => Session::getFormToken(),
+    'isNew'                 => $new,
+    'showServerPicker'      => $showServerPicker,
+    'validationFailed'      => Text::_('JGLOBAL_VALIDATION_FORM_FAILED'),
+    'switchWarning'         => Text::_('JBS_MED_SERVER_TYPE_CHANGE_WARNING'),
+    'loadingAddon'          => Text::_('JBS_MED_LOADING_ADDON'),
+    'switchLoading'         => Text::_('JBS_MED_SERVER_SWITCH_LOADING'),
+    'selectServerTitle'     => Text::_('JBS_MED_SELECT_SERVER_TITLE'),
+    'selectServerDesc'      => Text::_('JBS_MED_SELECT_SERVER_DESC'),
+    'serverTypeLocalDesc'   => Text::_('JBS_MED_SERVER_TYPE_LOCAL_DESC'),
+    'serverTypeDirectDesc'  => Text::_('JBS_MED_SERVER_TYPE_DIRECT_DESC'),
     'serverTypeYoutubeDesc' => Text::_('JBS_MED_SERVER_TYPE_YOUTUBE_DESC'),
     'serverTypeLegacyDesc'  => Text::_('JBS_MED_SERVER_TYPE_LEGACY_DESC'),
     'selectLabel'           => Text::_('JSELECT'),
     'clearLabel'            => Text::_('JCLEAR'),
+    'redetectUrl'           => 'index.php?option=com_proclaim&task=cwmpodcasts.fixSingleMetadata'
+        . '&media_id=' . (int) $this->item->id . '&force=1&' . Session::getFormToken() . '=1',
+    'redetectWorking' => Text::_('JBS_MED_REDETECT_METADATA_WORKING'),
+    'redetectFailed'  => Text::_('JBS_MED_REDETECT_METADATA_FAILED'),
 ]);
 
 $this->useCoreUI = true;
@@ -73,37 +77,37 @@ $this->useCoreUI = true;
 // Platform integration for Chapters & Tracks tab (addon-driven)
 $addonSupportsChapters = $this->addon !== null && $this->addon->supportsChapters();
 $addonSupportsCaptions = $this->addon !== null && $this->addon->supportsCaptions();
-$serverType = $this->state ? strtolower($this->state->get('type', '')) : '';
+$serverType            = $this->state ? strtolower($this->state->get('type', '')) : '';
 
 if (($addonSupportsChapters || $addonSupportsCaptions) && !$new) {
     $wa->useScript('com_proclaim.cwm-youtube-tracks');
 
     // Check if OAuth is connected (for platforms that need it for write operations)
-    $sParams = $this->state->get('s_params', []);
+    $sParams        = $this->state->get('s_params', []);
     $oauthConnected = !empty($sParams['access_token']);
 
     $this->getDocument()->addScriptOptions('com_proclaim.youtubeTracks', [
-        'isYouTube'          => $serverType === 'youtube',
-        'supportsChapters'   => $addonSupportsChapters,
-        'supportsCaptions'   => $addonSupportsCaptions,
-        'addonName'          => ucfirst($serverType),
-        'mediaId'            => (int) $this->item->id,
-        'oauthConnected'     => $oauthConnected,
-        'baseUrl'            => \Joomla\CMS\Uri\Uri::base(),
-        'token'              => Session::getFormToken(),
-        'toolbarTitle'       => Text::sprintf('JBS_MED_PLATFORM_INTEGRATION', ucfirst($serverType)),
-        'importChaptersBtn'  => Text::sprintf('JBS_MED_IMPORT_CHAPTERS_PLATFORM', ucfirst($serverType)),
-        'listCaptionsBtn'    => Text::sprintf('JBS_MED_DOWNLOAD_CAPTIONS_PLATFORM', ucfirst($serverType)),
-        'importing'          => Text::_('JBS_MED_IMPORTING_CHAPTERS'),
-        'importSuccess'      => Text::_('JBS_MED_IMPORT_CHAPTERS_SUCCESS'),
-        'importFailed'       => Text::_('JBS_MED_IMPORT_CHAPTERS_NONE'),
-        'importError'        => Text::_('JBS_MED_IMPORT_CHAPTERS_ERROR'),
-        'loadingCaptions'    => Text::_('JBS_MED_LOADING_CAPTIONS'),
-        'noCaptions'         => Text::_('JBS_MED_NO_CAPTIONS_FOUND'),
-        'captionError'       => Text::_('JBS_MED_CAPTION_ERROR'),
-        'downloadBtn'        => Text::_('JBS_MED_DOWNLOAD_VTT'),
-        'downloaded'         => Text::_('JBS_MED_CAPTION_ADDED'),
-        'oauthRequired'      => Text::_('JBS_MED_OAUTH_REQUIRED_CAPTIONS'),
+        'isYouTube'         => $serverType === 'youtube',
+        'supportsChapters'  => $addonSupportsChapters,
+        'supportsCaptions'  => $addonSupportsCaptions,
+        'addonName'         => ucfirst($serverType),
+        'mediaId'           => (int) $this->item->id,
+        'oauthConnected'    => $oauthConnected,
+        'baseUrl'           => \Joomla\CMS\Uri\Uri::base(),
+        'token'             => Session::getFormToken(),
+        'toolbarTitle'      => Text::sprintf('JBS_MED_PLATFORM_INTEGRATION', ucfirst($serverType)),
+        'importChaptersBtn' => Text::sprintf('JBS_MED_IMPORT_CHAPTERS_PLATFORM', ucfirst($serverType)),
+        'listCaptionsBtn'   => Text::sprintf('JBS_MED_DOWNLOAD_CAPTIONS_PLATFORM', ucfirst($serverType)),
+        'importing'         => Text::_('JBS_MED_IMPORTING_CHAPTERS'),
+        'importSuccess'     => Text::_('JBS_MED_IMPORT_CHAPTERS_SUCCESS'),
+        'importFailed'      => Text::_('JBS_MED_IMPORT_CHAPTERS_NONE'),
+        'importError'       => Text::_('JBS_MED_IMPORT_CHAPTERS_ERROR'),
+        'loadingCaptions'   => Text::_('JBS_MED_LOADING_CAPTIONS'),
+        'noCaptions'        => Text::_('JBS_MED_NO_CAPTIONS_FOUND'),
+        'captionError'      => Text::_('JBS_MED_CAPTION_ERROR'),
+        'downloadBtn'       => Text::_('JBS_MED_DOWNLOAD_VTT'),
+        'downloaded'        => Text::_('JBS_MED_CAPTION_ADDED'),
+        'oauthRequired'     => Text::_('JBS_MED_OAUTH_REQUIRED_CAPTIONS'),
     ]);
 }
 ?>
@@ -126,7 +130,18 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 <?php echo $this->form->renderField('study_id', null, $study_id); ?>
                 <?php echo $this->form->renderField('server_id', null, $this->item->server_id); ?>
                 <?php echo $this->form->renderField('podcast_id', null, $podcast_id); ?>
-                <?php echo $this->form->renderField('playlist_id', null, $playlist_id); ?>
+
+                <?php
+                // Playlists exist only for platforms whose addon reports the capability
+                // (YouTube, Vimeo) — elsewhere the picker can only ever come up empty.
+                // Rendered hidden rather than omitted so an existing assignment still
+                // posts back instead of being silently cleared, and so the server-change
+                // handler can reveal it without a page reload. See #1392.
+                $supportsPlaylists = $this->addon !== null && $this->addon->supportsPlaylists();
+                ?>
+                <div id="playlist-field-container"<?php echo $supportsPlaylists ? '' : ' class="d-none"'; ?>>
+                    <?php echo $this->form->renderField('playlist_id', null, $playlist_id); ?>
+                </div>
 
                 <div id="addon-general-container">
                     <?php if ($this->addon !== null) : ?>
@@ -137,6 +152,19 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                         </div>
                     <?php endif; ?>
                 </div>
+
+                <?php // Re-reads size, MIME type and duration from the file. Needs a
+                      // saved record to act on, and something to read them from.?>
+                <?php if (!$new && $this->addon !== null) : ?>
+                    <div class="mb-3" id="proclaim-redetect-wrap">
+                        <button type="button" class="btn btn-secondary btn-sm" id="proclaim-redetect-btn">
+                            <span class="icon-refresh" aria-hidden="true"></span>
+                            <span id="proclaim-redetect-label"><?php echo Text::_('JBS_MED_REDETECT_METADATA'); ?></span>
+                        </button>
+                        <div class="form-text"><?php echo Text::_('JBS_MED_REDETECT_METADATA_DESC'); ?></div>
+                        <div id="proclaim-redetect-result" class="mt-2" role="status" aria-live="polite"></div>
+                    </div>
+                <?php endif; ?>
 
             </div>
             <div class="col-lg-5">

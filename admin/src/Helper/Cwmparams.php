@@ -75,7 +75,7 @@ class Cwmparams
                 echo $e->getMessage();
             }
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select('*')
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = ' . 1);
@@ -127,7 +127,7 @@ class Cwmparams
 
         if (self::$templateId !== $pk || !isset(self::$templateTable)) {
             self::$templateId = $pk;
-            $query            = $db->getQuery(true);
+            $query            = $db->createQuery();
             $query->select('*')
                 ->from($db->quoteName('#__bsms_templates'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -138,7 +138,7 @@ class Cwmparams
             // This is a fallback to the default template if the specified template has been deleted.
             if (!$template) {
                 self::$templateId = 1;
-                $query            = $db->getQuery(true);
+                $query            = $db->createQuery();
                 $query->select('*')
                     ->from($db->quoteName('#__bsms_templates'))
                     ->where($db->quoteName('published') . ' = 1')
@@ -188,7 +188,7 @@ class Cwmparams
         // <name> and is neither guaranteed to equal the element nor unique across
         // extension types.
         $id = (int) $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName('extension_id'))
                 ->from($db->quoteName('#__extensions'))
                 ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))

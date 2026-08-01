@@ -96,7 +96,7 @@ class Cwmpodcast
         $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
 
         // First, get all podcasts that are published
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast'))
             ->where($db->quoteName('published') . ' = 1');
@@ -109,7 +109,7 @@ class Cwmpodcast
             $language->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, $podlanguage, true);
 
             // Check if there's any media file associated
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where('FIND_IN_SET(' . (int) $podinfo->id . ', ' . $db->quoteName('podcast_id') . ')')
@@ -133,7 +133,7 @@ class Cwmpodcast
             $registry->merge(Cwmparams::getTemplateparams()->params);
             $params = $registry;
             $params->set('show_verses', '1');
-            $protocol          = $params->get('protocol', 'http://');
+            $protocol          = $params->get('protocol', 'https://');
             $detailstemplateid = (int) ($podinfo->detailstemplateid ?: 1);
 
             if (empty($podinfo->podcastlink)) {
@@ -216,7 +216,7 @@ class Cwmpodcast
 
             // Podcasting 2.0: channel-level location from podcast settings
             if (!empty($podinfo->location_id) && (int) $podinfo->location_id > 0) {
-                $locQuery = $db->getQuery(true)
+                $locQuery = $db->createQuery()
                     ->select($db->quoteName('location_text'))
                     ->from($db->quoteName('#__bsms_locations'))
                     ->where($db->quoteName('id') . ' = ' . (int) $podinfo->location_id);
@@ -407,6 +407,13 @@ class Cwmpodcast
         // Numeric = Joomla menu item ID
         if (ctype_digit($value)) {
             return Route::link('site', 'index.php?Itemid=' . $value);
+        }
+
+        // Root-relative path — the admin field accepts these, and concatenating
+        // one onto a bare protocol yields "https:///path" (empty authority), so
+        // join it against the site root instead.
+        if (str_starts_with($value, '/')) {
+            return rtrim(Uri::root(), '/') . '/' . ltrim(rtrim($value, '/'), '/');
         }
 
         // Legacy bare domain — prepend protocol
@@ -662,7 +669,7 @@ class Cwmpodcast
     private function getPersonXml(object $episode, string $website, string $protocol): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('t.teachername'),
                 $db->quoteName('t.teacher_image'),
@@ -741,12 +748,12 @@ class Cwmpodcast
      */
     private function getEpisodeDuration($episode): string
     {
-        $hours   = $episode->params->get('media_hours', '00');
-        $minutes = $episode->params->get('media_minutes', '00');
-        $seconds = $episode->params->get('media_seconds', '00');
+        $hours   = (int) $episode->params->get('media_hours', '00');
+        $minutes = (int) $episode->params->get('media_minutes', '00');
+        $seconds = (int) $episode->params->get('media_seconds', '00');
 
-        if ($hours !== '00' || $minutes !== '00' || $seconds !== '00') {
-            return $hours . ':' . $minutes . ':' . $seconds;
+        if ($hours || $minutes || $seconds) {
+            return \sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
         }
 
         return '';
@@ -777,13 +784,14 @@ class Cwmpodcast
             $type         = $mimeType ?: 'application/octet-stream';
             $enclosureUrl = $url;
         } elseif ($docmanId > 1) {
-            $url          = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
-            $type         = $mimeType;
+            $url = $basePath . '/index.php?option=com_docman&amp;task=doc_download&amp;gid=' . $docmanId;
+            // No filename to derive from, and an empty type="" is invalid.
+            $type         = $mimeType ?: 'application/octet-stream';
             $enclosureUrl = $url;
         } else {
             // Direct live-media URL — stays the <guid> so subscribers never re-download.
             $url          = $protocol . $path;
-            $type         = $mimeType ?: 'audio/mpeg3';
+            $type         = $this->resolveEnclosureType($path, $mimeType);
             $enclosureUrl = $url;
 
             // Opt-in: route the enclosure through the tracking redirect (#1281).
@@ -805,9 +813,40 @@ class Cwmpodcast
             $url
         );
 
+        // isPermaLink defaults to true in RSS 2.0, which would invite readers to
+        // fetch the guid as the episode's web page. Since #1299 froze guids and
+        // decoupled them from the enclosure URL, it is an identity token only.
         return '
-		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $type . '" />
-		<guid>' . $guid . '</guid>';
+		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $this->escapeHTML($type) . '" />
+		<guid isPermaLink="false">' . $guid . '</guid>';
+    }
+
+    /**
+     * Resolve the MIME type to declare for a media enclosure.
+     *
+     * Derived from the file extension first: the stored mime_type is admin-entered
+     * and free to contradict the file it describes (the audit behind #1391 found
+     * .m4a files declared as audio/mp3, itself not a registered type). The stored
+     * value is honoured only where the extension yields nothing.
+     *
+     * @param   string   $path       Media path or URL the enclosure points at.
+     * @param   ?string  $storedType  The mime_type stored on the media file, if any.
+     *
+     * @return  string  A MIME type suitable for the enclosure's type attribute.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function resolveEnclosureType(string $path, ?string $storedType): string
+    {
+        $derived = $path !== '' ? Cwmmime::fromExtension($path) : null;
+
+        if ($derived !== null) {
+            return $derived;
+        }
+
+        // audio/mpeg is the registered type for MP3; the previous audio/mpeg3
+        // fallback here was never IANA-registered.
+        return !empty($storedType) ? $storedType : 'audio/mpeg';
     }
 
     /**
@@ -827,7 +866,7 @@ class Cwmpodcast
     private function getAlternateEnclosureXml(object $episode, int $podcastId, string $protocol): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('mf.params'),
                 $db->quoteName('sr.params', 'srparams'),
@@ -855,12 +894,14 @@ class Cwmpodcast
             $altParams  = new Registry($alt->params);
             $altSrParms = new Registry($alt->srparams);
             $filename   = $altParams->get('filename', '');
-            $mimeType   = $altParams->get('mime_type', 'audio/mpeg');
             $size       = $altParams->get('size', '');
 
             if (empty($filename)) {
                 continue;
             }
+
+            // Same derive-from-extension rule as the primary enclosure (#1391).
+            $mimeType = $this->resolveEnclosureType($filename, $altParams->get('mime_type'));
 
             $url = $protocol . Cwmhelper::mediaBuildUrl(
                 $altSrParms->get('path'),
@@ -903,7 +944,7 @@ class Cwmpodcast
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             [
                 'p.id AS pid', 'p.podcastlimit',
@@ -1136,7 +1177,7 @@ class Cwmpodcast
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get all published podcasts
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast'))
             ->where($db->quoteName('published') . ' = 1');
@@ -1210,7 +1251,7 @@ class Cwmpodcast
 
         // Check for associated media files
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where('FIND_IN_SET(' . (int) $podcast->id . ', ' . $db->quoteName('podcast_id') . ')')
@@ -1330,7 +1371,7 @@ class Cwmpodcast
         $warnings = [];
         $db       = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle', 's.studyintro']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -1356,13 +1397,31 @@ class Cwmpodcast
             $mimeType = $params->get('mime_type');
             if (empty($mimeType)) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
+            } elseif (!$isYouTube && !empty($filename)) {
+                // A stored type that contradicts the file. The feed no longer trusts
+                // it — the enclosure type is derived from the extension (#1391) — but
+                // the stored value is still wrong, and is a sign the record was
+                // created or imported incorrectly. YouTube URLs have no meaningful
+                // extension, so they are skipped rather than warned about (#1396).
+                $derived = Cwmmime::fromExtension($filename);
+
+                if ($derived !== null && $derived !== $mimeType) {
+                    $warnings[] = Text::sprintf(
+                        'JBS_PDC_VALIDATE_MEDIA_MIME_MISMATCH',
+                        $media->studytitle ?: 'ID: ' . $media->id,
+                        $mimeType,
+                        $derived
+                    );
+                }
             }
 
-            // Check for missing duration
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            // Check for missing duration. Compare numerically: a value stored as
+            // '0' rather than '00' is still no duration, but slips past a strict
+            // string comparison and goes unreported (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
+            if (!$hours && !$minutes && !$seconds) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_DURATION', $media->studytitle ?: 'ID: ' . $media->id);
             }
 
@@ -1551,7 +1610,7 @@ class Cwmpodcast
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get media files with missing duration
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -1570,18 +1629,21 @@ class Cwmpodcast
             $params = new Registry($media->params);
             $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
-            // Check if duration is already set
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
+            // Check if duration is already set. Numeric comparison: a record
+            // holding '0' rather than '00' has no duration, and a string
+            // comparison here made the repair tool skip the very records it
+            // exists to fix (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
 
-            if ($hours !== '00' || $minutes !== '00' || $seconds !== '00') {
+            if ($hours || $minutes || $seconds) {
                 $skipped++;
                 continue;
             }
 
             // Get server path
-            $serverQuery = $db->getQuery(true);
+            $serverQuery = $db->createQuery();
             $serverQuery->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
@@ -1614,7 +1676,7 @@ class Cwmpodcast
                         $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
                         $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
 
-                        $updateQuery = $db->getQuery(true);
+                        $updateQuery = $db->createQuery();
                         $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
                             ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
                             ->where($db->quoteName('id') . ' = ' . (int) $media->id);
@@ -1669,7 +1731,7 @@ class Cwmpodcast
                     $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
                     $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
 
-                    $updateQuery = $db->getQuery(true);
+                    $updateQuery = $db->createQuery();
                     $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
                         ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
                         ->where($db->quoteName('id') . ' = ' . (int) $media->id);
@@ -1731,7 +1793,7 @@ class Cwmpodcast
                     $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
                     $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
 
-                    $updateQuery = $db->getQuery(true);
+                    $updateQuery = $db->createQuery();
                     $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
                         ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
                         ->where($db->quoteName('id') . ' = ' . (int) $media->id);
@@ -1784,7 +1846,7 @@ class Cwmpodcast
             $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
 
             // Update the database
-            $updateQuery = $db->getQuery(true);
+            $updateQuery = $db->createQuery();
             $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
                 ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
                 ->where($db->quoteName('id') . ' = ' . (int) $media->id);
@@ -1824,7 +1886,7 @@ class Cwmpodcast
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -1844,12 +1906,12 @@ class Cwmpodcast
         foreach ($mediaFiles as $media) {
             $params = new Registry($media->params);
 
-            // Check if duration is already set
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
+            // Check if duration is already set (numeric — see fixMediaDurations)
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
 
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            if (!$hours && !$minutes && !$seconds) {
                 $result[] = [
                     'id'    => (int) $media->id,
                     'title' => $media->studytitle ?: 'ID: ' . $media->id,
@@ -1875,7 +1937,7 @@ class Cwmpodcast
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the media file
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -1896,7 +1958,7 @@ class Cwmpodcast
         $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
         // Get server path
-        $serverQuery = $db->getQuery(true);
+        $serverQuery = $db->createQuery();
         $serverQuery->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
@@ -2069,7 +2131,7 @@ class Cwmpodcast
         $params->set('media_minutes', str_pad((string) $duration->minutes, 2, '0', STR_PAD_LEFT));
         $params->set('media_seconds', str_pad((string) $duration->seconds, 2, '0', STR_PAD_LEFT));
 
-        $updateQuery = $db->getQuery(true);
+        $updateQuery = $db->createQuery();
         $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
             ->where($db->quoteName('id') . ' = ' . $mediaId);
@@ -2100,16 +2162,20 @@ class Cwmpodcast
      * Used for AJAX batch processing.
      *
      * @param   int|null  $podcastId  Optional podcast ID to filter by
+     * @param   bool      $all        Return every published file rather than only
+     *                                those with something missing. For re-reading
+     *                                values that are present but stale — a file
+     *                                replaced on disk under the same name.
      *
      * @return array  Array of files needing metadata fix with id, title, and missing fields
      *
      * @since 10.1.0
      */
-    public function getMediaFilesNeedingMetadata(?int $podcastId = null): array
+    public function getMediaFilesNeedingMetadata(?int $podcastId = null, bool $all = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -2140,30 +2206,64 @@ class Cwmpodcast
                 }
             }
 
-            // Check for missing MIME type
+            // Check for missing MIME type, or one that contradicts the file — both
+            // are fixed by re-detection, so both belong in the queue (#1396).
             $mimeType = $params->get('mime_type');
-            if (empty($mimeType)) {
+            if (empty($mimeType) || $this->mimeTypeContradictsFile($params)) {
                 $missing[] = 'mime_type';
             }
 
-            // Check for missing duration
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            // Check for missing duration. Compare numerically: a value stored as
+            // '0' rather than '00' is still no duration, but slips past a strict
+            // string comparison and goes unreported (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
+            if (!$hours && !$minutes && !$seconds) {
                 $missing[] = 'duration';
             }
 
-            if (!empty($missing)) {
+            if ($all || !empty($missing)) {
                 $result[] = [
-                    'id'      => (int) $media->id,
-                    'title'   => $media->studytitle ?: 'ID: ' . $media->id,
-                    'missing' => $missing,
+                    'id'    => (int) $media->id,
+                    'title' => $media->studytitle ?: 'ID: ' . $media->id,
+                    // Nothing is "missing" on a forced pass — every value is being
+                    // re-read — so name what will be looked at instead of showing
+                    // an empty list in the progress readout.
+                    'missing' => $missing ?: ['size', 'mime_type', 'duration'],
                 ];
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Whether a stored mime_type disagrees with what the filename implies.
+     *
+     * Detection is the authority — the feed derives the enclosure type from the
+     * extension since #1391 — so a disagreement means the stored value is wrong
+     * and worth replacing. YouTube URLs carry no meaningful extension and are
+     * never a mismatch.
+     *
+     * @param   Registry  $params  Media file params.
+     *
+     * @return  bool  True when the stored type contradicts the file.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function mimeTypeContradictsFile(Registry $params): bool
+    {
+        $filename = (string) $params->get('filename', '');
+        $stored   = (string) $params->get('mime_type', '');
+
+        if ($filename === '' || $stored === '' || $this->isYouTubeUrl($filename)) {
+            return false;
+        }
+
+        $derived = Cwmmime::fromExtension($filename);
+
+        return $derived !== null && $derived !== $stored;
     }
 
     /**
@@ -2176,12 +2276,12 @@ class Cwmpodcast
      *
      * @since 10.1.0
      */
-    public function fixSingleMediaMetadata(int $mediaId): array
+    public function fixSingleMediaMetadata(int $mediaId, bool $force = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the media file
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['mf.id', 'mf.params', 'mf.server_id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
@@ -2203,11 +2303,19 @@ class Cwmpodcast
 
         // Determine what needs to be fixed
         $needsSize     = empty($params->get('size', 0)) || $params->get('size', 0) < 1000;
-        $needsMimeType = empty($params->get('mime_type'));
-        $hours         = $params->get('media_hours', '00');
-        $minutes       = $params->get('media_minutes', '00');
-        $seconds       = $params->get('media_seconds', '00');
-        $needsDuration = ($hours === '00' && $minutes === '00' && $seconds === '00');
+        $needsMimeType = empty($params->get('mime_type'))
+            || $this->mimeTypeContradictsFile($params);
+        $hours         = (int) $params->get('media_hours', '00');
+        $minutes       = (int) $params->get('media_minutes', '00');
+        $seconds       = (int) $params->get('media_seconds', '00');
+        $needsDuration = (!$hours && !$minutes && !$seconds);
+
+        // Forced: re-read every value from the file regardless of what is stored.
+        // A file replaced on disk under the same name leaves stale values that are
+        // present rather than missing, so the needs-based path would skip it.
+        if ($force) {
+            $needsSize = $needsMimeType = $needsDuration = true;
+        }
 
         if (!$needsSize && !$needsMimeType && !$needsDuration) {
             return [
@@ -2218,7 +2326,7 @@ class Cwmpodcast
         }
 
         // Get server path
-        $serverQuery = $db->getQuery(true);
+        $serverQuery = $db->createQuery();
         $serverQuery->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $media->server_id);
@@ -2508,7 +2616,7 @@ class Cwmpodcast
      */
     protected function saveMetadata(int $mediaId, Registry $params, string $title, array $fixed, object $db, bool $isRemote): array
     {
-        $updateQuery = $db->getQuery(true);
+        $updateQuery = $db->createQuery();
         $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('params') . ' = ' . $db->q($params->toString()))
             ->where($db->quoteName('id') . ' = ' . $mediaId);
@@ -2528,10 +2636,10 @@ class Cwmpodcast
             }
             if (\in_array('duration', $fixed)) {
                 $durationStr = \sprintf(
-                    '%s:%s:%s',
-                    $params->get('media_hours', '00'),
-                    $params->get('media_minutes', '00'),
-                    $params->get('media_seconds', '00')
+                    '%02d:%02d:%02d',
+                    (int) $params->get('media_hours', '00'),
+                    (int) $params->get('media_minutes', '00'),
+                    (int) $params->get('media_seconds', '00')
                 );
                 $fixedLabels[] = Text::sprintf('JBS_PDC_FIX_METADATA_DURATION_VALUE', $durationStr);
             }
@@ -2543,6 +2651,15 @@ class Cwmpodcast
                 'message' => Text::sprintf($langKey, $title, implode(', ', $fixedLabels)),
                 'fixed'   => $fixed,
                 'type'    => 'fixed',
+                // The detected values, so a caller editing the record can put them
+                // into the open form rather than making the user reload to see them.
+                'values' => [
+                    'size'          => (string) $params->get('size', ''),
+                    'mime_type'     => (string) $params->get('mime_type', ''),
+                    'media_hours'   => (string) $params->get('media_hours', ''),
+                    'media_minutes' => (string) $params->get('media_minutes', ''),
+                    'media_seconds' => (string) $params->get('media_seconds', ''),
+                ],
             ];
         } catch (\Exception $e) {
             return [
@@ -3441,7 +3558,7 @@ class Cwmpodcast
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find a YouTube server with an API key
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select([$db->quoteName('id'), $db->quoteName('params')])
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('type') . ' = ' . $db->q('youtube'))

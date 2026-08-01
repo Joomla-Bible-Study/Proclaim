@@ -153,7 +153,7 @@ class CwmaiHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName(['m.params', 'm.server_id', 's.type']))
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
@@ -864,7 +864,7 @@ class CwmaiHelper
 
         // Get YouTube API key from server config
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -1055,7 +1055,7 @@ class CwmaiHelper
 
         // Look up the server ID to check quota before making the API call
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('m.server_id'))
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->join(

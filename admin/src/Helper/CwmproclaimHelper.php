@@ -255,7 +255,7 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
 
         // $db      = $driver->getDriver();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('DISTINCT YEAR(' . $db->quoteName('createdate') . ') as value, YEAR(' . $db->quoteName('createdate') . ') as text');
         $query->from($db->quoteName('#__bsms_mediafiles'));
@@ -285,7 +285,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
         $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
@@ -320,7 +320,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select('DISTINCT YEAR(' . $db->quoteName('studydate') . ') as value, YEAR(' . $db->quoteName('studydate') . ') as text');
         $query->from($db->quoteName('#__bsms_studies'));
@@ -351,7 +351,7 @@ class CwmproclaimHelper
         $options = [];
         $driver  = Factory::getContainer()->get(DatabaseInterface::class);
         $db      = $driver->getDriver();
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('teacher.id', 'value') . ', ' . $db->quoteName('teacher.teachername', 'text'));
         $query->from($db->quoteName('#__bsms_teachers', 'teacher'));
@@ -390,7 +390,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select(
             $db->quoteName('book.booknumber', 'value') . ', ' . $db->quoteName('book.bookname', 'text') . ', ' . $db->quoteName('book.id')
@@ -431,7 +431,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('messageType.id', 'value') . ', ' . $db->quoteName('messageType.message_type', 'text'));
         $query->from($db->quoteName('#__bsms_message_type', 'messageType'));
@@ -466,7 +466,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'));
         $query->from($db->quoteName('#__bsms_locations'));

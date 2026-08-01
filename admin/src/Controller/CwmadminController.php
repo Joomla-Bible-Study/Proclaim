@@ -152,7 +152,7 @@ class CwmadminController extends FormController
         $to   = $reg->get('to', 'x');
 
         if ($from !== 'x' && $to !== 'x') {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'params']))
                 ->from($db->quoteName('#__bsms_mediafiles'));
             $db->setQuery($query);
@@ -164,7 +164,7 @@ class CwmadminController extends FormController
                 if ($reg->get('player', 0) == $from) {
                     $reg->set('player', $to);
 
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->update($db->quoteName('#__bsms_mediafiles'))
                         ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
                         ->where($db->quoteName('id') . ' = ' . (int)$media->id);
@@ -208,7 +208,7 @@ class CwmadminController extends FormController
         $form2 = '';
         $to    = $reg->get('pTo', 'x');
         $msg   = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
@@ -227,7 +227,7 @@ class CwmadminController extends FormController
             if ($reg->get('popup', 0) == $from || $reg->get('popup', 0) == $form2) {
                 $reg->set('popup', $to);
 
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
                     ->where($db->quoteName('id') . ' = ' . (int)$media->id);
@@ -263,7 +263,7 @@ class CwmadminController extends FormController
         $post    = $this->input->post->get('jform', [], 'raw');
         $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
@@ -292,7 +292,7 @@ class CwmadminController extends FormController
                             'media_button_text'
                         ) == $buttontext
                     ) {
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $reg->set('media_button_color', $post['media_button_color']);
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
@@ -330,7 +330,7 @@ class CwmadminController extends FormController
                     $reg->loadString($media->params);
 
                     if ($reg->get('media_button_type') == $buttontype && $reg->get('media_icon_type') == $icontype) {
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $reg->set('media_button_color', $post['media_button_color']);
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
@@ -372,7 +372,7 @@ class CwmadminController extends FormController
                     $reg->loadString($media->params);
 
                     if ($reg->get('media_icon_type') == $icontype) {
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $reg->set('media_button_color', $post['media_button_color']);
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
@@ -418,7 +418,7 @@ class CwmadminController extends FormController
                     $reg->loadString($media->params);
 
                     if ($reg->get('media_image') == $mediaimage) {
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $reg->set('media_button_color', $post['media_button_color']);
                         $reg->set('media_button_text', $post['media_button_text']);
                         $reg->set('media_button_type', $post['media_button_type']);
@@ -474,7 +474,7 @@ class CwmadminController extends FormController
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $msg   = null;
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('hits') . ' = 0')
             ->where($db->quoteName('hits') . ' != 0');
@@ -508,7 +508,7 @@ class CwmadminController extends FormController
 
         $msg   = null;
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = 0')
             ->where($db->quoteName('downloads') . ' != 0');
@@ -543,7 +543,7 @@ class CwmadminController extends FormController
 
         $msg   = null;
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = 0')
             ->where($db->quoteName('plays') . ' != 0');
@@ -576,7 +576,7 @@ class CwmadminController extends FormController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('hits') . ' = 0')
             ->where($db->quoteName('hits') . ' != 0');
@@ -608,7 +608,7 @@ class CwmadminController extends FormController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = 0')
             ->where($db->quoteName('downloads') . ' != 0');
@@ -640,7 +640,7 @@ class CwmadminController extends FormController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = 0')
             ->where($db->quoteName('plays') . ' != 0');
@@ -738,7 +738,7 @@ class CwmadminController extends FormController
 
             // Look up the server type for this media file
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('sv.type'))
                 ->from($db->quoteName('#__bsms_mediafiles', 'm'))
                 ->leftJoin(
@@ -2241,7 +2241,7 @@ class CwmadminController extends FormController
 
             // Use optimized batch update with JSON functions
             // This replaces the N+1 query pattern with a single UPDATE
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
                     . $db->quote('"player":"' . $from . '"') . ', '
@@ -2321,7 +2321,7 @@ class CwmadminController extends FormController
             $replaceTo = $to === '100' ? '' : $to;
 
             // Use optimized batch update
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
                     . $db->quote('"popup":"' . $searchFrom . '"') . ', '
@@ -2334,7 +2334,7 @@ class CwmadminController extends FormController
 
             // If there's a secondary search pattern (for legacy 100 value)
             if ($searchFrom2 !== null) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
                         . $db->quote('"popup":"' . $searchFrom2 . '"') . ', '
@@ -2404,7 +2404,7 @@ class CwmadminController extends FormController
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Get all media files with matching media type
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('params')])
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('media_image') . ' = ' . $mediaType);
@@ -2419,7 +2419,7 @@ class CwmadminController extends FormController
                 $reg->loadString($media->params);
                 $reg->set('player', $player);
 
-                $updateQuery = $db->getQuery(true)
+                $updateQuery = $db->createQuery()
                     ->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
                     ->where($db->quoteName('id') . ' = ' . (int) $media->id);

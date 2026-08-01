@@ -379,6 +379,10 @@ class CwmmediafileController extends FormController
                 'generalHtml' => $generalHtml,
                 'optionsHtml' => $optionsHtml,
                 'serverType'  => $serverType,
+                // The playlist picker lives outside the swapped containers, so the
+                // capability has to travel with the response for the client to
+                // show or hide it on a server change. See #1392.
+                'supportsPlaylists' => $addon->supportsPlaylists(),
             ]);
         } catch (\Exception $e) {
             CWMAddon::outputJson(['success' => false, 'error' => $e->getMessage()]);
@@ -495,7 +499,7 @@ class CwmmediafileController extends FormController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -511,7 +515,7 @@ class CwmmediafileController extends FormController
         $params = new \Joomla\Registry\Registry($paramsJson ?: '{}');
         $params->set('chapters', $clean);
 
-        $update = $db->getQuery(true)
+        $update = $db->createQuery()
             ->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -839,7 +843,7 @@ class CwmmediafileController extends FormController
 
         // Load the media file alongside its parent study's transcript in one
         // query — the join keeps us from fetching the whole study row twice.
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('m.id'),
                 $db->quoteName('m.server_id'),

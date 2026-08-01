@@ -261,6 +261,13 @@
                             optionsContent.innerHTML = data.optionsHtml || '';
                         }
 
+                        // The playlist picker sits outside both swapped containers, so
+                        // follow the new server's capability explicitly (#1392).
+                        const playlistContainer = document.getElementById('playlist-field-container');
+                        if (playlistContainer) {
+                            playlistContainer.classList.toggle('d-none', !data.supportsPlaylists);
+                        }
+
                         // Update tracked server type
                         const serverTypes = getServerTypes();
                         previousServerType = serverTypes[serverId] || '';
@@ -506,8 +513,85 @@
     /**
      * Initialize on DOM ready
      */
+    /**
+     * Re-read size, MIME type and duration from the file and put the results into
+     * the open form.
+     *
+     * Clearing a field and saving already triggers detection, but that cannot help
+     * when a file is replaced on disk under the same name: the stored values are
+     * stale rather than missing. This asks for them unconditionally.
+     */
+    function bindRedetectButton() {
+        const button = document.getElementById('proclaim-redetect-btn');
+        const label = document.getElementById('proclaim-redetect-label');
+        const result = document.getElementById('proclaim-redetect-result');
+
+        if (!button || !label || !config.redetectUrl) {
+            return;
+        }
+
+        button.addEventListener('click', async () => {
+            const original = label.textContent;
+
+            button.disabled = true;
+            label.textContent = config.redetectWorking || 'Working…';
+            result.textContent = '';
+            result.className = 'mt-2';
+
+            try {
+                const response = await window.ProclaimFetch.fetch(
+                    config.redetectUrl,
+                    {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'same-origin',
+                    },
+                    { timeout: 60000, retries: 0 },
+                );
+
+                const payload = await response.json();
+                // Joomla's JsonResponse wraps the handler's return value in `data`.
+                const data = payload.data || {};
+
+                // Put the detected values into the form so a later save keeps them
+                // rather than writing the stale ones back over the database.
+                Object.entries(data.values || {}).forEach(([name, value]) => {
+                    const field = document.getElementById(`jform_params_${name}`);
+
+                    if (!field || value === '') {
+                        return;
+                    }
+
+                    // mime_type is a <select> over a fixed catalogue. Assigning a
+                    // value it has no option for silently blanks the field, so a
+                    // detected type outside the list is added rather than lost.
+                    if (field.tagName === 'SELECT'
+                        && !Array.from(field.options).some((o) => o.value === value)) {
+                        field.add(new Option(value, value));
+                    }
+
+                    field.value = value;
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                });
+
+                const failed = payload.success === false || data.status === 'error';
+
+                result.className = `mt-2 text-${failed ? 'danger' : 'success'}`;
+                result.textContent = data.message || payload.message || '';
+            } catch (err) {
+                result.className = 'mt-2 text-danger';
+                result.textContent = `${config.redetectFailed || 'Detection failed'}: ${err.message}`;
+            } finally {
+                button.disabled = false;
+                label.textContent = original;
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         getConfig();
+
+        bindRedetectButton();
 
         const serverField = document.getElementById('jform_server_id');
         if (!serverField) {

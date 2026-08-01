@@ -55,7 +55,7 @@ class DocmanField extends ListField
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('dm.docman_document_id') . ', ' . $db->quoteName('dm.title'));
         $query->from($db->quoteName('#__docman_documents', 'dm'));
         $query->order($db->quoteName('dm.docman_document_id') . ' DESC');

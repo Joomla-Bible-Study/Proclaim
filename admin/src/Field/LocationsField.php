@@ -49,7 +49,7 @@ class LocationsField extends ListField
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('location_text'));
         $query->from($db->quoteName('#__bsms_locations'));
         $query->order($db->quoteName('location_text'));

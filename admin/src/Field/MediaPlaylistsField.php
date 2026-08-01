@@ -90,7 +90,7 @@ class MediaPlaylistsField extends ListField
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['id', 'title']))
             ->from($db->quoteName('#__bsms_playlists'))
             ->where($db->quoteName('published') . ' = 1')

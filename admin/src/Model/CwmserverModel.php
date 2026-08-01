@@ -219,7 +219,7 @@ class CwmserverModel extends AdminModel
         }
 
         if (!empty($data) && !empty($data['id'])) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'params']))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('server_id') . ' = :serverId')
@@ -282,7 +282,7 @@ class CwmserverModel extends AdminModel
         try {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__scheduler_tasks'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote('proclaim.platformstats'));

@@ -163,6 +163,22 @@ class CwmmediafileModel extends AdminModel
                 $params->set('media_icon_type', Cwmmedia::normalizeIconClass($iconType));
             }
 
+            // Normalize the duration parts to the zero-padded form every automated
+            // writer already stores. The edit form's fields are plain text with no
+            // filter, so a hand-typed "7" persisted as "7" — reaching the feed as
+            // an invalid 00:27:7, and reading as "already set" to the repair and
+            // detection routines, which compare against '00' (#1391).
+            // A blank field is left blank: clearing it is how an administrator
+            // marks a duration as unknown, and the detection routines read blank
+            // and '00' alike as "not set".
+            foreach (['media_hours', 'media_minutes', 'media_seconds'] as $durationPart) {
+                $value = trim((string) $params->get($durationPart, ''));
+
+                if ($value !== '') {
+                    $params->set($durationPart, str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT));
+                }
+            }
+
             // Normalize URLs to canonical embed format on save
             $addon = CWMAddon::getInstance($table->type);
 
@@ -255,7 +271,7 @@ class CwmmediafileModel extends AdminModel
 
             if ($recordId > 0) {
                 $db       = Factory::getContainer()->get(DatabaseInterface::class);
-                $oldQuery = $db->getQuery(true)
+                $oldQuery = $db->createQuery()
                     ->select($db->quoteName(['params', 'server_id']))
                     ->from($db->quoteName('#__bsms_mediafiles'))
                     ->where($db->quoteName('id') . ' = ' . $recordId);
@@ -280,7 +296,16 @@ class CwmmediafileModel extends AdminModel
                 $filenameChanged = ($oldFilename !== $newFilename) || ($oldServerId !== $newServerId);
             }
 
-            if ($filenameChanged) {
+            // Clearing a detected field is how an administrator asks for it to be
+            // worked out again — the obvious gesture, which the gate above used to
+            // swallow because the filename had not changed. Detecting the clear
+            // itself (rather than "is anything missing?") keeps this to the one
+            // save that cleared it, so platforms that can never supply a value do
+            // not re-hit their API on every subsequent save.
+            $clearedForRedetect = $oldParams !== null
+                && $this->metadataWasCleared($oldParams, $params);
+
+            if ($filenameChanged || $clearedForRedetect) {
                 $this->autoDetectMetadata($params, $table, $set_path, $path);
             }
 
@@ -393,7 +418,7 @@ class CwmmediafileModel extends AdminModel
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('studytitle'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('id') . ' = :studyId')
@@ -401,6 +426,42 @@ class CwmmediafileModel extends AdminModel
         $db->setQuery($query);
 
         return (string) $db->loadResult();
+    }
+
+    /**
+     * Whether this save emptied a metadata field that previously held a value.
+     *
+     * Only the fields the addons can detect are considered, and only the
+     * populated → empty transition counts: a field that was already empty stays
+     * empty without re-triggering detection.
+     *
+     * @param   Registry  $oldParams  Params as stored before this save.
+     * @param   Registry  $newParams  Params being saved.
+     *
+     * @return  bool  True when a detected value was cleared.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function metadataWasCleared(Registry $oldParams, Registry $newParams): bool
+    {
+        // size and the duration parts read as empty at zero as well as blank;
+        // mime_type is a string, where only blank means absent.
+        $numeric = ['size', 'media_hours', 'media_minutes', 'media_seconds'];
+
+        foreach ([...$numeric, 'mime_type'] as $field) {
+            $isNumeric = \in_array($field, $numeric, true);
+            $old       = trim((string) $oldParams->get($field, ''));
+            $new       = trim((string) $newParams->get($field, ''));
+
+            $wasSet = $isNumeric ? ($old !== '' && (int) $old !== 0) : $old !== '';
+            $nowSet = $isNumeric ? ($new !== '' && (int) $new !== 0) : $new !== '';
+
+            if ($wasSet && !$nowSet) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -993,7 +1054,7 @@ class CwmmediafileModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
                 $db->setQuery($query);
                 $max = $db->loadResult();

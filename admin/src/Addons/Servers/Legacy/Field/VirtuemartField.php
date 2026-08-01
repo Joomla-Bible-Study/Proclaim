@@ -64,7 +64,7 @@ class VirtuemartField extends ListField
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('v.virtuemart_product_id') . ', ' . $db->quoteName('v.product_name'));
         $query->from($db->quoteName('#__virtuemart_products_' . VMLANG, 'v'));
         $query->select($db->quoteName('p.product_sku'));

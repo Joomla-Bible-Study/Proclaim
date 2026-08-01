@@ -283,7 +283,7 @@ class CwminstallModel extends ListModel
             }
 
             // Find Extension ID of Proclaim
-            $query = $this->getDatabase()->getQuery(true);
+            $query = $this->getDatabase()->createQuery();
             $query
                 ->select($this->getDatabase()->quoteName('extension_id'))
                 ->from($this->getDatabase()->quoteName('#__extensions'))
@@ -398,7 +398,7 @@ class CwminstallModel extends ListModel
 
         if ($version && $eid) {
             // Update the database
-            $query = $this->getDatabase()->getQuery(true);
+            $query = $this->getDatabase()->createQuery();
             $query
                 ->delete()
                 ->from($this->getDatabase()->quoteName('#__schemas'))
@@ -441,7 +441,7 @@ class CwminstallModel extends ListModel
         // Remove only legacy post-install messages that used hardcoded English strings
         // (from 10.0.0 era). Preserve messages managed by CwmguidedtourHelper which use
         // proper language keys (COM_PROCLAIM_*) and should retain their enabled/hidden state.
-        $query = $this->getDatabase()->getQuery(true);
+        $query = $this->getDatabase()->createQuery();
         $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
             ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'))
             ->where($this->getDatabase()->quoteName('title_key') . ' NOT LIKE ' . $this->getDatabase()->q('COM_PROCLAIM_%'));
@@ -1009,7 +1009,7 @@ class CwminstallModel extends ListModel
             case 'rmoldurl':
                 // Removes all other update URLs except the package URL.
                 $conditions = CwmmigrationHelper::rmoldurl();
-                $query      = $this->getDatabase()->getQuery(true);
+                $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
@@ -1018,7 +1018,7 @@ class CwminstallModel extends ListModel
                 break;
             case 'setupdateurl':
                 // Find Extension ID of component
-                $query = $this->getDatabase()->getQuery(true);
+                $query = $this->getDatabase()->createQuery();
                 $query
                     ->select($this->getDatabase()->quoteName('extension_id'))
                     ->from($this->getDatabase()->quoteName('#__extensions'))
@@ -1030,7 +1030,7 @@ class CwminstallModel extends ListModel
                     $this->getDatabase()->quoteName('name') . ' = ' .
                     $this->getDatabase()->q('Proclaim Package'),
                 ];
-                $query      = $this->getDatabase()->getQuery(true);
+                $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
@@ -1040,7 +1040,7 @@ class CwminstallModel extends ListModel
                     $this->getDatabase()->quoteName('extension_id') . ' = ' .
                     $this->getDatabase()->q($eid),
                 ];
-                $query      = $this->getDatabase()->getQuery(true);
+                $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites_extensions'));
                 $query->where($conditions, $glue = 'OR');
                 $this->getDatabase()->setQuery($query);
@@ -1071,7 +1071,7 @@ class CwminstallModel extends ListModel
                 if (!isset($tableColumns[$columnName])) {
                     // Prepare the ALTER TABLE query to add the new column
                     // You can customize the column definition (e.g., VARCHAR(255) NULL) as needed
-                    $query = $this->getDatabase()->getQuery(true)
+                    $query = $this->getDatabase()->createQuery()
                         ->setQuery('ALTER TABLE ' . $this->getDatabase()->quoteName($tableName) . ' ADD ' . $this->getDatabase()->quoteName($columnName) . ' VARCHAR(255) NULL');
 
                     // Set the query and execute it
@@ -1106,7 +1106,7 @@ class CwminstallModel extends ListModel
         $eid = $this->biblestudyEid;
 
         if (!$eid) {
-            $query = $this->getDatabase()->getQuery(true)
+            $query = $this->getDatabase()->createQuery()
                 ->select($this->getDatabase()->quoteName('extension_id'))
                 ->from($this->getDatabase()->quoteName('#__extensions'))
                 ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
@@ -1116,7 +1116,7 @@ class CwminstallModel extends ListModel
         }
 
         if ($eid) {
-            $query = $this->getDatabase()->getQuery(true)
+            $query = $this->getDatabase()->createQuery()
                 ->select($this->getDatabase()->quoteName('version_id'))
                 ->from($this->getDatabase()->quoteName('#__schemas'))
                 ->where($this->getDatabase()->quoteName('extension_id') . ' = ' . $eid);
@@ -1147,7 +1147,7 @@ class CwminstallModel extends ListModel
         $drop_result = '';
 
         if ($this->getDatabase()->loadResult()) {
-            $query = $this->getDatabase()->getQuery(true);
+            $query = $this->getDatabase()->createQuery();
             $query->select('*')
                 ->from($this->getDatabase()->quoteName('#__bsms_admin'))
                 ->where($this->getDatabase()->quoteName('id') . ' = 1');
@@ -1157,13 +1157,13 @@ class CwminstallModel extends ListModel
 
             if ($drop_tables > 0) {
                 // We must remove the assets manually each time
-                $query = $this->getDatabase()->getQuery(true);
+                $query = $this->getDatabase()->createQuery();
                 $query->select($this->getDatabase()->quoteName('id'))
                     ->from($this->getDatabase()->quoteName('#__assets'))
                     ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME));
                 $this->getDatabase()->setQuery($query);
                 $parent_id = $this->getDatabase()->loadResult();
-                $query     = $this->getDatabase()->getQuery(true);
+                $query     = $this->getDatabase()->createQuery();
 
                 if ($parent_id !== '0') {
                     $query->delete()
@@ -1174,7 +1174,7 @@ class CwminstallModel extends ListModel
                     $this->getDatabase()->execute();
                 }
 
-                $query = $this->getDatabase()->getQuery(true);
+                $query = $this->getDatabase()->createQuery();
                 $query->delete()
                     ->from($this->getDatabase()->quoteName('#__assets'))
                     ->where($this->getDatabase()->quoteName('name') . ' LIKE ' . $this->getDatabase()->q(BIBLESTUDY_COMPONENT_NAME))
@@ -1207,7 +1207,7 @@ class CwminstallModel extends ListModel
         }
 
         // Post Install Messages Cleanup for Component
-        $query = $this->getDatabase()->getQuery(true);
+        $query = $this->getDatabase()->createQuery();
         $query->delete($this->getDatabase()->quoteName('#__postinstall_messages'))
             ->where($this->getDatabase()->quoteName('language_extension') . ' = ' . $this->getDatabase()->q('com_proclaim'));
         $this->getDatabase()->setQuery($query);

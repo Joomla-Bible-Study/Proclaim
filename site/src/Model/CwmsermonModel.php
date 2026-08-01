@@ -57,7 +57,7 @@ class CwmsermonModel extends FormModel
     {
         $pk    = $pk ?? (int) $this->getState('study.id');
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('hits') . ' = ' . $db->quoteName('hits') . ' + 1')
             ->where($db->quoteName('id') . ' = :id')
@@ -89,7 +89,7 @@ class CwmsermonModel extends FormModel
         if (!isset($this->_item[$pk])) {
             try {
                 $db    = $this->getDatabase();
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select(
                     $this->getState(
                         'item.select',
@@ -231,7 +231,7 @@ class CwmsermonModel extends FormModel
                 }
 
                 // Load media stats in a separate query to avoid Cartesian product with topics
-                $mediaQuery = $db->getQuery(true)
+                $mediaQuery = $db->createQuery()
                     ->select([
                         'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),
                         'SUM(' . $db->quoteName('plays') . ') AS ' . $db->quoteName('totalplays'),
@@ -337,7 +337,7 @@ class CwmsermonModel extends FormModel
         }
 
         $db        = $this->getDatabase();
-        $query     = $db->getQuery(true);
+        $query     = $db->createQuery();
         $published = 1;
         $query->select($db->quoteName('c') . '.*')
             ->from($db->quoteName('#__bsms_comments', 'c'))

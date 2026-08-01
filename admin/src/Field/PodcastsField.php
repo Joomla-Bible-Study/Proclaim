@@ -81,7 +81,7 @@ class PodcastsField extends ListField
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'title']))
             ->from($db->quoteName('#__bsms_podcast'))
             ->where($db->quoteName('published') . ' = 1')

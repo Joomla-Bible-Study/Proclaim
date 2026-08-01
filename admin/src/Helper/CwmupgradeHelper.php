@@ -78,7 +78,7 @@ class CwmupgradeHelper
 
         if ($hasSchemaVersionTable) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('version'))
                     ->from($db->quoteName('#__bsms_schemaversion'))
                     ->order($db->quoteName('id') . ' DESC')
@@ -92,7 +92,7 @@ class CwmupgradeHelper
 
         if (empty($version) && $hasVersionTable) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('version'))
                     ->from($db->quoteName('#__bsms_version'))
                     ->order($db->quoteName('id') . ' DESC')
@@ -169,7 +169,7 @@ class CwmupgradeHelper
 
         foreach ($tables as $table) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName($table['name']));
                 $db->setQuery($query);
@@ -214,7 +214,7 @@ class CwmupgradeHelper
                 }
 
                 // Load all rows with non-empty, non-JSON params
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select([$db->quoteName('id'), $db->quoteName('params')])
                     ->from($db->quoteName($table['name']))
                     ->where($db->quoteName('params') . ' IS NOT NULL')
@@ -233,7 +233,7 @@ class CwmupgradeHelper
                         continue;
                     }
 
-                    $update = $db->getQuery(true)
+                    $update = $db->createQuery()
                         ->update($db->quoteName($table['name']))
                         ->set($db->quoteName('params') . ' = ' . $db->quote($json))
                         ->where($db->quoteName('id') . ' = ' . (int) $row->id);
@@ -273,14 +273,14 @@ class CwmupgradeHelper
         }
 
         // Delete current schema entry
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $cid);
         $db->setQuery($query);
         $db->execute();
 
         // Insert baseline version so fix() runs all update files
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->insert($db->quoteName('#__schemas'))
             ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
             ->values($cid . ', ' . $db->quote('0.0.0'));
@@ -509,7 +509,7 @@ class CwmupgradeHelper
         $cid = self::getExtensionId();
 
         if ($cid) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('version_id'))
                 ->from($db->quoteName('#__schemas'))
                 ->where($db->quoteName('extension_id') . ' = ' . $cid);
@@ -592,7 +592,7 @@ class CwmupgradeHelper
             }
 
             // Current schema version from Joomla's tracking table
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('version_id'))
                 ->from($db->quoteName('#__schemas'))
                 ->where($db->quoteName('extension_id') . ' = ' . $cid);
@@ -650,7 +650,7 @@ class CwmupgradeHelper
     private static function getExtensionId(): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));

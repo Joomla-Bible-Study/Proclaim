@@ -84,7 +84,7 @@ class TopicsFormField extends FormField
     protected function getAllTopics(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('topic_text') . ', ' . $db->quoteName('params', 'topic_params'))
             ->from($db->quoteName('#__bsms_topics'))
@@ -136,7 +136,7 @@ class TopicsFormField extends FormField
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName('topic_id'))
             ->from($db->quoteName('#__bsms_studytopics'))

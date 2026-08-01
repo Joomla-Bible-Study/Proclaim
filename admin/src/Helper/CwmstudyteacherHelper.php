@@ -54,7 +54,7 @@ class CwmstudyteacherHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('st.teacher_id'),
                 $db->quoteName('st.ordering'),
@@ -98,7 +98,7 @@ class CwmstudyteacherHelper
 
         if (!empty($uncached)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('st.study_id'),
                     $db->quoteName('st.teacher_id'),
@@ -175,7 +175,7 @@ class CwmstudyteacherHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Delete existing
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_teachers'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
         $db->setQuery($query);
@@ -200,7 +200,7 @@ class CwmstudyteacherHelper
                 \count($seen) - 1,
             ];
 
-            $insert = $db->getQuery(true)
+            $insert = $db->createQuery()
                 ->insert($db->quoteName('#__bsms_study_teachers'))
                 ->columns($db->quoteName($columns))
                 ->values(implode(', ', $values));
@@ -235,7 +235,7 @@ class CwmstudyteacherHelper
             }
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('teacher_id') . ' = ' . $primaryId)
             ->where($db->quoteName('id') . ' = ' . $studyId);
@@ -257,7 +257,7 @@ class CwmstudyteacherHelper
         self::resetCache($studyId);
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_teachers'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
         $db->setQuery($query);

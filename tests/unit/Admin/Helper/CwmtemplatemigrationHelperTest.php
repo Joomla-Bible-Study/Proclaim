@@ -77,6 +77,16 @@ class TemplateMigFakeDb extends \Joomla\Database\DatabaseDriver
         return new TemplateMigFakeQuery();
     }
 
+    // The component builds queries with createQuery() (#1394). DatabaseDriver
+    // declares a QueryInterface return type that the __call-based fake cannot
+    // satisfy, and the inherited implementation needs a factory this double
+    // skips constructing — so hand back a real query. The fake DB ignores what
+    // is passed to setQuery() anyway, and building it for real costs nothing.
+    public function createQuery(): \Joomla\Database\QueryInterface
+    {
+        return new \Joomla\Database\Mysqli\MysqliQuery($this);
+    }
+
     public function setQuery($query, $offset = 0, $limit = 0): static
     {
         return $this;

@@ -616,7 +616,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id'))
                 ->from($db->quoteName('#__menu'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -631,7 +631,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             }
 
             // Fallback: any com_proclaim menu item
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id'))
                 ->from($db->quoteName('#__menu'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -768,7 +768,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
         if ($table !== '' && $id > 0) {
             try {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select($db->quoteName('alias'))
                     ->from($db->quoteName($table))
                     ->where($db->quoteName('id') . ' = ' . $id);
@@ -886,7 +886,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');

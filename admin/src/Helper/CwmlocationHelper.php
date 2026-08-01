@@ -223,7 +223,7 @@ class CwmlocationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Many-to-many path: teachers → study_teachers → studies
-        $query1 = $db->getQuery(true)
+        $query1 = $db->createQuery()
             ->select('DISTINCT ' . $db->quoteName('s.location_id'))
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -240,7 +240,7 @@ class CwmlocationHelper
             ->bind(':userId1', $userId, ParameterType::INTEGER);
 
         // Legacy path: teachers → studies.teacher_id
-        $query2 = $db->getQuery(true)
+        $query2 = $db->createQuery()
             ->select('DISTINCT ' . $db->quoteName('s.location_id'))
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -279,7 +279,7 @@ class CwmlocationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check many-to-many path
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('1')
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -298,7 +298,7 @@ class CwmlocationHelper
         }
 
         // Check legacy teacher_id path
-        $query2 = $db->getQuery(true)
+        $query2 = $db->createQuery()
             ->select('1')
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -331,7 +331,7 @@ class CwmlocationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('location_id') . ' = ' . (int) $locationId);
@@ -384,7 +384,7 @@ class CwmlocationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_locations'))
             ->where($db->quoteName('published') . ' = 1');
@@ -482,7 +482,7 @@ class CwmlocationHelper
     private static function getUnrestrictedLocations(array $mappedIds): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
             ->where($db->quoteName('published') . ' = 1');

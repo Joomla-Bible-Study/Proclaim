@@ -73,7 +73,7 @@ class CwmarchiveModel extends AdminModel
     public function doArchive(): string
     {
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
-        $query      = $db->getQuery(true);
+        $query      = $db->createQuery();
         $studies    = 0;
         $mediafiles = 0;
 
@@ -110,7 +110,7 @@ class CwmarchiveModel extends AdminModel
             $studies = $db->getAffectedRows();
         }
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         // Conditions for which records should be updated.
         $conditions = [

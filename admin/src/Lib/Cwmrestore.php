@@ -235,7 +235,7 @@ class Cwmrestore
 
             if ($result) {
                 // Get Proclaim extension ID
-                $query = $dBo->getQuery(true);
+                $query = $dBo->createQuery();
                 $query->select($dBo->quoteName('extension_id'));
                 $query->from($dBo->quoteName('#__extensions'));
                 $query->where($dBo->quoteName('element') . ' = ' . $dBo->q('com_proclaim'));
@@ -336,7 +336,7 @@ class Cwmrestore
         // After restoring, reset the schema version and run DatabaseModel::fix()
         // so that any tables/columns added after the backup was created get applied.
         try {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('extension_id'))
                 ->from($db->quoteName('#__extensions'))
                 ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
@@ -597,14 +597,14 @@ class Cwmrestore
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Delete the current schema entry
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->delete($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $extensionId);
         $db->setQuery($query);
         $db->execute();
 
         // Insert a baseline version before all update files so fix() runs everything
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->insert($db->quoteName('#__schemas'))
             ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
             ->values($extensionId . ', ' . $db->quote('0.0.0'));
@@ -748,7 +748,7 @@ class Cwmrestore
         foreach ($tablesWithOwnership as $table) {
             try {
                 // Fix created_by where user doesn't exist
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('created_by') . ' = ' . (int) $currentUserId)
                     ->where($db->quoteName('created_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
@@ -758,7 +758,7 @@ class Cwmrestore
                 $totalFixed += $db->getAffectedRows();
 
                 // Fix modified_by where user doesn't exist
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->update($db->quoteName($table))
                     ->set($db->quoteName('modified_by') . ' = ' . (int) $currentUserId)
                     ->where($db->quoteName('modified_by') . ' NOT IN (SELECT ' . $db->quoteName('id') . ' FROM ' . $db->quoteName('#__users') . ')')
@@ -812,7 +812,7 @@ class Cwmrestore
                 // Delete id=0 rows — these are restore artifacts, not real content.
                 // Joomla uses id=0 as the "new record" sentinel in forms, so a
                 // persisted row with id=0 causes conflicts and silent overwrites.
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->delete($db->quoteName($abstractName))
                     ->where($db->quoteName('id') . ' = 0');
                 $db->setQuery($query);
@@ -841,7 +841,7 @@ class Cwmrestore
                 $currentAuto = (int) $status->Auto_increment;
 
                 // Get actual maximum ID in the table
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('id') . ')')
                     ->from($db->quoteName($abstractName));
                 $db->setQuery($query);
@@ -892,7 +892,7 @@ class Cwmrestore
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check component config (params should be substantial JSON)
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('LENGTH(' . $db->quoteName('params') . ')')
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
@@ -907,7 +907,7 @@ class Cwmrestore
         $schedulerTable = $prefix . 'scheduler_tasks';
 
         if (\in_array($schedulerTable, $tables, true)) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select('COUNT(*)')
                 ->from($db->quoteName('#__scheduler_tasks'))
                 ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));

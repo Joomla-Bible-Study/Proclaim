@@ -287,7 +287,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function checkSeriesAccess(Table $row): void
     {
-        $query = $this->db->getQuery(true)
+        $query = $this->db->createQuery()
             ->select($this->db->quoteName('access'))
             ->from($this->db->quoteName('#__bsms_series'))
             ->where($this->db->quoteName('id') . ' = ' . (int) $row->id);
@@ -373,7 +373,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
      */
     protected function getStateQuery(): QueryInterface
     {
-        $query = $this->db->getQuery(true);
+        $query = $this->db->createQuery();
 
         $db = $this->db;
 
@@ -507,7 +507,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Add Topics
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('t.topic_text'))
             ->from($db->quoteName('#__bsms_topics', 't'))
             ->join('INNER', $db->quoteName('#__bsms_studytopics', 'st') . ' ON ' . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id'))
@@ -531,7 +531,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Add Scripture/Book
         if (!empty($item->booknumber)) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('bookname'))
                 ->from($db->quoteName('#__bsms_books'))
                 ->where($db->quoteName('booknumber') . ' = ' . (int) $item->booknumber);
@@ -596,7 +596,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
         $db = $this->getDatabase();
 
         // Check if we can use the supplied SQL query.
-        $query = $query instanceof QueryInterface ? $query : $db->getQuery(true)
+        $query = $query instanceof QueryInterface ? $query : $db->createQuery()
             ->select($db->quoteName('a.id') . ', ' . $db->quoteName('a.studytitle', 'title') . ', ' . $db->quoteName('a.alias') . ', ' . $db->quoteName('a.studyintro', 'summary') . ', ' . $db->quoteName('a.studytext', 'body'))
             ->select($db->quoteName('a.thumbnailm') . ', ' . $db->quoteName('a.series_id'))
             ->select($db->quoteName('a.published', 'state') . ', ' . $db->quoteName('a.studydate', 'start_date') . ', ' . $db->quoteName('a.user_id'))

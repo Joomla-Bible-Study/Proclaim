@@ -48,7 +48,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('location_text', 'name')])
                 ->from($db->quoteName('#__bsms_locations'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -101,7 +101,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             }
 
             // Page views from studies
-            $q = $db->getQuery(true)
+            $q = $db->createQuery()
                 ->select('SUM(' . $db->quoteName('hits') . ')')
                 ->from($db->quoteName('#__bsms_studies'));
 
@@ -119,7 +119,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $result['views'] = (int) ($db->loadResult() ?? 0);
 
             // Plays and downloads from media files (join to get location)
-            $q2 = $db->getQuery(true)
+            $q2 = $db->createQuery()
                 ->select([
                     'SUM(' . $db->quoteName('m.plays') . ') AS plays',
                     'SUM(' . $db->quoteName('m.downloads') . ') AS downloads',
@@ -150,7 +150,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $result['podcast_downloads']  = (int) ($row['podcast_downloads'] ?? 0);
 
             // Platform plays for ministry-created media (external plays = platform - local)
-            $q3 = $db->getQuery(true)
+            $q3 = $db->createQuery()
                 ->select([
                     'COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0) AS platform_plays',
                     'GREATEST(COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0)'
@@ -207,7 +207,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
@@ -280,7 +280,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $format = $this->resolveTimeSeriesBucket($start, $end);
             $db     = $this->getDatabase();
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     'DATE_FORMAT(' . $db->quoteName('created') . ', ' . $db->quote($format) . ') AS period',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
@@ -323,7 +323,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('e.study_id'),
                     $db->quoteName('s.studytitle', 'title'),
@@ -384,7 +384,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $db = $this->getDatabase();
 
             // Sub-query 1: local analytics events per study (within date range)
-            $localSub = $db->getQuery(true)
+            $localSub = $db->createQuery()
                 ->select([
                     $db->quoteName('e.study_id'),
                     'COUNT(*) AS local_total',
@@ -401,7 +401,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             $localSub->group($db->quoteName('e.study_id'));
 
             // Sub-query 2: platform play counts per study (all-time, ministry-created only)
-            $platSub = $db->getQuery(true)
+            $platSub = $db->createQuery()
                 ->select([
                     $db->quoteName('mf.study_id'),
                     'COALESCE(SUM(' . $db->quoteName('ps.play_count') . '), 0) AS platform_plays',
@@ -417,7 +417,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
 
             // Outer query: FULL OUTER JOIN (emulated via LEFT JOIN + UNION)
             // Using a single query with LEFT JOINs from studies to both sub-queries
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('s.id', 'study_id'),
                     $db->quoteName('s.studytitle', 'title'),
@@ -550,7 +550,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('utm_source'),
                     $db->quoteName('utm_medium'),
@@ -591,7 +591,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN ' . $db->quoteName('count') . ' ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN ' . $db->quoteName('count') . ' ELSE 0 END) AS plays',
@@ -768,7 +768,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     public function exportCsvString(string $start, string $end, int $locationId = 0): string
     {
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName('#__bsms_analytics_events'))
             ->where($db->quoteName('created') . ' >= ' . $db->quote($start . ' 00:00:00'))
@@ -825,7 +825,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
             }
 
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName($column),
                     'COUNT(*) AS count',
@@ -963,7 +963,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('series_text', 'title'), $db->quoteName('series_thumbnail', 'thumb')])
                 ->from($db->quoteName('#__bsms_series'))
                 ->where($db->quoteName('id') . ' = ' . (int) $seriesId);
@@ -994,7 +994,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' WHERE mf2.' . $db->quoteName('study_id') . ' = ' . $db->quoteName('s.id')
                 . '), 0)';
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('s.id', 'study_id'),
                     $db->quoteName('s.studytitle', 'title'),
@@ -1034,7 +1034,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('s.id'),
                     $db->quoteName('s.studytitle', 'title'),
@@ -1068,7 +1068,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('play') . ' THEN 1 ELSE 0 END) AS plays',
@@ -1103,7 +1103,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
         try {
             $format = $this->resolveTimeSeriesBucket($start, $end);
             $db     = $this->getDatabase();
-            $query  = $db->getQuery(true)
+            $query  = $db->createQuery()
                 ->select([
                     'DATE_FORMAT(' . $db->quoteName('created') . ', ' . $db->quote($format) . ') AS period',
                     'SUM(CASE WHEN ' . $db->quoteName('event_type') . ' = ' . $db->quote('page_view') . ' THEN 1 ELSE 0 END) AS views',
@@ -1133,7 +1133,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('m.id', 'media_id'),
                     $db->quoteName('m.params', 'media_params'),
@@ -1208,7 +1208,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('ps.platform'),
                     'COUNT(*) AS media_count',
@@ -1286,7 +1286,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('ps.media_id'),
                     $db->quoteName('ps.platform'),
@@ -1340,7 +1340,7 @@ class CwmanalyticsModel extends BaseDatabaseModel
                 . ' WHERE mf2.' . $db->quoteName('server_id') . ' = sv.' . $db->quoteName('id')
                 . '), 0)';
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     'COALESCE(' . $db->quoteName('sv.server_name') . ', ' . $db->quote('Unknown') . ') AS server_name',
                     'COALESCE(' . $db->quoteName('sv.type') . ', ' . $db->quote('other') . ') AS server_type',

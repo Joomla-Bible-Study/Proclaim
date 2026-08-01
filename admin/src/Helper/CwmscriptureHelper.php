@@ -57,7 +57,7 @@ class CwmscriptureHelper extends ScriptureHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId)
@@ -99,7 +99,7 @@ class CwmscriptureHelper extends ScriptureHelper
 
         if (!empty($uncached)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('*')
                 ->from($db->quoteName('#__bsms_study_scriptures'))
                 ->whereIn($db->quoteName('study_id'), $uncached)
@@ -160,7 +160,7 @@ class CwmscriptureHelper extends ScriptureHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
         $db->setQuery($query);
@@ -183,7 +183,7 @@ class CwmscriptureHelper extends ScriptureHelper
                 $db->quote($ref->referenceText),
             ];
 
-            $insert = $db->getQuery(true)
+            $insert = $db->createQuery()
                 ->insert($db->quoteName('#__bsms_study_scriptures'))
                 ->columns($db->quoteName($columns))
                 ->values(implode(', ', $values));
@@ -243,7 +243,7 @@ class CwmscriptureHelper extends ScriptureHelper
             $fields[] = $db->quoteName('bible_version2') . ' = NULL';
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_studies'))
             ->set($fields)
             ->where($db->quoteName('id') . ' = ' . $studyId);
@@ -263,7 +263,7 @@ class CwmscriptureHelper extends ScriptureHelper
     public static function deleteScriptures(int $studyId): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
         $db->setQuery($query);

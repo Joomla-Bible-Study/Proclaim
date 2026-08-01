@@ -220,7 +220,7 @@ class CwmcsvimportHelper
             0,
         ];
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->insert($db->quoteName('#__bsms_studies'))
             ->columns($db->quoteName($columns))
             ->values(implode(', ', $values));
@@ -312,7 +312,7 @@ class CwmcsvimportHelper
         }
 
         if (!empty($fields)) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_studies'))
                 ->set($fields)
                 ->where($db->quoteName('id') . ' = ' . $studyId);
@@ -376,7 +376,7 @@ class CwmcsvimportHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Case-insensitive lookup
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->where('LOWER(' . $db->quoteName('teachername') . ') = LOWER(' . $db->quote($name) . ')')
@@ -397,7 +397,7 @@ class CwmcsvimportHelper
         // Auto-create
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->getQuery(true)
+        $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_teachers'))
             ->columns($db->quoteName(['teachername', 'alias', 'published']))
             ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
@@ -443,7 +443,7 @@ class CwmcsvimportHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_series'))
             ->where('LOWER(' . $db->quoteName('series_text') . ') = LOWER(' . $db->quote($name) . ')')
@@ -463,7 +463,7 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->getQuery(true)
+        $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_series'))
             ->columns($db->quoteName(['series_text', 'alias', 'published']))
             ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
@@ -509,7 +509,7 @@ class CwmcsvimportHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
             ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(' . $db->quote($name) . ')')
@@ -529,7 +529,7 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->getQuery(true)
+        $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_locations'))
             ->columns($db->quoteName(['location_text', 'alias', 'published']))
             ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
@@ -575,7 +575,7 @@ class CwmcsvimportHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_message_type'))
             ->where('LOWER(' . $db->quoteName('message_type') . ') = LOWER(' . $db->quote($name) . ')')
@@ -595,7 +595,7 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->getQuery(true)
+        $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_message_type'))
             ->columns($db->quoteName(['message_type', 'alias', 'published']))
             ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
@@ -641,7 +641,7 @@ class CwmcsvimportHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_topics'))
             ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(' . $db->quote($name) . ')')
@@ -661,7 +661,7 @@ class CwmcsvimportHelper
 
         $alias = OutputFilter::stringURLSafe($name);
 
-        $insert = $db->getQuery(true)
+        $insert = $db->createQuery()
             ->insert($db->quoteName('#__bsms_topics'))
             ->columns($db->quoteName(['topic_text', 'alias', 'published']))
             ->values($db->quote($name) . ', ' . $db->quote($alias) . ', 1');
@@ -792,7 +792,7 @@ class CwmcsvimportHelper
             }
 
             // Check if mapping already exists
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studytopics'))
                 ->where($db->quoteName('study_id') . ' = ' . $studyId)
@@ -803,7 +803,7 @@ class CwmcsvimportHelper
                 continue;
             }
 
-            $insert = $db->getQuery(true)
+            $insert = $db->createQuery()
                 ->insert($db->quoteName('#__bsms_studytopics'))
                 ->columns($db->quoteName(['study_id', 'topic_id']))
                 ->values($studyId . ', ' . $topicId);
@@ -826,7 +826,7 @@ class CwmcsvimportHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where('LOWER(' . $db->quoteName('studytitle') . ') = LOWER(' . $db->quote($title) . ')')
@@ -1018,7 +1018,7 @@ class CwmcsvimportHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
             ->where('LOWER(' . $db->quoteName('location_text') . ') = LOWER(' . $db->quote($name) . ')')

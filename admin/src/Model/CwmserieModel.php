@@ -169,7 +169,7 @@ class CwmserieModel extends AdminModel
     {
         if (empty($this->teacher)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'))
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('published') . ' = 1');
@@ -485,7 +485,7 @@ class CwmserieModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_series'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
@@ -650,7 +650,7 @@ class CwmserieModel extends AdminModel
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select([
             $db->quoteName('study.id'),

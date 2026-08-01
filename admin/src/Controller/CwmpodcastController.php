@@ -140,7 +140,7 @@ class CwmpodcastController extends FormController
 
             // Load the podcast to get its filename (RSS feed)
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'filename', 'title']))
                 ->from($db->quoteName('#__bsms_podcast'))
                 ->where($db->quoteName('id') . ' = :pid')

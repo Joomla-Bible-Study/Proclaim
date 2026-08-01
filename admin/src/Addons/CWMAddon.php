@@ -630,7 +630,7 @@ abstract class CWMAddon
             $select[] = $db->quoteName('stats_synced_at');
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($select)
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1');
@@ -675,7 +675,7 @@ abstract class CWMAddon
     public static function getPlaylistCapableServers(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['id', 'server_name', 'type']))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')
@@ -1052,14 +1052,17 @@ abstract class CWMAddon
      */
     protected function needsDetection(Registry $params): array
     {
-        $hours   = $params->get('media_hours', '00');
-        $minutes = $params->get('media_minutes', '00');
-        $seconds = $params->get('media_seconds', '00');
+        // Numeric comparison: a duration stored as '0' rather than '00' is still
+        // no duration, but a string comparison read it as set and skipped
+        // detection for exactly those records (#1391).
+        $hours   = (int) $params->get('media_hours', '00');
+        $minutes = (int) $params->get('media_minutes', '00');
+        $seconds = (int) $params->get('media_seconds', '00');
 
         return [
             'needsSize'     => empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000,
             'needsMime'     => empty($params->get('mime_type')),
-            'needsDuration' => ($hours === '00' && $minutes === '00' && $seconds === '00'),
+            'needsDuration' => (!$hours && !$minutes && !$seconds),
         ];
     }
 
@@ -1195,7 +1198,7 @@ abstract class CWMAddon
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $now   = Factory::getDate()->toSql();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
             ->where($db->quoteName('id') . ' = ' . $serverId);
@@ -1227,7 +1230,7 @@ abstract class CWMAddon
         bool $includeArchived = true
     ): array {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->where($db->quoteName('m.server_id') . ' = ' . (int) $serverId);
@@ -1286,7 +1289,7 @@ abstract class CWMAddon
     protected static function getMediaVideoCount(int $serverId, bool $includeArchived = true): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('server_id') . ' = ' . (int) $serverId);

@@ -76,7 +76,7 @@ class CwmtemplateController extends FormController
         // are read-only — campus users must clone them first.
         if (!$isAdmin && $recordId > 0 && CwmlocationHelper::isEnabled()) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('location_id'))
                 ->from($db->quoteName('#__bsms_templates'))
                 ->where($db->quoteName('id') . ' = :rid')

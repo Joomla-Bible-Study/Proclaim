@@ -38,7 +38,7 @@ function admin_postinstall_archivedmessages_condition(): bool
 {
     try {
         $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('params')
             ->from('#__bsms_templates')
             ->setLimit(1);

@@ -99,7 +99,7 @@ class Cwmstats
     public static function totalPlays(int $id, bool $includePlatform = false): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query
             ->select('SUM(' . $db->quoteName('m.plays') . ')')
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
@@ -149,7 +149,7 @@ class Cwmstats
             self::$total_messages_end   = $end;
 
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies', 's'))
@@ -201,7 +201,7 @@ class Cwmstats
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () use ($start, $end) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies', 's'))
@@ -259,7 +259,7 @@ class Cwmstats
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->from($db->quoteName('#__bsms_studies', 's'))
@@ -328,7 +328,7 @@ class Cwmstats
             $month      = mktime(0, 0, 0, (int) date("m") - 1, (int) date("d"), (int) date("Y"));
             $last_month = date("Y-m-d 00:00:01", $month);
             $db         = Factory::getContainer()->get(DatabaseInterface::class);
-            $query      = $db->getQuery(true);
+            $query      = $db->createQuery();
             $query
                 ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->from($db->quoteName('#__bsms_studies', 's'))
@@ -400,7 +400,7 @@ class Cwmstats
         $pc     = self::getPersistentCache();
         $result = $pc->get(function () {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query
                 ->select($db->quoteName(['mf.downloads']))
                 ->select($db->quoteName('s.id', 'sid'))
@@ -463,7 +463,7 @@ class Cwmstats
             $month     = mktime(0, 0, 0, (int) date("m") - 3, (int) date("d"), (int) date("Y"));
             $lastmonth = date("Y-m-d 00:00:01", $month);
             $db        = Factory::getContainer()->get(DatabaseInterface::class);
-            $query     = $db->getQuery(true);
+            $query     = $db->createQuery();
             $query
                 ->select($db->quoteName(['mf.downloads']))
                 ->select($db->quoteName('s.id', 'sid'))
@@ -516,7 +516,7 @@ class Cwmstats
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query
             ->select('SUM(' . $db->quoteName('downloads') . ')')
             ->from($db->quoteName('#__bsms_mediafiles'))
@@ -564,7 +564,7 @@ class Cwmstats
             $format = (int) $admin->params->get('format_popular', 0);
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.hits', 's.access']))
                 ->select('SUM(' . $db->quoteName('mf.downloads') . ' + ' . $db->quoteName('mf.plays') . ') AS added')
                 ->from($db->quoteName('#__bsms_studies', 's'))
@@ -655,7 +655,7 @@ class Cwmstats
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         // Use SQL to extract and count player/popup values directly from JSON params
         // This avoids loading all records into PHP memory
@@ -727,7 +727,7 @@ class Cwmstats
         ];
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->whereIn($db->quoteName('published'), [1, 2]);
@@ -870,7 +870,7 @@ class Cwmstats
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query
             ->select($db->quoteName(['id', 'state']))
             ->from($db->quoteName('#__scheduler_tasks'))
@@ -958,7 +958,7 @@ class Cwmstats
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_podcast'))
@@ -990,7 +990,7 @@ class Cwmstats
         $format = (int) $admin->params->get('format_popular', 0);
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']))
             ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))

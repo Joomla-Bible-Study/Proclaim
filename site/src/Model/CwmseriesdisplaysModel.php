@@ -235,7 +235,7 @@ class CwmseriesdisplaysModel extends ListModel
         // Create a new query object.
         $db = $this->getDatabase();
 
-        $query           = $db->getQuery(true);
+        $query           = $db->createQuery();
         $params          = ComponentHelper::getParams('com_proclaim');
 
         $query->select(

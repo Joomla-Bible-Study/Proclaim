@@ -734,6 +734,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Drop the inline onchange="this.form.submit();" the filter form XML puts on
+     * every select.  It is there for the simple/expert/custom sermon templates,
+     * which never load this script and still need an immediate submit.  Here it
+     * would fire alongside the change listeners below, costing a second AJAX
+     * request that the first one immediately aborts.  See #1389.
+     */
+    form.querySelectorAll('select[name^="filter_"], select[name^="filter["], select[name^="list_"], select[name^="list["]').forEach((select) => {
+        select.removeAttribute('onchange');
+        select.onchange = null;
+    });
+
+    /**
      * Intercept filter dropdown changes.
      * Suppressed while searchtools Clear is resetting fields — the
      * form submit at the end of clear() handles the single AJAX call.

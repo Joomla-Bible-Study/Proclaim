@@ -56,7 +56,7 @@ class TopicsListField extends ListField
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select(
             'DISTINCT ' . $db->quoteName('t.id') . ', '

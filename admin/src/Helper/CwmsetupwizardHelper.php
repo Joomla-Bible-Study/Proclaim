@@ -90,7 +90,7 @@ class CwmsetupwizardHelper
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Check if wizard was already completed or dismissed
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -108,7 +108,7 @@ class CwmsetupwizardHelper
 
             // Distinguish fresh install from upgrade: if studies exist,
             // this is an upgrade and the wizard should not auto-show.
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies'));
             $db->setQuery($query);
@@ -157,7 +157,7 @@ class CwmsetupwizardHelper
             }
 
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -191,7 +191,7 @@ class CwmsetupwizardHelper
     {
         try {
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
-            $query  = $db->getQuery(true)
+            $query  = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -207,7 +207,7 @@ class CwmsetupwizardHelper
             $items = [];
 
             // Check if default teacher has been edited (has more than just a name)
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('teachername'), $db->quoteName('short'), $db->quoteName('image')])
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -225,7 +225,7 @@ class CwmsetupwizardHelper
             ];
 
             // Check if a real message exists (not sample)
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_studies'))
                 ->where($db->quoteName('published') . ' >= 0')
@@ -242,7 +242,7 @@ class CwmsetupwizardHelper
 
             // Check if a series with image exists (Full/Multi-Campus)
             if ($style !== 'simple') {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('#__bsms_series'))
                     ->where($db->quoteName('published') . ' = 1')
@@ -261,7 +261,7 @@ class CwmsetupwizardHelper
 
             // Check if podcast is configured (if enabled)
             if ($style !== 'simple') {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('#__bsms_podcast'))
                     ->where($db->quoteName('published') . ' = 1');
@@ -292,7 +292,7 @@ class CwmsetupwizardHelper
             }
 
             // View your site
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__menu'))
                 ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim&view=cwmsermons%'))

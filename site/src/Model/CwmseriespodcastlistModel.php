@@ -203,7 +203,7 @@ class CwmseriespodcastlistModel extends ListModel
 
         // Create a new query object.
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         // Select only the columns we need for performance
         $query->select(

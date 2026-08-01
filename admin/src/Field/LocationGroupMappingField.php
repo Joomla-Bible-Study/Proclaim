@@ -57,7 +57,7 @@ class LocationGroupMappingField extends FormField
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Load published locations with message counts
-        $locQuery = $db->getQuery(true)
+        $locQuery = $db->createQuery()
             ->select([
                 $db->quoteName('l.id'),
                 $db->quoteName('l.location_text'),
@@ -81,7 +81,7 @@ class LocationGroupMappingField extends FormField
         }
 
         // Load all published user groups
-        $groupQuery = $db->getQuery(true)
+        $groupQuery = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('title')])
             ->from($db->quoteName('#__usergroups'))
             ->order($db->quoteName('lft'));

@@ -140,7 +140,7 @@ trait CwmActionlogListTrait
         try {
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $column = (string) ($this->actionlogTitleColumn ?? '');
-            $query  = $db->getQuery(true)
+            $query  = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName($this->actionlogTable))
                 ->whereIn($db->quoteName('id'), $ids, ParameterType::INTEGER);
@@ -185,7 +185,7 @@ trait CwmActionlogListTrait
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'published']))
                 ->from($db->quoteName($this->actionlogTable))
                 ->whereIn($db->quoteName('id'), $ids, ParameterType::INTEGER);
@@ -224,7 +224,7 @@ trait CwmActionlogListTrait
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName($this->actionlogTable))
                 ->whereIn($db->quoteName('id'), $ids, ParameterType::INTEGER);

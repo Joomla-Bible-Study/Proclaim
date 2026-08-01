@@ -119,7 +119,7 @@ class LocationField extends FormField
 
         if ($value) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('location_text'))
                 ->from($db->quoteName('#__bsms_locations'))
                 ->where($db->quoteName('id') . ' = :value')

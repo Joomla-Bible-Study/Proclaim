@@ -134,7 +134,7 @@ class Cwmtranslated
         // Check if there should be topics at all to save time
         if ($topicItem && $topicItem->tp_id) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('#__bsms_topics.topic_text') . ', ' . $db->quoteName('#__bsms_topics.params', 'topic_params'))
                 ->from($db->quoteName('#__bsms_topics'))
                 ->leftJoin(
@@ -181,7 +181,7 @@ class Cwmtranslated
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select([
             $db->quoteName('st.study_id'),
             $db->quoteName('t.topic_text'),

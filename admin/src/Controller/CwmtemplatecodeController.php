@@ -105,7 +105,7 @@ class CwmtemplatecodeController extends FormController
         // codes assigned to their campus. Global codes are read-only.
         if (!$isAdmin && $recordId > 0 && CwmlocationHelper::isEnabled()) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('location_id'))
                 ->from($db->quoteName('#__bsms_templatecode'))
                 ->where($db->quoteName('id') . ' = :rid')

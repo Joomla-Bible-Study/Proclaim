@@ -19,6 +19,36 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.0</version>
+        <date>2026-08-01</date>
+        <addition>
+            <item>Re-detect Metadata button on the media file edit form, re-reading size, MIME type and duration from the file — for files replaced on disk under the same name, where the stored values are stale rather than missing</item>
+            <item>Re-read every file option on the Fix Missing Metadata tool, applying the same re-read in bulk. Opt-in per run: it reads every file, and on hosted platforms costs one API call per video</item>
+            <item>Clearing a detected field and saving now re-runs detection for it, so emptying the file size is enough to have it worked out again</item>
+        </addition>
+        <fix>
+            <item>Podcast feed: itunes:duration is zero-padded. A single-digit seconds value was emitted bare (00:27:7), which Apple's validator rejects and several clients ignore</item>
+            <item>Podcast feed: the enclosure type is derived from the file rather than trusted from the record, and no longer defaults to the unregistered audio/mpeg3. Feeds declaring .m4a files as MP3 are corrected</item>
+            <item>Podcast feed: guid carries isPermaLink="false". RSS 2.0 defaults it to true, inviting readers to fetch the guid as a web page</item>
+            <item>Podcast feed: URLs default to https rather than http, and a root-relative podcast link no longer produces a malformed https:///path</item>
+            <item>Media durations are stored zero-padded when entered by hand. A value typed as 7 persisted as 7, and then read as "already set" to every repair and detection routine, leaving those records invisible to the tools meant to fix them</item>
+            <item>The MIME picker offered audio/mp3, which is not a registered media type and was the only MP3 option available. mp3, m4a, avi and exe now match what detection resolves</item>
+            <item>Podcast validation reports a stored MIME type that contradicts the file, and the Fix Missing Metadata tool now corrects it rather than reporting the record as already set</item>
+            <item>Sermons list: the filter panel no longer renders open on every visit, and a filter change issues one AJAX request rather than two</item>
+            <item>Media file edit: Choose Playlist(s) is hidden for server types that cannot host playlists, where it could only ever be empty</item>
+        </fix>
+        <change>
+            <item>Queries are built with createQuery() throughout — 666 call sites — with a CI check to keep it that way</item>
+            <item>Caches are cleared after an update, and third-party caches Proclaim cannot clear are named so they can be cleared by hand</item>
+        </change>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.4.1                                                   -->
     <!-- ============================================================ -->
     <changelog>

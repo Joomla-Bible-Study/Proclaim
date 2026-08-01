@@ -268,7 +268,7 @@ class HtmlView extends BaseHtmlView
                 if (\count($modules)) {
                     foreach ($modules as $module => $modulePreferences) {
                         // Was the module already installed?
-                        $sql = $db->getQuery(true);
+                        $sql = $db->createQuery();
                         $sql->select('COUNT(*)')->from($db->quoteName('#__extensions'))->where($db->quoteName('name') . ' = ' . $db->q('mod_' . $module));
                         $db->setQuery($sql);
                         $result                     = $db->loadResult();
@@ -305,7 +305,7 @@ class HtmlView extends BaseHtmlView
             foreach ($installation_queue['plugins'] as $folder => $plugins) {
                 if (\count($plugins)) {
                     foreach ($plugins as $plugin => $published) {
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $query->select('COUNT(*)')
                             ->from($db->quoteName('#__extensions'))
                             ->where($db->quoteName('folder') . ' = ' . $db->q($folder))

@@ -69,7 +69,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
         if ($pk > 0) {
             if (!isset($this->_item[$pk])) {
                 $db    = $this->getDatabase();
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select(
                     $this->getState(
                         'item.select',
@@ -123,7 +123,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $user            = $app->getIdentity();
         $groups          = $user->getAuthorisedViewLevels();
         $db              = $this->getDatabase();
-        $query           = $db->getQuery(true);
+        $query           = $db->createQuery();
         $template_params = Cwmparams::getTemplateparams();
         $t_params        = $template_params->params;
         $nullDate        = $db->getNullDate();
@@ -313,7 +313,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
 
         // Batch-load media stats separately to avoid Cartesian product
         $studyIds   = array_column($studies, 'id');
-        $mediaQuery = $db->getQuery(true)
+        $mediaQuery = $db->createQuery()
             ->select([
                 $db->quoteName('study_id'),
                 'GROUP_CONCAT(DISTINCT ' . $db->quoteName('id') . ') AS ' . $db->quoteName('mids'),

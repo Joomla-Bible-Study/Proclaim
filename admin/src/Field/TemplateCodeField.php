@@ -103,7 +103,7 @@ class TemplateCodeField extends ListField
     protected function loadTemplateCodes(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName(['id', 'type', 'filename']))
             ->from($db->quoteName('#__bsms_templatecode'))
