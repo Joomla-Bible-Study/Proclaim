@@ -2146,12 +2146,16 @@ class Cwmpodcast
      * Used for AJAX batch processing.
      *
      * @param   int|null  $podcastId  Optional podcast ID to filter by
+     * @param   bool      $all        Return every published file rather than only
+     *                                those with something missing. For re-reading
+     *                                values that are present but stale — a file
+     *                                replaced on disk under the same name.
      *
      * @return array  Array of files needing metadata fix with id, title, and missing fields
      *
      * @since 10.1.0
      */
-    public function getMediaFilesNeedingMetadata(?int $podcastId = null): array
+    public function getMediaFilesNeedingMetadata(?int $podcastId = null, bool $all = false): array
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
@@ -2202,11 +2206,14 @@ class Cwmpodcast
                 $missing[] = 'duration';
             }
 
-            if (!empty($missing)) {
+            if ($all || !empty($missing)) {
                 $result[] = [
-                    'id'      => (int) $media->id,
-                    'title'   => $media->studytitle ?: 'ID: ' . $media->id,
-                    'missing' => $missing,
+                    'id'    => (int) $media->id,
+                    'title' => $media->studytitle ?: 'ID: ' . $media->id,
+                    // Nothing is "missing" on a forced pass — every value is being
+                    // re-read — so name what will be looked at instead of showing
+                    // an empty list in the progress readout.
+                    'missing' => $missing ?: ['size', 'mime_type', 'duration'],
                 ];
             }
         }

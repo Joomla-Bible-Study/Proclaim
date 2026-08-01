@@ -247,9 +247,14 @@ class CwmpodcastsController extends AdminController
             return;
         }
 
+        // all=1 lists every published file rather than only those with something
+        // missing — the "re-read everything" pass, for values that are stale
+        // rather than absent.
+        $all = (bool) $this->input->getInt('all', 0);
+
         try {
             $podcasts = new Cwmpodcast();
-            $files    = $podcasts->getMediaFilesNeedingMetadata();
+            $files    = $podcasts->getMediaFilesNeedingMetadata(null, $all);
             $methods  = $podcasts->getAvailableDurationMethods();
 
             echo new JsonResponse([
