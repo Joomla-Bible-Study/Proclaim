@@ -2,7 +2,7 @@
 <extension type="package" method="upgrade">
     <packagename>proclaim</packagename>
     <name>PKG_PROCLAIM</name>
-    <version>10.5.2</version>
+    <version>10.5.3</version>
     <creationDate>2026-08-01</creationDate>
     <author>CWM Team</author>
     <authorEmail>info@christianwebministries.org</authorEmail>
