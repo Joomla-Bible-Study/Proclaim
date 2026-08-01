@@ -751,7 +751,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.0
      */
     private function clearCaches(): void
     {
@@ -793,7 +793,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.0
      */
     private function warnAboutExternalCaches($app): void
     {

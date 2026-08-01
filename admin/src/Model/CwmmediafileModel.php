@@ -440,7 +440,7 @@ class CwmmediafileModel extends AdminModel
      *
      * @return  bool  True when a detected value was cleared.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.0
      */
     protected function metadataWasCleared(Registry $oldParams, Registry $newParams): bool
     {

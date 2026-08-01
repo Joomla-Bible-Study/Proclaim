@@ -834,7 +834,7 @@ class Cwmpodcast
      *
      * @return  string  A MIME type suitable for the enclosure's type attribute.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.0
      */
     private function resolveEnclosureType(string $path, ?string $storedType): string
     {
@@ -2250,7 +2250,7 @@ class Cwmpodcast
      *
      * @return  bool  True when the stored type contradicts the file.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.0
      */
     protected function mimeTypeContradictsFile(Registry $params): bool
     {
