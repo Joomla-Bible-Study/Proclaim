@@ -1,0 +1,2 @@
+**Sermons with no series now show up in your podcast feed.** Proclaim checked for one specific "no series" value when building the feed, but that's not the value actually saved when you leave the series field blank — so any correctly published, correctly tagged episode without a series was silently left out. If most of your messages are standalone sermons rather than part of a series, this likely affected a large share of your feed.
+Rebuild your podcast feed after updating and the missing episodes appear.
