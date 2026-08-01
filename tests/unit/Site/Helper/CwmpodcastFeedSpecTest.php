@@ -119,6 +119,80 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         $this->assertSame('', $result, 'An all-zero duration must be omitted, not emitted as 00:00:00');
     }
 
+    /**
+     * Values a hand-typed duration can hold, and their normalized form.
+     *
+     * @return  array<string, array{0: string, 1: string}>
+     */
+    public static function durationNormalizationProvider(): array
+    {
+        return [
+            'single digit' => ['7', '07'],
+            'bare zero'    => ['0', '00'],
+            'empty'        => ['', '00'],
+            'already ok'   => ['07', '07'],
+            'two digits'   => ['27', '27'],
+            'three digits' => ['100', '100'],
+            'stray spaces' => [' 7 ', '07'],
+        ];
+    }
+
+    /**
+     * The edit form's duration fields are plain text with no filter, so what an
+     * admin types is what persists. Every automated writer pads to two digits;
+     * the model now holds manual entry to the same shape, so the bad value never
+     * reaches storage in the first place.
+     *
+     * @param   string  $typed     What the admin entered.
+     * @param   string  $expected  What must be stored.
+     *
+     * @return  void
+     */
+    #[DataProvider('durationNormalizationProvider')]
+    public function testDurationPartsAreNormalizedOnSave(string $typed, string $expected): void
+    {
+        $source = file_get_contents(
+            \dirname(__DIR__, 4) . '/admin/src/Model/CwmmediafileModel.php'
+        );
+
+        $this->assertStringContainsString(
+            "foreach (['media_hours', 'media_minutes', 'media_seconds'] as \$durationPart)",
+            $source,
+            'CwmmediafileModel::save() must normalize the duration parts'
+        );
+
+        // Mirror of the normalization the model applies, pinned so a change to
+        // the padding rule has to be a deliberate one.
+        $value  = trim($typed);
+        $result = $value === '' ? '00' : str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT);
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * A duration stored as '0' must read as "not set" everywhere, or the repair
+     * and detection routines skip exactly the records that need them.
+     *
+     * @return  void
+     */
+    public function testDurationSetChecksCompareNumerically(): void
+    {
+        $files = [
+            '/site/src/Helper/Cwmpodcast.php',
+            '/admin/src/Addons/CWMAddon.php',
+        ];
+
+        foreach ($files as $file) {
+            $source = file_get_contents(\dirname(__DIR__, 4) . $file);
+
+            $this->assertDoesNotMatchRegularExpression(
+                "/\\\$hours\s*[!=]==\s*'00'/",
+                $source,
+                \sprintf('%s still compares a duration against the string \'00\'', $file)
+            );
+        }
+    }
+
     // -------------------------------------------------------------------------
     // 2. enclosure type derivation
     // -------------------------------------------------------------------------

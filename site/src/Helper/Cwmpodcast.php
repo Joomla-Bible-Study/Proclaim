@@ -1613,12 +1613,15 @@ class Cwmpodcast
             $params = new Registry($media->params);
             $title  = $media->studytitle ?: 'ID: ' . $media->id;
 
-            // Check if duration is already set
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
+            // Check if duration is already set. Numeric comparison: a record
+            // holding '0' rather than '00' has no duration, and a string
+            // comparison here made the repair tool skip the very records it
+            // exists to fix (#1391).
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
 
-            if ($hours !== '00' || $minutes !== '00' || $seconds !== '00') {
+            if ($hours || $minutes || $seconds) {
                 $skipped++;
                 continue;
             }
@@ -1887,12 +1890,12 @@ class Cwmpodcast
         foreach ($mediaFiles as $media) {
             $params = new Registry($media->params);
 
-            // Check if duration is already set
-            $hours   = $params->get('media_hours', '00');
-            $minutes = $params->get('media_minutes', '00');
-            $seconds = $params->get('media_seconds', '00');
+            // Check if duration is already set (numeric — see fixMediaDurations)
+            $hours   = (int) $params->get('media_hours', '00');
+            $minutes = (int) $params->get('media_minutes', '00');
+            $seconds = (int) $params->get('media_seconds', '00');
 
-            if ($hours === '00' && $minutes === '00' && $seconds === '00') {
+            if (!$hours && !$minutes && !$seconds) {
                 $result[] = [
                     'id'    => (int) $media->id,
                     'title' => $media->studytitle ?: 'ID: ' . $media->id,
@@ -2249,10 +2252,10 @@ class Cwmpodcast
         // Determine what needs to be fixed
         $needsSize     = empty($params->get('size', 0)) || $params->get('size', 0) < 1000;
         $needsMimeType = empty($params->get('mime_type'));
-        $hours         = $params->get('media_hours', '00');
-        $minutes       = $params->get('media_minutes', '00');
-        $seconds       = $params->get('media_seconds', '00');
-        $needsDuration = ($hours === '00' && $minutes === '00' && $seconds === '00');
+        $hours         = (int) $params->get('media_hours', '00');
+        $minutes       = (int) $params->get('media_minutes', '00');
+        $seconds       = (int) $params->get('media_seconds', '00');
+        $needsDuration = (!$hours && !$minutes && !$seconds);
 
         if (!$needsSize && !$needsMimeType && !$needsDuration) {
             return [
@@ -2573,10 +2576,10 @@ class Cwmpodcast
             }
             if (\in_array('duration', $fixed)) {
                 $durationStr = \sprintf(
-                    '%s:%s:%s',
-                    $params->get('media_hours', '00'),
-                    $params->get('media_minutes', '00'),
-                    $params->get('media_seconds', '00')
+                    '%02d:%02d:%02d',
+                    (int) $params->get('media_hours', '00'),
+                    (int) $params->get('media_minutes', '00'),
+                    (int) $params->get('media_seconds', '00')
                 );
                 $fixedLabels[] = Text::sprintf('JBS_PDC_FIX_METADATA_DURATION_VALUE', $durationStr);
             }

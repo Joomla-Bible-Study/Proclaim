@@ -163,6 +163,20 @@ class CwmmediafileModel extends AdminModel
                 $params->set('media_icon_type', Cwmmedia::normalizeIconClass($iconType));
             }
 
+            // Normalize the duration parts to the zero-padded form every automated
+            // writer already stores. The edit form's fields are plain text with no
+            // filter, so a hand-typed "7" persisted as "7" — reaching the feed as
+            // an invalid 00:27:7, and reading as "already set" to the repair and
+            // detection routines, which compare against '00' (#1391).
+            foreach (['media_hours', 'media_minutes', 'media_seconds'] as $durationPart) {
+                $value = (string) $params->get($durationPart, '');
+
+                $params->set(
+                    $durationPart,
+                    $value === '' ? '00' : str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT)
+                );
+            }
+
             // Normalize URLs to canonical embed format on save
             $addon = CWMAddon::getInstance($table->type);
 

@@ -1052,14 +1052,17 @@ abstract class CWMAddon
      */
     protected function needsDetection(Registry $params): array
     {
-        $hours   = $params->get('media_hours', '00');
-        $minutes = $params->get('media_minutes', '00');
-        $seconds = $params->get('media_seconds', '00');
+        // Numeric comparison: a duration stored as '0' rather than '00' is still
+        // no duration, but a string comparison read it as set and skipped
+        // detection for exactly those records (#1391).
+        $hours   = (int) $params->get('media_hours', '00');
+        $minutes = (int) $params->get('media_minutes', '00');
+        $seconds = (int) $params->get('media_seconds', '00');
 
         return [
             'needsSize'     => empty($params->get('size', 0)) || (int) $params->get('size', 0) < 1000,
             'needsMime'     => empty($params->get('mime_type')),
-            'needsDuration' => ($hours === '00' && $minutes === '00' && $seconds === '00'),
+            'needsDuration' => (!$hours && !$minutes && !$seconds),
         ];
     }
 
