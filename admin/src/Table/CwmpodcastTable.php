@@ -51,6 +51,15 @@ class CwmpodcastTable extends Table
     public ?int $published = 1;
 
     /**
+     * 1 = rewrite feed enclosures through the download-tracking redirect (on by default)
+     *
+     * @var int|null
+     *
+     * @since 10.3.3
+     */
+    public ?int $track_downloads = 1;
+
+    /**
      * Location ID (multi-campus)
      *
      * @var int|null
@@ -77,6 +86,15 @@ class CwmpodcastTable extends Table
     public ?string $website = null;
 
     /**
+     * Legacy podcast URL — menu item ID for the podcast's site page.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $podcastlink = null;
+
+    /**
      * Description
      *
      * @var string|null
@@ -84,6 +102,15 @@ class CwmpodcastTable extends Table
      * @since 9.0.0
      */
     public ?string $description = null;
+
+    /**
+     * Subtitle
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $subtitle = null;
 
     /**
      * Image
@@ -284,6 +311,62 @@ class CwmpodcastTable extends Table
     public ?string $itunes_type = 'episodic';
 
     /**
+     * Podcasting 2.0 funding/donation URL, shown as a funding button in supporting apps.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $funding_url = null;
+
+    /**
+     * Display text for the funding/donation link.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $funding_text = null;
+
+    /**
+     * Content license declaration for the podcast:license tag.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $podcast_license = null;
+
+    /**
+     * Link to the full license text.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $podcast_license_url = null;
+
+    /**
+     * Ministry/church name attribution for the podcast:publisher tag.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $podcast_publisher = null;
+
+    /**
+     * Ownership verification string for Podcast Index and other directories.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $podcast_txt_verify = null;
+
+    /**
+     * Hint to podcast directories about how often new episodes publish.
+     *
+     * @var string|null
+     * @since 10.1.0
+     */
+    public ?string $update_frequency = null;
+
+    /**
      * Created date
      *
      * @var string|null
@@ -340,12 +423,66 @@ class CwmpodcastTable extends Table
     public ?int $access = null;
 
     /**
+     * Legacy alternate link — replaces the podcast file link on subscription.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $alternatelink = null;
+
+    /**
+     * Legacy alternate image path for the podcast.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $alternateimage = null;
+
+    /**
      * Platform links JSON (multi-platform subscription links)
      *
      * @var string|null
      * @since 10.1.0
      */
     public ?string $platform_links = null;
+
+    /**
+     * Whether to show the podcast subscribe image/description block.
+     *
+     * @var int|null
+     *
+     * @since 9.0.0
+     */
+    public ?int $podcast_subscribe_show = null;
+
+    /**
+     * Image to use for the podcast subscription block.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $podcast_image_subscribe = null;
+
+    /**
+     * Words to display below the podcast subscribe image.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $podcast_subscribe_desc = null;
+
+    /**
+     * Legacy alternate link label words.
+     *
+     * @var string|null
+     *
+     * @since 9.0.0
+     */
+    public ?string $alternatewords = null;
 
     /**
      * Params
