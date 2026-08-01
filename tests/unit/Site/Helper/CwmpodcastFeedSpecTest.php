@@ -454,4 +454,56 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
             'The mismatch check must be gated on the record not being a YouTube URL'
         );
     }
+
+    // -------------------------------------------------------------------------
+    // 6. absolute URLs and Apple-readable season/episode tags
+    // -------------------------------------------------------------------------
+
+    /**
+     * A podcast link stored as a menu item id must resolve to an absolute URL.
+     *
+     * RSS 2.0 requires absolute URLs, and validators reject the channel <link>
+     * and <image><link> otherwise. Route::link()'s $absolute parameter defaults
+     * to false, so the numeric branch silently produced a site-relative path —
+     * a live feed audit found "/resources/sermons.html" in both tags.
+     *
+     * @return  void
+     */
+    public function testMenuItemIdResolvesToAnAbsoluteUrl(): void
+    {
+        $method = new \ReflectionMethod(Cwmpodcast::class, 'resolveUrl');
+        $source = file($method->getFileName());
+        $body   = implode('', \array_slice(
+            $source,
+            $method->getStartLine() - 1,
+            $method->getEndLine() - $method->getStartLine() + 1
+        ));
+
+        $this->assertMatchesRegularExpression(
+            '/Route::link\(\s*\x27site\x27.*?,\s*true\s*\)/s',
+            $body,
+            'The menu-item branch must request the absolute form from Route::link()'
+        );
+    }
+
+    /**
+     * Season and episode are emitted in both namespaces.
+     *
+     * Apple ignores the podcast: namespace, so a feed carrying only those tags
+     * groups nowhere in Apple Podcasts.
+     *
+     * @return  void
+     */
+    public function testSeasonAndEpisodeAreEmittedForAppleToo(): void
+    {
+        $source = file_get_contents(\dirname(__DIR__, 4) . '/site/src/Helper/Cwmpodcast.php');
+
+        foreach (['itunes:season', 'itunes:episode'] as $tag) {
+            $this->assertStringContainsString(
+                '<' . $tag . '>',
+                $source,
+                \sprintf('%s must be emitted alongside its podcast: counterpart', $tag)
+            );
+        }
+    }
 }
