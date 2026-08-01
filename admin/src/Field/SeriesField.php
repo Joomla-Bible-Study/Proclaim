@@ -54,7 +54,7 @@ class SeriesField extends ListField
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('DISTINCT ' . $db->quoteName('se.id') . ', ' . $db->quoteName('se.series_text'))
             ->from($db->quoteName('#__bsms_series', 'se'))

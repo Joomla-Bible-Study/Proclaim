@@ -39,7 +39,7 @@ function admin_postinstall_simplemode_condition(): bool
 {
     try {
         $db    = Factory::getContainer()->get('DatabaseDriver');
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('params')
             ->from('#__bsms_admin')
             ->where($db->quoteName('id') . ' = 1');

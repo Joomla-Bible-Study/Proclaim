@@ -40,7 +40,7 @@ class CwmlatestModel extends BaseDatabaseModel
     public function getLatestStudySlug(): ?string
     {
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $published = 1;
         $query->select(

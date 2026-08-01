@@ -331,7 +331,7 @@ class CwmlocationModel extends AdminModel
         $totalReassigned = 0;
 
         foreach ($tables as $table) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName($table))
                 ->set($db->quoteName('location_id') . ' = ' . $targetId)
                 ->where($db->quoteName('location_id') . ' = ' . $sourceId);
@@ -401,7 +401,7 @@ class CwmlocationModel extends AdminModel
         $params->set('location_group_mapping', json_encode($mapping, JSON_THROW_ON_ERROR));
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -424,7 +424,7 @@ class CwmlocationModel extends AdminModel
     private function countByLocationId(string $table, int $locationId): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName($table))
             ->where($db->quoteName('location_id') . ' = ' . $locationId);

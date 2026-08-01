@@ -52,7 +52,7 @@ class MediaFileImagesField extends ListField
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*');
         $query->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery((string)$query);

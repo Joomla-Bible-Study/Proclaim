@@ -77,7 +77,7 @@ class CwmmessageController extends FormController
         $input = $this->input;
         $id    = $input->get('id', 0, 'int');
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('hits') . ' = ' . $db->q('0'))
             ->where($db->quoteName('id') . ' = ' . (int)$id);
@@ -174,7 +174,7 @@ class CwmmessageController extends FormController
 
         // Remove Exerting StudyTopics tags
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $qurey = $db->getQuery(true);
+        $qurey = $db->createQuery();
         $qurey->delete($db->quoteName('#__bsms_studytopics'))
             ->where($db->quoteName('study_id') . ' = ' . (int) $data['id']);
         $db->setQuery($qurey);
@@ -204,7 +204,7 @@ class CwmmessageController extends FormController
                     $topicId = null;
 
                     // Look up existing topic by name (case-insensitive)
-                    $lookupQuery = $db->getQuery(true)
+                    $lookupQuery = $db->createQuery()
                         ->select($db->quoteName('id'))
                         ->from($db->quoteName('#__bsms_topics'))
                         ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(' . $db->quote($aTag) . ')')
@@ -324,7 +324,7 @@ class CwmmessageController extends FormController
 
         if ($teacherId > 0) {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('teachername'))
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('id') . ' = ' . (int) $teacherId);

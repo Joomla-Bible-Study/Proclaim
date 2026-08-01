@@ -327,7 +327,7 @@ class CwmadminModel extends AdminModel
 
         // Delete old row
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
         $db->setQuery($query);
@@ -360,7 +360,7 @@ class CwmadminModel extends AdminModel
     public function getExtentionId(): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('extension_id'))->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));
         $db->setQuery($query);
@@ -384,7 +384,7 @@ class CwmadminModel extends AdminModel
     public function getSchemaVersion(): mixed
     {
         $db              = Factory::getContainer()->get(DatabaseInterface::class);
-        $query           = $db->getQuery(true);
+        $query           = $db->createQuery();
         $extensionresult = $this->getExtentionId();
         $query->select($db->quoteName('version_id'))->from($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $db->q($extensionresult));
@@ -526,7 +526,7 @@ class CwmadminModel extends AdminModel
     public function getSSorPI(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['extension_id', 'name', 'element']))
             ->from($db->quoteName('#__extensions'))
             ->whereIn($db->quoteName('element'), ['com_sermonspeaker', 'com_preachit']);
@@ -569,7 +569,7 @@ class CwmadminModel extends AdminModel
             return 'No Selection Made';
         }
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('published') . ' = ' . $db->q('1'));
@@ -614,7 +614,7 @@ class CwmadminModel extends AdminModel
 
                 $reg->set('player', $to);
 
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
                     ->where($db->quoteName('id') . ' = ' . (int)$media->id);

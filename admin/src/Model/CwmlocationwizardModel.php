@@ -59,7 +59,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     public function getLocations(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('location_text'), $db->quoteName('published'), $db->quoteName('access')])
             ->from($db->quoteName('#__bsms_locations'))
             ->order($db->quoteName('location_text') . ' ASC');
@@ -79,7 +79,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     public function getGroups(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('title')])
             ->from($db->quoteName('#__usergroups'))
             ->order($db->quoteName('title') . ' ASC');
@@ -138,7 +138,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
     public function getCurrentPermissions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('rules'))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
@@ -272,7 +272,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
         $params->set('enable_location_filtering', 1);
         $params->set('location_system_dismissed', 0);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -307,7 +307,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Load current component asset rules
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('rules')])
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
@@ -357,7 +357,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
         }
 
         // Save updated rules
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__assets'))
             ->set($db->quoteName('rules') . ' = ' . $db->quote(json_encode($rules)))
             ->where($db->quoteName('id') . ' = ' . (int) $asset->id);
@@ -384,7 +384,7 @@ class CwmlocationwizardModel extends BaseDatabaseModel
 
         $params->set('location_system_dismissed', 1);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))

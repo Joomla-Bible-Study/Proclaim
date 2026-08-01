@@ -48,7 +48,7 @@ class CwmmigrationHelper
         ];
 
         foreach ($replacements as $old => $new) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->update($db->quoteName('#__menu'))
                 ->set($db->quoteName('link') . ' = REPLACE(' . $db->quoteName('link') . ', ' . $db->q($old) . ', ' . $db->q($new) . ')')
                 ->where($db->quoteName('menutype') . ' != ' . $db->q('main'))
@@ -91,7 +91,7 @@ class CwmmigrationHelper
 
         // Correct blank or not set records
         foreach ($tables as $table) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->update($db->quoteName($table['table']))
                 ->set($db->quoteName('access') . ' = ' . (int) $id)
                 ->where(
@@ -125,7 +125,7 @@ class CwmmigrationHelper
 
         // Correct blank records
         foreach ($tables as $table) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->update($db->quoteName($table['table']))
                 ->set($db->quoteName('language') . ' = ' . $db->q('*'))
                 ->where($db->quoteName('language') . ' = ' . $db->q(''));
@@ -176,7 +176,7 @@ class CwmmigrationHelper
 
         foreach ($tables as $table) {
             if (!str_contains($table['name'], '_bsms_timeset')) {
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('*')->from($db->quoteName($table['name']));
                 $db->setQuery($query);
                 $data = $db->loadObjectList();
@@ -251,7 +251,7 @@ class CwmmigrationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         // Find Extension ID of a component
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query
             ->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))
@@ -290,7 +290,7 @@ class CwmmigrationHelper
 
         foreach ($deprecatedPlayers as $oldPlayer) {
             // Update using REPLACE on the JSON params field
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
                     . $db->quote('"player":"' . $oldPlayer . '"') . ', '
@@ -329,7 +329,7 @@ class CwmmigrationHelper
         $fixed = 0;
 
         // Step 1: Ensure every teacher has an alias
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_teachers'))
             ->set(
                 $db->quoteName('alias') . ' = LOWER(REPLACE(REPLACE(REPLACE(TRIM('
@@ -600,7 +600,7 @@ class CwmmigrationHelper
         ];
 
         foreach ($renames as $oldAbbr => [$newAbbr, $newName]) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('abbreviation') . ' = ' . $db->quote($newAbbr))
                 ->set($db->quoteName('name') . ' = ' . $db->quote($newName))
@@ -610,7 +610,7 @@ class CwmmigrationHelper
         }
 
         // Remove deprecated abbreviation
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_bible_translations'))
             ->where($db->quoteName('abbreviation') . ' = ' . $db->quote('webbe'));
         $db->setQuery($query);
@@ -656,7 +656,7 @@ class CwmmigrationHelper
         }
 
         // Get actual verse counts per translation from the verses table
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('translation'),
                 'COUNT(*) AS ' . $db->quoteName('cnt'),
@@ -668,7 +668,7 @@ class CwmmigrationHelper
 
         if (empty($counts)) {
             // No verses in DB — mark all as not installed
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 0')
                 ->set($db->quoteName('verse_count') . ' = 0')
@@ -681,7 +681,7 @@ class CwmmigrationHelper
 
         // Update translations that have verses
         foreach ($counts as $abbr => $row) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 1')
                 ->set($db->quoteName('verse_count') . ' = ' . (int) $row->cnt)
@@ -695,7 +695,7 @@ class CwmmigrationHelper
 
         if (!empty($installedAbbrs)) {
             $quoted = array_map([$db, 'quote'], $installedAbbrs);
-            $query  = $db->getQuery(true)
+            $query  = $db->createQuery()
                 ->update($db->quoteName('#__bsms_bible_translations'))
                 ->set($db->quoteName('installed') . ' = 0')
                 ->set($db->quoteName('verse_count') . ' = 0')
@@ -731,7 +731,7 @@ class CwmmigrationHelper
         $updated = 0;
 
         foreach ($replacements as $search => $replace) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set(
                     $db->quoteName('params') . ' = REPLACE('
@@ -866,7 +866,7 @@ class CwmmigrationHelper
     public static function getMessagesWithLocations(): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('published') . ' = 1')
@@ -889,13 +889,13 @@ class CwmmigrationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Subquery: distinct non-Public access values used by published messages
-        $sub = $db->getQuery(true)
+        $sub = $db->createQuery()
             ->select('DISTINCT ' . $db->quoteName('access'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('published') . ' = 1')
             ->where($db->quoteName('access') . ' > 1'); // 1 = Public
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('title')])
             ->from($db->quoteName('#__viewlevels'))
             ->where($db->quoteName('id') . ' IN (' . $sub . ')');
@@ -939,7 +939,7 @@ class CwmmigrationHelper
         $name = trim((string) $accessLevel->title);
 
         // Check for existing location with this name
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
             ->where($db->quoteName('location_text') . ' = ' . $db->quote($name));
@@ -999,7 +999,7 @@ class CwmmigrationHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote(json_encode($existing, JSON_THROW_ON_ERROR)))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -1028,7 +1028,7 @@ class CwmmigrationHelper
         $updated = 0;
 
         foreach ($locationMap as $accessId => $locationId) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_studies'))
                 ->set($db->quoteName('location_id') . ' = ' . (int) $locationId)
                 ->where($db->quoteName('access') . ' = ' . (int) $accessId)
@@ -1052,7 +1052,7 @@ class CwmmigrationHelper
     public static function normalizeAccessLevelsToPublic(): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('access') . ' = 1')
             ->where($db->quoteName('access') . ' != 1')
@@ -1084,7 +1084,7 @@ class CwmmigrationHelper
         $db  = Factory::getContainer()->get(DatabaseInterface::class);
         $ids = array_map('intval', array_keys($locationMap));
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('rules')])
             ->from($db->quoteName('#__viewlevels'))
             ->whereIn($db->quoteName('id'), $ids);
@@ -1130,13 +1130,13 @@ class CwmmigrationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $orphanQuery = $db->getQuery(true)
+        $orphanQuery = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->where($db->quoteName('s.location_id') . ' > 0')
             ->where(
                 'NOT EXISTS ('
-                . $db->getQuery(true)
+                . $db->createQuery()
                     ->select('1')
                     ->from($db->quoteName('#__bsms_locations', 'l'))
                     ->where($db->quoteName('l.id') . ' = ' . $db->quoteName('s.location_id'))
@@ -1164,7 +1164,7 @@ class CwmmigrationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Reuse existing location if any are present
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_locations'))
             ->where($db->quoteName('published') . ' = 1')
@@ -1205,7 +1205,7 @@ class CwmmigrationHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_studies'))
             ->set($db->quoteName('location_id') . ' = ' . $locationId)
             ->where('(' . $db->quoteName('location_id') . ' = 0 OR ' . $db->quoteName('location_id') . ' IS NULL)');
@@ -1237,7 +1237,7 @@ class CwmmigrationHelper
             return 0;
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_teachers'))
             ->where($db->quoteName('user_id') . ' > 0');
@@ -1260,7 +1260,7 @@ class CwmmigrationHelper
 
         if (!isset($columns['user_id'])) {
             // All teachers are "unlinked" if the column doesn't exist yet
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('teachername', 'name')])
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('published') . ' = 1');
@@ -1269,7 +1269,7 @@ class CwmmigrationHelper
             return $db->loadObjectList() ?: [];
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('name')])
             ->from($db->quoteName('#__bsms_teachers'))
             ->where($db->quoteName('published') . ' = 1')

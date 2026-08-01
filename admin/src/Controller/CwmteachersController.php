@@ -84,7 +84,7 @@ class CwmteachersController extends AdminController
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get all teacher IDs ordered alphabetically
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->order($db->quoteName('teachername') . ' ASC');
@@ -93,7 +93,7 @@ class CwmteachersController extends AdminController
 
         // Update each teacher's ordering sequentially
         foreach ($ids as $index => $id) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_teachers'))
                 ->set($db->quoteName('ordering') . ' = ' . ($index + 1))
                 ->where($db->quoteName('id') . ' = ' . (int) $id);

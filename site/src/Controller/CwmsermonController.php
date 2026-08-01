@@ -302,7 +302,7 @@ class CwmsermonController extends FormController
 
         $comment_livesite = Uri::root();
         $db               = Factory::getContainer()->get(DatabaseInterface::class);
-        $query            = $db->getQuery(true);
+        $query            = $db->createQuery();
         $query->select($db->quoteName(['id', 'studytitle', 'studydate']))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('id') . ' = ' . (int) $comment_study_id);

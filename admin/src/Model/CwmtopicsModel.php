@@ -131,7 +131,7 @@ class CwmtopicsModel extends ListModel
     protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select(

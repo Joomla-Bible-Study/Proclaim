@@ -117,7 +117,7 @@ class CwmlandingpageModel extends ListModel
     protected function getListQuery(): DatabaseQuery
     {
         $db              = $this->getDatabase();
-        $query           = $db->getQuery(true);
+        $query           = $db->createQuery();
         $template_params = Cwmparams::getTemplateparams();
         $t_params        = $template_params->params;
 

@@ -200,7 +200,7 @@ class CwmtemplateTable extends Table
             // This preserves values from lazy-loaded sections that were never expanded
             if (!empty($array['id'])) {
                 $db    = $this->getDatabase();
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('params'))
                     ->from($db->quoteName('#__bsms_templates'))
                     ->where($db->quoteName('id') . ' = ' . (int) $array['id']);

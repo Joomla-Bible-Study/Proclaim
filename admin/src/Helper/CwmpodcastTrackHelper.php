@@ -127,7 +127,7 @@ class CwmpodcastTrackHelper
         // enclosure changes can never move its identity.
         try {
             $db->setQuery(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('podcast_guid') . ' = :guid')
                     ->where($db->quoteName('id') . ' = :mid')
@@ -166,7 +166,7 @@ class CwmpodcastTrackHelper
         string $cutoffSql
     ): bool {
         $logged = $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->select($db->quoteName('logged'))
                 ->from($db->quoteName('#__bsms_podcast_download_log'))
                 ->where($db->quoteName('media_id') . ' = :mid')
@@ -194,7 +194,7 @@ class CwmpodcastTrackHelper
         }
 
         $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->update($db->quoteName('#__bsms_mediafiles'))
                 ->set($db->quoteName('podcast_downloads') . ' = ' . $db->quoteName('podcast_downloads') . ' + 1')
                 ->where($db->quoteName('id') . ' = :mid')
@@ -203,7 +203,7 @@ class CwmpodcastTrackHelper
 
         // Bounded-growth cleanup: drop this media's expired dedupe rows.
         $db->setQuery(
-            $db->getQuery(true)
+            $db->createQuery()
                 ->delete($db->quoteName('#__bsms_podcast_download_log'))
                 ->where($db->quoteName('media_id') . ' = :mid')
                 ->where($db->quoteName('logged') . ' < :cutoff')

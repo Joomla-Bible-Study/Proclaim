@@ -371,7 +371,7 @@ class CwmmediafileTable extends Table
             }
 
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('type'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = ' . (int) $this->server_id);
@@ -443,7 +443,7 @@ class CwmmediafileTable extends Table
 
             // Load server record
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('type'), $db->quoteName('params')])
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = ' . (int) $this->server_id);

@@ -95,6 +95,13 @@ class CwmsermonsFilterTest extends ProclaimTestCase
                 return '`' . $name . '`';
             }
 
+            // The component builds queries with createQuery() (#1394); this
+            // delegates so the double keeps satisfying both spellings.
+            public function createQuery(): object
+            {
+                return $this->getQuery();
+            }
+
             public function getQuery(bool $new = false): object
             {
                 // Return a minimal object for subquery building in addTeacherFilter

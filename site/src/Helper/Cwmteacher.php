@@ -57,7 +57,7 @@ class Cwmteacher extends Cwmlisting
 
         if (!empty($teacherIDs)) {
             $database = Factory::getContainer()->get(DatabaseInterface::class);
-            $query    = $database->getQuery(true);
+            $query    = $database->createQuery();
             $query->select('*')
                 ->from($database->quoteName('#__bsms_teachers'))
                 ->where($database->quoteName('id') . ' IN (' . implode(',', array_map('intval', $teacherIDs)) . ')');

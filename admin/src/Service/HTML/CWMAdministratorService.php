@@ -60,7 +60,7 @@ class CWMAdministratorService
 
             // Get the associated menu items
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select(
                     [
                         'c.*',

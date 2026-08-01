@@ -1171,7 +1171,7 @@ class Cwmmedia
     public function hitPlay(int $id): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('plays') . ' = ' . $db->quoteName('plays') . ' + 1')
             ->where($db->quoteName('id') . ' = ' . (int) $id);
@@ -1212,7 +1212,7 @@ class Cwmmedia
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
             . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '
@@ -1288,7 +1288,7 @@ class Cwmmedia
     {
         // We use this for the popup view because it relies on the media file's id rather than the study_id field above
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*, ' . $db->quoteName('#__bsms_servers.params', 'sparams') . ','
             . $db->quoteName('s.studyintro') . ', ' . $db->quoteName('s.series_id') . ', '

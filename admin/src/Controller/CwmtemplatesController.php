@@ -136,13 +136,13 @@ class CwmtemplatesController extends AdminController
                         $this->performDB($querie);
 
                         // Get new  record insert to change name
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $query->select($db->quoteName(['filename', 'id', 'type']))
                             ->from($db->quoteName('#__bsms_templatecode'))
                             ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $query->update($db->quoteName('#__bsms_styles'))
                             ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
                             ->where($db->quoteName('id') . ' = ' . (int)$data->id);
@@ -165,13 +165,13 @@ class CwmtemplatesController extends AdminController
                         $this->performDB($querie);
 
                         // Get new  record insert to change name
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $query->select($db->quoteName(['id', 'title', 'params']))
                             ->from($db->quoteName('#__bsms_templates'))
                             ->order($db->quoteName('id') . ' DESC');
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
-                        $query = $db->getQuery(true);
+                        $query = $db->createQuery();
                         $query->update($db->quoteName('#__bsms_templates'))
                             ->set($db->quoteName('title') . ' = ' . $db->q($data->title . '_copy' . $data->id))
                             ->where($db->quoteName('id') . ' = ' . (int)$data->id);
@@ -182,7 +182,7 @@ class CwmtemplatesController extends AdminController
         }
 
         // Get new  record insert to change name
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'type', 'filename']))
             ->from($db->quoteName('#__bsms_templatecode'))
             ->order($db->quoteName('id') . ' DESC');
@@ -226,7 +226,7 @@ class CwmtemplatesController extends AdminController
         }
 
         // Get new record insert to change name
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'title', 'params']))
             ->from($db->quoteName('#__bsms_templates'))
             ->order($db->quoteName('id'));
@@ -311,7 +311,7 @@ class CwmtemplatesController extends AdminController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
         $query->from($db->quoteName('#__bsms_templates', 't'));
         $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
@@ -356,7 +356,7 @@ class CwmtemplatesController extends AdminController
 
         if ($css) {
             $objects = "--\n-- CSS Style Code\n--\n";
-            $query2  = $db->getQuery(true);
+            $query2  = $db->createQuery();
             $query2->select($db->quoteName('style') . '.*');
             $query2->from($db->quoteName('#__bsms_styles', 'style'));
             $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
@@ -437,7 +437,7 @@ class CwmtemplatesController extends AdminController
     public function getTemplate($template): bool|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['tc.id', 'tc.templatecode', 'tc.type', 'tc.filename']));
         $query->from($db->quoteName('#__bsms_templatecode', 'tc'));
         $query->where($db->quoteName('tc.filename') . ' = ' . $db->q($template));

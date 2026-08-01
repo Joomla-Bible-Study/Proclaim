@@ -823,7 +823,7 @@ class CwmsermonsModel extends ListModel
     private function batchLoadMediaStats(array $studyIds): array
     {
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select([
             $db->quoteName('study_id'),
@@ -924,7 +924,7 @@ class CwmsermonsModel extends ListModel
 
         if ($hasParam && $filterValue < 1) {
             $intValues = array_map('intval', $paramValues);
-            $sub       = $db->getQuery(true)
+            $sub       = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
@@ -932,21 +932,21 @@ class CwmsermonsModel extends ListModel
             $query->where('EXISTS (' . $sub . ')');
         } elseif ($hasParam && $filterValue >= 1) {
             $intValues = array_map('intval', $paramValues);
-            $sub       = $db->getQuery(true)
+            $sub       = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))
                 ->whereIn($db->quoteName('stf.teacher_id'), $intValues);
             $query->where('EXISTS (' . $sub . ')');
 
-            $sub2 = $db->getQuery(true)
+            $sub2 = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf2'))
                 ->where($db->quoteName('stf2.study_id') . ' = ' . $db->quoteName('study.id'))
                 ->where($db->quoteName('stf2.teacher_id') . ' = ' . $filterValue);
             $query->where('EXISTS (' . $sub2 . ')');
         } elseif ($filterValue >= 1) {
-            $sub = $db->getQuery(true)
+            $sub = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))

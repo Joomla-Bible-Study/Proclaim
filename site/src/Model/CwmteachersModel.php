@@ -46,7 +46,7 @@ class CwmteachersModel extends ListModel
         $menu = $app->getMenu();
         $item = $menu->getActive();
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             'teachers.*,CASE WHEN CHAR_LENGTH(teachers.alias) THEN CONCAT_WS(\':\', teachers.id, teachers.alias)'
             . 'ELSE teachers.id END as slug'

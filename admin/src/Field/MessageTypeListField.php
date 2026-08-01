@@ -54,7 +54,7 @@ class MessageTypeListField extends ListField
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('DISTINCT ' . $db->quoteName('mt.id') . ', ' . $db->quoteName('mt.message_type'))
             ->from($db->quoteName('#__bsms_message_type', 'mt'))

@@ -350,7 +350,7 @@ class CwmdbHelper
 
         // Start by getting existing Style
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__bsms_styles'));
 
         if ($filename) {
@@ -397,7 +397,7 @@ class CwmdbHelper
 
         // No apply the new css back to the table
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_styles'))->set($db->quoteName('stylecode') . ' = ' . $db->q($newcss));
 
         if ($filename) {
@@ -521,7 +521,7 @@ class CwmdbHelper
         }
 
         // Remove old assets.
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->delete($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' LIKE ' . $db->q('com_proclaim.%'));
         $db->setQuery($query);
@@ -547,13 +547,13 @@ class CwmdbHelper
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
         foreach ($results as $result) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'topic_id']))
                 ->from($db->quoteName('#__bsms_studytopics'))
                 ->where($db->quoteName('study_id') . ' = ' . (int) $result->id);
@@ -565,7 +565,7 @@ class CwmdbHelper
                 $t = 1;
 
                 foreach ($resulta as $study_topics) {
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))
                         ->from($db->quoteName('#__bsms_studytopics'))
                         ->where($db->quoteName('study_id') . ' = ' . (int) $result->id)
@@ -578,7 +578,7 @@ class CwmdbHelper
                     if ($records > 1) {
                         foreach ($results as $id) {
                             if ($t < $records) {
-                                $query = $db->getQuery(true);
+                                $query = $db->createQuery();
                                 $query->delete($db->quoteName('#__bsms_studytopics'))
                                     ->where($db->quoteName('id') . ' = ' . (int) $id->id);
                                 $db->setQuery($query);

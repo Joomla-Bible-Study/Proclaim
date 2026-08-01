@@ -706,7 +706,7 @@ class CwmmessageTable extends Table
     {
         try {
             $db    = $this->getDatabase();
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('study_id') . ' = ' . $studyId);

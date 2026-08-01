@@ -190,7 +190,7 @@ class CwmserversModel extends ListModel
     protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select($this->getState('list.select', 'server.id, server.published, server.server_name, server.type, server.location_id, server.checked_out, server.checked_out_time'));

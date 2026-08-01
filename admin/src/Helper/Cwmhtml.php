@@ -200,7 +200,7 @@ class Cwmhtml
     {
         $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('teachername', 'text'));
         $query->from($db->quoteName('#__bsms_teachers', 'a'));
@@ -257,7 +257,7 @@ class Cwmhtml
     {
         $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('message_type', 'text'));
         $query->from($db->quoteName('#__bsms_message_type', 'a'));
@@ -314,7 +314,7 @@ class Cwmhtml
     {
         $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
 
         $query->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('series_text', 'text'));
         $query->from($db->quoteName('#__bsms_series', 'a'));
@@ -377,7 +377,7 @@ class Cwmhtml
     public static function locationList(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id', 'value') . ', ' . $db->quoteName('location_text', 'text'))
             ->from($db->quoteName('#__bsms_locations', 'a'))
             ->where($db->quoteName('a.published') . ' = 1')

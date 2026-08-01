@@ -363,7 +363,7 @@ class CwmyoutubeQuota
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = ' . $serverId);

@@ -39,7 +39,7 @@ class CwmcpanelModel extends BaseModel
         // Get version information
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $return = new \stdClass();
-        $query  = $db->getQuery(true);
+        $query  = $db->createQuery();
         $query->select('*');
         $query->from($db->quoteName('#__extensions'));
         $query->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
@@ -85,7 +85,7 @@ class CwmcpanelModel extends BaseModel
         // Get the extension ID
         // Get the extension ID for our component
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'));

@@ -474,7 +474,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
 
             try {
                 $cpDb    = Factory::getContainer()->get(DatabaseInterface::class);
-                $cpQuery = $cpDb->getQuery(true)
+                $cpQuery = $cpDb->createQuery()
                     ->select([$cpDb->quoteName('id'), $cpDb->quoteName('server_name'), $cpDb->quoteName('params')])
                     ->from($cpDb->quoteName('#__bsms_servers'))
                     ->where($cpDb->quoteName('type') . ' = ' . $cpDb->quote('youtube'))

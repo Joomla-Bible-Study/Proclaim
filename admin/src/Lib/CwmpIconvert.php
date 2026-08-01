@@ -257,7 +257,7 @@ class CwmpIconvert
         $uri   = Uri::getInstance();
         $url   = $uri->getHost();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__bsms_servers'));
         $db->setQuery($query);
         $servers = $db->loadObjectList();
@@ -265,7 +265,7 @@ class CwmpIconvert
             $reg = new Registry();
             $reg->loadString($server->params);
             $reg->set('path', $url);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->update($db->quoteName('#__bsms_servers'))
                 ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
                 ->where($db->quoteName('id') . ' = ' . (int) $server->id);
@@ -274,7 +274,7 @@ class CwmpIconvert
         }
         //Convert comments
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__picomments'));
         $db->setQuery($query);
         $this->picomments = $db->loadObjectList();
@@ -292,12 +292,12 @@ class CwmpIconvert
             $this->tnoadd++;
         } else {
             $this->tadd++;
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
             $db->setQuery($query, 0, 1);
             $this->genericteacher = $db->loadResult();
         }
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__piteachers'));
         $db->setQuery($query);
         $piteachers = $db->loadObjectList();
@@ -325,7 +325,7 @@ class CwmpIconvert
                     $this->tadd++;
 
                     // Get the new teacherid so we can later connect it to a study
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $newid               = $db->loadResult();
@@ -336,7 +336,7 @@ class CwmpIconvert
         }
 
         // Convert Ministries
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__piministry'));
         $db->setQuery($query);
         $ministries = $db->loadObjectList();
@@ -360,7 +360,7 @@ class CwmpIconvert
                     $this->ladd++;
 
                     // Get the new locationid so we can later connect it to a study
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_locations'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $newid             = $db->loadResult();
@@ -372,7 +372,7 @@ class CwmpIconvert
 
 
         // Convert Series
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__piseries'));
         $db->setQuery($query);
         $series = $db->loadObjectList();
@@ -395,7 +395,7 @@ class CwmpIconvert
                     $this->sradd++;
 
                     // Get the new seriesid so we can later connect it to a study
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_series'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $newid             = $db->loadResult();
@@ -406,7 +406,7 @@ class CwmpIconvert
         }
 
         // Convert podcacsts
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
         $podcasts = $db->loadObjectList();
@@ -440,7 +440,7 @@ class CwmpIconvert
                     $this->padd++;
 
                     // Get the new podcast id so we can later connect it to a study
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_podcast'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $newid              = $db->loadResult();
@@ -451,7 +451,7 @@ class CwmpIconvert
         }
         // Convert studies and media files
         $books = $this->getBooks();
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__pistudies'));
         $db->setQuery($query);
         $studies = $db->loadObjectList();
@@ -586,7 +586,7 @@ class CwmpIconvert
                     $this->sadd++;
 
                     // Get the new studiesid so we can later connect it to a study
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $newid              = $db->loadResult();
@@ -742,7 +742,7 @@ class CwmpIconvert
     public function insertMedia($pi, $type, $newid, $oldid): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__pifilepath'));
         $db->setQuery($query);
         $folders     = $db->loadObjectList();
@@ -760,7 +760,7 @@ class CwmpIconvert
         $link_type   = '';
         $player      = '';
         $pod         = [];
-        $query       = $db->getQuery(true);
+        $query       = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
         $podcasts = $db->loadObjectList();
@@ -781,7 +781,7 @@ class CwmpIconvert
 
                 case 1:
                     // JWPlayer
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->video_link);
                     $db->setQuery($query);
                     $object            = $db->loadObject();
@@ -888,7 +888,7 @@ class CwmpIconvert
 
         if ($type == 'notes') {
             $filesize = $pi->notesfs;
-            $query    = $db->getQuery(true);
+            $query    = $db->createQuery();
             $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->notes_folder);
             $db->setQuery($query);
             $object           = $db->loadObject();
@@ -920,7 +920,7 @@ class CwmpIconvert
 
         if ($type == 'slides') {
             $filesize = $pi->slidesfs;
-            $query    = $db->getQuery(true);
+            $query    = $db->createQuery();
             $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->slides_folder);
             $db->setQuery($query);
             $object        = $db->loadObject();
@@ -968,7 +968,7 @@ class CwmpIconvert
     {
         $podtest = 0;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->getQuery(true);
+        $query   = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
         $podcasts        = $db->loadObjectList();

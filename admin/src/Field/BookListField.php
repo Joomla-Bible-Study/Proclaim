@@ -65,7 +65,7 @@ class BookListField extends ListField
         $user   = $app->getIdentity();
         $groups = $user->getAuthorisedViewLevels();
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
-        $query  = $db->getQuery(true);
+        $query  = $db->createQuery();
 
         $query->select(
             $db->quoteName('book.booknumber', 'value') . ', '

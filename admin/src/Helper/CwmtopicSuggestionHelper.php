@@ -75,7 +75,7 @@ class CwmtopicSuggestionHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select(
             $db->quoteName('id') . ', '

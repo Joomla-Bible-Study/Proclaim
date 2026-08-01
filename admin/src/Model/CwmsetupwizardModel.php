@@ -38,7 +38,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     private function loadAdminParams(): Registry
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_admin'))
             ->where($db->quoteName('id') . ' = 1');
@@ -60,7 +60,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     private function saveAdminParams(Registry $params): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_admin'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = 1');
@@ -84,7 +84,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     private function setComponentParam(string $key, mixed $value): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -95,7 +95,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params = new Registry($json ?: '{}');
         $params->set($key, $value);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__extensions'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -371,7 +371,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
 
         foreach ($toCreate as $type) {
             // Check if a server of this type already exists
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote($type))
@@ -448,7 +448,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $orgName = trim($data['org_name'] ?? 'My Church');
 
         // Create default teacher if none exist
-        $query = $db->getQuery(true)->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
+        $query = $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
         $db->setQuery($query);
 
         if ((int) $db->loadResult() === 0) {
@@ -479,7 +479,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $style = $data['ministry_style'] ?? 'simple';
 
         if ($style !== 'simple') {
-            $query = $db->getQuery(true)->select('COUNT(*)')->from($db->quoteName('#__bsms_locations'));
+            $query = $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__bsms_locations'));
             $db->setQuery($query);
 
             if ((int) $db->loadResult() === 0) {
@@ -540,7 +540,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $teacherId = $defaults['teacher_id'] ?? 0;
 
         if ($teacherId === 0) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where($db->quoteName('published') . ' = 1')
@@ -654,7 +654,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
             $task = $taskMap[$key];
 
             // Check if this task type already exists
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__scheduler_tasks'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote($task['type']));
@@ -707,7 +707,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
     private function ensureDefaultTemplate(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_templates'))
             ->where($db->quoteName('id') . ' = 1');
@@ -715,7 +715,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
 
         if ((int) $db->loadResult() > 0) {
             // Ensure it's published
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_templates'))
                 ->set($db->quoteName('published') . ' = 1')
                 ->where($db->quoteName('id') . ' = 1');
@@ -758,7 +758,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check if any Proclaim menu items already exist
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__menu'))
             ->where($db->quoteName('link') . ' LIKE ' . $db->quote('%option=com_proclaim%'))
@@ -770,7 +770,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         }
 
         // Find the main menu type
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('menutype'))
             ->from($db->quoteName('#__menu_types'))
             ->order($db->quoteName('id') . ' ASC');
@@ -778,7 +778,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $menuType = $db->loadResult() ?: 'mainmenu';
 
         // Get component ID for com_proclaim
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
@@ -791,7 +791,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         }
 
         // Find the root menu item for parent_id
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__menu'))
             ->where($db->quoteName('menutype') . ' = ' . $db->quote($menuType))
@@ -876,7 +876,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Check if a podcast already exists
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_podcast'));
         $db->setQuery($query);
@@ -941,7 +941,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Load current template params
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_templates'))
             ->where($db->quoteName('id') . ' = 1');
@@ -972,7 +972,7 @@ class CwmsetupwizardModel extends BaseDatabaseModel
         $params->set('show_comments', !empty($data['enable_comments']) ? '1' : '');
 
         // Save
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_templates'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = 1');

@@ -212,7 +212,7 @@ class HtmlView extends BaseHtmlView
     protected function getPendingCount(): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_comments'))
             ->where($db->quoteName('published') . ' = 0');

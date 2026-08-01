@@ -185,7 +185,7 @@ class CwmassetsController extends BaseController
         $totalRecords = 0;
 
         foreach ($assetTables as $tableInfo) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select('COUNT(*)')
                 ->from($db->quoteName($tableInfo['name']));
             $db->setQuery($query);
@@ -241,7 +241,7 @@ class CwmassetsController extends BaseController
         }
 
         // Load a batch of records
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             $db->quoteName('j.id') . ', ' . $db->quoteName('j.asset_id') . ', '
             . $db->quoteName('a.id', 'aid') . ', ' . $db->quoteName('a.parent_id') . ', ' . $db->quoteName('a.rules')

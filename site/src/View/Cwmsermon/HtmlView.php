@@ -232,7 +232,7 @@ class HtmlView extends BaseHtmlView
             $this->recentItems = $cache->get(
                 static function () use ($user) {
                     $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-                    $query = $db->getQuery(true)
+                    $query = $db->createQuery()
                         ->select($db->quoteName(['s.id', 's.studytitle', 's.studydate', 's.alias', 's.studyintro', 's.thumbnailm', 's.image']))
                         ->select($db->quoteName('t.teachername'))
                         ->select($db->quoteName('t.teacher_thumbnail'))

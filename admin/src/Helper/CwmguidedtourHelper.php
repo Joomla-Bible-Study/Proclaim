@@ -373,7 +373,7 @@ class CwmguidedtourHelper
      */
     protected function getExtensionId(): int
     {
-        $query = $this->db->getQuery(true)
+        $query = $this->db->createQuery()
             ->select($this->db->quoteName('extension_id'))
             ->from($this->db->quoteName('#__extensions'))
             ->where($this->db->quoteName('element') . ' = ' . $this->db->quote('com_proclaim'))
@@ -533,7 +533,7 @@ class CwmguidedtourHelper
             return 0;
         }
 
-        $query = $this->db->getQuery(true)
+        $query = $this->db->createQuery()
             ->select($this->db->quoteName('id'))
             ->from($this->db->quoteName('#__guidedtours'))
             ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
@@ -557,7 +557,7 @@ class CwmguidedtourHelper
             return false;
         }
 
-        $query = $this->db->getQuery(true)
+        $query = $this->db->createQuery()
             ->select('COUNT(*)')
             ->from($this->db->quoteName('#__guidedtours'))
             ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
@@ -579,7 +579,7 @@ class CwmguidedtourHelper
      */
     protected function postInstallMessageExists(string $titleKey): bool
     {
-        $query = $this->db->getQuery(true)
+        $query = $this->db->createQuery()
             ->select('COUNT(*)')
             ->from($this->db->quoteName('#__postinstall_messages'))
             ->where($this->db->quoteName('title_key') . ' = ' . $this->db->quote($titleKey));
@@ -703,7 +703,7 @@ class CwmguidedtourHelper
             $this->db->updateObject('#__guidedtours', $tourObj, 'id');
 
             // Delete existing steps
-            $query = $this->db->getQuery(true)
+            $query = $this->db->createQuery()
                 ->delete($this->db->quoteName('#__guidedtour_steps'))
                 ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
             $this->db->setQuery($query);
@@ -800,7 +800,7 @@ class CwmguidedtourHelper
         $count = 0;
 
         foreach ($this->tours as $tour) {
-            $query = $this->db->getQuery(true)
+            $query = $this->db->createQuery()
                 ->select($this->db->quoteName('id'))
                 ->from($this->db->quoteName('#__guidedtours'))
                 ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($tour['uid']));
@@ -809,14 +809,14 @@ class CwmguidedtourHelper
 
             if ($tourId) {
                 // Delete steps first
-                $query = $this->db->getQuery(true)
+                $query = $this->db->createQuery()
                     ->delete($this->db->quoteName('#__guidedtour_steps'))
                     ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
                 $this->db->setQuery($query);
                 $this->db->execute();
 
                 // Delete tour
-                $query = $this->db->getQuery(true)
+                $query = $this->db->createQuery()
                     ->delete($this->db->quoteName('#__guidedtours'))
                     ->where($this->db->quoteName('id') . ' = ' . (int) $tourId);
                 $this->db->setQuery($query);

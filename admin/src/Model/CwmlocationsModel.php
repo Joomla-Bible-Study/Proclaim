@@ -79,7 +79,7 @@ class CwmlocationsModel extends ListModel
     {
         if (empty($this->deletes)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('allow_deletes'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -219,7 +219,7 @@ class CwmlocationsModel extends ListModel
         $counts = [];
 
         foreach ($tables as $key => $table) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('location_id'),
                     'COUNT(*) AS ' . $db->quoteName('cnt'),
@@ -262,7 +262,7 @@ class CwmlocationsModel extends ListModel
     protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select(
             $this->getState(

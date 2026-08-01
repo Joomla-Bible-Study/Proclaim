@@ -630,7 +630,7 @@ abstract class CWMAddon
             $select[] = $db->quoteName('stats_synced_at');
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($select)
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1');
@@ -675,7 +675,7 @@ abstract class CWMAddon
     public static function getPlaylistCapableServers(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['id', 'server_name', 'type']))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')
@@ -1198,7 +1198,7 @@ abstract class CWMAddon
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $now   = Factory::getDate()->toSql();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('stats_synced_at') . ' = ' . $db->quote($now))
             ->where($db->quoteName('id') . ' = ' . $serverId);
@@ -1230,7 +1230,7 @@ abstract class CWMAddon
         bool $includeArchived = true
     ): array {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('m.id'), $db->quoteName('m.params')])
             ->from($db->quoteName('#__bsms_mediafiles', 'm'))
             ->where($db->quoteName('m.server_id') . ' = ' . (int) $serverId);
@@ -1289,7 +1289,7 @@ abstract class CWMAddon
     protected static function getMediaVideoCount(int $serverId, bool $includeArchived = true): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('server_id') . ' = ' . (int) $serverId);

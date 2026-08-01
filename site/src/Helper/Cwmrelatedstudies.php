@@ -120,7 +120,7 @@ class Cwmrelatedstudies
      */
     private function scoreBySeries(object $db, int $studyId, int $seriesId, array $groups): void
     {
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('series_id') . ' = ' . $seriesId)
@@ -150,7 +150,7 @@ class Cwmrelatedstudies
      */
     private function scoreByTeacher(object $db, int $studyId, int $teacherId, array $groups): void
     {
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('s.id'))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->innerJoin(
@@ -184,7 +184,7 @@ class Cwmrelatedstudies
     private function scoreByTopics(object $db, int $studyId, array $groups): void
     {
         // Get current study's topic IDs
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('topic_id'))
             ->from($db->quoteName('#__bsms_studytopics'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
@@ -197,7 +197,7 @@ class Cwmrelatedstudies
         }
 
         // Find other studies with overlapping topics, counting overlaps
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('st.study_id'))
             ->select('COUNT(*) AS ' . $db->quoteName('overlap'))
             ->from($db->quoteName('#__bsms_studytopics', 'st'))
@@ -235,13 +235,13 @@ class Cwmrelatedstudies
     private function scoreByBooks(object $db, int $studyId, array $groups): void
     {
         // Collect book numbers from both junction table and legacy column in one query
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('DISTINCT ' . $db->quoteName('booknumber'))
             ->from($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId)
             ->where($db->quoteName('booknumber') . ' > 0')
             ->union(
-                $db->getQuery(true)
+                $db->createQuery()
                     ->select($db->quoteName('booknumber'))
                     ->from($db->quoteName('#__bsms_studies'))
                     ->where($db->quoteName('id') . ' = ' . $studyId)
@@ -258,7 +258,7 @@ class Cwmrelatedstudies
         $bookList = implode(',', $bookNumbers);
 
         // Find matches via junction table
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('ss.study_id'))
             ->select('COUNT(DISTINCT ' . $db->quoteName('ss.booknumber') . ') AS ' . $db->quoteName('overlap'))
             ->from($db->quoteName('#__bsms_study_scriptures', 'ss'))
@@ -280,7 +280,7 @@ class Cwmrelatedstudies
         }
 
         // Also match via legacy booknumber column
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('booknumber') . ' IN (' . $bookList . ')')
@@ -327,7 +327,7 @@ class Cwmrelatedstudies
             }
 
             $escaped = $db->quote('%' . $db->escape($key, true) . '%');
-            $query   = $db->getQuery(true)
+            $query   = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_studies'))
                 ->where($db->quoteName('id') . ' != ' . $studyId)
@@ -389,7 +389,7 @@ class Cwmrelatedstudies
 
         $idList = implode(',', $topIds);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName([
                 's.id', 's.studytitle', 's.alias', 's.studydate',
                 's.booknumber', 's.chapter_begin', 's.thumbnailm', 's.image',

@@ -190,7 +190,7 @@ class Cwmserieslist extends Cwmlisting
 
         // Compute view access permissions.
         $groups = implode(',', $user->getAuthorisedViewLevels());
-        $query  = $db->getQuery(true);
+        $query  = $db->createQuery();
         $query->select(
             $db->quoteName('s') . '.*, '
             . $db->quoteName('se.id', 'seid') . ', '

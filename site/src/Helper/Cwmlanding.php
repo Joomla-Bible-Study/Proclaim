@@ -442,7 +442,7 @@ class Cwmlanding
      */
     private function buildQueryForType(string $type, string $language): ?DatabaseQuery
     {
-        $query = $this->db->getQuery(true);
+        $query = $this->db->createQuery();
         $null  = $this->db->quote('');
 
         switch ($type) {
@@ -626,7 +626,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'locations_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_locations', 'a'))
                 ->innerJoin(
@@ -708,7 +708,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'teachers_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_teachers', 'a'))
                 ->innerJoin(
@@ -809,7 +809,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'series_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_series', 'a'))
                 ->innerJoin(
@@ -892,7 +892,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'years_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT YEAR(' . $this->db->quoteName('studydate') . ') AS ' . $this->db->quoteName('theYear'))
                 ->from($this->db->quoteName('#__bsms_studies'))
                 ->where($this->db->quoteName('language') . ' IN (' . $language . ')')
@@ -952,7 +952,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'topics_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select(
                 'DISTINCT ' . $this->db->quoteName('#__bsms_topics.id') . ', '
                 . $this->db->quoteName('#__bsms_topics.topic_text') . ', '
@@ -1032,7 +1032,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'messagetypes_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_message_type', 'a'))
                 ->innerJoin(
@@ -1107,7 +1107,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_books', 'a'))
                 ->innerJoin(
@@ -1244,7 +1244,7 @@ class Cwmlanding
         $order    = $this->getSortOrder($params, 'teachers_order');
         $language = $this->getLanguageFilter($params);
 
-        $query = $this->db->getQuery(true);
+        $query = $this->db->createQuery();
         $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
             ->from($this->db->quoteName('#__bsms_teachers', 'a'))
             ->innerJoin(
@@ -1337,7 +1337,7 @@ class Cwmlanding
         $order    = $this->getSortOrder($params, 'series_order');
         $language = $this->getLanguageFilter($params);
 
-        $query = $this->db->getQuery(true);
+        $query = $this->db->createQuery();
         $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
             ->from($this->db->quoteName('#__bsms_series', 'a'))
             ->innerJoin(
@@ -1433,7 +1433,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'locations_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_locations', 'a'))
                 ->innerJoin(
@@ -1508,7 +1508,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'messagetypes_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_message_type', 'a'))
                 ->innerJoin(
@@ -1580,7 +1580,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'topics_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select(
                 'DISTINCT ' . $this->db->quoteName('#__bsms_topics.id') . ', '
                 . $this->db->quoteName('#__bsms_topics.topic_text') . ', '
@@ -1665,7 +1665,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
                 ->from($this->db->quoteName('#__bsms_books', 'a'))
                 ->innerJoin(
@@ -1737,7 +1737,7 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'years_order');
             $language = $this->getLanguageFilter($params);
 
-            $query = $this->db->getQuery(true);
+            $query = $this->db->createQuery();
             $query->select('DISTINCT YEAR(' . $this->db->quoteName('studydate') . ') AS ' . $this->db->quoteName('theYear'))
                 ->from($this->db->quoteName('#__bsms_studies'))
                 ->where($this->db->quoteName('language') . ' IN (' . $language . ')')

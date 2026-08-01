@@ -779,7 +779,7 @@ class CwmbackupController extends FormController
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find the Proclaim extension ID
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('extension_id'))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
@@ -793,13 +793,13 @@ class CwmbackupController extends FormController
         }
 
         // Reset #__schemas to force all update files to re-run
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->delete($db->quoteName('#__schemas'))
             ->where($db->quoteName('extension_id') . ' = ' . $cid);
         $db->setQuery($query);
         $db->execute();
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->insert($db->quoteName('#__schemas'))
             ->columns([$db->quoteName('extension_id'), $db->quoteName('version_id')])
             ->values($cid . ', ' . $db->quote('0.0.0'));
@@ -870,7 +870,7 @@ class CwmbackupController extends FormController
 
         try {
             // Get all templatecode records
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'type', 'filename', 'templatecode']))
                 ->from($db->quoteName('#__bsms_templatecode'))
                 ->where($db->quoteName('published') . ' = 1');
