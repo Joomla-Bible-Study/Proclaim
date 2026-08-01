@@ -157,6 +157,9 @@ jobs:
       - name: Check PHP syntax
         run: composer lint:syntax
 
+      - name: Check query builder usage
+        run: composer lint:queries
+
       - name: Run PHPUnit tests
         run: composer test
         env:
