@@ -28,7 +28,9 @@ function setupModule(fetchMock, extraOpts) {
     let html = '<div id="proclaim-main-content">' +
             '<form id="adminForm">' +
                 '<input name="filter_search" type="text" value="" />' +
-                '<select name="filter_teacher">' +
+                // The inline onchange mirrors what site/forms/filter_cwmsermons.xml
+                // renders — without it the fixture cannot catch double submits (#1389).
+                '<select name="filter_teacher" onchange="this.form.submit();">' +
                     '<option value="">All Teachers</option>' +
                     '<option value="5">Pastor John</option>' +
                 '</select>' +
@@ -314,6 +316,30 @@ describe('sermon-filters.es6.js', () => {
             expect(mockFetch.mock.calls.length).toBeGreaterThan(baselineCount);
 
             jest.useRealTimers();
+        });
+    });
+
+    describe('Filter change', () => {
+        // Regression guard for #1389: the form XML puts onchange="this.form.submit();"
+        // on every select for the non-AJAX templates. Left in place it fires alongside
+        // the module's own change listener, so a single change issued two requests —
+        // the second aborting the first, with the server having run both queries.
+        test('should issue exactly one request per dropdown change', async () => {
+            const mockFetch = jest.fn().mockResolvedValue(mockAjaxResponse());
+            setupModule(mockFetch);
+            mockFetch.mockClear();
+
+            const select = document.querySelector('select[name="filter_teacher"]');
+
+            expect(select.getAttribute('onchange')).toBeNull();
+
+            select.value = '5';
+            select.dispatchEvent(new Event('change'));
+
+            await new Promise(function (r) { setTimeout(r, 0); });
+            await new Promise(function (r) { setTimeout(r, 0); });
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
         });
     });
 

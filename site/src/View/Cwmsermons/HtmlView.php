@@ -290,13 +290,12 @@ class HtmlView extends BaseHtmlView
                 'showPagination'  => $params->get('show_pagination', '2'),
             ]);
 
+            // Joomla's searchtools stays loaded on purpose: it owns the Filter Options
+            // toggle, the Clear button and the sortable column headers, all of which
+            // sermon-filters hooks into. Its submit paths run through form.submit(),
+            // which sermon-filters overrides to fetch over AJAX instead. See #1389.
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
-
-            // Disable Joomla's searchtools — it auto-submits the form on keystroke,
-            // conflicting with Proclaim's AJAX-based filtering which handles the
-            // same form without page reloads.
-            $wa->disableScript('searchtools');
         }
 
         // Load scripture tooltip assets (per-element controlled; JS is a no-op
