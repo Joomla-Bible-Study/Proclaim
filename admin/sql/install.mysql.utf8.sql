@@ -296,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_podcast`
     `language`                VARCHAR(10)               DEFAULT 'en-us',
     `editor_name`             VARCHAR(150)              DEFAULT NULL,
     `editor_email`            VARCHAR(150)              DEFAULT NULL,
+    `copyright`               VARCHAR(255)              DEFAULT NULL COMMENT 'Rights holder for the feed copyright tag; falls back to the site name',
     `podcastlimit`            INT(5)                    DEFAULT NULL,
     `published`               TINYINT(3)       NOT NULL DEFAULT '1',
     `track_downloads`         TINYINT(1)       NOT NULL DEFAULT 1 COMMENT '1 = rewrite feed enclosures through the download-tracking redirect (on by default)',

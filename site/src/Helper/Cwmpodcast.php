@@ -86,10 +86,16 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg  = [];
-        $db   = Factory::getContainer()->get(DatabaseInterface::class);
-        $year = '(' . date('Y') . ')';
-        $date = date('r');
+        $msg = [];
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Dates are written in the site's configured time zone, not the server's.
+        // PHP's default zone is whatever php.ini says — Joomla never sets it
+        // globally, and Joomla\CMS\Date\Date restores it after each use — so a
+        // bare date() reports the host's zone and ignores Global Configuration
+        // entirely. See the comment on formatFeedDate().
+        $siteTz = new \DateTimeZone(Factory::getApplication()->get('offset', 'UTC'));
+        $date   = $this->formatFeedDate('now', $siteTz);
 
         // Get English language file as fallback
         $language = Factory::getApplication()->getLanguage();
@@ -163,7 +169,7 @@ class Cwmpodcast
 	<description><![CDATA[' . $sanitizedDescription . ']]></description>
 	<language>' . $podlanguage . '</language>
 	<itunes:type>' . $this->escapeHTML($podinfo->itunes_type ?: 'episodic') . '</itunes:type>
-	<copyright>© ' . $year . ' All rights reserved.</copyright>
+	<copyright>' . $this->escapeHTML($this->getCopyrightLine($podinfo, $siteTz)) . '</copyright>
 	<atom:link href="' . $this->resolveUrl($podinfo->website, $protocol) . '/' . $podinfo->filename . '" rel="self" type="application/rss+xml" />
 	<lastBuildDate>' . $date . '</lastBuildDate>
 	<itunes:author>' . $this->escapeHTML($podinfo->author ?: $podinfo->editor_name) . '</itunes:author>
@@ -232,7 +238,7 @@ class Cwmpodcast
             $episodedetail = '';
 
             foreach ($episodes as $episode) {
-                $episodedate   = date('r', strtotime($episode->createdate));
+                $episodedate   = $this->formatFeedDate($episode->createdate, $siteTz);
                 $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
 
@@ -286,21 +292,27 @@ class Cwmpodcast
                 // Podcasting 2.0: person/speaker tags for all teachers
                 $episodedetail .= $this->getPersonXml($episode, $podinfo->website, $protocol);
 
-                // Podcasting 2.0: season (from series)
+                // Podcasting 2.0: season (from series). Emitted alongside
+                // itunes:season, which Apple reads and the podcast: namespace it
+                // ignores — a feed carrying only the latter groups nowhere in
+                // Apple Podcasts.
                 if (!empty($episode->series_text) && ($episode->series_id ?? -1) > 0) {
                     $episodedetail .= '
 		<podcast:season name="' . $this->escapeHTML($episode->series_text) . '">'
-                        . (int) $episode->series_id . '</podcast:season>';
+                        . (int) $episode->series_id . '</podcast:season>
+		<itunes:season>' . (int) $episode->series_id . '</itunes:season>';
                 }
 
-                // Podcasting 2.0: episode number (from studynumber)
+                // Podcasting 2.0: episode number (from studynumber), likewise
+                // paired with the itunes: tag Apple actually reads.
                 if (!empty($episode->studynumber)) {
                     $epNum = preg_replace('/[^0-9]/', '', $episode->studynumber);
 
                     if ($epNum !== '' && (int) $epNum > 0) {
                         $episodedetail .= '
 		<podcast:episode display="' . $this->escapeHTML($episode->studynumber) . '">'
-                            . (int) $epNum . '</podcast:episode>';
+                            . (int) $epNum . '</podcast:episode>
+		<itunes:episode>' . (int) $epNum . '</itunes:episode>';
                     }
                 }
 
@@ -388,6 +400,63 @@ class Cwmpodcast
     }
 
     /**
+     * Build the feed's copyright line.
+     *
+     * The line was hardcoded as "© (2026) All rights reserved." — stray
+     * parentheses, and naming nobody, which is the one thing a copyright notice
+     * exists to say (#1412). The holder now comes from the podcast, falling back
+     * to the site name so existing feeds gain a real one without anyone having
+     * to edit a record.
+     *
+     * @param   object         $podinfo  The podcast row.
+     * @param   \DateTimeZone  $siteTz   The site's configured time zone.
+     *
+     * @return  string  e.g. © 2026 Nashville First Seventh-Day Adventist Church
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function getCopyrightLine(object $podinfo, \DateTimeZone $siteTz): string
+    {
+        $year   = Factory::getDate('now', $siteTz)->format('Y', true, false);
+        $holder = trim((string) ($podinfo->copyright ?? ''));
+
+        if ($holder === '') {
+            $holder = trim((string) Factory::getApplication()->get('sitename', ''));
+        }
+
+        return $holder === ''
+            ? \sprintf('© %s All rights reserved.', $year)
+            : \sprintf('© %s %s', $year, $holder);
+    }
+
+    /**
+     * Format a stored date as an RFC 2822 feed date in the site's time zone.
+     *
+     * `date('r', strtotime($stored))` gets this wrong twice over. Joomla stores
+     * dates in UTC, but strtotime() reads them in PHP's default zone — the
+     * host's, since Joomla never sets one globally — so the instant shifts by
+     * the host's offset. date() then labels it with that same wrong zone. On a
+     * site configured for Chicago but hosted in Los Angeles, every pubDate came
+     * out claiming -0800.
+     *
+     * @param   string         $stored  A UTC date string from the database, or 'now'.
+     * @param   \DateTimeZone  $siteTz  The site's configured time zone.
+     *
+     * @return  string  RFC 2822 date, e.g. Sat, 15 Nov 2025 10:00:00 -0600
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function formatFeedDate(string $stored, \DateTimeZone $siteTz): string
+    {
+        // $translate = false: Date::format() localises day and month names by
+        // default, but RFC 2822 requires the English abbreviations. A translated
+        // pubDate is unparseable to feed readers.
+        return Factory::getDate($stored, 'UTC')
+            ->setTimezone($siteTz)
+            ->format(\DateTimeInterface::RFC2822, true, false);
+    }
+
+    /**
      * Resolve a URL-like value (full URL, bare domain, or Joomla menu item ID).
      *
      * @param   string  $value     The stored value (URL, bare domain, or numeric menu item ID)
@@ -404,9 +473,12 @@ class Cwmpodcast
             return rtrim($value, '/');
         }
 
-        // Numeric = Joomla menu item ID
+        // Numeric = Joomla menu item ID. Route::link()'s $absolute parameter
+        // defaults to false, which returns a site-relative SEF path — and RSS 2.0
+        // requires absolute URLs, so validators reject the channel <link> and
+        // <image><link> built from it. Ask for the absolute form.
         if (ctype_digit($value)) {
-            return Route::link('site', 'index.php?Itemid=' . $value);
+            return Route::link('site', 'index.php?Itemid=' . $value, true, Route::TLS_IGNORE, true);
         }
 
         // Root-relative path — the admin field accepts these, and concatenating

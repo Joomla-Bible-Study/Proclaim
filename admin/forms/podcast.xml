@@ -41,6 +41,9 @@
         <field name="editor_email" type="email" label="JBS_PDC_OWNER_EMAIL"
                description="JBS_PDC_OWNER_EMAIL_DESC" size="50" validate="email" required="true"/>
 
+        <field name="copyright" type="text" label="JBS_PDC_COPYRIGHT_HOLDER"
+               description="JBS_PDC_COPYRIGHT_HOLDER_DESC" size="50"/>
+
         <!-- Legacy podcastsearch — hidden, itunes:keywords deprecated by Apple in 2018 -->
         <field name="podcastsearch" type="hidden"/>
 
@@ -49,10 +52,8 @@
             <option value="-1">JBS_CMN_GLOBAL_ALL_CAMPUSES</option>
         </field>
 
-        <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL"
-               description="JBS_CMN_SELECT_LANGUAGE_DESC">
-            <option value="*">JALL</option>
-        </field>
+        <field name="language" type="FeedLanguage" label="JBS_PDC_FEED_LANGUAGE"
+               description="JBS_PDC_FEED_LANGUAGE_DESC"/>
 
         <field name="detailstemplateid" type="TemplateList"
                label="JBS_PDC_TEMPLATE_FOR_DETAILS_VIEW_LINK"

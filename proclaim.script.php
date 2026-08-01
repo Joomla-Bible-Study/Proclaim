@@ -717,6 +717,64 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Run a cache operation without its housekeeping noise reaching the user.
+     *
+     * Joomla's file cache cannot always remove a cache directory during a live
+     * request — administrator/cache/language is in use by the very request doing
+     * the clearing — and reports it with
+     * `Log::add(..., Log::WARNING, 'jerror')`, which Joomla routes into the
+     * message queue. The administrator sees a red
+     * "Could not delete folder" beside a successful update (#1407).
+     *
+     * It cannot be caught: FileStorage::_deleteFolder() logs and returns false
+     * rather than throwing, so the try/catch around clean() never sees it.
+     *
+     * Only that one message is dropped, and only if the operation itself
+     * produced it. Anything else the queue gains — including messages from
+     * plugins reacting to the cache events — is put back untouched, in order.
+     *
+     * @param   callable  $operation  The cache operation to run.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function withoutCacheHousekeepingNoise(callable $operation): void
+    {
+        $app = Factory::getApplication();
+
+        if (!method_exists($app, 'getMessageQueue')) {
+            $operation();
+
+            return;
+        }
+
+        $before = $app->getMessageQueue();
+
+        try {
+            $operation();
+        } finally {
+            $after = $app->getMessageQueue(true);
+            $noise = Text::_('JLIB_FILESYSTEM_ERROR_FOLDER_DELETE');
+            // The string is a sprintf template; compare on the part before the
+            // path placeholder so the message matches whatever path it names.
+            $needle = trim((string) strstr($noise, '%', true)) ?: $noise;
+
+            foreach ($after as $index => $message) {
+                $isNew   = !\array_key_exists($index, $before);
+                $isNoise = $needle !== ''
+                    && str_contains((string) ($message['message'] ?? ''), $needle);
+
+                if ($isNew && $isNoise) {
+                    continue;
+                }
+
+                $app->enqueueMessage($message['message'] ?? '', $message['type'] ?? 'message');
+            }
+        }
+    }
+
+    /**
      * Clear caches after an install or update, and say so when something outside
      * our reach still needs clearing.
      *
@@ -759,7 +817,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         try {
             // No group argument = every group, matching com_cache's Delete all.
-            Factory::getCache('')->clean();
+            $this->withoutCacheHousekeepingNoise(static fn () => Factory::getCache('')->clean());
         } catch (\Throwable $e) {
             Log::add('Proclaim: cache clean skipped — ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
@@ -813,10 +871,16 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->whereIn($db->quoteName('element'), array_keys($known), ParameterType::STRING);
             $db->setQuery($query);
 
-            $found = array_map(
+            // Deduplicate: the query filters on element but not folder, and a
+            // suite like JCH Optimize registers several plugins under the same
+            // element — which printed "JCH Optimize, JCH Optimize" (#1407). Any
+            // one of them being enabled is reason enough to warn, so collapsing
+            // to distinct names is the right answer rather than filtering by
+            // folder, whose names vary between releases.
+            $found = array_values(array_unique(array_map(
                 static fn (string $element): string => $known[$element] ?? $element,
                 (array) $db->loadColumn()
-            );
+            )));
 
             if ($found === []) {
                 return;
