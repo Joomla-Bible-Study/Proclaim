@@ -113,7 +113,7 @@ class Cwmbackup
         $export .= "-- --------------------------------------------------------\n\n";
 
         try {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['extension_id', 'params']))
                 ->from($db->quoteName('#__extensions'))
                 ->where($db->quoteName('element') . ' = ' . $db->q('com_proclaim'))
@@ -180,7 +180,7 @@ class Cwmbackup
         $export .= "-- --------------------------------------------------------\n\n";
 
         // 1. Component-level ACL (rules on the `com_proclaim` parent row).
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('rules'))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
@@ -202,7 +202,7 @@ class Cwmbackup
             array_map(static fn ($v) => $db->quote($v), Cwmassets::EMPTY_RULE_VARIANTS)
         );
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['name', 'title', 'rules']))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
@@ -302,7 +302,7 @@ class Cwmbackup
         }
 
         // Get all Proclaim tasks
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__scheduler_tasks'))
             ->where($db->quoteName('type') . ' LIKE ' . $db->q('proclaim.%'));
@@ -497,7 +497,7 @@ class Cwmbackup
         $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Get the table rows and create insert statements from them
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName($table));
         $db->setQuery($query);
@@ -538,7 +538,7 @@ class Cwmbackup
     public function getTableRowCount(string $table): int
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName($table));
         $db->setQuery($query);
@@ -599,7 +599,7 @@ class Cwmbackup
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName($table));
         $db->setQuery($query, $offset, $limit);
@@ -674,7 +674,7 @@ class Cwmbackup
         $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
 
         // Get the table rows and create insert statements from them
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName($table));
         $db->setQuery($query);

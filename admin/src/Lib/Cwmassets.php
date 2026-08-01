@@ -65,7 +65,7 @@ class Cwmassets
         // Direct DB lookup (NOT via parentId() — that would cause recursion)
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
@@ -81,7 +81,7 @@ class Cwmassets
         // Parent asset doesn't exist - need to create it
 
         // Find the root asset to use as parent
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('id'))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('parent_id') . ' = 0')
@@ -96,7 +96,7 @@ class Cwmassets
         // Create the com_proclaim parent asset
         $defaultRules = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->insert($db->quoteName('#__assets'))
             ->columns($db->quoteName(['parent_id', 'lft', 'rgt', 'level', 'name', 'title', 'rules']))
             ->values(
@@ -149,7 +149,7 @@ class Cwmassets
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__assets'))
             ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
@@ -302,7 +302,7 @@ class Cwmassets
         );
 
         try {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__assets'))
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
@@ -343,7 +343,7 @@ class Cwmassets
 
         foreach ($orphanMap as $prefix => $sourceTable) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('COUNT(*)')
                     ->from($db->quoteName('#__assets'))
                     ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
@@ -397,7 +397,7 @@ class Cwmassets
             $sourceTbl = $info['name'];
 
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName($sourceTbl, 's'))
                     ->innerJoin(
                         $db->quoteName('#__assets', 'a') . ' ON '
@@ -420,7 +420,7 @@ class Cwmassets
 
         // Now delete the asset rows themselves.
         try {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->delete($db->quoteName('#__assets'))
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
                 ->where($db->quoteName('name') . ' <> ' . $db->quote('com_proclaim'))
@@ -466,7 +466,7 @@ class Cwmassets
         }
 
         try {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
                 ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
@@ -514,7 +514,7 @@ class Cwmassets
         try {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('rules'))
                 ->from($db->quoteName('#__assets'))
                 ->where($db->quoteName('id') . ' = ' . $assetId);
@@ -525,7 +525,7 @@ class Cwmassets
                 return;
             }
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->delete($db->quoteName('#__assets'))
                 ->where($db->quoteName('id') . ' = ' . $assetId);
             $db->setQuery($query);
@@ -538,7 +538,7 @@ class Cwmassets
             $keyName   = $table->getKeyName();
 
             if ($tableName && $keyName && !empty($table->$keyName)) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName($tableName))
                     ->set($db->quoteName('asset_id') . ' = 0')
                     ->where($db->quoteName($keyName) . ' = ' . (int) $table->$keyName);
@@ -593,7 +593,7 @@ class Cwmassets
         // Case 1 — record has no asset link. If a real-rules asset row
         // exists by name, relink; otherwise do nothing.
         if (empty($item->asset_id) || (int) $item->asset_id === 0 || !$assetExists) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName(['id', 'rules']))
                 ->from($db->quoteName('#__assets'))
                 ->where($db->quoteName('name') . ' = ' . $db->quote($assetFullName));
@@ -601,7 +601,7 @@ class Cwmassets
             $existing = $db->loadObject();
 
             if ($existing && !\in_array((string) $existing->rules, self::EMPTY_RULE_VARIANTS, true)) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName($tableName))
                     ->set($db->quoteName('asset_id') . ' = ' . (int) $existing->id)
                     ->where($db->quoteName('id') . ' = ' . (int) $item->id);
@@ -618,13 +618,13 @@ class Cwmassets
         // Delete the row and null the link; subsequent permission checks
         // inherit from the com_proclaim parent.
         if (\in_array((string) ($item->rules ?? ''), self::EMPTY_RULE_VARIANTS, true)) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->delete($db->quoteName('#__assets'))
                 ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
             $db->setQuery($query);
             $db->execute();
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName($tableName))
                 ->set($db->quoteName('asset_id') . ' = 0')
                 ->where($db->quoteName('id') . ' = ' . (int) $item->id);
@@ -636,7 +636,7 @@ class Cwmassets
 
         // Case 3 — real custom rules, but parent has drifted.
         if ((int) ($item->parent_id ?? 0) !== (int) $parentId) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
                 ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
                 ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName))
@@ -686,7 +686,7 @@ class Cwmassets
 
         foreach ($assetMap as $prefix => $sourceTable) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->delete($db->quoteName('#__assets'))
                     ->where($db->quoteName('name') . ' LIKE ' . $db->quote($prefix . '%'))
                     ->where(
@@ -769,7 +769,7 @@ class Cwmassets
         $totalCount = 0;
 
         foreach ($objects as $object) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select(
                 $db->quoteName('j.id') . ', ' .
                     $db->quoteName('j.asset_id') . ', ' .
@@ -829,7 +829,7 @@ class Cwmassets
             // Total source rows.
             try {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select('COUNT(*)')
                         ->from($db->quoteName($sourceTbl))
                 );
@@ -841,7 +841,7 @@ class Cwmassets
             // Inherited (asset_id = 0 — the new default for uncustomised records).
             try {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select('COUNT(*)')
                         ->from($db->quoteName($sourceTbl))
                         ->where($db->quoteName('asset_id') . ' = 0')
@@ -854,7 +854,7 @@ class Cwmassets
             // Custom rules — real per-record ACL configured.
             try {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select('COUNT(*)')
                         ->from($db->quoteName($sourceTbl, 's'))
                         ->innerJoin(
@@ -871,7 +871,7 @@ class Cwmassets
             // Needs cleanup — linked to an empty-rules asset.
             try {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select('COUNT(*)')
                         ->from($db->quoteName($sourceTbl, 's'))
                         ->innerJoin(
@@ -888,7 +888,7 @@ class Cwmassets
             // Drifted parent — row exists but parented outside com_proclaim.
             try {
                 $db->setQuery(
-                    $db->getQuery(true)
+                    $db->createQuery()
                         ->select('COUNT(*)')
                         ->from($db->quoteName($sourceTbl, 's'))
                         ->innerJoin(

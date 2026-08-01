@@ -361,7 +361,7 @@ class Cwmpagebuilder
         $user   = \Joomla\CMS\Factory::getApplication()->getIdentity();
         $groups = implode(',', $user->getAuthorisedViewLevels());
 
-        $query          = $db->getQuery(true);
+        $query          = $db->createQuery();
         $nullDateQuoted = $db->quote($db->getNullDate());
         $query->select(implode(', ', $db->quoteName([
             'study.id', 'study.published', 'study.studydate', 'study.studytitle',
@@ -517,7 +517,7 @@ class Cwmpagebuilder
                 // Junction table EXISTS subquery for multi-teacher support, with legacy
                 // study.teacher_id fallback to mirror CwmsermonsModel's COALESCE behavior
                 // and tolerate rows where the junction backfill has not run.
-                $tSubquery = $db->getQuery(true)
+                $tSubquery = $db->createQuery()
                     ->select('1')
                     ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                     ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))

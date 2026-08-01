@@ -151,7 +151,7 @@ class CwmserverMigrationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get all legacy servers (published or unpublished)
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('s.id'),
                 $db->quoteName('s.server_name'),
@@ -171,7 +171,7 @@ class CwmserverMigrationHelper
         $serverIds = array_column($servers, 'id');
 
         // Get all media files for these servers
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('m.id'),
                 $db->quoteName('m.server_id'),
@@ -245,7 +245,7 @@ class CwmserverMigrationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('m.id'),
                 $db->quoteName('m.study_id'),
@@ -440,7 +440,7 @@ class CwmserverMigrationHelper
     public static function getExistingServersByType(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('id'),
                 $db->quoteName('server_name'),
@@ -536,7 +536,7 @@ class CwmserverMigrationHelper
         // and returned fewer matching IDs than the batch size.
         // ORDER BY id ensures deterministic ordering so the offset-based
         // failure-skipping logic in the JS batch loop works correctly.
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('params')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('server_id') . ' = :serverId')
@@ -598,7 +598,7 @@ class CwmserverMigrationHelper
 
         foreach ($mediaIds as $mediaId) {
             try {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select([$db->quoteName('id'), $db->quoteName('params')])
                     ->from($db->quoteName('#__bsms_mediafiles'))
                     ->where($db->quoteName('id') . ' = :id')
@@ -616,7 +616,7 @@ class CwmserverMigrationHelper
                 $newParams     = self::transformParams($params, $targetType, $legacyServerParams);
                 $newParamsJson = json_encode($newParams, JSON_THROW_ON_ERROR);
 
-                $update = $db->getQuery(true)
+                $update = $db->createQuery()
                     ->update($db->quoteName('#__bsms_mediafiles'))
                     ->set($db->quoteName('server_id') . ' = :serverId')
                     ->set($db->quoteName('params') . ' = :params')
@@ -719,7 +719,7 @@ class CwmserverMigrationHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get published legacy servers
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('type') . ' = ' . $db->quote('legacy'))
@@ -735,7 +735,7 @@ class CwmserverMigrationHelper
         $skipped     = 0;
 
         foreach ($legacyIds as $serverId) {
-            $countQuery = $db->getQuery(true)
+            $countQuery = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('server_id') . ' = :serverId')
@@ -744,7 +744,7 @@ class CwmserverMigrationHelper
             $count = (int) $db->loadResult();
 
             if ($count === 0) {
-                $update = $db->getQuery(true)
+                $update = $db->createQuery()
                     ->update($db->quoteName('#__bsms_servers'))
                     ->set($db->quoteName('published') . ' = 0')
                     ->where($db->quoteName('id') . ' = :id')

@@ -115,7 +115,7 @@ class CwmmediafilesController extends AdminController
         }
 
         $db    = $this->getModel()->getDatabase();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('mf.id'),
                 $db->quoteName('mf.params', 'mf_params'),

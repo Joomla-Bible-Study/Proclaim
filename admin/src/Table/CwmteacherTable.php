@@ -188,7 +188,7 @@ class CwmteacherTable extends Table
         }
 
         if (!empty($this->alias) && $db !== null) {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['id', 'teachername']))
                 ->from($db->quoteName('#__bsms_teachers'))
                 ->where('LOWER(' . $db->quoteName('alias') . ') = LOWER(' . $db->quote($this->alias) . ')');

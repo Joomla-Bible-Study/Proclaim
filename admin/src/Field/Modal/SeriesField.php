@@ -129,7 +129,7 @@ class SeriesField extends ModalSelectField
         if ($value) {
             try {
                 $db    = $this->getDatabase();
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('series_text'))
                     ->from($db->quoteName('#__bsms_series'))
                     ->where($db->quoteName('id') . ' = :value')

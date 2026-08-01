@@ -149,7 +149,7 @@ class CwmpodcastsModel extends ListModel
     protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select(

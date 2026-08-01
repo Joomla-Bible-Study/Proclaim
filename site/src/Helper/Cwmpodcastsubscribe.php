@@ -100,7 +100,7 @@ class Cwmpodcastsubscribe
     {
         $user  = Factory::getApplication()->getIdentity();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('*')
             ->from($db->quoteName('#__bsms_podcast', 'p'))

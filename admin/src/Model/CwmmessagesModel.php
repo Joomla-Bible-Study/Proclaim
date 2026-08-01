@@ -205,7 +205,7 @@ class CwmmessagesModel extends ListModel
     protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select(
@@ -276,11 +276,11 @@ class CwmmessagesModel extends ListModel
         );
 
         // Plays/Downloads totals via scalar subqueries (avoids GROUP BY on the main query)
-        $playsSubquery = $db->getQuery(true)
+        $playsSubquery = $db->createQuery()
             ->select('COALESCE(SUM(' . $db->quoteName('mf.plays') . '), 0)')
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
-        $downloadsSubquery = $db->getQuery(true)
+        $downloadsSubquery = $db->createQuery()
             ->select('COALESCE(SUM(' . $db->quoteName('mf.downloads') . '), 0)')
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->where($db->quoteName('mf.study_id') . ' = ' . $db->quoteName('study.id'));
@@ -303,7 +303,7 @@ class CwmmessagesModel extends ListModel
         $teacher = $this->getState('filter.teacher');
 
         if (is_numeric($teacher)) {
-            $tSubquery = $db->getQuery(true)
+            $tSubquery = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('study.id'))

@@ -52,7 +52,7 @@ class CwmpodcastController extends BaseController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . $mediaId)
@@ -116,7 +116,7 @@ class CwmpodcastController extends BaseController
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('mf.params'))
             ->select($db->quoteName('sr.params', 'sparams'))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))

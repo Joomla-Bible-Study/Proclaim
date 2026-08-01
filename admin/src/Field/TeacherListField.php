@@ -84,7 +84,7 @@ class TeacherListField extends ListField
     {
         $app   = Factory::getApplication();
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('DISTINCT ' . $db->quoteName('t.id') . ', ' . $db->quoteName('t.teachername'))
             ->from($db->quoteName('#__bsms_teachers', 't'));

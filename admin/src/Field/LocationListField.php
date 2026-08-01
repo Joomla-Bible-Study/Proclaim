@@ -68,7 +68,7 @@ class LocationListField extends ListField
         // Frontend filter: only locations used by published, accessible messages
         if ($app->isClient('site')) {
             $groups = $user->getAuthorisedViewLevels();
-            $query  = $db->getQuery(true)
+            $query  = $db->createQuery()
                 ->select('DISTINCT ' . $db->quoteName('loc.id') . ', ' . $db->quoteName('loc.location_text'))
                 ->from($db->quoteName('#__bsms_locations', 'loc'))
                 ->join(
@@ -95,7 +95,7 @@ class LocationListField extends ListField
         }
 
         // Admin: show all published locations with campus-aware filtering
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('id'), $db->quoteName('location_text')])
             ->from($db->quoteName('#__bsms_locations'))
             ->where($db->quoteName('published') . ' = 1')
@@ -184,7 +184,7 @@ class LocationListField extends ListField
                 // that currently have no location — show the dropdown instead.
                 if ($isNewRecord || $currentVal === $locationId) {
                     $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                    $query = $db->getQuery(true)
+                    $query = $db->createQuery()
                         ->select($db->quoteName('location_text'))
                         ->from($db->quoteName('#__bsms_locations'))
                         ->where($db->quoteName('id') . ' = ' . $locationId);

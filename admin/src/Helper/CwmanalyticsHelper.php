@@ -169,7 +169,7 @@ class CwmanalyticsHelper
             $db  = Factory::getContainer()->get(DatabaseInterface::class);
             $now = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s');
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->insert($db->quoteName('#__bsms_analytics_events'))
                 ->columns([
                     $db->quoteName('series_id'),
@@ -430,7 +430,7 @@ class CwmanalyticsHelper
             $result['rolled'] = $db->getAffectedRows();
 
             // Purge rolled-up raw events
-            $purgeQuery = $db->getQuery(true)
+            $purgeQuery = $db->createQuery()
                 ->delete($db->quoteName('#__bsms_analytics_events'))
                 ->where($db->quoteName('created') . ' < ' . $db->quote($cutoff));
             $db->setQuery($purgeQuery);
@@ -460,7 +460,7 @@ class CwmanalyticsHelper
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('series_id'))
                 ->from($db->quoteName('#__bsms_studies'))
                 ->where($db->quoteName('id') . ' = ' . (int) $studyId);
@@ -489,7 +489,7 @@ class CwmanalyticsHelper
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('study_id'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -517,7 +517,7 @@ class CwmanalyticsHelper
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             if ($studyId > 0) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('location_id'))
                     ->from($db->quoteName('#__bsms_studies'))
                     ->where($db->quoteName('id') . ' = ' . (int) $studyId);
@@ -530,7 +530,7 @@ class CwmanalyticsHelper
             }
 
             if ($mediaId > 0) {
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select($db->quoteName('s.location_id'))
                     ->from($db->quoteName('#__bsms_mediafiles', 'm'))
                     ->leftJoin(

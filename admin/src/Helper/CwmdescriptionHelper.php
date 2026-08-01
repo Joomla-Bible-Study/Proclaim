@@ -87,7 +87,7 @@ class CwmdescriptionHelper
     private static function gatherDescriptionData(int $studyId, int $mediaId): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('s.id'),
                 $db->quoteName('s.studytitle'),
@@ -259,7 +259,7 @@ class CwmdescriptionHelper
         $db   = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Find a site menu item pointing to a Proclaim sermon list or detail view
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('path'), $db->quoteName('link')])
             ->from($db->quoteName('#__menu'))
             ->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_proclaim&view=cwmsermon%'))
@@ -304,7 +304,7 @@ class CwmdescriptionHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('srv.params'))
             ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
             ->leftJoin(
@@ -343,7 +343,7 @@ class CwmdescriptionHelper
     private static function getTopicsForStudy(int $studyId): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('t.topic_text'))
             ->from($db->quoteName('#__bsms_studytopics', 'st'))
             ->leftJoin(
@@ -369,7 +369,7 @@ class CwmdescriptionHelper
     private static function getScriptureReferences(int $studyId): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('b.bookname'),
                 $db->quoteName('ss.chapter_begin'),
@@ -430,7 +430,7 @@ class CwmdescriptionHelper
 
         if ($mediaId > 0) {
             // Look up chapters from the specific media file
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('params'))
                 ->from($db->quoteName('#__bsms_mediafiles'))
                 ->where($db->quoteName('id') . ' = ' . $mediaId);
@@ -452,7 +452,7 @@ class CwmdescriptionHelper
         }
 
         // Fall back: find the first media file on this study that has chapters
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('study_id') . ' = ' . (int) $studyId)

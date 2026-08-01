@@ -69,7 +69,7 @@ class ServerListField extends ListField
     protected function getOptions(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'server_name', 'type']))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')

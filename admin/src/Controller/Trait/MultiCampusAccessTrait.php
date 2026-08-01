@@ -65,7 +65,7 @@ trait MultiCampusAccessTrait
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('access'))
             ->from($db->quoteName($this->accessTable))
             ->where($db->quoteName('id') . ' = :rid')

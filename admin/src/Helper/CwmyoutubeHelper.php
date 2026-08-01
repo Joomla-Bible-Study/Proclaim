@@ -88,7 +88,7 @@ class CwmyoutubeHelper
         $searchName = $db->quote('%' . $db->escape($teacherName, true) . '%');
         $exactName  = $db->quote($teacherName);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->where('LOWER(' . $db->quoteName('teachername') . ') LIKE LOWER(' . $searchName . ')')
@@ -125,7 +125,7 @@ class CwmyoutubeHelper
         $searchTitle = $db->quote('%' . $db->escape($messageTitle, true) . '%');
         $exactTitle  = $db->quote($messageTitle);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('s.id'),
                 $db->quoteName('s.studytitle'),
@@ -145,7 +145,7 @@ class CwmyoutubeHelper
 
         // Filter by teacher if provided
         if ($teacherId !== null) {
-            $tSub = $db->getQuery(true)
+            $tSub = $db->createQuery()
                 ->select('1')
                 ->from($db->quoteName('#__bsms_study_teachers', 'stf'))
                 ->where($db->quoteName('stf.study_id') . ' = ' . $db->quoteName('s.id'))
@@ -187,7 +187,7 @@ class CwmyoutubeHelper
         // "//www.youtube.com/embed/{videoId}?enablejsapi=1"
         $searchId = $db->quote('%' . $db->escape($videoId, true) . '%');
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('s.id'),
                 $db->quoteName('s.studytitle'),
@@ -307,7 +307,7 @@ class CwmyoutubeHelper
         foreach ($searchTerms as $searchTerm) {
             $searchTitle = $db->quote('%' . $db->escape($searchTerm, true) . '%');
 
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([
                     $db->quoteName('s.id'),
                     $db->quoteName('s.studytitle'),

@@ -78,7 +78,7 @@ class CwmmessagetypesModel extends ListModel
     {
         if (empty($this->deletes)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('allowdeletes'))
                 ->from($db->quoteName('#__bsms_admin'))
                 ->where($db->quoteName('id') . ' = 1');
@@ -191,7 +191,7 @@ class CwmmessagetypesModel extends ListModel
     protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select(

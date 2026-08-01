@@ -73,7 +73,7 @@ class CwmtemplatesModel extends ListModel
     {
         if (empty($this->templates)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id', 'value'))
                 ->select($db->quoteName('title', 'text'))
                 ->from($db->quoteName('#__bsms_templates'))
@@ -95,7 +95,7 @@ class CwmtemplatesModel extends ListModel
     public function getTypes(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName('template.type', 'text'));
         $query->from($db->quoteName('#__bsms_templates', 'template'));
@@ -153,7 +153,7 @@ class CwmtemplatesModel extends ListModel
     protected function getListQuery(): mixed
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $user  = $this->getCurrentUser();
 
         $query->select(

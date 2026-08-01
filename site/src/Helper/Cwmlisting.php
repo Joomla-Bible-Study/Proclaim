@@ -514,7 +514,7 @@ class Cwmlisting
     public function getMediaFiles(array $medias): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         // Select only needed mediafile columns (avoids loading metadata TEXT blob)
         $mf = '#__bsms_mediafiles';
         $query->select(implode(', ', [
@@ -2158,7 +2158,7 @@ class Cwmlisting
         // Preload all book names on first call (66 rows, tiny table)
         if (empty(self::$bookNameCache)) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select([$db->quoteName('booknumber'), $db->quoteName('bookname')])
                 ->from($db->quoteName('#__bsms_books'));
             $db->setQuery($query);
@@ -2553,7 +2553,7 @@ class Cwmlisting
     {
         $link  = '';
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select([
                 $db->quoteName('#__bsms_mediafiles.id'),
                 $db->quoteName('#__bsms_mediafiles.article_id'),

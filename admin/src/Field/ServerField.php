@@ -118,7 +118,7 @@ class ServerField extends FormField
         if ($value) {
             // Get a reverse lookup of the server ID to server name
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('server_name'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('id') . ' = :value')

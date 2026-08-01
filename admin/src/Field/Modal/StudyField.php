@@ -130,7 +130,7 @@ class StudyField extends FormField
 
         if ($value) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('studytitle') . 'AS name')
                 ->from($db->quoteName('#__bsms_studies'))
                 ->where($db->quoteName('id') . ' = :value')

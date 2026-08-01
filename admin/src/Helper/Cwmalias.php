@@ -60,7 +60,7 @@ class Cwmalias
                     // Do nothing
                 } else {
                     $alias = OutputFilter::stringURLSafe($r['title']);
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->update($db->quoteName($r['table']))
                         ->set($db->quoteName('alias') . ' = ' . $db->q($alias))
                         ->where($db->quoteName('id') . ' = ' . (int) $r['id']);
@@ -112,7 +112,7 @@ class Cwmalias
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('id') . ', ' . $db->quoteName('alias') . ', ' . $db->quoteName($title))
             ->from($db->quoteName($table));
         $db->setQuery($query);

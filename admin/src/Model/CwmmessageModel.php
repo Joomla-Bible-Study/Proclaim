@@ -89,7 +89,7 @@ class CwmmessageModel extends AdminModel
     public function isDuplicate(int $study_id, int $topic_id): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__bsms_studytopics'))
             ->where($db->quoteName('study_id') . ' = ' . (int) $study_id)
@@ -125,7 +125,7 @@ class CwmmessageModel extends AdminModel
 
         if ($id > 0) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
 
             $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
             $query->from($db->quoteName('#__bsms_studytopics', 'studytopics'));
@@ -161,7 +161,7 @@ class CwmmessageModel extends AdminModel
     public function getAlltopics(): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select($db->quoteName('topic.id') . ', ' . $db->quoteName('topic.topic_text') . ', ' . $db->quoteName('topic.params', 'topic_params'));
         $query->from($db->quoteName('#__bsms_topics', 'topic'));
@@ -193,7 +193,7 @@ class CwmmessageModel extends AdminModel
     public function getMediaFiles(): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select(
             $db->quoteName(
@@ -1060,7 +1060,7 @@ class CwmmessageModel extends AdminModel
                 if (!empty($data->id)) {
                     try {
                         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                        $query = $db->getQuery(true)
+                        $query = $db->createQuery()
                             ->select($db->quoteName('t.teachername'))
                             ->from($db->quoteName('#__bsms_teachers', 't'))
                             ->innerJoin(
@@ -1099,7 +1099,7 @@ class CwmmessageModel extends AdminModel
                 if (!empty($data->series_id) && (int) $data->series_id > 0) {
                     try {
                         $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
-                        $query = $db->getQuery(true)
+                        $query = $db->createQuery()
                             ->select($db->quoteName('series_text'))
                             ->from($db->quoteName('#__bsms_series'))
                             ->where($db->quoteName('id') . ' = ' . (int) $data->series_id);
@@ -1118,7 +1118,7 @@ class CwmmessageModel extends AdminModel
                 if (!empty($data->id)) {
                     try {
                         $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
-                        $query = $db->getQuery(true)
+                        $query = $db->createQuery()
                             ->select($db->quoteName('t.topic_text'))
                             ->from($db->quoteName('#__bsms_topics', 't'))
                             ->innerJoin(
@@ -1143,7 +1143,7 @@ class CwmmessageModel extends AdminModel
                 if (!empty($data->messagetype) && (int) $data->messagetype > 0) {
                     try {
                         $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
-                        $query = $db->getQuery(true)
+                        $query = $db->createQuery()
                             ->select($db->quoteName('message_type'))
                             ->from($db->quoteName('#__bsms_message_type'))
                             ->where($db->quoteName('id') . ' = ' . (int) $data->messagetype);
@@ -1162,7 +1162,7 @@ class CwmmessageModel extends AdminModel
                 if (!empty($data->location_id) && (int) $data->location_id > 0) {
                     try {
                         $db    = $db ?? Factory::getContainer()->get(DatabaseInterface::class);
-                        $query = $db->getQuery(true)
+                        $query = $db->createQuery()
                             ->select($db->quoteName('location_text'))
                             ->from($db->quoteName('#__bsms_locations'))
                             ->where($db->quoteName('id') . ' = ' . (int) $data->location_id);
@@ -1244,7 +1244,7 @@ class CwmmessageModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->select('MAX(' . $db->quoteName('ordering') . ')')
                     ->from($db->quoteName('#__bsms_studies'));
                 $db->setQuery($query);

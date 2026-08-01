@@ -158,7 +158,7 @@ class CwmcommentsModel extends ListModel
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Select the required fields from the table.
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             $this->getState(
                 'list.select',

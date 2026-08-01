@@ -796,7 +796,7 @@ class CWMAddonYoutube extends CWMAddon
 
         // Verify this is a YouTube server
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('type'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . $serverId);
@@ -902,7 +902,7 @@ class CWMAddonYoutube extends CWMAddon
     protected function getServerConfig(int $serverId): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -937,7 +937,7 @@ class CWMAddonYoutube extends CWMAddon
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__bsms_servers'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'));
@@ -1893,7 +1893,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             // Case-insensitive de-dup check
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select('COUNT(*)')
                 ->from($db->quoteName('#__bsms_topics'))
                 ->where('LOWER(' . $db->quoteName('topic_text') . ') = LOWER(:tag)')
@@ -1905,7 +1905,7 @@ class CWMAddonYoutube extends CWMAddon
             }
 
             // Insert new topic
-            $insert = $db->getQuery(true);
+            $insert = $db->createQuery();
             $insert->insert($db->quoteName('#__bsms_topics'))
                 ->columns($db->quoteName(['topic_text', 'published', 'language']))
                 ->values(
@@ -2131,7 +2131,7 @@ class CWMAddonYoutube extends CWMAddon
         // Persist on the server so every later broadcast reuses it — the
         // same params-write pattern as saveOAuthTokens() below.
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2142,7 +2142,7 @@ class CWMAddonYoutube extends CWMAddon
         $params->set('live_stream_key', $details['stream_key']);
         $params->set('live_rtmp_url', $details['rtmp_url']);
 
-        $update = $db->getQuery(true)
+        $update = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2165,7 +2165,7 @@ class CWMAddonYoutube extends CWMAddon
     public function saveOAuthTokens(int $serverId, array $tokenData): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2187,7 +2187,7 @@ class CWMAddonYoutube extends CWMAddon
         // Set a simple flag for the status field to detect connection
         $params->set('access_token', $tokenData['access_token'] ?? '1');
 
-        $update = $db->getQuery(true)
+        $update = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2209,7 +2209,7 @@ class CWMAddonYoutube extends CWMAddon
     public function disconnectOAuth(int $serverId): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2221,7 +2221,7 @@ class CWMAddonYoutube extends CWMAddon
         $params->remove('oauth_refresh_token');
         $params->remove('access_token');
 
-        $update = $db->getQuery(true)
+        $update = $db->createQuery()
             ->update($db->quoteName('#__bsms_servers'))
             ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
             ->where($db->quoteName('id') . ' = ' . (int) $serverId);
@@ -2326,7 +2326,7 @@ class CWMAddonYoutube extends CWMAddon
     public function syncDescription(int $mediaId, string $description): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -2825,7 +2825,7 @@ class CWMAddonYoutube extends CWMAddon
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -2906,7 +2906,7 @@ class CWMAddonYoutube extends CWMAddon
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -2984,7 +2984,7 @@ class CWMAddonYoutube extends CWMAddon
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('params'), $db->quoteName('server_id'), $db->quoteName('study_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);

@@ -61,7 +61,7 @@ class CwmscriptureMigration
         }
 
         // Check if already migrated (junction table has rows)
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_study_scriptures'));
         $db->setQuery($query);
@@ -74,7 +74,7 @@ class CwmscriptureMigration
         }
 
         // Query all studies with at least one book reference
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('id'),
                 $db->quoteName('booknumber'),
@@ -191,7 +191,7 @@ class CwmscriptureMigration
             'chapter_end', 'verse_end', 'bible_version', 'reference_text',
         ]);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->insert($db->quoteName('#__bsms_study_scriptures'))
             ->columns($columns);
 

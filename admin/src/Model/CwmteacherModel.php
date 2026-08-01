@@ -313,7 +313,7 @@ class CwmteacherModel extends AdminModel
         $text = '';
 
         if (!empty($record) && $this->getState('task') === 'trash') {
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName(['s.id', 's.studytitle']))
                 ->from($db->quoteName('#__bsms_studies', 's'))
                 ->innerJoin(
@@ -511,7 +511,7 @@ class CwmteacherModel extends AdminModel
         $text       = '';
 
         // Iterate the items to delete each one.
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['s.id', 's.studytitle']))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->innerJoin(
@@ -707,7 +707,7 @@ class CwmteacherModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_teachers'));
                 $db->setQuery($query);
                 $max = $db->loadResult();
@@ -737,7 +737,7 @@ class CwmteacherModel extends AdminModel
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select([
             $db->quoteName('study.id'),
@@ -765,7 +765,7 @@ class CwmteacherModel extends AdminModel
         // Filter by teacher via junction table OR legacy teacher_id
         $query->where(
             '(' . $db->quoteName('study.id') . ' IN ('
-            . $db->getQuery(true)
+            . $db->createQuery()
                 ->select($db->quoteName('st.study_id'))
                 ->from($db->quoteName('#__bsms_study_teachers', 'st'))
                 ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
@@ -805,14 +805,14 @@ class CwmteacherModel extends AdminModel
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $query->select('COUNT(DISTINCT ' . $db->quoteName('study.id') . ')')
             ->from($db->quoteName('#__bsms_studies', 'study'));
 
         $query->where(
             '(' . $db->quoteName('study.id') . ' IN ('
-            . $db->getQuery(true)
+            . $db->createQuery()
                 ->select($db->quoteName('st.study_id'))
                 ->from($db->quoteName('#__bsms_study_teachers', 'st'))
                 ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
@@ -949,7 +949,7 @@ class CwmteacherModel extends AdminModel
         // Get all teacher IDs in current ordering, excluding the selected ones.
         // Tiebreaker on teachername prevents random shuffling when multiple
         // teachers share the same ordering value (e.g. all at 0).
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->whereNotIn($db->quoteName('id'), $pks)
@@ -958,7 +958,7 @@ class CwmteacherModel extends AdminModel
         $otherIds = $db->loadColumn();
 
         // Get the selected teacher IDs sorted alphabetically
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__bsms_teachers'))
             ->whereIn($db->quoteName('id'), $pks)
@@ -976,7 +976,7 @@ class CwmteacherModel extends AdminModel
 
         // Update all ordering values
         foreach ($newOrder as $index => $id) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->update($db->quoteName('#__bsms_teachers'))
                 ->set($db->quoteName('ordering') . ' = ' . ($index + 1))
                 ->where($db->quoteName('id') . ' = ' . (int) $id);

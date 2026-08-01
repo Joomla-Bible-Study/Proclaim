@@ -149,7 +149,7 @@ class CwmImageCleanup
     private static function getValidIds(string $type): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $table = match ($type) {
             'studies'  => '#__bsms_studies',
@@ -358,7 +358,7 @@ class CwmImageCleanup
 
         // Count other media records referencing the same filename + server
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('server_id') . ' = ' . $serverId)
@@ -383,7 +383,7 @@ class CwmImageCleanup
         }
 
         // Load server type so we can instantiate the correct addon
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('type'), $db->quoteName('params')])
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . $serverId);

@@ -497,7 +497,7 @@ class CwmschemaorgHelper
 
         try {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__schemaorg'))
                 ->where($db->quoteName('itemId') . ' = ' . $itemId)
@@ -716,7 +716,7 @@ class CwmschemaorgHelper
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $context = 'com_proclaim.cwmmessage';
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['id', 'schema']))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $sermonId)
@@ -738,7 +738,7 @@ class CwmschemaorgHelper
             return;
         }
 
-        $tQuery = $db->getQuery(true)
+        $tQuery = $db->createQuery()
             ->select($db->quoteName('t.teachername'))
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -791,7 +791,7 @@ class CwmschemaorgHelper
             return false;
         }
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName($table))
             ->where($db->quoteName('id') . ' = ' . $itemId);
@@ -865,7 +865,7 @@ class CwmschemaorgHelper
         $synced  = 0;
         $skipped = 0;
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([
                 $db->quoteName('m.id'),
                 $db->quoteName('m.studytitle'),
@@ -911,7 +911,7 @@ class CwmschemaorgHelper
             }
 
             // Teacher names
-            $tQuery = $db->getQuery(true)
+            $tQuery = $db->createQuery()
                 ->select($db->quoteName('t.teachername'))
                 ->from($db->quoteName('#__bsms_teachers', 't'))
                 ->innerJoin(
@@ -930,7 +930,7 @@ class CwmschemaorgHelper
             $customFields = [];
 
             if (!empty($msg->series_id) && (int) $msg->series_id > 0) {
-                $sQuery = $db->getQuery(true)
+                $sQuery = $db->createQuery()
                     ->select($db->quoteName('series_text'))
                     ->from($db->quoteName('#__bsms_series'))
                     ->where($db->quoteName('id') . ' = ' . (int) $msg->series_id);
@@ -942,7 +942,7 @@ class CwmschemaorgHelper
             }
 
             if (!empty($msg->messagetype) && (int) $msg->messagetype > 0) {
-                $mtQuery = $db->getQuery(true)
+                $mtQuery = $db->createQuery()
                     ->select($db->quoteName('message_type'))
                     ->from($db->quoteName('#__bsms_message_type'))
                     ->where($db->quoteName('id') . ' = ' . (int) $msg->messagetype);
@@ -954,7 +954,7 @@ class CwmschemaorgHelper
             }
 
             if (!empty($msg->location_id) && (int) $msg->location_id > 0) {
-                $lQuery = $db->getQuery(true)
+                $lQuery = $db->createQuery()
                     ->select($db->quoteName('location_text'))
                     ->from($db->quoteName('#__bsms_locations'))
                     ->where($db->quoteName('id') . ' = ' . (int) $msg->location_id);
@@ -966,7 +966,7 @@ class CwmschemaorgHelper
             }
 
             // Topics
-            $topQuery = $db->getQuery(true)
+            $topQuery = $db->createQuery()
                 ->select($db->quoteName('t.topic_text'))
                 ->from($db->quoteName('#__bsms_topics', 't'))
                 ->innerJoin(
@@ -1008,7 +1008,7 @@ class CwmschemaorgHelper
         $synced  = 0;
         $skipped = 0;
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName('#__bsms_teachers'))
             ->where($db->quoteName('published') . ' = 1');
@@ -1099,7 +1099,7 @@ class CwmschemaorgHelper
         $synced  = 0;
         $skipped = 0;
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName('#__bsms_series'))
             ->where($db->quoteName('published') . ' = 1');
@@ -1170,7 +1170,7 @@ class CwmschemaorgHelper
      */
     private static function isManuallyEdited(DatabaseInterface $db, int $itemId, string $context): ?bool
     {
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('schema'))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $itemId)
@@ -1235,7 +1235,7 @@ class CwmschemaorgHelper
         }
 
         // Teacher names
-        $tQuery = $db->getQuery(true)
+        $tQuery = $db->createQuery()
             ->select($db->quoteName('t.teachername'))
             ->from($db->quoteName('#__bsms_teachers', 't'))
             ->innerJoin(
@@ -1422,7 +1422,7 @@ class CwmschemaorgHelper
         $schema['_autoHash'] = self::computeAutoHash($schema);
 
         // Check for existing row
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $itemId)

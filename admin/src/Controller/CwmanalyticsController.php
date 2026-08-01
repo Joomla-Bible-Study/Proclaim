@@ -148,7 +148,7 @@ class CwmanalyticsController extends BaseController
         $user = $app->getIdentity();
         $db   = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('access'), $db->quoteName('location_id')])
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('id') . ' = ' . (int) $studyId);

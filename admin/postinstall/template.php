@@ -39,7 +39,7 @@ function admin_postinstall_template_condition(): bool
     $results = null;
 
     $db    = Factory::getContainer()->get('DatabaseDriver');
-    $qurey = $db->getQuery(true);
+    $qurey = $db->createQuery();
     $qurey->select('*')->from('#__bsms_templates');
     $db->setQuery($qurey);
 

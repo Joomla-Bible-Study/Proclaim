@@ -244,7 +244,7 @@ class FiltersField extends FormField
     protected function getUserGroups(): array
     {
         $db    = $this->getDatabase();
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('a.id', 'value') . ', ' . $db->quoteName('a.title', 'text') . ', COUNT(DISTINCT ' . $db->quoteName('b.id') . ') AS ' . $db->quoteName('level') . ', ' . $db->quoteName('a.parent_id', 'parent'))
             ->from($db->quoteName('#__usergroups', 'a'))
             ->join('LEFT', $db->quoteName('#__usergroups', 'b') . ' ON ' . $db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' . $db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt'))

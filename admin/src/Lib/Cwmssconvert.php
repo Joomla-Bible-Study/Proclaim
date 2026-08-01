@@ -41,7 +41,7 @@ class Cwmssconvert
     public function convertSS(): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__sermon_sermons'));
         $db->setQuery($query);
@@ -50,7 +50,7 @@ class Cwmssconvert
         // Get the old sermons, teachers, series
 
         // Get a unique list of teacher ids
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['speaker_id', 'id', 'series_id']))->from($db->quoteName('#__sermon_sermons'))->group($db->quoteName('series_id'));
         $db->setQuery($query);
         $seriesspeakers = $db->loadObjectList();
@@ -70,7 +70,7 @@ class Cwmssconvert
             $result_table .= '<tr><td>' . Text::_('JBS_IBM_SERVER_RECORD_ADDED') . '</td></tr>';
         }
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('published') . ' = 1')
@@ -80,7 +80,7 @@ class Cwmssconvert
         $this->serverid = $server['id'];
 
         // Make the teachers
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__sermon_speakers'));
         $db->setQuery($query);
@@ -112,7 +112,7 @@ class Cwmssconvert
             }
 
             // Get the last teacherid
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
             $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id'));
             $db->setQuery($query, 0, 1);
             $lastteacher = $db->loadResult();
@@ -126,7 +126,7 @@ class Cwmssconvert
         } // End teachers foreach
 
         // Series Records
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('*')
             ->from($db->quoteName('#__sermon_series'));
         $db->setQuery($query);
@@ -170,7 +170,7 @@ class Cwmssconvert
                 if (!$db->insertObject('#__bsms_series', $data)) {
                     $result_table .= '<tr><td>' . Text::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
                 } else {
-                    $query = $db->getQuery(true);
+                    $query = $db->createQuery();
                     $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
                     $db->setQuery($query, 0, 1);
                     $lastseries = $db->loadResult();
@@ -191,22 +191,22 @@ class Cwmssconvert
         }
 
         // Count the new numbers and report
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('COUNT(*)')->from($db->quoteName('#__bsms_studies'));
         $db->setQuery($query);
         $newstudies = $db->loadResult();
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('COUNT(*)')->from($db->quoteName('#__bsms_teachers'));
         $db->setQuery($query);
         $newteachers = $db->loadResult();
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('COUNT(*)')->from($db->quoteName('#__bsms_series'));
         $db->setQuery($query);
         $newseries = $db->loadResult();
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select('COUNT(*)')->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery($query);
         $newmediafiles = $db->loadResult();
@@ -269,7 +269,7 @@ class Cwmssconvert
         $data->alias     = $sermon->alias;
 
         $db->insertObject('#__bsms_studies', $data);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
 
         $db->setQuery($query, 0, 1);

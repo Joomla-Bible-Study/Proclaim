@@ -68,7 +68,7 @@ class CwmcountHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName($tableName, 't'))
             ->where($db->quoteName('t.published') . ' = ' . $state);
@@ -104,7 +104,7 @@ class CwmcountHelper
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName($tableName, 't'))
             ->where($db->quoteName('t.published') . ' != -2');

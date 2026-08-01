@@ -160,7 +160,7 @@ class Cwmhelper
     public static function setFileSize(int $id, int $size): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $id);

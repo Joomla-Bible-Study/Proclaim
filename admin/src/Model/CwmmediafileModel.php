@@ -271,7 +271,7 @@ class CwmmediafileModel extends AdminModel
 
             if ($recordId > 0) {
                 $db       = Factory::getContainer()->get(DatabaseInterface::class);
-                $oldQuery = $db->getQuery(true)
+                $oldQuery = $db->createQuery()
                     ->select($db->quoteName(['params', 'server_id']))
                     ->from($db->quoteName('#__bsms_mediafiles'))
                     ->where($db->quoteName('id') . ' = ' . $recordId);
@@ -418,7 +418,7 @@ class CwmmediafileModel extends AdminModel
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('studytitle'))
             ->from($db->quoteName('#__bsms_studies'))
             ->where($db->quoteName('id') . ' = :studyId')
@@ -1054,7 +1054,7 @@ class CwmmediafileModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_mediafiles'));
                 $db->setQuery($query);
                 $max = $db->loadResult();

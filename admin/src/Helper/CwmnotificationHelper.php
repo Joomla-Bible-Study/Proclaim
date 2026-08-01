@@ -119,7 +119,7 @@ class CwmnotificationHelper
     protected static function getStudyDetails(int $studyId): ?object
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName(['s.studytitle', 's.studydate', 'b.bookname']))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->join(

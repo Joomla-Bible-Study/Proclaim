@@ -52,7 +52,7 @@ class Cwmdownload
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Get the template so we can find a protocol
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select($db->quoteName(['id', 'params']))
             ->from($db->quoteName('#__bsms_templates'))
             ->where($db->quoteName('id') . ' = ' . $templateId);
@@ -68,7 +68,7 @@ class Cwmdownload
         $registry->loadString($template->params);
         $params = $registry;
 
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*,'
             . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
@@ -241,7 +241,7 @@ class Cwmdownload
     protected function hitDownloads(int $mid): bool
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
         $query->update($db->quoteName('#__bsms_mediafiles'))
             ->set($db->quoteName('downloads') . ' = ' . $db->quoteName('downloads') . ' + 1')
             ->where($db->quoteName('id') . ' = ' . $mid);

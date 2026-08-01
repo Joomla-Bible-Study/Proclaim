@@ -391,7 +391,7 @@ class CWMAddonWistia extends CWMAddon
     public function syncDescription(int $mediaId, string $description): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select([$db->quoteName('params'), $db->quoteName('server_id')])
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
@@ -578,7 +578,7 @@ class CWMAddonWistia extends CWMAddon
     private function getServerApiToken(int $serverId): string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName('params'))
             ->from($db->quoteName('#__bsms_servers'))
             ->where($db->quoteName('id') . ' = ' . $serverId);

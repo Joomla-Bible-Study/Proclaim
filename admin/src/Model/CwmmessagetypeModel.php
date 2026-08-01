@@ -124,7 +124,7 @@ class CwmmessagetypeModel extends AdminModel
             // Set ordering to the last item if not set
             if (empty($table->ordering)) {
                 $db    = Factory::getContainer()->get(DatabaseInterface::class);
-                $query = $db->getQuery(true);
+                $query = $db->createQuery();
                 $query->select('MAX(' . $db->quoteName('ordering') . ')')->from($db->quoteName('#__bsms_message_type'));
                 $db->setQuery($query);
                 $max = $db->loadResult();

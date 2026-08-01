@@ -132,7 +132,7 @@ class CwmImageMigration
     public static function getRecordsNeedingMigration(string $type): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         // SQL exclusion for core component images
         $coreExclude = ' NOT LIKE ' . $db->q('media/com_proclaim/images/%');
@@ -229,7 +229,7 @@ class CwmImageMigration
     public static function migrateRecordById(string $type, int $id): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         switch ($type) {
             case 'studies':
@@ -437,7 +437,7 @@ class CwmImageMigration
 
         // Update database
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         switch ($type) {
             case 'studies':
@@ -583,7 +583,7 @@ class CwmImageMigration
     private static function updateDbFromExistingFiles(string $type, int $id, array $existing): array
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         $thumbPath = $existing['thumbnail'];
         $imagePath = $existing['image'];
@@ -677,7 +677,7 @@ class CwmImageMigration
         self::logClearedImage($type, $id, $oldPath, $title);
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         switch ($type) {
             case 'studies':
@@ -923,7 +923,7 @@ class CwmImageMigration
 
             // Load valid IDs for this type so we only count recoverable folders
             $table = self::REGEN_TYPE_CONFIG[$type]['table'];
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName($table));
             $db->setQuery($query);
@@ -983,7 +983,7 @@ class CwmImageMigration
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->getQuery(true);
+        $query = $db->createQuery();
 
         // Select the columns needed for relinking
         switch ($type) {
@@ -1209,7 +1209,7 @@ class CwmImageMigration
             $id = (int) $dirName;
 
             // Look up the DB record
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
 
             // Only select the columns needed for folder naming — the source
             // image comes from the filesystem, not the DB.
@@ -1297,7 +1297,7 @@ class CwmImageMigration
             }
 
             // Update DB columns
-            $update = $db->getQuery(true);
+            $update = $db->createQuery();
 
             switch ($type) {
                 case 'studies':
@@ -1945,7 +1945,7 @@ class CwmImageMigration
         $counts = [];
 
         foreach (self::REGEN_TYPE_CONFIG as $type => $cfg) {
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName($cfg['table']));
 
@@ -2032,7 +2032,7 @@ class CwmImageMigration
         // Build column list to select
         $selectCols = ['id', $cfg['imageCol'], $cfg['thumbCol']];
 
-        $query = $db->getQuery(true)
+        $query = $db->createQuery()
             ->select($db->quoteName($selectCols))
             ->from($db->quoteName($cfg['table']));
 
@@ -2043,7 +2043,7 @@ class CwmImageMigration
         $records = $db->loadObjectList();
 
         // Count total
-        $countQuery = $db->getQuery(true)
+        $countQuery = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName($cfg['table']));
 
@@ -2111,7 +2111,7 @@ class CwmImageMigration
                 }
 
                 // Update DB columns
-                $update = $db->getQuery(true)
+                $update = $db->createQuery()
                     ->update($db->quoteName($cfg['table']))
                     ->set($db->quoteName($imageCol) . ' = ' . $db->quote($imageRelPath))
                     ->set($db->quoteName($thumbCol) . ' = ' . $db->quote($thumbRelPath))

@@ -728,7 +728,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('schema'))
                 ->from($db->quoteName('#__schemaorg'))
                 ->where($db->quoteName('itemId') . ' = ' . $itemId)
@@ -789,7 +789,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         try {
             $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-            $query = $db->getQuery(true)
+            $query = $db->createQuery()
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__schemaorg'))
                 ->where($db->quoteName('itemId') . ' = ' . $itemId)

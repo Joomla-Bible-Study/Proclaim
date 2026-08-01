@@ -251,7 +251,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->getQuery(true);
+            $query = $db->createQuery();
 
             // Calculate cutoff date
             $cutoffDate = Factory::getDate()->modify('-' . $timeframe . ' ' . $interval . 's')->toSql();
@@ -312,7 +312,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
             foreach ($tables as $table) {
                 // Auto-publish: unpublished items whose publish_up has passed
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName($table))
                     ->set($db->quoteName('published') . ' = 1')
                     ->where($db->quoteName('published') . ' = 0')
@@ -324,7 +324,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
                 $totalPublished += $db->getAffectedRows();
 
                 // Auto-unpublish/archive: published items whose publish_down has passed
-                $query = $db->getQuery(true)
+                $query = $db->createQuery()
                     ->update($db->quoteName($table))
                     ->set($db->quoteName('published') . ' = ' . $publishDownAction)
                     ->where($db->quoteName('published') . ' = 1')

@@ -916,7 +916,7 @@ $youtubeServers = [];
 
 try {
     $db    = Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
-    $query = $db->getQuery(true)
+    $query = $db->createQuery()
         ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('params')])
         ->from($db->quoteName('#__bsms_servers'))
         ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'))
