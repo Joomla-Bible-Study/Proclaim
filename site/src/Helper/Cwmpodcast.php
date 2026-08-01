@@ -86,10 +86,17 @@ class Cwmpodcast
      */
     public function makePodcasts(): string
     {
-        $msg  = [];
-        $db   = Factory::getContainer()->get(DatabaseInterface::class);
-        $year = '(' . date('Y') . ')';
-        $date = date('r');
+        $msg = [];
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+
+        // Dates are written in the site's configured time zone, not the server's.
+        // PHP's default zone is whatever php.ini says — Joomla never sets it
+        // globally, and Joomla\CMS\Date\Date restores it after each use — so a
+        // bare date() reports the host's zone and ignores Global Configuration
+        // entirely. See the comment on formatFeedDate().
+        $siteTz = new \DateTimeZone(Factory::getApplication()->get('offset', 'UTC'));
+        $year   = '(' . Factory::getDate('now', $siteTz)->format('Y', true, false) . ')';
+        $date   = $this->formatFeedDate('now', $siteTz);
 
         // Get English language file as fallback
         $language = Factory::getApplication()->getLanguage();
@@ -232,7 +239,7 @@ class Cwmpodcast
             $episodedetail = '';
 
             foreach ($episodes as $episode) {
-                $episodedate   = date('r', strtotime($episode->createdate));
+                $episodedate   = $this->formatFeedDate($episode->createdate, $siteTz);
                 $scripture     = $this->getListing()->getScripture($params, $episode, 0, 1);
                 $episode->size = $episode->params->get('size', '30000000');
 
@@ -391,6 +398,33 @@ class Cwmpodcast
                 return $episode->bookname . ' ' . $episode->chapter_begin;
         }
         return '';
+    }
+
+    /**
+     * Format a stored date as an RFC 2822 feed date in the site's time zone.
+     *
+     * `date('r', strtotime($stored))` gets this wrong twice over. Joomla stores
+     * dates in UTC, but strtotime() reads them in PHP's default zone — the
+     * host's, since Joomla never sets one globally — so the instant shifts by
+     * the host's offset. date() then labels it with that same wrong zone. On a
+     * site configured for Chicago but hosted in Los Angeles, every pubDate came
+     * out claiming -0800.
+     *
+     * @param   string         $stored  A UTC date string from the database, or 'now'.
+     * @param   \DateTimeZone  $siteTz  The site's configured time zone.
+     *
+     * @return  string  RFC 2822 date, e.g. Sat, 15 Nov 2025 10:00:00 -0600
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function formatFeedDate(string $stored, \DateTimeZone $siteTz): string
+    {
+        // $translate = false: Date::format() localises day and month names by
+        // default, but RFC 2822 requires the English abbreviations. A translated
+        // pubDate is unparseable to feed readers.
+        return Factory::getDate($stored, 'UTC')
+            ->setTimezone($siteTz)
+            ->format(\DateTimeInterface::RFC2822, true, false);
     }
 
     /**
