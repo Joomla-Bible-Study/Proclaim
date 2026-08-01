@@ -798,9 +798,9 @@ class com_proclaimInstallerScript extends InstallerScript
     private function warnAboutExternalCaches($app): void
     {
         $known = [
-            'jchoptimize'   => 'JCH Optimize',
+            'jchoptimize'    => 'JCH Optimize',
             'litespeedcache' => 'LiteSpeed Cache',
-            'cache'         => 'System - Page Cache',
+            'cache'          => 'System - Page Cache',
         ];
 
         try {
@@ -2072,8 +2072,8 @@ class com_proclaimInstallerScript extends InstallerScript
         ];
 
         try {
-            $db     = Factory::getContainer()->get(DatabaseInterface::class);
-            $prefix = $db->getPrefix();
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $prefix  = $db->getPrefix();
             $dropped = [];
 
             foreach ($tables as $name) {
@@ -2594,11 +2594,11 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Check if any scripture keys exist in component params
             $keyMap = [
-                'provider_getbible'    => 'provider_getbible',
-                'gdpr_mode'            => 'gdpr_mode',
-                'provider_api_bible'   => 'provider_api_bible',
-                'api_bible_api_key'    => 'api_bible_api_key',
-                'scripture_cache_days' => 'cache_days',
+                'provider_getbible'     => 'provider_getbible',
+                'gdpr_mode'             => 'gdpr_mode',
+                'provider_api_bible'    => 'provider_api_bible',
+                'api_bible_api_key'     => 'api_bible_api_key',
+                'scripture_cache_days'  => 'cache_days',
                 'default_bible_version' => 'default_version',
             ];
 
