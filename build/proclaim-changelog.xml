@@ -19,6 +19,27 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.1                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.1</version>
+        <date>2026-08-01</date>
+        <fix>
+            <item>Podcast feed: the channel link and image link are absolute. A podcast whose link is stored as a menu item gave a site-relative address, which RSS 2.0 does not allow and validators reject</item>
+            <item>Podcast feed: dates are written in the time zone set in Global Configuration, not the server's. A site configured for Chicago but hosted elsewhere published every episode date in the host's zone, and eight hours from the correct moment</item>
+            <item>Podcast feed: season and episode numbers are emitted in the form Apple reads, so episodes group into seasons in Apple Podcasts</item>
+            <item>Updating no longer reports "Could not delete folder" beside a successful update. Joomla cannot remove a cache directory the running request is using, and said so in a way that looked like the update had failed</item>
+            <item>The notice naming a cache Proclaim cannot clear no longer repeats the same plugin twice</item>
+        </fix>
+        <addition>
+            <item>Podcasts have a Copyright Holder, shown as the copyright line on podcast directories. Left empty it uses the site name, so existing feeds gain a real owner in place of the previous "© (2026) All rights reserved."</item>
+            <item>Podcasts have a Feed Language covering the codes directories act on, no longer limited to the languages installed in Joomla. A US church on an en-GB Joomla install can now declare English (United States), which Apple and Spotify use for language and territory targeting</item>
+        </addition>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.0                                                   -->
     <!-- ============================================================ -->
     <changelog>
