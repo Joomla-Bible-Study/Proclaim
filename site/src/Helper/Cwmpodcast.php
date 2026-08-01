@@ -1397,6 +1397,22 @@ class Cwmpodcast
             $mimeType = $params->get('mime_type');
             if (empty($mimeType)) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
+            } elseif (!$isYouTube && !empty($filename)) {
+                // A stored type that contradicts the file. The feed no longer trusts
+                // it — the enclosure type is derived from the extension (#1391) — but
+                // the stored value is still wrong, and is a sign the record was
+                // created or imported incorrectly. YouTube URLs have no meaningful
+                // extension, so they are skipped rather than warned about (#1396).
+                $derived = Cwmmime::fromExtension($filename);
+
+                if ($derived !== null && $derived !== $mimeType) {
+                    $warnings[] = Text::sprintf(
+                        'JBS_PDC_VALIDATE_MEDIA_MIME_MISMATCH',
+                        $media->studytitle ?: 'ID: ' . $media->id,
+                        $mimeType,
+                        $derived
+                    );
+                }
             }
 
             // Check for missing duration. Compare numerically: a value stored as
