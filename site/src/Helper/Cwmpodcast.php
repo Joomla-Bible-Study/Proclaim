@@ -286,21 +286,27 @@ class Cwmpodcast
                 // Podcasting 2.0: person/speaker tags for all teachers
                 $episodedetail .= $this->getPersonXml($episode, $podinfo->website, $protocol);
 
-                // Podcasting 2.0: season (from series)
+                // Podcasting 2.0: season (from series). Emitted alongside
+                // itunes:season, which Apple reads and the podcast: namespace it
+                // ignores — a feed carrying only the latter groups nowhere in
+                // Apple Podcasts.
                 if (!empty($episode->series_text) && ($episode->series_id ?? -1) > 0) {
                     $episodedetail .= '
 		<podcast:season name="' . $this->escapeHTML($episode->series_text) . '">'
-                        . (int) $episode->series_id . '</podcast:season>';
+                        . (int) $episode->series_id . '</podcast:season>
+		<itunes:season>' . (int) $episode->series_id . '</itunes:season>';
                 }
 
-                // Podcasting 2.0: episode number (from studynumber)
+                // Podcasting 2.0: episode number (from studynumber), likewise
+                // paired with the itunes: tag Apple actually reads.
                 if (!empty($episode->studynumber)) {
                     $epNum = preg_replace('/[^0-9]/', '', $episode->studynumber);
 
                     if ($epNum !== '' && (int) $epNum > 0) {
                         $episodedetail .= '
 		<podcast:episode display="' . $this->escapeHTML($episode->studynumber) . '">'
-                            . (int) $epNum . '</podcast:episode>';
+                            . (int) $epNum . '</podcast:episode>
+		<itunes:episode>' . (int) $epNum . '</itunes:episode>';
                     }
                 }
 
@@ -404,9 +410,12 @@ class Cwmpodcast
             return rtrim($value, '/');
         }
 
-        // Numeric = Joomla menu item ID
+        // Numeric = Joomla menu item ID. Route::link()'s $absolute parameter
+        // defaults to false, which returns a site-relative SEF path — and RSS 2.0
+        // requires absolute URLs, so validators reject the channel <link> and
+        // <image><link> built from it. Ask for the absolute form.
         if (ctype_digit($value)) {
-            return Route::link('site', 'index.php?Itemid=' . $value);
+            return Route::link('site', 'index.php?Itemid=' . $value, true, Route::TLS_IGNORE, true);
         }
 
         // Root-relative path — the admin field accepts these, and concatenating
