@@ -129,7 +129,10 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         return [
             'single digit' => ['7', '07'],
             'bare zero'    => ['0', '00'],
-            'empty'        => ['', '00'],
+            // Clearing the field is how an admin marks a duration unknown, so a
+            // blank stays blank rather than becoming an explicit zero.
+            'empty'        => ['', ''],
+            'whitespace'   => ['   ', ''],
             'already ok'   => ['07', '07'],
             'two digits'   => ['27', '27'],
             'three digits' => ['100', '100'],
@@ -164,7 +167,7 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         // Mirror of the normalization the model applies, pinned so a change to
         // the padding rule has to be a deliberate one.
         $value  = trim($typed);
-        $result = $value === '' ? '00' : str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT);
+        $result = $value === '' ? '' : str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT);
 
         $this->assertSame($expected, $result);
     }
