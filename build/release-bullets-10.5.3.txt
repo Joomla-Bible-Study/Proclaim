@@ -1,0 +1,2 @@
+**Podcasting 2.0 fields now save.** Funding/Donation URL, Funding Button Text, Content License, License URL, Publisher Name, Podcast Index Verification, and Publishing Schedule showed "Item saved" but reopening the podcast showed them empty again — on any site running since before March 2026, the database columns for these fields were simply never added. This update adds them.
+Linking a teacher to a Joomla user account had the identical bug on the same class of sites, and is fixed by the same update.
