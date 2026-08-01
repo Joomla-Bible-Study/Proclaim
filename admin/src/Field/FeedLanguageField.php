@@ -36,7 +36,7 @@ use Joomla\CMS\Language\Text;
  * hand-set to something unusual survives an edit.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.1
  */
 class FeedLanguageField extends ListField
 {
@@ -44,7 +44,7 @@ class FeedLanguageField extends ListField
      * The field type.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.1
      */
     protected $type = 'FeedLanguage';
 
@@ -52,7 +52,7 @@ class FeedLanguageField extends ListField
      * Codes worth offering, grouped by language, most-used variant first.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.1
      */
     private const CODES = [
         'en-us' => 'English (United States) — en-us',
@@ -97,7 +97,7 @@ class FeedLanguageField extends ListField
      *
      * @return  array  An array of HTMLHelper options.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.1
      */
     #[\Override]
     protected function getOptions(): array

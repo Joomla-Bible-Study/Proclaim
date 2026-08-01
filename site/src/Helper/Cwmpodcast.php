@@ -413,7 +413,7 @@ class Cwmpodcast
      *
      * @return  string  e.g. © 2026 Nashville First Seventh-Day Adventist Church
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.1
      */
     private function getCopyrightLine(object $podinfo, \DateTimeZone $siteTz): string
     {
@@ -444,7 +444,7 @@ class Cwmpodcast
      *
      * @return  string  RFC 2822 date, e.g. Sat, 15 Nov 2025 10:00:00 -0600
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.1
      */
     private function formatFeedDate(string $stored, \DateTimeZone $siteTz): string
     {

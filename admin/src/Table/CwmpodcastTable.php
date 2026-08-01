@@ -180,7 +180,7 @@ class CwmpodcastTable extends Table
      *
      * @var string|null
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.1
      */
     public ?string $copyright = null;
 
