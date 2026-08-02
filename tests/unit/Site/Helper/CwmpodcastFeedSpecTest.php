@@ -693,4 +693,101 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         $this->assertStringContainsString('name="language" type="FeedLanguage"', $xml);
         $this->assertStringContainsString('name="copyright"', $xml);
     }
+
+    // -------------------------------------------------------------------------
+    // 5. Tracked enclosure URL carries a real extension (#1424)
+    // -------------------------------------------------------------------------
+
+    /**
+     * A bare "?...&task=cwmpodcast.track&media_id=N" URL has no file extension
+     * anywhere in it. Apple's RSS guide says that determines whether an episode
+     * is even ingested — a production feed audited against this exact defect
+     * had 0% of tracked episodes with a valid extension and Apple had stopped
+     * ingesting new episodes and delisted previously-published ones. When SEF
+     * is on, the URL must be a real path carrying the media's own extension.
+     *
+     * @return  void
+     */
+    public function testTrackedEnclosureUrlCarriesRealExtensionWhenSefEnabled(): void
+    {
+        $config  = Factory::getApplication()->getConfig();
+        $wasSef  = $config->get('sef');
+        $config->set('sef', 1);
+
+        try {
+            $ref     = new \ReflectionMethod(Cwmpodcast::class, 'buildTrackedEnclosureUrl');
+            $episode = (object) ['mfid' => 2498, 'alias' => 'What about God'];
+
+            $result = $ref->invoke(
+                $this->podcast,
+                'https://example.com',
+                'https://',
+                $episode,
+                'media/what-about-god.mp3'
+            );
+
+            $this->assertNotNull($result, 'SEF is on and the extension is known — a tracked URL must be produced');
+            $this->assertStringEndsWith('.mp3', $result, 'The URL must carry the real media extension');
+            $this->assertStringContainsString('/component/proclaim/podcast-download/2498/', $result);
+        } finally {
+            $config->set('sef', $wasSef);
+        }
+    }
+
+    /**
+     * Without SEF there is no router to understand a pretty path, and
+     * Route::link() would fall back to the same bare query string this method
+     * exists to replace — so it must return null rather than a URL that looks
+     * extension-bearing but isn't actually routable.
+     *
+     * @return  void
+     */
+    public function testTrackedEnclosureUrlReturnsNullWhenSefDisabled(): void
+    {
+        $config = Factory::getApplication()->getConfig();
+        $wasSef = $config->get('sef');
+        $config->set('sef', 0);
+
+        try {
+            $ref     = new \ReflectionMethod(Cwmpodcast::class, 'buildTrackedEnclosureUrl');
+            $episode = (object) ['mfid' => 2498, 'alias' => 'what-about-god'];
+
+            $result = $ref->invoke(
+                $this->podcast,
+                'https://example.com',
+                'https://',
+                $episode,
+                'media/what-about-god.mp3'
+            );
+
+            $this->assertNull($result, 'A working direct URL beats an unroutable pretty path');
+        } finally {
+            $config->set('sef', $wasSef);
+        }
+    }
+
+    /**
+     * An unrecognized/missing extension can't be turned into a meaningful
+     * extension-bearing path either — the caller must fall back to the direct
+     * media URL rather than emit a path with a blank or wrong extension.
+     *
+     * @return  void
+     */
+    public function testTrackedEnclosureUrlReturnsNullForUnknownExtension(): void
+    {
+        $config = Factory::getApplication()->getConfig();
+        $wasSef = $config->get('sef');
+        $config->set('sef', 1);
+
+        try {
+            $ref     = new \ReflectionMethod(Cwmpodcast::class, 'buildTrackedEnclosureUrl');
+            $episode = (object) ['mfid' => 2498, 'alias' => 'what-about-god'];
+
+            $result = $ref->invoke($this->podcast, 'https://example.com', 'https://', $episode, 'media/what-about-god');
+
+            $this->assertNull($result, 'No extension to give the path — fall back to the direct URL instead');
+        } finally {
+            $config->set('sef', $wasSef);
+        }
+    }
 }

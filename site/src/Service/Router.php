@@ -138,6 +138,38 @@ class Router extends RouterView
     }
 
     /**
+     * Recognizes the cosmetic podcast download-tracking path (#1424) and maps
+     * it back to the track task from the media id alone. The trailing
+     * filename segment is decorative only — it exists so the enclosure URL
+     * carries a real file extension for Apple's ingestion crawler — and is
+     * never used for routing, mirroring the rule CwmpodcastTrackHelper
+     * already follows: the redirect target always comes from a server-side
+     * lookup by media id, never from request-supplied data.
+     *
+     * URL shape: /component/proclaim/podcast-download/{media_id}/{any-name}.{ext}
+     *
+     * @param   array  &$segments  Array of URL string-segments
+     *
+     * @return  array  Associative array of query values
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function parse(&$segments)
+    {
+        if (($segments[0] ?? null) === 'podcast-download' && isset($segments[1]) && ctype_digit((string) $segments[1])) {
+            $mediaId  = (int) $segments[1];
+            $segments = [];
+
+            return [
+                'task'     => 'cwmpodcast.track',
+                'media_id' => $mediaId,
+            ];
+        }
+
+        return parent::parse($segments);
+    }
+
+    /**
      * Method to get the segment(s) for a sermon
      *
      * @param   Integer|string  $id     ID of the article to retrieve the segments for

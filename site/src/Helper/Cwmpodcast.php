@@ -26,6 +26,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -870,8 +871,16 @@ class Cwmpodcast
             // The <guid> above is deliberately left as the direct URL so toggling
             // this on/off never changes item identity.
             if ($trackDownloads && $website !== '') {
-                $enclosureUrl = $this->resolveUrl($website, $protocol)
-                    . '/index.php?option=com_proclaim&amp;task=cwmpodcast.track&amp;media_id=' . (int) $episode->mfid;
+                $tracked = $this->buildTrackedEnclosureUrl($website, $protocol, $episode, $path);
+
+                // #1424: a bare "?...&task=cwmpodcast.track&media_id=N" URL has
+                // no file extension anywhere in it, and Apple's own RSS guide
+                // says that determines whether an episode is even ingested —
+                // this isn't validator pickiness. buildTrackedEnclosureUrl()
+                // only returns a URL when it can give it a real extension; when
+                // it can't (SEF off, or an unrecognized media extension), a
+                // working direct URL beats a broken extensionless one.
+                $enclosureUrl = $tracked ?? $url;
             }
         }
 
@@ -891,6 +900,59 @@ class Cwmpodcast
         return '
 		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $this->escapeHTML($type) . '" />
 		<guid isPermaLink="false">' . $guid . '</guid>';
+    }
+
+    /**
+     * Build the download-tracking enclosure URL as a real, extension-bearing
+     * path instead of a bare task query string (#1424).
+     *
+     * Apple's Podcaster's Guide to RSS is explicit that the enclosure's file
+     * extension "determines whether or not content appears in the podcast
+     * directory" — a production feed audited against this exact fix reported
+     * 0% of tracked episodes with a valid extension, and Apple had stopped
+     * ingesting new episodes and delisted previously-published ones.
+     *
+     * When the site has SEF routing on, Router::parse() (site/src/Service/
+     * Router.php) understands the resulting `/component/proclaim/
+     * podcast-download/{media_id}/{name}.{ext}` path and maps it straight
+     * back to the track task using only the media id — the filename segment
+     * is cosmetic, never trusted for routing, mirroring the rule
+     * CwmpodcastTrackHelper already follows for the redirect target itself.
+     *
+     * Returns null when a real extension can't be produced: SEF disabled
+     * (there is no router to understand the pretty path — Route::link()
+     * isn't used here specifically to avoid falling back to the same bare
+     * query string this method exists to replace), or an unrecognized media
+     * extension. The caller falls back to the direct media URL in both
+     * cases, which already carries a real extension.
+     *
+     * @param   string  $website  Podcast website (tracking-redirect base)
+     * @param   string  $protocol URL protocol
+     * @param   object  $episode  Episode info (uses ->mfid and ->alias)
+     * @param   string  $path     Direct media path/URL (source of the extension)
+     *
+     * @return  ?string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function buildTrackedEnclosureUrl(string $website, string $protocol, $episode, string $path): ?string
+    {
+        if (!Factory::getApplication()->getConfig()->get('sef')) {
+            return null;
+        }
+
+        $extPath   = parse_url($path, PHP_URL_PATH) ?: $path;
+        $extension = strtolower(pathinfo((string) $extPath, PATHINFO_EXTENSION));
+
+        if ($extension === '') {
+            return null;
+        }
+
+        $slug = !empty($episode->alias) ? OutputFilter::stringURLSafe((string) $episode->alias) : '';
+        $slug = $slug !== '' ? $slug : 'episode';
+
+        return $this->resolveUrl($website, $protocol)
+            . '/component/proclaim/podcast-download/' . (int) $episode->mfid . '/' . $slug . '.' . $extension;
     }
 
     /**
