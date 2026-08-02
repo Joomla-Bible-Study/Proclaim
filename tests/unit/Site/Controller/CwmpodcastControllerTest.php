@@ -244,4 +244,53 @@ class CwmpodcastControllerTest extends ProclaimTestCase
             );
         }
     }
+
+    // -------------------------------------------------------------------------
+    // curl availability — some hosts disable ext-curl entirely
+    // -------------------------------------------------------------------------
+
+    /**
+     * Some hosts disable ext-curl outright, or block curl_init() specifically
+     * via disable_functions in php.ini — common on restrictive shared hosting.
+     * streamRemoteFile() is the only method that touches curl (local media
+     * never does), and it must check availability before calling any curl_*
+     * function, falling back to the pre-#1424 redirect rather than fataling.
+     *
+     * Source-level rather than behavioral: function_exists() isn't mockable
+     * without changing the call convention this codebase uses consistently
+     * (\function_exists, leading-backslash global resolution) purely to
+     * accommodate one test, so this pins the guard's presence and position
+     * instead of simulating curl's absence.
+     *
+     * @return void
+     */
+    public function testStreamRemoteFileGuardsCurlAvailability(): void
+    {
+        $method = new \ReflectionMethod(CwmpodcastController::class, 'streamRemoteFile');
+        $source = file($method->getFileName());
+        $body   = implode('', \array_slice(
+            $source,
+            $method->getStartLine() - 1,
+            $method->getEndLine() - $method->getStartLine() + 1
+        ));
+
+        $guardPos = strpos($body, "function_exists('curl_init')");
+        $this->assertNotFalse($guardPos, 'streamRemoteFile() must check curl_init availability before using it');
+
+        $redirectPos = strpos($body, 'redirect(', $guardPos);
+        $this->assertNotFalse($redirectPos, 'The curl-unavailable branch must fall back to redirect()');
+        $this->assertLessThan(
+            200,
+            $redirectPos - $guardPos,
+            'redirect() must be the immediate fallback for the curl-unavailable branch, not just present somewhere later in the method'
+        );
+
+        $firstCurlCallPos = strpos($body, 'curl_init($url)');
+        $this->assertNotFalse($firstCurlCallPos);
+        $this->assertGreaterThan(
+            $redirectPos,
+            $firstCurlCallPos,
+            'The actual curl_init($url) call must come after the availability guard, never before it'
+        );
+    }
 }
