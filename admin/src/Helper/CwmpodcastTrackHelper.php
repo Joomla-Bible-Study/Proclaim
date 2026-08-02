@@ -143,6 +143,38 @@ class CwmpodcastTrackHelper
     }
 
     /**
+     * Look up a published media file's params for the tracking endpoint, joined
+     * with its server's params (needed to resolve the live media URL).
+     *
+     * Kept here rather than inline in CwmpodcastController so the controller
+     * stays limited to HTTP concerns — request parsing, headers, streaming —
+     * with data access alongside the rest of this feature's DB logic.
+     *
+     * @param   DatabaseInterface  $db       Database driver.
+     * @param   integer            $mediaId  Media file ID.
+     *
+     * @return  ?object  Row with ->params and ->sparams, or null if not found/unpublished.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function findPublishedMedia(DatabaseInterface $db, int $mediaId): ?object
+    {
+        $query = $db->createQuery()
+            ->select($db->quoteName('mf.params'))
+            ->select($db->quoteName('sr.params', 'sparams'))
+            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
+            ->leftJoin(
+                $db->quoteName('#__bsms_servers', 'sr')
+                . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id')
+            )
+            ->where($db->quoteName('mf.id') . ' = :mid')
+            ->where($db->quoteName('mf.published') . ' = 1')
+            ->bind(':mid', $mediaId, ParameterType::INTEGER);
+
+        return $db->setQuery($query)->loadObject();
+    }
+
+    /**
      * Count a download unless this client already counted within the 24h window.
      *
      * Slides the client's window to $nowSql, increments the per-episode counter,
