@@ -19,6 +19,19 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.5                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.5</version>
+        <date>2026-08-02</date>
+        <note>
+            <item>fix(podcast): guard the download-tracking proxy against SSRF (#1426) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1427</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.4                                                   -->
     <!-- ============================================================ -->
     <changelog>
