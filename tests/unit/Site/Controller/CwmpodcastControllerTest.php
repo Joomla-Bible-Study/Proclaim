@@ -293,4 +293,112 @@ class CwmpodcastControllerTest extends ProclaimTestCase
             'The actual curl_init($url) call must come after the availability guard, never before it'
         );
     }
+
+    // -------------------------------------------------------------------------
+    // resolveSafeRemoteIp() — SSRF guard (#1426)
+    // -------------------------------------------------------------------------
+
+    /**
+     * @return \ReflectionMethod
+     */
+    private function resolveSafeRemoteIpMethod(): \ReflectionMethod
+    {
+        return new \ReflectionMethod(CwmpodcastController::class, 'resolveSafeRemoteIp');
+    }
+
+    /**
+     * streamRemoteFile() makes the request itself and relays the response to
+     * an unauthenticated caller — unlike the redirect it replaces, which only
+     * ever sent the client's own browser/app to fetch the URL. $url is
+     * admin-configured (server.params.path), not request-supplied, but a
+     * compromised or misconfigured admin account pointing it at an internal
+     * host would otherwise turn this endpoint into a standing, public,
+     * unauthenticated gateway into the internal network — localhost
+     * services, and cloud metadata endpoints in particular (AWS/GCP/Azure
+     * all use 169.254.169.254, a link-local address).
+     *
+     * @return iterable<string, array{0: string}>
+     */
+    public static function unsafeRemoteHostProvider(): iterable
+    {
+        yield 'IPv4 loopback' => ['127.0.0.1'];
+        yield 'IPv4 loopback, alternate form' => ['127.1.2.3'];
+        yield 'RFC1918 10/8' => ['10.0.0.1'];
+        yield 'RFC1918 172.16/12' => ['172.16.5.1'];
+        yield 'RFC1918 192.168/16' => ['192.168.1.1'];
+        yield 'link-local / cloud metadata (AWS/GCP/Azure)' => ['169.254.169.254'];
+        yield 'IPv6 loopback' => ['::1'];
+        yield 'unresolvable hostname' => ['this-host-does-not-exist.invalid'];
+    }
+
+    /**
+     * @param   string  $host  A host that must never be fetched
+     *
+     * @return void
+     */
+    #[DataProvider('unsafeRemoteHostProvider')]
+    public function testUnsafeRemoteHostsAreRejected(string $host): void
+    {
+        $result = $this->resolveSafeRemoteIpMethod()->invoke(null, $host);
+
+        $this->assertNull($result, "\"{$host}\" must be refused, not resolved to a fetchable IP");
+    }
+
+    /**
+     * A genuine public IP literal must resolve to itself unchanged — the
+     * guard must not be so aggressive it breaks the actual, intended use
+     * case (an admin-configured external media host).
+     *
+     * @return void
+     */
+    public function testPublicIpLiteralIsAccepted(): void
+    {
+        // 8.8.8.8 — Google Public DNS. Stable, well-known, unambiguously
+        // public; used here only as a fixed literal, never actually
+        // contacted by this test.
+        $result = $this->resolveSafeRemoteIpMethod()->invoke(null, '8.8.8.8');
+
+        $this->assertSame('8.8.8.8', $result);
+    }
+
+    /**
+     * streamRemoteFile() must run this check before doing anything curl-
+     * related, and must refuse (not fall back to anything) when it fails —
+     * an internal host has nothing safe to fall back to. Source-level rather
+     * than behavioral: exercising the live-network resolution path in a unit
+     * test would make it non-deterministic and environment-dependent.
+     *
+     * @return void
+     */
+    public function testStreamRemoteFileGuardsAgainstUnsafeHostsBeforeCurl(): void
+    {
+        $method = new \ReflectionMethod(CwmpodcastController::class, 'streamRemoteFile');
+        $source = file($method->getFileName());
+        $body   = implode('', \array_slice(
+            $source,
+            $method->getStartLine() - 1,
+            $method->getEndLine() - $method->getStartLine() + 1
+        ));
+
+        $guardPos = strpos($body, 'resolveSafeRemoteIp(');
+        $this->assertNotFalse($guardPos, 'streamRemoteFile() must call resolveSafeRemoteIp() before fetching $url');
+
+        $failPos = strpos($body, 'fail(', $guardPos);
+        $this->assertNotFalse($failPos, 'An unsafe host must be refused via fail(), not redirected or silently allowed');
+
+        $firstCurlCallPos = strpos($body, 'curl_init($url)');
+        $this->assertNotFalse($firstCurlCallPos);
+        $this->assertGreaterThan(
+            $guardPos,
+            $firstCurlCallPos,
+            'curl_init($url) must never run before the SSRF guard has had a chance to refuse the request'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/CURLOPT_FOLLOWLOCATION\s*=>\s*true/',
+            $body,
+            'Following redirects would fetch a host this guard never validated — a malicious origin could '
+            . '302 to an internal address and bypass the check entirely'
+        );
+    }
 }
