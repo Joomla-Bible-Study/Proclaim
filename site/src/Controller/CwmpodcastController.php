@@ -364,6 +364,23 @@ class CwmpodcastController extends BaseController
             Factory::getApplication()->redirect($url, 302);
         }
 
+        // SSRF guard (#1426): this method makes the request itself and relays
+        // the response to an unauthenticated caller — unlike the redirect it
+        // replaces, which only ever sent the *client's* browser/app to fetch
+        // $url. $url is admin-configured (server.params.path), not
+        // request-supplied, but a compromised/misconfigured admin account
+        // could still point it at an internal host (localhost services,
+        // cloud metadata, etc.) and turn this endpoint into a standing,
+        // public, unauthenticated proxy into the internal network. Refuse
+        // outright rather than falling back to anything — an internal host
+        // has nothing safe to fall back to.
+        $host   = (string) (parse_url($url, PHP_URL_HOST) ?? '');
+        $safeIp = $host !== '' ? self::resolveSafeRemoteIp($host) : null;
+
+        if ($safeIp === null) {
+            $this->fail(Factory::getApplication(), 404);
+        }
+
         $this->flushBuffers();
 
         $requestHeaders = [];
@@ -380,13 +397,26 @@ class CwmpodcastController extends BaseController
             $requestHeaders[] = 'If-None-Match: ' . $ifNoneMatch;
         }
 
+        $port = parse_url($url, PHP_URL_PORT) ?? (str_starts_with($url, 'https://') ? 443 : 80);
+
         $ch = curl_init($url);
 
         curl_setopt_array($ch, [
-            CURLOPT_HTTPHEADER     => $requestHeaders,
-            CURLOPT_NOBODY         => $headOnly,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS      => 3,
+            CURLOPT_HTTPHEADER => $requestHeaders,
+            CURLOPT_NOBODY     => $headOnly,
+            // A redirect chain could point anywhere, including back at an
+            // internal host this check never sees — the live nfsda.org
+            // target this was built for is a direct file, not a redirect,
+            // so not following one costs nothing real here.
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS      => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            // Pin resolution to the IP already validated above — curl would
+            // otherwise re-resolve the hostname itself at connect time, and
+            // DNS could answer differently between the check and the fetch
+            // (DNS rebinding) and land on an internal address anyway. The
+            // hostname is kept in the URL/Host header/TLS SNI for virtual
+            // hosting and certificate validation to keep working correctly.
+            CURLOPT_RESOLVE        => [$host . ':' . $port . ':' . $safeIp],
             CURLOPT_CONNECTTIMEOUT => 15,
             CURLOPT_TIMEOUT        => 0,
             CURLOPT_HEADERFUNCTION => static function ($curlHandle, string $headerLine): int {
@@ -508,6 +538,47 @@ class CwmpodcastController extends BaseController
         $targetHost = strtolower((string) (parse_url($target, PHP_URL_HOST) ?: ''));
 
         return $hostOnly !== '' && $targetHost !== '' && $hostOnly === $targetHost;
+    }
+
+    /**
+     * SSRF guard for streamRemoteFile() (#1426): resolve a hostname to an IP
+     * that is safe to fetch on this server's behalf, or null if it isn't.
+     *
+     * "Safe" means a public, routable address — not loopback (127.0.0.1,
+     * ::1), not a private/RFC1918 range (10/8, 172.16/12, 192.168/16), and
+     * not link-local (169.254.0.0/16, which is where cloud metadata
+     * endpoints like AWS's 169.254.169.254 live). streamRemoteFile() proxies
+     * the fetch to an unauthenticated caller, so an admin-configured server
+     * path pointing here — whether by mistake or a compromised account —
+     * would otherwise turn this endpoint into a standing, public gateway
+     * into the internal network.
+     *
+     * Only IPv4 is resolved (gethostbyname()); a host that only has an AAAA
+     * record fails safe (returns null) rather than being fetched unchecked.
+     *
+     * @param   string  $host  Hostname or IP literal to validate
+     *
+     * @return  ?string  A safe IP to connect to, or null to refuse the fetch entirely
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function resolveSafeRemoteIp(string $host): ?string
+    {
+        $flags = \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE;
+
+        if (filter_var($host, \FILTER_VALIDATE_IP) !== false) {
+            // A literal IP was given directly — validate it as-is.
+            return filter_var($host, \FILTER_VALIDATE_IP, $flags) !== false ? $host : null;
+        }
+
+        $ip = gethostbyname($host);
+
+        // gethostbyname() returns its input unchanged when resolution fails.
+        if ($ip === $host) {
+            return null;
+        }
+
+        return filter_var($ip, \FILTER_VALIDATE_IP, $flags) !== false ? $ip : null;
     }
 
     /**
