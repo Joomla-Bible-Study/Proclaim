@@ -14,12 +14,6 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 ## Build Commands
 
 ```bash
-# Install PHP dependencies (vendor dir is libraries/vendor)
-composer install --dev
-
-# Install JS dependencies
-npm install
-
 # Run all PHP tests (unit + integration)
 composer test
 
@@ -28,9 +22,6 @@ composer test:unit
 
 # Run only integration tests
 composer test:integration
-
-# Run JS tests
-npm test
 
 # Run a single PHP test file
 ./libraries/vendor/bin/phpunit tests/unit/Admin/Helper/CwmparamsTest.php
@@ -93,24 +84,9 @@ composer version -- -v 10.2.0-dev -c "New Codename"
 
 ### Directory Structure
 
-- `admin/src/` - Administrator component code (namespace: `CWM\Component\Proclaim\Administrator`)
-- `site/src/` - Frontend component code (namespace: `CWM\Component\Proclaim\Site`)
 - `libraries/vendor/` - Composer dependencies (non-standard location)
-- `modules/` - Joomla modules (site and admin)
-- `plugins/` - Joomla plugins (finder, task)
 - `build/media_source/` - Source JS, CSS, images, and vendor libraries (committed to git)
 - `media/` - Generated JS/CSS/assets (gitignored; produced by `npm run build`)
-
-### Joomla MVC Pattern
-
-Each section (admin/site) follows Joomla 4's MVC structure:
-- `Controller/` - Request handlers
-- `Model/` - Business logic and data access
-- `View/` - View classes (HtmlView.php)
-- `Helper/` - Utility classes
-- `Table/` - Database table classes (admin only)
-- `Field/` - Custom form fields (admin only)
-- `tmpl/` - PHP template files
 
 ### Key Admin Components
 
@@ -161,15 +137,6 @@ Test files should be named `*.test.js` or `*.spec.js`. Coverage reports are gene
 
 This project follows **PSR-12** coding standards. All code must pass PHP CS Fixer before committing.
 
-### PSR-12 Requirements
-
-- **Type casts**: Always include a space after the cast operator: `(int) $var`, `(string) $value`
-- **Indentation**: 4 spaces, no tabs
-- **Line length**: Should not exceed 120 characters
-- **Braces**: Opening brace on same line for control structures, new line for classes/methods
-- **Namespaces**: One blank line after namespace declaration
-- **Use statements**: Grouped by type, one blank line after use block
-
 ### Tools
 
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
@@ -182,14 +149,7 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 ## Development Setup
 
-1. Run `composer install --dev` to install dependencies (auto-clones joomla-cms for testing)
-2. Run `npm install && npm run build` to generate `media/` assets (JS, CSS, images, vendor libs)
-3. Run `composer setup` for interactive configuration (or manually edit `build.properties`)
-4. Run `composer symlink` to link component to your Joomla installation
-
-> **Note**: `media/js/`, `media/css/`, `media/images/`, `media/vendor/`, and `media/fancybox/` are
-> generated — they are gitignored and must be built locally. Source files live in `build/media_source/`.
-> Run `npm run build` after any changes to source JS/CSS.
+See the `dev-setup` skill for bootstrapping a fresh clone (dependency install, asset build, configuration, symlinking).
 
 ## Documentation
 

@@ -152,11 +152,11 @@ $wa->addInlineScript(
                 <?php
                 // Detect legacy URL in podcastlink (non-numeric = unmatched URL from pre-10.1)
                 $legacyPodcastLink = '';
-                $rawPodcastLink    = $this->item->podcastlink ?? '';
-                if ($rawPodcastLink !== '' && !ctype_digit((string) $rawPodcastLink)) {
-                    $legacyPodcastLink = $rawPodcastLink;
-                }
-                ?>
+$rawPodcastLink                    = $this->item->podcastlink ?? '';
+if ($rawPodcastLink !== '' && !ctype_digit((string) $rawPodcastLink)) {
+    $legacyPodcastLink = $rawPodcastLink;
+}
+?>
                 <?php if ($legacyPodcastLink !== '') : ?>
                 <div class="alert alert-warning">
                     <strong><?php echo Text::_('JBS_PDC_PODCAST_URL_LEGACY_LABEL'); ?></strong>
@@ -165,7 +165,6 @@ $wa->addInlineScript(
                 </div>
                 <?php endif; ?>
                 <?php echo $this->form->renderField('podcastlink'); ?>
-                <?php echo $this->form->renderField('author'); ?>
             </div>
             <div class="col-lg-3">
                 <?php echo $this->form->renderField('published'); ?>
@@ -176,11 +175,16 @@ $wa->addInlineScript(
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php // Every field that identifies who is behind the show lives here — see #1417.
+              // Was scattered across General, Feed Owner, and Podcasting 2.0.?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'author', Text::_('JBS_PDC_FEED_OWNER')); ?>
         <div class="row">
             <div class="col-lg-9">
+                <?php echo $this->form->renderField('author'); ?>
                 <?php echo $this->form->renderField('editor_name'); ?>
                 <?php echo $this->form->renderField('editor_email'); ?>
+                <?php echo $this->form->renderField('podcast_publisher'); ?>
+                <?php echo $this->form->renderField('copyright'); ?>
             </div>
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
@@ -217,7 +221,6 @@ $wa->addInlineScript(
                 <?php echo $this->form->renderField('podcast_license'); ?>
                 <?php echo $this->form->renderField('podcast_license_url'); ?>
                 <hr>
-                <?php echo $this->form->renderField('podcast_publisher'); ?>
                 <?php echo $this->form->renderField('podcast_txt_verify'); ?>
                 <?php echo $this->form->renderField('update_frequency'); ?>
             </div>
