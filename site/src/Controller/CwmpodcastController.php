@@ -560,7 +560,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  ?string  A safe IP to connect to, or null to refuse the fetch entirely
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.5
      */
     private static function resolveSafeRemoteIp(string $host): ?string
     {
