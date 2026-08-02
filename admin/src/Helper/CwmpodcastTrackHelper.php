@@ -155,7 +155,7 @@ class CwmpodcastTrackHelper
      *
      * @return  ?object  Row with ->params and ->sparams, or null if not found/unpublished.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     public static function findPublishedMedia(DatabaseInterface $db, int $mediaId): ?object
     {
