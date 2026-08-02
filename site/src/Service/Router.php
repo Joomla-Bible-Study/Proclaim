@@ -152,7 +152,7 @@ class Router extends RouterView
      *
      * @return  array  Associative array of query values
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     public function parse(&$segments)
     {

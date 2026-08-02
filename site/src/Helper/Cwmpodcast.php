@@ -933,7 +933,7 @@ class Cwmpodcast
      *
      * @return  ?string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function buildTrackedEnclosureUrl(string $website, string $protocol, $episode, string $path): ?string
     {

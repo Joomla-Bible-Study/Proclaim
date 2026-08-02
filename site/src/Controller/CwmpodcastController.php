@@ -193,7 +193,7 @@ class CwmpodcastController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function serveMedia(string $target, string $mimeType): void
     {
@@ -230,7 +230,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  ?string  Absolute filesystem path, or null if it can't be served locally
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function resolveLocalPath(string $target): ?string
     {
@@ -262,7 +262,7 @@ class CwmpodcastController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function streamLocalFile(
         string $filePath,
@@ -351,7 +351,7 @@ class CwmpodcastController extends BaseController
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function streamRemoteFile(
         string $url,
@@ -460,7 +460,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  never
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function terminate(): never
     {
@@ -475,7 +475,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private function flushBuffers(): void
     {
@@ -500,7 +500,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private static function isLocalHost(string $requestHost, string $target): bool
     {
@@ -518,7 +518,7 @@ class CwmpodcastController extends BaseController
      *
      * @return  array{0:int,1:int,2:int}  [start, end, status] — status is 200, 206, or 416
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.4
      */
     private static function resolveRange(string $rangeHeader, int $size): array
     {

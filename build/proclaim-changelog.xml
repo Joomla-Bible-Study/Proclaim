@@ -19,6 +19,31 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.4                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.4</version>
+        <date>2026-08-02</date>
+        <note>
+            <item>Tracked episode links now carry a real file extension (e.g. .mp3),</item>
+            <item>The tracking link itself now correctly answers Range and HEAD requests —</item>
+            <item>fix(podcast): give tracked enclosure URLs a real file extension (#1424) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1425</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
+    <!-- 10.5.3                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.3</version>
+        <date>2026-08-01</date>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.2                                                   -->
     <!-- ============================================================ -->
     <changelog>
