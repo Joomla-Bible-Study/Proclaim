@@ -104,19 +104,6 @@ class TeachersController extends AbstractWritableController
             $data['image'] = '';
         }
 
-        $user = $this->app->getIdentity();
-
-        // Strip internal system fields — prevent mass assignment
-        unset($data['asset_id'], $data['checked_out'], $data['checked_out_time'], $data['modified_by']);
-
-        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
-            unset($data['created_by']);
-        }
-
-        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
-            $data['published'] = 0;
-        }
-
-        return $data;
+        return $this->stripProtectedFields($data);
     }
 }

@@ -101,29 +101,13 @@ class LocationsController extends AbstractWritableController
      */
     protected function preprocessSaveData(array $data): array
     {
-        $user = $this->app->getIdentity();
+        $data = $this->stripProtectedFields($data);
 
-        // Strip internal system fields to prevent mass assignment, plus three
-        // that must never be settable over the API: email_to is a notification
-        // target (an open door to redirecting site mail), and user_id /
-        // contact_id bind a location to a Joomla account.
-        unset(
-            $data['asset_id'],
-            $data['checked_out'],
-            $data['checked_out_time'],
-            $data['modified_by'],
-            $data['email_to'],
-            $data['user_id'],
-            $data['contact_id']
-        );
-
-        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
-            unset($data['created_by']);
-        }
-
-        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
-            $data['published'] = 0;
-        }
+        // Three extra fields that must never be settable over the API:
+        // email_to is a notification target (an open door to redirecting
+        // site mail), and user_id/contact_id bind a location to a Joomla
+        // account.
+        unset($data['email_to'], $data['user_id'], $data['contact_id']);
 
         return $data;
     }
