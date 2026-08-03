@@ -178,4 +178,27 @@ class FiltersFieldTest extends ProclaimTestCase
         $this->assertIsString(htmlspecialchars($groupFilter['filter_tags'], ENT_QUOTES));
         $this->assertIsString(htmlspecialchars($groupFilter['filter_attributes'], ENT_QUOTES));
     }
+
+    /**
+     * Regression test for #1456: getInput() interpolated $group->text (a
+     * #__usergroups.title) directly into HTML with no escaping, unlike the
+     * filter_tags/filter_attributes values two lines below it.
+     *
+     * @return void
+     */
+    public function testGroupTitleIsEscaped(): void
+    {
+        $reflection = new \ReflectionMethod(FiltersField::class, 'getInput');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/htmlspecialchars\(\$group->text/',
+            $body,
+            'getInput() must escape $group->text — see #1456'
+        );
+    }
 }
