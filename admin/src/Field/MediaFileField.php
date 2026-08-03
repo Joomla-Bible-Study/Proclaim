@@ -20,6 +20,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 
 /**
@@ -49,12 +50,15 @@ class MediaFileField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        if ($this->form->getValue('id')) {
+        $studyId = (int) $this->form->getValue('id');
+
+        if ($studyId > 0) {
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->createQuery();
             $query->select($db->quoteName(['a.id', 'a.params']));
             $query->from($db->quoteName('#__bsms_mediafiles', 'a'));
-            $query->where($db->quoteName('a.study_id') . ' = ' . (int) $this->form->getValue('id'));
+            $query->where($db->quoteName('a.study_id') . ' = :studyId')
+                ->bind(':studyId', $studyId, ParameterType::INTEGER);
             $db->setQuery((string)$query);
             $messages = $db->loadObjectList();
         } else {

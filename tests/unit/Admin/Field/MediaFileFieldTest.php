@@ -50,4 +50,27 @@ class MediaFileFieldTest extends ProclaimTestCase
 
         $this->assertSame('42 - audio/mpeg', self::buildOptionLabel(42, $params));
     }
+
+    /**
+     * Regression test for #1467: getOptions() interpolated an int-cast
+     * study id directly into the query string instead of binding it, unlike
+     * the equivalent lookup in MediaPlaylistsField.php. Not a security fix
+     * (the value was already (int)-cast) -- a consistency fix so this file
+     * matches the project's established query-building convention.
+     */
+    public function testGetOptionsBindsStudyIdInsteadOfInterpolating(): void
+    {
+        $reflection = new \ReflectionMethod(MediaFileField::class, 'getOptions');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/->bind\(.*ParameterType::INTEGER\)/s',
+            $body,
+            'getOptions() must bind the study id via ParameterType::INTEGER rather than interpolating it — see #1467'
+        );
+    }
 }
