@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Scripture separator dropdown — single source of truth for separator options.
@@ -28,7 +26,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    10.2.0
  */
-class ScriptureSeparatorField extends ListField
+class ScriptureSeparatorField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -40,20 +38,16 @@ class ScriptureSeparatorField extends ListField
     protected $type = 'ScriptureSeparator';
 
     /**
-     * Get the field options.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array  Array of HTMLHelper option objects
+     * @var  array
      *
-     * @since   10.2.0
+     * @since __DEPLOY_VERSION__
      */
-    protected function getOptions(): array
-    {
-        $options   = parent::getOptions();
-        $options[] = HTMLHelper::_('select.option', 'newline', Text::_('JBS_TPL_SEPARATOR_STACKED'));
-        $options[] = HTMLHelper::_('select.option', 'middot', Text::_('JBS_TPL_SEPARATOR_MIDDOT'));
-        $options[] = HTMLHelper::_('select.option', 'pipe', Text::_('JBS_TPL_SEPARATOR_PIPE'));
-        $options[] = HTMLHelper::_('select.option', 'semicolon', Text::_('JBS_TPL_SEPARATOR_SEMICOLON'));
-
-        return $options;
-    }
+    protected $predefinedOptions = [
+        'newline'   => 'JBS_TPL_SEPARATOR_STACKED',
+        'middot'    => 'JBS_TPL_SEPARATOR_MIDDOT',
+        'pipe'      => 'JBS_TPL_SEPARATOR_PIPE',
+        'semicolon' => 'JBS_TPL_SEPARATOR_SEMICOLON',
+    ];
 }

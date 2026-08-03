@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -26,7 +24,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class LinkOptionsField extends ListField
+class LinkOptionsField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -38,25 +36,21 @@ class LinkOptionsField extends ListField
     protected $type = 'LinkOptions';
 
     /**
-     * Method to get a list of options for a list input.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array  An array of HTMLHelper options.
+     * @var  array
      *
-     * @since 7.0
+     * @since __DEPLOY_VERSION__
      */
-    #[\Override]
-    protected function getOptions(): array
-    {
-        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
-        $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_LINK_TO_DETAILS'));
-        $options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_LINK_TO_MEDIA'));
-        $options[] = HTMLHelper::_('select.option', '9', Text::_('JBS_TPL_LINK_TO_DOWNLOAD'));
-        $options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_LINK_TO_TEACHERS_PROFILE'));
-        $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_LINK_TO_FIRST_ARTICLE'));
-        $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_LINK_TO_VIRTUEMART'));
-        $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_LINK_TO_DOCMAN'));
-        $options[] = HTMLHelper::_('select.option', '10', Text::_('JBS_TPL_LINK_TO_SERIES'));
-
-        return array_merge(parent::getOptions(), $options);
-    }
+    protected $predefinedOptions = [
+        '0'  => 'JBS_TPL_NO_LINK',
+        '1'  => 'JBS_TPL_LINK_TO_DETAILS',
+        '2'  => 'JBS_TPL_LINK_TO_MEDIA',
+        '9'  => 'JBS_TPL_LINK_TO_DOWNLOAD',
+        '3'  => 'JBS_TPL_LINK_TO_TEACHERS_PROFILE',
+        '6'  => 'JBS_TPL_LINK_TO_FIRST_ARTICLE',
+        '7'  => 'JBS_TPL_LINK_TO_VIRTUEMART',
+        '8'  => 'JBS_TPL_LINK_TO_DOCMAN',
+        '10' => 'JBS_TPL_LINK_TO_SERIES',
+    ];
 }

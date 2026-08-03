@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -26,7 +24,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class SeriesLinkOptionsField extends ListField
+class SeriesLinkOptionsField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -38,18 +36,14 @@ class SeriesLinkOptionsField extends ListField
     protected $type = 'SeriesLinkOptions';
 
     /**
-     * Method to get a list of options for a list input.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array  An array of JHtml options.
+     * @var  array
      *
-     * @since    7.0.4
+     * @since __DEPLOY_VERSION__
      */
-    #[\Override]
-    protected function getOptions(): array
-    {
-        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_NO_LINK'));
-        $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_LINK_TO_DETAILS'));
-
-        return array_merge(parent::getOptions(), $options);
-    }
+    protected $predefinedOptions = [
+        '0' => 'JBS_TPL_NO_LINK',
+        '1' => 'JBS_TPL_LINK_TO_DETAILS',
+    ];
 }

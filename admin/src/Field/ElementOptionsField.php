@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Books List Form Field class for the Proclaim component
@@ -26,7 +24,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    7.0.4
  */
-class ElementOptionsField extends ListField
+class ElementOptionsField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -38,25 +36,21 @@ class ElementOptionsField extends ListField
     protected $type = 'ElementOptions';
 
     /**
-     * Method to get a list of options for a list input.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array   An array of HTMLHelper options.
+     * @var  array
      *
-     * @since 7.0
+     * @since __DEPLOY_VERSION__
      */
-    #[\Override]
-    protected function getOptions(): array
-    {
-        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_CMN_NONE'));
-        $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_PARAGRAPH'));
-        $options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_HEADER1'));
-        $options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_HEADER2'));
-        $options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_HEADER3'));
-        $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_HEADER4'));
-        $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_HEADER5'));
-        $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_BLOCKQUOTE'));
-        $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_DIV'));
-
-        return array_merge(parent::getOptions(), $options);
-    }
+    protected $predefinedOptions = [
+        '0' => 'JBS_CMN_NONE',
+        '1' => 'JBS_TPL_PARAGRAPH',
+        '2' => 'JBS_TPL_HEADER1',
+        '3' => 'JBS_TPL_HEADER2',
+        '4' => 'JBS_TPL_HEADER3',
+        '5' => 'JBS_TPL_HEADER4',
+        '6' => 'JBS_TPL_HEADER5',
+        '7' => 'JBS_TPL_BLOCKQUOTE',
+        '8' => 'JBS_TPL_DIV',
+    ];
 }
