@@ -25,9 +25,9 @@ class ServerTypeFieldTest extends ProclaimTestCase
      * Regression test for #1457: getInput() interpolated the reverse-lookup
      * display name ($text) and the raw field value ($value) directly into
      * HTML value="..." attributes with no escaping. Every sibling field in
-     * Modal/ (LocationField, TeacherDisplayField, StudyField) already
-     * htmlspecialchars()'s this exact pattern — ServerTypeField was the one
-     * that dropped it.
+     * Modal/ already htmlspecialchars()'s this exact pattern (or, since
+     * #1465, no longer hand-rolls HTML at all) — ServerTypeField was the
+     * one that dropped it.
      *
      * @return void
      */
