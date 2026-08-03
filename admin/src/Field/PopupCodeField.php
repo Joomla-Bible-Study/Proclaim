@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\TextField;
 use Joomla\CMS\Language\Text;
 
@@ -86,10 +87,24 @@ class PopupCodeField extends TextField
 
         $buttons .= '</div>';
 
-        // Add the JavaScript for code insertion (only once per page)
-        static $jsAdded = false;
-        if (!$jsAdded) {
-            $js = <<<'JS'
+        $this->registerJavaScript();
+
+        return $html . $buttons;
+    }
+
+    /**
+     * Register the code-insertion script via WebAssetManager. The asset
+     * manager keys inline scripts by a content hash, so repeated calls
+     * across multiple field instances on the same page register the same
+     * asset name and render once -- no manual "added" flag needed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function registerJavaScript(): void
+    {
+        $js = <<<'JS'
 document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('popup-code-btn')) {
@@ -110,10 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 JS;
-            $html .= '<script>' . $js . '</script>';
-            $jsAdded = true;
-        }
 
-        return $html . $buttons;
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineScript($js);
     }
 }
