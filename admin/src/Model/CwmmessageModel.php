@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
+use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -1348,6 +1349,21 @@ class CwmmessageModel extends AdminModel
         // Always ensure created date is set (handles empty string from form)
         if (empty($table->created) || $table->created === '') {
             $table->created = $date->toSql();
+        }
+
+        // Auto-fill the episode number within the series when left blank.
+        // Applies to both new and existing records — e.g. adding an existing
+        // standalone message to a series for the first time should still get
+        // a number. Ignores non-numeric legacy studynumber values when
+        // computing the next one; see #1505.
+        if ((int) $table->series_id > 0 && (string) $table->studynumber === '') {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $table->studynumber = (string) CwmepisodenumberHelper::nextNumber(
+                $db,
+                (int) $table->series_id,
+                empty($table->id) ? null : (int) $table->id
+            );
         }
 
         if (empty($table->id)) {

@@ -149,6 +149,11 @@
                   alt="Proclaim/Analytics">
                 JBS_MNU_ANALYTICS_DISPLAY
             </menu>
+            <menu link="option=com_proclaim&amp;view=cwmepisodeaudit"
+                  view="cwmepisodeaudit"
+                  alt="Proclaim/EpisodeAudit">
+                JBS_MNU_EPISODEAUDIT_DISPLAY
+            </menu>
             <!-- Instead of a link, you can specify individual link attributes -->
         </submenu>
 
