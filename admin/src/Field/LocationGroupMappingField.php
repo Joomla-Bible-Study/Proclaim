@@ -165,7 +165,7 @@ class LocationGroupMappingField extends FormField
 
         // JSON serialisation: a small inline script converts the checkbox arrays
         // to the JSON format expected by the component params on save.
-        $html .= $this->buildSerializationScript($fieldName, $fieldId);
+        $this->registerSerializationScript($fieldName, $fieldId);
 
         return $html;
     }
@@ -202,27 +202,32 @@ class LocationGroupMappingField extends FormField
     }
 
     /**
-     * Build a small inline script that serialises the checkbox arrays to JSON
-     * before the config form is submitted.
+     * Register the inline script that serialises the checkbox arrays to JSON
+     * before the config form is submitted, via WebAssetManager rather than a
+     * raw <script> tag concatenated into the returned HTML.
      *
      * The component config form POSTs all fields; this script intercepts submit
      * and writes a single JSON string into a hidden input for the mapping field.
+     * Registering it via WebAssetManager (instead of emitting it inline at the
+     * point getInput() happens to run) is safe here because the whole handler
+     * is gated on DOMContentLoaded -- it looks up #adminForm and the field
+     * wrapper by id at ready-time, so where in the document the <script> tag
+     * itself ends up rendered does not matter.
      *
      * @param   string  $fieldName  The field name attribute (e.g. "jform[location_group_mapping]").
      * @param   string  $fieldId    The field wrapper element ID.
      *
-     * @return  string  HTML <script> tag (safe inline script, no user data).
+     * @return  void
      *
-     * @since   10.1.0
+     * @since   __DEPLOY_VERSION__
      */
-    private function buildSerializationScript(string $fieldName, string $fieldId): string
+    private function registerSerializationScript(string $fieldName, string $fieldId): void
     {
         // Encode the field name for use in JavaScript string literals
         $jsFieldName = json_encode($fieldName, JSON_UNESCAPED_SLASHES);
         $jsFieldId   = json_encode($fieldId, JSON_UNESCAPED_SLASHES);
 
-        return <<<JS
-<script>
+        $js = <<<JS
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
         var form = document.getElementById('adminForm');
@@ -259,7 +264,8 @@ class LocationGroupMappingField extends FormField
         });
     });
 }());
-</script>
 JS;
+
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineScript($js);
     }
 }
