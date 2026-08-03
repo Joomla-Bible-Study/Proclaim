@@ -33,6 +33,26 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 class SermonsController extends AbstractWritableController
 {
     /**
+     * The content type for serialization.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected $contentType = 'sermons';
+
+    /**
+     * The default view for the display method.
+     *
+     * @var    string
+     * @since  10.3.0
+     */
+    protected $default_view = 'sermons';
+
+    protected $logType = 'message';
+
+    protected $logTitleField = 'studytitle';
+
+    /**
      * List sermons — published and archived only.
      *
      * Supports query filters: ?filter[teacher]=5&filter[series]=3&filter[search]=keyword
@@ -78,26 +98,6 @@ class SermonsController extends AbstractWritableController
 
         return parent::displayList();
     }
-
-    /**
-     * The content type for serialization.
-     *
-     * @var    string
-     * @since  10.3.0
-     */
-    protected $contentType = 'sermons';
-
-    /**
-     * The default view for the display method.
-     *
-     * @var    string
-     * @since  10.3.0
-     */
-    protected $default_view = 'sermons';
-
-    protected $logType = 'message';
-
-    protected $logTitleField = 'studytitle';
 
     /**
      * Get the model, mapping API names to Cwm-prefixed model classes.

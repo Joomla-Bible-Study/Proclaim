@@ -19,6 +19,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Component\Proclaim\Site\Model\CwmsermonsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -121,6 +122,13 @@ class CwmsermonsController extends BaseController
     {
         $app = Factory::getApplication();
         header('Content-Type: application/json; charset=utf-8');
+
+        if (!Session::checkToken('get')) {
+            echo json_encode(['success' => false, 'message' => 'Invalid token'], JSON_THROW_ON_ERROR);
+            $app->close();
+
+            return;
+        }
 
         CwmDebug::startTimer('filterAjax');
 
