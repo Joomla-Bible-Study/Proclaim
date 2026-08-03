@@ -71,8 +71,7 @@ class MediaFileField extends ListField
                 $options[]       = HTMLHelper::_(
                     'select.option',
                     $message->id,
-                    $message->params->get('filename') ? $message->id . ' - ' .
-                        $message->params->get('mimetext') : $message->params->get('filename')
+                    self::buildOptionLabel($message->id, $message->params)
                 );
             }
         }
@@ -80,5 +79,23 @@ class MediaFileField extends ListField
         $options = array_merge(parent::getOptions(), $options);
 
         return $options;
+    }
+
+    /**
+     * Build the dropdown label for one media file option.
+     *
+     * Prefers the stored filename; falls back to "id - mimetype" when no
+     * filename is set, so the option is still identifiable.
+     *
+     * @param   int       $id      The media file id.
+     * @param   Registry  $params  The media file's parsed params.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function buildOptionLabel(int $id, Registry $params): string
+    {
+        return $params->get('filename') ?: ($id . ' - ' . $params->get('mimetext'));
     }
 }
