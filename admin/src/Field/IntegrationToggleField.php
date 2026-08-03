@@ -133,7 +133,7 @@ class IntegrationToggleField extends RadioField
 
         // If not installed, add visual indicator to label
         if (!$this->isExtensionInstalled()) {
-            $label = str_replace('</label>', ' <em class="text-muted">(' . Text::_('JBS_ADM_UNAVAILABLE') . ')</em></label>', $label);
+            $label = str_replace('</label>', ' <em class="text-body-secondary">(' . Text::_('JBS_ADM_UNAVAILABLE') . ')</em></label>', $label);
         }
 
         return $label;

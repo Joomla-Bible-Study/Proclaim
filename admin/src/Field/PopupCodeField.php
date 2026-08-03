@@ -70,12 +70,12 @@ class PopupCodeField extends TextField
 
         // Build the code buttons
         $buttons = '<div class="popup-code-buttons mt-2">';
-        $buttons .= '<small class="text-muted me-2">' . Text::_('JBS_TPL_INSERT_CODE') . ':</small>';
+        $buttons .= '<small class="text-body-secondary me-2">' . Text::_('JBS_TPL_INSERT_CODE') . ':</small>';
 
         foreach ($this->codes as $code => $labelKey) {
             $label = Text::_($labelKey);
             $buttons .= \sprintf(
-                '<button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1 popup-code-btn" '
+                '<button type="button" class="btn btn-secondary btn-sm me-1 mb-1 popup-code-btn" '
                 . 'data-code="%s" data-target="%s" title="%s">%s</button>',
                 htmlspecialchars($code, ENT_QUOTES, 'UTF-8'),
                 htmlspecialchars($this->id, ENT_QUOTES, 'UTF-8'),
