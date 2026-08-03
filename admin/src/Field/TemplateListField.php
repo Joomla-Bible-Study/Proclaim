@@ -57,31 +57,35 @@ class TemplateListField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        if (self::$templates) {
-            return self::$templates;
-        }
+        if (!self::$templates) {
+            $options = [];
+            $db      = Factory::getContainer()->get(DatabaseInterface::class);
+            $query   = $db->createQuery();
 
-        $options = [];
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->createQuery();
+            $query->select($db->quoteName(['id', 'title']))
+                ->from($db->quoteName('#__bsms_templates'))
+                ->where($db->quoteName('published') . ' = 1')
+                ->order($db->quoteName('title') . ' ASC');
 
-        $query->select($db->quoteName(['id', 'title']))
-            ->from($db->quoteName('#__bsms_templates'))
-            ->where($db->quoteName('published') . ' = 1')
-            ->order($db->quoteName('title') . ' ASC');
+            $db->setQuery($query);
+            $templates = $db->loadObjectList();
 
-        $db->setQuery($query);
-        $templates = $db->loadObjectList();
-
-        if ($templates) {
-            foreach ($templates as $template) {
-                $options[] = HTMLHelper::_('select.option', $template->id, $template->title);
+            if ($templates) {
+                foreach ($templates as $template) {
+                    $options[] = HTMLHelper::_('select.option', $template->id, $template->title);
+                }
             }
+
+            self::$templates = $options;
         }
 
-        self::$templates = array_merge(parent::getOptions(), $options);
-
-        return self::$templates;
+        // parent::getOptions() reads THIS field instance's own XML <option>
+        // children, which differ per form — only the DB-derived list above is
+        // safe to cache across instances. Caching the merged result (as this
+        // used to) meant a second TemplateList field with different XML
+        // options in the same request silently got the first instance's
+        // stale merged list. See #1460.
+        return array_merge(parent::getOptions(), self::$templates);
     }
 
     /**
