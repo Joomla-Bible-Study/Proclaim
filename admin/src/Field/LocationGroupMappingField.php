@@ -160,7 +160,7 @@ class LocationGroupMappingField extends FormField
         $html .= '</tbody></table>';
 
         // Explanation note
-        $html .= '<p class="form-text text-muted mt-2">'
+        $html .= '<p class="form-text text-body-secondary mt-2">'
             . Text::_('JBS_CONFIG_LOCATION_MAPPING_NOTE') . '</p>';
 
         $html .= '</div>';
