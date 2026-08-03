@@ -455,6 +455,12 @@ class CwmmediafileController extends FormController
             return;
         }
 
+        if (!$this->allowEdit(['id' => $mediaId])) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED')]);
+
+            return;
+        }
+
         // Parse chapters from POST body (JSON)
         $rawBody = file_get_contents('php://input');
 
@@ -498,29 +504,36 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->select($db->quoteName('params'))
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
-        $db->setQuery($query);
-        $paramsJson = $db->loadResult();
+        /** @var CwmmediafileTable $table */
+        $table = $this->getModel('Cwmmediafile', 'Administrator', [])->getTable();
 
-        if ($paramsJson === null) {
+        if (!$table->load($mediaId)) {
             CWMAddon::outputJson(['success' => false, 'error' => 'Media file not found']);
 
             return;
         }
 
-        $params = new \Joomla\Registry\Registry($paramsJson ?: '{}');
+        if ($table->isCheckedOut((int) $app->getIdentity()->id)) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH')]);
+
+            return;
+        }
+
+        $params = new \Joomla\Registry\Registry($table->params ?: '{}');
         $params->set('chapters', $clean);
 
-        $update = $db->createQuery()
-            ->update($db->quoteName('#__bsms_mediafiles'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
-        $db->setQuery($update);
-        $db->execute();
+        if (!$table->bind(['id' => $mediaId, 'params' => $params->toString()]) || !$table->check() || !$table->store()) {
+            CWMAddon::outputJson(['success' => false, 'error' => $table->getError() ?: 'Unable to save chapters']);
+
+            return;
+        }
+
+        CwmactionlogHelper::log(
+            'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED',
+            $params->get('filename', '#' . $mediaId),
+            'mediafile',
+            $mediaId
+        );
 
         CWMAddon::outputJson(['success' => true, 'count' => \count($clean)]);
     }
