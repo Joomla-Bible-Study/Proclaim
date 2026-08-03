@@ -46,7 +46,7 @@ class SpanOptionsField extends ListField
     #[\Override]
     protected function getOptions(): array
     {
-        $options[] = HTMLHelper::_('select.option', 'None', 0);
+        $options[] = HTMLHelper::_('select.option', 0, 'None');
         $options[] = HTMLHelper::_('select.option', '1', 1);
         $options[] = HTMLHelper::_('select.option', '2', 2);
         $options[] = HTMLHelper::_('select.option', '3', 3);

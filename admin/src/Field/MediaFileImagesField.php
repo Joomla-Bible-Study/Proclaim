@@ -53,7 +53,7 @@ class MediaFileImagesField extends ListField
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
-        $query->select('*');
+        $query->select($db->quoteName('params'));
         $query->from($db->quoteName('#__bsms_mediafiles'));
         $db->setQuery((string)$query);
         $mediafiles = $db->loadObjectList();
@@ -75,15 +75,7 @@ class MediaFileImagesField extends ListField
                                 ': ' . $media->params->get('media_button_text');
                             $options[]          = HTMLHelper::_(
                                 'select.option',
-                                '{"media_use_button_icon":"' .
-                                $media->params->get('media_use_button_icon') .
-                                '","media_button_type":"' . $media->params->get(
-                                    'media_button_type'
-                                ) . '","media_button_text":"' .
-                                $media->params->get(
-                                    'media_button_text'
-                                ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_image":""}',
+                                $this->buildOptionValueJson($media->params),
                                 $media->media_image
                             );
                             break;
@@ -95,15 +87,7 @@ class MediaFileImagesField extends ListField
                             ) . ': ' . $icon;
                             $options[]          = HTMLHelper::_(
                                 'select.option',
-                                '{"media_use_button_icon":"' .
-                                $media->params->get('media_use_button_icon') .
-                                '","media_button_type":"' . $media->params->get(
-                                    'media_button_type'
-                                ) . '","media_button_text":"' .
-                                $media->params->get(
-                                    'media_button_text'
-                                ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_image":""}',
+                                $this->buildOptionValueJson($media->params),
                                 $media->media_image
                             );
                             break;
@@ -112,15 +96,7 @@ class MediaFileImagesField extends ListField
                             $media->media_image = Text::_('JBS_MED_ICON') . ': ' . $icon;
                             $options[]          = HTMLHelper::_(
                                 'select.option',
-                                '{"media_use_button_icon":"' .
-                                $media->params->get('media_use_button_icon') .
-                                '","media_button_type":"' . $media->params->get(
-                                    'media_button_type'
-                                ) . '","media_button_text":"' .
-                                $media->params->get(
-                                    'media_button_text'
-                                ) . '","media_icon_type":"' . $media->params->get('media_icon_type') .
-                                '","media_image":""}',
+                                $this->buildOptionValueJson($media->params),
                                 $media->media_image
                             );
                             break;
@@ -133,15 +109,7 @@ class MediaFileImagesField extends ListField
                     $media->media_image = Text::_('JBS_MED_IMAGE') . ': ' . substr($image, $slash + 1, $imagecount);
                     $options[]          = HTMLHelper::_(
                         'select.option',
-                        '{"media_use_button_icon":"' . $media->params->get('media_use_button_icon') .
-                        '","media_button_type":"' . $media->params->get(
-                            'media_button_type'
-                        ) . '","media_button_text":"' .
-                        $media->params->get('media_button_text') . '","media_icon_type":"' . $media->params->get(
-                            'media_icon_type'
-                        ) .
-                        '","media_image":"' .
-                        $media->params->get('media_image') . '"}',
+                        $this->buildOptionValueJson($media->params, $media->params->get('media_image')),
                         $media->media_image
                     );
                 }
@@ -176,6 +144,28 @@ class MediaFileImagesField extends ListField
         }
 
         return array_merge(parent::getOptions(), $options);
+    }
+
+    /**
+     * Build the option value: a JSON blob of the media params this option
+     * represents, re-applied to the target field on selection.
+     *
+     * @param   Registry  $params      The media file's params.
+     * @param   string    $mediaImage  The media_image value to embed (empty for button/icon options).
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function buildOptionValueJson(Registry $params, string $mediaImage = ''): string
+    {
+        return json_encode([
+            'media_use_button_icon' => (string) $params->get('media_use_button_icon'),
+            'media_button_type'     => (string) $params->get('media_button_type'),
+            'media_button_text'     => (string) $params->get('media_button_text'),
+            'media_icon_type'       => (string) $params->get('media_icon_type'),
+            'media_image'           => $mediaImage,
+        ]) ?: '{}';
     }
 
     /**
