@@ -220,6 +220,46 @@ abstract class AbstractWritableController extends ApiController
     }
 
     /**
+     * Remove fields that should not be set directly via API.
+     *
+     * Prevents mass assignment of ownership, internal state, and
+     * system-managed fields. Published state requires core.edit.state.
+     * Subclasses with extra protected fields of their own (Locations'
+     * email_to/user_id/contact_id, Media's podcast_id) call this first and
+     * layer their own unset()/normalization on top.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The cleaned data
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function stripProtectedFields(array $data): array
+    {
+        $user = $this->app->getIdentity();
+
+        // Never allow setting internal system fields via API
+        unset(
+            $data['asset_id'],
+            $data['checked_out'],
+            $data['checked_out_time'],
+            $data['modified_by'],
+        );
+
+        // Only admins can set created_by (creating on behalf of someone)
+        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
+            unset($data['created_by']);
+        }
+
+        // Restrict published state — users without core.edit.state default to unpublished
+        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
+            $data['published'] = 0;
+        }
+
+        return $data;
+    }
+
+    /**
      * Best-effort display title for a record.
      *
      * Never throws: a failure to read a title must not turn a successful write
