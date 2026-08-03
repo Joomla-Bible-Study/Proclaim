@@ -11,82 +11,7 @@ Proclaim (CWM Proclaim) is a Joomla 4+ component for managing and displaying Bib
 
 > **Claude Code:** load the `joomla` skill (Skill tool) at the start of any session touching this project's PHP, forms, manifests, or extension structure — it carries the J5/J6 API rules, canonical upstream references, and the gotchas this codebase is built against.
 
-## Build Commands
-
-```bash
-# Run all PHP tests (unit + integration)
-composer test
-
-# Run only unit tests
-composer test:unit
-
-# Run only integration tests
-composer test:integration
-
-# Run a single PHP test file
-./libraries/vendor/bin/phpunit tests/unit/Admin/Helper/CwmparamsTest.php
-
-# Run a specific test suite
-./libraries/vendor/bin/phpunit --testsuite "Admin Helper Tests"
-
-# Check PHP syntax errors
-composer lint:syntax
-
-# Check code style via php-cs-fixer (dry-run)
-composer lint
-
-# Fix code style via php-cs-fixer
-composer lint:fix
-
-# Run lint + PHP tests
-composer check
-
-# Run all checks + all tests (PHP + JS)
-composer check:all
-
-# Full build with all checks
-composer build:full
-
-# Build frontend assets (JS/CSS)
-composer build:assets
-
-# Build component package (zip)
-composer build
-
-# Setup development environment
-composer setup
-
-# Create symlinks to Joomla installation
-composer symlink
-
-# Install Joomla (interactive)
-composer joomla-install
-
-# Show latest available Joomla version
-composer joomla-latest
-
-# Clean dev state (remove symlinks)
-composer clean
-
-# Sync and translate language files
-composer sync-languages
-
-# Force re-translate ALL language keys (use after major English changes)
-composer sync-languages-force
-
-# Bump version (for releases)
-composer version -- -v 10.2.0
-composer version -- -v 10.2.0-beta1
-composer version -- -v 10.2.0-dev -c "New Codename"
-```
-
 ## Architecture
-
-### Directory Structure
-
-- `libraries/vendor/` - Composer dependencies (non-standard location)
-- `build/media_source/` - Source JS, CSS, images, and vendor libraries (committed to git)
-- `media/` - Generated JS/CSS/assets (gitignored; produced by `npm run build`)
 
 ### Key Admin Components
 
@@ -106,11 +31,7 @@ Messages (sermons), Teachers, Series, Topics, Locations, MediaFiles, Servers, Po
 
 ### PHP Tests (PHPUnit)
 
-Tests are in `tests/unit/` with structure mirroring the source:
-- `tests/unit/Admin/Helper/` - Admin helper tests
-- `tests/unit/Site/Helper/` - Site helper tests
-- `tests/unit/Admin/Table/` - Table tests
-- `tests/unit/Site/Model/` - Site model tests
+Tests are in `tests/unit/`, structure mirrors the source.
 
 Base test class: `CWM\Component\Proclaim\Tests\ProclaimTestCase`
 
@@ -146,6 +67,15 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 
 - Class naming: `Cwm` prefix (e.g., `CwmparamsModel`, `CwmteacherTable`)
 - Template files in `tmpl/` and `layouts/` are excluded from linting
+
+## Versioning
+
+Bump version (for releases) — flags aren't discoverable from `composer.json` alone (it just points to `cwm-bump`):
+```bash
+composer version -- -v 10.2.0
+composer version -- -v 10.2.0-beta1
+composer version -- -v 10.2.0-dev -c "New Codename"
+```
 
 ## Development Setup
 
