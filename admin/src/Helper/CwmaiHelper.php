@@ -38,16 +38,16 @@ class CwmaiHelper
      *
      * @since 10.1.0
      */
-    private const PROVIDER_CLAUDE  = 'claude';
-    private const PROVIDER_GEMINI  = 'gemini';
-    private const PROVIDER_OPENAI  = 'openai';
+    private const string PROVIDER_CLAUDE  = 'claude';
+    private const string PROVIDER_GEMINI  = 'gemini';
+    private const string PROVIDER_OPENAI  = 'openai';
 
     /**
      * Cache TTL in seconds (5 minutes)
      *
      * @since 10.1.0
      */
-    private const CACHE_TTL = 300;
+    private const int CACHE_TTL = 300;
 
     /**
      * Generate sermon content (topics, description, study text) using AI
@@ -67,7 +67,7 @@ class CwmaiHelper
      * @return  array  Generated content: ['topics' => string[], 'studyintro' => string, 'studytext' => string,
      *                 'chapters' => array]
      *
-     * @throws  \RuntimeException  If API call fails or is not configured
+     * @throws  \RuntimeException|\Exception  If API call fails or is not configured
      * @since   10.1.0
      */
     public static function generateSermonContent(array $context): array
@@ -238,7 +238,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchClaudeModels(string $apiKey): array
@@ -287,7 +287,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchOpenAIModels(string $apiKey): array
@@ -349,7 +349,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchGeminiModels(string $apiKey): array
@@ -398,9 +398,11 @@ class CwmaiHelper
     /**
      * Build the system prompt for sermon content generation
      *
-     * @param   array  $fields           Which fields to generate: ['topics' => bool, 'intro' => bool, 'text' => bool]
-     * @param   bool   $hasChapters      Whether the video already has chapter timestamps
-     * @param   bool   $suggestChapters  Whether the AI should suggest chapter timestamps
+     * @param   array   $fields           Which fields to generate: ['topics' => bool, 'intro' => bool, 'text' => bool]
+     * @param   bool    $hasChapters      Whether the video already has chapter timestamps
+     * @param   bool    $suggestChapters  Whether the AI should suggest chapter timestamps
+     * @param   string  $voice
+     * @param   string  $teacherName
      *
      * @return  string
      *
@@ -629,7 +631,7 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callClaude(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
@@ -669,11 +671,7 @@ class CwmaiHelper
         $content    = $data['content'][0]['text'] ?? '';
         $stopReason = $data['stop_reason'] ?? '';
 
-        if ($stopReason === 'max_tokens') {
-            throw new \RuntimeException(
-                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
-            );
-        }
+        self::assertNormalFinish(self::PROVIDER_CLAUDE, $stopReason);
 
         return self::parseJsonResponse($content);
     }
@@ -688,7 +686,7 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callGemini(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
@@ -710,6 +708,11 @@ class CwmaiHelper
                 'temperature'      => 0.7,
                 'maxOutputTokens'  => 8192,
                 'responseMimeType' => 'application/json',
+                // Constrained decoding — without this, loose JSON mode intermittently
+                // emits an extra stray bracket/brace after a structurally complete
+                // object (observed live, ~25% of calls), which fails json_decode()
+                // even on a clean finishReason=STOP completion.
+                'responseSchema' => self::geminiResponseSchema(),
             ],
         ], JSON_THROW_ON_ERROR);
 
@@ -737,13 +740,43 @@ class CwmaiHelper
         $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
         $finishReason = $data['candidates'][0]['finishReason'] ?? '';
 
-        if ($finishReason === 'MAX_TOKENS') {
-            throw new \RuntimeException(
-                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
-            );
-        }
+        self::assertNormalFinish(self::PROVIDER_GEMINI, $finishReason);
 
         return self::parseJsonResponse($content);
+    }
+
+    /**
+     * The JSON schema Gemini must conform to via constrained decoding.
+     *
+     * The system prompt always requests all four top-level keys (unrequested
+     * fields are asked for as empty string/array — see buildSystemPrompt()),
+     * so a single fixed schema covers every field-toggle combination.
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function geminiResponseSchema(): array
+    {
+        return [
+            'type'       => 'object',
+            'properties' => [
+                'topics'     => ['type' => 'array', 'items' => ['type' => 'string']],
+                'studyintro' => ['type' => 'string'],
+                'studytext'  => ['type' => 'string'],
+                'chapters'   => [
+                    'type'  => 'array',
+                    'items' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'time'  => ['type' => 'string'],
+                            'label' => ['type' => 'string'],
+                        ],
+                    ],
+                ],
+            ],
+            'required' => ['topics', 'studyintro', 'studytext', 'chapters'],
+        ];
     }
 
     /**
@@ -756,7 +789,7 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callOpenAI(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
@@ -797,13 +830,60 @@ class CwmaiHelper
         $content      = $data['choices'][0]['message']['content'] ?? '';
         $finishReason = $data['choices'][0]['finish_reason'] ?? '';
 
-        if ($finishReason === 'length') {
+        self::assertNormalFinish(self::PROVIDER_OPENAI, $finishReason);
+
+        return self::parseJsonResponse($content);
+    }
+
+    /**
+     * Throw if a provider's finish/stop reason indicates the response is
+     * incomplete or was withheld — before handing possibly-empty content to
+     * parseJsonResponse(), which can only report a raw "Invalid JSON" error.
+     *
+     * An empty reason (field absent from the response) is treated as normal —
+     * there is no evidence that absence means failure.
+     *
+     * @param   string  $provider  One of the PROVIDER_* constants
+     * @param   string  $reason    The raw stop_reason/finishReason/finish_reason value
+     *
+     * @return  void
+     *
+     * @throws  \RuntimeException
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function assertNormalFinish(string $provider, string $reason): void
+    {
+        if ($reason === '') {
+            return;
+        }
+
+        $truncated = match ($provider) {
+            self::PROVIDER_CLAUDE => $reason === 'max_tokens',
+            self::PROVIDER_GEMINI => $reason === 'MAX_TOKENS',
+            self::PROVIDER_OPENAI => $reason === 'length',
+            default               => false,
+        };
+
+        if ($truncated) {
             throw new \RuntimeException(
                 Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
             );
         }
 
-        return self::parseJsonResponse($content);
+        $normal = match ($provider) {
+            // stop_sequence/tool_use included for completeness; this feature sets
+            // no stop_sequences and offers no tools, so only end_turn is expected.
+            self::PROVIDER_CLAUDE => \in_array($reason, ['end_turn', 'stop_sequence', 'tool_use'], true),
+            self::PROVIDER_GEMINI => $reason === 'STOP',
+            self::PROVIDER_OPENAI => $reason === 'stop',
+            default               => true,
+        };
+
+        if (!$normal) {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::sprintf('JBS_CMN_AI_RESPONSE_ABNORMAL', $reason)
+            );
+        }
     }
 
     /**
@@ -849,6 +929,7 @@ class CwmaiHelper
      *
      * @return  array  Normalized metadata
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private static function fetchYouTubeMetadata(string $filename, int $serverId): array
@@ -940,6 +1021,7 @@ class CwmaiHelper
      *
      * @return  array  Normalized metadata
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private static function fetchVimeoMetadata(string $filename): array
