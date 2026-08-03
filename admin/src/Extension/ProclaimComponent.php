@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Extension;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Service\HTML\CWMAdministratorService;
 use Joomla\CMS\Component\Router\RouterServiceInterface;
 use Joomla\CMS\Component\Router\RouterServiceTrait;
@@ -123,6 +124,14 @@ class ProclaimComponent extends MVCComponent implements
 
     public function boot(ContainerInterface $container): void
     {
+        // Define the legacy BIBLESTUDY_* path constants before anything else runs.
+        //
+        // These previously only existed if admin/api.php had been included, which
+        // never happens in the API application — code reachable from the API saw
+        // them as undefined and fatalled (see #1428). Defining them here means
+        // every application (administrator, site, API) gets them for real.
+        CwmproclaimHelper::defineLegacyPathConstants();
+
         // Register Proclaim's log categories before anything else runs.
         //
         // Log::addLogEntry() only dispatches to loggers matching an entry's

@@ -68,19 +68,10 @@ if ($app->isClient('administrator')) {
     \define('BIBLESTUDY_VERSION', '');
 }
 
-// Default values
-const BIBLESTUDY_COMPONENT_NAME = 'com_proclaim';
-
-// File system paths
-const BIBLESTUDY_COMPONENT_RELPATH = 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME;
-
-// Root system paths
-const BIBLESTUDY_ROOT_PATH       = JPATH_ROOT;
-const BIBLESTUDY_ROOT_PATH_ADMIN = JPATH_ADMINISTRATOR;
-const BIBLESTUDY_MEDIA_PATH      = JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_proclaim';
-
-// Admin Component paths
-const BIBLESTUDY_PATH_ADMIN         = BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH;
+// File system paths — defined in ProclaimComponent::boot(), which runs in every
+// application. This call is for the paths that reach this file without booting
+// the component, such as the postinstall messages. It is guarded/idempotent.
+CwmproclaimHelper::defineLegacyPathConstants();
 
 // If a phrase is not found in a specific language file, load the English language file:
 $language = $app->getLanguage();
