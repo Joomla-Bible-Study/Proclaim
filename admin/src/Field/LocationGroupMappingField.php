@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
@@ -124,11 +123,10 @@ class LocationGroupMappingField extends FormField
         foreach ($locations as $location) {
             $locId      = (int) $location->id;
             $mappedGids = array_map('intval', $currentMapping[(string) $locId] ?? []);
-            $usage      = CwmlocationHelper::getLocationUsage($locId);
 
             $html .= '<tr>';
             $html .= '<td><strong>' . $this->escape($location->location_text) . '</strong></td>';
-            $html .= '<td class="text-center">' . (int) $usage['messages'] . '</td>';
+            $html .= '<td class="text-center">' . (int) $location->message_count . '</td>';
             $html .= '<td>';
 
             // Hidden zero-value field so unchecked locations produce an empty array
