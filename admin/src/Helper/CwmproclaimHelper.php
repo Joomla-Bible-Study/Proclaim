@@ -50,6 +50,52 @@ class CwmproclaimHelper
     public static string $extension = 'com_proclaim';
 
     /**
+     * Define the legacy BIBLESTUDY_* path constants, if not already defined.
+     *
+     * These used to be declared with `const` in admin/api.php, which is only
+     * included in the administrator and site applications — the API application
+     * never loads it, so code reachable from the API saw the constants as
+     * undefined and fatalled. Calling this from ProclaimComponent::boot()
+     * (which runs in every application) fixes that at the source.
+     *
+     * admin/api.php still calls this too, guarded, for the paths that reach
+     * that file without booting the component (e.g. postinstall messages).
+     *
+     * @return void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function defineLegacyPathConstants(): void
+    {
+        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+            \define('BIBLESTUDY_COMPONENT_NAME', 'com_proclaim');
+        }
+
+        if (!\defined('BIBLESTUDY_COMPONENT_RELPATH')) {
+            \define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME);
+        }
+
+        if (!\defined('BIBLESTUDY_ROOT_PATH')) {
+            \define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
+        }
+
+        if (!\defined('BIBLESTUDY_ROOT_PATH_ADMIN')) {
+            \define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
+        }
+
+        if (!\defined('BIBLESTUDY_MEDIA_PATH')) {
+            \define(
+                'BIBLESTUDY_MEDIA_PATH',
+                JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_proclaim'
+            );
+        }
+
+        if (!\defined('BIBLESTUDY_PATH_ADMIN')) {
+            \define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
+        }
+    }
+
+    /**
      * Update View and Controller to work with Namespace Case-Sensitive
      *
      * @param   string  $defaultController  Default Controller
