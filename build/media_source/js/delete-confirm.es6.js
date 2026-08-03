@@ -83,12 +83,13 @@
 
         const ids = Array.from(checkboxes).map((cb) => cb.value);
 
-        // Find the CSRF token input in the form
-        const tokenInput = form.querySelector('input[type="hidden"][value="1"]');
-        let tokenParam = '';
-        if (tokenInput) {
-            tokenParam = `&${encodeURIComponent(tokenInput.name)}=1`;
-        }
+        // CSRF token name — passed explicitly by the PHP view (see
+        // addScriptOptions('com_proclaim.deleteConfirm', ...)) rather than
+        // guessed by scanning the DOM. Joomla renders more than one hidden
+        // input with value="1" on this form (e.g. delete_physical_files),
+        // so a `value="1"` selector can't reliably tell them apart — see #1501.
+        const { csrfToken } = Joomla.getOptions('com_proclaim.deleteConfirm') || {};
+        const tokenParam = csrfToken ? `&${encodeURIComponent(csrfToken)}=1` : '';
 
         const url = `index.php?option=com_proclaim&task=${context}.checkDeleteFiles`
       + `&cid[]=${ids.join('&cid[]=')
