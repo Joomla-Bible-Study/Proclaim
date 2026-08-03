@@ -132,6 +132,16 @@ class ProclaimComponent extends MVCComponent implements
         // every application (administrator, site, API) gets them for real.
         CwmproclaimHelper::defineLegacyPathConstants();
 
+        // Load Proclaim's language files before anything else runs.
+        //
+        // This previously only happened via admin/api.php, which is not included
+        // in the API application, so language strings were never loaded in that
+        // context (see #1431). Language::load() is idempotent, so this and
+        // admin/api.php's own calls (for paths that reach it without booting the
+        // component) do not double-load anything.
+        Factory::getApplication()->getLanguage()->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
+        Factory::getApplication()->getLanguage()->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
+
         // Register Proclaim's log categories before anything else runs.
         //
         // Log::addLogEntry() only dispatches to loggers matching an entry's

@@ -12,7 +12,6 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -39,33 +38,6 @@ if ($app->isClient('administrator') || $app->getInput()->getInt('jbsmdbg', 0) ==
     }
 } else {
     \define('JBSMDEBUG', 0);
-}
-
-// Version information — defer XML parsing to admin only (the only consumer
-// is CwminstallModel). On the front end, set a placeholder to avoid the
-// cost of file_get_contents + simplexml on every page load.
-if ($app->isClient('administrator')) {
-    $manifestFile    = JPATH_ADMINISTRATOR . '/components/com_proclaim/proclaim.xml';
-    $manifestVersion = '0.0.0';
-
-    if (is_file($manifestFile) && is_readable($manifestFile)) {
-        libxml_use_internal_errors(true);
-        $xml = simplexml_load_string(file_get_contents($manifestFile));
-
-        if ($xml instanceof \SimpleXMLElement && isset($xml->version)) {
-            $manifestVersion = trim((string) $xml->version);
-        } else {
-            foreach (libxml_get_errors() as $error) {
-                Log::add('XML Error in proclaim.xml: ' . trim($error->message), Log::WARNING, 'com_proclaim');
-            }
-        }
-
-        libxml_clear_errors();
-    }
-
-    \define('BIBLESTUDY_VERSION', $manifestVersion);
-} else {
-    \define('BIBLESTUDY_VERSION', '');
 }
 
 // File system paths — defined in ProclaimComponent::boot(), which runs in every

@@ -50,6 +50,54 @@ class CwmproclaimHelper
     public static string $extension = 'com_proclaim';
 
     /**
+     * Cached installed component version.
+     *
+     * @var  ?string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?string $version = null;
+
+    /**
+     * Get the installed Proclaim version.
+     *
+     * Reads `#__extensions.manifest_cache`, which every Joomla application
+     * (site, admin, API, CLI) can query. This replaces the old
+     * BIBLESTUDY_VERSION constant, which admin/api.php only populated by
+     * parsing proclaim.xml off the filesystem, and only when the current
+     * client was 'administrator' — everywhere else, including the API
+     * application, it was an empty string. See #1429.
+     *
+     * @return  string  Semver version string, or '0.0.0' if unavailable
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getVersion(): string
+    {
+        if (self::$version !== null) {
+            return self::$version;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('manifest_cache'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
+            $db->setQuery($query);
+            $cache = $db->loadResult();
+
+            $manifest      = $cache ? json_decode($cache, true) : null;
+            self::$version = $manifest['version'] ?? '0.0.0';
+        } catch (\Throwable) {
+            self::$version = '0.0.0';
+        }
+
+        return self::$version;
+    }
+
+    /**
      * Define the legacy BIBLESTUDY_* path constants, if not already defined.
      *
      * These used to be declared with `const` in admin/api.php, which is only
