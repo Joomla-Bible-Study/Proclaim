@@ -11,8 +11,7 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Library\Scripture\Bible\AbstractBibleProvider;
-use CWM\Library\Scripture\Bible\BibleProviderFactory;
+use CWM\Component\Proclaim\Site\Helper\CwmscriptureLookupHelper;
 use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
@@ -93,103 +92,7 @@ class CwmscriptureController extends BaseController
             $scriptureParams = new Registry();
         }
 
-        try {
-            AbstractBibleProvider::registerLogger();
-            $provider  = BibleProviderFactory::getProviderForTranslation($version, $scriptureParams);
-            $cacheDays = (int) $scriptureParams->get('cache_days', 30);
-
-            if ($cacheDays > 0 && method_exists($provider, 'setCacheTtl')) {
-                $provider->setCacheTtl($cacheDays * 86400);
-            }
-
-            $result      = $provider->getPassage($reference, $version);
-            $transient   = ($provider instanceof AbstractBibleProvider) && $provider->isLastErrorTransient();
-            $usedVersion = $version;
-
-            // Fallback 1: try same version via Local provider
-            if (!$result->hasText() && $provider->getName() !== 'local') {
-                try {
-                    $localProvider = BibleProviderFactory::getProvider('local');
-                    $localResult   = $localProvider->getPassage($reference, $version);
-
-                    if ($localResult->hasText()) {
-                        $result    = $localResult;
-                        $transient = false;
-                    }
-                } catch (\Throwable $e) {
-                    // Continue to next fallback
-                }
-            }
-
-            // Fallback 2: try admin default version locally
-            if (!$result->hasText()) {
-                $defaultVersion = (string) $scriptureParams->get('default_version', 'kjv');
-
-                if ($defaultVersion === '') {
-                    $defaultVersion = 'kjv';
-                }
-
-                if ($defaultVersion !== $version) {
-                    try {
-                        $localProvider = BibleProviderFactory::getProvider('local');
-                        $defaultResult = $localProvider->getPassage($reference, $defaultVersion);
-
-                        if ($defaultResult->hasText()) {
-                            $result      = $defaultResult;
-                            $usedVersion = $defaultVersion;
-                            $transient   = false;
-                        }
-                    } catch (\Throwable $e) {
-                        // Continue to hard fallback
-                    }
-                }
-            }
-
-            // Fallback 3: hard fallback to KJV (bundled, always auto-downloaded)
-            if ($usedVersion !== 'kjv' && !$result->hasText()) {
-                try {
-                    $localProvider = BibleProviderFactory::getProvider('local');
-                    $kjvResult     = $localProvider->getPassage($reference, 'kjv');
-
-                    if ($kjvResult->hasText()) {
-                        $result      = $kjvResult;
-                        $usedVersion = 'kjv';
-                        $transient   = false;
-                    }
-                } catch (\Throwable $e) {
-                    // Even KJV failed
-                }
-            }
-
-            $providerName = ($provider instanceof AbstractBibleProvider) ? $provider->getName() : 'unknown';
-
-            if ($result->hasText()) {
-                $this->sendJson($app, [
-                    'success'     => true,
-                    'text'        => $result->text,
-                    'copyright'   => $result->copyright,
-                    'translation' => $usedVersion,
-                    'fallback'    => $usedVersion !== $version,
-                    'provider'    => $providerName,
-                    'requested'   => $version,
-                ]);
-            } else {
-                $this->sendJson($app, [
-                    'success'   => false,
-                    'retryable' => $transient,
-                    'message'   => Text::_('COM_PROCLAIM_SCRIPTURE_AJAX_NO_PASSAGE_TEXT'),
-                    'provider'  => $providerName,
-                    'requested' => $version,
-                ]);
-            }
-        } catch (\Throwable $e) {
-            $this->sendJson($app, [
-                'success'   => false,
-                'retryable' => false,
-                'message'   => Text::sprintf('COM_PROCLAIM_SCRIPTURE_AJAX_PROVIDER_ERROR', $e->getMessage()),
-                'requested' => $version,
-            ]);
-        }
+        $this->sendJson($app, CwmscriptureLookupHelper::lookupPassage($reference, $version, $scriptureParams));
     }
 
     /**
