@@ -19,7 +19,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmseriesdisplays;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use CWM\Component\Proclaim\Site\Helper\CwmseriesdisplaysHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmserieslist;
 use CWM\Component\Proclaim\Site\Helper\UpdateFiltersTrait;
 use Joomla\CMS\Factory;
@@ -27,7 +27,6 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -160,37 +159,16 @@ class HtmlView extends BaseHtmlView
         $this->template = $this->state->get('template');
 
         $uri                   = new Uri();
-        $pagebuilder           = new Cwmpagebuilder();
         $items                 = $this->get('Items');
         $this->activeFilters   = $this->get('ActiveFilters');
 
         // Get a filter form.
         $this->filterForm = $this->get('FilterForm');
-        // Adjust the slug if there is no alias in the row
-        foreach ($items as $item) {
-            $item->slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-                . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
-            $seriesimage = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
 
-            if ($seriesimage->path) {
-                $item->image = Cwmimages::renderPicture($seriesimage, $item->series_text ?? '');
-            }
-
-            $item->serieslink = Route::_(
-                'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $this->template->id
-            );
-            $teacherimage     = Cwmimages::getTeacherImage($item->thumb ?? '');
-
-            if ($teacherimage->path) {
-                $item->teacherimage = Cwmimages::renderPicture($teacherimage, $item->teachername ?? '');
-            }
-
-            if (isset($item->description)) {
-                $item->text        = $item->description;
-                $description       = $pagebuilder->runContentPlugins($item, $params);
-                $item->description = $description->text;
-            }
-        }
+        // Adjust the slug if there is no alias in the row; the same prep
+        // runs in CwmseriesdisplaysController::paginateAjax() so both entry
+        // points render identically.
+        $items = CwmseriesdisplaysHelper::prepareItems($items, $params, $this->template);
 
         $this->items           = $items;
         $pagination            = $this->get('Pagination');
