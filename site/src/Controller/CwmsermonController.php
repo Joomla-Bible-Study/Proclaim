@@ -282,6 +282,10 @@ class CwmsermonController extends FormController
     /**
      * Email comment out.
      *
+     * Private: only meant to be called internally from comment(). Public
+     * visibility made `task=cwmsermon.commentsEmail` a directly dispatchable
+     * Joomla task with no CSRF token check of its own — see #1441.
+     *
      * @param   Registry  $params  Params to parse
      *
      * @return void
@@ -289,7 +293,7 @@ class CwmsermonController extends FormController
      * @throws Exception|\Exception
      * @since 7.0
      */
-    public function commentsEmail($params): void
+    private function commentsEmail($params): void
     {
         $input = Factory::getApplication()->getInput();
 
