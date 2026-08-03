@@ -144,6 +144,8 @@ class LayoutEditorField extends FormField
         // Register all Layout Editor script options via centralized layout
         $this->registerScriptOptions($elementDefinitions, $params);
 
+        $paramsPrefix = $this->computeParamsPrefix();
+
         // Build the HTML with data attributes for the external JS to read
         $html = [];
 
@@ -153,7 +155,7 @@ class LayoutEditorField extends FormField
             . ' data-context="' . htmlspecialchars($context) . '"'
             . ' data-show-view-settings="' . ($showViewSettings ? 'true' : 'false') . '"'
             . ' data-lazy-init="' . ($lazyLoad ? 'true' : 'false') . '"'
-            . ' data-params-prefix="jform[params]">';
+            . ' data-params-prefix="' . htmlspecialchars($paramsPrefix) . '">';
         $html[] = '    <div id="layout-editor-loading" class="text-center py-4">';
         $html[] = '        <span class="spinner-border spinner-border-sm" role="status"></span>';
         $html[] = '        <span class="ms-2">' . Text::_('JBS_TPL_LOADING') . '</span>';
@@ -247,4 +249,29 @@ class LayoutEditorField extends FormField
         ];
     }
 
+    /**
+     * Compute the form-control + group prefix (e.g. "jform[params]") — NOT
+     * this field's own name. The external JS uses it to build names for the
+     * dynamic sub-fields the layout editor generates.
+     *
+     * Derived from the field's own form state instead of a hardcoded
+     * "jform[params]", which broke silently outside the one hardcoded
+     * form/group. See #1461.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function computeParamsPrefix(): string
+    {
+        $prefix = (string) $this->formControl;
+
+        if ($this->group) {
+            foreach (explode('.', $this->group) as $group) {
+                $prefix .= '[' . $group . ']';
+            }
+        }
+
+        return $prefix;
+    }
 }
