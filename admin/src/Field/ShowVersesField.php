@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Show Verses dropdown — single source of truth for verse display options.
@@ -28,7 +26,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    10.2.0
  */
-class ShowVersesField extends ListField
+class ShowVersesField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -40,19 +38,15 @@ class ShowVersesField extends ListField
     protected $type = 'ShowVerses';
 
     /**
-     * Get the field options.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array  Array of HTMLHelper option objects
+     * @var  array
      *
-     * @since   10.2.0
+     * @since __DEPLOY_VERSION__
      */
-    protected function getOptions(): array
-    {
-        $options   = parent::getOptions();
-        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_SHOW_ONLY_CHAPTERS'));
-        $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_SHOW_VERSES_AND_CHAPTERS'));
-        $options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_SHOW_ONLY_BOOKS'));
-
-        return $options;
-    }
+    protected $predefinedOptions = [
+        '0' => 'JBS_TPL_SHOW_ONLY_CHAPTERS',
+        '1' => 'JBS_TPL_SHOW_VERSES_AND_CHAPTERS',
+        '2' => 'JBS_TPL_SHOW_ONLY_BOOKS',
+    ];
 }
