@@ -223,6 +223,11 @@ class ColorPickerField extends FormField
             $hexValue = '#FFFFFF';
         }
 
+        // Not a recognized CSS color name, so the raw stored value reaches
+        // here unvalidated — escape before it's interpolated into the two
+        // value="..." attributes below.
+        $hexValue = htmlspecialchars($hexValue, ENT_QUOTES, 'UTF-8');
+
         $html = '<div class="colorpicker-field-wrapper" style="position:relative;">';
 
         // Main container with flex layout - clickable to open dropdown
