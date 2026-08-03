@@ -16,14 +16,19 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Controller\BaseController;
 
 /**
  * Controller for the cPanel
  *
+ * Pure display controller -- CwmcpanelModel extends BaseModel, not
+ * FormModel, and no task=cwmcpanel.* routing exists (only view=cwmcpanel
+ * display links). Matches DisplayController's pattern for display-only
+ * controllers. See #1449.
+ *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CwmcpanelController extends FormController
+class CwmcpanelController extends BaseController
 {
 }
