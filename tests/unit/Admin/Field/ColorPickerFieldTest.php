@@ -44,4 +44,75 @@ class ColorPickerFieldTest extends ProclaimTestCase
             'getInput() must escape $hexValue before interpolating into value="..." — see #1458'
         );
     }
+
+    /**
+     * Regression test for #1484: buildStyles()/buildJavaScript() returned
+     * raw <style>/<script> tags concatenated into getInput()'s HTML,
+     * bypassing WebAssetManager. Now registered via
+     * WebAssetManager::addInlineStyle()/addInlineScript() instead.
+     *
+     * @return void
+     */
+    public function testStylesAndScriptAreRegisteredViaWebAssetManagerNotRawTags(): void
+    {
+        $reflection = new \ReflectionClass(ColorPickerField::class);
+        $source     = file_get_contents($reflection->getFileName());
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/[\'"]<style>/',
+            $source,
+            'ColorPickerField must not concatenate a raw <style> tag — see #1484'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/[\'"]<script>[\'"]/',
+            $source,
+            'ColorPickerField must not concatenate a raw <script> tag — see #1484'
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/->addInlineStyle\(/',
+            $source,
+            'ColorPickerField must register its styles via WebAssetManager::addInlineStyle() — see #1484'
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/->addInlineScript\(/',
+            $source,
+            'ColorPickerField must register its script via WebAssetManager::addInlineScript() — see #1484'
+        );
+    }
+
+    /**
+     * Confirms the registered CSS/JS content (selectors, function names,
+     * the $id interpolation) survived the WebAssetManager migration
+     * unchanged -- checked against the method source directly, since the
+     * test suite's CLI application has no Document/WebAssetManager to
+     * invoke the real registration against.
+     *
+     * @return void
+     */
+    public function testStylesAndScriptContentIsUnchanged(): void
+    {
+        $stylesReflection = new \ReflectionMethod(ColorPickerField::class, 'registerStyles');
+        $stylesLines      = file($stylesReflection->getFileName());
+        $stylesBody       = implode(
+            '',
+            \array_slice($stylesLines, $stylesReflection->getStartLine() - 1, $stylesReflection->getEndLine() - $stylesReflection->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('.colorpicker-swatch:hover', $stylesBody);
+        $this->assertStringContainsString('.colorpicker-selected', $stylesBody);
+
+        $jsReflection = new \ReflectionMethod(ColorPickerField::class, 'registerJavaScript');
+        $jsLines      = file($jsReflection->getFileName());
+        $jsBody       = implode(
+            '',
+            \array_slice($jsLines, $jsReflection->getStartLine() - 1, $jsReflection->getEndLine() - $jsReflection->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('function toggleColorPalette_{$id}()', $jsBody);
+        $this->assertStringContainsString('function selectColor_{$id}(name, hex)', $jsBody);
+        $this->assertStringContainsString('function filterColors_{$id}(query)', $jsBody);
+    }
 }
