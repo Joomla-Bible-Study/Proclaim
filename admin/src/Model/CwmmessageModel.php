@@ -23,7 +23,9 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
+use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
 use CWM\Library\Scripture\Helper\ScriptureReference;
@@ -372,6 +374,14 @@ class CwmmessageModel extends AdminModel
         $teachersData = $data['teachers'] ?? [];
         unset($data['teachers']);
 
+        // topic_ids is a legacy fallback key; the TopicsForm field submits under 'topics'.
+        $topicsData = $data['topic_ids'] ?? $data['topics'] ?? '';
+        unset($data['topic_ids'], $data['topics']);
+
+        $studyIntro = (string) ($data['studyintro'] ?? '');
+        $studyText  = (string) ($data['studytext'] ?? '');
+        $language   = (string) ($data['language'] ?? '*');
+
         $data['image'] = $image->url;
         $this->cleanCache();
 
@@ -401,6 +411,7 @@ class CwmmessageModel extends AdminModel
 
             $this->saveScriptures($scripturesData);
             $this->saveTeachers($teachersData);
+            $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
             return true;
         }
@@ -413,6 +424,7 @@ class CwmmessageModel extends AdminModel
 
             $this->saveScriptures($scripturesData);
             $this->saveTeachers($teachersData);
+            $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
             return true;
         }
@@ -443,6 +455,7 @@ class CwmmessageModel extends AdminModel
 
             $this->saveScriptures($scripturesData);
             $this->saveTeachers($teachersData);
+            $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
             return true;
         }
@@ -480,6 +493,7 @@ class CwmmessageModel extends AdminModel
             if ($isNew) {
                 $this->saveScriptures($scripturesData);
                 $this->saveTeachers($teachersData);
+                $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
                 return true;
             }
@@ -490,6 +504,7 @@ class CwmmessageModel extends AdminModel
 
             $this->saveScriptures($scripturesData);
             $this->saveTeachers($teachersData);
+            $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
             return true;
         }
@@ -504,6 +519,7 @@ class CwmmessageModel extends AdminModel
 
         $this->saveScriptures($scripturesData);
         $this->saveTeachers($teachersData);
+        $this->saveTopics($topicsData, $studyIntro, $studyText, $language);
 
         return true;
     }
@@ -585,6 +601,105 @@ class CwmmessageModel extends AdminModel
         // junction is written here, so the auto-built schema has no author.
         // Backfill it now that teachers are persisted (no-op if user customized).
         CwmschemaorgHelper::ensureSermonAuthor($studyId);
+    }
+
+    /**
+     * Normalize the TopicsForm field's submitted value into a flat list of
+     * tag tokens (topic IDs and/or free text).
+     *
+     * The field submits a single comma-separated string, but by the time
+     * Form::filter() has processed a `multiple="true"` field, the value can
+     * arrive here already wrapped in an array — e.g. `['145']` for one tag,
+     * or `['1,ClaudeNewTopic']` for two. Flatten to one string first so a
+     * multi-tag submission still splits correctly on every comma.
+     *
+     * @param   array|string  $topicsRaw  Comma-separated string or array of topic IDs/text tags.
+     *
+     * @return  string[]
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private static function normalizeTopicTags(array|string $topicsRaw): array
+    {
+        if (\is_array($topicsRaw)) {
+            $topicsRaw = implode(',', $topicsRaw);
+        }
+
+        $tags = $topicsRaw !== '' ? explode(',', $topicsRaw) : [];
+
+        return array_values(array_filter($tags, static fn ($tag) => $tag !== '' && $tag !== null));
+    }
+
+    /**
+     * Sync the study's topic tags to the `#__bsms_studytopics` junction table.
+     *
+     * $topicsRaw entries are either numeric (an existing topic ID) or free
+     * text (matched against existing topics by name, or created as a new
+     * topic if no match exists). If no tags were submitted at all, existing
+     * topics are auto-matched from the study's intro/body text.
+     *
+     * @param   array|string  $topicsRaw   Comma-separated string or array of topic IDs/text tags.
+     * @param   string        $studyIntro  The study's intro text, used for auto-matching when no tags are given.
+     * @param   string        $studyText   The study's body text, used for auto-matching when no tags are given.
+     * @param   string        $language    Language code to use when creating a new topic from free text.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function saveTopics(array|string $topicsRaw, string $studyIntro, string $studyText, string $language): void
+    {
+        $studyId = (int) $this->getState($this->getName() . '.id');
+
+        if ($studyId <= 0) {
+            return;
+        }
+
+        $tags = self::normalizeTopicTags($topicsRaw);
+
+        // Auto-match existing topics from text if none manually assigned
+        if (empty($tags)) {
+            $text = strip_tags($studyIntro . ' ' . $studyText);
+
+            if (trim($text) !== '') {
+                $matched = CwmtopicSuggestionHelper::matchExistingTopics($text);
+                $tags    = array_column($matched, 'id');
+            }
+        }
+
+        $topicIds = [];
+
+        foreach ($tags as $tag) {
+            if ($tag === '' || $tag === null) {
+                continue;
+            }
+
+            if (is_numeric($tag)) {
+                $topicIds[] = (int) $tag;
+
+                continue;
+            }
+
+            // Text tag — match against existing topics first, then create if new
+            $topicId = CwmstudytopicHelper::findTopicIdByText((string) $tag);
+
+            if (!$topicId) {
+                /** @var \CWM\Component\Proclaim\Administrator\Model\CwmtopicModel $topicModel */
+                $topicModel = Factory::getApplication()->bootComponent('com_proclaim')
+                    ->getMVCFactory()->createModel('Cwmtopic', 'Administrator', ['ignore_request' => true]);
+
+                // id=0 forces INSERT (without it, AdminModel reuses the previous state ID and UPDATEs instead)
+                if ($topicModel->save(['id' => 0, 'topic_text' => $tag, 'language' => $language])) {
+                    $topicId = (int) $topicModel->getState('cwmtopic.id');
+                }
+            }
+
+            if ($topicId) {
+                $topicIds[] = $topicId;
+            }
+        }
+
+        CwmstudytopicHelper::saveTopics($studyId, $topicIds);
     }
 
     /**
