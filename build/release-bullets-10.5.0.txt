@@ -1,7 +1,0 @@
-**Podcast feeds now pass validation.** Four faults are fixed: episode length was written as 00:27:7 rather than 00:27:07, which Apple's validator rejects; episode files were described with a type that is not real; episode identity was not declared as an identity; and feed addresses defaulted to http rather than https.
-**Re-detect Metadata.** A button on the media file edit screen re-reads a file's size, type and length and replaces what is stored — for files replaced on disk but kept under the same name, where the stored details are stale rather than missing.
-**Re-read every file.** The Fix Missing Metadata tool gains an option that applies the same thing in bulk. Off by default, because it reads every file and spends one API call per video on hosted platforms.
-**The sermons filter panel starts closed**, and each change of a filter now asks the server once instead of twice.
-Lengths entered by hand are stored properly, which also makes those records visible to the tools meant to repair them.
-The file type list no longer offers audio/mp3, which is not a registered media type and was the only MP3 choice available.
-Caches are cleared after an update, and any third-party cache Proclaim cannot clear is named so you can clear it yourself.
