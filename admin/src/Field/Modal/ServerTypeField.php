@@ -132,7 +132,8 @@ class ServerTypeField extends FormField
 
         $text = (string)ArrayHelper::getValue($rlu_type, $this->value);
 
-        $html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $text . '" readonly size="35">';
+        $html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="'
+            . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') . '" readonly size="35">';
 
         // Select Message button
         if ($allowSelect) {
@@ -264,7 +265,8 @@ class ServerTypeField extends FormField
 
         $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required
             . '" name="' . $this->name . '" data-text="' .
-            htmlspecialchars(Text::_('JBS_CMN_SELECT_SERVERTYPE'), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '">';
+            htmlspecialchars(Text::_('JBS_CMN_SELECT_SERVERTYPE'), ENT_COMPAT, 'UTF-8') . '" value="'
+            . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '">';
 
         return $html;
     }
