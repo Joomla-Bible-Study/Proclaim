@@ -378,6 +378,11 @@ class CwmsermonController extends FormController
     /**
      * Method override to check if you can edit an existing record.
      *
+     * Mirrors the admin-side CwmmessageController::allowEdit() for the same
+     * underlying #__bsms_studies table/asset scope (com_proclaim.message.*) —
+     * this override used to unconditionally return true, letting any caller
+     * edit any sermon regardless of ACL. See #1437.
+     *
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
      *
@@ -387,7 +392,32 @@ class CwmsermonController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        return true;
+        $recordId = (int) ($data[$key] ?? 0);
+        $user     = Factory::getApplication()->getIdentity();
+
+        if ($user->authorise('core.edit', 'com_proclaim.message.' . $recordId)) {
+            return true;
+        }
+
+        if ($user->authorise('core.edit.own', 'com_proclaim.message.' . $recordId)) {
+            $ownerId = (int) ($data['created_by'] ?? 0);
+
+            if (empty($ownerId) && $recordId) {
+                $record = $this->getModel()->getItem($recordId);
+
+                if (empty($record)) {
+                    return false;
+                }
+
+                $ownerId = (int) $record->created_by;
+            }
+
+            if ($ownerId === (int) $user->id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
