@@ -26,6 +26,7 @@
 const { test, expect } = require('@playwright/test');
 
 const API_SERMONS = '/api/index.php/v1/proclaim/sermons';
+const API_INFO = '/api/index.php/v1/proclaim/info';
 
 test.describe.serial('REST API acceptance (package install) @api', () => {
     test('Proclaim and its webservices plugin are installed and enabled', async ({ page }) => {
@@ -63,6 +64,16 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
             + 'only acceptable "no" here.',
         ).not.toBe(404);
 
+        expect(response.status()).toBe(401);
+    });
+
+    test('unauthenticated request to info is denied with 401, not 404', async ({ request }) => {
+        // info is a singleton route registered outside the RESOURCES loop
+        // (#1429) — its own regression check that route registration for it
+        // actually happened, same reasoning as the sermons check above.
+        const response = await request.get(API_INFO);
+
+        expect(response.status()).not.toBe(404);
         expect(response.status()).toBe(401);
     });
 
@@ -118,6 +129,21 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
 
         // A JSON:API document carries its resources under `data`.
         expect(Array.isArray(body.data), 'Expected a JSON:API document with a data array').toBe(true);
+
+        // info is a singleton item, not a list — same token, no re-auth needed.
+        const infoResponse = await request.get(API_INFO, {
+            headers: { 'X-Joomla-Token': token },
+        });
+
+        expect(infoResponse.status()).toBe(200);
+
+        const infoBody = await infoResponse.json();
+
+        expect(infoBody.data?.type).toBe('info');
+        expect(
+            infoBody.data?.attributes?.version,
+            'Expected a non-empty version string from CwmproclaimHelper::getVersion()',
+        ).not.toBe('');
     });
 
     test('public_reads set through the plugin UI opens and closes anonymous reads', async ({ page, request }) => {
