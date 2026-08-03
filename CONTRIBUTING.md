@@ -148,6 +148,12 @@ Include:
 - Expected vs actual behavior
 - Error messages/logs
 
+### Issue Hygiene
+
+- **Triage on read**: if you open an issue that's missing a label (`priority:*`, `area:*`, `status:*`), a milestone, or template fields (repro steps, version info), fill in what you can before moving on — don't leave it for someone else to re-derive later.
+- **Multi-issue features**: apply the `epic` label and use an `epic/{N}-{slug}` integration branch, with sub-PRs targeting that branch instead of `development`.
+- **Link branches to their issue**: don't just name a branch after the issue number — run `gh issue develop <issue-number> --branch <name>` (or use the issue's "Create a branch" button) so the branch and its PR show up under the issue's Development section automatically.
+
 ## Versioning
 
 Check `build/versions.json` for version numbers:
