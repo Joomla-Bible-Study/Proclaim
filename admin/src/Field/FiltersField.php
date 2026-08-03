@@ -112,7 +112,7 @@ class FiltersField extends FormField
             $html[] = '			' . LayoutHelper::render(
                 'joomla.html.treeprefix',
                 ['level' => $group->level + 1]
-            ) . $group->text;
+            ) . htmlspecialchars($group->text, ENT_QUOTES);
             $html[] = '		</th>';
             $html[] = '		<td>';
             $html[] = '			<label for="' . $this->id . $group->value . '_filter_type" class="visually-hidden">'
