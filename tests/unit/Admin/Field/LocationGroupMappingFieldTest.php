@@ -62,4 +62,68 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
             'getInput() must read message_count from the already-computed main query result — see #1466'
         );
     }
+
+    /**
+     * Regression test for #1484: the serialisation script was returned as a
+     * raw <script>...</script> string concatenated into getInput()'s HTML,
+     * bypassing WebAssetManager. It's now registered via
+     * WebAssetManager::addInlineScript() instead, with the JS body itself
+     * unchanged (verified byte-for-byte against the pre-fix heredoc).
+     *
+     * @return void
+     */
+    public function testSerialisationScriptIsRegisteredViaWebAssetManagerNotRawTag(): void
+    {
+        $reflection = new \ReflectionMethod(LocationGroupMappingField::class, 'registerSerializationScript');
+        $lines      = file($reflection->getFileName());
+        $methodBody = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/[\'"]<script>[\'"]/',
+            $methodBody,
+            'LocationGroupMappingField must not concatenate a raw <script> tag — see #1484'
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/->addInlineScript\(/',
+            $methodBody,
+            'LocationGroupMappingField must register its script via WebAssetManager::addInlineScript() — see #1484'
+        );
+    }
+
+    /**
+     * Confirms the JS body itself (field name/id interpolation via
+     * json_encode(), the checkbox-array regex, the disable-on-submit step)
+     * survived the WebAssetManager migration unchanged. The test suite's CLI
+     * application has no Document/WebAssetManager to invoke
+     * registerSerializationScript() against, so this asserts on the heredoc
+     * as written in source rather than on a live registered asset -- still
+     * enough to catch a mangled escape sequence or broken interpolation,
+     * which a check on method names alone would not.
+     *
+     * @return void
+     */
+    public function testSerialisationScriptBodyMatchesExpectedContentExactly(): void
+    {
+        $reflection = new \ReflectionMethod(LocationGroupMappingField::class, 'registerSerializationScript');
+        $lines      = file($reflection->getFileName());
+        $methodBody = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        // Field-name/id interpolation via the JSON-encoded PHP variables.
+        $this->assertStringContainsString('document.getElementById({$jsFieldId})', $methodBody);
+        $this->assertStringContainsString('existing.name = {$jsFieldName};', $methodBody);
+
+        // The checkbox-array parsing regex, byte-for-byte as before the migration.
+        $this->assertStringContainsString('cb.name.match(/\[(\d+)\]\[\]$/)', $methodBody);
+
+        // The submit-time serialisation/disable steps, unchanged.
+        $this->assertStringContainsString("data-cwm-location-mapping", $methodBody);
+        $this->assertStringContainsString('el.disabled = true;', $methodBody);
+    }
 }
