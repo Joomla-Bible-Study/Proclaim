@@ -60,8 +60,6 @@
                description="JBS_STUDY_TRANSCRIPT_DESC"
                filter="raw"/>
 
-        <field name="studynumber" type="text" size="15" label="JBS_CMN_STUDYNUMBER"/>
-
         <fieldset name="scripture" label="JBS_CMN_SCRIPTURE">
             <field name="scriptures" type="subform"
                    label="JBS_CMN_SCRIPTURE_REFERENCES"
@@ -97,6 +95,10 @@
 
         <field name="series_id" type="Modal_Series" label="JBS_CMN_SERIES"
                select="true" new="true" edit="true" clear="true"/>
+
+        <field name="studynumber" type="number" filter="integer" min="1" label="JBS_CMN_STUDYNUMBER"
+               description="JBS_CMN_STUDYNUMBER_DESC"
+               showon="series_id!:"/>
 
         <field name="topics" type="TopicsForm" label="JBS_CMN_TOPIC_TAG"
                description="JBS_CMN_TOPIC_TAG_DESC" multiple="true"/>

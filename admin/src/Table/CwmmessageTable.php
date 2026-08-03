@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
@@ -537,6 +538,44 @@ class CwmmessageTable extends Table
         // Normalise "Select Location" sentinel (-1) to NULL for DB storage
         if ($this->location_id !== null && $this->location_id <= 0) {
             $this->location_id = null;
+        }
+
+        // Reject a newly-introduced duplicate episode number within a series.
+        // Only re-validates when series_id or studynumber actually changed on
+        // this save — pre-existing duplicates stay editable for unrelated
+        // field changes (title, date, etc.); see #1505.
+        if ((int) $this->series_id > 0 && trim((string) $this->studynumber) !== '') {
+            $db      = $this->getDatabase();
+            $changed = empty($this->id);
+
+            if (!$changed) {
+                $query = $db->createQuery()
+                    ->select($db->quoteName(['series_id', 'studynumber']))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $this->id);
+                $db->setQuery($query);
+                $original = $db->loadObject();
+
+                $changed = $original === null
+                    || (int) $original->series_id !== (int) $this->series_id
+                    || (string) $original->studynumber !== (string) $this->studynumber;
+            }
+
+            if ($changed) {
+                $duplicate = CwmepisodenumberHelper::findDuplicate(
+                    $db,
+                    (int) $this->series_id,
+                    (string) $this->studynumber,
+                    empty($this->id) ? null : (int) $this->id
+                );
+
+                if ($duplicate !== null) {
+                    $link = 'index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $duplicate->id;
+                    throw new \UnexpectedValueException(
+                        Text::sprintf('JBS_STY_DUPLICATE_EPISODE_LINK', $this->studynumber, $duplicate->studytitle, $link)
+                    );
+                }
+            }
         }
 
         // Normalise studydate: ensure it has full HH:MM:SS for DATETIME column
