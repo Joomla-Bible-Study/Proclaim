@@ -351,7 +351,7 @@ class CwmyoutubeFileCache
         }
 
         // Use fopen + flock for atomic read-write (prevents race conditions)
-        $fp = @fopen($file, 'c');
+        $fp = @fopen($file, 'cb');
 
         if ($fp === false) {
             CwmyoutubeLogHelper::log(
@@ -731,7 +731,7 @@ class CwmyoutubeFileCache
             return null;
         }
 
-        $fp = @fopen($file, 'r');
+        $fp = @fopen($file, 'rb');
 
         if ($fp === false) {
             return null;

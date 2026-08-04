@@ -19,7 +19,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Model\DatabaseModel;
+use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 

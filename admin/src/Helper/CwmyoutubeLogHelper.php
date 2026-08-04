@@ -66,8 +66,10 @@ class CwmyoutubeLogHelper
     {
         $dir = JPATH_CACHE . self::LOG_DIR;
 
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            error_log(\sprintf('[Proclaim] CwmyoutubeLogHelper: directory "%s" was not created', $dir));
+
+            return;
         }
 
         $file = JPATH_CACHE . self::LOG_FILE;
@@ -75,12 +77,18 @@ class CwmyoutubeLogHelper
         // Auto-rotate before writing
         self::rotate($file);
 
-        $entry = json_encode([
-            'timestamp' => (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('c'),
-            'level'     => $level,
-            'message'   => $message,
-            'context'   => $context,
-        ], JSON_UNESCAPED_SLASHES);
+        try {
+            $entry = json_encode([
+                'timestamp' => (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('c'),
+                'level'     => $level,
+                'message'   => $message,
+                'context'   => $context,
+            ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        } catch (\JsonException $e) {
+            error_log(\sprintf('[Proclaim] CwmyoutubeLogHelper: failed to encode log entry: %s', $e->getMessage()));
+
+            return;
+        }
 
         @file_put_contents($file, $entry . "\n", FILE_APPEND | LOCK_EX);
     }
