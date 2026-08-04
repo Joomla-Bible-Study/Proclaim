@@ -96,6 +96,55 @@ class Cwmbackup
     }
 
     /**
+     * Cached per-table ORDER BY clause (built from the table's actual
+     * primary key), keyed by table name. Populated on first use.
+     *
+     * @var array<string, string>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static array $primaryKeyOrderClauses = [];
+
+    /**
+     * Build a deterministic ORDER BY clause from a table's primary key.
+     *
+     * Handles composite keys by ordering on every key column in index
+     * sequence. Returns an empty string for a table with no primary key
+     * (rare; the caller falls back to unordered in that case).
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Full table name (with `#__` prefix)
+     *
+     * @return  string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function getPrimaryKeyOrderClause(DatabaseInterface $db, string $table): string
+    {
+        if (isset(self::$primaryKeyOrderClauses[$table])) {
+            return self::$primaryKeyOrderClauses[$table];
+        }
+
+        $keys              = $db->getTableKeys($table);
+        $primaryKeyColumns = [];
+
+        foreach ($keys as $key) {
+            if (($key->Key_name ?? '') === 'PRIMARY') {
+                $primaryKeyColumns[(int) $key->Seq_in_index] = $key->Column_name;
+            }
+        }
+
+        ksort($primaryKeyColumns);
+
+        $clause = implode(', ', array_map(
+            static fn ($column) => $db->quoteName($column) . ' ASC',
+            $primaryKeyColumns
+        ));
+
+        return self::$primaryKeyOrderClauses[$table] = $clause;
+    }
+
+    /**
      * Generate a standardized backup filename
      *
      * Format: proclaim-backup_SiteName_YYYY-MM-DD_vX.X.X.sql
@@ -631,6 +680,19 @@ class Cwmbackup
         $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName($table));
+
+        // A bounded LIMIT/OFFSET with no ORDER BY has no guaranteed row
+        // order across separate queries -- paging in chunks (as exportdb()
+        // now does) could then skip or duplicate rows between calls. Order
+        // by the table's actual primary key (composite-key safe) so paging
+        // is deterministic; tables with no primary key fall back to
+        // unordered (matches the pre-chunking behavior for that edge case).
+        $orderBy = self::getPrimaryKeyOrderClause($db, $table);
+
+        if ($orderBy !== '') {
+            $query->order($orderBy);
+        }
+
         $db->setQuery($query, $offset, $limit);
         $results = $db->loadObjectList();
 
@@ -668,6 +730,17 @@ class Cwmbackup
      */
     protected function writeln(string $fileData): bool
     {
+        // file_put_contents() returns 0 (falsy) for an empty string, which
+        // would otherwise read as a write failure and abort the export.
+        // Every chunk exportdb() currently produces is non-empty (each
+        // export method emits a header/section comment unconditionally),
+        // but that's true by accident of the string content, not by any
+        // contract this method enforces -- guard it directly now that this
+        // is called per-chunk instead of once for the whole dump.
+        if ($fileData === '') {
+            return true;
+        }
+
         if (file_put_contents($this->dumpFile, $fileData, FILE_APPEND)) {
             return true;
         }

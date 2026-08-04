@@ -162,25 +162,86 @@ class CwmbackupTest extends ProclaimTestCase
     /**
      * Live, read-only proof that paging through a table in chunks visits
      * every row exactly once -- no rows lost or duplicated by chunking.
+     *
+     * A bounded LIMIT/OFFSET with no ORDER BY has no guaranteed row order
+     * across separate queries; counting INSERT statements alone can't catch
+     * a chunk boundary silently dropping one row and duplicating another.
+     * This compares the actual set of primary-key ids extracted from each
+     * chunk against the set from an unbounded read, on a table large enough
+     * (827 rows on j5-dev) to span multiple chunks at the real chunk size
+     * used by exportdb().
      */
-    public function testChunkedRowsCoverTheSameTotalAsAnUnboundedRead(): void
+    public function testChunkedRowsCoverTheExactSameRowsAsAnUnboundedRead(): void
     {
         $backup    = new Cwmbackup();
-        $table     = '#__bsms_message_type';
+        $table     = '#__bsms_studies';
+        $chunkSize = 500;
         $rowCount  = $backup->getTableRowCount($table);
 
-        $this->assertGreaterThan(0, $rowCount, 'test precondition: #__bsms_message_type must have rows on j5-dev');
+        $this->assertGreaterThan($chunkSize, $rowCount, 'test precondition: #__bsms_studies must span more than one chunk on j5-dev');
 
-        $chunkedInserts = 0;
+        $chunkedIds = [];
 
-        for ($offset = 0; $offset < $rowCount; $offset += 2) {
-            $chunkedInserts += preg_match_all('/^INSERT INTO/m', $backup->getExportTableRows($table, $offset, 2));
+        for ($offset = 0; $offset < $rowCount; $offset += $chunkSize) {
+            preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, $offset, $chunkSize), $matches);
+            $chunkedIds = array_merge($chunkedIds, $matches[1]);
         }
 
-        $unboundedInserts = preg_match_all('/^INSERT INTO/m', $backup->getExportTableRows($table, 0, 0));
+        preg_match_all('/`id`=\'(\d+)\'/', $backup->getExportTableRows($table, 0, 0), $matches);
+        $unboundedIds = $matches[1];
 
-        $this->assertSame($rowCount, $chunkedInserts);
-        $this->assertSame($rowCount, $unboundedInserts);
+        $this->assertCount($rowCount, $chunkedIds, 'chunked read must return exactly one row per id -- see #1524');
+        $this->assertCount($rowCount, array_unique($chunkedIds), 'chunked read must not duplicate any id across chunk boundaries -- see #1524');
+        sort($chunkedIds);
+        sort($unboundedIds);
+        $this->assertSame($unboundedIds, $chunkedIds, 'chunked read must cover exactly the same ids as an unbounded read -- see #1524');
+    }
+
+    /**
+     * Regression test for the primary-key-order fix: not every Proclaim
+     * table has an `id` column (#__bsms_storage's PK is `key`,
+     * #__bsms_timeset's is `timeset`, #__bsms_podcast_download_log has a
+     * composite PK). getExportTableRows() must build its ORDER BY from the
+     * table's actual primary key rather than assuming `id`, or a bounded
+     * export of these tables would throw "Unknown column 'id'".
+     */
+    public function testGetExportTableRowsHandlesTablesWithoutAnIdColumn(): void
+    {
+        $backup = new Cwmbackup();
+
+        foreach (['#__bsms_storage', '#__bsms_timeset', '#__bsms_podcast_download_log'] as $table) {
+            $rowCount = $backup->getTableRowCount($table);
+            $this->assertGreaterThan(0, $rowCount, "test precondition: $table must have at least one row on j5-dev");
+
+            $export = $backup->getExportTableRows($table, 0, 10);
+
+            $this->assertSame($rowCount, preg_match_all('/^INSERT INTO/m', $export), "expected exactly $rowCount row(s) from $table");
+        }
+    }
+
+    /**
+     * Direct test of the ORDER BY clause builder itself.
+     *
+     * getExportTableRows()'s row order happening to be stable on this dev
+     * DB (single writer, small tables) doesn't prove the ORDER BY clause is
+     * actually being emitted -- MySQL can return InnoDB clustered-index
+     * order without one under exactly these conditions, which is the whole
+     * reason the fix is needed for cases where that assumption doesn't
+     * hold. This exercises the clause builder directly against real
+     * `SHOW KEYS` output, including a composite primary key.
+     */
+    public function testGetPrimaryKeyOrderClauseBuildsFromTheRealPrimaryKey(): void
+    {
+        $db         = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
+        $reflection = new \ReflectionMethod(Cwmbackup::class, 'getPrimaryKeyOrderClause');
+
+        $this->assertSame('`id` ASC', $reflection->invoke(null, $db, '#__bsms_studies'));
+        $this->assertSame('`key` ASC', $reflection->invoke(null, $db, '#__bsms_storage'));
+        $this->assertSame(
+            '`media_id` ASC, `client_hash` ASC',
+            $reflection->invoke(null, $db, '#__bsms_podcast_download_log'),
+            'composite primary key columns must be ordered by their actual index sequence'
+        );
     }
 
     public function testFileSizeHeaderReadsRangeViaJoomlaInputNotSuperglobal(): void
