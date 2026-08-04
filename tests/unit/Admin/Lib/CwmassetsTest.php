@@ -259,6 +259,14 @@ class CwmassetsTest extends ProclaimTestCase
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
+        // Force the com_proclaim parent asset to exist and cache its id
+        // *before* measuring. On a fresh install with no com_proclaim asset
+        // row yet, ensureParentAsset()'s one-time create-and-rebuild path
+        // can itself issue a large, environment-dependent number of queries
+        // -- unrelated to the N+1 this test targets -- and must not be
+        // counted in the delta below.
+        Cwmassets::parentId();
+
         $before = $db->getCount();
         $status = Cwmassets::getAssetStatus();
         $after  = $db->getCount();
