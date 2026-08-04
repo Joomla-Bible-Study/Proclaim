@@ -243,4 +243,218 @@ class CwmpIconvertTest extends ProclaimTestCase
         // the use-import block instead of directly above the class.
         $this->assertMatchesRegularExpression('/\*\/\s*$/', $lines[$classLine - 2]);
     }
+
+    /**
+     * Regression tests for #1528.
+     *
+     * The book-number loop's `else` branch ran on every non-matching iteration
+     * of the 66-entry book array and unconditionally overwrote $booknumber back
+     * to '101' (Genesis) -- only study_book==66 (the last array entry) ever
+     * survived. Every other imported study landed on the wrong book regardless
+     * of its actual scripture reference. $booknumber must default once before
+     * the loop and only be assigned on an actual match.
+     */
+    public function testBookNumberDefaultsBeforeLoopInsteadOfOnEveryNonMatch(): void
+    {
+        $body = self::methodBody('convertPI');
+
+        $this->assertMatchesRegularExpression(
+            "/\\\$booknumber\s*=\s*'101';.*?foreach\s*\(\\\$books as \\\$book\)/s",
+            $body,
+            'booknumber must default to \'101\' before the book-matching loop -- see #1528'
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            "/if \(\\\$book\['id'\] == \\\$pi->study_book\) \{\s*\\\$booknumber = \\\$book\['jbs'\];\s*\} else \{/",
+            $body,
+            'the book-matching loop must not reset booknumber to \'101\' on every non-matching iteration -- see #1528'
+        );
+    }
+
+    /**
+     * getBooks() gave Hosea (id 28) the same jbs code as Joel (id 29,
+     * '129'), instead of continuing the 100+index pattern with '128'.
+     */
+    public function testGetBooksHoseaAndJoelHaveDistinctJbsCodes(): void
+    {
+        $reflection = new \ReflectionMethod(CwmpIconvert::class, 'getBooks');
+        $books      = $reflection->invoke(new CwmpIconvert());
+        $byId       = array_column($books, 'jbs', 'id');
+
+        $this->assertSame('128', $byId['28'], 'Hosea must map to jbs 128, not duplicate Joel\'s 129 -- see #1528');
+        $this->assertSame('129', $byId['29']);
+    }
+
+    /**
+     * insertPodcast() is typed ?int but had 3 exclusion paths returning
+     * `false`, which PHP's coercive typing silently turns into `0` rather
+     * than `null` -- writing podcast_id=0 (an invalid FK) instead of leaving
+     * the field unset for excluded records.
+     */
+    public function testInsertPodcastNeverReturnsFalse(): void
+    {
+        $body = self::methodBody('insertPodcast');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/return\s+false;/',
+            $body,
+            'insertPodcast() is typed ?int -- every exclusion path must return null, not false -- see #1528'
+        );
+    }
+
+    /**
+     * The teacher/ministry exclusion checks passed the still-JSON-encoded
+     * $pi->teacher/$pi->ministry strings straight to in_array(), which
+     * requires an array haystack -- a TypeError that would abort the whole
+     * conversion whenever any podcast had teacher/ministry exclusion
+     * configured. Both must be Registry-decoded first, matching the
+     * pattern already used by the inclusion checks in the same method.
+     */
+    public function testInsertPodcastDecodesTeacherAndMinistryBeforeExclusionCheck(): void
+    {
+        $body = self::methodBody('insertPodcast');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/in_array\(\$t,\s*\$pi->teacher\)/',
+            $body,
+            'the teacher exclusion check must not pass the raw JSON-encoded $pi->teacher to in_array() -- see #1528'
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/in_array\(\$m,\s*\$pi->ministry\)/',
+            $body,
+            'the ministry exclusion check must not pass the raw JSON-encoded $pi->ministry to in_array() -- see #1528'
+        );
+    }
+
+    /**
+     * checkMedia()'s "all media types" sentinel compared an array
+     * ($includemedia) to the string 'all' with ==, which is always false --
+     * podcasts configured for "all media types" (media==0) never matched
+     * anything. Exercised live: checkMedia() has no DB dependency once
+     * $podcastids is set directly on the instance.
+     */
+    public function testCheckMediaAllSentinelMatchesAgainstTheArray(): void
+    {
+        $instance             = new CwmpIconvert();
+        $instance->podcastids = [['newid' => 42, 'oldid' => 7]];
+
+        $reflection = new \ReflectionMethod(CwmpIconvert::class, 'checkMedia');
+        $pi         = (object) ['audio_link' => null, 'video_link' => null, 'slides_link' => 0];
+        $podcast    = (object) ['id' => 7];
+
+        $result = $reflection->invoke($instance, ['all'], $pi, $podcast);
+
+        $this->assertSame(42, $result, 'checkMedia() must match the \'all\' sentinel inside the $includemedia array -- see #1528');
+    }
+
+    /**
+     * The single-item teacher/ministry inclusion fallback compared the
+     * podcast's configured value against the still-encoded $pi->teacher/
+     * $pi->ministry string instead of the decoded array built two lines
+     * earlier -- essentially never true.
+     */
+    public function testInsertPodcastSingleItemInclusionComparesAgainstDecodedArray(): void
+    {
+        $body = self::methodBody('insertPodcast');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/if \(\$value == \$pi->teacher\)/',
+            $body,
+            'the single-teacher inclusion check must compare against the decoded $teacher array, not raw $pi->teacher -- see #1528'
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/if \(\$value == \$pi->ministry\)/',
+            $body,
+            'the single-ministry inclusion check must compare against the decoded $ministry array, not raw $pi->ministry -- see #1528'
+        );
+    }
+
+    /**
+     * The teacher-inclusion branch guard tested \count($teacher) -- the
+     * study's own decoded teacher array -- while the loop it guards
+     * iterates $teacher_list, the podcast's configured list. The parallel
+     * ministry block correctly guards on \count($ministry_list). With the
+     * bug, a podcast configured with multiple teacher_list entries but a
+     * study with only one teacher fell into the elseif branch and checked
+     * only $teacher_list[0], silently ignoring the rest of the configured
+     * list.
+     */
+    public function testInsertPodcastTeacherInclusionGuardsOnTheConfiguredListNotTheStudy(): void
+    {
+        $body = self::methodBody('insertPodcast');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/if \(\\\\count\(\$teacher\) > 1\)/',
+            $body,
+            'the teacher-inclusion branch must guard on \\count($teacher_list), matching the ministry block -- see #1528'
+        );
+        $this->assertMatchesRegularExpression(
+            '/if \(\\\\count\(\$teacher_list\) > 1\)/',
+            $body,
+            'the teacher-inclusion branch must guard on \\count($teacher_list), matching the ministry block -- see #1528'
+        );
+    }
+
+    /**
+     * "Last inserted id" was fetched via a fresh SELECT ... ORDER BY id DESC
+     * LIMIT 1 query at 6 call sites instead of insertObject()'s own $key
+     * parameter -- a race hazard under concurrent writes and an avoidable
+     * query per insert. Same pattern as #1525's Cwmssconvert finding.
+     */
+    public function testLastInsertedIdUsesInsertObjectKeyParamNotAFollowUpQuery(): void
+    {
+        $body = self::methodBody('convertPI');
+
+        $this->assertDoesNotMatchRegularExpression(
+            "/order\(\\\$db->quoteName\('id'\)\s*\.\s*'\s*DESC'\)/",
+            $body,
+            'must not fetch the last-inserted id via a follow-up ORDER BY id DESC query -- see #1528'
+        );
+        $this->assertSame(
+            6,
+            preg_match_all("/insertObject\('#__bsms_\w+',\s*\\\$\w+,\s*'id'\)/", $body),
+            'expected all 6 insertObject() calls (teacher x2, location, series, podcast, study) to pass \'id\' as the key argument -- see #1528'
+        );
+    }
+
+    /**
+     * insertMedia() unconditionally reloaded the entire #__pifilepath table
+     * even though only the audio branch used it -- video/notes/slides
+     * either don't need it or already do their own scoped query. Now scoped
+     * like the notes/slides branches (WHERE id = ...).
+     */
+    public function testInsertMediaOnlyQueriesPifilepathWithinTheAudioBranch(): void
+    {
+        $body = self::methodBody('insertMedia');
+
+        $this->assertDoesNotMatchRegularExpression(
+            "/^\s*\\\$query->select\('\*'\)->from\(\\\$db->quoteName\('#__pifilepath'\)\);\s*$/m",
+            $body,
+            'must not unconditionally load the whole #__pifilepath table at the top of insertMedia() -- see #1528'
+        );
+        $this->assertSame(
+            4,
+            preg_match_all("/from\(\\\$db->quoteName\('#__pifilepath'\)\)->where\(/", $body),
+            'expected 4 scoped #__pifilepath lookups (JWPlayer video, audio, notes, slides), each WHERE id = ... -- see #1528'
+        );
+    }
+
+    /**
+     * insertPodcast() reloaded the entire #__pipodcast table on every call,
+     * and it's invoked up to 4x per study inside the studies loop despite
+     * the source table never changing during a single conversion run.
+     */
+    public function testInsertPodcastCachesPipodcastAcrossCalls(): void
+    {
+        $reflection = new \ReflectionClass(CwmpIconvert::class);
+        $this->assertTrue(
+            $reflection->hasProperty('piPodcastsCache'),
+            'insertPodcast() must cache #__pipodcast on the instance instead of reloading it every call -- see #1528'
+        );
+
+        $body = self::methodBody('insertPodcast');
+        $this->assertMatchesRegularExpression(
+            '/if \(\$this->piPodcastsCache === null\)/',
+            $body
+        );
+    }
 }
