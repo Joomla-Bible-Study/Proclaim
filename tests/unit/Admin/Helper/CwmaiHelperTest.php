@@ -205,4 +205,181 @@ class CwmaiHelperTest extends ProclaimTestCase
             'The raw finish/stop reason must be interpolated into the abnormal-completion message for diagnosability'
         );
     }
+
+    // =========================================================================
+    // Regression tests for #1550, found during a Helper-folder-wide
+    // bug-hunting review, tier 2 (external I/O + security surface, sequel
+    // to #1537-#1542).
+    // =========================================================================
+
+    private static function invokeExtractFirstJsonObject(string $content): ?string
+    {
+        $method = new \ReflectionMethod(CwmaiHelper::class, 'extractFirstJsonObject');
+
+        return $method->invoke(null, $content);
+    }
+
+    private static function invokeParseJsonResponse(string $content): array
+    {
+        $method = new \ReflectionMethod(CwmaiHelper::class, 'parseJsonResponse');
+
+        return $method->invoke(null, $content);
+    }
+
+    /**
+     * The old greedy regex (first '{' to the LAST '}' in the whole
+     * response) swallowed trailing prose that itself contained a '}' --
+     * a real risk here specifically because the system prompt repeatedly
+     * discusses the literal '{scripture}...{/scripture}' tag syntax, so a
+     * model (Claude has no JSON-mode constraint) adding a follow-up
+     * remark referencing that syntax reintroduces a '}' after the actual
+     * JSON object ends.
+     */
+    public function testExtractFirstJsonObjectStopsAtTheMatchingCloseBraceNotTheLastOne(): void
+    {
+        $content = '{"topics":["Faith"],"studyintro":"","studytext":"","chapters":[]}'
+            . ' Note: use the {scripture} tag format described above.';
+
+        $this->assertSame(
+            '{"topics":["Faith"],"studyintro":"","studytext":"","chapters":[]}',
+            self::invokeExtractFirstJsonObject($content)
+        );
+    }
+
+    /**
+     * A literal '}' inside a JSON string value is completely ordinary --
+     * only '"' and '\' need escaping in JSON strings -- so the scan must
+     * not treat it as closing the object early.
+     */
+    public function testExtractFirstJsonObjectIgnoresBracesInsideStringValues(): void
+    {
+        $content = '{"topics":[],"studyintro":"","studytext":"the set {1,2,3} was mentioned","chapters":[]}';
+
+        $this->assertSame($content, self::invokeExtractFirstJsonObject($content));
+    }
+
+    /**
+     * An escaped quote inside a string value must not be mistaken for the
+     * end of the string (which would then miscount subsequent braces as
+     * outside a string).
+     */
+    public function testExtractFirstJsonObjectHandlesEscapedQuotesInsideStrings(): void
+    {
+        $content = '{"topics":[],"studyintro":"He said \"hello\" to the {crowd}","studytext":"","chapters":[]}';
+
+        $this->assertSame($content, self::invokeExtractFirstJsonObject($content));
+    }
+
+    public function testExtractFirstJsonObjectReturnsNullWhenNoBraceIsPresent(): void
+    {
+        $this->assertNull(self::invokeExtractFirstJsonObject('not json at all'));
+    }
+
+    /**
+     * End-to-end: parseJsonResponse() must still successfully decode a
+     * response with trailing prose containing a closing brace, instead of
+     * corrupting the JSON and throwing "Invalid JSON".
+     */
+    public function testParseJsonResponseSurvivesTrailingProseContainingAClosingBrace(): void
+    {
+        $content = '{"topics":["Faith"],"studyintro":"Intro","studytext":"Text","chapters":[]}'
+            . ' Remember to use the {scripture} tag format.';
+
+        $result = self::invokeParseJsonResponse($content);
+
+        $this->assertSame(['Faith'], $result['topics']);
+        $this->assertSame('Intro', $result['studyintro']);
+    }
+
+    /**
+     * Gemini's API key must travel via the x-goog-api-key header, not the
+     * URL query string -- a URL-embedded key leaks into transport-failure
+     * exception messages, gets echoed back to the browser by both AJAX
+     * callers on error, and lands in the debug log whenever JBSMDEBUG is
+     * on. Checked structurally since exercising the real HTTP call
+     * requires live network access this suite doesn't perform.
+     */
+    public function testGeminiCallsSendTheApiKeyViaHeaderNotUrl(): void
+    {
+        foreach (['callGemini', 'fetchGeminiModels'] as $method) {
+            $body = self::methodBody($method);
+
+            $this->assertStringNotContainsString(
+                '?key=',
+                $body,
+                $method . '() must not embed the API key in the URL query string -- see #1550'
+            );
+            $this->assertStringContainsString(
+                "'x-goog-api-key'",
+                $body,
+                $method . '() must send the API key via the x-goog-api-key header -- see #1550'
+            );
+        }
+    }
+
+    /**
+     * A prompt-level safety block returns HTTP 200 with a
+     * promptFeedback.blockReason field and no 'candidates' key at all --
+     * an architecturally different rejection path from a per-candidate
+     * abnormal finishReason. Without a dedicated check, $content and
+     * $finishReason both silently default to '' and parseJsonResponse('')
+     * throws the raw "Invalid JSON —" error this class was already fixed
+     * once to eliminate (#1495/#1443/#1444), for a different trigger.
+     * Checked structurally: reproducing this requires a live Gemini
+     * response this suite doesn't fetch.
+     */
+    public function testCallGeminiChecksForAMissingCandidatesKeyBeforeParsing(): void
+    {
+        $body = self::methodBody('callGemini');
+
+        $this->assertStringContainsString(
+            "isset(\$data['candidates'])",
+            $body,
+            'callGemini() must check for a missing candidates key (prompt-level block) -- see #1550'
+        );
+        $this->assertStringContainsString(
+            "\$data['promptFeedback']['blockReason']",
+            $body,
+            'callGemini() must surface promptFeedback.blockReason for a prompt-level block -- see #1550'
+        );
+    }
+
+    /**
+     * getVideoContext() previously swallowed every exception from the
+     * YouTube/Vimeo metadata fetchers with no logging at all, making a
+     * transient network/API failure indistinguishable from "this video
+     * genuinely has no metadata" -- syncFromYouTube() reports the same
+     * generic message either way, with no diagnostic trail to tell them
+     * apart. Checked structurally: reproducing a live fetch failure
+     * requires network access this suite doesn't perform.
+     */
+    public function testGetVideoContextLogsTheExceptionInsteadOfSilentlySwallowingIt(): void
+    {
+        $body = self::methodBody('getVideoContext');
+
+        $this->assertStringContainsString(
+            'CwmDebug::error(',
+            $body,
+            'getVideoContext() must log the caught exception, not silently swallow it -- see #1550'
+        );
+    }
+
+    /**
+     * Every outbound HTTP call in this class previously had no timeout, so
+     * a slow/hung provider could tie up the PHP worker handling the
+     * synchronous AI-Assist AJAX request indefinitely. Checked
+     * structurally across every method that calls the HTTP client.
+     */
+    public function testEveryHttpCallPassesTheSharedTimeoutConstant(): void
+    {
+        foreach (['fetchClaudeModels', 'fetchOpenAIModels', 'fetchGeminiModels', 'postJson', 'fetchYouTubeMetadata', 'fetchVimeoMetadata'] as $method) {
+            $body = self::methodBody($method);
+
+            $this->assertStringContainsString(
+                'self::HTTP_TIMEOUT',
+                $body,
+                $method . '() must pass a timeout to its HTTP call -- see #1550'
+            );
+        }
+    }
 }
