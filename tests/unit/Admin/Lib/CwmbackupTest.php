@@ -152,7 +152,9 @@ class CwmbackupTest extends ProclaimTestCase
         $backup   = new Cwmbackup();
         $rowCount = $backup->getTableRowCount('#__bsms_studies');
 
-        $this->assertGreaterThan(2, $rowCount, 'test precondition: #__bsms_studies must have more than 2 rows on j5-dev');
+        if ($rowCount <= 2) {
+            $this->markTestSkipped('#__bsms_studies needs more than 2 rows to exercise a bounded chunk; only ' . $rowCount . ' present on this DB.');
+        }
 
         $chunk = $backup->getExportTableRows('#__bsms_studies', 0, 2);
 
@@ -168,8 +170,9 @@ class CwmbackupTest extends ProclaimTestCase
      * a chunk boundary silently dropping one row and duplicating another.
      * This compares the actual set of primary-key ids extracted from each
      * chunk against the set from an unbounded read, on a table large enough
-     * (827 rows on j5-dev) to span multiple chunks at the real chunk size
-     * used by exportdb().
+     * to span multiple chunks at the real chunk size used by exportdb() --
+     * skipped on a DB too small to prove anything (e.g. a fresh CI fixture
+     * seeded from install SQL only, with no update-migration sample data).
      */
     public function testChunkedRowsCoverTheExactSameRowsAsAnUnboundedRead(): void
     {
@@ -178,7 +181,9 @@ class CwmbackupTest extends ProclaimTestCase
         $chunkSize = 500;
         $rowCount  = $backup->getTableRowCount($table);
 
-        $this->assertGreaterThan($chunkSize, $rowCount, 'test precondition: #__bsms_studies must span more than one chunk on j5-dev');
+        if ($rowCount <= $chunkSize) {
+            $this->markTestSkipped('#__bsms_studies needs more than ' . $chunkSize . ' rows to span multiple chunks; only ' . $rowCount . ' present on this DB.');
+        }
 
         $chunkedIds = [];
 
@@ -204,18 +209,37 @@ class CwmbackupTest extends ProclaimTestCase
      * composite PK). getExportTableRows() must build its ORDER BY from the
      * table's actual primary key rather than assuming `id`, or a bounded
      * export of these tables would throw "Unknown column 'id'".
+     *
+     * #__bsms_storage is created by a later update-SQL migration rather
+     * than the base install, so it may not exist on a DB seeded from
+     * install SQL alone (e.g. a fresh CI fixture) -- each table is checked
+     * independently rather than asserted as a fixed set.
      */
     public function testGetExportTableRowsHandlesTablesWithoutAnIdColumn(): void
     {
-        $backup = new Cwmbackup();
+        $backup       = new Cwmbackup();
+        $knownTables  = array_column(CwmdbHelper::getObjects(), 'name');
+        $exercisedAny = false;
 
         foreach (['#__bsms_storage', '#__bsms_timeset', '#__bsms_podcast_download_log'] as $table) {
-            $rowCount = $backup->getTableRowCount($table);
-            $this->assertGreaterThan(0, $rowCount, "test precondition: $table must have at least one row on j5-dev");
+            if (!\in_array($table, $knownTables, true)) {
+                continue;
+            }
 
-            $export = $backup->getExportTableRows($table, 0, 10);
+            $rowCount = $backup->getTableRowCount($table);
+
+            if ($rowCount === 0) {
+                continue;
+            }
+
+            $exercisedAny = true;
+            $export       = $backup->getExportTableRows($table, 0, 10);
 
             $this->assertSame($rowCount, preg_match_all('/^INSERT INTO/m', $export), "expected exactly $rowCount row(s) from $table");
+        }
+
+        if (!$exercisedAny) {
+            $this->markTestSkipped('none of the no-id-column tables exist with rows on this DB.');
         }
     }
 
@@ -236,12 +260,20 @@ class CwmbackupTest extends ProclaimTestCase
         $reflection = new \ReflectionMethod(Cwmbackup::class, 'getPrimaryKeyOrderClause');
 
         $this->assertSame('`id` ASC', $reflection->invoke(null, $db, '#__bsms_studies'));
-        $this->assertSame('`key` ASC', $reflection->invoke(null, $db, '#__bsms_storage'));
         $this->assertSame(
             '`media_id` ASC, `client_hash` ASC',
             $reflection->invoke(null, $db, '#__bsms_podcast_download_log'),
             'composite primary key columns must be ordered by their actual index sequence'
         );
+
+        // #__bsms_storage is created by a later update-SQL migration, not
+        // the base install -- may not exist on a DB seeded from install SQL
+        // alone (e.g. a fresh CI fixture).
+        $knownTables = array_column(CwmdbHelper::getObjects(), 'name');
+
+        if (\in_array('#__bsms_storage', $knownTables, true)) {
+            $this->assertSame('`key` ASC', $reflection->invoke(null, $db, '#__bsms_storage'));
+        }
     }
 
     public function testFileSizeHeaderReadsRangeViaJoomlaInputNotSuperglobal(): void
