@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -57,6 +58,48 @@ class Cwmbackup
      * @since 9.0.0
      */
     protected string $saveAsName = '';
+
+    /**
+     * Cached list of this component's own table names (with `#__` prefix), as
+     * returned by CwmdbHelper::getObjects(). Populated on first use.
+     *
+     * @var string[]|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?array $knownTables = null;
+
+    /**
+     * Reject any table name that isn't one of this component's own tables.
+     *
+     * The table-export methods below take `$table` from AJAX request input
+     * (see CwmbackupController::exportTableXHR()) and interpolate it directly
+     * into `SHOW CREATE TABLE`/`SELECT *` queries. Without this check, a
+     * request for e.g. `#__users` would export Joomla's user table — including
+     * password hashes — through an endpoint meant only for this component's
+     * own `#__bsms_*` tables. Validating here (not just in the controller)
+     * keeps every export method safe regardless of caller.
+     *
+     * @param   string  $table  Full table name (with `#__` prefix) to check
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function isKnownProclaimTable(string $table): bool
+    {
+        if (self::$knownTables === null) {
+            self::$knownTables = array_column(CwmdbHelper::getObjects(), 'name');
+        }
+
+        if (\in_array($table, self::$knownTables, true)) {
+            return true;
+        }
+
+        Log::add('Rejected export/count request for non-Proclaim table: ' . $table, Log::WARNING, 'com_proclaim');
+
+        return false;
+    }
 
     /**
      * Generate a standardized backup filename
@@ -465,6 +508,10 @@ class Cwmbackup
             return $this->getProclaimAssetsExport();
         }
 
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
+        }
+
         // Reset the execution time limit for long-running exports
         if (\function_exists('set_time_limit')) {
             set_time_limit(\ini_get('max_execution_time'));
@@ -537,6 +584,10 @@ class Cwmbackup
      */
     public function getTableRowCount(string $table): int
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return 0;
+        }
+
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery()
             ->select('COUNT(*)')
@@ -557,6 +608,10 @@ class Cwmbackup
      */
     public function getExportTableStructure(string $table): string
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
+        }
+
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $prefix = $db->getPrefix();
         $export = '';
@@ -593,6 +648,10 @@ class Cwmbackup
      */
     public function getExportTableRows(string $table, int $offset, int $limit): string
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
+        }
+
         if (\function_exists('set_time_limit')) {
             set_time_limit(\ini_get('max_execution_time'));
         }
