@@ -58,13 +58,14 @@ class CwmmigrationHelperTest extends ProclaimTestCase
             $db->insertObject('#__bsms_servers', $legacyServer, 'id');
 
             // Pre-seed an existing 'local' target server so getExistingServersByType()
-            // finds one to reuse and migrateLegacyServers() never calls
-            // createServerForType() -- that method reads
-            // Factory::getApplication()->getIdentity()->id unconditionally, which is
-            // null in the PHPUnit CLI context (no logged-in user) and triggers a
-            // PHP warning that PHPUnit's strict-output-checking treats as a failure.
-            // That's a pre-existing gap unrelated to #1538; sidestepping it here
-            // keeps this test scoped to the offset/pagination bug it's about.
+            // finds one to reuse, keeping this test focused on the offset/pagination
+            // bug rather than server-creation behavior. (Discovered along the way:
+            // createServerForType() read Factory::getApplication()->getIdentity()->id
+            // unconditionally, which is null in the PHPUnit CLI context and produced a
+            // warning CI's strict-output-checking treated as a failure -- install SQL
+            // seeds 3 real legacy servers, and migrateLegacyServers() processes them
+            // too, so this pre-seed alone didn't avoid the crash. Fixed at the source
+            // in CwmserverMigrationHelper::createServerForType() instead.)
             $targetServer              = new \stdClass();
             $targetServer->server_name = 'ZZTEST Local Server ' . uniqid();
             $targetServer->type        = 'local';

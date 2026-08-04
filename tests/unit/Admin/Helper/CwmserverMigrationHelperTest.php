@@ -18,6 +18,8 @@ use CWM\Component\Proclaim\Administrator\Addons\Servers\Wistia\CWMAddonWistia;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -1120,5 +1122,44 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('https://example.com/video', $result['filename']);
         self::assertSame('8', $result['player']);
         self::assertSame('{customtag}something{/customtag}', $result['mediacode']);
+    }
+
+    /**
+     * createServerForType() read Factory::getApplication()->getIdentity()->id
+     * unconditionally. getIdentity() can legitimately return null outside a
+     * real request context (a CLI script, a scheduled task, PHPUnit's own CLI
+     * process) -- discovered when a #1538 regression test that calls
+     * CwmmigrationHelper::migrateLegacyServers() (which calls this method)
+     * triggered exactly that in CI, where no identity is ever set up.
+     */
+    public function testCreateServerForTypeDoesNotDereferenceANullIdentity(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $db->transactionStart();
+
+        try {
+            $id = CwmserverMigrationHelper::createServerForType('local', 'ZZTEST Direct Call ' . uniqid());
+
+            $this->assertGreaterThan(0, $id, 'must return a valid new server id -- see #1538');
+        } finally {
+            $db->transactionRollback();
+        }
+    }
+
+    public function testCreateServerForTypeGuardsAgainstANullIdentity(): void
+    {
+        $reflection = new \ReflectionMethod(CwmserverMigrationHelper::class, 'createServerForType');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/\'created_by\'\s*=>\s*\(int\)\s*\$user->id/',
+            $body,
+            'must not dereference $user->id unconditionally -- getIdentity() can return null -- see #1538'
+        );
     }
 }

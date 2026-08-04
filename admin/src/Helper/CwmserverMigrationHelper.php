@@ -498,7 +498,7 @@ class CwmserverMigrationHelper
             'media'       => '{}',
             'location_id' => $locationId,
             'created'     => (new \Joomla\CMS\Date\Date())->toSql(),
-            'created_by'  => (int) $user->id,
+            'created_by'  => $user ? (int) $user->id : 0,
         ];
 
         $db->insertObject('#__bsms_servers', $data, 'id');
