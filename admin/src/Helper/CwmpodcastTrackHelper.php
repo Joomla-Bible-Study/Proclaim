@@ -255,7 +255,9 @@ class CwmpodcastTrackHelper
      *
      * @param   string  $target           Absolute URL of the live media
      * @param   string  $mimeType         Content-Type to declare
-     * @param   string  $host             Raw incoming Host header (may include a port)
+     * @param   string  $host             This site's own configured hostname (from
+     *                                    Uri::root(), NOT the incoming Host header --
+     *                                    see isLocalHost()), may include a port
      * @param   string  $range            Raw incoming Range header, if any
      * @param   string  $ifModifiedSince  Raw incoming If-Modified-Since header, if any
      * @param   string  $ifNoneMatch      Raw incoming If-None-Match header, if any
@@ -491,7 +493,16 @@ class CwmpodcastTrackHelper
             CURLOPT_RESOLVE        => [$host . ':' . $port . ':' . $safeIp],
             CURLOPT_CONNECTTIMEOUT => 15,
             CURLOPT_TIMEOUT        => 0,
-            CURLOPT_HEADERFUNCTION => static function ($curlHandle, string $headerLine): int {
+            // This endpoint is unauthenticated and unrate-limited, so a
+            // slow/stalled upstream host is a resource-exhaustion vector --
+            // set_time_limit(0) above plus TIMEOUT=0 mean nothing else
+            // bounds how long a worker stays pinned. A LOW_SPEED guard
+            // (not a hard total-time cap) aborts only a genuinely stalled
+            // transfer, so legitimately large episode files can still
+            // stream for as long as they need to. See #1552.
+            CURLOPT_LOW_SPEED_LIMIT => 1,
+            CURLOPT_LOW_SPEED_TIME  => 60,
+            CURLOPT_HEADERFUNCTION  => static function ($curlHandle, string $headerLine): int {
                 $trimmed = trim($headerLine);
 
                 if ($trimmed === '') {
@@ -504,7 +515,16 @@ class CwmpodcastTrackHelper
                     return \strlen($headerLine);
                 }
 
-                if (preg_match('/^(Content-Type|Content-Length|Content-Range|Accept-Ranges|Last-Modified|ETag|Cache-Control|Expires):/i', $trimmed)) {
+                // Location is relayed too: CURLOPT_FOLLOWLOCATION is off (see
+                // above), so without this a redirect from upstream (e.g. an
+                // http->https upgrade, or a CDN 301/302-ing to a signed URL --
+                // the common case, given the "external host" storage model
+                // this method exists for) reached the client as a bare 3xx
+                // status with no Location and no body. This restores the
+                // pre-#1424 trust model for that case: the *client* follows
+                // the redirect itself, same as it always did, not curl -- no
+                // new SSRF surface. See #1552.
+                if (preg_match('/^(Content-Type|Content-Length|Content-Range|Accept-Ranges|Last-Modified|ETag|Cache-Control|Expires|Location):/i', $trimmed)) {
                     header($trimmed);
                 }
 
@@ -590,23 +610,30 @@ class CwmpodcastTrackHelper
      * Is the media target on this same site, so it can be streamed directly
      * off local disk rather than proxied from an external host?
      *
-     * parse_url()'s PHP_URL_HOST never includes a port, but the raw Host
-     * header does whenever the site isn't on the default port (every local
-     * dev site this was tested against runs on :8890) — comparing them
-     * as-is always mismatched on those sites and silently sent every local
-     * file down the remote-proxy path instead. Strip the port from both
-     * sides before comparing.
+     * $siteHost must be this site's own configured hostname (Uri::root()),
+     * NOT the incoming request's Host header. The Host header is
+     * client-supplied and rewritable by any reverse proxy/CDN in front of
+     * the site, so it can legitimately differ from the site's real
+     * hostname in form (e.g. "site.com" vs "www.site.com") with no
+     * attacker involved at all -- comparing against it caused local media
+     * to be misrouted down the remote-proxy path (which then either
+     * self-proxies or 404s, depending on what that hostname resolves to)
+     * on any such mismatch. See #1552.
      *
-     * @param   string  $requestHost  Raw incoming Host header (may include a port)
-     * @param   string  $target       Absolute URL of the live media
+     * parse_url()'s PHP_URL_HOST never includes a port, but $siteHost may
+     * (every local dev site this was tested against runs on :8890) —
+     * strip the port from both sides before comparing.
+     *
+     * @param   string  $siteHost  This site's own configured hostname (may include a port)
+     * @param   string  $target    Absolute URL of the live media
      *
      * @return  bool
      *
      * @since   10.5.4
      */
-    private static function isLocalHost(string $requestHost, string $target): bool
+    private static function isLocalHost(string $siteHost, string $target): bool
     {
-        $hostOnly   = strtolower(explode(':', $requestHost, 2)[0]);
+        $hostOnly   = strtolower(explode(':', $siteHost, 2)[0]);
         $targetHost = strtolower((string) (parse_url($target, PHP_URL_HOST) ?: ''));
 
         return $hostOnly !== '' && $targetHost !== '' && $hostOnly === $targetHost;

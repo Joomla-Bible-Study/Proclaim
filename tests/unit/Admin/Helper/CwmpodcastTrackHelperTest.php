@@ -110,4 +110,117 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
             CwmpodcastTrackHelper::resolveGuid($db, 0, null, 'https://example.org/media/new.mp3')
         );
     }
+
+    // -------------------------------------------------------------------------
+    // Regression tests for #1552
+    // -------------------------------------------------------------------------
+
+    private function invokeIsLocalHost(string $siteHost, string $target): bool
+    {
+        $method = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'isLocalHost');
+
+        return $method->invoke(null, $siteHost, $target);
+    }
+
+    public function testIsLocalHostMatchesOnSiteConfiguredHostname(): void
+    {
+        $this->assertTrue($this->invokeIsLocalHost('nfsda.org', 'https://nfsda.org/media/sermon.mp3'));
+    }
+
+    public function testIsLocalHostStripsPortFromBothSidesBeforeComparing(): void
+    {
+        $this->assertTrue($this->invokeIsLocalHost('nfsda.org:8890', 'https://nfsda.org/media/sermon.mp3'));
+    }
+
+    public function testIsLocalHostReturnsFalseForAGenuinelyExternalHost(): void
+    {
+        $this->assertFalse($this->invokeIsLocalHost('nfsda.org', 'https://cdn.otherhost.com/media/sermon.mp3'));
+    }
+
+    /**
+     * track() must derive $host from Uri::root() (this site's own
+     * configured hostname), not the raw, client-supplied and
+     * reverse-proxy-rewritable HTTP_HOST request header -- comparing
+     * against the latter could misroute genuinely local media down the
+     * remote-proxy path on a benign hostname-form mismatch (e.g.
+     * "site.com" vs "www.site.com"), with no attacker involved. Checked
+     * structurally against the controller source. See #1552.
+     */
+    public function testTrackDerivesHostFromUriRootNotTheRequestHostHeader(): void
+    {
+        $reflection = new \ReflectionMethod(
+            \CWM\Component\Proclaim\Site\Controller\CwmpodcastController::class,
+            'track'
+        );
+        $lines = file($reflection->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertStringNotContainsString(
+            "getString('HTTP_HOST'",
+            $body,
+            'must not derive $host from the raw HTTP_HOST request header -- see #1552'
+        );
+        $this->assertStringContainsString(
+            'Uri::root()',
+            $body,
+            'must derive $host from Uri::root() -- see #1552'
+        );
+    }
+
+    /**
+     * streamRemoteFile()'s header relay allow-list previously excluded
+     * Location, so a 3xx from the upstream media host (e.g. an
+     * http->https upgrade, or a CDN 301/302-ing to a signed URL) reached
+     * the client as a bare redirect status with no Location and no body
+     * -- breaking playback for the exact "external host" case this
+     * method exists to support. CURLOPT_FOLLOWLOCATION stays off; only
+     * the header is now relayed so the client follows it itself, same as
+     * the pre-#1424 behavior. Checked structurally: exercising the real
+     * header-relay closure requires a live HTTP fetch this suite doesn't
+     * perform. See #1552.
+     */
+    public function testStreamRemoteFileRelaysTheLocationHeader(): void
+    {
+        $reflection = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/preg_match\(\'\/\^\([^)]*\|Location\)[^)]*\)/',
+            $body,
+            'the relayed-header allow-list must include Location -- see #1552'
+        );
+        $this->assertStringContainsString(
+            'CURLOPT_FOLLOWLOCATION => false',
+            $body,
+            'curl itself must still not follow redirects -- only the header is relayed, see #1552'
+        );
+    }
+
+    /**
+     * This endpoint is unauthenticated and unrate-limited, with
+     * set_time_limit(0) and CURLOPT_TIMEOUT=0 -- nothing else bounds how
+     * long a worker stays pinned to a slow/stalled upstream host. A
+     * LOW_SPEED guard (not a hard total-time cap) must be present so a
+     * stalled transfer aborts while a large legitimately-slow episode
+     * download can still complete. See #1552.
+     */
+    public function testStreamRemoteFileSetsALowSpeedStallGuard(): void
+    {
+        $reflection = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('CURLOPT_LOW_SPEED_LIMIT', $body);
+        $this->assertStringContainsString('CURLOPT_LOW_SPEED_TIME', $body);
+    }
 }

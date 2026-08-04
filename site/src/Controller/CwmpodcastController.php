@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -178,7 +179,15 @@ class CwmpodcastController extends BaseController
             $mimeType   = $storedMime !== '' ? $storedMime : 'application/octet-stream';
         }
 
-        $host            = (string) $this->input->server->getString('HTTP_HOST', '');
+        // Deliberately NOT the incoming Host header: that's client-supplied
+        // and (via reverse proxies/CDNs) reverse-proxy-rewritable, so it can
+        // legitimately differ from this site's own configured hostname in
+        // form (e.g. "site.com" vs "www.site.com") even with no attacker
+        // involved. Comparing against it made isLocalHost() misroute local
+        // media to the remote-proxy path on any such mismatch. Uri::root()
+        // reflects Joomla's own site configuration (the "Live Site URL"
+        // when set) instead. See #1552.
+        $host            = (string) (parse_url(Uri::root(), PHP_URL_HOST) ?: '');
         $range           = (string) $this->input->server->getString('HTTP_RANGE', '');
         $ifModifiedSince = (string) $this->input->server->getString('HTTP_IF_MODIFIED_SINCE', '');
         $ifNoneMatch     = (string) $this->input->server->getString('HTTP_IF_NONE_MATCH', '');
