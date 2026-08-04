@@ -967,6 +967,11 @@ class CwmImageMigration
      * Then checks if `findExistingMigratedFiles()` can locate files in the expected
      * alias-ID or bare-ID folder for that record.
      *
+     * Intentionally has no SQL WHERE clause narrowing the row set: "broken" (file
+     * missing on disk) can only be determined by stat-ing every non-empty thumbnail
+     * path, so any SQL filter that excluded non-empty-but-broken rows would silently
+     * under-report candidates. Every row genuinely needs to be considered.
+     *
      * @param   string  $type   Record type: 'studies', 'teachers', or 'series'
      * @param   int     $limit  Maximum records to return (0 = unlimited)
      *
@@ -1182,7 +1187,10 @@ class CwmImageMigration
         $db        = Factory::getContainer()->get(DatabaseInterface::class);
         $params    = Cwmparams::getAdmin()->params;
         $thumbSize = (int) $params->get($cfg['sizeParam'], $cfg['sizeDefault']);
-        $processed = 0;
+
+        // First pass: find which bare-ID folders on disk qualify for this page,
+        // without touching the DB yet.
+        $eligibleIds = [];
 
         foreach ($subDirs as $dirName) {
             if ($dirName === '.' || $dirName === '..' || !ctype_digit($dirName)) {
@@ -1191,24 +1199,24 @@ class CwmImageMigration
 
             $absDir = $baseDir . '/' . $dirName;
 
-            if (!is_dir($absDir)) {
+            if (!is_dir($absDir) || !self::dirHasImageFiles($absDir)) {
                 continue;
             }
 
-            if (!self::dirHasImageFiles($absDir)) {
-                continue;
-            }
-
-            if ($processed >= $limit) {
+            if (\count($eligibleIds) >= $limit) {
                 $result['remaining']++;
 
                 continue;
             }
 
-            $processed++;
-            $id = (int) $dirName;
+            $eligibleIds[$dirName] = (int) $dirName;
+        }
 
-            // Look up the DB record
+        // Batch-fetch the DB records for this page of folders in a single query
+        // instead of one SELECT per folder.
+        $rowsById = [];
+
+        if (!empty($eligibleIds)) {
             $query = $db->createQuery();
 
             // Only select the columns needed for folder naming — the source
@@ -1216,25 +1224,31 @@ class CwmImageMigration
             switch ($type) {
                 case 'studies':
                     $query->select($db->quoteName(['id', 'studytitle', 'alias']))
-                        ->from($db->quoteName('#__bsms_studies'))
-                        ->where($db->quoteName('id') . ' = ' . $id);
+                        ->from($db->quoteName('#__bsms_studies'));
                     break;
 
                 case 'teachers':
                     $query->select($db->quoteName(['id', 'teachername', 'alias']))
-                        ->from($db->quoteName('#__bsms_teachers'))
-                        ->where($db->quoteName('id') . ' = ' . $id);
+                        ->from($db->quoteName('#__bsms_teachers'));
                     break;
 
                 case 'series':
                     $query->select($db->quoteName(['id', 'series_text', 'alias']))
-                        ->from($db->quoteName('#__bsms_series'))
-                        ->where($db->quoteName('id') . ' = ' . $id);
+                        ->from($db->quoteName('#__bsms_series'));
                     break;
             }
 
+            $query->whereIn($db->quoteName('id'), array_values($eligibleIds));
             $db->setQuery($query);
-            $row = $db->loadObject();
+
+            foreach ($db->loadObjectList() as $row) {
+                $rowsById[(int) $row->id] = $row;
+            }
+        }
+
+        foreach ($eligibleIds as $dirName => $id) {
+            $absDir = $baseDir . '/' . $dirName;
+            $row    = $rowsById[$id] ?? null;
 
             if (!$row) {
                 $result['skipped']++;
@@ -1770,7 +1784,8 @@ class CwmImageMigration
         foreach ($folderPaths as $relPath) {
             $relPath = trim($relPath, '/');
 
-            // SAFETY: Validate path is within allowed scope
+            // Cheap prefix pre-check (defense in depth only -- Path::clean() never
+            // collapses '../' segments, so this alone cannot be trusted as the scope guard)
             $isAllowed = false;
 
             foreach ($allowedBases as $base) {
@@ -1789,6 +1804,15 @@ class CwmImageMigration
 
             if (!is_dir($absDir)) {
                 $errors[] = 'Folder not found: ' . $relPath;
+                continue;
+            }
+
+            // SAFETY: authoritative scope check -- resolves '../' and symlinks before
+            // anything is deleted, unlike the string prefix check above
+            $realDir = realpath($absDir);
+
+            if ($realDir === false || !self::isWithinAllowedBases($realDir, $allowedBases)) {
+                $errors[] = 'Path not allowed: ' . $relPath;
                 continue;
             }
 
@@ -1811,6 +1835,35 @@ class CwmImageMigration
         }
 
         return ['deleted' => $deleted, 'errors' => $errors];
+    }
+
+    /**
+     * Check whether a resolved real path is within (or equal to) one of the
+     * allowed base directories, using realpath() so '../' traversal and
+     * symlinks can't escape the intended scope.
+     *
+     * @param   string  $realDir       Resolved real path of the target directory
+     * @param   array   $allowedBases  Allowed base paths, relative to JPATH_ROOT
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function isWithinAllowedBases(string $realDir, array $allowedBases): bool
+    {
+        foreach ($allowedBases as $base) {
+            $realBase = realpath(JPATH_ROOT . '/' . $base);
+
+            if ($realBase === false) {
+                continue;
+            }
+
+            if ($realDir === $realBase || str_starts_with($realDir . \DIRECTORY_SEPARATOR, $realBase . \DIRECTORY_SEPARATOR)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
