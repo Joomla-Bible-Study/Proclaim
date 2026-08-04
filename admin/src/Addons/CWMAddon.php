@@ -813,21 +813,27 @@ abstract class CWMAddon
      * Called by the sync engine to ensure a video Proclaim considers a member of
      * a playlist (e.g. via the playlist's linked series) is actually in that
      * playlist on the platform. Override in a write-back-capable addon. Must
-     * return ['success' => bool, 'error' => ?string]. The engine only calls this
-     * for videos not already recorded as members, but a duplicate insert should
-     * still fail gracefully.
+     * return ['success' => bool, 'error' => ?string, 'fatal' => ?bool]. The engine
+     * only calls this for videos not already recorded as members, but a duplicate
+     * insert should still fail gracefully.
+     *
+     * 'fatal' tells the caller this failure is systemic (quota exhausted, OAuth
+     * unusable) rather than specific to this one video/playlist — further calls in
+     * the same batch would only repeat it, so the caller stops early instead of
+     * burning quota on doomed retries. Omit (or false) for a per-item failure that
+     * later items may still succeed at.
      *
      * @param   int     $serverId          The server record ID.
      * @param   string  $remotePlaylistId  The platform playlist ID.
      * @param   string  $remoteVideoId     The platform video ID to add.
      *
-     * @return  array{success: bool, error?: string}
+     * @return  array{success: bool, error?: string, fatal?: bool}
      *
      * @since   10.3.3
      */
     public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
-        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'fatal' => true];
     }
 
     /**
@@ -835,20 +841,21 @@ abstract class CWMAddon
      *
      * Called by the sync engine when a media file's playlist assignment is removed
      * and the site opted in to platform-side removal. Override in a write-back-capable
-     * addon. Must return ['success' => bool, 'error' => ?string]. A video that is
-     * already absent from the playlist should be treated as a success (idempotent).
+     * addon. Must return ['success' => bool, 'error' => ?string, 'fatal' => ?bool]. A
+     * video that is already absent from the playlist should be treated as a success
+     * (idempotent). See addPlaylistMembership() for the meaning of 'fatal'.
      *
      * @param   int     $serverId          The server record ID.
      * @param   string  $remotePlaylistId  The platform playlist ID.
      * @param   string  $remoteVideoId     The platform video ID to remove.
      *
-     * @return  array{success: bool, error?: string}
+     * @return  array{success: bool, error?: string, fatal?: bool}
      *
      * @since   10.3.3
      */
     public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
-        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'fatal' => true];
     }
 
     /**
