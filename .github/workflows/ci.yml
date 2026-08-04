@@ -170,6 +170,152 @@ jobs:
           JTEST_DB_PASSWORD: proclaim_test
           JTEST_DB_PREFIX: proclaim_
 
+  # Forward-compatibility coverage for the next PHP release. Not a required
+  # check — 8.3 (php-checks, above) is the supported floor and must pass;
+  # this job exists to surface 8.5 breakage early without blocking merges
+  # until the codebase is verified clean against it.
+  php-checks-85:
+    name: PHP Lint & Tests (8.5, non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_USER: proclaim_test
+          MYSQL_PASSWORD: proclaim_test
+          MYSQL_ROOT_PASSWORD: proclaim_test
+          MYSQL_DATABASE: proclaim_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, json, xml, mysqli
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php85-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php85-composer-
+
+      - name: Clone joomla-cms for test framework
+        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+
+      - name: Cache joomla-cms composer dependencies
+        id: joomla-cms-cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}-php85
+
+      - name: Install joomla-cms composer dependencies
+        if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/../joomla-cms
+          composer install --no-dev --no-interaction --prefer-dist
+
+      - name: Generate minimal configuration.php for tests
+        run: |
+          cat > $GITHUB_WORKSPACE/../joomla-cms/configuration.php <<'PHP'
+          <?php
+          class JConfig
+          {
+              public $dbtype          = 'mysqli';
+              public $host            = '127.0.0.1';
+              public $user            = 'proclaim_test';
+              public $password        = 'proclaim_test';
+              public $db              = 'proclaim_test';
+              public $dbprefix        = 'proclaim_';
+              public $secret          = 'proclaim-test-secret-key-0123456789abcdef';
+              public $sitename        = 'Proclaim Test';
+              public $editor          = 'none';
+              public $captcha         = '0';
+              public $language        = 'en-GB';
+              public $mailer          = 'smtp';
+              public $mailfrom        = 'test@example.com';
+              public $fromname        = 'Proclaim Test';
+              public $sendmail        = '/usr/sbin/sendmail';
+              public $smtpauth        = '0';
+              public $smtpuser        = '';
+              public $smtppass        = '';
+              public $smtphost        = 'localhost';
+              public $smtpsecure      = 'none';
+              public $smtpport        = '25';
+              public $caching         = '0';
+              public $cache_handler   = 'file';
+              public $cachetime       = '15';
+              public $MetaDesc        = '';
+              public $MetaAuthor      = '1';
+              public $sef             = '1';
+              public $sef_rewrite     = '0';
+              public $sef_suffix      = '0';
+              public $unicodeslugs    = '0';
+              public $tmp_path        = '/tmp';
+              public $log_path        = '/tmp';
+              public $offline         = '0';
+              public $debug           = '0';
+              public $debug_lang      = '0';
+              public $error_reporting = 'default';
+              public $cookie_domain   = '';
+              public $cookie_path     = '';
+              public $lifetime        = '15';
+              public $session_handler = 'database';
+              public $session_metadata = '1';
+              public $force_ssl       = '0';
+              public $log_deprecated  = '0';
+          }
+          PHP
+
+      - name: Install Composer dependencies
+        run: composer install --dev --no-interaction --prefer-dist
+
+      - name: Import Joomla core database schema
+        run: |
+          sed 's/#__/proclaim_/g' $GITHUB_WORKSPACE/../joomla-cms/installation/sql/mysql/base.sql > /tmp/joomla-base.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/joomla-base.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Import Proclaim database schema
+        run: |
+          sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Check PHP syntax
+        run: composer lint:syntax
+
+      - name: Check query builder usage
+        run: composer lint:queries
+
+      - name: Run PHPUnit tests
+        run: composer test
+        env:
+          JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
+          JTEST_DB_HOST: 127.0.0.1
+          JTEST_DB_NAME: proclaim_test
+          JTEST_DB_USER: proclaim_test
+          JTEST_DB_PASSWORD: proclaim_test
+          JTEST_DB_PREFIX: proclaim_
+
   js-checks:
     name: JS Lint & Tests
     runs-on: ubuntu-latest
