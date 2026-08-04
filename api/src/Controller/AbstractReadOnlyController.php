@@ -68,7 +68,7 @@ abstract class AbstractReadOnlyController extends ApiController
     /**
      * Deleting is not supported for this resource.
      *
-     * @param   integer|null  $id  Ignored.
+     * @param   int|null  $id  Ignored.
      *
      * @return  void
      *

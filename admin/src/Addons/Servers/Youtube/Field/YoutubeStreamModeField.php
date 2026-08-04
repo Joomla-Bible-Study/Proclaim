@@ -53,7 +53,7 @@ class YoutubeStreamModeField extends RadioField
      * form never carries oauth_token. This is the same stored key
      * isOAuthConnected() and the media-form gate test.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @throws \Exception
      * @since   10.4.1

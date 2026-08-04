@@ -40,12 +40,12 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  integer
+     * @var  int
      */
     private int $serverId = 0;
 
     /**
-     * @var  integer
+     * @var  int
      */
     private int $seriesId = 0;
 
