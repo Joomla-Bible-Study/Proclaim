@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Factory;
@@ -34,6 +35,8 @@ use Joomla\Database\DatabaseInterface;
  */
 class CwmassetsController extends BaseController
 {
+    use CwmJsonResponseTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -322,33 +325,5 @@ class CwmassetsController extends BaseController
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Failed to rebuild asset tree: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Send JSON response and close the application.
-     *
-     * @param   bool    $success  Success status
-     * @param   string  $message  Message
-     * @param   array   $data     Additional data
-     *
-     * @return never
-     *
-     * @throws \Exception
-     * @since 10.1.0
-     */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
-    {
-        $app = Factory::getApplication();
-        header('Content-Type: application/json; charset=utf-8');
-        $app->setHeader('Cache-Control', 'no-cache, must-revalidate');
-
-        $response = [
-            'success' => $success,
-            'message' => $message,
-            'data'    => $data,
-        ];
-
-        echo json_encode($response, JSON_THROW_ON_ERROR);
-        $app->close();
     }
 }

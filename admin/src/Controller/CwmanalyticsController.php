@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Model\CwmanalyticsModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -32,6 +33,8 @@ use Joomla\Registry\Registry;
  */
 class CwmanalyticsController extends BaseController
 {
+    use CwmJsonResponseTrait;
+
     /**
      * Seed the monthly aggregates table with legacy hit/play/download counts
      * from existing study and media-file records.
@@ -206,35 +209,5 @@ class CwmanalyticsController extends BaseController
             'periodStart'   => $start,
             'periodEnd'     => $end,
         ]);
-    }
-
-    /**
-     * Send a JSON response and terminate execution.
-     *
-     * @param   bool    $success  Whether the request succeeded.
-     * @param   string  $message  Optional message.
-     * @param   array   $data     Optional data payload.
-     *
-     * @return  never
-     *
-     * @since   10.1.0
-     */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
-    {
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        $response = json_encode([
-            'success' => $success,
-            'message' => $message,
-            'data'    => $data,
-        ], JSON_THROW_ON_ERROR);
-
-        header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: no-store');
-        echo $response;
-
-        Factory::getApplication()->close();
     }
 }
