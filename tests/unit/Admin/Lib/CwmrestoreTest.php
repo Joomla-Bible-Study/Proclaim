@@ -115,4 +115,92 @@ class CwmrestoreTest extends ProclaimTestCase
 
         $this->assertMatchesRegularExpression('/isSafeRestoreStatement\(/', $body);
     }
+
+    /**
+     * Regression tests for #1523.
+     *
+     * importdb() read the selected server-side backup filename via
+     * $input->getWord('backuprestore', ''), whose 'word' filter strips
+     * everything except letters and underscores. Real backup filenames
+     * (proclaim-backup_SiteName_YYYY-MM-DD_vX.X.X.sql) always contain
+     * digits and a dot, so the value could never contain '.sql' after
+     * filtering -- the substr_count($backupRestore, '.sql') check at the
+     * top of importdb() was permanently false, making "restore from
+     * server backup folder" dead on arrival. getCmd()'s 'cmd' filter
+     * allows [A-Za-z0-9_.-], which matches the actual filename format.
+     */
+    public function testImportdbReadsBackupRestoreViaGetCmdNotGetWord(): void
+    {
+        $body = self::methodBody('importdb');
+
+        $this->assertMatchesRegularExpression(
+            '/->getCmd\(\s*.backuprestore./',
+            $body,
+            'importdb() must read backuprestore via getCmd(), not getWord() -- see #1523'
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/->getWord\(\s*.backuprestore./',
+            $body,
+            'importdb() must not read backuprestore via getWord() -- its filter strips digits and dots, ' .
+                'so a real "proclaim-backup_Site_2026-08-04_v10.5.6.sql" filename could never survive -- see #1523'
+        );
+    }
+
+    /**
+     * Proves the actual bug, not just the code shape: Joomla's 'word' filter
+     * mangles a realistic backup filename into something that can never
+     * contain '.sql', while 'cmd' passes it through unchanged.
+     */
+    public function testWordFilterCannotSurviveARealBackupFilenameButCmdFilterCan(): void
+    {
+        $filter   = new \Joomla\Filter\InputFilter();
+        $filename = 'proclaim-backup_SiteName_2026-08-04_v10.5.6.sql';
+
+        $this->assertStringNotContainsString(
+            '.sql',
+            $filter->clean($filename, 'word'),
+            "word filter unexpectedly preserved '.sql' -- if this ever changes, #1523's root cause is gone"
+        );
+        $this->assertSame($filename, $filter->clean($filename, 'cmd'));
+    }
+
+    public function testImportdbAndRestoreDbHaveTypedParameters(): void
+    {
+        $importdb = new \ReflectionMethod(Cwmrestore::class, 'importdb');
+        $this->assertSame('bool', (string) $importdb->getParameters()[0]->getType());
+
+        $restoreDb = new \ReflectionMethod(Cwmrestore::class, 'restoreDB');
+        $this->assertSame('string', (string) $restoreDb->getParameters()[0]->getType());
+    }
+
+    /**
+     * tablesToBlob()/tablesToText() were grep-confirmed unused anywhere in
+     * the repo -- dead code found during the same review as #1523.
+     */
+    public function testDeadTableConversionMethodsAreRemoved(): void
+    {
+        $this->assertFalse(method_exists(Cwmrestore::class, 'tablesToBlob'));
+        $this->assertFalse(method_exists(Cwmrestore::class, 'tablesToText'));
+    }
+
+    /**
+     * importdb() and restoreDB() built the com_installer DatabaseModel via
+     * `new DatabaseModel()`, inconsistent with the MVCFactory-based
+     * UpdateModel creation three lines below it in the same method.
+     */
+    public function testDatabaseModelIsCreatedViaMvcFactory(): void
+    {
+        $body = self::methodBody('importdb') . self::methodBody('restoreDB');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/new DatabaseModel\(\)/',
+            $body,
+            'DatabaseModel must not be directly instantiated -- see #1523'
+        );
+        $this->assertSame(
+            2,
+            preg_match_all('/bootComponent\(.com_installer.\)\s*\n?\s*->getMVCFactory\(\)->createModel\(.Database./', $body),
+            'expected both DatabaseModel creation sites to go through MVCFactory -- see #1523'
+        );
+    }
 }

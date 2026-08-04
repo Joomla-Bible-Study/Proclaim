@@ -102,52 +102,6 @@ class Cwmrestore
     }
 
     /**
-     * Alter tables for Blob
-     *
-     * @return bool
-     *
-     * @since 7.0.0
-     */
-    protected static function tablesToBlob(): bool
-    {
-        $backuptables = self::getObjects();
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        foreach ($backuptables as $backuptable) {
-            if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Tables to preserve during restore.
      *
      * These tables contain downloaded/cached data that is expensive to
@@ -199,50 +153,6 @@ class Cwmrestore
     /**
      * Modify tables to Text
      *
-     * @return bool
-     *
-     * @since 9.0.0
-     */
-    protected static function tablesToText(): bool
-    {
-        $backuptables = self::getObjects();
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        foreach ($backuptables as $backuptable) {
-            if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Import DB
      *
      * @param bool $parent Switch to see if it is coming from migration or restore.
@@ -252,11 +162,11 @@ class Cwmrestore
      * @throws \Exception
      * @since 9.0.0
      */
-    public function importdb($parent): bool|array
+    public function importdb(bool $parent): bool|array
     {
         $input         = Factory::getApplication()->getInput();
         $installType   = $input->getPath('install_directory');
-        $backupRestore = $input->getWord('backuprestore', '');
+        $backupRestore = $input->getCmd('backuprestore', '');
         $dBo           = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Restore form prior backup files located on the server.
@@ -315,8 +225,10 @@ class Cwmrestore
                 }
 
                 // Fix the Proclaim Database schema after restore
-                $DatabaseModel = new DatabaseModel();
-                $DatabaseModel->fix([$cid]);
+                /** @var DatabaseModel $databaseModel */
+                $databaseModel = Factory::getApplication()->bootComponent('com_installer')
+                    ->getMVCFactory()->createModel('Database', 'Administrator', ['ignore_request' => true]);
+                $databaseModel->fix([$cid]);
 
                 // Run PHP data migration steps that ChangeSet cannot handle
                 self::runPostRestoreDataFixes();
@@ -358,7 +270,7 @@ class Cwmrestore
      * @throws \Exception
      * @since 9.0.0
      */
-    public static function restoreDB($backuprestore): bool
+    public static function restoreDB(string $backuprestore): bool
     {
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get(DatabaseInterface::class);
@@ -417,7 +329,9 @@ class Cwmrestore
             if ($cid) {
                 self::resetSchemaVersion($cid);
 
-                $databaseModel = new DatabaseModel();
+                /** @var DatabaseModel $databaseModel */
+                $databaseModel = Factory::getApplication()->bootComponent('com_installer')
+                    ->getMVCFactory()->createModel('Database', 'Administrator', ['ignore_request' => true]);
                 $databaseModel->fix([$cid]);
             }
         } catch (\Exception $e) {
