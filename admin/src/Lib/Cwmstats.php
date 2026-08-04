@@ -23,7 +23,6 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Cache\Controller\CallbackController;
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseInterface;
@@ -970,115 +969,5 @@ class Cwmstats
         self::$cache['hasPublishedPodcasts'] = $result;
 
         return $result;
-    }
-
-    /**
-     * Top Score Site
-     *
-     * @return bool|string
-     *
-     * @throws \Exception
-     * @since 9.0.0
-     */
-    public function getTopScoreSite(): bool|string
-    {
-        $input = Factory::getApplication()->getInput();
-        $t     = $input->get('t', 1, 'int');
-
-        $admin  = Cwmparams::getAdmin();
-        $limit  = (int) $admin->params->get('popular_limit', 25);
-        $format = (int) $admin->params->get('format_popular', 0);
-
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery();
-        $query->select($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']))
-            ->select('SUM(' . $db->quoteName('m.downloads') . ' + ' . $db->quoteName('m.plays') . ') as added')
-            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
-            ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('m.study_id') . ' = ' . $db->quoteName('s.id'))
-            ->whereIn($db->quoteName('m.published'), [1, 2])
-            ->whereIn($db->quoteName('s.published'), [1, 2]);
-
-        // LEFT JOIN platform stats for format_popular >= 2 (ministry-created content only)
-        if ($format >= 2) {
-            $query->select(
-                'COALESCE(SUM(CASE WHEN ' . $db->quoteName('m.content_origin') . ' = 0 THEN '
-                . $db->quoteName('ps.play_count') . ' ELSE 0 END), 0) AS platform_plays'
-            );
-            $query->leftJoin(
-                $db->quoteName('#__bsms_platform_stats', 'ps')
-                . ' ON ' . $db->quoteName('ps.media_id') . ' = ' . $db->quoteName('m.id')
-            );
-        }
-
-        $query->group($db->quoteName(['s.id', 's.studytitle', 's.alias', 's.hits', 's.studydate', 's.access']));
-
-        $db->setQuery($query);
-        $items = $db->loadObjectList() ?: [];
-
-        // Check permissions for this view by running through the records and removing those the user doesn't have permission to see
-        $user   = Factory::getApplication()->getIdentity();
-        $groups = $user->getAuthorisedViewLevels();
-
-        $final = [];
-
-        foreach ($items as $item) {
-            if (($item->access > 1) && !\in_array($item->access, $groups, true)) {
-                continue;
-            }
-
-            $name          = $item->studytitle ?: $item->id;
-            $platformPlays = (int) ($item->platform_plays ?? 0);
-
-            $total = match ($format) {
-                0       => (int) $item->added + (int) $item->hits,
-                1       => (int) $item->added,
-                2       => (int) $item->added + $platformPlays,
-                3       => (int) $item->added + (int) $item->hits + $platformPlays,
-                default => (int) $item->added,
-            };
-
-            $slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-                . str_replace(' ', '-', htmlspecialchars_decode($item->studytitle, ENT_QUOTES));
-
-            $selectvalue   = Route::_('index.php?option=com_proclaim&view=cwmsermon&id=' . $slug . '&t=' . $t);
-            $selectdisplay = $name . ' - ' . Text::_('JBS_CMN_SCORE') . ': ' . $total;
-
-            $final[] = [
-                'score'   => $total,
-                'select'  => $selectvalue,
-                'display' => $selectdisplay,
-            ];
-        }
-
-        // Sort by score descending
-        usort($final, function ($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
-
-        // Slice to limit
-        if ($limit > 0) {
-            $final = \array_slice($final, 0, $limit);
-        }
-
-        $options = [
-            HTMLHelper::_('select.option', '', Text::_('JBS_CMN_SELECT_POPULAR_STUDY')),
-        ];
-
-        foreach ($final as $topscore) {
-            $options[] = HTMLHelper::_('select.option', $topscore['select'], $topscore['display']);
-        }
-
-        return HTMLHelper::_(
-            'select.genericlist',
-            $options,
-            'urlList',
-            [
-                'list.attr'   => 'class="form-select chzn-color-state valid form-control-success" onchange="window.location.href=this.value" size="1"',
-                'list.select' => '',
-                'option.key'  => 'value',
-                'option.text' => 'text',
-                'id'          => 'urlList',
-            ]
-        );
     }
 }
