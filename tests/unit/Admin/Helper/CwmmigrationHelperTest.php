@@ -57,6 +57,22 @@ class CwmmigrationHelperTest extends ProclaimTestCase
             $legacyServer->published   = 1;
             $db->insertObject('#__bsms_servers', $legacyServer, 'id');
 
+            // Pre-seed an existing 'local' target server so getExistingServersByType()
+            // finds one to reuse and migrateLegacyServers() never calls
+            // createServerForType() -- that method reads
+            // Factory::getApplication()->getIdentity()->id unconditionally, which is
+            // null in the PHPUnit CLI context (no logged-in user) and triggers a
+            // PHP warning that PHPUnit's strict-output-checking treats as a failure.
+            // That's a pre-existing gap unrelated to #1538; sidestepping it here
+            // keeps this test scoped to the offset/pagination bug it's about.
+            $targetServer              = new \stdClass();
+            $targetServer->server_name = 'ZZTEST Local Server ' . uniqid();
+            $targetServer->type        = 'local';
+            $targetServer->params      = '{}';
+            $targetServer->media       = '{}';
+            $targetServer->published   = 1;
+            $db->insertObject('#__bsms_servers', $targetServer, 'id');
+
             for ($i = 1; $i <= 60; $i++) {
                 $row            = new \stdClass();
                 $row->study_id  = null;
