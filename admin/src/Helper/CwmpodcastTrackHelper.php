@@ -54,7 +54,7 @@ class CwmpodcastTrackHelper
      *
      * @param   string  $userAgent  Raw User-Agent header.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   10.3.3
      */
@@ -104,7 +104,7 @@ class CwmpodcastTrackHelper
      * failure just falls back to emitting $legacyGuid.
      *
      * @param   DatabaseInterface  $db          Database driver.
-     * @param   integer            $mediaId     Media file ID.
+     * @param   int            $mediaId     Media file ID.
      * @param   string|null        $stored      Current #__bsms_mediafiles.podcast_guid (null if unstamped).
      * @param   string             $legacyGuid  The guid the feed would emit today (direct-URL value).
      *
@@ -152,7 +152,7 @@ class CwmpodcastTrackHelper
      * with data access alongside the rest of this feature's DB logic.
      *
      * @param   DatabaseInterface  $db       Database driver.
-     * @param   integer            $mediaId  Media file ID.
+     * @param   int            $mediaId  Media file ID.
      *
      * @return  ?object  Row with ->params and ->sparams, or null if not found/unpublished.
      *
@@ -182,12 +182,12 @@ class CwmpodcastTrackHelper
      * and prunes this media's rows older than $cutoffSql (rolling-window cleanup).
      *
      * @param   DatabaseInterface  $db         Database driver.
-     * @param   integer            $mediaId    Media file ID.
+     * @param   int            $mediaId    Media file ID.
      * @param   string             $clientHash Result of clientHash().
      * @param   string             $nowSql     Current time as an SQL datetime.
      * @param   string             $cutoffSql  now minus 24h as an SQL datetime.
      *
-     * @return  boolean  True if this hit was counted; false if deduped.
+     * @return  bool  True if this hit was counted; false if deduped.
      *
      * @since   10.3.3
      */

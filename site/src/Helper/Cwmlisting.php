@@ -715,7 +715,7 @@ class Cwmlisting
      * @param   Object     $item       ?
      * @param   Registry   $params     Item Params
      * @param   \stdClass  $template  Template info
-     * @param   integer    $header     ?
+     * @param   int    $header     ?
      * @param   string     $type       ?
      *
      * @return string

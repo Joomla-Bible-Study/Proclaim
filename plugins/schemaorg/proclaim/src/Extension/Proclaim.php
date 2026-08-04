@@ -51,7 +51,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     /**
      * Load the language file on instantiation.
      *
-     * @var    boolean
+     * @var    bool
      * @since  10.3.0
      */
     protected $autoloadLanguage = true;

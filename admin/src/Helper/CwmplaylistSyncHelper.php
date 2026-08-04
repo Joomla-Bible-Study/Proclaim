@@ -43,10 +43,10 @@ final class CwmplaylistSyncHelper
     /**
      * Page size for the YouTube playlistItems pagination (API max is 50).
      *
-     * @var integer
+     * @var int
      * @since 10.3.3
      */
-    private const PAGE_SIZE = 50;
+    private const int PAGE_SIZE = 50;
 
     /**
      * Import every playlist from one (or all) YouTube server(s) and reconcile
@@ -68,10 +68,10 @@ final class CwmplaylistSyncHelper
      * playlist's linked series) are added to the remote playlist if missing.
      * $dryRun reports what would be pushed without calling the remote write API.
      *
-     * @param   integer  $serverId     Server ID to import, or 0 for all YouTube servers.
-     * @param   boolean  $discoverNew  Whether to create playlists not seen locally yet.
-     * @param   boolean  $pushChanges  Whether to push locally-authoritative titles, descriptions + memberships to the remote.
-     * @param   boolean  $dryRun       Report would-push changes without writing to the remote.
+     * @param   int  $serverId     Server ID to import, or 0 for all YouTube servers.
+     * @param   bool  $discoverNew  Whether to create playlists not seen locally yet.
+     * @param   bool  $pushChanges  Whether to push locally-authoritative titles, descriptions + memberships to the remote.
+     * @param   bool  $dryRun       Report would-push changes without writing to the remote.
      *
      * @return  array{servers:int, playlistsCreated:int, playlistsUpdated:int, playlistsSkipped:int, itemsMatched:int, itemsUnmatched:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], membershipsPushed:int, membershipsWouldPush:string[], membershipsRemoved:int, membershipsWouldRemove:string[], pushErrors:string[], conflicts:string[], errors:string[]}
      *
@@ -202,10 +202,10 @@ final class CwmplaylistSyncHelper
      *
      * @param   DatabaseInterface  $db           Database driver.
      * @param   CWMAddon           $addon        Playlist-capable addon instance.
-     * @param   integer            $serverId     Server ID to import from.
-     * @param   boolean            $discoverNew  Whether to create not-yet-local playlists.
-     * @param   boolean            $pushChanges   Whether to push locally-authoritative titles + descriptions to the remote.
-     * @param   boolean            $dryRun       Report would-push changes without writing to the remote.
+     * @param   int            $serverId     Server ID to import from.
+     * @param   bool            $discoverNew  Whether to create not-yet-local playlists.
+     * @param   bool            $pushChanges   Whether to push locally-authoritative titles + descriptions to the remote.
+     * @param   bool            $dryRun       Report would-push changes without writing to the remote.
      *
      * @return  array{created:int, updated:int, skipped:int, titlesPushed:int, titlesWouldPush:string[], descriptionsPushed:int, descriptionsWouldPush:string[], pushErrors:string[], playlistIds:int[], conflicts:string[], error:?string}
      *
@@ -434,8 +434,8 @@ final class CwmplaylistSyncHelper
      *
      * @param   string   $localValue        Current local value.
      * @param   string   $remoteValue       Current remote value.
-     * @param   boolean  $locallyEdited     Whether the local row was edited since last sync.
-     * @param   boolean  $writebackEnabled  Whether write-back is on for this run + playlist.
+     * @param   bool  $locallyEdited     Whether the local row was edited since last sync.
+     * @param   bool  $writebackEnabled  Whether write-back is on for this run + playlist.
      *
      * @return  string  One of 'none', 'pull', 'push', 'conflict'.
      *
@@ -460,8 +460,8 @@ final class CwmplaylistSyncHelper
      *
      * @param   string   $localTitle        Current local title.
      * @param   string   $remoteTitle       Current remote title.
-     * @param   boolean  $locallyEdited     Whether the local row was edited since last sync.
-     * @param   boolean  $writebackEnabled  Whether write-back is on for this run + playlist.
+     * @param   bool  $locallyEdited     Whether the local row was edited since last sync.
+     * @param   bool  $writebackEnabled  Whether write-back is on for this run + playlist.
      *
      * @return  string  One of 'none', 'pull', 'push', 'conflict'.
      *
@@ -482,7 +482,7 @@ final class CwmplaylistSyncHelper
      *
      * @param   CwmplaylistTable  $table  A loaded playlist row.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   10.3.3
      */
@@ -504,7 +504,7 @@ final class CwmplaylistSyncHelper
      *
      * @param   DatabaseInterface              $db          Database driver.
      * @param   CWMAddon                       $addon       Playlist-capable addon instance.
-     * @param   integer                        $playlistId  Local playlist row ID.
+     * @param   int                        $playlistId  Local playlist row ID.
      * @param   array<string,array<string,int>>  $videoMap  type => (videoId => mediafileId), built once per run.
      *
      * @return  array{items:int, matched:int, unmatched:int, error:?string}
@@ -599,8 +599,8 @@ final class CwmplaylistSyncHelper
      *
      * @param   DatabaseInterface  $db          Database driver.
      * @param   CWMAddon           $addon       Playlist-capable addon instance.
-     * @param   integer            $playlistId  Local playlist row ID.
-     * @param   boolean            $dryRun      Report would-push without writing to the remote.
+     * @param   int            $playlistId  Local playlist row ID.
+     * @param   bool            $dryRun      Report would-push without writing to the remote.
      *
      * @return  array{pushed:int, wouldPush:string[], removed:int, wouldRemove:string[], errors:string[]}
      *
@@ -828,7 +828,7 @@ final class CwmplaylistSyncHelper
      * applied on the platform (or is unresolvable) and the local row should go.
      *
      * @param   DatabaseInterface  $db      Database driver.
-     * @param   integer            $itemId  Junction row ID.
+     * @param   int            $itemId  Junction row ID.
      *
      * @return  void
      *
@@ -859,10 +859,10 @@ final class CwmplaylistSyncHelper
      * links are cleared first. Never throws — a media save must not fail because
      * of playlist bookkeeping.
      *
-     * @param   integer  $mediafileId  The saved media file's ID.
+     * @param   int  $mediafileId  The saved media file's ID.
      * @param   string   $params       The media file's params JSON (holds filename).
      *
-     * @return  integer  Number of junction rows linked to this media file.
+     * @return  int  Number of junction rows linked to this media file.
      *
      * @since   10.3.3
      */
@@ -924,7 +924,7 @@ final class CwmplaylistSyncHelper
      * Leaves the rows in place (the video may still be in the playlist) but nulls
      * the mediafile_id so no row points at a deleted media file. Never throws.
      *
-     * @param   integer  $mediafileId  The deleted media file's ID.
+     * @param   int  $mediafileId  The deleted media file's ID.
      *
      * @return  void
      *
@@ -955,7 +955,7 @@ final class CwmplaylistSyncHelper
      * The playlist IDs a media file is currently a member of (any source), used
      * as the value of the media-file playlist field. Never throws.
      *
-     * @param   integer  $mediafileId  The media file's ID.
+     * @param   int  $mediafileId  The media file's ID.
      *
      * @return  int[]  Playlist row IDs.
      *
@@ -992,7 +992,7 @@ final class CwmplaylistSyncHelper
      * a new media file's playlist assignment (Message → Series → Playlist). Never
      * throws.
      *
-     * @param   integer  $studyId  The study (Message) ID.
+     * @param   int  $studyId  The study (Message) ID.
      *
      * @return  int[]  Published playlist row IDs linked to the study's series.
      *
@@ -1073,10 +1073,10 @@ final class CwmplaylistSyncHelper
      * has none, only removals apply. Never throws — a media save must not fail on
      * playlist bookkeeping.
      *
-     * @param   integer  $mediafileId         The saved media file's ID.
+     * @param   int  $mediafileId         The saved media file's ID.
      * @param   int[]    $desiredPlaylistIds  Playlist IDs the user selected.
      * @param   string   $params              The media file's params JSON (holds filename).
-     * @param   boolean  $deleteSync          Queue de-selected remote memberships for platform removal.
+     * @param   bool  $deleteSync          Queue de-selected remote memberships for platform removal.
      *
      * @return  void
      *
@@ -1154,9 +1154,9 @@ final class CwmplaylistSyncHelper
      * mediafile_id ensured; otherwise a new source='manual' row is inserted.
      *
      * @param   DatabaseInterface  $db           Database driver.
-     * @param   integer            $playlistId   Playlist row ID.
+     * @param   int            $playlistId   Playlist row ID.
      * @param   string             $videoId      Remote video ID (junction key).
-     * @param   integer            $mediafileId  Media file ID to link.
+     * @param   int            $mediafileId  Media file ID to link.
      * @param   string             $now          SQL timestamp.
      *
      * @return  void
@@ -1387,11 +1387,11 @@ final class CwmplaylistSyncHelper
      * Insert or update a junction row for a playlist/video pair.
      *
      * @param   DatabaseInterface  $db           Database driver.
-     * @param   integer            $playlistId   Playlist row ID.
+     * @param   int            $playlistId   Playlist row ID.
      * @param   string             $videoId      YouTube video ID.
      * @param   string             $title        Video title.
-     * @param   integer|null       $mediafileId  Matched media file ID, or null.
-     * @param   integer            $position     Zero-based position in the playlist.
+     * @param   int|null       $mediafileId  Matched media file ID, or null.
+     * @param   int            $position     Zero-based position in the playlist.
      * @param   string             $now          SQL timestamp.
      *
      * @return  void
@@ -1433,7 +1433,7 @@ final class CwmplaylistSyncHelper
      * Remove junction rows for videos that are no longer in the playlist.
      *
      * @param   DatabaseInterface  $db          Database driver.
-     * @param   integer            $playlistId  Playlist row ID.
+     * @param   int            $playlistId  Playlist row ID.
      * @param   string[]           $keepVideos  Video IDs to retain.
      *
      * @return  void
@@ -1463,9 +1463,9 @@ final class CwmplaylistSyncHelper
      *
      * @param   DatabaseInterface  $db        Database driver.
      * @param   string             $remoteId  YouTube playlist ID.
-     * @param   integer            $serverId  Server ID.
+     * @param   int            $serverId  Server ID.
      *
-     * @return  integer  The playlist row ID, or 0 if none.
+     * @return  int  The playlist row ID, or 0 if none.
      *
      * @since   10.3.3
      */
