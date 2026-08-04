@@ -274,6 +274,45 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
         self::assertSame('virtuemart', $result);
     }
 
+    /**
+     * When more than one legacy ID field is populated at once (a realistic
+     * state for hand-edited legacy records), detectContentType() must match
+     * the live renderer's precedence in Cwmmedia.php: docMan_id is checked
+     * first but unconditionally overridden by article_id, which is in turn
+     * unconditionally overridden by virtueMart_id -- i.e. last-match-wins,
+     * so virtuemart beats article beats docman. Checking in
+     * [docman, article, virtuemart] order and returning on first match was
+     * the exact inverse -- see #1540.
+     */
+    public function testDetectContentTypeLegacyIdPrecedenceMatchesLiveRendererWhenMultipleSet(): void
+    {
+        $result = CwmserverMigrationHelper::detectContentType(
+            '',
+            '',
+            '',
+            '',
+            ['docMan_id' => '15', 'article_id' => '42', 'virtueMart_id' => '0']
+        );
+        self::assertSame(
+            'article',
+            $result,
+            'article_id overrides docMan_id in the renderer -- must not return docman just because it was checked first'
+        );
+
+        $result = CwmserverMigrationHelper::detectContentType(
+            '',
+            '',
+            '',
+            '',
+            ['docMan_id' => '15', 'article_id' => '42', 'virtueMart_id' => '7']
+        );
+        self::assertSame(
+            'virtuemart',
+            $result,
+            'virtueMart_id overrides both docMan_id and article_id in the renderer -- must win when all three are set'
+        );
+    }
+
     // -------------------------------------------------------------------------
     // detectContentType() with AllVideos shortcodes
     // -------------------------------------------------------------------------
@@ -570,6 +609,53 @@ class CwmserverMigrationHelperTest extends ProclaimTestCase
 
         self::assertSame('audio.mp3', $result['filename']);
         self::assertSame('0', $result['player']);
+    }
+
+    /**
+     * stripLegacyPrefix() must not strip a host that doesn't belong to the
+     * legacy server being migrated. The old fallback stripped ANY
+     * http(s)://host/ prefix unconditionally, turning an S3/CDN URL into a
+     * bare relative path that mediaBuildUrl() then silently concatenated
+     * onto the *new* local server's own base path -- pointing at a file
+     * that was never actually moved there. See #1540.
+     */
+    public function testStripLegacyPrefixDoesNotStripAnUnrelatedHost(): void
+    {
+        $legacyParams = [
+            'path'     => 'legacy.example.com/legacy-media',
+            'protocol' => 'https://',
+        ];
+
+        $result = CwmserverMigrationHelper::stripLegacyPrefix(
+            'https://cdn.otherhost.com/podcasts/sermon123.mp3',
+            $legacyParams
+        );
+
+        self::assertSame(
+            'https://cdn.otherhost.com/podcasts/sermon123.mp3',
+            $result,
+            'a foreign host must be left untouched, not stripped into a bare relative path -- see #1540'
+        );
+    }
+
+    /**
+     * Sanity check the fix didn't also break the case it's meant to
+     * preserve: a filename actually served by the legacy server being
+     * migrated must still have its prefix stripped.
+     */
+    public function testStripLegacyPrefixStillStripsTheConfiguredLegacyServerPrefix(): void
+    {
+        $legacyParams = [
+            'path'     => 'legacy.example.com/legacy-media',
+            'protocol' => 'https://',
+        ];
+
+        $result = CwmserverMigrationHelper::stripLegacyPrefix(
+            'https://legacy.example.com/legacy-media/sermons/audio.mp3',
+            $legacyParams
+        );
+
+        self::assertSame('sermons/audio.mp3', $result);
     }
 
     public function testTransformParamsEmbed(): void
