@@ -64,6 +64,7 @@ class CwmstudytopicHelper
      *
      * @return  bool  True if every insert succeeded (a delete failure alone does not fail the call).
      *
+     * @throws \Exception
      * @since  __DEPLOY_VERSION__
      */
     public static function saveTopics(int $studyId, array $topicIds): bool

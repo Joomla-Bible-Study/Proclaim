@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -196,7 +197,7 @@ class Cwmassets
      *
      * @since 10.3.0
      */
-    public const EMPTY_RULE_VARIANTS = [
+    public const array EMPTY_RULE_VARIANTS = [
         '',
         '{}',
         '[]',
@@ -497,13 +498,13 @@ class Cwmassets
      * no asset_id or the linked row has non-default rules, this is a
      * no-op.
      *
-     * @param   \Joomla\CMS\Table\Table  $table  Just-stored Proclaim table instance
+     * @param   Table  $table  Just-stored Proclaim table instance
      *
      * @return  void
      *
      * @since   10.3.0
      */
-    public static function stripEmptyAssetRow(\Joomla\CMS\Table\Table $table): void
+    public static function stripEmptyAssetRow(Table $table): void
     {
         $assetId = (int) ($table->asset_id ?? 0);
 
