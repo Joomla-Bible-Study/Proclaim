@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -45,6 +46,8 @@ use Joomla\Filesystem\Path;
  */
 class CwmbackupController extends BaseController
 {
+    use CwmJsonResponseTrait;
+
     // =========================================================================
     // AJAX Export Methods
     // =========================================================================
@@ -1026,51 +1029,6 @@ class CwmbackupController extends BaseController
         Log::add('Compressed backup file: ' . basename($zipPath), Log::INFO, 'com_proclaim');
 
         return $zipPath;
-    }
-
-    /**
-     * Send JSON response and terminate.
-     *
-     * @param   bool    $success  Success status
-     * @param   string  $message  Message
-     * @param   array   $data     Additional data
-     *
-     * @return never
-     *
-     * @throws \Exception
-     * @since 10.1.0
-     */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
-    {
-        $app = Factory::getApplication();
-
-        // Capture and log any stray output (PHP errors, warnings, etc.)
-        $strayOutput = '';
-
-        while (ob_get_level()) {
-            $strayOutput .= ob_get_clean();
-        }
-
-        if (!empty($strayOutput)) {
-            Log::add('Stray output captured: ' . substr($strayOutput, 0, 500), Log::WARNING, 'com_proclaim');
-        }
-
-        // Set JSON headers directly (only if headers not already sent)
-        if (!headers_sent()) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: no-cache, must-revalidate');
-        }
-
-        $response = [
-            'success' => $success,
-            'message' => $message,
-            'data'    => $data,
-        ];
-
-        echo json_encode($response, JSON_THROW_ON_ERROR);
-
-        // Use exit instead of $app->close() to avoid any shutdown processing issues
-        exit(0);
     }
 
     /**

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -32,6 +33,8 @@ use Joomla\CMS\Session\Session;
  */
 class CwmlocationwizardController extends BaseController
 {
+    use CwmJsonResponseTrait;
+
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
      *
@@ -254,36 +257,5 @@ class CwmlocationwizardController extends BaseController
         }
 
         $this->sendJsonResponse(true, '', $data);
-    }
-
-    /**
-     * Send a JSON response and terminate execution.
-     *
-     * @param   bool    $success  Whether the operation succeeded.
-     * @param   string  $message  Human-readable message.
-     * @param   array   $data     Extra data payload.
-     *
-     * @return  never
-     *
-     * @since   10.1.0
-     */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
-    {
-        // Clean any stray output
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        $response = json_encode([
-            'success' => $success,
-            'message' => $message,
-            'data'    => $data,
-        ], JSON_THROW_ON_ERROR);
-
-        header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: no-store');
-        echo $response;
-
-        Factory::getApplication()->close();
     }
 }
