@@ -199,6 +199,9 @@ class CwmpIconvert
     /** @var int|null YouTube server ID @since 10.1.0 */
     public ?int $youtube = null;
 
+    /** @var int[]|null Cached #__viewlevels ids, populated on first use @since __DEPLOY_VERSION__ */
+    private ?array $validAccessLevels = null;
+
     /**
      * Convert PreachIT
      *
@@ -348,7 +351,7 @@ class CwmpIconvert
                 $locations->id            = null;
                 $locations->published     = $pi->published;
                 $locations->location_text = $pi->name;
-                $locations->access        = $pi->access;
+                $locations->access        = $this->resolveAccessLevel($pi->access);
                 $locations->ordering      = $pi->ordering;
                 $locations->misc          = $pi->description;
                 $locations->image         = $pi->image_folderlrg . $pi->ministry_image_lrg;
@@ -545,7 +548,7 @@ class CwmpIconvert
 
                 $published = $pi->published;
                 $params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
-                $access    = $pi->saccess;
+                $access    = $this->resolveAccessLevel($pi->saccess);
 
                 // Create the study then get the id to create the media file and comments
                 $datastudies                 = new \stdClass();
@@ -724,6 +727,36 @@ class CwmpIconvert
     }
 
     /**
+     * Validate a PreachIT-supplied access/view-level value against this site's
+     * `#__viewlevels` table, falling back to Public (id 1 — a protected system
+     * level guaranteed to exist on every Joomla install) when the value doesn't
+     * correspond to a real view level here. PreachIT's own access-code numbering
+     * has no guaranteed relationship to the target site's view level ids, which
+     * aren't even guaranteed contiguous (e.g. 1,2,3,5,6,7) — writing it through
+     * unvalidated can silently assign an imported record to a view level no
+     * user holds, making it permanently invisible with no error at import time.
+     *
+     * @param mixed $value  Raw PreachIT access/accesscode value
+     *
+     * @return int
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private function resolveAccessLevel(mixed $value): int
+    {
+        $value = (int) $value;
+
+        if ($this->validAccessLevels === null) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__viewlevels'));
+            $db->setQuery($query);
+            $this->validAccessLevels = array_map('intval', $db->loadColumn());
+        }
+
+        return \in_array($value, $this->validAccessLevels, true) ? $value : 1;
+    }
+
+    /**
      * Insert Media into Proclaim
      *
      * @param object $pi     PreachIT study row being converted
@@ -791,7 +824,7 @@ class CwmpIconvert
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {
@@ -832,7 +865,7 @@ class CwmpIconvert
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {
@@ -871,7 +904,7 @@ class CwmpIconvert
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {

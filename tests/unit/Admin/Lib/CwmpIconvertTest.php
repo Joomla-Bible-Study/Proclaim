@@ -13,6 +13,8 @@ namespace CWM\Component\Proclaim\Tests\Admin\Lib;
 
 use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Regression tests for #1513.
@@ -170,6 +172,63 @@ class CwmpIconvertTest extends ProclaimTestCase
             '/return\s+null;\s*\}\s*$/',
             rtrim($body),
             'checkMedia() must explicitly return null on fall-through, not rely on implicit null — see #1513'
+        );
+    }
+
+    /**
+     * Regression tests for the access-level validation gap found while investigating #1515:
+     * $pi->saccess / $pi->access / $pi->accesscode (PreachIT's own access-code values) were
+     * written straight into Proclaim's `access` column with no check against this site's
+     * `#__viewlevels` table. That table's ids aren't even guaranteed contiguous, so an
+     * unmapped PreachIT code silently assigns an imported record to a view level no user
+     * holds -- the record exists but is invisible to everyone, with no error at import time.
+     *
+     * resolveAccessLevel() is exercised directly against the real `#__viewlevels` table
+     * (read-only) rather than a fabricated schema -- unlike PreachIT's own tables, this one
+     * genuinely exists on every Joomla install, so this is real behavior, not a guess.
+     */
+    public function testResolveAccessLevelAcceptsAnExistingViewLevel(): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__viewlevels'));
+        $db->setQuery($query, 0, 1);
+        $validId = (int) $db->loadResult();
+
+        $this->assertGreaterThan(0, $validId, 'test precondition: #__viewlevels must have at least one row');
+
+        $reflection = new \ReflectionMethod(CwmpIconvert::class, 'resolveAccessLevel');
+        $result     = $reflection->invoke(new CwmpIconvert(), $validId);
+
+        $this->assertSame($validId, $result);
+    }
+
+    public function testResolveAccessLevelFallsBackToPublicForAnUnmappedId(): void
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()->select('MAX(' . $db->quoteName('id') . ')')->from($db->quoteName('#__viewlevels'));
+        $db->setQuery($query);
+        $unmappedId = (int) $db->loadResult() + 1000;
+
+        $reflection = new \ReflectionMethod(CwmpIconvert::class, 'resolveAccessLevel');
+        $result     = $reflection->invoke(new CwmpIconvert(), $unmappedId);
+
+        $this->assertSame(1, $result, 'an unmapped access value must fall back to Public (id 1) — see #1515');
+    }
+
+    public function testAllAccessSitesGoThroughResolveAccessLevel(): void
+    {
+        $bodies = self::methodBody('convertPI') . self::methodBody('insertMedia');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/->access\s*=\s*\$pi->(saccess|access|accesscode)\s*;/',
+            $bodies,
+            'every ->access assignment sourced from PreachIT data must go through ' .
+                'resolveAccessLevel() rather than being written unvalidated — see #1515'
+        );
+        $this->assertSame(
+            5,
+            preg_match_all('/resolveAccessLevel\(/', $bodies),
+            'expected 5 call sites (studies, locations, and 3x media video branches) — see #1515'
         );
     }
 
