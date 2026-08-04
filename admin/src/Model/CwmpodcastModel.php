@@ -18,10 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmpodcastTable;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
@@ -111,6 +113,32 @@ class CwmpodcastModel extends AdminModel
         }
 
         return $data;
+    }
+
+    /**
+     * Save the podcast, then regenerate its RSS feed so settings changes
+     * (image, category, explicit flag, etc.) take effect immediately instead
+     * of waiting for the next manual "Generate Feeds" click or scheduled task run.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function save($data): bool
+    {
+        if (!parent::save($data)) {
+            return false;
+        }
+
+        try {
+            (new Cwmpodcast())->makePodcasts();
+        } catch (\Exception $e) {
+            Log::add('Podcast feed regeneration after save failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        return true;
     }
 
     /**
