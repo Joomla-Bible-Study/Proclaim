@@ -47,12 +47,6 @@ class Cwmbackup
      */
     protected string $dumpFile = '';
 
-    /** @var string Data cache, used to cache data before being written to disk
-     *
-     * @since 9.0.0
-     */
-    protected string $data_cache = '';
-
     /** @var string Relative path of how the file should be saved in the archive
      *
      * @since 9.0.0
@@ -387,6 +381,17 @@ class Cwmbackup
     }
 
     /**
+     * Number of rows read and written per chunk in exportdb()'s per-table
+     * loop. Keeps peak memory bounded to one chunk's worth of row objects
+     * plus generated SQL text, regardless of table size.
+     *
+     * @var int
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const int EXPORT_CHUNK_SIZE = 500;
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -402,25 +407,50 @@ class Cwmbackup
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
-        $path1            = '';
 
+        $this->dumpFile = $run === 2
+            ? JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName
+            : $path;
+
+        // Truncate/create the dump file before the first append below.
+        if (file_put_contents($this->dumpFile, '') === false) {
+            return false;
+        }
+
+        // Stream each table's DDL + rows in bounded chunks and flush to
+        // disk immediately, rather than buffering the entire database dump
+        // in memory before a single write.
         foreach ($objects as $object) {
-            $this->getExportTable($object['name']);
+            $table = $object['name'];
+
+            if (!$this->writeln($this->getExportTableStructure($table))) {
+                return false;
+            }
+
+            $rowCount = $this->getTableRowCount($table);
+
+            for ($offset = 0; $offset < $rowCount; $offset += self::EXPORT_CHUNK_SIZE) {
+                if (!$this->writeln($this->getExportTableRows($table, $offset, self::EXPORT_CHUNK_SIZE))) {
+                    return false;
+                }
+            }
+
+            if (!$this->writeln("\n-- --------------------------------------------------------\n\n")) {
+                return false;
+            }
         }
 
         // Append component configuration, scheduled tasks, and asset ACLs.
-        $this->data_cache .= $this->getComponentConfigExport();
-        $this->data_cache .= $this->getScheduledTasksExport();
-        $this->data_cache .= $this->getProclaimAssetsExport();
+        if (
+            !$this->writeln($this->getComponentConfigExport())
+            || !$this->writeln($this->getScheduledTasksExport())
+            || !$this->writeln($this->getProclaimAssetsExport())
+        ) {
+            return false;
+        }
 
         switch ($run) {
             case 1:
-                $this->dumpFile = $path;
-
-                if (!$this->writeln($this->data_cache)) {
-                    return false;
-                }
-
                 $mime_type = 'text/x-sql';
 
                 if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
@@ -432,12 +462,6 @@ class Cwmbackup
 
                 break;
             case 2:
-                $this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
-
-                if (!$this->writeln($this->data_cache)) {
-                    return false;
-                }
-
                 if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $path = $this->compress();
                 }
@@ -512,65 +536,11 @@ class Cwmbackup
             return '';
         }
 
-        // Reset the execution time limit for long-running exports
-        if (\function_exists('set_time_limit')) {
-            set_time_limit(\ini_get('max_execution_time'));
-        }
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // Get the prefix
-        $prefix = $db->getPrefix();
-        $export = '';
-
-        // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
-
-        // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
-        $db->setQuery($query);
-        $table_def = $db->loadObject();
-
-        foreach ($table_def as $value) {
-            if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=', 'ENGINE=', $export);
-            }
-        }
-
-        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Get the table rows and create insert statements from them
-        $query = $db->createQuery();
-        $query->select('*')
-            ->from($db->quoteName($table));
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-
-        if ($results) {
-            foreach ($results as $result) {
-                $data   = [];
-                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
-
-                foreach ($result as $key => $value) {
-                    if ($value === null) {
-                        $data[] = $db->quoteName($key) . "=NULL";
-                    } else {
-                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
-                    }
-                }
-
-                $export .= implode(',', $data);
-                $export .= ";\n";
-            }
-        }
-
-        $export .= "\n-- --------------------------------------------------------\n\n";
-
-        return $export;
+        // Delegate to the chunked pair (limit 0 = unbounded) so the DDL
+        // and row-dump logic lives in exactly one place.
+        return $this->getExportTableStructure($table)
+            . $this->getExportTableRows($table, 0, 0)
+            . "\n-- --------------------------------------------------------\n\n";
     }
 
     /**
@@ -687,84 +657,6 @@ class Cwmbackup
     }
 
     /**
-     * Get Export Table
-     *
-     * @param   string  $table  Table name
-     *
-     * @return bool
-     *
-     * @since 9.0.0
-     */
-    public function getExportTable(string $table): bool
-    {
-        if (!$table) {
-            return false;
-        }
-
-        // Reset the execution time limit for long-running exports
-        if (\function_exists('set_time_limit')) {
-            set_time_limit(\ini_get('max_execution_time'));
-        }
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // Get the prefix
-        $prefix = $db->getPrefix();
-        $export = '';
-
-        // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
-
-        // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
-        $db->setQuery($query);
-        $table_def = $db->loadObject();
-
-        foreach ($table_def as $value) {
-            if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=', 'ENGINE=', $export);
-            }
-        }
-
-        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Get the table rows and create insert statements from them
-        $query = $db->createQuery();
-        $query->select('*')
-            ->from($db->quoteName($table));
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-
-        if ($results) {
-            foreach ($results as $result) {
-                $data   = [];
-                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
-
-                foreach ($result as $key => $value) {
-                    if ($value === null) {
-                        $data[] = $db->quoteName($key) . "=NULL";
-                    } else {
-                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
-                    }
-                }
-
-                $export .= implode(',', $data);
-                $export .= ";\n";
-            }
-        }
-
-        $export .= "\n-- --------------------------------------------------------\n\n";
-
-        $this->data_cache .= $export;
-
-        return true;
-    }
-
-    /**
      * Saves the string in $fileData to the file.
      *
      * @param   string  $fileData  Data to write. Set to null to close the file handle.
@@ -862,10 +754,10 @@ class Cwmbackup
      */
     private function fileSizeHeader(string $file): void
     {
-        // Get File Size
+        // Get File Size. filesize() is safe from the historical 32-bit
+        // signed-integer overflow under PHP 8.3+ (64-bit builds only).
         $size = filesize($file);
 
-        // Modified by Rene
         // HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
         $newFileSize = $size - 1;
 
@@ -873,19 +765,16 @@ class Cwmbackup
         $resultLength = (string)$size;
         $resultRange  = "0-" . $newFileSize;
 
-        // Workaround for int overflow
-        if ($size < 0) {
-            $size = exec('ls -al ' . escapeshellarg($file) . ' | awk \'BEGIN {FS=" "}{print $5}\'');
-        }
+        $httpRangeHeader = Factory::getApplication()->getInput()->server->get('HTTP_RANGE', '', 'raw');
 
         /* We support requests for a single range only.
                  * So we check if we have a range field.
                  * If yes, ensure that it is valid.
                  * If it is not valid, we ignore it and send the whole file.
                  * */
-        if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE'])) {
+        if ($httpRangeHeader !== '' && preg_match('%^bytes=\d*\-\d*$%', $httpRangeHeader)) {
             // Let's take the right side
-            [, $httpRange] = explode('=', $_SERVER['HTTP_RANGE']);
+            [, $httpRange] = explode('=', $httpRangeHeader);
 
             // And get the two values (as strings!)
             $httpRange = explode('-', $httpRange);
