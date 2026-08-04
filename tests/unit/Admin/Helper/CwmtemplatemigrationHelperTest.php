@@ -672,6 +672,28 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $this->assertArrayNotHasKey('teacher_id', $params, 'Old name must not appear after migration');
     }
 
+    /**
+     * Table::bind() merges the submitted form array on top of currently
+     * stored params, so an admin editing a template whose migration hasn't
+     * run yet can end up with BOTH the stale old-name key and a real,
+     * just-saved new-name value present at once. The rename copy must not
+     * blindly overwrite that just-saved value with the stale one -- see
+     * #1541.
+     */
+    public function testRenameDoesNotOverwriteAlreadyPopulatedNewName(): void
+    {
+        $h = makeMigHelper([['teacher_id' => '5', 'lteacher_id' => '7']]);
+        $h->migrateFromVersion('0.0.0');
+
+        $params = $h->getParamsArray(1);
+        $this->assertSame(
+            '7',
+            (string) ($params['lteacher_id'] ?? ''),
+            'must not clobber the already-populated new-name value with the stale old-name value'
+        );
+        $this->assertArrayNotHasKey('teacher_id', $params, 'stale old name must still be removed');
+    }
+
     // =========================================================================
     // Section 5 – color conversion
     // =========================================================================
@@ -881,6 +903,28 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         }
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * migrateRowspanImages() has no version of its own to gate on -- it's
+     * meant to run on every migrateFromVersion() call regardless of
+     * $fromVersion. All four version-gated migration/rename/color/path
+     * arrays are keyed only under '10.1.0' with no later entries, so any
+     * $fromVersion >= '10.1.0' (i.e. every currently-supported upgrade
+     * path) used to hit an early return before ever reaching the rowspan
+     * cleanup. Uses a $fromVersion well past '10.1.0' to reproduce that
+     * -- see #1541.
+     */
+    public function testMigrateFromVersionPastAllGatedMigrationsStillRunsRowspanCleanup(): void
+    {
+        $h       = makeMigHelper([['rowspanitem' => '1', 'rowspanitemspan' => '4']]);
+        $updated = $h->migrateFromVersion('99.0.0');
+
+        $this->assertSame(1, $updated, 'rowspan cleanup must still run and count as an update');
+
+        $params = $h->getParamsArray(1);
+        $this->assertSame('1', (string) ($params['teacherimagerow'] ?? ''), 'rowspanitem=1 must still migrate to teacherimagerow=1');
+        $this->assertSame('0', (string) ($params['rowspanitem'] ?? ''), 'rowspanitem must still be reset to 0');
     }
 
     // =========================================================================

@@ -178,6 +178,15 @@ class CwmtemplatemigrationHelper
     {
         $updatedCount = 0;
 
+        // Migrate legacy rowspanitem image settings to Layout Editor elements.
+        // Unconditional -- unlike the version-gated migrations below, this
+        // has no version of its own to gate on, so it must run before the
+        // early-return check that only looks at those gated migrations.
+        // Running it after that check meant it silently never ran for any
+        // $fromVersion >= '10.1.0', since none of the four getXAfterVersion()
+        // arrays have entries past that version.
+        $updatedCount += $this->migrateRowspanImages();
+
         // First, run any parameter renames
         $renamesToRun = $this->getRenamesAfterVersion($fromVersion);
 
@@ -235,8 +244,9 @@ class CwmtemplatemigrationHelper
 
         if (empty($migrationsToRun) && empty($renamesToRun) && empty($colorConversionsToRun)
             && empty($pathConversionsToRun)) {
-            Log::add('No template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
-            return 0;
+            Log::add('No version-gated template migrations to run from version ' . $fromVersion, Log::INFO, 'com_proclaim');
+
+            return $updatedCount;
         }
 
         // Merge all parameters from applicable migrations
@@ -253,9 +263,6 @@ class CwmtemplatemigrationHelper
         if (!empty($paramsToAdd)) {
             $updatedCount += $this->applyParamsToTemplates($paramsToAdd);
         }
-
-        // Migrate legacy rowspanitem image settings to Layout Editor elements
-        $updatedCount += $this->migrateRowspanImages();
 
         Log::add('Template migration complete. Updated ' . $updatedCount . ' templates.', Log::INFO, 'com_proclaim');
 
@@ -580,9 +587,20 @@ class CwmtemplatemigrationHelper
                 $oldValue = $registry->get($oldName);
 
                 if ($oldValue !== null) {
-                    // Copy value to new name
-                    $registry->set($newName, $oldValue);
-                    // Remove old name
+                    // Only copy the stale old-name value over the new name if
+                    // the new name isn't already populated -- otherwise this
+                    // clobbers a value an admin already saved under the new
+                    // name (e.g. picked a different teacher via lteacher_id
+                    // after this template's teacher_id migration hadn't run
+                    // yet) with the older, no-longer-current value. Matches
+                    // the guard applyParamsToTemplates() uses for the same
+                    // reason.
+                    if ($registry->get($newName) === null) {
+                        $registry->set($newName, $oldValue);
+                    }
+
+                    // Remove old name regardless -- it's no longer a valid
+                    // form field and shouldn't linger in stored params.
                     $registry->remove($oldName);
                     $updated = true;
                     Log::add(
