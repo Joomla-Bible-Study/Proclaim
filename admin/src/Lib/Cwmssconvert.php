@@ -98,29 +98,23 @@ class Cwmssconvert
             $teachername       = $teacher->name;
             $data->teachername = $teachername;
             $data->website     = $teacher->website;
-            $data->information = $db->escape($teacher->bio);
+            $data->information = $teacher->bio;
             $data->image       = $teacher->pic;
             $data->thumb       = $teacher->pic;
             $data->published   = $teacher->state;
             $data->ordering    = $teacher->ordering;
             $data->catid       = $teacher->catid;
-            $data->short       = $db->escape($teacher->bio);
+            $data->short       = $teacher->bio;
             $data->alias       = $teacher->alias;
 
-            if (!$db->insertObject('#__bsms_teachers', $data)) {
+            if (!$db->insertObject('#__bsms_teachers', $data, 'id')) {
                 $result_table .= '<tr><td>' . Text::_('JBS_IBM_ERROR_OCCURED_CREATING_TEACHERS') . '</td></tr>';
             }
-
-            // Get the last teacherid
-            $query = $db->createQuery();
-            $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id'));
-            $db->setQuery($query, 0, 1);
-            $lastteacher = $db->loadResult();
 
             // Add the new teacher id to the object for cross walk of series and teachers
             foreach ($seriesspeakers as $speakers) {
                 if ($speakers->speaker_id == $teacher->id) {
-                    $speakers->newid = $lastteacher;
+                    $speakers->newid = $data->id;
                 }
             }
         } // End teachers foreach
@@ -156,29 +150,26 @@ class Cwmssconvert
                 $data->published        = $published;
                 $data->series_thumbnail = $series_thumbnail;
 
+                // Default when no crosswalk match is found for this series.
+                $data->teacher = $id;
+
                 foreach ($seriesspeakers as $speakers) {
                     if ($speakers->series_id == $single->id) {
                         $data->teacher = $speakers->newid;
-                    } else {
-                        $data->teacher = $id;
+                        break;
                     }
                 }
 
                 $data->alias    = $single->alias;
                 $data->ordering = $single->ordering;
 
-                if (!$db->insertObject('#__bsms_series', $data)) {
+                if (!$db->insertObject('#__bsms_series', $data, 'id')) {
                     $result_table .= '<tr><td>' . Text::_('JBS_IBM_ERROR_OCCURED_SS_SERIES') . '</td></tr>';
                 } else {
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $lastseries = $db->loadResult();
-
-                    // Add the new teacher id to the object for cross walk of series and teachers
+                    // Add the new series id to the object for cross walk of series and teachers
                     foreach ($seriesspeakers as $speakers) {
                         if ($speakers->series_id == $single->id) {
-                            $speakers->newseriesid = $lastseries;
+                            $speakers->newseriesid = $data->id;
                         }
                     }
                 }
@@ -230,7 +221,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function newStudies($sermon, $seriesspeakers): void
+    public function newStudies(object $sermon, array $seriesspeakers): void
     {
         $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $data = new \stdClass();
@@ -268,14 +259,10 @@ class Cwmssconvert
         $data->published = $sermon->state;
         $data->alias     = $sermon->alias;
 
-        $db->insertObject('#__bsms_studies', $data);
-        $query = $db->createQuery();
-        $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
+        $db->insertObject('#__bsms_studies', $data, 'id');
 
-        $db->setQuery($query, 0, 1);
-        $study              = $db->loadAssoc();
         $data1              = new \stdClass();
-        $data1->study_id    = $study['id'];
+        $data1->study_id    = $data->id;
         $data1->server_id   = $this->serverid;
         $data1->filename    = $sermon->audiofile;
         $data1->published   = 1;
@@ -288,7 +275,7 @@ class Cwmssconvert
 
         if ($sermon->videofile) {
             $data2              = new \stdClass();
-            $data2->study_id    = $study['id'];
+            $data2->study_id    = $data->id;
             $data2->server      = $this->serverid;
             $data2->filename    = $sermon->videofile;
             $data2->published   = 1;
@@ -310,7 +297,7 @@ class Cwmssconvert
      *
      * @since 9.0.0
      */
-    public function getVerses($sermon): \stdClass
+    public function getVerses(?string $sermon): \stdClass
     {
         $sermonscripture             = new \stdClass();
         $sermonscripture->booknumber = '101';
