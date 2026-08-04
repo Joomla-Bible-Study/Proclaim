@@ -34,6 +34,7 @@ use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -2096,10 +2097,32 @@ class CwmadminController extends FormController
     /**
      * Change Player by Media Type XHR - AJAX version with optimized batch update
      *
-     * Deliberately left as-is (not extracted to the Model) as part of #1443:
-     * its WHERE clause queries 'media_image' as a table column, but that key
-     * only exists inside the JSON params blob -- every call throws a DB error.
-     * Moving broken SQL into the Model doesn't fix it; see #1492.
+     * 'mediatype' is a MIME type string (e.g. "video/mp4") -- the value of the
+     * `mtFrom` MimeType field (see admin/forms/admin.xml), exactly what the
+     * non-AJAX CwmadminModel::playerByMediaType() also matches against. The
+     * previous version read it via getInt(), which strips non-digit
+     * characters (Joomla's INT filter), silently turning "video/mp4" into 4
+     * and "video/x-ms-wmv" into 0 -- neither is a usable value. It then
+     * compared that against 'media_image', a key that only exists inside the
+     * JSON params blob, not a real column on #__bsms_mediafiles, so every
+     * request that got past the mangled-value check still threw a DB error.
+     * See #1492.
+     *
+     * Deliberately left in the controller (not extracted to the Model) as
+     * part of #1443 -- the query itself was broken independent of where it
+     * lived, so moving it first would have just relocated the bug.
+     *
+     * Matching mirrors playerByMediaType()'s working logic (mime_type match,
+     * falling back to filename extension) without its dead-code bug (that
+     * method resets $from = '' at the top of every loop iteration, so its
+     * 'http'/'mediacode' branches can never fire). This version does not
+     * support the 'http'/'mediacode' sentinel values either -- that behavior
+     * was already non-functional in the method it mirrors, and reproducing
+     * it correctly is out of scope for this fix.
+     *
+     * Unlike playerByMediaType(), this does not filter to published = 1 --
+     * the point of a bulk "fix the player on files still using the wrong
+     * one" tool is to catch everything, not just currently-published rows.
      *
      * @return void
      *
@@ -2108,8 +2131,8 @@ class CwmadminController extends FormController
      */
     public function changePlayerByMediaTypeXHR(): void
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
         header('Content-Type: application/json; charset=utf-8');
 
@@ -2124,10 +2147,18 @@ class CwmadminController extends FormController
             return;
         }
 
-        $mediaType = $input->getInt('mediatype', 0);
+        $mediaType = $input->getString('mediatype', 'x');
         $player    = $input->getCmd('player', 'x');
 
-        if ($mediaType === 0 || $player === 'x') {
+        // Not validated against Cwmmedia::getMimetypes()'s current value list --
+        // that list dropped the legacy 'audio/mp3' string in favor of the
+        // IANA-registered 'audio/mpeg' (#1397), but existing rows can still
+        // have 'audio/mp3' stored, and MimeTypeField deliberately keeps a
+        // stored-but-no-longer-offered value selectable in the mtFrom dropdown
+        // (see MimeTypeField::getOptions()). Rejecting it here would silently
+        // break matching for exactly the records #1397 was written to keep
+        // working. An unrecognized value just matches zero rows below.
+        if ($mediaType === 'x' || $mediaType === '' || $player === 'x') {
             echo json_encode([
                 'success' => false,
                 'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_MEDIATYPE_PLAYER'),
@@ -2138,13 +2169,15 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
+            $mimetypes  = (new Cwmmedia())->getMimetypes();
+            $extensions = explode('|', (string) array_search($mediaType, $mimetypes, true));
 
-            // Get all media files with matching media type
+            // Match happens in PHP against the decoded params blob, not in SQL --
+            // mime_type / filename are JSON keys, not columns.
             $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('params')])
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where($db->quoteName('media_image') . ' = ' . $mediaType);
+                ->from($db->quoteName('#__bsms_mediafiles'));
 
             $db->setQuery($query);
             $mediaFiles = $db->loadObjectList();
@@ -2154,6 +2187,17 @@ class CwmadminController extends FormController
             foreach ($mediaFiles as $media) {
                 $reg = new Registry();
                 $reg->loadString($media->params);
+
+                $filename  = $reg->get('filename', '');
+                $extension = strtolower((string) substr($filename, strrpos($filename, '.') ?: 0));
+
+                $matches = $reg->get('mime_type', '') === $mediaType
+                    || ($extension !== '' && \in_array(ltrim($extension, '.'), $extensions, true));
+
+                if (!$matches) {
+                    continue;
+                }
+
                 $reg->set('player', $player);
 
                 $updateQuery = $db->createQuery()

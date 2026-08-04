@@ -21,9 +21,12 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
  * changePopupXHR() duplicated the same job with a more efficient batch
  * query. All five now delegate to CwmadminModel — see CwmadminModelTest.
  *
- * changePlayerByMediaTypeXHR() is deliberately left untouched: its query
- * is independently broken (queries a table column that doesn't exist —
- * see #1492) and moving broken SQL into the Model would not fix it.
+ * changePlayerByMediaTypeXHR() is deliberately left in the controller
+ * (not extracted to the Model): its query was independently broken —
+ * queried 'media_image' as a table column when that key only exists in
+ * the JSON params blob, and read the MIME-type 'mediatype' param via
+ * getInt(), which mangled it into a meaningless digit extraction. Fixed
+ * in place — see #1492 and CwmadminControllerTest's dedicated tests below.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -107,18 +110,70 @@ class CwmadminControllerTest extends ProclaimTestCase
     }
 
     /**
-     * changePlayerByMediaTypeXHR() is intentionally NOT refactored here —
-     * its query is independently broken (see #1492) and this asserts the
-     * scoping decision is visible in the method body via the doc comment,
-     * not silently dropped.
+     * Regression test for #1492: changePlayerByMediaTypeXHR() read the
+     * 'mediatype' request param (a MIME type string like "video/mp4", the
+     * value of the mtFrom MimeType field) via getInt(), which strips
+     * non-digit characters and silently turns it into a meaningless number
+     * ("video/mp4" -> 4, "video/x-ms-wmv" -> 0) instead of rejecting or
+     * preserving it. It then compared that against 'media_image', a key
+     * that only exists inside the JSON params blob, never a real column on
+     * #__bsms_mediafiles — so any request whose mangled value got past the
+     * "=== 0" guard still threw a DB error ("Unknown column 'media_image'").
      */
-    public function testChangePlayerByMediaTypeXHRDocumentsWhyItWasSkipped(): void
+    public function testChangePlayerByMediaTypeXHRReadsMediatypeAsAString(): void
     {
-        $reflection = new \ReflectionMethod(CwmadminController::class, 'changePlayerByMediaTypeXHR');
-        $lines      = file($reflection->getFileName());
-        $docStart   = $reflection->getStartLine() - 10;
-        $docBlock   = implode('', \array_slice($lines, max(0, $docStart - 1), 10));
+        $body = self::methodBody('changePlayerByMediaTypeXHR');
 
-        $this->assertStringContainsString('#1492', $docBlock, 'changePlayerByMediaTypeXHR() must document why it was left out of the #1443 refactor');
+        $this->assertDoesNotMatchRegularExpression(
+            '/getInt\(\s*[\'"]mediatype[\'"]/',
+            $body,
+            "getInt('mediatype', ...) mangles a MIME type string like \"video/mp4\" into a meaningless digit " .
+                'extraction (4) — see #1492'
+        );
+        $this->assertMatchesRegularExpression(
+            '/getString\(\s*[\'"]mediatype[\'"]/',
+            $body,
+            "changePlayerByMediaTypeXHR() must read 'mediatype' via getString() to preserve the MIME type " .
+                'string intact (getCmd() would strip the "/") — see #1492'
+        );
+    }
+
+    public function testChangePlayerByMediaTypeXHRDoesNotQueryMediaImageAsAColumn(): void
+    {
+        $body = self::methodBody('changePlayerByMediaTypeXHR');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/quoteName\(\s*[\'"]media_image[\'"]\s*\)/',
+            $body,
+            "'media_image' is a key inside the JSON params blob, not a column on #__bsms_mediafiles — every " .
+                'query using it as a column throws "Unknown column" — see #1492'
+        );
+    }
+
+    /**
+     * Deliberately NOT validated against Cwmmedia::getMimetypes()'s value
+     * list -- live-testing on j5-dev caught that the list dropped the legacy
+     * 'audio/mp3' string in favor of 'audio/mpeg' (#1397), but existing rows
+     * can still have 'audio/mp3' stored, and MimeTypeField keeps a
+     * stored-but-no-longer-offered value selectable. A whitelist check would
+     * have silently broken matching for exactly those records.
+     */
+    public function testChangePlayerByMediaTypeXHRDoesNotRejectUnrecognizedMimetypes(): void
+    {
+        $body = self::methodBody('changePlayerByMediaTypeXHR');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '/!\s*\\\\?in_array\(\s*\$mediaType\s*,\s*\$mimetypes/',
+            $body,
+            'changePlayerByMediaTypeXHR() must not reject a mediatype value just because it is missing from ' .
+                "Cwmmedia::getMimetypes()'s current list — legacy stored values (e.g. 'audio/mp3', see #1397) " .
+                'must still be matchable — see #1492'
+        );
+        $this->assertStringContainsString(
+            'getMimetypes()',
+            $body,
+            'changePlayerByMediaTypeXHR() must still call Cwmmedia::getMimetypes() to resolve the ' .
+                'extension-based fallback match — see #1492'
+        );
     }
 }
