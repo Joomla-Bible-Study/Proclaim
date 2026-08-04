@@ -50,6 +50,17 @@ class CwmaiHelper
     private const int CACHE_TTL = 300;
 
     /**
+     * Timeout in seconds for every outbound HTTP call in this class.
+     *
+     * Previously unset, so a slow/hung provider or metadata API could tie up
+     * the PHP worker handling the synchronous AI-Assist AJAX request for up
+     * to max_execution_time (or longer, depending on SAPI/transport). See #1550.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const int HTTP_TIMEOUT = 20;
+
+    /**
      * Generate sermon content (topics, description, study text) using AI
      *
      * Results are cached for 5 minutes per unique context to avoid redundant
@@ -182,6 +193,13 @@ class CwmaiHelper
                 default   => $empty,
             };
         } catch (\Exception $e) {
+            // Logged (unlike previously) so a transient network/API failure
+            // isn't indistinguishable from "this video genuinely has no
+            // metadata" -- the caller (syncFromYouTube()) reports a generic
+            // "no metadata found" message either way, which was misleading
+            // an admin about the real cause with no diagnostic trail. See #1550.
+            CwmDebug::error('getVideoContext failed for media file ' . $mediaFileId, $e, 'ai');
+
             return $empty;
         }
     }
@@ -250,7 +268,7 @@ class CwmaiHelper
             'anthropic-version' => '2023-06-01',
         ];
 
-        $response = $http->get('https://api.anthropic.com/v1/models?limit=100', $headers);
+        $response = $http->get('https://api.anthropic.com/v1/models?limit=100', $headers, self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException(
@@ -298,7 +316,7 @@ class CwmaiHelper
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
-        $response = $http->get('https://api.openai.com/v1/models', $headers);
+        $response = $http->get('https://api.openai.com/v1/models', $headers, self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException(
@@ -357,8 +375,15 @@ class CwmaiHelper
         $factory  = new HttpFactory();
         $http     = $factory->getHttp();
 
+        // The API key travels in a header, not the URL query string -- a
+        // URL-embedded key leaks into transport-failure exception messages
+        // (Joomla's Stream transport builds those from the failing URL) and
+        // gets echoed straight back to the browser by both AJAX callers on
+        // error, plus into the debug log whenever JBSMDEBUG is on. See #1550.
         $response = $http->get(
-            'https://generativelanguage.googleapis.com/v1beta/models?key=' . urlencode($apiKey)
+            'https://generativelanguage.googleapis.com/v1beta/models',
+            ['x-goog-api-key' => $apiKey],
+            self::HTTP_TIMEOUT
         );
 
         if ($response->getStatusCode() !== 200) {
@@ -608,7 +633,7 @@ class CwmaiHelper
         $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
 
         try {
-            $response = $http->post($url, $payload, $headers);
+            $response = $http->post($url, $payload, $headers, self::HTTP_TIMEOUT);
         } catch (\Exception $e) {
             CwmDebug::error($provider . ' API request failed', $e, 'ai');
 
@@ -693,7 +718,7 @@ class CwmaiHelper
     {
         // Ensure no double models/ prefix
         $model   = str_replace('models/', '', $model);
-        $url     = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent?key=' . $apiKey;
+        $url     = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent';
 
         $payload = json_encode([
             'system_instruction' => [
@@ -718,6 +743,8 @@ class CwmaiHelper
 
         $headers = [
             'Content-Type' => 'application/json',
+            // Header, not a URL query param -- see fetchGeminiModels() for why.
+            'x-goog-api-key' => $apiKey,
         ];
 
         $response = self::postJson('gemini', $url, $payload, $headers);
@@ -736,7 +763,24 @@ class CwmaiHelper
             );
         }
 
-        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        // A prompt-level safety block returns HTTP 200 with a
+        // promptFeedback.blockReason field and NO 'candidates' key at all --
+        // an architecturally different rejection path from a per-candidate
+        // abnormal finishReason (which assertNormalFinish() below already
+        // handles). Without this check, $content and $finishReason both
+        // silently default to '' and parseJsonResponse('') throws the raw,
+        // unhelpful "Invalid JSON —" error this class was already fixed once
+        // to eliminate (#1495/#1443/#1444) -- for a different trigger. See #1550.
+        if (!isset($data['candidates']) || !\is_array($data['candidates']) || empty($data['candidates'])) {
+            $blockReason = $data['promptFeedback']['blockReason'] ?? 'unknown';
+
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::sprintf('JBS_CMN_AI_RESPONSE_ABNORMAL', $blockReason)
+            );
+        }
+
         $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
         $finishReason = $data['candidates'][0]['finishReason'] ?? '';
 
@@ -898,9 +942,22 @@ class CwmaiHelper
      */
     private static function parseJsonResponse(string $content): array
     {
-        // Extract JSON from response (may be wrapped in markdown code blocks)
-        if (preg_match('/\{[\s\S]*\}/', $content, $matches)) {
-            $content = $matches[0];
+        // Extract JSON from response (may be wrapped in markdown code blocks
+        // or followed by trailing prose). A greedy regex from the first '{'
+        // to the LAST '}' in the whole response used to be here -- correct
+        // only when the model never emits a '}' character anywhere outside
+        // the JSON object. Gemini/OpenAI are protected from that by
+        // schema/JSON-mode constraints, but Claude (the default provider)
+        // has neither and can prepend/append prose; the system prompt also
+        // repeatedly discusses the literal '{scripture}...{/scripture}' tag
+        // syntax, so a follow-up remark referencing it reintroduces a '}'
+        // that the greedy match would swallow past, corrupting an otherwise
+        // well-formed object. extractFirstJsonObject() finds the '}' that
+        // actually matches the first '{' instead. See #1550.
+        $extracted = self::extractFirstJsonObject($content);
+
+        if ($extracted !== null) {
+            $content = $extracted;
         }
 
         try {
@@ -919,6 +976,65 @@ class CwmaiHelper
             'studytext'  => (string) ($parsed['studytext'] ?? ''),
             'chapters'   => (array) ($parsed['chapters'] ?? []),
         ];
+    }
+
+    /**
+     * Find the JSON object starting at the first '{' in $content and ending
+     * at the '}' that actually closes it, tracking string literals (with
+     * escape handling) so a literal '{' or '}' inside a quoted string value
+     * doesn't throw off the brace count -- both are ordinary, unescaped
+     * characters in JSON strings.
+     *
+     * @param   string  $content  Raw text that may contain a JSON object
+     *                            plus surrounding prose/markdown fencing
+     *
+     * @return  ?string  The matched object substring, or null if no
+     *                    balanced object was found
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function extractFirstJsonObject(string $content): ?string
+    {
+        $start = strpos($content, '{');
+
+        if ($start === false) {
+            return null;
+        }
+
+        $depth    = 0;
+        $inString = false;
+        $escaped  = false;
+        $length   = \strlen($content);
+
+        for ($i = $start; $i < $length; $i++) {
+            $char = $content[$i];
+
+            if ($inString) {
+                if ($escaped) {
+                    $escaped = false;
+                } elseif ($char === '\\') {
+                    $escaped = true;
+                } elseif ($char === '"') {
+                    $inString = false;
+                }
+
+                continue;
+            }
+
+            if ($char === '"') {
+                $inString = true;
+            } elseif ($char === '{') {
+                $depth++;
+            } elseif ($char === '}') {
+                $depth--;
+
+                if ($depth === 0) {
+                    return substr($content, $start, $i - $start + 1);
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -973,7 +1089,7 @@ class CwmaiHelper
         $url      = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='
             . urlencode($videoId) . '&key=' . urlencode($apiKey);
 
-        $response = $http->get($url);
+        $response = $http->get($url, [], self::HTTP_TIMEOUT);
 
         // Record quota usage regardless of response (YouTube counts the call)
         CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
@@ -1040,7 +1156,7 @@ class CwmaiHelper
         $factory  = new HttpFactory();
         $http     = $factory->getHttp();
         $url      = 'https://vimeo.com/api/oembed.json?url=' . urlencode($videoUrl);
-        $response = $http->get($url);
+        $response = $http->get($url, [], self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             return $empty;
