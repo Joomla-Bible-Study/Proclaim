@@ -2841,7 +2841,11 @@ class CwmadminController extends FormController
 
         try {
             $verifyResult = CwmupgradeHelper::verify();
-            $dropped      = CwmupgradeHelper::cleanup9xArtifacts();
+            // Only clean up once verify() confirms the 10.x schema is fully
+            // present -- on a partial/failed upgrade this must not run, or
+            // it destroys the only tables detect9xSchema() uses to detect
+            // that the wizard still needs to be re-run.
+            $dropped      = $verifyResult['success'] ? CwmupgradeHelper::cleanup9xArtifacts() : 0;
 
             $verifyResult['artifacts_dropped'] = $dropped;
             echo json_encode($verifyResult, JSON_THROW_ON_ERROR);
