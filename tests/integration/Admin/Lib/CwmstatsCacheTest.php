@@ -95,4 +95,27 @@ class CwmstatsCacheTest extends IntegrationTestCase
         $this->assertNotNull($return, 'getPersistentCache() must declare a return type');
         $this->assertStringContainsString('CallbackController', (string) $return);
     }
+
+    /**
+     * Regression test for #1527.
+     *
+     * getTopScoreSite() was dead code: its only call site was a
+     * commented-out `@todo not ready for live` stub in
+     * site/src/View/Cwmsermons/HtmlView.php, itself removed in
+     * ec2c9ec3b (2024-03-21) -- so the method never had a live caller.
+     * It also diverged from every sibling in this class (no
+     * CwmlocationHelper::applySecurityFilter() call, no LIMIT, no
+     * caching). Removed rather than fixed, since nothing calls it.
+     * getTopScore() -- the sibling actually used by
+     * admin/tmpl/cwmcpanel/default.php -- is unaffected.
+     */
+    public function testGetTopScoreSiteIsRemoved(): void
+    {
+        $this->assertFalse(method_exists(Cwmstats::class, 'getTopScoreSite'));
+    }
+
+    public function testGetTopScoreStillExists(): void
+    {
+        $this->assertTrue(method_exists(Cwmstats::class, 'getTopScore'));
+    }
 }
