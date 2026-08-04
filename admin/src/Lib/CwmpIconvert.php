@@ -203,6 +203,18 @@ class CwmpIconvert
     private ?array $validAccessLevels = null;
 
     /**
+     * Cached published #__pipodcast rows, populated on first use.
+     * insertPodcast() is called up to 4x per study (once per media type),
+     * and reloading the whole table on every call is unnecessary -- the
+     * source table doesn't change during a single conversion run.
+     *
+     * @var array|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private ?array $piPodcastsCache = null;
+
+    /**
      * Convert PreachIT
      *
      * @return string
@@ -294,10 +306,7 @@ class CwmpIconvert
             $this->tnoadd++;
         } else {
             $this->tadd++;
-            $query = $db->createQuery();
-            $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
-            $db->setQuery($query, 0, 1);
-            $this->genericteacher = $db->loadResult();
+            $this->genericteacher = $teach->id;
         }
         $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__piteachers'));
@@ -326,13 +335,7 @@ class CwmpIconvert
                 } else {
                     $this->tadd++;
 
-                    // Get the new teacherid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid               = $db->loadResult();
-                    $oldid               = $pi->id;
-                    $this->teachersids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->teachersids[] = ['newid' => $datateachers->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -361,13 +364,7 @@ class CwmpIconvert
                 } else {
                     $this->ladd++;
 
-                    // Get the new locationid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_locations'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid             = $db->loadResult();
-                    $oldid             = $pi->id;
-                    $this->locations[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->locations[] = ['newid' => $locations->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -396,13 +393,7 @@ class CwmpIconvert
                 } else {
                     $this->sradd++;
 
-                    // Get the new seriesid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_series'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid             = $db->loadResult();
-                    $oldid             = $pi->id;
-                    $this->seriesids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->seriesids[] = ['newid' => $dataseries->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -441,13 +432,7 @@ class CwmpIconvert
                 } else {
                     $this->padd++;
 
-                    // Get the new podcast id so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_podcast'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid              = $db->loadResult();
-                    $oldid              = $pi->id;
-                    $this->podcastids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->podcastids[] = ['newid' => $podcast->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -479,14 +464,12 @@ class CwmpIconvert
                 }
 
                 $studynumber = $pi->id;
-                $booknumber  = null;
+                $booknumber  = '101';
                 $booknumber2 = null;
 
                 foreach ($books as $book) {
                     if ($book['id'] == $pi->study_book) {
                         $booknumber = $book['jbs'];
-                    } else {
-                        $booknumber = '101';
                     }
 
                     if ($book['id'] == $pi->study_book2) {
@@ -587,11 +570,7 @@ class CwmpIconvert
                 } else {
                     $this->sadd++;
 
-                    // Get the new studiesid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid              = $db->loadResult();
+                    $newid              = $datastudies->id;
                     $oldid              = $pi->id;
                     $this->studiesids[] = ['newid' => $newid, 'oldid' => $oldid];
                 }
@@ -682,7 +661,7 @@ class CwmpIconvert
             ['id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'],
             ['id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'],
             ['id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'],
-            ['id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'],
+            ['id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '128'],
             ['id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'],
             ['id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'],
             ['id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'],
@@ -770,11 +749,7 @@ class CwmpIconvert
      */
     public function insertMedia(object $pi, string $type, int $newid): bool
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__pifilepath'));
-        $db->setQuery($query);
-        $folders = $db->loadObjectList();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if ($type == 'video') {
             switch ($pi->video_type) {
@@ -918,13 +893,11 @@ class CwmpIconvert
         }
 
         if ($type == 'audio') {
-            $filename = '';
-
-            foreach ($folders as $folder) {
-                if ($folder->id == $pi->audio_folder) {
-                    $filename = $folder->folder . $pi->audio_link;
-                }
-            }
+            $query = $db->createQuery();
+            $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->audio_folder);
+            $db->setQuery($query);
+            $object   = $db->loadObject();
+            $filename = $object->folder . $pi->audio_link;
 
             $media         = new \stdClass();
             $media->params = json_encode([
@@ -1087,11 +1060,15 @@ class CwmpIconvert
      */
     private function insertPodcast(object $pi): ?int
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $podcasts        = $db->loadObjectList();
+        if ($this->piPodcastsCache === null) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery();
+            $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
+            $db->setQuery($query);
+            $this->piPodcastsCache = $db->loadObjectList();
+        }
+
+        $podcasts        = $this->piPodcastsCache;
         $includeteacher  = [];
         $includeministry = [];
         $includeseries   = [];
@@ -1128,9 +1105,12 @@ class CwmpIconvert
                 $registry = new Registry();
                 $registry->loadString($podcast->teacher_list);
                 $teacher_list = $registry->toArray();
+                $registry     = new Registry();
+                $registry->loadString($pi->teacher);
+                $excludedTeachers = $registry->toArray();
                 foreach ($teacher_list as $t) {
-                    if (\in_array($t, $pi->teacher)) {
-                        return false;
+                    if (\in_array($t, $excludedTeachers)) {
+                        return null;
                     }
                 }
             }
@@ -1141,7 +1121,7 @@ class CwmpIconvert
                 $series_list = $registry->toArray();
                 foreach ($series_list as $s) {
                     if ($s == $pi->series) {
-                        return false;
+                        return null;
                     }
                 }
             }
@@ -1150,9 +1130,12 @@ class CwmpIconvert
                 $registry = new Registry();
                 $registry->loadString($podcast->ministry_list);
                 $ministry_list = $registry->toArray();
+                $registry      = new Registry();
+                $registry->loadString($pi->ministry);
+                $excludedMinistries = $registry->toArray();
                 foreach ($ministry_list as $m) {
-                    if (\in_array($m, $pi->ministry)) {
-                        return false;
+                    if (\in_array($m, $excludedMinistries)) {
+                        return null;
                     }
                 }
             }
@@ -1185,7 +1168,7 @@ class CwmpIconvert
                 $registry     = new Registry();
                 $registry->loadString($pi->teacher);
                 $teacher = $registry->toArray();
-                if (\count($teacher) > 1) {
+                if (\count($teacher_list) > 1) {
                     foreach ($teacher_list as $ti) {
                         if (\in_array($ti, $teacher) || $podcast->teacher == 0) {
                             return $this->checkMedia($includemedia, $pi, $podcast);
@@ -1193,7 +1176,7 @@ class CwmpIconvert
                     }
                 } elseif ($teacher_list[0]) {
                     $value = $teacher_list[0];
-                    if ($value == $pi->teacher) {
+                    if (\in_array($value, $teacher)) {
                         return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
@@ -1214,7 +1197,7 @@ class CwmpIconvert
                     }
                 } elseif ($ministry_list[0]) {
                     $value = $ministry_list[0];
-                    if ($value == $pi->ministry) {
+                    if (\in_array($value, $ministry)) {
                         return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
@@ -1237,7 +1220,7 @@ class CwmpIconvert
     private function checkMedia(array $includemedia, object $pi, object $podcast): ?int
     {
         //check for which media to include
-        if ($includemedia == 'all') {
+        if (\in_array('all', $includemedia, true)) {
             foreach ($this->podcastids as $pods) {
                 if ($pods['oldid'] == $podcast->id) {
                     $podcast_id = $pods['newid'];
