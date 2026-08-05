@@ -132,7 +132,7 @@ class LocationListField extends ListField
         foreach ($rows as $row) {
             $id = (int) $row->id;
 
-            if ($enabled && !$isAdmin && !empty($allowedIds)) {
+            if ($enabled && !$isAdmin) {
                 if (!\in_array($id, $allowedIds, true)) {
                     if ($id !== $currentId) {
                         continue;
