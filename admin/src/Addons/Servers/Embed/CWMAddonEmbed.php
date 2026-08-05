@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Embed;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Joomla\Input\Input;
 
 /**
  * Embed Server Addon
@@ -135,7 +136,7 @@ class CWMAddonEmbed extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Embed codes are entered directly, not uploaded
         return false;

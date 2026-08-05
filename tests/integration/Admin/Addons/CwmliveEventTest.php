@@ -316,7 +316,7 @@ class CwmliveEventTest extends IntegrationTestCase
                 return '';
             }
 
-            protected function upload(?array $data): mixed
+            protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;
             }

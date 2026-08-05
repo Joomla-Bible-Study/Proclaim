@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -641,7 +642,7 @@ class CWMAddonResi extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Resi.io videos are referenced by URL, not uploaded
         return false;

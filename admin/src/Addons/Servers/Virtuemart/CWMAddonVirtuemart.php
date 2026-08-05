@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Virtuemart;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use Joomla\Input\Input;
 
 /**
  * VirtueMart Server Addon
@@ -158,7 +159,7 @@ class CWMAddonVirtuemart extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         return false;
     }

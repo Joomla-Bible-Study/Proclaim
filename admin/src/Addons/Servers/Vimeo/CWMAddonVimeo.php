@@ -1163,7 +1163,7 @@ class CWMAddonVimeo extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Vimeo videos are referenced by URL, not uploaded
         return false;
