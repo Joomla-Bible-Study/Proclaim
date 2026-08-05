@@ -642,7 +642,7 @@ final class CwmplaylistSyncHelper
             $error           = (string) ($res['error'] ?? 'unknown error');
             $out['errors'][] = \sprintf('Playlist "%s" (#%d): add video %s failed: %s', (string) $pl->title, $playlistId, $videoId, $error);
 
-            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
+            if (!empty($res['fatal'])) {
                 $stopped = true;
             }
 
@@ -815,7 +815,7 @@ final class CwmplaylistSyncHelper
             $error           = (string) ($res['error'] ?? 'unknown error');
             $out['errors'][] = \sprintf('Playlist "%s" (#%d): remove video %s failed: %s', (string) $pl->title, $playlistId, $videoId, $error);
 
-            if (stripos($error, 'quota') !== false || stripos($error, 'oauth') !== false) {
+            if (!empty($res['fatal'])) {
                 $stopped = true;
             }
         }
@@ -878,16 +878,18 @@ final class CwmplaylistSyncHelper
             return 0;
         }
 
-        // Identify the video using any playlist-capable platform's extractor — a
-        // media file's URL is the source of truth, regardless of which server
-        // type it is filed under.
-        $videoId = self::extractAnyRemoteId((string) $decoded['filename']);
-
-        if ($videoId === null) {
-            return 0;
-        }
-
         try {
+            // Identify the video using any playlist-capable platform's extractor —
+            // a media file's URL is the source of truth, regardless of which
+            // server type it is filed under. getPlaylistCapableServers() runs an
+            // unguarded query, so this must stay inside the try: a transient DB
+            // error here must not surface after parent::store() already succeeded.
+            $videoId = self::extractAnyRemoteId((string) $decoded['filename']);
+
+            if ($videoId === null) {
+                return 0;
+            }
+
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             // Clear links that no longer match (the media file's URL changed).
@@ -1461,6 +1463,19 @@ final class CwmplaylistSyncHelper
     /**
      * Find an existing playlist by remote ID and server.
      *
+     * #__bsms_playlists has no unique constraint on (remote_playlist_id, server_id),
+     * so two importChannelPlaylists() runs racing each other (e.g. a scheduled sync
+     * overlapping a manual admin-triggered one) can each pass this lookup and both
+     * insert a row for the same remote playlist — a select-then-insert TOCTOU. A
+     * proper fix needs a unique index plus a de-dup migration first: existing sites
+     * that already hit the race may carry duplicate rows, and #__bsms_mediafiles'
+     * manual playlist assignments reference playlist IDs directly, so de-duping
+     * would also have to remap those — deliberately left as a follow-up rather than
+     * bundled here (see #1553). In the meantime, ORDER BY id makes the outcome of a
+     * duplicate deterministic: the lowest-id (originally-created) row always wins
+     * and keeps syncing, rather than each sync run nondeterministically picking a
+     * different duplicate to update.
+     *
      * @param   DatabaseInterface  $db        Database driver.
      * @param   string             $remoteId  YouTube playlist ID.
      * @param   int            $serverId  Server ID.
@@ -1479,6 +1494,8 @@ final class CwmplaylistSyncHelper
                 ->where($db->quoteName('server_id') . ' = :sid')
                 ->bind(':rid', $remoteId, \Joomla\Database\ParameterType::STRING)
                 ->bind(':sid', $serverId, \Joomla\Database\ParameterType::INTEGER)
+                ->order($db->quoteName('id') . ' ASC')
+                ->setLimit(1)
         )->loadResult() ?? 0);
     }
 }

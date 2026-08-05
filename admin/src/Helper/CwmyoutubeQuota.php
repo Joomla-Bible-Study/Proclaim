@@ -257,13 +257,9 @@ class CwmyoutubeQuota
         // Check for Google's specific daily quota error reason
         if (stripos($message, 'quotaExceeded') !== false) {
             // Exclude transient rate limits (rateLimitExceeded, userRateLimitExceeded)
-            // which share the 403 status but don't mean daily quota is gone
-            if (stripos($message, 'rateLimitExceeded') !== false
-                || stripos($message, 'userRateLimitExceeded') !== false) {
-                return false;
-            }
-
-            return true;
+            // which share status 403 but don't mean daily quota is gone
+            return !(stripos($message, 'rateLimitExceeded') !== false
+                || stripos($message, 'userRateLimitExceeded') !== false);
         }
 
         return false;
@@ -307,13 +303,12 @@ class CwmyoutubeQuota
      *
      * @return  string  Date string like "2026-02-28"
      *
+     * @throws \DateMalformedStringException
      * @since   10.1.0
      */
     private static function currentQuotaDate(): string
     {
-        $now = new \DateTimeImmutable('now', new \DateTimeZone('America/Los_Angeles'));
-
-        return $now->format('Y-m-d');
+        return (new \DateTimeImmutable('now', new \DateTimeZone('America/Los_Angeles')))->format('Y-m-d');
     }
 
     /**
@@ -341,6 +336,7 @@ class CwmyoutubeQuota
      *
      * @return  array{date: string, used: int}
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private static function loadQuotaFile(int $serverId): array
@@ -351,7 +347,7 @@ class CwmyoutubeQuota
             return ['date' => '', 'used' => 0];
         }
 
-        $fp = @fopen($file, 'r');
+        $fp = @fopen($file, 'rb');
 
         if ($fp === false) {
             CwmyoutubeLogHelper::log(
@@ -363,7 +359,7 @@ class CwmyoutubeQuota
             return ['date' => '', 'used' => 0];
         }
 
-        $raw = '';
+        $raw = false;
 
         if (flock($fp, LOCK_SH)) {
             $raw = stream_get_contents($fp);
@@ -406,6 +402,7 @@ class CwmyoutubeQuota
      *
      * @return  bool  True if the write succeeded
      *
+     * @throws \JsonException
      * @since   __DEPLOY_VERSION__
      */
     private static function mutateQuotaFile(int $serverId, callable $mutator): bool
@@ -424,7 +421,7 @@ class CwmyoutubeQuota
         }
 
         $file = self::quotaFilePath($serverId);
-        $fp   = @fopen($file, 'c+');
+        $fp   = @fopen($file, 'cb+');
 
         if ($fp === false) {
             CwmyoutubeLogHelper::log(

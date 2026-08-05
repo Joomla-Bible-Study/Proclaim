@@ -264,7 +264,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
         $playlistId = $this->insertPlaylist($this->seriesId, 1);
 
         // First insert fails with a quota error → the loop breaks before the second.
-        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded']]);
+        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded', 'fatal' => true]]);
 
         $result = CwmplaylistSyncHelper::pushMemberships($this->db, $addon, $playlistId, false);
 
@@ -282,7 +282,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * deliberately overridden to a no-op so the double needs no config on disk,
      * and ID extraction delegates to the real YouTube extractor.
      *
-     * @param   array<string,array{success:bool,error?:string}>  $results  Result map.
+     * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
      *
      * @return  CWMAddon
      */
@@ -292,7 +292,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             /** @var array<int,array{videoId:string,playlistId:string}> */
             public array $calls = [];
 
-            /** @var array<string,array{success:bool,error?:string}> */
+            /** @var array<string,array{success:bool,error?:string,fatal?:bool}> */
             private array $results;
 
             public function __construct(array $results = [])
