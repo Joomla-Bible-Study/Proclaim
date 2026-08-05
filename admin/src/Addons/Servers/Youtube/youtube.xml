@@ -20,9 +20,6 @@
             <field name="youtube_daily_quota" type="number" default="10000" min="100" max="1000000"
                    label="JBS_ADDON_YOUTUBE_DAILY_QUOTA"
                    description="JBS_ADDON_YOUTUBE_DAILY_QUOTA_DESC" filter="int"/>
-            <field name="youtube_quota_reset_hour" type="number" default="7" min="0" max="23"
-                   label="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR"
-                   description="JBS_ADDON_YOUTUBE_QUOTA_RESET_HOUR_DESC" filter="int"/>
         </fieldset>
         <fieldset name="youtube_oauth" label="JBS_ADDON_YOUTUBE_OAUTH_SETTINGS">
             <field name="oauth_note" type="note" label="JBS_ADDON_YOUTUBE_OAUTH_NOTE"

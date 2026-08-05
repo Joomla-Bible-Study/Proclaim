@@ -66,9 +66,9 @@ abstract class AbstractWritableController extends ApiController
      * and update. A null $recordKey means a create. The parent throws on failure,
      * so reaching the log call means the write actually landed.
      *
-     * @param   integer|null  $recordKey  Key of the record being updated, null on create.
+     * @param   int|null  $recordKey  Key of the record being updated, null on create.
      *
-     * @return  integer  The record id.
+     * @return  int  The record id.
      *
      * @since   10.3.4
      */
@@ -88,7 +88,7 @@ abstract class AbstractWritableController extends ApiController
      * read it from — a log entry saying only "deleted #7" is of little use during
      * an audit.
      *
-     * @param   integer|null  $id  Record id, or null to read it from the request.
+     * @param   int|null  $id  Record id, or null to read it from the request.
      *
      * @return  mixed
      *
@@ -160,7 +160,7 @@ abstract class AbstractWritableController extends ApiController
      * client, a buggy one, or a key being used for something it should not be.
      *
      * @param   string   $verb  create, update or delete.
-     * @param   integer  $id    Record id, 0 when creating.
+     * @param   int  $id    Record id, 0 when creating.
      *
      * @return  void
      *
@@ -192,7 +192,7 @@ abstract class AbstractWritableController extends ApiController
      * Write one action-log entry for an API change.
      *
      * @param   string       $verb   ADDED, UPDATED or DELETED.
-     * @param   integer      $id     Record id.
+     * @param   int      $id     Record id.
      * @param   string|null  $title  Pre-read title, or null to read it now.
      *
      * @return  void
@@ -220,12 +220,52 @@ abstract class AbstractWritableController extends ApiController
     }
 
     /**
+     * Remove fields that should not be set directly via API.
+     *
+     * Prevents mass assignment of ownership, internal state, and
+     * system-managed fields. Published state requires core.edit.state.
+     * Subclasses with extra protected fields of their own (Locations'
+     * email_to/user_id/contact_id, Media's podcast_id) call this first and
+     * layer their own unset()/normalization on top.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The cleaned data
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function stripProtectedFields(array $data): array
+    {
+        $user = $this->app->getIdentity();
+
+        // Never allow setting internal system fields via API
+        unset(
+            $data['asset_id'],
+            $data['checked_out'],
+            $data['checked_out_time'],
+            $data['modified_by'],
+        );
+
+        // Only admins can set created_by (creating on behalf of someone)
+        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
+            unset($data['created_by']);
+        }
+
+        // Restrict published state — users without core.edit.state default to unpublished
+        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
+            $data['published'] = 0;
+        }
+
+        return $data;
+    }
+
+    /**
      * Best-effort display title for a record.
      *
      * Never throws: a failure to read a title must not turn a successful write
      * into an error response.
      *
-     * @param   integer  $id  Record id.
+     * @param   int  $id  Record id.
      *
      * @return  string
      *

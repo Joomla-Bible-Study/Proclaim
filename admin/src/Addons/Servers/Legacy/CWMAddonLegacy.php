@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -52,16 +53,30 @@ class CWMAddonLegacy extends CWMAddon
     protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function upload(?array $data): array
+    public function upload(Input $data): array
     {
         return (new Cwmuploadscript())->upload($data);
     }

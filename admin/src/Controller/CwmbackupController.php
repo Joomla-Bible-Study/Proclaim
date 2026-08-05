@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
@@ -28,7 +29,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
@@ -43,8 +44,10 @@ use Joomla\Filesystem\Path;
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class CwmbackupController extends FormController
+class CwmbackupController extends BaseController
 {
+    use CwmJsonResponseTrait;
+
     // =========================================================================
     // AJAX Export Methods
     // =========================================================================
@@ -186,22 +189,7 @@ class CwmbackupController extends FormController
      */
     public function finalizeExportXHR(): void
     {
-        // Register a shutdown handler to catch fatal errors
-        register_shutdown_function(function () {
-            $error = error_get_last();
-
-            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                header('Content-Type: application/json; charset=utf-8');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
-                    'data'    => [],
-                ], JSON_THROW_ON_ERROR);
-            }
-        });
+        $this->registerFatalErrorShutdownHandler();
 
         try {
             // Check for request forgeries
@@ -581,22 +569,7 @@ class CwmbackupController extends FormController
      */
     public function postRestoreStepXHR(): void
     {
-        // Register a shutdown handler to catch fatal errors
-        register_shutdown_function(function () {
-            $error = error_get_last();
-
-            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                header('Content-Type: application/json; charset=utf-8');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
-                    'data'    => [],
-                ], JSON_THROW_ON_ERROR);
-            }
-        });
+        $this->registerFatalErrorShutdownHandler();
 
         try {
             if (!Session::checkToken('get') && !Session::checkToken()) {
@@ -674,22 +647,7 @@ class CwmbackupController extends FormController
         ini_set('display_errors', '0');
         ob_start();
 
-        // Register a shutdown handler to catch fatal errors
-        register_shutdown_function(function () {
-            $error = error_get_last();
-
-            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                header('Content-Type: application/json; charset=utf-8');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
-                    'data'    => [],
-                ], JSON_THROW_ON_ERROR);
-            }
-        });
+        $this->registerFatalErrorShutdownHandler();
 
         try {
             // Check for request forgeries
@@ -1074,47 +1032,29 @@ class CwmbackupController extends FormController
     }
 
     /**
-     * Send JSON response and terminate.
+     * Register a shutdown handler that reports a PHP fatal error as JSON
+     * instead of letting it surface as a blank/HTML response to an XHR caller.
      *
-     * @param   bool    $success  Success status
-     * @param   string  $message  Message
-     * @param   array   $data     Additional data
+     * @return void
      *
-     * @return never
-     *
-     * @throws \Exception
-     * @since 10.1.0
+     * @since __DEPLOY_VERSION__
      */
-    private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
+    private function registerFatalErrorShutdownHandler(): void
     {
-        $app = Factory::getApplication();
+        register_shutdown_function(function () {
+            $error = error_get_last();
 
-        // Capture and log any stray output (PHP errors, warnings, etc.)
-        $strayOutput = '';
-
-        while (ob_get_level()) {
-            $strayOutput .= ob_get_clean();
-        }
-
-        if (!empty($strayOutput)) {
-            Log::add('Stray output captured: ' . substr($strayOutput, 0, 500), Log::WARNING, 'com_proclaim');
-        }
-
-        // Set JSON headers directly (only if headers not already sent)
-        if (!headers_sent()) {
-            header('Content-Type: application/json; charset=utf-8');
-            header('Cache-Control: no-cache, must-revalidate');
-        }
-
-        $response = [
-            'success' => $success,
-            'message' => $message,
-            'data'    => $data,
-        ];
-
-        echo json_encode($response, JSON_THROW_ON_ERROR);
-
-        // Use exit instead of $app->close() to avoid any shutdown processing issues
-        exit(0);
+            if ($error !== null && \in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'PHP Fatal: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'],
+                    'data'    => [],
+                ], JSON_THROW_ON_ERROR);
+            }
+        });
     }
 }

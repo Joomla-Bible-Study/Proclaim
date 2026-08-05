@@ -45,7 +45,6 @@ class CwmplaylistControllerTest extends ProclaimTestCase
     public function testAccessTableIsSet(): void
     {
         $reflection = new \ReflectionProperty(CwmplaylistController::class, 'accessTable');
-        $reflection->setAccessible(true);
 
         $instance = $reflection->getDeclaringClass()->newInstanceWithoutConstructor();
 

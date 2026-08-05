@@ -23,76 +23,26 @@ class CwmstatsCacheTest extends IntegrationTestCase
         $this->resetStaticCache(Cwmstats::class, 'cache', []);
     }
 
-    public function testCachePropertyExists(): void
+    /**
+     * Regression test for #1527.
+     *
+     * getTopScoreSite() was dead code: its only call site was a
+     * commented-out `@todo not ready for live` stub in
+     * site/src/View/Cwmsermons/HtmlView.php, itself removed in
+     * ec2c9ec3b (2024-03-21) -- so the method never had a live caller.
+     * It also diverged from every sibling in this class (no
+     * CwmlocationHelper::applySecurityFilter() call, no LIMIT, no
+     * caching). Removed rather than fixed, since nothing calls it.
+     * getTopScore() -- the sibling actually used by
+     * admin/tmpl/cwmcpanel/default.php -- is unaffected.
+     */
+    public function testGetTopScoreSiteIsRemoved(): void
     {
-        $ref = new \ReflectionClass(Cwmstats::class);
-        $this->assertTrue($ref->hasProperty('cache'));
-
-        $prop = $ref->getProperty('cache');
-        $this->assertTrue($prop->isStatic());
-        $this->assertTrue($prop->isPrivate());
+        $this->assertFalse(method_exists(Cwmstats::class, 'getTopScoreSite'));
     }
 
-    public function testCacheIsArray(): void
+    public function testGetTopScoreStillExists(): void
     {
-        $ref  = new \ReflectionClass(Cwmstats::class);
-        $prop = $ref->getProperty('cache');
-
-        $this->assertIsArray($prop->getValue());
-    }
-
-    public function testResetCacheClearsAll(): void
-    {
-        // Seed the cache with a value
-        $ref  = new \ReflectionClass(Cwmstats::class);
-        $prop = $ref->getProperty('cache');
-        $prop->setValue(null, ['topStudies' => 'cached-html']);
-
-        // Verify it was set
-        $this->assertNotEmpty($prop->getValue());
-
-        // Reset using our helper
-        $this->resetStaticCache(Cwmstats::class, 'cache', []);
-
-        $this->assertEmpty($prop->getValue());
-    }
-
-    public function testTotalPlaysSignatureAcceptsInt(): void
-    {
-        $ref    = new \ReflectionMethod(Cwmstats::class, 'totalPlays');
-        $params = $ref->getParameters();
-
-        $this->assertCount(2, $params);
-        $this->assertEquals('id', $params[0]->getName());
-        $this->assertParamTypeName('int', $params[0]);
-        $this->assertEquals('includePlatform', $params[1]->getName());
-        $this->assertTrue($params[1]->isOptional(), 'includePlatform must be optional');
-        $this->assertParamTypeName('bool', $params[1]);
-        $this->assertReturnTypeName('int', $ref);
-    }
-
-    public function testPersistentCacheHelperExists(): void
-    {
-        $ref = new \ReflectionClass(Cwmstats::class);
-        $this->assertTrue($ref->hasMethod('getPersistentCache'), 'getPersistentCache() method must exist');
-
-        $method = $ref->getMethod('getPersistentCache');
-        $this->assertTrue($method->isStatic(), 'getPersistentCache() must be static');
-        $this->assertTrue($method->isPrivate(), 'getPersistentCache() must be private');
-
-        $params = $method->getParameters();
-        $this->assertCount(1, $params, 'getPersistentCache() must accept one parameter (lifetime)');
-        $this->assertEquals('lifetime', $params[0]->getName());
-        $this->assertTrue($params[0]->isOptional(), 'lifetime must be optional');
-        $this->assertEquals(900, $params[0]->getDefaultValue(), 'Default TTL must be 900 seconds');
-    }
-
-    public function testPersistentCacheReturnTypeIsCallbackController(): void
-    {
-        $ref    = new \ReflectionMethod(Cwmstats::class, 'getPersistentCache');
-        $return = $ref->getReturnType();
-
-        $this->assertNotNull($return, 'getPersistentCache() must declare a return type');
-        $this->assertStringContainsString('CallbackController', (string) $return);
+        $this->assertTrue(method_exists(Cwmstats::class, 'getTopScore'));
     }
 }

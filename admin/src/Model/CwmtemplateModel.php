@@ -55,6 +55,12 @@ class CwmtemplateModel extends AdminModel
      */
     public function save($data): bool
     {
+        CwmlocationHelper::assertLocationAssignable(
+            '#__bsms_templates',
+            (int) ($data['id'] ?? 0),
+            (int) ($data['location_id'] ?? 0)
+        );
+
         // Make sure we cannot unpublished default template.
         if ($data['id'] == '1' && $data['published'] != '1') {
             Factory::getApplication()->enqueueMessage(Text::_('JBS_TPL_DEFAULT_ERROR'), 'error');
@@ -258,7 +264,11 @@ class CwmtemplateModel extends AdminModel
         if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
             $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
-            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+            // core.admin already excluded above, so an empty $accessible here
+            // means a real zero-access user, not a super admin -- in_array()
+            // against an empty array is always false, so this denies rather
+            // than silently skipping the check. See #1561.
+            if (!\in_array($locationId, $accessible, true)) {
                 throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
             }
         }

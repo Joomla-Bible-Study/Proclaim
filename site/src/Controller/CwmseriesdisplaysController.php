@@ -11,13 +11,11 @@
 
 namespace CWM\Component\Proclaim\Site\Controller;
 
-use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
-use CWM\Component\Proclaim\Site\Helper\Cwmpagebuilder;
+use CWM\Component\Proclaim\Site\Helper\CwmseriesdisplaysHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -35,19 +33,25 @@ class CwmseriesdisplaysController extends BaseController
     /**
      * Proxy for getModel
      *
+     * Unlike the single-item site controllers this codebase otherwise
+     * follows (CwmsermonController, CwmteachersController), this wraps a
+     * ListModel — ignore_request => true here would set __state_set in
+     * BaseModel::__construct(), permanently skipping populateState() and
+     * leaving list/filter/template state empty for any caller (like
+     * paginateAjax()) that fetches the model with fewer than 3 args. See
+     * #1502.
+     *
      * @param   string  $name    The name of the model
      * @param   string  $prefix  The prefix for the PHP class name
-     * @param   array   $config  Set ignore request
+     * @param   array   $config  Configuration array for the model
      *
-     * @return BaseDatabaseModel|bool
+     * @return  BaseDatabaseModel
      *
      * @since 7.0
      */
-    public function &getModel($name = 'Cwmseriesdisplays', $prefix = 'Model', $config = ['ignore_request' => true]): BaseDatabaseModel|bool
+    public function getModel($name = 'Cwmseriesdisplays', $prefix = 'Model', $config = []): BaseDatabaseModel
     {
-        $model = parent::getModel($name, $prefix, $config);
-
-        return $model;
+        return parent::getModel($name, $prefix, $config);
     }
 
     /**
@@ -82,35 +86,11 @@ class CwmseriesdisplaysController extends BaseController
             $template = $state->get('template');
             $params   = $state->get('params');
 
-            $items       = $model->getItems();
-            $pagination  = $model->getPagination();
-            $pagebuilder = new Cwmpagebuilder();
+            $items      = $model->getItems();
+            $pagination = $model->getPagination();
 
             // Prepare items the same way the HtmlView does
-            foreach ($items as $item) {
-                $item->slug  = $item->alias ? ($item->id . ':' . $item->alias) : $item->id . ':'
-                    . str_replace(' ', '-', htmlspecialchars_decode($item->series_text, ENT_QUOTES));
-                $seriesimage = Cwmimages::getSeriesThumbnail($item->series_thumbnail);
-
-                if ($seriesimage->path) {
-                    $item->image = Cwmimages::renderPicture($seriesimage, $item->series_text ?? '');
-                }
-
-                $item->serieslink = Route::_(
-                    'index.php?option=com_proclaim&view=cwmseriesdisplay&id=' . $item->slug . '&t=' . $template->id
-                );
-                $teacherimage     = Cwmimages::getTeacherImage($item->thumb ?? '');
-
-                if ($teacherimage->path) {
-                    $item->teacherimage = Cwmimages::renderPicture($teacherimage, $item->teachername ?? '');
-                }
-
-                if (isset($item->description)) {
-                    $item->text        = $item->description;
-                    $description       = $pagebuilder->runContentPlugins($item, $params);
-                    $item->description = $description->text;
-                }
-            }
+            $items = CwmseriesdisplaysHelper::prepareItems($items, $params, $template);
 
             // Render using the same listing helper
             $listing = new Cwmlisting();
@@ -126,7 +106,10 @@ class CwmseriesdisplaysController extends BaseController
                 'total'      => $pagination->total,
                 'pagesTotal' => $pagination->pagesTotal,
             ], JSON_THROW_ON_ERROR);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // \Throwable (not \Exception): a graceful {success:false} beats an
+            // unhandled fatal HTML page for an endpoint whose only consumer is
+            // fetch()-based JS expecting JSON. See #1502.
             echo json_encode([
                 'success' => false,
                 'message' => 'Failed to load results',

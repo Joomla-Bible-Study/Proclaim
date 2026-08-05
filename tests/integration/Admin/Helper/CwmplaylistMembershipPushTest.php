@@ -40,12 +40,20 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  integer
+     * Factory::$language as it was before silenceDateLanguageWarnings()
+     * replaced it, so tearDown() can restore process-wide state.
+     *
+     * @var mixed
+     */
+    private mixed $previousFactoryLanguage = null;
+
+    /**
+     * @var  int
      */
     private int $serverId = 0;
 
     /**
-     * @var  integer
+     * @var  int
      */
     private int $seriesId = 0;
 
@@ -86,6 +94,12 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      */
     private function silenceDateLanguageWarnings(): void
     {
+        // Remember the process-wide state so tearDown() can put it back --
+        // leaving the forced en-GB tag in place leaks into every later test
+        // in the run and masks the exact null-metadata warning class other
+        // suites' beStrictAboutOutputDuringTests would surface.
+        $this->previousFactoryLanguage = Factory::$language;
+
         $lang = Factory::getApplication()->getLanguage();
 
         try {
@@ -116,6 +130,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                 // Connection may have been lost — nothing to roll back.
             }
         }
+
+        Factory::$language = $this->previousFactoryLanguage;
 
         parent::tearDown();
     }
@@ -264,7 +280,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
         $playlistId = $this->insertPlaylist($this->seriesId, 1);
 
         // First insert fails with a quota error → the loop breaks before the second.
-        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded']]);
+        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded', 'fatal' => true]]);
 
         $result = CwmplaylistSyncHelper::pushMemberships($this->db, $addon, $playlistId, false);
 
@@ -282,7 +298,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * deliberately overridden to a no-op so the double needs no config on disk,
      * and ID extraction delegates to the real YouTube extractor.
      *
-     * @param   array<string,array{success:bool,error?:string}>  $results  Result map.
+     * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
      *
      * @return  CWMAddon
      */
@@ -292,7 +308,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             /** @var array<int,array{videoId:string,playlistId:string}> */
             public array $calls = [];
 
-            /** @var array<string,array{success:bool,error?:string}> */
+            /** @var array<string,array{success:bool,error?:string,fatal?:bool}> */
             private array $results;
 
             public function __construct(array $results = [])
@@ -334,7 +350,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                 return '';
             }
 
-            protected function upload(?array $data): mixed
+            protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;
             }

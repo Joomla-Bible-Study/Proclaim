@@ -125,7 +125,7 @@ final class CwmlogHelper
     /**
      * Whether the loggers have been registered for this request.
      *
-     * @var    boolean
+     * @var    bool
      * @since  10.3.4
      */
     private static bool $registered = false;
@@ -178,7 +178,7 @@ final class CwmlogHelper
      * JBSMDEBUG is defined by admin/api.php from the component's debug setting, or
      * by the jbsmdbg query parameter.
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   10.3.4
      */
@@ -284,7 +284,7 @@ final class CwmlogHelper
      * Record one entry.
      *
      * @param   string   $message   The message to record.
-     * @param   integer  $priority  A Log::* severity constant.
+     * @param   int  $priority  A Log::* severity constant.
      * @param   string   $category  Log category.
      *
      * @return  void

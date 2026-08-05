@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -360,9 +361,8 @@ class ColorPickerField extends FormField
 
         $html .= '</div>';
 
-        // Add JavaScript and CSS
-        $html .= $this->buildStyles();
-        $html .= $this->buildJavaScript();
+        $this->registerStyles();
+        $this->registerJavaScript();
 
         return $html;
     }
@@ -448,37 +448,40 @@ class ColorPickerField extends FormField
     }
 
     /**
-     * Build the CSS styles
+     * Register the CSS styles via WebAssetManager. The asset manager keys
+     * inline styles by a content hash, so repeated calls across multiple
+     * field instances on the same page register the same asset name and
+     * render once -- no manual "added" flag needed.
      *
-     * @return  string  The style tag
+     * @return  void
      *
-     * @since 10.1.0
+     * @since   __DEPLOY_VERSION__
      */
-    protected function buildStyles(): string
+    protected function registerStyles(): void
     {
-        static $stylesAdded = false;
-
-        if ($stylesAdded) {
-            return '';
-        }
-        $stylesAdded = true;
-
-        return '<style>
+        $css = <<<'CSS'
 .colorpicker-swatch:hover { transform: scale(1.1); border-color: #666 !important; }
 .colorpicker-swatch:focus { outline: 2px solid #0d6efd; outline-offset: 2px; }
 .colorpicker-selected { border-color: #0d6efd !important; box-shadow: 0 0 0 2px rgba(13,110,253,0.5); }
 .colorpicker-swatch[data-hidden="true"] { display: none !important; }
-</style>';
+CSS;
+
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineStyle($css);
     }
 
     /**
-     * Build the JavaScript for color selection and filtering
+     * Register the JavaScript for color selection and filtering via
+     * WebAssetManager. Unlike registerStyles(), this is per-field-instance
+     * (the function names are scoped to $id), so each instance registers
+     * its own distinctly-named asset rather than being deduplicated -- the
+     * same behaviour as before, where each instance emitted its own
+     * <script> block inline.
      *
-     * @return  string  The script tag with JavaScript
+     * @return  void
      *
-     * @since 10.1.0
+     * @since   __DEPLOY_VERSION__
      */
-    protected function buildJavaScript(): string
+    protected function registerJavaScript(): void
     {
         $id = $this->id;
 
@@ -621,6 +624,6 @@ document.addEventListener('click', function(e) {
 });
 JS;
 
-        return '<script>' . $js . '</script>';
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineScript($js);
     }
 }

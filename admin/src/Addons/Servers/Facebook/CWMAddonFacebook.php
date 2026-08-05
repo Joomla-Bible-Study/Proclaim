@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Addons\Servers\Facebook;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -356,7 +357,7 @@ class CWMAddonFacebook extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         return false;
     }

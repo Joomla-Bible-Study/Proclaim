@@ -42,10 +42,9 @@ class DisplayController extends \Joomla\CMS\MVC\Controller\BaseController
     {
         // Get input early to check view before parent construction.
         $appInput = $input ?? Factory::getApplication()->getInput();
+        $view     = $appInput->get('view');
 
-        if ($appInput->get('view') === 'cwmlandingpage' && $appInput->get('layout') === 'modal') {
-            $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
-        } elseif ($appInput->get('view') === 'cwmsermons' && $appInput->get('layout') === 'modal') {
+        if (($view === 'cwmlandingpage' || $view === 'cwmsermons') && $appInput->get('layout') === 'modal') {
             $config['base_path'] = JPATH_ADMINISTRATOR . '/components';
         }
 

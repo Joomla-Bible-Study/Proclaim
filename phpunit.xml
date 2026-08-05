@@ -37,6 +37,9 @@
 		<testsuite name="Admin Api Controller Tests">
 			<directory>tests/unit/Admin/Api/Controller</directory>
 		</testsuite>
+		<testsuite name="Admin Api View Tests">
+			<directory>tests/unit/Admin/Api/View</directory>
+		</testsuite>
 		<testsuite name="Admin Bible Tests">
 			<directory>tests/unit/Admin/Bible</directory>
 		</testsuite>
@@ -58,6 +61,9 @@
 		<testsuite name="Site Bible Tests">
 			<directory>tests/unit/Site/Bible</directory>
 		</testsuite>
+		<testsuite name="Plugin Schemaorg Tests">
+			<directory>tests/unit/Plugin/Schemaorg</directory>
+		</testsuite>
 
 		<!-- Integration suites: one per tests/integration subtree -->
 		<testsuite name="Integration Admin Helper Tests">
@@ -65,9 +71,6 @@
 		</testsuite>
 		<testsuite name="Integration Admin Lib Tests">
 			<directory>tests/integration/Admin/Lib</directory>
-		</testsuite>
-		<testsuite name="Integration Admin Api Tests">
-			<directory>tests/integration/Admin/Api</directory>
 		</testsuite>
 		<testsuite name="Integration Admin Table Tests">
 			<directory>tests/integration/Admin/Table</directory>
@@ -77,6 +80,9 @@
 		</testsuite>
 		<testsuite name="Integration Site Model Tests">
 			<directory>tests/integration/Site/Model</directory>
+		</testsuite>
+		<testsuite name="Integration Site Helper Tests">
+			<directory>tests/integration/Site/Helper</directory>
 		</testsuite>
 	</testsuites>
 

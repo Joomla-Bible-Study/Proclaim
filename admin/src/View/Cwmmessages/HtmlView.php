@@ -28,6 +28,7 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
@@ -253,6 +254,9 @@ class HtmlView extends BaseHtmlView
             // Delete confirmation dialog for physical files
             $wa = $this->getDocument()->getWebAssetManager();
             $wa->useScript('com_proclaim.delete-confirm');
+            $this->getDocument()->addScriptOptions('com_proclaim.deleteConfirm', [
+                'csrfToken' => Session::getFormToken(),
+            ]);
 
             Text::script('JBS_DEL_PHYSICAL_FILES_TITLE');
             Text::script('JBS_DEL_PHYSICAL_FILES_WARNING');

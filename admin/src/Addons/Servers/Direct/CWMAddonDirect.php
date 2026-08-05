@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -48,16 +49,30 @@ class CWMAddonDirect extends CWMAddon
     protected $description = 'Direct link server for URL-based media files.';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @throws \Exception
      * @since 10.1.0
      */
-    public function upload(?array $data): array
+    public function upload(Input $data): array
     {
         return (new Cwmuploadscript())->upload($data);
     }

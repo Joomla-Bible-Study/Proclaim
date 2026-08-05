@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
@@ -124,12 +125,11 @@ class CwmlocationHelper
      */
     public static function getUserAccessibleLocationsForEdit(int $userId = 0, int $currentId = 0): array
     {
-        $visible = self::getUserLocations($userId);
-
-        // Empty = super admin (all locations allowed)
-        if (empty($visible)) {
+        if (self::isSuperAdmin($userId)) {
             return [];
         }
+
+        $visible = self::getUserLocations($userId);
 
         // Ensure the currently-saved location is always present
         if ($currentId > 0 && !\in_array($currentId, $visible, true)) {
@@ -141,11 +141,75 @@ class CwmlocationHelper
     }
 
     /**
+     * Validate that a user may assign a record to the given location, throwing
+     * if not.
+     *
+     * The edit-form dropdown (LocationListField) already restricts what a
+     * non-admin user can pick, but nothing previously enforced that
+     * server-side -- a restricted user could submit any location_id directly
+     * (devtools, a raw POST) and it would persist unchecked. Call this at the
+     * top of save() before any data is written. See #1561.
+     *
+     * Looking up the record's current location_id (when $recordId > 0) means
+     * saving a record without changing its location is never blocked just
+     * because the user lacks access to that location -- only an actual
+     * attempt to move it to an inaccessible location is denied, matching
+     * getUserAccessibleLocationsForEdit()'s existing "always include the
+     * current value" semantics.
+     *
+     * @param   string  $table       Table name owning the location_id column, e.g. '#__bsms_studies'.
+     * @param   int     $recordId    Existing record ID (0 = new record).
+     * @param   int     $locationId  Submitted location_id (0 or less = none, always allowed).
+     * @param   int     $userId      Joomla user ID (0 = current user).
+     *
+     * @return  void
+     *
+     * @throws  \RuntimeException  If the user may not assign this location.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function assertLocationAssignable(
+        string $table,
+        int $recordId,
+        int $locationId,
+        int $userId = 0
+    ): void {
+        if ($locationId <= 0 || !self::isEnabled() || self::isSuperAdmin($userId)) {
+            return;
+        }
+
+        $currentId = 0;
+
+        if ($recordId > 0) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $currentId = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select($db->quoteName('location_id'))
+                    ->from($db->quoteName($table))
+                    ->where($db->quoteName('id') . ' = :id')
+                    ->bind(':id', $recordId, ParameterType::INTEGER)
+            )->loadResult();
+        }
+
+        $allowed = self::getUserAccessibleLocationsForEdit($userId, $currentId);
+
+        if (!\in_array($locationId, $allowed, true)) {
+            throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
+        }
+    }
+
+    /**
      * Apply a location visibility filter to a query.
      *
      * Does nothing when:
      *   - location filtering is disabled in component config, or
      *   - the user is a super admin.
+     *
+     * A non-admin user with zero accessible locations (a real, valid config --
+     * not the same thing as a super admin, see isSuperAdmin()) is restricted to
+     * records with no location assigned at all, rather than seeing every
+     * location. See #1561.
      *
      * @param   QueryInterface  $query   The query to filter.
      * @param   string          $alias   Table alias owning the location_id column.
@@ -157,19 +221,46 @@ class CwmlocationHelper
      */
     public static function applyLocationFilter(QueryInterface $query, string $alias, int $userId = 0): void
     {
-        if (!self::isEnabled()) {
+        if (!self::isEnabled() || self::isSuperAdmin($userId)) {
             return;
         }
 
         $locations = self::getUserLocations($userId);
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Empty = super admin — no filter needed
         if (empty($locations)) {
+            $query->where($db->quoteName($alias . '.location_id') . ' IS NULL');
+
             return;
         }
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query->whereIn($db->quoteName($alias . '.location_id'), $locations);
+    }
+
+    /**
+     * Determine whether a user is a super admin, exempt from all location filtering.
+     *
+     * getUserLocations()/getUserAccessibleLocationsForEdit() also return an
+     * empty array for an authenticated non-admin with zero accessible
+     * locations -- a real, valid configuration, not a super admin. Conflating
+     * the two let every consumer fail open (treat "zero access" as "no
+     * restriction"). Callers that need to distinguish the two cases must
+     * check this method directly rather than inferring admin status from an
+     * empty location array. See #1561.
+     *
+     * @param   int  $userId  Joomla user ID (0 = current user).
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isSuperAdmin(int $userId = 0): bool
+    {
+        $user = $userId > 0
+            ? Factory::getContainer()->get('user.factory')->loadUserById($userId)
+            : Factory::getApplication()->getIdentity();
+
+        return $user->authorise('core.admin');
     }
 
     /**
@@ -234,10 +325,9 @@ class CwmlocationHelper
                 $db->quoteName('#__bsms_studies', 's')
                 . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('st.study_id')
             )
-            ->where($db->quoteName('t.user_id') . ' = :userId1')
+            ->where($db->quoteName('t.user_id') . ' = :userId')
             ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
-            ->where($db->quoteName('s.location_id') . ' > 0')
-            ->bind(':userId1', $userId, ParameterType::INTEGER);
+            ->where($db->quoteName('s.location_id') . ' > 0');
 
         // Legacy path: teachers → studies.teacher_id
         $query2 = $db->createQuery()
@@ -247,12 +337,18 @@ class CwmlocationHelper
                 $db->quoteName('#__bsms_studies', 's')
                 . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
             )
-            ->where($db->quoteName('t.user_id') . ' = :userId2')
+            ->where($db->quoteName('t.user_id') . ' = :userId')
             ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
-            ->where($db->quoteName('s.location_id') . ' > 0')
-            ->bind(':userId2', $userId, ParameterType::INTEGER);
+            ->where($db->quoteName('s.location_id') . ' > 0');
 
-        $db->setQuery('(' . $query1 . ') UNION (' . $query2 . ')');
+        // Both branches share the single :userId placeholder, bound once here.
+        // DatabaseQuery::union() only merges SQL text, not bound parameters
+        // (getBounded() returns whichever query object is passed to setQuery()),
+        // so query2 must never carry its own separately-bound placeholder name --
+        // that value would silently be lost. See #1561.
+        $query1->union($query2)->bind(':userId', $userId, ParameterType::INTEGER);
+
+        $db->setQuery($query1);
 
         return array_map('intval', $db->loadColumn() ?: []);
     }

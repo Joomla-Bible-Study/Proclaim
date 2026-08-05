@@ -93,8 +93,22 @@ class PredefinedOptionsFieldsTest extends ProclaimTestCase
             $byValue[(string) $option->value] = $option;
         }
 
+        // Check the value => language-key pairing against the untranslated
+        // $predefinedOptions map, not the rendered option text -- getOptions()
+        // runs the text through Text::_(), whose output depends on which
+        // language files the test bootstrap happened to load. The prior
+        // version only asserted the value keys existed, so swapping every
+        // label (e.g. "No link" showing the link-to-details string) stayed
+        // green.
+        $declared = (new \ReflectionProperty($fieldClass, 'predefinedOptions'))->getValue($field);
+
         foreach ($expectedOptions as $value => $langKey) {
             $this->assertArrayHasKey($value, $byValue, "$fieldClass must still offer option value \"$value\"");
+            $this->assertSame(
+                $langKey,
+                $declared[$value] ?? null,
+                "$fieldClass option \"$value\" must keep language key \"$langKey\""
+            );
         }
     }
 

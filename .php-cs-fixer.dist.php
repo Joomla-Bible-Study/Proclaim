@@ -100,6 +100,9 @@ $config
             'no_useless_sprintf' => true,
             // Fix indentation
             'indentation_type' => true,
+            // Scalar types in PHPDoc must use the short form: int not integer,
+            // bool not boolean, float not real or double.
+            'phpdoc_scalar' => true,
         ]
     )
     ->setFinder($finder);

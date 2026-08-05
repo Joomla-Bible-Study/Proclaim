@@ -38,16 +38,27 @@ class CwmaiHelper
      *
      * @since 10.1.0
      */
-    private const PROVIDER_CLAUDE  = 'claude';
-    private const PROVIDER_GEMINI  = 'gemini';
-    private const PROVIDER_OPENAI  = 'openai';
+    private const string PROVIDER_CLAUDE  = 'claude';
+    private const string PROVIDER_GEMINI  = 'gemini';
+    private const string PROVIDER_OPENAI  = 'openai';
 
     /**
      * Cache TTL in seconds (5 minutes)
      *
      * @since 10.1.0
      */
-    private const CACHE_TTL = 300;
+    private const int CACHE_TTL = 300;
+
+    /**
+     * Timeout in seconds for every outbound HTTP call in this class.
+     *
+     * Previously unset, so a slow/hung provider or metadata API could tie up
+     * the PHP worker handling the synchronous AI-Assist AJAX request for up
+     * to max_execution_time (or longer, depending on SAPI/transport). See #1550.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const int HTTP_TIMEOUT = 20;
 
     /**
      * Generate sermon content (topics, description, study text) using AI
@@ -67,7 +78,7 @@ class CwmaiHelper
      * @return  array  Generated content: ['topics' => string[], 'studyintro' => string, 'studytext' => string,
      *                 'chapters' => array]
      *
-     * @throws  \RuntimeException  If API call fails or is not configured
+     * @throws  \RuntimeException|\Exception  If API call fails or is not configured
      * @since   10.1.0
      */
     public static function generateSermonContent(array $context): array
@@ -182,6 +193,13 @@ class CwmaiHelper
                 default   => $empty,
             };
         } catch (\Exception $e) {
+            // Logged (unlike previously) so a transient network/API failure
+            // isn't indistinguishable from "this video genuinely has no
+            // metadata" -- the caller (syncFromYouTube()) reports a generic
+            // "no metadata found" message either way, which was misleading
+            // an admin about the real cause with no diagnostic trail. See #1550.
+            CwmDebug::error('getVideoContext failed for media file ' . $mediaFileId, $e, 'ai');
+
             return $empty;
         }
     }
@@ -238,7 +256,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchClaudeModels(string $apiKey): array
@@ -250,7 +268,7 @@ class CwmaiHelper
             'anthropic-version' => '2023-06-01',
         ];
 
-        $response = $http->get('https://api.anthropic.com/v1/models?limit=100', $headers);
+        $response = $http->get('https://api.anthropic.com/v1/models?limit=100', $headers, self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException(
@@ -287,7 +305,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchOpenAIModels(string $apiKey): array
@@ -298,7 +316,7 @@ class CwmaiHelper
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
-        $response = $http->get('https://api.openai.com/v1/models', $headers);
+        $response = $http->get('https://api.openai.com/v1/models', $headers, self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException(
@@ -349,7 +367,7 @@ class CwmaiHelper
      *
      * @return  array  Models list
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function fetchGeminiModels(string $apiKey): array
@@ -357,8 +375,15 @@ class CwmaiHelper
         $factory  = new HttpFactory();
         $http     = $factory->getHttp();
 
+        // The API key travels in a header, not the URL query string -- a
+        // URL-embedded key leaks into transport-failure exception messages
+        // (Joomla's Stream transport builds those from the failing URL) and
+        // gets echoed straight back to the browser by both AJAX callers on
+        // error, plus into the debug log whenever JBSMDEBUG is on. See #1550.
         $response = $http->get(
-            'https://generativelanguage.googleapis.com/v1beta/models?key=' . urlencode($apiKey)
+            'https://generativelanguage.googleapis.com/v1beta/models',
+            ['x-goog-api-key' => $apiKey],
+            self::HTTP_TIMEOUT
         );
 
         if ($response->getStatusCode() !== 200) {
@@ -398,9 +423,11 @@ class CwmaiHelper
     /**
      * Build the system prompt for sermon content generation
      *
-     * @param   array  $fields           Which fields to generate: ['topics' => bool, 'intro' => bool, 'text' => bool]
-     * @param   bool   $hasChapters      Whether the video already has chapter timestamps
-     * @param   bool   $suggestChapters  Whether the AI should suggest chapter timestamps
+     * @param   array   $fields           Which fields to generate: ['topics' => bool, 'intro' => bool, 'text' => bool]
+     * @param   bool    $hasChapters      Whether the video already has chapter timestamps
+     * @param   bool    $suggestChapters  Whether the AI should suggest chapter timestamps
+     * @param   string  $voice
+     * @param   string  $teacherName
      *
      * @return  string
      *
@@ -606,7 +633,7 @@ class CwmaiHelper
         $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
 
         try {
-            $response = $http->post($url, $payload, $headers);
+            $response = $http->post($url, $payload, $headers, self::HTTP_TIMEOUT);
         } catch (\Exception $e) {
             CwmDebug::error($provider . ' API request failed', $e, 'ai');
 
@@ -629,7 +656,7 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callClaude(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
@@ -669,11 +696,7 @@ class CwmaiHelper
         $content    = $data['content'][0]['text'] ?? '';
         $stopReason = $data['stop_reason'] ?? '';
 
-        if ($stopReason === 'max_tokens') {
-            throw new \RuntimeException(
-                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
-            );
-        }
+        self::assertNormalFinish(self::PROVIDER_CLAUDE, $stopReason);
 
         return self::parseJsonResponse($content);
     }
@@ -688,14 +711,14 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callGemini(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
     {
         // Ensure no double models/ prefix
         $model   = str_replace('models/', '', $model);
-        $url     = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent?key=' . $apiKey;
+        $url     = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent';
 
         $payload = json_encode([
             'system_instruction' => [
@@ -710,11 +733,18 @@ class CwmaiHelper
                 'temperature'      => 0.7,
                 'maxOutputTokens'  => 8192,
                 'responseMimeType' => 'application/json',
+                // Constrained decoding — without this, loose JSON mode intermittently
+                // emits an extra stray bracket/brace after a structurally complete
+                // object (observed live, ~25% of calls), which fails json_decode()
+                // even on a clean finishReason=STOP completion.
+                'responseSchema' => self::geminiResponseSchema(),
             ],
         ], JSON_THROW_ON_ERROR);
 
         $headers = [
             'Content-Type' => 'application/json',
+            // Header, not a URL query param -- see fetchGeminiModels() for why.
+            'x-goog-api-key' => $apiKey,
         ];
 
         $response = self::postJson('gemini', $url, $payload, $headers);
@@ -733,17 +763,64 @@ class CwmaiHelper
             );
         }
 
-        $data         = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-        $finishReason = $data['candidates'][0]['finishReason'] ?? '';
+        $data = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
-        if ($finishReason === 'MAX_TOKENS') {
+        // A prompt-level safety block returns HTTP 200 with a
+        // promptFeedback.blockReason field and NO 'candidates' key at all --
+        // an architecturally different rejection path from a per-candidate
+        // abnormal finishReason (which assertNormalFinish() below already
+        // handles). Without this check, $content and $finishReason both
+        // silently default to '' and parseJsonResponse('') throws the raw,
+        // unhelpful "Invalid JSON —" error this class was already fixed once
+        // to eliminate (#1495/#1443/#1444) -- for a different trigger. See #1550.
+        if (!isset($data['candidates']) || !\is_array($data['candidates']) || empty($data['candidates'])) {
+            $blockReason = $data['promptFeedback']['blockReason'] ?? 'unknown';
+
             throw new \RuntimeException(
-                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::sprintf('JBS_CMN_AI_RESPONSE_ABNORMAL', $blockReason)
             );
         }
 
+        $content      = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $finishReason = $data['candidates'][0]['finishReason'] ?? '';
+
+        self::assertNormalFinish(self::PROVIDER_GEMINI, $finishReason);
+
         return self::parseJsonResponse($content);
+    }
+
+    /**
+     * The JSON schema Gemini must conform to via constrained decoding.
+     *
+     * The system prompt always requests all four top-level keys (unrequested
+     * fields are asked for as empty string/array — see buildSystemPrompt()),
+     * so a single fixed schema covers every field-toggle combination.
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function geminiResponseSchema(): array
+    {
+        return [
+            'type'       => 'object',
+            'properties' => [
+                'topics'     => ['type' => 'array', 'items' => ['type' => 'string']],
+                'studyintro' => ['type' => 'string'],
+                'studytext'  => ['type' => 'string'],
+                'chapters'   => [
+                    'type'  => 'array',
+                    'items' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'time'  => ['type' => 'string'],
+                            'label' => ['type' => 'string'],
+                        ],
+                    ],
+                ],
+            ],
+            'required' => ['topics', 'studyintro', 'studytext', 'chapters'],
+        ];
     }
 
     /**
@@ -756,7 +833,7 @@ class CwmaiHelper
      *
      * @return  array  Parsed content
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException|\JsonException
      * @since   10.1.0
      */
     private static function callOpenAI(string $apiKey, string $model, string $systemPrompt, string $userMessage): array
@@ -797,13 +874,60 @@ class CwmaiHelper
         $content      = $data['choices'][0]['message']['content'] ?? '';
         $finishReason = $data['choices'][0]['finish_reason'] ?? '';
 
-        if ($finishReason === 'length') {
+        self::assertNormalFinish(self::PROVIDER_OPENAI, $finishReason);
+
+        return self::parseJsonResponse($content);
+    }
+
+    /**
+     * Throw if a provider's finish/stop reason indicates the response is
+     * incomplete or was withheld — before handing possibly-empty content to
+     * parseJsonResponse(), which can only report a raw "Invalid JSON" error.
+     *
+     * An empty reason (field absent from the response) is treated as normal —
+     * there is no evidence that absence means failure.
+     *
+     * @param   string  $provider  One of the PROVIDER_* constants
+     * @param   string  $reason    The raw stop_reason/finishReason/finish_reason value
+     *
+     * @return  void
+     *
+     * @throws  \RuntimeException
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function assertNormalFinish(string $provider, string $reason): void
+    {
+        if ($reason === '') {
+            return;
+        }
+
+        $truncated = match ($provider) {
+            self::PROVIDER_CLAUDE => $reason === 'max_tokens',
+            self::PROVIDER_GEMINI => $reason === 'MAX_TOKENS',
+            self::PROVIDER_OPENAI => $reason === 'length',
+            default               => false,
+        };
+
+        if ($truncated) {
             throw new \RuntimeException(
                 Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::_('JBS_CMN_AI_RESPONSE_TRUNCATED')
             );
         }
 
-        return self::parseJsonResponse($content);
+        $normal = match ($provider) {
+            // stop_sequence/tool_use included for completeness; this feature sets
+            // no stop_sequences and offers no tools, so only end_turn is expected.
+            self::PROVIDER_CLAUDE => \in_array($reason, ['end_turn', 'stop_sequence', 'tool_use'], true),
+            self::PROVIDER_GEMINI => $reason === 'STOP',
+            self::PROVIDER_OPENAI => $reason === 'stop',
+            default               => true,
+        };
+
+        if (!$normal) {
+            throw new \RuntimeException(
+                Text::_('JBS_CMN_AI_ERROR') . ': ' . Text::sprintf('JBS_CMN_AI_RESPONSE_ABNORMAL', $reason)
+            );
+        }
     }
 
     /**
@@ -818,9 +942,22 @@ class CwmaiHelper
      */
     private static function parseJsonResponse(string $content): array
     {
-        // Extract JSON from response (may be wrapped in markdown code blocks)
-        if (preg_match('/\{[\s\S]*\}/', $content, $matches)) {
-            $content = $matches[0];
+        // Extract JSON from response (may be wrapped in markdown code blocks
+        // or followed by trailing prose). A greedy regex from the first '{'
+        // to the LAST '}' in the whole response used to be here -- correct
+        // only when the model never emits a '}' character anywhere outside
+        // the JSON object. Gemini/OpenAI are protected from that by
+        // schema/JSON-mode constraints, but Claude (the default provider)
+        // has neither and can prepend/append prose; the system prompt also
+        // repeatedly discusses the literal '{scripture}...{/scripture}' tag
+        // syntax, so a follow-up remark referencing it reintroduces a '}'
+        // that the greedy match would swallow past, corrupting an otherwise
+        // well-formed object. extractFirstJsonObject() finds the '}' that
+        // actually matches the first '{' instead. See #1550.
+        $extracted = self::extractFirstJsonObject($content);
+
+        if ($extracted !== null) {
+            $content = $extracted;
         }
 
         try {
@@ -842,6 +979,65 @@ class CwmaiHelper
     }
 
     /**
+     * Find the JSON object starting at the first '{' in $content and ending
+     * at the '}' that actually closes it, tracking string literals (with
+     * escape handling) so a literal '{' or '}' inside a quoted string value
+     * doesn't throw off the brace count -- both are ordinary, unescaped
+     * characters in JSON strings.
+     *
+     * @param   string  $content  Raw text that may contain a JSON object
+     *                            plus surrounding prose/markdown fencing
+     *
+     * @return  ?string  The matched object substring, or null if no
+     *                    balanced object was found
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function extractFirstJsonObject(string $content): ?string
+    {
+        $start = strpos($content, '{');
+
+        if ($start === false) {
+            return null;
+        }
+
+        $depth    = 0;
+        $inString = false;
+        $escaped  = false;
+        $length   = \strlen($content);
+
+        for ($i = $start; $i < $length; $i++) {
+            $char = $content[$i];
+
+            if ($inString) {
+                if ($escaped) {
+                    $escaped = false;
+                } elseif ($char === '\\') {
+                    $escaped = true;
+                } elseif ($char === '"') {
+                    $inString = false;
+                }
+
+                continue;
+            }
+
+            if ($char === '"') {
+                $inString = true;
+            } elseif ($char === '{') {
+                $depth++;
+            } elseif ($char === '}') {
+                $depth--;
+
+                if ($depth === 0) {
+                    return substr($content, $start, $i - $start + 1);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Fetch video metadata from YouTube Data API
      *
      * @param   string  $filename  YouTube video URL or ID
@@ -849,6 +1045,7 @@ class CwmaiHelper
      *
      * @return  array  Normalized metadata
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private static function fetchYouTubeMetadata(string $filename, int $serverId): array
@@ -892,7 +1089,7 @@ class CwmaiHelper
         $url      = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='
             . urlencode($videoId) . '&key=' . urlencode($apiKey);
 
-        $response = $http->get($url);
+        $response = $http->get($url, [], self::HTTP_TIMEOUT);
 
         // Record quota usage regardless of response (YouTube counts the call)
         CwmyoutubeQuota::recordUsage($serverId, CwmyoutubeQuota::COST_VIDEOS);
@@ -940,6 +1137,7 @@ class CwmaiHelper
      *
      * @return  array  Normalized metadata
      *
+     * @throws \JsonException
      * @since   10.1.0
      */
     private static function fetchVimeoMetadata(string $filename): array
@@ -958,7 +1156,7 @@ class CwmaiHelper
         $factory  = new HttpFactory();
         $http     = $factory->getHttp();
         $url      = 'https://vimeo.com/api/oembed.json?url=' . urlencode($videoUrl);
-        $response = $http->get($url);
+        $response = $http->get($url, [], self::HTTP_TIMEOUT);
 
         if ($response->getStatusCode() !== 200) {
             return $empty;

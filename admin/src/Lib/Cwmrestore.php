@@ -39,49 +39,66 @@ use Joomla\Filesystem\Path;
 class Cwmrestore
 {
     /**
-     * Alter tables for Blob
+     * Core Joomla tables that Cwmbackup's own export methods legitimately write
+     * to (component config, ACL rules, scheduled tasks) alongside Proclaim's own
+     * `#__bsms_*` tables (which are discovered dynamically via CwmdbHelper).
      *
-     * @return bool
+     * @var string[]
      *
-     * @since 7.0.0
+     * @since __DEPLOY_VERSION__
      */
-    protected static function tablesToBlob(): bool
+    private const array ALLOWED_RESTORE_TABLES = ['#__extensions', '#__assets', '#__scheduler_tasks'];
+
+    /**
+     * Cached list of Proclaim's own table names, populated on first use.
+     *
+     * @var string[]|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?array $bsmsTables = null;
+
+    /**
+     * Reject any SQL statement from a restore file that isn't one of the shapes
+     * (and target tables) Cwmbackup itself is known to generate.
+     *
+     * restoreDB()/installdb() execute every statement in an uploaded/selected
+     * backup file with essentially no validation -- only two substr_count()
+     * checks for literal marker strings, trivially satisfied by embedding them
+     * anywhere (even a comment) while the rest of the file contains arbitrary
+     * SQL. This is Super-User-gated, so not a remote-anonymous vector, but a
+     * compromised admin account or a supply-chain-tainted backup file shared
+     * between sites has far more reach than this feature needs. Restricting to
+     * the statement shapes and tables Cwmbackup actually produces is defense in
+     * depth, not a hard sandbox -- see #1522 for the full threat discussion.
+     *
+     * @param   string  $statement  A single SQL statement (already trimmed, non-empty, non-comment)
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function isSafeRestoreStatement(string $statement): bool
     {
-        $backuptables = self::getObjects();
+        $pattern = '/^(?:CREATE\s+TABLE|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|ALTER\s+TABLE|INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+`?(?<table>#__[a-z0-9_]+)`?/i';
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        if (!preg_match($pattern, $statement, $matches)) {
+            Log::add('Rejected restore statement (unrecognized shape): ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
 
-        foreach ($backuptables as $backuptable) {
-            if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' BLOB';
-                $db->setQuery($query);
-                $db->execute();
-            }
+            return false;
         }
 
-        return true;
+        if (self::$bsmsTables === null) {
+            self::$bsmsTables = array_column(CwmdbHelper::getObjects(), 'name');
+        }
+
+        if (\in_array($matches['table'], self::$bsmsTables, true) || \in_array($matches['table'], self::ALLOWED_RESTORE_TABLES, true)) {
+            return true;
+        }
+
+        Log::add('Rejected restore statement targeting non-Proclaim table: ' . $matches['table'], Log::WARNING, 'com_proclaim');
+
+        return false;
     }
 
     /**
@@ -136,50 +153,6 @@ class Cwmrestore
     /**
      * Modify tables to Text
      *
-     * @return bool
-     *
-     * @since 9.0.0
-     */
-    protected static function tablesToText(): bool
-    {
-        $backuptables = self::getObjects();
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        foreach ($backuptables as $backuptable) {
-            if (substr_count($backuptable['name'], 'studies')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('studytext2') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'podcast')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'series')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('description') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-
-            if (substr_count($backuptable['name'], 'teachers')) {
-                $query = 'ALTER TABLE ' . $db->quoteName($backuptable['name']) . ' MODIFY ' . $db->quoteName('information') . ' TEXT';
-                $db->setQuery($query);
-                $db->execute();
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Import DB
      *
      * @param bool $parent Switch to see if it is coming from migration or restore.
@@ -189,11 +162,11 @@ class Cwmrestore
      * @throws \Exception
      * @since 9.0.0
      */
-    public function importdb($parent): bool|array
+    public function importdb(bool $parent): bool|array
     {
         $input         = Factory::getApplication()->getInput();
         $installType   = $input->getPath('install_directory');
-        $backupRestore = $input->getWord('backuprestore', '');
+        $backupRestore = $input->getCmd('backuprestore', '');
         $dBo           = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Restore form prior backup files located on the server.
@@ -252,8 +225,10 @@ class Cwmrestore
                 }
 
                 // Fix the Proclaim Database schema after restore
-                $DatabaseModel = new DatabaseModel();
-                $DatabaseModel->fix([$cid]);
+                /** @var DatabaseModel $databaseModel */
+                $databaseModel = Factory::getApplication()->bootComponent('com_installer')
+                    ->getMVCFactory()->createModel('Database', 'Administrator', ['ignore_request' => true]);
+                $databaseModel->fix([$cid]);
 
                 // Run PHP data migration steps that ChangeSet cannot handle
                 self::runPostRestoreDataFixes();
@@ -295,7 +270,7 @@ class Cwmrestore
      * @throws \Exception
      * @since 9.0.0
      */
-    public static function restoreDB($backuprestore): bool
+    public static function restoreDB(string $backuprestore): bool
     {
         $app = Factory::getApplication();
         $db  = Factory::getContainer()->get(DatabaseInterface::class);
@@ -327,10 +302,18 @@ class Cwmrestore
         foreach ($queries as $query) {
             $query = trim($query);
 
-            if ($query !== '' && $query[0] !== '#') {
-                $db->setQuery($query);
-                $db->execute();
+            if ($query === '' || $query[0] === '#') {
+                continue;
             }
+
+            if (!self::isSafeRestoreStatement($query)) {
+                $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'error');
+
+                return false;
+            }
+
+            $db->setQuery($query);
+            $db->execute();
         }
 
         // After restoring, reset the schema version and run DatabaseModel::fix()
@@ -346,7 +329,9 @@ class Cwmrestore
             if ($cid) {
                 self::resetSchemaVersion($cid);
 
-                $databaseModel = new DatabaseModel();
+                /** @var DatabaseModel $databaseModel */
+                $databaseModel = Factory::getApplication()->bootComponent('com_installer')
+                    ->getMVCFactory()->createModel('Database', 'Administrator', ['ignore_request' => true]);
                 $databaseModel->fix([$cid]);
             }
         } catch (\Exception $e) {
@@ -563,14 +548,22 @@ class Cwmrestore
         foreach ($queries as $query) {
             $query = trim($query);
 
-            if ($query !== '' && $query[0] !== '#') {
-                $db->setQuery($query);
+            if ($query === '' || $query[0] === '#') {
+                continue;
+            }
 
-                if (!$db->execute()) {
-                    $app->enqueueMessage(Text::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true)), 'error');
+            if (!self::isSafeRestoreStatement($query)) {
+                $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'error');
 
-                    return false;
-                }
+                return false;
+            }
+
+            $db->setQuery($query);
+
+            if (!$db->execute()) {
+                $app->enqueueMessage(Text::sprintf('JBS_IBM_INSTALLDB_ERRORS', $db->stderr(true)), 'error');
+
+                return false;
             }
         }
 

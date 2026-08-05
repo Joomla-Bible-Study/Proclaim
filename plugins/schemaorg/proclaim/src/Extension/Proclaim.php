@@ -51,7 +51,7 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     /**
      * Load the language file on instantiation.
      *
-     * @var    boolean
+     * @var    bool
      * @since  10.3.0
      */
     protected $autoloadLanguage = true;
@@ -456,9 +456,42 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
                 $entry['sameAs'] = !empty($flat) ? $flat : null;
             }
+
+            // Defense in depth: Joomla core's system schemaorg plugin serializes
+            // this @graph with Registry::toString('JSON', ['bitmask' =>
+            // JSON_UNESCAPED_SLASHES | ...]) — no JSON_HEX_TAG — then embeds the
+            // result directly inside a <script type="application/ld+json"> tag.
+            // A literal "</script" in any string value (e.g. an unfiltered
+            // studytitle) would terminate that tag early. We don't control core's
+            // encode call, so neutralize '<'/'>' here, the last point before
+            // handoff, rather than relying on an upstream fix.
+            $entry = self::sanitizeForScriptEmbedding($entry);
         }
 
         $schema->set('@graph', $graph);
+    }
+
+    /**
+     * Recursively replace '<' and '>' in string values with HTML entities so
+     * no value can contain a literal "</script" sequence once serialized.
+     *
+     * @param   mixed  $value  Schema value (array or scalar)
+     *
+     * @return  mixed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function sanitizeForScriptEmbedding(mixed $value): mixed
+    {
+        if (\is_array($value)) {
+            return array_map([self::class, 'sanitizeForScriptEmbedding'], $value);
+        }
+
+        if (\is_string($value)) {
+            return str_replace(['<', '>'], ['&lt;', '&gt;'], $value);
+        }
+
+        return $value;
     }
 
     /**

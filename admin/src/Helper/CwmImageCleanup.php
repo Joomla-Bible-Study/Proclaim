@@ -96,6 +96,10 @@ class CwmImageCleanup
                 $folderPath         = $basePath . '/' . $folder;
                 $absoluteFolderPath = $absolutePath . '/' . $folder;
 
+                if (!self::looksLikeAppManagedFolder($absoluteFolderPath)) {
+                    continue;
+                }
+
                 $orphans[] = [
                     'path'         => $folderPath,
                     'name'         => $folder,
@@ -124,8 +128,12 @@ class CwmImageCleanup
      */
     private static function extractIdFromFolderName(string $folderName): ?int
     {
-        // Try format: alias-ID (ends with -number)
-        if (preg_match('/-(\d+)$/', $folderName, $matches)) {
+        // Try format: alias-ID. Anchored end-to-end so a name like
+        // "export-2026-08-04" doesn't loosely match on its trailing "-04" --
+        // aliases are OutputFilter::stringURLSafe() output (lowercase
+        // alphanumeric + hyphens only), so anything outside that class can't
+        // be a real alias-ID folder.
+        if (preg_match('/^[a-z0-9-]+-(\d+)$/', $folderName, $matches)) {
             return (int) $matches[1];
         }
 
@@ -135,6 +143,40 @@ class CwmImageCleanup
         }
 
         return null;
+    }
+
+    /**
+     * Check whether a folder's contents look like something the app actually
+     * created, as a second signal alongside the ID-suffix match. An empty
+     * folder is treated as safe (nothing to lose); a non-empty folder must
+     * contain at least one recognized image file. This is what actually
+     * excludes a stray directory like "export-2026-08-04" -- its trailing
+     * "-04" satisfies the alias-ID pattern just as well as a real folder's
+     * does, so the regex alone can't tell them apart.
+     *
+     * @param   string  $absoluteFolderPath  Absolute path to the folder
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function looksLikeAppManagedFolder(string $absoluteFolderPath): bool
+    {
+        $files = Folder::files($absoluteFolderPath, '.', true, false);
+
+        if (empty($files)) {
+            return true;
+        }
+
+        foreach ($files as $file) {
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            if (\in_array($ext, self::IMAGE_EXTENSIONS, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -229,20 +271,25 @@ class CwmImageCleanup
      */
     public static function deleteOrphans(array $folderPaths): array
     {
-        $deleted = 0;
-        $errors  = [];
+        $deleted        = 0;
+        $errors         = [];
+        $validIdsByType = [];
 
         foreach ($folderPaths as $path) {
-            // SAFETY: Validate path is within allowed scope
-            $isAllowed = false;
+            // SAFETY: Validate path is within allowed scope. String-prefix
+            // check only -- Path::clean() below doesn't resolve '../', so
+            // this alone is not authoritative (see the realpath() check
+            // further down, which is).
+            $matchedBase = null;
+
             foreach (self::ALLOWED_PATHS as $allowedBase) {
-                if (str_starts_with($path, $allowedBase . '/')) {
-                    $isAllowed = true;
+                if ($path === $allowedBase || str_starts_with($path, $allowedBase . '/')) {
+                    $matchedBase = $allowedBase;
                     break;
                 }
             }
 
-            if (!$isAllowed) {
+            if ($matchedBase === null) {
                 $errors[] = 'Path not allowed: ' . $path;
                 Log::add('Cleanup rejected path outside scope: ' . $path, Log::WARNING, 'com_proclaim');
                 continue;
@@ -250,19 +297,80 @@ class CwmImageCleanup
 
             $absolutePath = Path::clean(JPATH_ROOT . '/' . $path);
 
-            if (is_dir($absolutePath)) {
-                if (Folder::delete($absolutePath)) {
-                    $deleted++;
-                    Log::add('Cleanup deleted orphan folder: ' . $path, Log::INFO, 'com_proclaim');
-                } else {
-                    $errors[] = 'Failed to delete: ' . $path;
-                }
-            } else {
+            if (!is_dir($absolutePath)) {
                 $errors[] = 'Folder not found: ' . $path;
+                continue;
+            }
+
+            // SAFETY: authoritative scope check -- resolves '../' and
+            // symlinks before anything is deleted, unlike the string-prefix
+            // check above.
+            $realPath = realpath($absolutePath);
+
+            if ($realPath === false || !self::isWithinAllowedBases($realPath)) {
+                $errors[] = 'Path not allowed: ' . $path;
+                Log::add('Cleanup rejected path outside scope after resolution: ' . $path, Log::WARNING, 'com_proclaim');
+                continue;
+            }
+
+            // TOCTOU guard: findOrphanedFolders() (scan) and deleteOrphans()
+            // (delete) are separate round trips with no lock/version token
+            // between them. Re-derive the folder's ID and re-check it
+            // against current DB state immediately before deleting, in case
+            // a restore/import re-created the record in between.
+            $type     = basename($matchedBase);
+            $folderId = self::extractIdFromFolderName(basename($path));
+
+            if ($folderId !== null) {
+                if (!\array_key_exists($type, $validIdsByType)) {
+                    $validIdsByType[$type] = self::getValidIds($type);
+                }
+
+                if (\in_array($folderId, $validIdsByType[$type], true)) {
+                    $errors[] = 'Skipped (no longer orphaned): ' . $path;
+                    Log::add('Cleanup skipped folder that is no longer orphaned: ' . $path, Log::WARNING, 'com_proclaim');
+                    continue;
+                }
+            }
+
+            if (Folder::delete($absolutePath)) {
+                $deleted++;
+                Log::add('Cleanup deleted orphan folder: ' . $path, Log::INFO, 'com_proclaim');
+            } else {
+                $errors[] = 'Failed to delete: ' . $path;
             }
         }
 
         return ['deleted' => $deleted, 'errors' => $errors];
+    }
+
+    /**
+     * Check whether a resolved real path is within (or equal to) one of the
+     * allowed base directories, using realpath() so '../' traversal and
+     * symlinks can't escape the intended scope. Mirrors
+     * CwmImageMigration::isWithinAllowedBases().
+     *
+     * @param   string  $realPath  Resolved real path of the target directory
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function isWithinAllowedBases(string $realPath): bool
+    {
+        foreach (self::ALLOWED_PATHS as $base) {
+            $realBase = realpath(JPATH_ROOT . '/' . $base);
+
+            if ($realBase === false) {
+                continue;
+            }
+
+            if ($realPath === $realBase || str_starts_with($realPath . \DIRECTORY_SEPARATOR, $realBase . \DIRECTORY_SEPARATOR)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -356,31 +464,7 @@ class CwmImageCleanup
             return;
         }
 
-        // Count other media records referencing the same filename + server
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->select('COUNT(*)')
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('server_id') . ' = ' . $serverId)
-            ->where($db->quoteName('id') . ' != ' . $recordId);
-
-        // The filename is stored inside the JSON params column
-        $query->where(
-            $db->quoteName('params') . ' LIKE ' . $db->quote('%' . $db->escape($oldFilename, true) . '%')
-        );
-
-        $db->setQuery($query);
-        $refCount = (int) $db->loadResult();
-
-        if ($refCount > 0) {
-            Log::add(
-                'Image cleanup: skipping ' . $oldFilename . ' — still referenced by ' . $refCount . ' other record(s)',
-                Log::INFO,
-                'com_proclaim'
-            );
-
-            return;
-        }
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Load server type so we can instantiate the correct addon
         $query = $db->createQuery()
@@ -391,6 +475,26 @@ class CwmImageCleanup
         $server = $db->loadObject();
 
         if (!$server || empty($server->type)) {
+            return;
+        }
+
+        // Re-check other-record references immediately before the delete
+        // call below, narrowing (not closing) the TOCTOU window: a Batch
+        // Copy that duplicates this row's filename between this check and
+        // deleteFile() could still race past it. There's no unique
+        // constraint or lock backing this check -- and the check itself is
+        // already an approximate LIKE-scan of the params JSON blob (a
+        // substring match, so it over-counts and fails safe rather than
+        // under-counts) -- so a real fix would need a proper
+        // reference-counted asset table. Accepted as a residual risk; see
+        // #1563.
+        if (self::countOtherReferences($db, $oldFilename, $serverId, $recordId) > 0) {
+            Log::add(
+                'Image cleanup: skipping ' . $oldFilename . ' — still referenced by another record',
+                Log::INFO,
+                'com_proclaim'
+            );
+
             return;
         }
 
@@ -405,5 +509,32 @@ class CwmImageCleanup
                 'com_proclaim'
             );
         }
+    }
+
+    /**
+     * Count media-file records (other than $recordId) on $serverId whose
+     * params JSON references $filename.
+     *
+     * @param   DatabaseInterface  $db          Database instance
+     * @param   string             $filename    Filename to search for
+     * @param   int                $serverId    Server ID
+     * @param   int                $recordId    Record ID to exclude
+     *
+     * @return  int
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function countOtherReferences(DatabaseInterface $db, string $filename, int $serverId, int $recordId): int
+    {
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_mediafiles'))
+            ->where($db->quoteName('server_id') . ' = ' . $serverId)
+            ->where($db->quoteName('id') . ' != ' . $recordId)
+            // The filename is stored inside the JSON params column
+            ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%' . $db->escape($filename, true) . '%'));
+        $db->setQuery($query);
+
+        return (int) $db->loadResult();
     }
 }

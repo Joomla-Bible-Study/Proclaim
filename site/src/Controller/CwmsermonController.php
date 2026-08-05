@@ -369,14 +369,8 @@ class CwmsermonController extends FormController
      */
     protected function allowAdd($data = []): bool
     {
-        $allow = null;
-
-        if ($allow === null) {
-            // In the absence of better information, revert to the component permissions.
-            return parent::allowAdd();
-        }
-
-        return $allow;
+        // In the absence of better information, revert to the component permissions.
+        return parent::allowAdd();
     }
 
     /**

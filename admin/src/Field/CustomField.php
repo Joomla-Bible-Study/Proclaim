@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -41,15 +42,6 @@ class CustomField extends FormField
      * @since 10.1.0
      */
     protected $type = 'Custom';
-
-    /**
-     * Flag to track if modal HTML has been added to the page
-     *
-     * @var  bool
-     *
-     * @since 10.1.0
-     */
-    protected static bool $modalAdded = false;
 
     /**
      * Podcast codes for insertion (single braces)
@@ -123,8 +115,7 @@ class CustomField extends FormField
         // Add modal HTML (only once per codeset type)
         $html .= $this->buildModalHtml($modalId, $codeset, $codes);
 
-        // Add JavaScript (only once per page)
-        $html .= $this->buildJavaScript();
+        $this->registerJavaScript();
 
         return $html;
     }
@@ -272,21 +263,17 @@ class CustomField extends FormField
     }
 
     /**
-     * Build the JavaScript for code insertion
+     * Register the code-insertion script via WebAssetManager. The asset
+     * manager keys inline scripts by a content hash, so repeated calls
+     * across multiple field instances on the same page register the same
+     * asset name and render once -- no manual "added" flag needed.
      *
-     * @return  string  The script tag with JavaScript
+     * @return  void
      *
-     * @since 10.1.0
+     * @since   __DEPLOY_VERSION__
      */
-    protected function buildJavaScript(): string
+    protected function registerJavaScript(): void
     {
-        static $jsAdded = false;
-
-        if ($jsAdded) {
-            return '';
-        }
-        $jsAdded = true;
-
         $js = <<<'JS'
 document.addEventListener('DOMContentLoaded', function() {
     // Track which input field triggered the modal
@@ -333,6 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 JS;
 
-        return '<script>' . $js . '</script>';
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineScript($js);
     }
 }

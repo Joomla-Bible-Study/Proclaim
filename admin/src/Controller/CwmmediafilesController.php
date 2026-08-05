@@ -18,11 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmActionlogListTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediafilesHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Session\Session;
-use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 
 /**
@@ -106,54 +107,8 @@ class CwmmediafilesController extends AdminController
         ArrayHelper::toInteger($ids);
         $ids = array_filter($ids);
 
-        if (empty($ids)) {
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode(['success' => true, 'hasFiles' => false, 'files' => []]);
-            $app->close();
-
-            return;
-        }
-
-        $db    = $this->getModel()->getDatabase();
-        $query = $db->createQuery()
-            ->select([
-                $db->quoteName('mf.id'),
-                $db->quoteName('mf.params', 'mf_params'),
-                $db->quoteName('sv.server_name'),
-                $db->quoteName('sv.params', 'sv_params'),
-                $db->quoteName('st.studytitle'),
-            ])
-            ->from($db->quoteName('#__bsms_mediafiles', 'mf'))
-            ->join('INNER', $db->quoteName('#__bsms_servers', 'sv') . ' ON ' . $db->quoteName('sv.id') . ' = ' . $db->quoteName('mf.server_id'))
-            ->join('LEFT', $db->quoteName('#__bsms_studies', 'st') . ' ON ' . $db->quoteName('st.id') . ' = ' . $db->quoteName('mf.study_id'))
-            ->whereIn($db->quoteName('mf.id'), $ids)
-            ->where($db->quoteName('mf.server_id') . ' > 0');
-        $db->setQuery($query);
-        $rows = $db->loadObjectList();
-
-        $files = [];
-
-        foreach ($rows as $row) {
-            $svParams = new Registry($row->sv_params ?: '{}');
-
-            if (!(int) $svParams->get('delete_files', 0)) {
-                continue;
-            }
-
-            $mfParams = new Registry($row->mf_params ?: '{}');
-            $filename = $mfParams->get('filename', '');
-
-            if ($filename === '') {
-                continue;
-            }
-
-            $files[] = [
-                'id'       => (int) $row->id,
-                'filename' => $filename,
-                'message'  => $row->studytitle ?: '',
-                'server'   => $row->server_name ?: '',
-            ];
-        }
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $files = CwmmediafilesHelper::findFilesForDelete($db, $ids, 'id');
 
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
