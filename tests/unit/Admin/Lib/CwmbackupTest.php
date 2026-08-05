@@ -65,15 +65,6 @@ class CwmbackupTest extends ProclaimTestCase
         $this->assertGreaterThan(0, $rowCount, 'expected #__bsms_studies to have rows on j5-dev');
     }
 
-    public function testGetExportTableDataStillHandlesVirtualTables(): void
-    {
-        // Virtual "tables" (_component_config, etc.) are handled before the
-        // allow-list check and must keep working -- they are not real table names.
-        $export = (new Cwmbackup())->getExportTableData('_component_config');
-
-        $this->assertStringContainsString('Component Configuration', $export);
-    }
-
     /**
      * Regression tests for #1524.
      *

@@ -749,13 +749,15 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h = makeMigHelper([['backcolor' => '#FF0000']]);
         $h->migrateFromVersion('0.0.0');
 
+        // migrateFromVersion('0.0.0') always ends up writing an update for
+        // this template -- applyParamsToTemplates() adds missing
+        // version-gated default params regardless of color conversion -- so
+        // this can't assert "no update happened". What it can assert
+        // unconditionally is that backcolor itself, already in valid #
+        // format, comes through that write unchanged.
         $params = $h->getParamsArray(1);
-
-        if (isset($params['backcolor'])) {
-            $this->assertSame('#FF0000', $params['backcolor'], '# format must not be altered');
-        }
-
-        $this->assertTrue(true); // Test passes even if no color update written
+        $this->assertArrayHasKey('backcolor', $params);
+        $this->assertSame('#FF0000', $params['backcolor'], '# format must not be altered');
     }
 
     public function testColorConversionDoesNotTouchEmptyValue(): void
@@ -764,12 +766,8 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h->migrateFromVersion('0.0.0');
 
         $params = $h->getParamsArray(1);
-
-        if (\array_key_exists('backcolor', $params)) {
-            $this->assertSame('', $params['backcolor'], 'Empty color value must not be changed');
-        }
-
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('backcolor', $params);
+        $this->assertSame('', $params['backcolor'], 'Empty color value must not be changed');
     }
 
     // =========================================================================
@@ -795,13 +793,13 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         $h = makeMigHelper([['custom_icon' => 'media/com_proclaim/images/icon.png']]);
         $h->migrateFromVersion('0.0.0');
 
+        // Same reasoning as the color-conversion tests above: an update
+        // still gets written for unrelated reasons (default param
+        // additions), so assert the already-current path survives it
+        // unchanged rather than asserting no write happened at all.
         $params = $h->getParamsArray(1);
-
-        if (isset($params['custom_icon'])) {
-            $this->assertSame('media/com_proclaim/images/icon.png', $params['custom_icon']);
-        }
-
-        $this->assertTrue(true);
+        $this->assertArrayHasKey('custom_icon', $params);
+        $this->assertSame('media/com_proclaim/images/icon.png', $params['custom_icon']);
     }
 
     // =========================================================================
