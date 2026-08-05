@@ -49,6 +49,20 @@ class CWMAddonDirect extends CWMAddon
     protected $description = 'Direct link server for URL-based media files.';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
      * @param   Input  $data  Data to upload

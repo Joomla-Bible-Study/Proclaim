@@ -54,6 +54,24 @@ class CWMAddonVimeo extends CWMAddon
     protected $description = 'Used for Vimeo server access';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by addon-vimeo-browser.es6.js (fetchFolders, fetchVideos, getMetadata)
+     * plus playlist-picker.es6.js (fetchRemotePlaylists).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'fetchFolders',
+            'fetchRemotePlaylists',
+            'fetchVideos',
+            'getMetadata',
+        ];
+    }
+
+    /**
      * URL patterns that identify Vimeo content.
      *
      * @return  string[]

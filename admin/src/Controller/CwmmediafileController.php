@@ -148,22 +148,45 @@ class CwmmediafileController extends FormController
 
             return;
         }
-        $input = Factory::getApplication()->getInput();
+        $app = Factory::getApplication();
+
+        // Every UI that reaches this endpoint is a form field rendered on an
+        // edit/create screen (PlaylistPickerField, the Youtube/Vimeo/Wistia
+        // browse buttons), so require the matching permission. Previously the
+        // only gate was the CSRF token, which any authenticated backend user
+        // with com_proclaim access already has -- letting them invoke
+        // state-changing addon methods they were never granted rights to.
+        // See #1599.
+        $user = $app->getIdentity();
+
+        if (!$user || (!$user->authorise('core.edit', 'com_proclaim') && !$user->authorise('core.create', 'com_proclaim'))) {
+            throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $input = $app->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
-        $handler   = $input->get('handler');
+        $handler   = (string) $input->get('handler', '', 'cmd');
 
         // Load the addon
         $addon = CWMAddon::getInstance($addonType);
 
-        if (method_exists($addon, $handler)) {
-            echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
-
-            $app = Factory::getApplication();
-            $app->close();
-        } else {
-            throw new \RuntimeException(Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')), 404);
+        // Dispatch only to handlers the addon explicitly opted in. The old
+        // method_exists() check made every public method on every addon
+        // callable by request-supplied name -- including createLiveEvent()
+        // and cancelLiveEvent(), which act on the connected platform account.
+        // Those are invoked server-side (CwmmediafileModel/CwmmediafileTable)
+        // and deliberately stay off the allow-list. See #1599.
+        if (!\in_array($handler, $addon->getXhrHandlers(), true) || !method_exists($addon, $handler)) {
+            throw new \RuntimeException(
+                Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')),
+                404
+            );
         }
+
+        echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
+
+        $app->close();
     }
 
     /**

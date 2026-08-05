@@ -318,6 +318,34 @@ abstract class CWMAddon
     abstract protected function upload(Input $data): mixed;
 
     /**
+     * Handler names this addon exposes to CwmmediafileController::xhr().
+     *
+     * xhr() is a generic dispatcher: it takes a `handler` name straight from
+     * the request and invokes it on the resolved addon, passing the request
+     * Input. It previously gated only on method_exists(), which made every
+     * public method on every addon callable by name -- including
+     * state-changing ones such as createLiveEvent()/cancelLiveEvent(), and
+     * with no permission check at all (see #1599).
+     *
+     * Returning an empty list here means an addon exposes nothing: an addon
+     * must opt each handler in explicitly. This mirrors getAjaxActions(),
+     * which already guards the other (handleAjaxAction) dispatch path.
+     *
+     * Only list handlers a UI actually calls through xhr(). Methods invoked
+     * server-side -- createLiveEvent() from CwmmediafileModel, cancelLiveEvent()
+     * from CwmmediafileTable -- are called directly on the addon object and do
+     * not need, and must not have, dispatcher exposure.
+     *
+     * @return  array  List of handler names callable via cwmmediafile.xhr
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [];
+    }
+
+    /**
      * Get available AJAX actions for this addon
      *
      * Override in child classes to register available AJAX actions.

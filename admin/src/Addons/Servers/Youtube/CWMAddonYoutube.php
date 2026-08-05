@@ -90,6 +90,28 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by addon-youtube-browser.es6.js (fetchChannelPlaylists, and the \${handler}
+     * variable resolving to fetchChannelVideos/searchChannelVideos/
+     * fetchPlaylistVideos/fetchLiveVideos) plus playlist-picker.es6.js
+     * (fetchRemotePlaylists).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'fetchChannelPlaylists',
+            'fetchChannelVideos',
+            'fetchLiveVideos',
+            'fetchPlaylistVideos',
+            'fetchRemotePlaylists',
+            'searchChannelVideos',
+        ];
+    }
+
+    /**
      * Render Fields for a general view.
      *
      * @param   object  $media_form  Medea files form
