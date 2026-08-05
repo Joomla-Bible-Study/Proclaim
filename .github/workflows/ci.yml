@@ -154,6 +154,24 @@ jobs:
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
+      - name: Create Joomla #__schemaorg table
+        run: |
+          # base.sql (imported above) doesn't include this table -- it's
+          # defined in Joomla core's extensions.sql, which also carries a lot
+          # of unrelated seed data we don't want in the test fixture. The
+          # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
+          # read/write #__schemaorg directly, so integration tests need it.
+          mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
+            CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`itemId\` int unsigned,
+              \`context\` varchar(100),
+              \`schemaType\` varchar(100),
+              \`schema\` text,
+              PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+          "
+
       - name: Check PHP syntax
         run: composer lint:syntax
 
@@ -299,6 +317,24 @@ jobs:
         run: |
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Create Joomla #__schemaorg table
+        run: |
+          # base.sql (imported above) doesn't include this table -- it's
+          # defined in Joomla core's extensions.sql, which also carries a lot
+          # of unrelated seed data we don't want in the test fixture. The
+          # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
+          # read/write #__schemaorg directly, so integration tests need it.
+          mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
+            CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`itemId\` int unsigned,
+              \`context\` varchar(100),
+              \`schemaType\` varchar(100),
+              \`schema\` text,
+              PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+          "
 
       - name: Check PHP syntax
         run: composer lint:syntax

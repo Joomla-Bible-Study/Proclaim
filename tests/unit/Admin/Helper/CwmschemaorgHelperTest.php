@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
+use Joomla\CMS\Factory;
 
 /**
  * Test class for CwmschemaorgHelper
@@ -299,6 +300,57 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
         $this->assertEquals('https://twitter.com/valid', $result['sameAs'][0]);
     }
 
+    /**
+     * Regression test for #1562 finding 5: collectSocialLinks() ignored the
+     * social_links subform JSON and link3, unlike buildTeacherSchemaFromRow()
+     * (used by the sync path). The PreachIT importer writes social_links
+     * directly, bypassing the legacy facebooklink/twitterlink/... columns.
+     *
+     * @return void
+     */
+    public function testBuildTeacherDetailPrefersSocialLinksJsonOverLegacyFields(): void
+    {
+        $item               = new \stdClass();
+        $item->teachername  = 'Teacher';
+        $item->social_links = json_encode([
+            ['url' => 'https://mastodon.example.com/@teacher'],
+            ['url' => 'not-a-url'],
+        ]);
+        // Legacy fields present but must be ignored once social_links resolves.
+        $item->facebooklink = 'https://facebook.com/legacy';
+        $item->website      = '';
+        $item->link1        = '';
+        $item->link2        = '';
+        $item->link3        = '';
+
+        $result = CwmschemaorgHelper::buildTeacherDetail($item, 'https://example.com/teacher/1');
+
+        $this->assertEquals(['https://mastodon.example.com/@teacher'], $result['sameAs']);
+    }
+
+    /**
+     * Regression test for #1562 finding 5: link3 was missing from the
+     * legacy-field fallback list.
+     *
+     * @return void
+     */
+    public function testBuildTeacherDetailFallsBackToLink3(): void
+    {
+        $item               = new \stdClass();
+        $item->teachername  = 'Teacher';
+        $item->facebooklink = '';
+        $item->twitterlink  = '';
+        $item->bloglink     = '';
+        $item->website      = '';
+        $item->link1        = '';
+        $item->link2        = '';
+        $item->link3        = 'https://example.com/teacher-profile';
+
+        $result = CwmschemaorgHelper::buildTeacherDetail($item, 'https://example.com/teacher/1');
+
+        $this->assertEquals(['https://example.com/teacher-profile'], $result['sameAs']);
+    }
+
     // ----- Series Detail Tests -----
 
     /**
@@ -340,6 +392,31 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
 
         $this->assertEquals('CreativeWorkSeries', $result['@type']);
         $this->assertArrayNotHasKey('hasPart', $result);
+    }
+
+    /**
+     * Regression test for #1562 finding 4: buildSermonDetail(), buildSermonList(),
+     * and buildSeriesDetail() emitted a literal '0000-00-00 00:00:00' MySQL zero-date
+     * sentinel as datePublished, unlike syncMessages()/buildSermonSchemaFromRow()
+     * which already guarded against it.
+     *
+     * @return void
+     */
+    public function testZeroDateSentinelOmitsDatePublished(): void
+    {
+        $sermonItem            = $this->makeMinimalSermonItem();
+        $sermonItem->studydate = '0000-00-00 00:00:00';
+        $detail                = CwmschemaorgHelper::buildSermonDetail($sermonItem, 'https://example.com/sermon/1', '');
+        $this->assertArrayNotHasKey('datePublished', $detail);
+
+        $list = CwmschemaorgHelper::buildSermonList([$sermonItem], 'https://example.com/sermons', '');
+        $this->assertArrayNotHasKey('datePublished', $list['itemListElement'][0]['item']);
+
+        $seriesItem            = $this->makeSeriesItem();
+        $study                 = $this->makeStudies()[0];
+        $study->studydate      = '0000-00-00 00:00:00';
+        $seriesResult          = CwmschemaorgHelper::buildSeriesDetail($seriesItem, [$study], 'https://example.com/series/5', '');
+        $this->assertArrayNotHasKey('datePublished', $seriesResult['hasPart'][0]);
     }
 
     // ----- cleanDescription Tests -----
@@ -408,5 +485,70 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
 
         $listItem = $result['itemListElement'][0]['item'];
         $this->assertEquals('Pastor John', $listItem['author']['name']);
+    }
+
+    // ----- inject() XSS Tests (#1562 finding 1) -----
+
+    /**
+     * Regression test for #1562 finding 1: inject() used JSON_UNESCAPED_SLASHES
+     * with no JSON_HEX_TAG, so a "</script" sequence in any string value (e.g.
+     * an unfiltered studytitle) survived verbatim into the JSON-LD payload and
+     * terminated the surrounding <script> tag early, letting the rest of the
+     * value be parsed as HTML/JS.
+     *
+     * Swaps Factory::$application for a fake with a getDocument() stub so
+     * inject() runs its real json_encode()/addCustomTag() logic without a full
+     * Joomla application bootstrap.
+     *
+     * @return void
+     */
+    public function testInjectNeutralizesScriptBreakoutInMaliciousTitle(): void
+    {
+        $originalApplication = Factory::$application;
+
+        // A fake app with a getDocument() stub is sufficient: inject() calls
+        // Factory::getApplication()->getDocument()->addCustomTag() without any
+        // type hint enforcing CMSApplicationInterface/HtmlDocument.
+        $box       = new \stdClass();
+        $box->html = null;
+
+        $app = new class ($box) {
+            public function __construct(private $box)
+            {
+            }
+
+            public function getDocument()
+            {
+                $box = $this->box;
+
+                return new class ($box) {
+                    public function __construct(private $box)
+                    {
+                    }
+
+                    public function addCustomTag($html)
+                    {
+                        $this->box->html = $html;
+                    }
+                };
+            }
+        };
+
+        Factory::$application = $app;
+
+        try {
+            CwmschemaorgHelper::inject([
+                '@context' => 'https://schema.org',
+                '@type'    => 'CreativeWork',
+                'name'     => 'Evil</script><script>alert(document.cookie)</script>',
+            ]);
+        } finally {
+            Factory::$application = $originalApplication;
+        }
+
+        $this->assertNotNull($box->html, 'inject() must call addCustomTag()');
+        // Only our own closing </script> tag may appear -- the malicious
+        // title's two "</script" sequences must be neutralized.
+        $this->assertSame(1, substr_count(strtolower($box->html), '</script'));
     }
 }

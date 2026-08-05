@@ -60,7 +60,7 @@ class CwmschemaorgHelper
         }
 
         // Date published
-        if (!empty($item->studydate)) {
+        if (!empty($item->studydate) && $item->studydate !== '0000-00-00 00:00:00') {
             $data['datePublished'] = self::toIso8601($item->studydate);
         }
 
@@ -162,7 +162,7 @@ class CwmschemaorgHelper
                 );
             }
 
-            if (!empty($item->studydate)) {
+            if (!empty($item->studydate) && $item->studydate !== '0000-00-00 00:00:00') {
                 $sermonData['datePublished'] = self::toIso8601($item->studydate);
             }
 
@@ -298,7 +298,7 @@ class CwmschemaorgHelper
                 );
             }
 
-            if (!empty($study->studydate)) {
+            if (!empty($study->studydate) && $study->studydate !== '0000-00-00 00:00:00') {
                 $part['datePublished'] = self::toIso8601($study->studydate);
             }
 
@@ -541,7 +541,12 @@ class CwmschemaorgHelper
         try {
             $document    = Factory::getApplication()->getDocument();
             $prettyPrint = \defined('JDEBUG') && JDEBUG ? JSON_PRETTY_PRINT : 0;
-            $json        = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | $prettyPrint);
+            // No JSON_UNESCAPED_SLASHES: a "</script" sequence in any string value
+            // (e.g. studytitle, which bypasses InputFilter via filter="trim") would
+            // otherwise survive verbatim into the JSON and terminate this <script>
+            // tag early, letting the rest be parsed as HTML/JS. JSON_HEX_TAG rewrites
+            // every '<'/'>' as a \uXXXX escape so no literal angle bracket survives.
+            $json = json_encode($data, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | $prettyPrint);
         } catch (\Exception $e) {
             return;
         }
@@ -642,14 +647,34 @@ class CwmschemaorgHelper
      */
     private static function collectSocialLinks(object $item): array
     {
-        $links  = [];
-        $fields = ['facebooklink', 'twitterlink', 'bloglink', 'website', 'link1', 'link2'];
+        $links = [];
 
-        foreach ($fields as $field) {
-            $value = $item->$field ?? '';
+        // Prefer the social_links subform JSON — populated by the PreachIT
+        // importer and the newer admin UI, which the legacy link1-3 columns
+        // are not. Mirrors buildTeacherSchemaFromRow()'s resolution order.
+        if (!empty($item->social_links) && \is_string($item->social_links)) {
+            try {
+                $decoded = json_decode($item->social_links, true, 512, JSON_THROW_ON_ERROR);
 
-            if (\is_string($value) && $value !== '' && filter_var($value, FILTER_VALIDATE_URL)) {
-                $links[] = $value;
+                foreach ($decoded as $link) {
+                    if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
+                        $links[] = $link['url'];
+                    }
+                }
+            } catch (\Throwable) {
+                // Malformed JSON — fall through to the legacy fields below.
+            }
+        }
+
+        if (empty($links)) {
+            $fields = ['facebooklink', 'twitterlink', 'bloglink', 'website', 'link1', 'link2', 'link3'];
+
+            foreach ($fields as $field) {
+                $value = $item->$field ?? '';
+
+                if (\is_string($value) && $value !== '' && filter_var($value, FILTER_VALIDATE_URL)) {
+                    $links[] = $value;
+                }
             }
         }
 
@@ -888,102 +913,7 @@ class CwmschemaorgHelper
                 continue;
             }
 
-            $schema = ['@type' => 'CreativeWork'];
-
-            if (!empty($msg->studytitle)) {
-                $schema['headline'] = $msg->studytitle;
-            }
-
-            if (!empty($msg->studyintro)) {
-                $schema['description'] = self::cleanDescription($msg->studyintro);
-            }
-
-            if (!empty($msg->studydate) && $msg->studydate !== '0000-00-00 00:00:00') {
-                $schema['datePublished'] = $msg->studydate;
-            }
-
-            if (!empty($msg->modified) && $msg->modified !== '0000-00-00 00:00:00') {
-                $schema['dateModified'] = $msg->modified;
-            }
-
-            if (!empty($msg->image)) {
-                $schema['image'] = $msg->image;
-            }
-
-            // Teacher names
-            $tQuery = $db->createQuery()
-                ->select($db->quoteName('t.teachername'))
-                ->from($db->quoteName('#__bsms_teachers', 't'))
-                ->innerJoin(
-                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
-                    . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
-                )
-                ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id)
-                ->order($db->quoteName('st.ordering') . ' ASC');
-            $names = $db->setQuery($tQuery)->loadColumn() ?: [];
-
-            if (!empty($names)) {
-                $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
-            }
-
-            // Custom fields: series, topics, genre, location
-            $customFields = [];
-
-            if (!empty($msg->series_id) && (int) $msg->series_id > 0) {
-                $sQuery = $db->createQuery()
-                    ->select($db->quoteName('series_text'))
-                    ->from($db->quoteName('#__bsms_series'))
-                    ->where($db->quoteName('id') . ' = ' . (int) $msg->series_id);
-                $seriesName = $db->setQuery($sQuery)->loadResult();
-
-                if ($seriesName) {
-                    $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
-                }
-            }
-
-            if (!empty($msg->messagetype) && (int) $msg->messagetype > 0) {
-                $mtQuery = $db->createQuery()
-                    ->select($db->quoteName('message_type'))
-                    ->from($db->quoteName('#__bsms_message_type'))
-                    ->where($db->quoteName('id') . ' = ' . (int) $msg->messagetype);
-                $msgType = $db->setQuery($mtQuery)->loadResult();
-
-                if ($msgType) {
-                    $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($msgType)];
-                }
-            }
-
-            if (!empty($msg->location_id) && (int) $msg->location_id > 0) {
-                $lQuery = $db->createQuery()
-                    ->select($db->quoteName('location_text'))
-                    ->from($db->quoteName('#__bsms_locations'))
-                    ->where($db->quoteName('id') . ' = ' . (int) $msg->location_id);
-                $location = $db->setQuery($lQuery)->loadResult();
-
-                if ($location) {
-                    $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
-                }
-            }
-
-            // Topics
-            $topQuery = $db->createQuery()
-                ->select($db->quoteName('t.topic_text'))
-                ->from($db->quoteName('#__bsms_topics', 't'))
-                ->innerJoin(
-                    $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
-                    . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
-                )
-                ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id);
-            $topics = $db->setQuery($topQuery)->loadColumn() ?: [];
-
-            if (!empty($topics)) {
-                $translated     = array_map(static fn ($t) => Text::_($t), $topics);
-                $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
-            }
-
-            if (!empty($customFields)) {
-                $schema['genericField'] = $customFields;
-            }
+            $schema = self::buildSermonSchemaFromRow($db, $msg);
 
             self::upsertSchemaRow($db, (int) $msg->id, $context, 'Sermon', $schema);
             $synced++;
@@ -1021,60 +951,7 @@ class CwmschemaorgHelper
                 continue;
             }
 
-            $schema = ['@type' => 'Person'];
-
-            if (!empty($teacher->teachername)) {
-                $schema['name'] = $teacher->teachername;
-            }
-
-            if (!empty($teacher->title)) {
-                $schema['jobTitle'] = $teacher->title;
-            }
-
-            if (!empty($teacher->short)) {
-                $schema['description'] = self::cleanDescription($teacher->short);
-            } elseif (!empty($teacher->information)) {
-                $schema['description'] = self::cleanDescription($teacher->information);
-            }
-
-            if (!empty($teacher->teacher_image)) {
-                $schema['image'] = $teacher->teacher_image;
-            } elseif (!empty($teacher->teacher_thumbnail)) {
-                $schema['image'] = $teacher->teacher_thumbnail;
-            }
-
-            if (!empty($teacher->website)) {
-                $schema['url'] = $teacher->website;
-            }
-
-            // Social links → sameAs
-            $sameAs = [];
-
-            if (!empty($teacher->social_links) && \is_string($teacher->social_links)) {
-                try {
-                    $links = json_decode($teacher->social_links, true, 512, JSON_THROW_ON_ERROR);
-
-                    foreach ($links as $link) {
-                        if (!empty($link['url']) && filter_var($link['url'], FILTER_VALIDATE_URL)) {
-                            $sameAs[] = ['value' => $link['url']];
-                        }
-                    }
-                } catch (\Throwable) {
-                    // Malformed JSON
-                }
-            }
-
-            if (empty($sameAs)) {
-                foreach (['facebooklink', 'twitterlink', 'bloglink', 'link1', 'link2', 'link3'] as $field) {
-                    if (!empty($teacher->$field) && filter_var($teacher->$field, FILTER_VALIDATE_URL)) {
-                        $sameAs[] = ['value' => $teacher->$field];
-                    }
-                }
-            }
-
-            if (!empty($sameAs)) {
-                $schema['sameAs'] = $sameAs;
-            }
+            $schema = self::buildTeacherSchemaFromRow($teacher);
 
             self::upsertSchemaRow($db, (int) $teacher->id, $context, 'Teacher', $schema);
             $synced++;
@@ -1112,19 +989,7 @@ class CwmschemaorgHelper
                 continue;
             }
 
-            $schema = ['@type' => 'CreativeWorkSeries'];
-
-            if (!empty($series->series_text)) {
-                $schema['name'] = $series->series_text;
-            }
-
-            if (!empty($series->description)) {
-                $schema['description'] = self::cleanDescription($series->description);
-            }
-
-            if (!empty($series->series_thumbnail)) {
-                $schema['image'] = $series->series_thumbnail;
-            }
+            $schema = self::buildSeriesSchemaFromRow($series);
 
             self::upsertSchemaRow($db, (int) $series->id, $context, 'Series', $schema);
             $synced++;
@@ -1194,10 +1059,11 @@ class CwmschemaorgHelper
             return true;
         }
 
-        unset($data['_autoHash']);
-        ksort($data);
-
-        return $storedHash !== substr(md5(json_encode($data, JSON_UNESCAPED_UNICODE)), 0, 12);
+        // Must strip the same keys computeAutoHash() strips when it stamped
+        // this row, or every row carrying a non-empty _customFields/_fieldHashes
+        // (written by the schemaorg plugin's per-field Smart Sync) permanently
+        // mismatches and Smart Sync can never touch it again.
+        return $storedHash !== self::computeAutoHash($data);
     }
 
     /**
@@ -1255,6 +1121,65 @@ class CwmschemaorgHelper
 
         if ($orgName !== '') {
             $schema['publisher'] = ['@type' => 'Organization', 'name' => $orgName];
+        }
+
+        // Custom fields: series, genre, location, topics
+        $customFields = [];
+
+        if (!empty($msg->series_id) && (int) $msg->series_id > 0) {
+            $sQuery = $db->createQuery()
+                ->select($db->quoteName('series_text'))
+                ->from($db->quoteName('#__bsms_series'))
+                ->where($db->quoteName('id') . ' = ' . (int) $msg->series_id);
+            $seriesName = $db->setQuery($sQuery)->loadResult();
+
+            if ($seriesName) {
+                $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
+            }
+        }
+
+        if (!empty($msg->messagetype) && (int) $msg->messagetype > 0) {
+            $mtQuery = $db->createQuery()
+                ->select($db->quoteName('message_type'))
+                ->from($db->quoteName('#__bsms_message_type'))
+                ->where($db->quoteName('id') . ' = ' . (int) $msg->messagetype);
+            $msgType = $db->setQuery($mtQuery)->loadResult();
+
+            if ($msgType) {
+                $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($msgType)];
+            }
+        }
+
+        if (!empty($msg->location_id) && (int) $msg->location_id > 0) {
+            $lQuery = $db->createQuery()
+                ->select($db->quoteName('location_text'))
+                ->from($db->quoteName('#__bsms_locations'))
+                ->where($db->quoteName('id') . ' = ' . (int) $msg->location_id);
+            $location = $db->setQuery($lQuery)->loadResult();
+
+            if ($location) {
+                $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
+            }
+        }
+
+        // Topics
+        $topQuery = $db->createQuery()
+            ->select($db->quoteName('t.topic_text'))
+            ->from($db->quoteName('#__bsms_topics', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id);
+        $topics = $db->setQuery($topQuery)->loadColumn() ?: [];
+
+        if (!empty($topics)) {
+            $translated     = array_map(static fn ($t) => Text::_($t), $topics);
+            $customFields[] = ['genericTitle' => 'about', 'genericValue' => implode(', ', $translated)];
+        }
+
+        if (!empty($customFields)) {
+            $schema['genericField'] = $customFields;
         }
 
         return $schema;
