@@ -218,7 +218,7 @@ class CwmdbHelper
      * @param   ?string  $from   Where the source of the query comes from
      * @param   ?int     $limit  Set the Limit of the query
      *
-     * @return bool true if success, or error string if failed
+     * @return bool true if the query ran, false if it failed
      *
      * @throws  \Exception
      * @since   7.0
@@ -230,13 +230,28 @@ class CwmdbHelper
         }
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $db->setQuery($query, 0, $limit);
 
-        if (!$db->execute()) {
+        // DatabaseDriver::execute() returns true or throws -- it never returns
+        // false -- so the old `if (!$db->execute())` branch was unreachable and
+        // every real SQL failure escaped as an uncaught exception instead of the
+        // false this method's contract promises. CwmadminController::copyTables()
+        // calls this three times per table with no try/catch and relies on a
+        // false return to abort cleanly. See #1566.
+        //
+        // setQuery() is inside the try on purpose: the MySQLi driver prepares
+        // the statement eagerly, so a bad table name or syntax error -- the
+        // most common failure here -- throws from setQuery(), before execute()
+        // is ever reached. Guarding execute() alone would still let those
+        // escape.
+        try {
+            $db->setQuery($query, 0, $limit);
+            $db->execute();
+        } catch (\RuntimeException $e) {
             Factory::getApplication()->enqueueMessage(
-                $from . Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $db->stderr(true)),
+                $from . Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', $e->getMessage()),
                 'warning'
             );
+            Log::add($from . 'FAILED: ' . $query . ' -- ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
 
             return false;
         }
@@ -292,7 +307,17 @@ class CwmdbHelper
         $objects   = [];
 
         foreach ($tables as $table) {
-            if (str_contains($table, $prefix) && str_contains($table, $bsms)) {
+            // Anchored, not a substring test. getTableList() returns every
+            // table in the schema, which on shared-database hosting includes
+            // other Joomla installs' tables. An unanchored
+            // str_contains($table, $prefix) matched a sibling table that merely
+            // contained this prefix somewhere -- e.g. with prefix 'jos_', the
+            // table 'myjos_bsms_studies' matched, and substr_replace() then
+            // stripped a fixed prefix-length from the front regardless,
+            // yielding the mangled '#__s_bsms_studies'. That bogus name was
+            // handed to every consumer of this list: the backup/restore and
+            // migration loops, and Cwmbackup's export allow-list. See #1566.
+            if (str_starts_with($table, $prefix . $bsms)) {
                 $table = substr_replace($table, '#__', 0, $prelength);
 
                 // Skip legacy version tracking table (replaced by #__schemas)
@@ -509,10 +534,30 @@ class CwmdbHelper
                 $query = trim($query);
 
                 if ($query !== '' && $query[0] !== '#') {
-                    $db->setQuery($query);
-
-                    if (!$db->execute()) {
-                        $app->enqueueMessage(Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value), 'error');
+                    // execute() throws rather than returning false, so this
+                    // never returned the documented false and instead
+                    // propagated out of CwminstallModel::realRun() -- which
+                    // calls resetdb() as its migration-rollback recovery step
+                    // and has no try/catch. resetStack() then never ran,
+                    // leaving a dirty migration stack plus a fatal error
+                    // instead of the intended "not migrated" warning. Exactly
+                    // the situation this recovery path exists to handle (a
+                    // half-created table erroring on re-create) triggered it.
+                    // setQuery() is inside the try because the MySQLi driver
+                    // prepares eagerly and throws there first. See #1566.
+                    try {
+                        $db->setQuery($query);
+                        $db->execute();
+                    } catch (\RuntimeException $e) {
+                        $app->enqueueMessage(
+                            Text::sprintf('JBS_INS_SQL_UPDATE_ERRORS', ' in ' . $value . ': ' . $e->getMessage()),
+                            'error'
+                        );
+                        Log::add(
+                            'resetdb() failed in ' . $value . ': ' . $e->getMessage(),
+                            Log::ERROR,
+                            'com_proclaim'
+                        );
 
                         return false;
                     }
