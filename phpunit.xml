@@ -58,6 +58,9 @@
 		<testsuite name="Site Bible Tests">
 			<directory>tests/unit/Site/Bible</directory>
 		</testsuite>
+		<testsuite name="Plugin Schemaorg Tests">
+			<directory>tests/unit/Plugin/Schemaorg</directory>
+		</testsuite>
 
 		<!-- Integration suites: one per tests/integration subtree -->
 		<testsuite name="Integration Admin Helper Tests">
