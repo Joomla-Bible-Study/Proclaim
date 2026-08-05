@@ -52,8 +52,12 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
     {
         $source = file_get_contents((new \ReflectionClass($class))->getFileName());
 
+        // Broader than the original quote-delimited '<script>' literal check:
+        // '<script' followed by whitespace or '>' also catches a raw tag
+        // reintroduced with attributes ('<script type="module">') or via a
+        // differently-quoted string, which the tighter pattern waved through.
         $this->assertDoesNotMatchRegularExpression(
-            '/[\'"]<script>[\'"]/',
+            '/[\'"]<script[\s>]/',
             $source,
             $class . ' must not concatenate a raw <script> tag into its returned HTML — see #1484'
         );
@@ -68,6 +72,29 @@ class ScriptRegistrationCurrencyTest extends ProclaimTestCase
             '/->addInlineScript\(/',
             $source,
             $class . ' must register its script via WebAssetManager::addInlineScript() — see #1484'
+        );
+    }
+
+    /**
+     * The two checks above prove a registration method exists -- not that
+     * getInput() still calls it. Without this wiring assertion, deleting the
+     * `$this->registerJavaScript();` line ships the field with no JS at all
+     * while every other test stays green.
+     */
+    #[DataProvider('fieldClassProvider')]
+    public function testGetInputWiresUpTheScriptRegistration(string $class): void
+    {
+        $ref   = new \ReflectionMethod($class, 'getInput');
+        $lines = file($ref->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString(
+            '$this->registerJavaScript();',
+            $body,
+            $class . '::getInput() must call registerJavaScript() so the script is actually registered — see #1484'
         );
     }
 }

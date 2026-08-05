@@ -149,7 +149,22 @@ class CwmbibleVersionHelperTest extends ProclaimTestCase
 
     public function testGetDefaultVersionFallsBackToKjv(): void
     {
-        // Without a configured plugin default, must fall back to 'kjv'.
-        $this->assertNotEmpty(CwmbibleVersionHelper::getDefaultVersion());
+        // The contract is: plugin default_version when configured, 'kjv'
+        // otherwise. The plugin param genuinely varies by environment (may
+        // be set on a local dev DB), so derive which branch applies and
+        // assert THAT branch's exact outcome -- on CI's empty DB this always
+        // exercises and exact-asserts the 'kjv' fallback, which the prior
+        // assertNotEmpty() never actually pinned.
+        try {
+            $pluginDefault = \CWM\Library\Scripture\Helper\ScriptureParamsHelper::getParams()->get('default_version', '');
+        } catch (\Exception) {
+            $pluginDefault = '';
+        }
+
+        $this->assertSame(
+            $pluginDefault !== '' ? $pluginDefault : 'kjv',
+            CwmbibleVersionHelper::getDefaultVersion(),
+            'Must return the configured plugin default, or exactly kjv when none is set'
+        );
     }
 }

@@ -61,8 +61,13 @@ class CwmstreamModeFieldTest extends IntegrationTestCase
      */
     protected function tearDown(): void
     {
-        $this->db->transactionRollback();
-        Factory::getApplication()->getInput()->set('id', null);
+        // When setUp() skips (no DB), $this->db was never initialized and an
+        // unconditional dereference turns every skip into an error on
+        // DB-less machines.
+        if (isset($this->db)) {
+            $this->db->transactionRollback();
+            Factory::getApplication()->getInput()->set('id', null);
+        }
 
         parent::tearDown();
     }

@@ -61,7 +61,10 @@ class CwmJsonResponseTraitTest extends ProclaimTestCase
         $root = \dirname(__DIR__, 4);
         $hits = [];
 
-        foreach (['admin', 'site'] as $subdir) {
+        // api/ is the third controller tree -- omitting it (as the original
+        // version did) let a duplicate sendJsonResponse() reappear there
+        // undetected, re-creating exactly what #1503 removed.
+        foreach (['admin', 'site', 'api'] as $subdir) {
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($root . '/' . $subdir, \FilesystemIterator::SKIP_DOTS)
             );

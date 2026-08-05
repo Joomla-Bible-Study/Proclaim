@@ -82,7 +82,7 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
         );
 
         $this->assertDoesNotMatchRegularExpression(
-            '/[\'"]<script>[\'"]/',
+            '/[\'"]<script[\s>]/',
             $methodBody,
             'LocationGroupMappingField must not concatenate a raw <script> tag — see #1484'
         );
@@ -92,6 +92,16 @@ class LocationGroupMappingFieldTest extends ProclaimTestCase
             $methodBody,
             'LocationGroupMappingField must register its script via WebAssetManager::addInlineScript() — see #1484'
         );
+
+        // The method existing is not the same as being called -- getInput()
+        // must still wire it up or the mapping never serializes on submit.
+        $inputRef  = new \ReflectionMethod(LocationGroupMappingField::class, 'getInput');
+        $inputBody = implode(
+            '',
+            \array_slice($lines, $inputRef->getStartLine() - 1, $inputRef->getEndLine() - $inputRef->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('$this->registerSerializationScript(', $inputBody);
     }
 
     /**

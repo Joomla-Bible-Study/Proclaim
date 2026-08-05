@@ -99,5 +99,20 @@ class ServerTypeFieldTest extends ProclaimTestCase
 
         // Empty value must short-circuit to '' without touching the reverse-lookup model.
         $this->assertSame('', $getValueTitle->invoke($field));
+
+        // The non-empty path can't be invoked here (it boots the component's
+        // MVC factory), so pin its shape: it must resolve titles through the
+        // model's reverse-lookup map, not a per-render SQL query -- the exact
+        // regression this test's name guards, which the empty-value
+        // short-circuit assertion alone never exercised.
+        $lines = file($getValueTitle->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $getValueTitle->getStartLine() - 1, $getValueTitle->getEndLine() - $getValueTitle->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('getTypeReverseLookup()', $body, 'Titles must come from the reverse-lookup map');
+        $this->assertStringNotContainsString('setQuery', $body, 'getValueTitle() must not run its own SQL query');
+        $this->assertStringNotContainsString('createQuery', $body, 'getValueTitle() must not build its own SQL query');
     }
 }

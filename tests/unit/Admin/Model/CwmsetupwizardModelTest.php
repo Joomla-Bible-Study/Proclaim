@@ -29,9 +29,18 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
         $lines  = \array_slice(file($ref->getFileName()), $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1);
         $source = implode('', $lines);
 
-        // Verify it checks for existing servers before creating
+        // Verify it checks for existing servers before creating. Asserting
+        // only the COUNT(*) query text stayed green if the gating
+        // `if (loadResult() > 0) continue;` was removed while the query
+        // remained -- which would duplicate default servers on every
+        // wizard re-run.
         $this->assertStringContainsString('COUNT(*)', $source);
         $this->assertStringContainsString('#__bsms_servers', $source);
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\(int\)\s*\$db->loadResult\(\)\s*>\s*0\)\s*\{\s*continue;/s',
+            $source,
+            'The existing-server count must gate (skip) the insert, not just be queried'
+        );
     }
 
     /**
@@ -45,6 +54,11 @@ class CwmsetupwizardModelTest extends ProclaimTestCase
 
         $this->assertStringContainsString('COUNT(*)', $source);
         $this->assertStringContainsString('#__scheduler_tasks', $source);
+        $this->assertMatchesRegularExpression(
+            '/if\s*\(\(int\)\s*\$db->loadResult\(\)\s*>\s*0\)\s*\{\s*continue;/s',
+            $source,
+            'The existing-task count must gate (skip) the insert, not just be queried'
+        );
     }
 
     /**

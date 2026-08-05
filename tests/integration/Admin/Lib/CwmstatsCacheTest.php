@@ -23,22 +23,6 @@ class CwmstatsCacheTest extends IntegrationTestCase
         $this->resetStaticCache(Cwmstats::class, 'cache', []);
     }
 
-    public function testResetCacheClearsAll(): void
-    {
-        // Seed the cache with a value
-        $ref  = new \ReflectionClass(Cwmstats::class);
-        $prop = $ref->getProperty('cache');
-        $prop->setValue(null, ['topStudies' => 'cached-html']);
-
-        // Verify it was set
-        $this->assertNotEmpty($prop->getValue());
-
-        // Reset using our helper
-        $this->resetStaticCache(Cwmstats::class, 'cache', []);
-
-        $this->assertEmpty($prop->getValue());
-    }
-
     /**
      * Regression test for #1527.
      *

@@ -890,17 +890,16 @@ class CwmtemplatemigrationHelperTest extends ProclaimTestCase
         ]]);
         $h->migrateRowspanImages();
 
-        $saved = $h->getSavedParams();
-
-        foreach ($saved as $json) {
-            $params = json_decode($json, true);
-
-            if (isset($params['thumbnailrow'])) {
-                $this->assertSame('2', (string) $params['thumbnailrow'], 'Already-placed element must not be moved');
-            }
-        }
-
-        $this->assertTrue(true);
+        // A save always happens here: the legacy rowspanitem flag is reset
+        // to '0' even when the element is already placed, so the update path
+        // runs regardless. Assert the row value unconditionally -- the prior
+        // isset()-guarded version was vacuously green if the migration
+        // dropped/renamed thumbnailrow entirely (same bug class as the three
+        // fixed in PR #1595).
+        $params = $h->getParamsArray(1);
+        $this->assertArrayHasKey('thumbnailrow', $params);
+        $this->assertSame('2', (string) $params['thumbnailrow'], 'Already-placed element must not be moved');
+        $this->assertSame('0', (string) ($params['rowspanitem'] ?? ''), 'Legacy flag must still be cleared');
     }
 
     /**

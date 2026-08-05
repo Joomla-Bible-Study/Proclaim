@@ -105,5 +105,21 @@ class BibleVersionFieldTest extends ProclaimTestCase
 
         $this->assertNotEmpty($options, 'getOptions() must return at least the fallback versions via the helper');
         $this->assertIsObject($options[array_key_last($options)] ?? $options[0], 'Options must be objects (HTMLHelper option shape), not raw arrays');
+
+        // Shape assertions alone can't tell delegation from re-inlined query
+        // logic -- the #1484-era regression this test's name guards. Pin the
+        // delegation call itself.
+        $ref   = new \ReflectionMethod(BibleVersionField::class, 'getOptions');
+        $lines = file($ref->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString(
+            'CwmbibleVersionHelper::getVersionOptions(',
+            $body,
+            'getOptions() must delegate to CwmbibleVersionHelper, not re-inline the version query/grouping logic'
+        );
     }
 }
