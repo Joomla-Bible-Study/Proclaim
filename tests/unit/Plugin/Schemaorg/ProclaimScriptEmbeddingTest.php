@@ -57,7 +57,6 @@ class ProclaimScriptEmbeddingTest extends ProclaimTestCase
     private function sanitize(mixed $value): mixed
     {
         $method = new \ReflectionMethod(\CWM\Plugin\Schemaorg\Proclaim\Extension\Proclaim::class, 'sanitizeForScriptEmbedding');
-        $method->setAccessible(true);
 
         return $method->invoke(null, $value);
     }

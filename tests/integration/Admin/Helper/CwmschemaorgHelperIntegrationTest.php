@@ -144,7 +144,6 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         $teacherId = $this->insertTeacher('Pastor Jane');
 
         $method = new \ReflectionMethod(CwmschemaorgHelper::class, 'syncTeachers');
-        $method->setAccessible(true);
         $result = $method->invoke(null, $this->db, CwmschemaorgHelper::SYNC_SMART);
 
         $this->assertGreaterThan(0, $result['synced']);
@@ -164,7 +163,6 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
     private function invokeIsManuallyEdited(int $itemId, string $context): ?bool
     {
         $method = new \ReflectionMethod(CwmschemaorgHelper::class, 'isManuallyEdited');
-        $method->setAccessible(true);
 
         return $method->invoke(null, $this->db, $itemId, $context);
     }
