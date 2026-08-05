@@ -188,6 +188,11 @@ class CwmcountHelper
                             . ' OR ' . $db->quoteName('t.location_id') . ' IN ('
                             . implode(',', array_map('intval', $accessible)) . '))'
                         );
+                    } else {
+                        // core.admin already excluded above, so an empty $accessible here
+                        // means a real zero-access user, not a super admin -- restrict to
+                        // unassigned records instead of adding no predicate. See #1561.
+                        $query->where($db->quoteName('t.location_id') . ' IS NULL');
                     }
                 }
 
@@ -211,6 +216,11 @@ class CwmcountHelper
                             . ' OR ' . $db->quoteName('s.location_id') . ' IN ('
                             . implode(',', array_map('intval', $accessible)) . '))'
                         );
+                    } else {
+                        // core.admin already excluded above, so an empty $accessible here
+                        // means a real zero-access user, not a super admin -- restrict to
+                        // unassigned records instead of adding no predicate. See #1561.
+                        $query->where($db->quoteName('s.location_id') . ' IS NULL');
                     }
                 }
 
