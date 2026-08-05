@@ -36,6 +36,69 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmsermonsModuleStateTest extends IntegrationTestCase
 {
     /**
+     * @var  \Joomla\Database\DatabaseDriver|null
+     */
+    private ?\Joomla\Database\DatabaseDriver $db = null;
+
+    /**
+     * Open a transaction so seeded studies roll back.
+     *
+     * @return  void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
+            $this->markTestSkipped('Live database/container not available for model integration test.');
+        }
+
+        $this->db = Factory::getContainer()->get(\Joomla\Database\DatabaseDriver::class);
+        $this->db->transactionStart();
+    }
+
+    /**
+     * @return  void
+     */
+    protected function tearDown(): void
+    {
+        if ($this->db !== null) {
+            try {
+                $this->db->transactionRollback();
+            } catch (\Throwable) {
+                // Connection may have been lost — nothing to roll back.
+            }
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * Insert a published, publicly-visible study the module query will match.
+     *
+     * @return  void
+     */
+    private function insertPublishedStudy(): void
+    {
+        $row = (object) [
+            'studytitle'  => 'Module Fixture ' . uniqid('', true),
+            'alias'       => 'module-fixture-' . uniqid('', true),
+            'studydate'   => '2026-01-15 10:00:00',
+            'teacher_id'  => 0,
+            'series_id'   => 0,
+            'messagetype' => 1,
+            'booknumber'  => 101,
+            'published'   => 1,
+            'access'      => 1,
+            'language'    => '*',
+            'ordering'    => 0,
+            'params'      => '{}',
+        ];
+
+        $this->db->insertObject('#__bsms_studies', $row);
+    }
+
+    /**
      * Build a real CwmsermonsModel through a component MVCFactory.
      *
      * bootComponent() falls back to a LegacyComponent/LegacyFactory in the test
@@ -209,10 +272,24 @@ class CwmsermonsModuleStateTest extends IntegrationTestCase
     #[TestDox('Empty-string filter params return the same items as no filters (regression)')]
     public function testEmptyParamsDoNotFilterEverythingOut(): void
     {
+        // Seed rows the module query matches. Without this, CI's empty
+        // database made both counts 0 and 0 == 0 stayed green even with the
+        // guarded bug present ([""] filtering out every sermon) — the test
+        // was vacuous exactly where it mattered.
+        $this->insertPublishedStudy();
+        $this->insertPublishedStudy();
+        $this->insertPublishedStudy();
+
         // Baseline: no filter params at all.
         $baseline = $this->createModel();
         $baseline->setModuleState($this->moduleParams());
         $baselineCount = \count($this->items($baseline));
+
+        $this->assertGreaterThan(
+            0,
+            $baselineCount,
+            'Baseline must see the seeded studies — a zero baseline makes the comparison below vacuous'
+        );
 
         // Same request, but every dropdown unset as [""] — the bug condition.
         $empty = $this->createModel();

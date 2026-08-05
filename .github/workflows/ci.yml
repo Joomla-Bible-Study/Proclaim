@@ -154,13 +154,15 @@ jobs:
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
-      - name: Create Joomla #__schemaorg table
+      - name: Create Joomla #__schemaorg and #__scheduler_tasks tables
         run: |
-          # base.sql (imported above) doesn't include this table -- it's
+          # base.sql (imported above) doesn't include these tables -- they're
           # defined in Joomla core's extensions.sql, which also carries a lot
           # of unrelated seed data we don't want in the test fixture. The
           # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
-          # read/write #__schemaorg directly, so integration tests need it.
+          # read/write #__schemaorg directly, and Cwmbackup's scheduled-tasks
+          # export needs #__scheduler_tasks to exist to exercise its real
+          # (non-"table not found") branch, so integration tests need both.
           mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
             CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
               \`id\` int unsigned NOT NULL AUTO_INCREMENT,
@@ -169,6 +171,32 @@ jobs:
               \`schemaType\` varchar(100),
               \`schema\` text,
               PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+            CREATE TABLE IF NOT EXISTS \`proclaim_scheduler_tasks\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`asset_id\` int unsigned NOT NULL DEFAULT 0,
+              \`title\` varchar(255) NOT NULL DEFAULT '',
+              \`type\` varchar(128) NOT NULL,
+              \`execution_rules\` text,
+              \`cron_rules\` text,
+              \`state\` tinyint NOT NULL DEFAULT 0,
+              \`last_exit_code\` int NOT NULL DEFAULT 0,
+              \`last_execution\` datetime,
+              \`next_execution\` datetime,
+              \`times_executed\` int DEFAULT 0,
+              \`times_failed\` int DEFAULT 0,
+              \`locked\` datetime,
+              \`priority\` smallint NOT NULL DEFAULT 0,
+              \`ordering\` int NOT NULL DEFAULT 0,
+              \`cli_exclusive\` smallint NOT NULL DEFAULT 0,
+              \`params\` text NOT NULL,
+              \`note\` text,
+              \`created\` datetime NOT NULL,
+              \`created_by\` int unsigned NOT NULL DEFAULT 0,
+              \`checked_out\` int unsigned,
+              \`checked_out_time\` datetime,
+              PRIMARY KEY (\`id\`),
+              KEY \`idx_type\` (\`type\`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
           "
 
@@ -317,13 +345,15 @@ jobs:
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
-      - name: Create Joomla #__schemaorg table
+      - name: Create Joomla #__schemaorg and #__scheduler_tasks tables
         run: |
-          # base.sql (imported above) doesn't include this table -- it's
+          # base.sql (imported above) doesn't include these tables -- they're
           # defined in Joomla core's extensions.sql, which also carries a lot
           # of unrelated seed data we don't want in the test fixture. The
           # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
-          # read/write #__schemaorg directly, so integration tests need it.
+          # read/write #__schemaorg directly, and Cwmbackup's scheduled-tasks
+          # export needs #__scheduler_tasks to exist to exercise its real
+          # (non-"table not found") branch, so integration tests need both.
           mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
             CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
               \`id\` int unsigned NOT NULL AUTO_INCREMENT,
@@ -332,6 +362,32 @@ jobs:
               \`schemaType\` varchar(100),
               \`schema\` text,
               PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+            CREATE TABLE IF NOT EXISTS \`proclaim_scheduler_tasks\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`asset_id\` int unsigned NOT NULL DEFAULT 0,
+              \`title\` varchar(255) NOT NULL DEFAULT '',
+              \`type\` varchar(128) NOT NULL,
+              \`execution_rules\` text,
+              \`cron_rules\` text,
+              \`state\` tinyint NOT NULL DEFAULT 0,
+              \`last_exit_code\` int NOT NULL DEFAULT 0,
+              \`last_execution\` datetime,
+              \`next_execution\` datetime,
+              \`times_executed\` int DEFAULT 0,
+              \`times_failed\` int DEFAULT 0,
+              \`locked\` datetime,
+              \`priority\` smallint NOT NULL DEFAULT 0,
+              \`ordering\` int NOT NULL DEFAULT 0,
+              \`cli_exclusive\` smallint NOT NULL DEFAULT 0,
+              \`params\` text NOT NULL,
+              \`note\` text,
+              \`created\` datetime NOT NULL,
+              \`created_by\` int unsigned NOT NULL DEFAULT 0,
+              \`checked_out\` int unsigned,
+              \`checked_out_time\` datetime,
+              PRIMARY KEY (\`id\`),
+              KEY \`idx_type\` (\`type\`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
           "
 
