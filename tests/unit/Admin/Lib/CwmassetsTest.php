@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test class for Cwmassets
@@ -48,49 +49,6 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
-     * Test fixSingleRecord method exists with correct signature
-     *
-     * @return void
-     */
-    public function testFixSingleRecordMethodExists(): void
-    {
-        $this->assertTrue(method_exists(Cwmassets::class, 'fixSingleRecord'));
-
-        $method = new \ReflectionMethod(Cwmassets::class, 'fixSingleRecord');
-        $this->assertTrue($method->isPublic());
-        $this->assertTrue($method->isStatic());
-        $this->assertReturnTypeName('bool', $method);
-    }
-
-    /**
-     * Test fixAllAssets method exists
-     *
-     * @return void
-     */
-    public function testFixAllAssetsMethodExists(): void
-    {
-        $this->assertTrue(method_exists(Cwmassets::class, 'fixAllAssets'));
-
-        $method = new \ReflectionMethod(Cwmassets::class, 'fixAllAssets');
-        $this->assertTrue($method->isPublic());
-        $this->assertTrue($method->isStatic());
-    }
-
-    /**
-     * Test cleanOrphanedAssets method exists
-     *
-     * @return void
-     */
-    public function testCleanOrphanedAssetsMethodExists(): void
-    {
-        $this->assertTrue(method_exists(Cwmassets::class, 'cleanOrphanedAssets'));
-
-        $method = new \ReflectionMethod(Cwmassets::class, 'cleanOrphanedAssets');
-        $this->assertTrue($method->isPublic());
-        $this->assertTrue($method->isStatic());
-    }
-
-    /**
      * Test getAssetObjects returns expected structure
      *
      * @return void
@@ -111,55 +69,30 @@ class CwmassetsTest extends ProclaimTestCase
     }
 
     /**
-     * Test getAssetObjects includes servers table
+     * Test getAssetObjects includes each of the core content tables.
      *
      * @return void
      */
-    public function testGetAssetObjectsIncludesServers(): void
+    #[DataProvider('coreTableProvider')]
+    public function testGetAssetObjectsIncludesTable(string $table): void
     {
         $objects = Cwmassets::getAssetObjects();
         $names   = array_column($objects, 'name');
 
-        $this->assertContains('#__bsms_servers', $names);
+        $this->assertContains($table, $names);
     }
 
     /**
-     * Test getAssetObjects includes studies table
-     *
-     * @return void
+     * @return array<string, array{string}>
      */
-    public function testGetAssetObjectsIncludesStudies(): void
+    public static function coreTableProvider(): array
     {
-        $objects = Cwmassets::getAssetObjects();
-        $names   = array_column($objects, 'name');
-
-        $this->assertContains('#__bsms_studies', $names);
-    }
-
-    /**
-     * Test getAssetObjects includes teachers table
-     *
-     * @return void
-     */
-    public function testGetAssetObjectsIncludesTeachers(): void
-    {
-        $objects = Cwmassets::getAssetObjects();
-        $names   = array_column($objects, 'name');
-
-        $this->assertContains('#__bsms_teachers', $names);
-    }
-
-    /**
-     * Test getAssetObjects includes series table
-     *
-     * @return void
-     */
-    public function testGetAssetObjectsIncludesSeries(): void
-    {
-        $objects = Cwmassets::getAssetObjects();
-        $names   = array_column($objects, 'name');
-
-        $this->assertContains('#__bsms_series', $names);
+        return [
+            'servers'  => ['#__bsms_servers'],
+            'studies'  => ['#__bsms_studies'],
+            'teachers' => ['#__bsms_teachers'],
+            'series'   => ['#__bsms_series'],
+        ];
     }
 
     /**

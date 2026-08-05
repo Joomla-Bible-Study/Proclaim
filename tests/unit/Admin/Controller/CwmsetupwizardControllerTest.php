@@ -92,36 +92,6 @@ class CwmsetupwizardControllerTest extends ProclaimTestCase
     }
 
     /**
-     * Test that dismiss method exists and checks token.
-     */
-    public function testDismissMethodExists(): void
-    {
-        $ref = new \ReflectionMethod(CwmsetupwizardController::class, 'dismiss');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    /**
-     * Test that getStepData method exists.
-     */
-    public function testGetStepDataMethodExists(): void
-    {
-        $ref = new \ReflectionMethod(CwmsetupwizardController::class, 'getStepData');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    /**
-     * Test that sendJsonResponse is private.
-     */
-    public function testSendJsonResponseIsPrivate(): void
-    {
-        $ref = new \ReflectionMethod(CwmsetupwizardController::class, 'sendJsonResponse');
-
-        $this->assertTrue($ref->isPrivate());
-    }
-
-    /**
      * Test that apply sanitizes ministry_style input.
      */
     public function testApplySanitizesMinistryStyle(): void

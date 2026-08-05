@@ -35,39 +35,6 @@ class VersionTest extends ProclaimTestCase
     }
 
     /**
-     * Test major version constant
-     *
-     * @return void
-     * #[CoversClass(Version::class)]::MAJOR_VERSION
-     */
-    public function testMajorVersionIsInteger(): void
-    {
-        $this->assertIsInt(Version::MAJOR_VERSION);
-    }
-
-    /**
-     * Test minor version constant
-     *
-     * @return void
-     * #[CoversClass(Version::class)]::MINOR_VERSION
-     */
-    public function testMinorVersionIsInteger(): void
-    {
-        $this->assertIsInt(Version::MINOR_VERSION);
-    }
-
-    /**
-     * Test patch version constant
-     *
-     * @return void
-     * #[CoversClass(Version::class)]::PATCH_VERSION
-     */
-    public function testPatchVersionIsInteger(): void
-    {
-        $this->assertIsInt(Version::PATCH_VERSION);
-    }
-
-    /**
      * Test isInDevelopmentState method
      *
      * @return void

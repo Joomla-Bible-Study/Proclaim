@@ -15,37 +15,15 @@ use CWM\Component\Proclaim\Administrator\Field\CustomField;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 
 /**
- * Regression test for #1484: buildJavaScript() returned a raw
- * <script>...</script> string concatenated into getInput()'s HTML,
- * bypassing WebAssetManager. Now registered via
- * WebAssetManager::addInlineScript() instead.
+ * The raw-<script>-tag / WebAssetManager-registration checks for #1484 live
+ * in ScriptRegistrationCurrencyTest (data-provider-driven across several
+ * fields including this one); this file keeps only what's unique to
+ * CustomField.
  *
  * @since  __DEPLOY_VERSION__
  */
 class CustomFieldTest extends ProclaimTestCase
 {
-    public function testDoesNotEmitRawScriptTag(): void
-    {
-        $source = file_get_contents((new \ReflectionClass(CustomField::class))->getFileName());
-
-        $this->assertDoesNotMatchRegularExpression(
-            '/[\'"]<script>[\'"]/',
-            $source,
-            'CustomField must not concatenate a raw <script> tag — see #1484'
-        );
-    }
-
-    public function testRegistersScriptViaWebAssetManager(): void
-    {
-        $source = file_get_contents((new \ReflectionClass(CustomField::class))->getFileName());
-
-        $this->assertMatchesRegularExpression(
-            '/->addInlineScript\(/',
-            $source,
-            'CustomField must register its script via WebAssetManager::addInlineScript() — see #1484'
-        );
-    }
-
     /**
      * Confirms the actual JS content (event delegation, code insertion,
      * modal close logic) survived the WebAssetManager migration unchanged.

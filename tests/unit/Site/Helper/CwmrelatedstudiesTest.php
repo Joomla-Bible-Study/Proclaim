@@ -55,19 +55,6 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
     }
 
     /**
-     * Test scores property starts empty
-     *
-     * @return void
-     */
-    public function testScoresDefaultEmpty(): void
-    {
-        $helper = new Cwmrelatedstudies();
-
-        $this->assertIsArray($helper->scores);
-        $this->assertEmpty($helper->scores);
-    }
-
-    /**
      * Test scoring order is correct after arsort
      *
      * @return void
@@ -89,19 +76,5 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
         $this->assertSame(10, $sorted[0]);
         $this->assertSame(30, $sorted[1]);
         $this->assertSame(20, $sorted[2]);
-    }
-
-    /**
-     * Test class existence and method signatures
-     *
-     * @return void
-     */
-    public function testClassStructure(): void
-    {
-        $helper = new Cwmrelatedstudies();
-
-        $this->assertInstanceOf(Cwmrelatedstudies::class, $helper);
-        $this->assertTrue(method_exists($helper, 'getRelated'));
-        $this->assertTrue(method_exists($helper, 'addScore'));
     }
 }

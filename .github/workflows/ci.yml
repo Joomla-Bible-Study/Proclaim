@@ -188,14 +188,13 @@ jobs:
           JTEST_DB_PASSWORD: proclaim_test
           JTEST_DB_PREFIX: proclaim_
 
-  # Forward-compatibility coverage for the next PHP release. Not a required
-  # check — 8.3 (php-checks, above) is the supported floor and must pass;
-  # this job exists to surface 8.5 breakage early without blocking merges
-  # until the codebase is verified clean against it.
+  # Forward-compatibility coverage for the next PHP release. Blocking since
+  # 2026-08-05: the suite is verified clean on 8.5, so a failure here means a
+  # real forward-compat regression (e.g. a newly-deprecated API) and must be
+  # fixed before merge, not discovered at the 8.5 support cutover.
   php-checks-85:
-    name: PHP Lint & Tests (8.5, non-blocking)
+    name: PHP Lint & Tests (8.5)
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     services:
       mysql:

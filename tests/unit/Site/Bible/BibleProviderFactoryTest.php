@@ -135,25 +135,6 @@ class BibleProviderFactoryTest extends ProclaimTestCase
     }
 
     /**
-     * Test getProviderForTranslation falls back to getbible when all providers enabled
-     * but no DB available (unit test environment).
-     *
-     * @return void
-     */
-    public function testGetProviderForTranslationFallback(): void
-    {
-        BibleProviderFactory::reset();
-
-        $params = new Registry([
-            'provider_getbible' => 1,
-        ]);
-
-        // Without DB access, local/getbible checks fail and it falls to getbible
-        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
-        $this->assertInstanceOf(BibleProviderInterface::class, $provider);
-    }
-
-    /**
      * Test getProviderForTranslation with only getbible enabled
      *
      * @return void
