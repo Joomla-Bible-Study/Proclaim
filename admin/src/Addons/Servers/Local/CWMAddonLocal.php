@@ -55,6 +55,20 @@ class CWMAddonLocal extends CWMAddon
     protected $description = 'Used for local server files';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
      * @param   Input  $data  Data to upload

@@ -53,6 +53,20 @@ class CWMAddonLegacy extends CWMAddon
     protected $description = 'Legacy Server that we brought over from 8.x.x version of proclaim';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
      * @param   Input  $data  Data to upload
