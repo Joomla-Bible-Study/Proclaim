@@ -149,8 +149,10 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         $result = $this->podcast->getMediaDuration($wavFile);
 
-        // Should be approximately 1 second
-        $this->assertGreaterThanOrEqual(0, $result);
+        // Should be approximately 1 second. The lower bound must be >= 1:
+        // a broken parser reports 0 (its parse-failure value), which the
+        // previous >= 0 bound waved through.
+        $this->assertGreaterThanOrEqual(1, $result);
         $this->assertLessThanOrEqual(2, $result);
 
         @unlink($wavFile);
@@ -237,13 +239,17 @@ class CwmpodcastDurationTest extends ProclaimTestCase
 
         $result = $method->invoke($this->podcast);
 
-        // Result should be either null or a valid path
-        if ($result !== null) {
-            $this->assertIsString($result);
-            $this->assertTrue(is_executable($result) || str_contains($result, 'ffprobe'));
-        } else {
-            $this->assertNull($result);
+        // ffprobe availability is genuinely machine-dependent. Skip (rather
+        // than assertNull($result) on a known-null, which passes vacuously
+        // and would also stay green if detection broke everywhere) when it
+        // isn't installed, so the assertions only count when they mean
+        // something.
+        if ($result === null) {
+            $this->markTestSkipped('ffprobe not installed on this machine — detection result unassertable');
         }
+
+        $this->assertIsString($result);
+        $this->assertTrue(is_executable($result) || str_contains($result, 'ffprobe'));
     }
 
     /**

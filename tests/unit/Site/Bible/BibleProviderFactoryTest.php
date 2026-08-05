@@ -147,9 +147,15 @@ class BibleProviderFactoryTest extends ProclaimTestCase
             'provider_getbible' => 1,
         ]);
 
-        // Without DB, getbible check fails, but getbible is still the fallback
-        $provider = BibleProviderFactory::getProviderForTranslation('kjv', $params);
-        $this->assertInstanceOf(BibleProviderInterface::class, $provider);
+        // Use a version no environment can have installed locally or in any
+        // provider catalog: on a dev DB, 'kjv' is locally installed and
+        // resolves to LocalProvider, while CI's empty DB resolves to the
+        // fallback -- so an assertion on 'kjv' can only be instanceof-the-
+        // interface, which everything satisfies. A nonsense version forces
+        // the getbible fallback branch deterministically in every
+        // environment, so the concrete class is assertable.
+        $provider = BibleProviderFactory::getProviderForTranslation('zz-nonexistent-version', $params);
+        $this->assertInstanceOf(GetBibleProvider::class, $provider);
     }
 
     /**

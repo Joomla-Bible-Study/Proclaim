@@ -109,6 +109,16 @@ class CwmplaylistCapabilityTest extends IntegrationTestCase
                 $method->getEndLine() - $method->getStartLine() + 1
             ));
 
+            // Anchor on the whole body being a lone `return false;` -- a
+            // bare /return\s+false\s*;/ also matches a conditionally-true
+            // body like `if ($x) { return true; } return false;`, which is
+            // exactly the "base class no longer defaults to false" regression
+            // this guards.
+            $this->assertDoesNotMatchRegularExpression(
+                '/return\s+true/',
+                $body,
+                \sprintf('%s() must not have any true-returning branch in the base class', $name)
+            );
             $this->assertMatchesRegularExpression(
                 '/return\s+false\s*;/',
                 $body,

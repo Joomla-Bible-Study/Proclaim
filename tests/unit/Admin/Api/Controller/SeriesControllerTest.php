@@ -55,27 +55,42 @@ class SeriesControllerTest extends ProclaimTestCase
     }
 
     /**
-     * Write operations (add/edit/delete) must set itemModelRequested
-     * so getModel() returns the singular CwmserieModel.
+     * Write operations (add/edit/delete) must set itemModelRequested so
+     * getModel() returns the singular CwmserieModel. Each check slices the
+     * specific method's body -- asserting the override merely EXISTS (the
+     * prior version) stayed green if the flag assignment was deleted from
+     * inside it, which breaks every series write.
+     *
+     * @param   string  $method  Overridden write method name
      */
-    public function testAddSetsItemModelFlag(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('writeMethodProvider')]
+    public function testWriteMethodSetsItemModelFlag(string $method): void
     {
-        $this->assertTrue(method_exists(SeriesController::class, 'add'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'add');
+        $ref = new \ReflectionMethod(SeriesController::class, $method);
         $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
+
+        $lines = file($ref->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString(
+            '$this->itemModelRequested = true;',
+            $body,
+            $method . '() must set itemModelRequested so getModel() resolves the singular CwmserieModel'
+        );
     }
 
-    public function testEditSetsItemModelFlag(): void
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function writeMethodProvider(): array
     {
-        $this->assertTrue(method_exists(SeriesController::class, 'edit'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'edit');
-        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
-    }
-
-    public function testDeleteSetsItemModelFlag(): void
-    {
-        $this->assertTrue(method_exists(SeriesController::class, 'delete'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'delete');
-        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
+        return [
+            'add'    => ['add'],
+            'edit'   => ['edit'],
+            'delete' => ['delete'],
+        ];
     }
 }

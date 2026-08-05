@@ -58,14 +58,17 @@ class ColorPickerFieldTest extends ProclaimTestCase
         $reflection = new \ReflectionClass(ColorPickerField::class);
         $source     = file_get_contents($reflection->getFileName());
 
+        // '<style'/'<script' followed by whitespace or '>' also catches raw
+        // tags reintroduced with attributes, which a bare-literal pattern
+        // waved through.
         $this->assertDoesNotMatchRegularExpression(
-            '/[\'"]<style>/',
+            '/[\'"]<style[\s>]/',
             $source,
             'ColorPickerField must not concatenate a raw <style> tag — see #1484'
         );
 
         $this->assertDoesNotMatchRegularExpression(
-            '/[\'"]<script>[\'"]/',
+            '/[\'"]<script[\s>]/',
             $source,
             'ColorPickerField must not concatenate a raw <script> tag — see #1484'
         );
@@ -81,6 +84,19 @@ class ColorPickerFieldTest extends ProclaimTestCase
             $source,
             'ColorPickerField must register its script via WebAssetManager::addInlineScript() — see #1484'
         );
+
+        // Registration methods existing is not the same as being called --
+        // getInput() must still wire them up or the field renders unstyled
+        // and inert.
+        $inputRef  = new \ReflectionMethod(ColorPickerField::class, 'getInput');
+        $lines     = file($inputRef->getFileName());
+        $inputBody = implode(
+            '',
+            \array_slice($lines, $inputRef->getStartLine() - 1, $inputRef->getEndLine() - $inputRef->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString('$this->registerStyles();', $inputBody);
+        $this->assertStringContainsString('$this->registerJavaScript();', $inputBody);
     }
 
     /**

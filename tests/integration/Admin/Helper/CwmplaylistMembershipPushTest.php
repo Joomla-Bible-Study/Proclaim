@@ -40,6 +40,14 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     private ?DatabaseDriver $db = null;
 
     /**
+     * Factory::$language as it was before silenceDateLanguageWarnings()
+     * replaced it, so tearDown() can restore process-wide state.
+     *
+     * @var mixed
+     */
+    private mixed $previousFactoryLanguage = null;
+
+    /**
      * @var  int
      */
     private int $serverId = 0;
@@ -86,6 +94,12 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      */
     private function silenceDateLanguageWarnings(): void
     {
+        // Remember the process-wide state so tearDown() can put it back --
+        // leaving the forced en-GB tag in place leaks into every later test
+        // in the run and masks the exact null-metadata warning class other
+        // suites' beStrictAboutOutputDuringTests would surface.
+        $this->previousFactoryLanguage = Factory::$language;
+
         $lang = Factory::getApplication()->getLanguage();
 
         try {
@@ -116,6 +130,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                 // Connection may have been lost — nothing to roll back.
             }
         }
+
+        Factory::$language = $this->previousFactoryLanguage;
 
         parent::tearDown();
     }

@@ -199,23 +199,25 @@ class ApiActionLogTest extends ProclaimTestCase
      */
     public function testDeniedActionsAreLogged(): void
     {
-        $source = (string) file_get_contents(
-            \dirname(__DIR__, 5) . '/api/src/Controller/AbstractWritableController.php'
-        );
-
+        // Scope every check to the individual verb's method body. The prior
+        // whole-file regex with a non-greedy `.*?` could satisfy delete()'s
+        // check by matching across into add()/edit()'s catch blocks, so one
+        // verb could silently lose its denial logging while the counts and
+        // cross-method matches kept everything green.
         foreach (['add', 'edit', 'delete'] as $verb) {
-            $this->assertMatchesRegularExpression(
-                '/function ' . $verb . '\([^)]*\)\s*\{.*?catch \(NotAllowed/s',
-                $source,
+            $body = self::verbBody($verb);
+
+            $this->assertStringContainsString(
+                'catch (NotAllowed',
+                $body,
                 "{$verb}() should record a permission refusal"
             );
+            $this->assertSame(
+                1,
+                substr_count($body, '$this->logDenied('),
+                "{$verb}() should record exactly one refusal"
+            );
         }
-
-        $this->assertSame(
-            3,
-            substr_count($source, '$this->logDenied('),
-            'Each of add/edit/delete should record exactly one refusal'
-        );
     }
 
     /**
@@ -223,14 +225,33 @@ class ApiActionLogTest extends ProclaimTestCase
      */
     public function testDeniedActionsRethrow(): void
     {
-        $source = (string) file_get_contents(
-            \dirname(__DIR__, 5) . '/api/src/Controller/AbstractWritableController.php'
-        );
+        foreach (['add', 'edit', 'delete'] as $verb) {
+            $this->assertSame(
+                1,
+                substr_count(self::verbBody($verb), 'throw $e;'),
+                "{$verb}()'s caught NotAllowed must be rethrown so the caller still gets a 403"
+            );
+        }
+    }
 
-        $this->assertSame(
-            3,
-            substr_count($source, 'throw $e;'),
-            'Every caught NotAllowed must be rethrown so the caller still gets a 403'
+    /**
+     * Slice one write verb's method body out of AbstractWritableController.
+     *
+     * @param   string  $verb  Method name (add/edit/delete)
+     *
+     * @return  string
+     */
+    private static function verbBody(string $verb): string
+    {
+        $ref   = new \ReflectionMethod(
+            'CWM\\Component\\Proclaim\\Api\\Controller\\AbstractWritableController',
+            $verb
+        );
+        $lines = file($ref->getFileName());
+
+        return implode(
+            '',
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
         );
     }
 

@@ -141,7 +141,11 @@ class CwmschemaorgHelperTest extends ProclaimTestCase
         $this->assertEquals('The Good Samaritan', $result['name']);
         $this->assertEquals('https://example.com/sermon/42', $result['url']);
         $this->assertStringNotContainsString('<', $result['description']);
-        $this->assertArrayHasKey('datePublished', $result);
+        // toIso8601() formats with DateTime::format('c'); the offset suffix
+        // depends on the runner's timezone, so pin the date-time prefix --
+        // enough to catch the raw MySQL datetime (space separator, no T)
+        // leaking through if toIso8601() breaks.
+        $this->assertStringStartsWith('2025-06-15T10:00:00', $result['datePublished']);
         $this->assertEquals('Pastor John', $result['author']['name']);
         $this->assertEquals('Person', $result['author']['@type']);
         $this->assertEquals('Parables of Jesus', $result['isPartOf']['name']);

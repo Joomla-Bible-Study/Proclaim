@@ -169,8 +169,11 @@ class CwmadminControllerTest extends ProclaimTestCase
                 "Cwmmedia::getMimetypes()'s current list — legacy stored values (e.g. 'audio/mp3', see #1397) " .
                 'must still be matchable — see #1492'
         );
-        $this->assertStringContainsString(
-            'getMimetypes()',
+        // Match the actual call expression, not the bare method name -- the
+        // method body also mentions getMimetypes() in a comment, which kept
+        // the previous substring check green even with the real call removed.
+        $this->assertMatchesRegularExpression(
+            '/\(new Cwmmedia\(\)\)->getMimetypes\(\)/',
             $body,
             'changePlayerByMediaTypeXHR() must still call Cwmmedia::getMimetypes() to resolve the ' .
                 'extension-based fallback match — see #1492'
