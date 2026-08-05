@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -59,19 +60,119 @@ class Cwmalias
                 if (!$r['title']) {
                     // Do nothing
                 } else {
-                    $alias = OutputFilter::stringURLSafe($r['title']);
+                    // Two titles that slugify identically (reused series names,
+                    // teacher name variants) previously both got the same alias.
+                    // On #__bsms_studies/_series/_message_type there is no unique
+                    // index, so the duplicate stuck and the SEF router -- which
+                    // resolves by alias alone under "Remove IDs from URLs" -- served
+                    // whichever row the database returned first, silently rendering
+                    // one record's page as another's. On #__bsms_teachers, which
+                    // does carry UNIQUE KEY `idx_alias`, the duplicate INSERT threw
+                    // instead and aborted the whole backfill mid-run. See #1565.
+                    $alias = self::makeUniqueAlias(
+                        $db,
+                        $r['table'],
+                        OutputFilter::stringURLSafe($r['title']),
+                        (int) $r['id']
+                    );
+
                     $query = $db->createQuery();
                     $query->update($db->quoteName($r['table']))
                         ->set($db->quoteName('alias') . ' = ' . $db->q($alias))
                         ->where($db->quoteName('id') . ' = ' . (int) $r['id']);
                     $db->setQuery($query);
-                    $db->execute();
-                    $done++;
+
+                    // One unwritable row must not abandon the rest of the backfill.
+                    // Before this, a single failure (e.g. the unique-index collision
+                    // above) surfaced as an uncaught exception and left the operation
+                    // half-applied with no indication of how far it got.
+                    try {
+                        $db->execute();
+                        $done++;
+                    } catch (\RuntimeException $e) {
+                        Log::add(
+                            'Alias backfill skipped ' . $r['table'] . ' id ' . (int) $r['id']
+                            . ': ' . $e->getMessage(),
+                            Log::WARNING,
+                            'com_proclaim'
+                        );
+                    }
                 }
             }
         }
 
         return $done;
+    }
+
+    /**
+     * Build an alias that no other row in the same table is already using.
+     *
+     * Appends -2, -3, ... to the slug until it is free, matching the
+     * disambiguation Joomla core applies to article and category aliases.
+     *
+     * Each candidate is checked against the live table rather than against an
+     * in-memory set, so it also accounts for rows written earlier in this same
+     * backfill run (updateAlias() writes each row before moving to the next).
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Table being backfilled
+     * @param   string             $base   Slugified title (may be empty)
+     * @param   int                $id     Row being updated, excluded from the check
+     *
+     * @return  string  An alias free for this row
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function makeUniqueAlias(DatabaseInterface $db, string $table, string $base, int $id): string
+    {
+        // stringURLSafe() returns '' for titles with no transliterable
+        // characters. Writing that back would leave the row looking
+        // un-aliased, so it would be picked up again on every future run and
+        // never gain a usable alias.
+        if ($base === '') {
+            $base = 'item-' . $id;
+        }
+
+        $alias   = $base;
+        $counter = 1;
+
+        while (self::aliasInUse($db, $table, $alias, $id)) {
+            $counter++;
+
+            // Defensive stop: the row id is unique by definition, so this
+            // suffix always terminates the search.
+            if ($counter > 100) {
+                return $base . '-' . $id;
+            }
+
+            $alias = $base . '-' . $counter;
+        }
+
+        return $alias;
+    }
+
+    /**
+     * Whether another row in this table already holds the given alias.
+     *
+     * @param   DatabaseInterface  $db         Database driver
+     * @param   string             $table      Table to search
+     * @param   string             $alias      Candidate alias
+     * @param   int                $excludeId  Row to ignore (the one being updated)
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function aliasInUse(DatabaseInterface $db, string $table, string $alias, int $excludeId): bool
+    {
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName($table))
+            ->where($db->quoteName('alias') . ' = ' . $db->q($alias))
+            ->where($db->quoteName('id') . ' != ' . $excludeId);
+        $db->setQuery($query);
+
+        return (int) $db->loadResult() > 0;
     }
 
     /**
