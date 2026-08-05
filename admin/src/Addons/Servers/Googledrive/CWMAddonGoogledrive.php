@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -311,7 +312,7 @@ class CWMAddonGoogledrive extends CWMAddon
      *
      * @since   10.2.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Google Drive files are referenced by URL, not uploaded
         return false;

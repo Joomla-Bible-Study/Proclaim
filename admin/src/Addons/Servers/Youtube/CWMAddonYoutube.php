@@ -77,13 +77,13 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @since 9.0.0
      */
-    public function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Holds for nothing
         return $data;

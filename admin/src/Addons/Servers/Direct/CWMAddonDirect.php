@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmuploadscript;
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -50,14 +51,14 @@ class CWMAddonDirect extends CWMAddon
     /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @throws \Exception
      * @since 10.1.0
      */
-    public function upload(?array $data): array
+    public function upload(Input $data): array
     {
         return (new Cwmuploadscript())->upload($data);
     }

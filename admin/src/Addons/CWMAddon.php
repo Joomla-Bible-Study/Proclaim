@@ -309,13 +309,13 @@ abstract class CWMAddon
     /**
      * Upload
      *
-     * @param ?array $data Data to upload
+     * @param   Input  $data Data to upload
      *
      * @return mixed
      *
      * @since 9.0.0
      */
-    abstract protected function upload(?array $data): mixed;
+    abstract protected function upload(Input $data): mixed;
 
     /**
      * Get available AJAX actions for this addon
