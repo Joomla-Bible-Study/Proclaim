@@ -363,7 +363,21 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     {
         $params       = $event->getArgument('params');
         $enableRollup = (bool) ($params->enable_rollup ?? true);
-        $enablePurge  = (bool) ($params->enable_purge ?? true);
+
+        // Defaults to OFF: analytics history is kept indefinitely unless an
+        // administrator deliberately opts in to deleting it.
+        //
+        // Deletion is irreversible and costs more than the rollup preserves.
+        // CwmanalyticsModel reads #__bsms_analytics_events in around twenty
+        // queries -- every breakdown, trend and top-content panel -- but reads
+        // #__bsms_analytics_monthly in exactly one, getLegacyKpiTotals(). The
+        // aggregates therefore do not back the dashboard, so purging blanks
+        // most of it for the purged period rather than compacting it.
+        //
+        // Note this also changes behaviour for existing installs: the setup
+        // wizard seeds this task with params '{}', so those tasks have been
+        // falling through to the previous `?? true` and purging. They stop.
+        $enablePurge = (bool) ($params->enable_purge ?? false);
 
         // Validate the raw param before casting. `?? 90` only substitutes on
         // NULL, and a blank retention field in the Scheduler UI is saved as

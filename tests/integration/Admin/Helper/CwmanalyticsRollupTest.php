@@ -333,6 +333,45 @@ class CwmanalyticsRollupTest extends IntegrationTestCase
         );
     }
 
+    /**
+     * Analytics history is kept for all time unless an administrator opts in.
+     * Pinned in both places because they are independent: the form default
+     * governs a task created through the UI, while the plugin's fallback
+     * governs the tasks the setup wizard seeds with params '{}'.
+     */
+    #[TestDox('The task form ships with the purge switched off')]
+    public function testPurgeIsOffByDefaultInTheTaskForm(): void
+    {
+        $xml = simplexml_load_file(
+            JPATH_ROOT . '/plugins/task/proclaim/forms/analytics.xml'
+        );
+
+        $purge = $xml->xpath('//field[@name="enable_purge"]')[0] ?? null;
+
+        $this->assertNotNull($purge, 'Expected an enable_purge field on the analytics task form');
+        $this->assertSame(
+            '0',
+            (string) $purge['default'],
+            'Analytics history must be kept indefinitely unless an admin opts in to deleting it'
+        );
+    }
+
+    #[TestDox('A task with no saved params does not purge')]
+    public function testPurgeFallbackIsOffForWizardSeededTasks(): void
+    {
+        // The setup wizard seeds this task with params '{}', so the plugin's
+        // null-coalescing fallback is what actually runs on those installs.
+        $source = file_get_contents(
+            JPATH_ROOT . '/plugins/task/proclaim/src/Extension/Proclaim.php'
+        );
+
+        $this->assertMatchesRegularExpression(
+            '/enable_purge\s*\?\?\s*false/',
+            $source,
+            'Falling back to true meant wizard-created tasks purged without anyone choosing it — see #1608'
+        );
+    }
+
     #[TestDox('A below-floor retention deletes nothing and reports nothing rolled')]
     public function testUnsafeRetentionIsARefusalNotAWipe(): void
     {
