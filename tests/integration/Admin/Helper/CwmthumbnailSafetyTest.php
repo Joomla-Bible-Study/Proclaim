@@ -92,7 +92,11 @@ class CwmthumbnailSafetyTest extends IntegrationTestCase
         $im = imagecreatetruecolor(40, 30);
         imagefilledrectangle($im, 0, 0, 40, 30, imagecolorallocate($im, 20, 120, 200));
         imagejpeg($im, $path);
-        imagedestroy($im);
+
+        // No imagedestroy(): it has been a no-op since PHP 8.0 (GdImage is
+        // garbage-collected) and is deprecated in 8.5, which the blocking 8.5
+        // CI job turns into a failure via failOnWarning. Letting $im fall out
+        // of scope is the supported form.
     }
 
     // -------------------------------------------------------------------------
