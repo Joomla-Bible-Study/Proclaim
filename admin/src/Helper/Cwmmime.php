@@ -90,10 +90,38 @@ final class Cwmmime
      */
     public static function fromExtension(string $pathOrFilename): ?string
     {
-        $path      = parse_url($pathOrFilename, PHP_URL_PATH) ?: $pathOrFilename;
-        $extension = strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
+        return self::MAP[self::extensionOf($pathOrFilename)] ?? null;
+    }
 
-        return self::MAP[$extension] ?? null;
+    /**
+     * Extract the lower-cased extension from a filename, path or URL.
+     *
+     * parse_url() splits on '?' and '#' whether or not the value is a URL, so
+     * routing a bare filename through it loses everything after those
+     * characters -- "Sermon #12.mp4" becomes "Sermon " and the extension is
+     * gone. Filenames here are admin-entered and unsanitised, so a '#' in one
+     * is ordinary rather than hostile. A query or fragment is therefore only
+     * stripped when the value actually is a URL.
+     *
+     * Detected by '://' or a leading '//' rather than PHP_URL_SCHEME, because
+     * a Windows path like "C:\media\file #1.mp4" reports its drive letter as
+     * the scheme and would be misread as a URL.
+     *
+     * @param   string  $pathOrFilename  Filename, filesystem path or URL
+     *
+     * @return  string  Lower-cased extension, or an empty string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function extensionOf(string $pathOrFilename): string
+    {
+        $path = $pathOrFilename;
+
+        if (str_contains($pathOrFilename, '://') || str_starts_with($pathOrFilename, '//')) {
+            $path = parse_url($pathOrFilename, PHP_URL_PATH) ?: $pathOrFilename;
+        }
+
+        return strtolower(pathinfo((string) $path, PATHINFO_EXTENSION));
     }
 
     /**
