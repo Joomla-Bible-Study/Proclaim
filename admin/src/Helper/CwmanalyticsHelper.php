@@ -172,8 +172,15 @@ class CwmanalyticsHelper
                 }
             }
 
-            // Outbound click: repurpose destUrl as referrer_url column
-            if ($type === 'outbound_click' && $destUrl !== '') {
+            // Outbound click: repurpose destUrl as referrer_url column.
+            //
+            // Gated on $consentOn like every other write to this column. It
+            // previously sat outside the gate, so a visitor who had signalled
+            // GPC/DNT still had a destination URL and timestamp recorded --
+            // and since referrer_url is otherwise only written when the
+            // referrer mode is set to 'full', this was the one path that
+            // populated the column on a default install.
+            if ($consentOn && $type === 'outbound_click' && $destUrl !== '') {
                 $referrerUrl = substr($destUrl, 0, 2048);
             }
 
@@ -368,8 +375,40 @@ class CwmanalyticsHelper
     }
 
     /**
+     * Name of the cookie a consent manager sets to suppress personal-data columns.
+     *
+     * This is Proclaim's published integration contract, not a cookie Proclaim
+     * sets. Proclaim deliberately ships no consent banner: virtually every
+     * Joomla site already runs one, and a second would compete with it.
+     * Joomla core offers nothing to integrate with either -- plg_system_
+     * privacyconsent covers account-registration consent and has no concept of
+     * an anonymous visitor -- so a documented cookie is the integration point.
+     *
+     * Set it to any non-empty value when a visitor declines analytics.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const string OPTOUT_COOKIE = 'proclaim_analytics_optout';
+
+    /**
      * Check whether the current visitor has opted out of personal-data tracking.
-     * Respects the DNT (Do Not Track) header and the proclaim_analytics_optout cookie.
+     *
+     * Three signals are honoured, any one of which suppresses the
+     * consent-required columns:
+     *
+     *  - Sec-GPC: 1 -- Global Privacy Control. The live successor to DNT, sent
+     *    by Firefox, Brave and DuckDuckGo and recognised under CCPA/CPRA.
+     *  - DNT: 1 -- retained for completeness, but effectively defunct: the W3C
+     *    discontinued the specification, Safari and Firefox removed the
+     *    setting, and Chrome never sent it by default. Almost no visitor sends
+     *    this, which is why GPC was added alongside it.
+     *  - The OPTOUT_COOKIE, which the site's own consent manager sets.
+     *
+     * Note this governs the personal-data tier only. Proclaim itself stores
+     * nothing on the visitor's device -- the session identifier it hashes comes
+     * from Joomla's own strictly-necessary session cookie -- so the ePrivacy
+     * consent requirement that cookie banners exist to satisfy is not what is
+     * being answered here.
      *
      * @return  bool  True if opted out (skip personal-data columns).
      *
@@ -385,7 +424,11 @@ class CwmanalyticsHelper
                 return false;
             }
 
-            // GDPR mode — Proclaim keeps its own copy in component params
+            // GDPR mode — Proclaim keeps its own copy in component params.
+            // Note this parameter is primarily documented as governing outbound
+            // API calls and social sharing; that it also suppresses the
+            // analytics personal-data tier is called out in its own
+            // description so the coupling is not a surprise.
             if ($params->get('gdpr_mode', '0')) {
                 return true;
             }
@@ -393,11 +436,16 @@ class CwmanalyticsHelper
             // No params available — default to opt-out support enabled
         }
 
+        // Global Privacy Control — the signal that is actually alive.
+        if (($_SERVER['HTTP_SEC_GPC'] ?? '') === '1') {
+            return true;
+        }
+
         if (($_SERVER['HTTP_DNT'] ?? '') === '1') {
             return true;
         }
 
-        if (!empty($_COOKIE['proclaim_analytics_optout'])) {
+        if (!empty($_COOKIE[self::OPTOUT_COOKIE])) {
             return true;
         }
 
