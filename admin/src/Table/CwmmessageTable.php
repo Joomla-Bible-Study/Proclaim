@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
@@ -722,6 +723,9 @@ class CwmmessageTable extends Table
 
         // Delete associated study_teachers junction records
         CwmstudyteacherHelper::deleteTeachers((int) $pk);
+
+        // Delete associated study_topics junction records
+        CwmstudytopicHelper::deleteTopics((int) $pk);
 
         // Cascade-delete associated media files (triggers physical file cleanup)
         $this->deleteMediaFiles((int) $pk);

@@ -610,7 +610,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics`
     KEY `idx_access` (`access`),
     KEY `idx_study` (`study_id`),
     KEY `idx_topic` (`topic_id`),
-    KEY `idx_study_topic` (`study_id`, `topic_id`)
+    UNIQUE KEY `uq_study_topic` (`study_id`, `topic_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
