@@ -149,7 +149,7 @@ class CwmanalyticsHelper
             //
             // Keyed and rotated daily, so the same visitor hashes differently
             // on different days and cannot be followed across them. See
-            // deriveSessionHash(). If no site secret is available the hash is
+            // hashSessionForDay(). If no site secret is available the hash is
             // left NULL rather than falling back to an unkeyed digest --
             // losing a row from the Sessions count is preferable to writing a
             // permanently linkable identifier.
@@ -161,7 +161,7 @@ class CwmanalyticsHelper
                     $secret    = (string) $app->get('secret');
 
                     if ($sessionId !== '' && $secret !== '') {
-                        $sessionHash = self::deriveSessionHash(
+                        $sessionHash = self::hashSessionForDay(
                             $sessionId,
                             $secret,
                             (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d')
@@ -400,12 +400,25 @@ class CwmanalyticsHelper
     private const string SESSION_HASH_CONTEXT = 'proclaim:analytics:session';
 
     /**
-     * Derive the stored session identifier: keyed, and rotated daily.
+     * Fingerprint a visitor's session for one particular day.
+     *
+     * This is what gets stored in session_hash, and it exists for exactly one
+     * reason: to count how many distinct visits happened, without recording
+     * who made them. COUNT(DISTINCT session_hash) is the Sessions figure on
+     * the analytics dashboard.
+     *
+     * The fingerprint deliberately changes every day. Two rows from the same
+     * visitor on the same day share a value, so a day's visits still count as
+     * one session; two rows from different days do not, so nobody can join
+     * them up. The raw session ID is never stored, and the value cannot be
+     * turned back into one.
      *
      * Previously this was a bare hash('sha256', $sessionId). That had two
      * problems. It was unkeyed, so the digest was reproducible by anyone
-     * holding a candidate session ID; and it was stable forever, so a single
-     * visitor could be followed across the entire history of the table.
+     * holding a candidate session ID -- letting them confirm that a specific
+     * person had visited. And it was stable forever, so a single visitor could
+     * be followed across the entire history of the table; 188 of them were, on
+     * a real 82,565-row site.
      *
      * Keying with the site secret removes the first. Folding the day into the
      * key removes the second: the same visitor produces a different hash
@@ -431,7 +444,7 @@ class CwmanalyticsHelper
      *
      * @since   __DEPLOY_VERSION__
      */
-    public static function deriveSessionHash(string $sessionId, string $secret, string $day): string
+    public static function hashSessionForDay(string $sessionId, string $secret, string $day): string
     {
         $dailyKey = hash_hmac('sha256', self::SESSION_HASH_CONTEXT . ':' . $day, $secret);
 

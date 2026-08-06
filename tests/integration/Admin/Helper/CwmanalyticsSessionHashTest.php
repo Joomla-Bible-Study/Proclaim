@@ -49,8 +49,8 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
     public function testStableWithinADay(): void
     {
         $this->assertSame(
-            CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-06'),
-            CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-06'),
+            CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-06'),
+            CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-06'),
             'Sessions counting depends on same-day stability'
         );
     }
@@ -61,8 +61,8 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
     #[TestDox('The same visitor on a different day is unlinkable')]
     public function testRotatesAcrossDays(): void
     {
-        $day1 = CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-06');
-        $day2 = CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-07');
+        $day1 = CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-06');
+        $day2 = CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-07');
 
         $this->assertNotSame(
             $day1,
@@ -75,15 +75,15 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
     public function testDistinctVisitorsDiffer(): void
     {
         $this->assertNotSame(
-            CwmanalyticsHelper::deriveSessionHash('session-one', self::SECRET, '2026-08-06'),
-            CwmanalyticsHelper::deriveSessionHash('session-two', self::SECRET, '2026-08-06')
+            CwmanalyticsHelper::hashSessionForDay('session-one', self::SECRET, '2026-08-06'),
+            CwmanalyticsHelper::hashSessionForDay('session-two', self::SECRET, '2026-08-06')
         );
     }
 
     #[TestDox('The digest is keyed, not a plain SHA-256 of the session id')]
     public function testIsKeyed(): void
     {
-        $derived = CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-06');
+        $derived = CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-06');
 
         $this->assertNotSame(
             hash('sha256', self::SESSION),
@@ -95,7 +95,7 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
         // not actually participating.
         $this->assertNotSame(
             $derived,
-            CwmanalyticsHelper::deriveSessionHash(self::SESSION, 'another-secret', '2026-08-06'),
+            CwmanalyticsHelper::hashSessionForDay(self::SESSION, 'another-secret', '2026-08-06'),
             'The site secret must be load-bearing'
         );
     }
@@ -103,7 +103,7 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
     #[TestDox('The stored value never contains the raw session id')]
     public function testRawSessionIdIsNotStored(): void
     {
-        $derived = CwmanalyticsHelper::deriveSessionHash(self::SESSION, self::SECRET, '2026-08-06');
+        $derived = CwmanalyticsHelper::hashSessionForDay(self::SESSION, self::SECRET, '2026-08-06');
 
         $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $derived, 'Expected a hex sha256 digest');
         $this->assertStringNotContainsString(self::SESSION, $derived);
@@ -119,7 +119,7 @@ class CwmanalyticsSessionHashTest extends IntegrationTestCase
     {
         $this->assertNotSame(
             hash('sha256', self::SESSION),
-            CwmanalyticsHelper::deriveSessionHash(self::SESSION, '', '2026-08-06')
+            CwmanalyticsHelper::hashSessionForDay(self::SESSION, '', '2026-08-06')
         );
     }
 
