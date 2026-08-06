@@ -170,6 +170,76 @@ class CwmcaptionValidator
     }
 
     /**
+     * Check that an entire WebVTT body is structurally WebVTT.
+     *
+     * detectFormat() only sniffs the first bytes, which is all it can do with a
+     * 64-byte head. That is enough to route a file but says nothing about the
+     * rest of it: `WEBVTT\n\n` followed by two megabytes of anything satisfies
+     * the prefix test. Since a VTT upload is stored byte-for-byte and served
+     * from a public URL, the whole body has to be checked before it is kept.
+     *
+     * This validates rather than rewrites. Parsing and re-serialising through
+     * parseVttCues() would also reject junk, but that method deliberately drops
+     * NOTE, STYLE and REGION blocks, cue identifiers, cue settings and inline
+     * tags such as <v Speaker> -- fine when converting to a format that cannot
+     * express them, and destructive when applied to a caption file the user
+     * authored. Valid files are stored exactly as uploaded.
+     *
+     * @param   string  $body  Full caption file contents.
+     *
+     * @return  bool  True when every block is a header, comment, style,
+     *                region, or a cue with a parseable timestamp line.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function isStructurallyVtt(string $body): bool
+    {
+        $body = ltrim($body, "\xEF\xBB\xBF");
+        $body = str_replace(["\r\n", "\r"], "\n", $body);
+        $body = trim($body);
+
+        if (!preg_match('/^WEBVTT(\s|$)/', $body)) {
+            return false;
+        }
+
+        $blocks = preg_split('/\n\s*\n/', $body) ?: [];
+
+        foreach ($blocks as $index => $block) {
+            $block = trim($block);
+
+            if ($block === '') {
+                continue;
+            }
+
+            // The header block, and the metadata blocks WebVTT allows.
+            if ($index === 0 && preg_match('/^WEBVTT(\s|$)/', $block)) {
+                continue;
+            }
+
+            if (preg_match('/^(NOTE|STYLE|REGION)(\s|$)/', $block)) {
+                continue;
+            }
+
+            // Anything else has to be a cue: an optional identifier line
+            // followed by a timestamp line.
+            $lines = explode("\n", $block);
+
+            if (!str_contains($lines[0], '-->') && \count($lines) > 1) {
+                array_shift($lines);
+            }
+
+            if (!preg_match(
+                '/^((?:\d{2,}:)?\d{2}:\d{2}\.\d{3})\s*-->\s*((?:\d{2,}:)?\d{2}:\d{2}\.\d{3})/',
+                $lines[0]
+            )) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Convert a YouTube SBV caption body to WebVTT.
      *
      * SBV cues are `H:MM:SS.mmm,H:MM:SS.mmm` on one line, followed by
