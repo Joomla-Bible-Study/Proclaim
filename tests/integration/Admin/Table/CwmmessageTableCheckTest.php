@@ -22,7 +22,7 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
 
     private ?DatabaseDriver $db = null;
 
-    /** @var int[] Message ids sharing studynumber '1' (seeded on demand — see seedDuplicateFixture()) */
+    /** @var int[] Message ids holding a number in the fixture series (see seedDuplicateFixture()) */
     private array $tiedIds = [];
 
     private int $seriesId = 0;
@@ -54,8 +54,8 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
     }
 
     /**
-     * Insert a series plus three messages tied at studynumber '1' and one
-     * unique message at studynumber '4' — a self-contained duplicate
+     * Insert a series plus a message at studynumber '1' and another at '4'
+     * — a self-contained
      * fixture, independent of whatever data (if any) the target database
      * already has.
      */
@@ -102,9 +102,11 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
         };
 
         $this->tiedIds  = [
-            $insertSermon('Fixture Episode 1a', '1'),
-            $insertSermon('Fixture Episode 1b', '1'),
-            $insertSermon('Fixture Episode 1c', '1'),
+            // One holder per number. Since #1579 the database rejects a second
+            // message taking the same number in the same series, so the tied
+            // group this fixture used to build cannot be created. None of the
+            // behaviours below need one -- they need a number to be *taken*.
+            $insertSermon('Fixture Episode 1', '1'),
         ];
         $this->uniqueId = $insertSermon('Fixture Episode 4', '4');
     }
@@ -171,9 +173,9 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
     {
         $this->seedDuplicateFixture();
 
-        // The first tied message already conflicts with the other two.
-        // Re-saving it with the same series_id/studynumber (e.g. editing an
-        // unrelated field) must not be blocked by this new check.
+        // Re-saving a message with its own series_id/studynumber unchanged
+        // (editing an unrelated field) must not be blocked by the duplicate
+        // check, which is what the changed/unchanged comparison is for.
         $this->table->id          = $this->tiedIds[0];
         $this->table->studytitle  = 'Fixture Episode 1a (edited)';
         $this->table->series_id   = $this->seriesId;
@@ -186,9 +188,8 @@ class CwmmessageTableCheckTest extends IntegrationTestCase
     {
         $this->seedDuplicateFixture();
 
-        // The unique message currently has studynumber '4'. Changing it to
-        // '1' introduces a brand new conflict with the tied group and must
-        // be rejected.
+        // The other message currently has studynumber '4'. Changing it to '1'
+        // introduces a brand new conflict and must be rejected.
         $this->table->id          = $this->uniqueId;
         $this->table->studytitle  = 'Fixture Episode 4 (edited)';
         $this->table->series_id   = $this->seriesId;

@@ -533,7 +533,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `ordering`            INT(11)                                          NOT NULL DEFAULT '0',
     `language`            CHAR(7)                                          NOT NULL COMMENT 'The language code for the Studies.',
     `download_id`         INT(10)                                          NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile',
+    `studynumber_uk`      VARCHAR(100) GENERATED ALWAYS AS
+        (IF(`series_id` > 0 AND `studynumber` <> '', `studynumber`, NULL)) STORED,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_seriesid` (`series_id`),
