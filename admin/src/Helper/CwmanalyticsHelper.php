@@ -145,13 +145,28 @@ class CwmanalyticsHelper
             // Campus: resolved from study or media record
             $locationId = self::resolveLocationId($studyId, $mediaId);
 
-            // Session hash (personal data — consent-required)
+            // Session hash (personal data — consent-required).
+            //
+            // Keyed and rotated daily, so the same visitor hashes differently
+            // on different days and cannot be followed across them. See
+            // deriveSessionHash(). If no site secret is available the hash is
+            // left NULL rather than falling back to an unkeyed digest --
+            // losing a row from the Sessions count is preferable to writing a
+            // permanently linkable identifier.
             $sessionHash = null;
 
             if ($consentOn) {
                 try {
-                    $sessionId   = $app->getSession()->getId();
-                    $sessionHash = hash('sha256', $sessionId);
+                    $sessionId = (string) $app->getSession()->getId();
+                    $secret    = (string) $app->get('secret');
+
+                    if ($sessionId !== '' && $secret !== '') {
+                        $sessionHash = self::deriveSessionHash(
+                            $sessionId,
+                            $secret,
+                            (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d')
+                        );
+                    }
                 } catch (\Exception $e) {
                     $sessionHash = null;
                 }
@@ -372,6 +387,55 @@ class CwmanalyticsHelper
         }
 
         return ['device' => $device, 'browser' => $browser, 'os' => $os];
+    }
+
+    /**
+     * Domain-separation label for the session-hash key derivation.
+     *
+     * Keeps the derived analytics key distinct from any other use of the site
+     * secret, so it is not interchangeable with tokens minted elsewhere.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string SESSION_HASH_CONTEXT = 'proclaim:analytics:session';
+
+    /**
+     * Derive the stored session identifier: keyed, and rotated daily.
+     *
+     * Previously this was a bare hash('sha256', $sessionId). That had two
+     * problems. It was unkeyed, so the digest was reproducible by anyone
+     * holding a candidate session ID; and it was stable forever, so a single
+     * visitor could be followed across the entire history of the table.
+     *
+     * Keying with the site secret removes the first. Folding the day into the
+     * key removes the second: the same visitor produces a different hash
+     * tomorrow, and no amount of access to the stored data reveals that the
+     * two rows belong to one person. Within a day the value is still stable,
+     * which is exactly what COUNT(DISTINCT session_hash) needs -- so the
+     * Sessions metric keeps working while cross-day tracking becomes
+     * impossible.
+     *
+     * This mirrors the rotating-salt approach Plausible and Fathom use, and is
+     * the basis on which they describe themselves as storing no personal data.
+     * Note the value remains pseudonymous *within* a single day and is still
+     * treated as consent-required.
+     *
+     * Pure by design -- the secret and day are arguments rather than globals
+     * so the rotation can be proven in a test without a request context.
+     *
+     * @param   string  $sessionId  Raw session identifier; never stored.
+     * @param   string  $secret     Site secret used as key material.
+     * @param   string  $day        Rotation bucket, 'Y-m-d' in UTC.
+     *
+     * @return  string  64-character hex digest.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function deriveSessionHash(string $sessionId, string $secret, string $day): string
+    {
+        $dailyKey = hash_hmac('sha256', self::SESSION_HASH_CONTEXT . ':' . $day, $secret);
+
+        return hash_hmac('sha256', $sessionId, $dailyKey);
     }
 
     /**
