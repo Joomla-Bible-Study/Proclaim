@@ -286,6 +286,35 @@ class CwmdescriptionHelper
     }
 
     /**
+     * Decode a params column into an array.
+     *
+     * The callers index into the result, so anything that is not an array --
+     * malformed JSON, but equally a valid scalar or list where an object was
+     * expected -- has to come back as an empty array rather than as something
+     * that warns on offset access or fails a return type further up.
+     *
+     * @param   mixed  $json  Raw params value
+     *
+     * @return  array  Decoded parameters, or an empty array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function decodeParams(mixed $json): array
+    {
+        if (!\is_string($json) || $json === '') {
+            return [];
+        }
+
+        try {
+            $decoded = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return [];
+        }
+
+        return \is_array($decoded) ? $decoded : [];
+    }
+
+    /**
      * Get the description format template from a media file's server addon.
      *
      * Looks for a `description_format` or `yt_description_format` param
@@ -319,16 +348,19 @@ class CwmdescriptionHelper
             return '';
         }
 
-        try {
-            $decoded = json_decode($serverParams, true, 512, JSON_THROW_ON_ERROR) ?: [];
-        } catch (\JsonException) {
-            return '';
-        }
+        $decoded = self::decodeParams($serverParams);
 
         // Prefer the standardized key; fall back to legacy YouTube-specific key
-        return $decoded['description_format']
+        $format = $decoded['description_format']
             ?? $decoded['yt_description_format']
             ?? '';
+
+        // Valid JSON carrying the wrong shape -- an object or list where a
+        // template string belongs -- would otherwise fail this method's return
+        // type. That is a TypeError, which is an Error rather than an
+        // Exception, so the AJAX callers' catch(\Exception) does not see it and
+        // the request dies instead of falling back to no format.
+        return \is_string($format) ? $format : '';
     }
 
     /**
@@ -439,10 +471,12 @@ class CwmdescriptionHelper
 
             if ($params) {
                 try {
-                    $decoded  = json_decode($params, true, 512, JSON_THROW_ON_ERROR) ?: [];
-                    $chapters = $decoded['chapters'] ?? [];
+                    $chapters = self::decodeParams($params)['chapters'] ?? [];
 
-                    if (!empty($chapters)) {
+                    // is_array before the emptiness test: a non-empty string or
+                    // number here would satisfy !empty() and then fail this
+                    // method's array return type.
+                    if (\is_array($chapters) && $chapters !== []) {
                         return $chapters;
                     }
                 } catch (\JsonException) {
@@ -467,10 +501,9 @@ class CwmdescriptionHelper
             }
 
             try {
-                $decoded  = json_decode($paramsJson, true, 512, JSON_THROW_ON_ERROR) ?: [];
-                $chapters = $decoded['chapters'] ?? [];
+                $chapters = self::decodeParams($paramsJson)['chapters'] ?? [];
 
-                if (!empty($chapters)) {
+                if (\is_array($chapters) && $chapters !== []) {
                     return $chapters;
                 }
             } catch (\JsonException) {
