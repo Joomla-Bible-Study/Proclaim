@@ -67,16 +67,9 @@ class CwmanalyticsHelper
      * Respects GDPR opt-out (DNT header + proclaim_analytics_optout cookie).
      * Classifies UA and referrer at log-time; raw signals never stored.
      *
-     * NOTE: no GeoIP classification happens here, despite what this docblock
-     * previously claimed. There is no GeoIP resolution anywhere in the
-     * codebase, and country_code is absent from this method's INSERT column
-     * list, so #__bsms_analytics_events.country_code is always NULL. The
-     * monthly rollup and CwmanalyticsModel::getBreakdown('country_code', ...)
-     * therefore have nothing to report. Deliberately left unimplemented rather
-     * than wired up here: GeoIP means a new dependency and a new privacy
-     * surface, against a schema that documents never storing the raw IP. No
-     * admin view currently renders a country breakdown, so nothing surfaces an
-     * empty widget. See #1571.
+     * NOTE: no GeoIP happens here -- country_code is absent from the INSERT and
+     * is always NULL. Unimplemented on purpose: it means a new dependency and
+     * privacy surface, and no admin view renders a country breakdown.
      *
      * @param   string  $type      Event type: page_view|play|download|outbound_click
      * @param   int     $studyId   Study (message) ID, 0 if media-only
@@ -146,13 +139,8 @@ class CwmanalyticsHelper
             $locationId = self::resolveLocationId($studyId, $mediaId);
 
             // Session hash (personal data — consent-required).
-            //
-            // Keyed and rotated daily, so the same visitor hashes differently
-            // on different days and cannot be followed across them. See
-            // hashSessionForDay(). If no site secret is available the hash is
-            // left NULL rather than falling back to an unkeyed digest --
-            // losing a row from the Sessions count is preferable to writing a
-            // permanently linkable identifier.
+            // Left NULL without a secret rather than falling back to an
+            // unkeyed digest, which would be permanently linkable.
             $sessionHash = null;
 
             if ($consentOn) {
@@ -188,13 +176,7 @@ class CwmanalyticsHelper
             }
 
             // Outbound click: repurpose destUrl as referrer_url column.
-            //
-            // Gated on $consentOn like every other write to this column. It
-            // previously sat outside the gate, so a visitor who had signalled
-            // GPC/DNT still had a destination URL and timestamp recorded --
-            // and since referrer_url is otherwise only written when the
-            // referrer mode is set to 'full', this was the one path that
-            // populated the column on a default install.
+            // Gated on $consentOn like every other write to this column.
             if ($consentOn && $type === 'outbound_click' && $destUrl !== '') {
                 $referrerUrl = substr($destUrl, 0, 2048);
             }
@@ -390,51 +372,24 @@ class CwmanalyticsHelper
     }
 
     /**
-     * Domain-separation label for the session-hash key derivation.
-     *
-     * Keeps the derived analytics key distinct from any other use of the site
-     * secret, so it is not interchangeable with tokens minted elsewhere.
+     * Domain-separation label, so the analytics key is not interchangeable
+     * with tokens minted elsewhere from the same site secret.
      *
      * @since  __DEPLOY_VERSION__
      */
     private const string SESSION_HASH_CONTEXT = 'proclaim:analytics:session';
 
     /**
-     * Fingerprint a visitor's session for one particular day.
+     * Fingerprint a visitor's session for one day.
      *
-     * This is what gets stored in session_hash, and it exists for exactly one
-     * reason: to count how many distinct visits happened, without recording
-     * who made them. COUNT(DISTINCT session_hash) is the Sessions figure on
-     * the analytics dashboard.
+     * Stored in session_hash so COUNT(DISTINCT session_hash) can report the
+     * Sessions figure. Keyed with the site secret so an outsider cannot
+     * recompute it from a guessed session ID, and rotated daily so the same
+     * visitor is not linkable across days. Stable within a day, which is all
+     * the count needs.
      *
-     * The fingerprint deliberately changes every day. Two rows from the same
-     * visitor on the same day share a value, so a day's visits still count as
-     * one session; two rows from different days do not, so nobody can join
-     * them up. The raw session ID is never stored, and the value cannot be
-     * turned back into one.
-     *
-     * Previously this was a bare hash('sha256', $sessionId). That had two
-     * problems. It was unkeyed, so the digest was reproducible by anyone
-     * holding a candidate session ID -- letting them confirm that a specific
-     * person had visited. And it was stable forever, so a single visitor could
-     * be followed across the entire history of the table; 188 of them were, on
-     * a real 82,565-row site.
-     *
-     * Keying with the site secret removes the first. Folding the day into the
-     * key removes the second: the same visitor produces a different hash
-     * tomorrow, and no amount of access to the stored data reveals that the
-     * two rows belong to one person. Within a day the value is still stable,
-     * which is exactly what COUNT(DISTINCT session_hash) needs -- so the
-     * Sessions metric keeps working while cross-day tracking becomes
-     * impossible.
-     *
-     * This mirrors the rotating-salt approach Plausible and Fathom use, and is
-     * the basis on which they describe themselves as storing no personal data.
-     * Note the value remains pseudonymous *within* a single day and is still
-     * treated as consent-required.
-     *
-     * Pure by design -- the secret and day are arguments rather than globals
-     * so the rotation can be proven in a test without a request context.
+     * Secret and day are arguments rather than globals so the rotation is
+     * testable without a request context.
      *
      * @param   string  $sessionId  Raw session identifier; never stored.
      * @param   string  $secret     Site secret used as key material.
@@ -452,16 +407,11 @@ class CwmanalyticsHelper
     }
 
     /**
-     * Name of the cookie a consent manager sets to suppress personal-data columns.
+     * Cookie a site's own consent manager sets to suppress the personal-data
+     * columns. Any non-empty value counts.
      *
-     * This is Proclaim's published integration contract, not a cookie Proclaim
-     * sets. Proclaim deliberately ships no consent banner: virtually every
-     * Joomla site already runs one, and a second would compete with it.
-     * Joomla core offers nothing to integrate with either -- plg_system_
-     * privacyconsent covers account-registration consent and has no concept of
-     * an anonymous visitor -- so a documented cookie is the integration point.
-     *
-     * Set it to any non-empty value when a visitor declines analytics.
+     * Proclaim ships no consent banner -- most Joomla sites already run one --
+     * so this is the published integration point, not a cookie Proclaim sets.
      *
      * @since  __DEPLOY_VERSION__
      */
@@ -470,22 +420,13 @@ class CwmanalyticsHelper
     /**
      * Check whether the current visitor has opted out of personal-data tracking.
      *
-     * Three signals are honoured, any one of which suppresses the
-     * consent-required columns:
+     * Any one of three signals suppresses the consent-required columns:
+     * Sec-GPC: 1, DNT: 1, or OPTOUT_COOKIE. DNT is kept for completeness but is
+     * effectively defunct, which is why GPC was added alongside it.
      *
-     *  - Sec-GPC: 1 -- Global Privacy Control. The live successor to DNT, sent
-     *    by Firefox, Brave and DuckDuckGo and recognised under CCPA/CPRA.
-     *  - DNT: 1 -- retained for completeness, but effectively defunct: the W3C
-     *    discontinued the specification, Safari and Firefox removed the
-     *    setting, and Chrome never sent it by default. Almost no visitor sends
-     *    this, which is why GPC was added alongside it.
-     *  - The OPTOUT_COOKIE, which the site's own consent manager sets.
-     *
-     * Note this governs the personal-data tier only. Proclaim itself stores
-     * nothing on the visitor's device -- the session identifier it hashes comes
-     * from Joomla's own strictly-necessary session cookie -- so the ePrivacy
-     * consent requirement that cookie banners exist to satisfy is not what is
-     * being answered here.
+     * Governs the personal-data tier only. Proclaim stores nothing on the
+     * visitor's device, so this is not answering the ePrivacy cookie-consent
+     * question. See #1613.
      *
      * @return  bool  True if opted out (skip personal-data columns).
      *
@@ -540,21 +481,14 @@ class CwmanalyticsHelper
     /**
      * Is this retention window safe to delete raw events against?
      *
-     * A window of zero or less puts the cutoff at -- or, when negative,
-     * *after* -- "now", which makes the purge DELETE match every row in
-     * the events table rather than only aged ones.
+     * A window of zero or less puts the cutoff at (or, when negative, after)
+     * "now", so the purge DELETE would match every row rather than only aged
+     * ones. A blank field in the Scheduler UI saves as "" and casts to 0, so
+     * this is reachable from ordinary configuration. Adding filter="int" to
+     * that field does NOT help -- it converts "" to exactly the lethal 0.
      *
-     * That is reachable from ordinary configuration, not just tampering.
-     * The task plugin reads `retention_days` from task params and casts it
-     * with `(int)`, and `?? 90` only defends against NULL: a blank field in
-     * the Scheduler UI saves as `""`, and `(int) "" === 0`. `min="7"` on
-     * the form field is a client-side rendering hint that is not enforced
-     * server-side. Note that adding `filter="int"` to that field does NOT
-     * help -- it converts `""` to exactly the lethal `0`.
-     *
-     * Kept pure and public so it can be exercised without touching the
-     * database. Testing the guard by calling rollupAndPurge() with a bad
-     * window means running the real DELETE if the guard is wrong.
+     * Pure and public so the guard can be tested without running the real
+     * DELETE.
      *
      * @param   int  $retentionDays  Proposed retention window in days.
      *
