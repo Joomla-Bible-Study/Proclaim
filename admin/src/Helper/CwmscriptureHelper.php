@@ -160,6 +160,88 @@ class CwmscriptureHelper extends ScriptureHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
+        // The delete and the inserts are one unit. Without that, an insert
+        // failing partway through leaves the study with its old references
+        // gone and only some of the new ones written, which nothing later
+        // reconciles.
+        //
+        // Savepoint-aware so this can nest inside a caller's transaction:
+        // MysqliDriver::transactionStart() calls begin_transaction()
+        // unconditionally otherwise, and MySQL implicitly commits any
+        // transaction already open when it does.
+        $db->transactionStart(true);
+
+        try {
+            self::writeScriptures($db, $studyId, $scriptures);
+            $db->transactionCommit(true);
+        } catch (\Throwable $e) {
+            try {
+                $db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Nothing to roll back.
+            }
+
+            // The cache was cleared before the write; clear it again so a
+            // reader after the rollback re-reads the restored rows.
+            self::resetScriptureCache($studyId);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Save references and refresh the legacy flat columns as one unit.
+     *
+     * #__bsms_studies carries a flattened copy of the first two references.
+     * Writing the junction table and that copy separately lets them diverge if
+     * the second write never happens, and the divergence is permanent -- the
+     * flat columns keep describing the previous reference set until some later
+     * save happens to succeed. Callers that maintain both should use this.
+     *
+     * @param   int                   $studyId     Study primary key
+     * @param   ScriptureReference[]  $scriptures  References to save
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function saveScripturesAndSync(int $studyId, array $scriptures): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $db->transactionStart(true);
+
+        try {
+            self::resetScriptureCache($studyId);
+            self::writeScriptures($db, $studyId, $scriptures);
+            self::syncLegacyColumns($studyId, $scriptures);
+            $db->transactionCommit(true);
+        } catch (\Throwable $e) {
+            try {
+                $db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Nothing to roll back.
+            }
+
+            self::resetScriptureCache($studyId);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Replace a study's reference rows. Caller owns the transaction.
+     *
+     * @param   DatabaseInterface     $db          Database driver
+     * @param   int                   $studyId     Study primary key
+     * @param   ScriptureReference[]  $scriptures  References to write
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function writeScriptures(DatabaseInterface $db, int $studyId, array $scriptures): void
+    {
         $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);

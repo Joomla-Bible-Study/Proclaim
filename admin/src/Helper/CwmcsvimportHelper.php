@@ -244,8 +244,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 
@@ -342,8 +341,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 
