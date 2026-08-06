@@ -361,17 +361,30 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function analyticsTask(ExecuteTaskEvent $event): int
     {
-        $params        = $event->getArgument('params');
-        $enableRollup  = (bool) ($params->enable_rollup ?? true);
-        $enablePurge   = (bool) ($params->enable_purge ?? true);
-        $retentionDays = (int) ($params->retention_days ?? 90);
+        $params       = $event->getArgument('params');
+        $enableRollup = (bool) ($params->enable_rollup ?? true);
+        $enablePurge  = (bool) ($params->enable_purge ?? true);
+
+        // Validate the raw param before casting. `?? 90` only substitutes on
+        // NULL, and a blank retention field in the Scheduler UI is saved as
+        // "" -- which `(int)` turns into 0, putting the purge cutoff at "now"
+        // and matching every raw event. Non-numeric and negative values fail
+        // the same way. This is the only layer that can still tell a blank
+        // field from a deliberate 0; by the time CwmanalyticsHelper sees it,
+        // it is just an int. That helper enforces its own floor as well, for
+        // values arriving from anywhere else.
+        $rawRetention  = $params->retention_days ?? null;
+        $retentionDays = is_numeric($rawRetention) ? (int) $rawRetention : 90;
 
         $jLanguage = $this->getApplication()->getLanguage();
         $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
 
         try {
             if ($enableRollup || $enablePurge) {
-                $result = CwmanalyticsHelper::rollupAndPurge($retentionDays);
+                // enable_purge was previously computed and then ignored --
+                // rollupAndPurge() deleted unconditionally, so an admin who
+                // explicitly set "Purge: No" still lost their raw events.
+                $result = CwmanalyticsHelper::rollupAndPurge($retentionDays, $enablePurge);
                 $this->logTask(
                     Text::sprintf(
                         'PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_SUCCESS',
