@@ -74,7 +74,11 @@ class SeriesField extends ListField
                 ->whereIn($db->quoteName('s.access'), $groups)
                 ->whereIn($db->quoteName('se.access'), $groups);
 
-            CwmfilterHelper::applyCrossFilters($query, 'series');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'series',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
         }
 
         $query->order($db->quoteName('se.series_text'));

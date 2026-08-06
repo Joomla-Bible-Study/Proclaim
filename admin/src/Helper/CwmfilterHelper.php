@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
 
@@ -42,12 +43,42 @@ abstract class CwmfilterHelper
      *
      * @since   10.1.0
      */
-    private static function getFilterValue(string $name): mixed
+    private static function getFilterValue(string $name, string $context): mixed
     {
-        $app     = Factory::getApplication();
-        $context = 'com_proclaim.sermons.list';
+        return Factory::getApplication()->getUserStateFromRequest(
+            $context . '.filter.' . $name,
+            'filter_' . $name,
+            ''
+        );
+    }
 
-        return $app->getUserStateFromRequest($context . '.filter.' . $name, 'filter_' . $name, '');
+    /**
+     * Derive the list context a filter field belongs to, from its own form.
+     *
+     * ListModel::getFilterForm() names the form `{context}.filter`, so a field
+     * can recover the context of whatever page is rendering it. Without this
+     * every dropdown read and wrote one hardcoded context, which meant a filter
+     * set on one page silently constrained the dropdowns on another -- and
+     * submitting a filter on the second page wrote back into the first page's
+     * session key.
+     *
+     * @param   ?Form  $form  The form the field belongs to.
+     *
+     * @return  string  The list context, or the sermons list when it cannot be
+     *                  determined -- the previous behaviour, kept so a caller
+     *                  without a form is no worse off than before.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function contextFromForm(?Form $form): string
+    {
+        $name = $form?->getName() ?? '';
+
+        if ($name !== '' && str_ends_with($name, '.filter')) {
+            return substr($name, 0, -\strlen('.filter'));
+        }
+
+        return 'com_proclaim.sermons.list';
     }
 
     /**
@@ -59,18 +90,24 @@ abstract class CwmfilterHelper
      *
      * @param   QueryInterface  $query    The query to constrain
      * @param   string          $exclude  Filter name to skip (the caller's own filter)
+     * @param   string          $context  The list context whose filters apply. Callers
+     *                                    should pass contextFromForm($this->form);
+     *                                    an empty value keeps the historic
+     *                                    sermons-list behaviour.
      *
      * @return  void
      *
      * @since   10.1.0
      */
-    public static function applyCrossFilters(QueryInterface $query, string $exclude = ''): void
+    public static function applyCrossFilters(QueryInterface $query, string $exclude = '', string $context = ''): void
     {
+        $context = $context !== '' ? $context : 'com_proclaim.sermons.list';
+
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Teacher filter
         if ($exclude !== 'teacher') {
-            $teacher = (int) self::getFilterValue('teacher');
+            $teacher = (int) self::getFilterValue('teacher', $context);
 
             if ($teacher > 0) {
                 // Use junction table for multi-teacher support
@@ -85,7 +122,7 @@ abstract class CwmfilterHelper
 
         // Book filter
         if ($exclude !== 'book') {
-            $book = (int) self::getFilterValue('book');
+            $book = (int) self::getFilterValue('book', $context);
 
             if ($book > 0) {
                 $query->where(
@@ -97,7 +134,7 @@ abstract class CwmfilterHelper
 
         // Series filter
         if ($exclude !== 'series') {
-            $series = (int) self::getFilterValue('series');
+            $series = (int) self::getFilterValue('series', $context);
 
             if ($series > 0) {
                 $query->where($db->quoteName('s.series_id') . ' = ' . $series);
@@ -106,7 +143,7 @@ abstract class CwmfilterHelper
 
         // Message type filter
         if ($exclude !== 'messagetype') {
-            $messagetype = (int) self::getFilterValue('messageType');
+            $messagetype = (int) self::getFilterValue('messageType', $context);
 
             if ($messagetype > 0) {
                 $query->where($db->quoteName('s.messagetype') . ' = ' . $messagetype);
@@ -115,7 +152,7 @@ abstract class CwmfilterHelper
 
         // Year filter
         if ($exclude !== 'year') {
-            $year = (int) self::getFilterValue('year');
+            $year = (int) self::getFilterValue('year', $context);
 
             if ($year > 0) {
                 $query->where('YEAR(' . $db->quoteName('s.studydate') . ') = ' . $year);
@@ -124,7 +161,7 @@ abstract class CwmfilterHelper
 
         // Topic filter
         if ($exclude !== 'topic') {
-            $topic = (int) self::getFilterValue('topic');
+            $topic = (int) self::getFilterValue('topic', $context);
 
             if ($topic > 0) {
                 $query->join(
@@ -138,7 +175,7 @@ abstract class CwmfilterHelper
 
         // Location filter
         if ($exclude !== 'location') {
-            $location = (int) self::getFilterValue('location');
+            $location = (int) self::getFilterValue('location', $context);
 
             if ($location > 0) {
                 $query->where($db->quoteName('s.location_id') . ' = ' . $location);
