@@ -27,7 +27,7 @@ use Joomla\CMS\Language\Text;
  * languages *installed in Joomla*, and the two are different concepts: RSS
  * <language> describes the audio, while a content language describes what
  * translations the CMS serves. Joomla ships en-GB and does not install en-US,
- * so every US church published en-GB and had no way to correct it (#1411).
+ * so a US church using the content languages could not select its own.
  *
  * The list is the codes podcast directories actually act on, not the full
  * RFC 5646 registry — Apple and Spotify use this for language and territory

@@ -395,9 +395,10 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         try {
             if ($enableRollup || $enablePurge) {
-                // enable_purge was previously computed and then ignored --
-                // rollupAndPurge() deleted unconditionally, so an admin who
-                // explicitly set "Purge: No" still lost their raw events.
+                // $enablePurge is passed through, not just computed:
+                // rollupAndPurge() must not delete unless the administrator
+                // asked for it. Analytics history is kept indefinitely by
+                // default.
                 $result = CwmanalyticsHelper::rollupAndPurge($retentionDays, $enablePurge);
                 $this->logTask(
                     Text::sprintf(

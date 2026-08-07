@@ -232,11 +232,11 @@ class CwmdbHelper
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // DatabaseDriver::execute() returns true or throws -- it never returns
-        // false -- so the old `if (!$db->execute())` branch was unreachable and
-        // every real SQL failure escaped as an uncaught exception instead of the
-        // false this method's contract promises. CwmadminController::copyTables()
-        // calls this three times per table with no try/catch and relies on a
-        // false return to abort cleanly. See #1566.
+        // false -- so a `if (!$db->execute())` check is unreachable and every
+        // real SQL failure escapes as an uncaught exception instead of the false
+        // this method's contract promises. CwmadminController::copyTables()
+        // calls this three times per table with no try/catch and relies on that
+        // false return to abort cleanly.
         //
         // setQuery() is inside the try on purpose: the MySQLi driver prepares
         // the statement eagerly, so a bad table name or syntax error -- the

@@ -206,9 +206,10 @@ class YoutubeHelper implements DatabaseAwareInterface
         }
 
         // Cache the result (including null) to prevent repeated API calls.
-        // Use the full cache_time for null results too — the old 60s TTL caused
-        // ~200 quota units/minute when no stream was active (search.list x 2 per miss).
-        // Live transitions are detected by JS polling (getStatusAjax), not page loads.
+        // Null results get the full cache_time as well: a short TTL costs about
+        // 200 quota units a minute while no stream is active, at search.list x 2
+        // per miss. Live transitions are picked up by JS polling
+        // (getStatusAjax), not by page loads.
         $cacheData = $video ?? ['_noVideo' => true];
 
         // Primary: file-based cache (always works, even with Joomla caching off)

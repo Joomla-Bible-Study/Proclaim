@@ -334,10 +334,9 @@ abstract class CWMAddon
      *
      * xhr() is a generic dispatcher: it takes a `handler` name straight from
      * the request and invokes it on the resolved addon, passing the request
-     * Input. It previously gated only on method_exists(), which made every
-     * public method on every addon callable by name -- including
-     * state-changing ones such as createLiveEvent()/cancelLiveEvent(), and
-     * with no permission check at all (see #1599).
+     * Input. Gating on method_exists() alone would make every public method on
+     * every addon callable by name -- including state-changing ones such as
+     * createLiveEvent()/cancelLiveEvent() -- with no permission check.
      *
      * Returning an empty list here means an addon exposes nothing: an addon
      * must opt each handler in explicitly. This mirrors getAjaxActions(),

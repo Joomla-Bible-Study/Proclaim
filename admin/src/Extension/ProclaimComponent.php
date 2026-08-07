@@ -126,19 +126,19 @@ class ProclaimComponent extends MVCComponent implements
     {
         // Define the legacy BIBLESTUDY_* path constants before anything else runs.
         //
-        // These previously only existed if admin/api.php had been included, which
-        // never happens in the API application — code reachable from the API saw
-        // them as undefined and fatalled (see #1428). Defining them here means
-        // every application (administrator, site, API) gets them for real.
+        // Defined here rather than in admin/api.php, which the API application
+        // never includes — code reachable from the API would otherwise see them
+        // as undefined and fatal. boot() runs in every application, so
+        // administrator, site and API all get them.
         CwmproclaimHelper::defineLegacyPathConstants();
 
         // Load Proclaim's language files before anything else runs.
         //
-        // This previously only happened via admin/api.php, which is not included
-        // in the API application, so language strings were never loaded in that
-        // context (see #1431). Language::load() is idempotent, so this and
-        // admin/api.php's own calls (for paths that reach it without booting the
-        // component) do not double-load anything.
+        // Loaded here rather than only via admin/api.php, which the API
+        // application does not include — language strings would otherwise never
+        // load in that context. Language::load() is idempotent, so this and
+        // admin/api.php's own calls, for paths that reach it without booting the
+        // component, do not double-load anything.
         Factory::getApplication()->getLanguage()->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, 'en-GB', true);
         Factory::getApplication()->getLanguage()->load('com_proclaim', BIBLESTUDY_PATH_ADMIN, null, true);
 
@@ -146,10 +146,10 @@ class ProclaimComponent extends MVCComponent implements
         //
         // Log::addLogEntry() only dispatches to loggers matching an entry's
         // category, so a Log::add() against an unregistered category is built and
-        // silently discarded. Proclaim makes ~160 such calls and previously
-        // registered nothing, so none of them reached a file. Doing it here means
-        // every code path dispatched through the component logs for real, whether
-        // it runs in the administrator, the site or the API.
+        // silently discarded. Proclaim makes ~160 such calls, so the categories
+        // have to be registered before any of them run. Doing it here covers
+        // every code path dispatched through the component, in the administrator,
+        // the site and the API alike.
         CwmlogHelper::register();
 
         // Check PHP version requirement

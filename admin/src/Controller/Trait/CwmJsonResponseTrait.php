@@ -20,14 +20,13 @@ use Joomla\CMS\Log\Log;
 /**
  * Send a uniform {success, message, data} JSON response and terminate.
  *
- * Consolidates 5 previously byte-identical-envelope, independently
- * maintained sendJsonResponse() implementations (CwmassetsController,
+ * The single implementation shared by CwmassetsController,
  * CwmlocationwizardController, CwmsetupwizardController,
- * CwmanalyticsController, CwmbackupController) into one. This is the
- * CwmbackupController implementation, which was the most complete of the
- * five: it captures and logs stray output (PHP notices/warnings that would
- * otherwise corrupt the JSON body), guards header calls with headers_sent(),
- * and exits immediately rather than routing through Joomla's shutdown
+ * CwmanalyticsController and CwmbackupController, which each need the same
+ * envelope. It captures and logs stray output -- PHP notices and warnings that
+ * would otherwise corrupt the JSON body -- guards header calls with
+ * headers_sent(), and exits immediately rather than routing through Joomla's
+ * shutdown
  * processing.
  *
  * Only the plumbing was unified — every consuming controller already

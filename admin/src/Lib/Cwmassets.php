@@ -583,8 +583,8 @@ class Cwmassets
      * points at a missing row) and the only thing we could create would
      * be an empty-rules placeholder, we leave it alone — permission
      * checks fall through to the `com_proclaim` parent asset, which is
-     * what we want. The old behavior accumulated thousands of empty rows
-     * that slowed down `Access::preload('com_proclaim')` for no benefit.
+     * what we want. Creating them instead accumulates thousands of empty rows
+     * that slow `Access::preload('com_proclaim')` down for no benefit.
      *
      * What it still does:
      *   - Relink a record to an existing, real-rules asset row by name.
