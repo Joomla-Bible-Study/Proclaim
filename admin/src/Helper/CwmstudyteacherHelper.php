@@ -174,7 +174,84 @@ class CwmstudyteacherHelper
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Delete existing
+        // The delete and the inserts are one unit. CwmmessageModel::save()
+        // commits the study row before calling this, so a failure partway
+        // through the loop left the study saved but its teacher list
+        // truncated, with the administrator seeing a fatal as though nothing
+        // had been written.
+        //
+        // Savepoint-aware: MysqliDriver::transactionStart() calls
+        // begin_transaction() unconditionally otherwise, and MySQL implicitly
+        // commits any transaction already open when it does.
+        $db->transactionStart(true);
+
+        try {
+            self::writeTeachers($db, $studyId, $teachers);
+            $db->transactionCommit(true);
+        } catch (\Throwable $e) {
+            try {
+                $db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Nothing to roll back.
+            }
+
+            self::resetCache($studyId);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Save the junction rows and the legacy teacher_id column as one unit.
+     *
+     * #__bsms_studies.teacher_id holds the primary teacher, duplicated from the
+     * junction table. Writing the two separately lets them diverge when the
+     * second write never happens, and nothing reconciles that afterwards.
+     *
+     * @param   int      $studyId   Study primary key
+     * @param   array[]  $teachers  Teacher entries to save
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function saveTeachersAndSync(int $studyId, array $teachers): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $db->transactionStart(true);
+
+        try {
+            self::resetCache($studyId);
+            self::writeTeachers($db, $studyId, $teachers);
+            self::syncLegacyColumn($studyId, $teachers);
+            $db->transactionCommit(true);
+        } catch (\Throwable $e) {
+            try {
+                $db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Nothing to roll back.
+            }
+
+            self::resetCache($studyId);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Replace a study's teacher rows. Caller owns the transaction.
+     *
+     * @param   DatabaseInterface  $db        Database driver
+     * @param   int                $studyId   Study primary key
+     * @param   array[]            $teachers  Teacher entries to write
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function writeTeachers(DatabaseInterface $db, int $studyId, array $teachers): void
+    {
         $query = $db->createQuery()
             ->delete($db->quoteName('#__bsms_study_teachers'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId);
@@ -184,7 +261,7 @@ class CwmstudyteacherHelper
         // Insert new (skip duplicates and empty entries)
         $seen = [];
 
-        foreach ($teachers as $i => $entry) {
+        foreach ($teachers as $entry) {
             $teacherId = (int) ($entry['teacher_id'] ?? 0);
 
             if ($teacherId <= 0 || isset($seen[$teacherId])) {
