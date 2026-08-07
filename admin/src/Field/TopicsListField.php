@@ -82,7 +82,11 @@ class TopicsListField extends ListField
             $groups = $user->getAuthorisedViewLevels();
             $query->whereIn($db->quoteName('s.access'), $groups);
 
-            CwmfilterHelper::applyCrossFilters($query, 'topic');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'topic',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
         }
 
         $query->order($db->quoteName('t.topic_text') . ' ASC');

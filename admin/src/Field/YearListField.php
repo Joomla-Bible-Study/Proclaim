@@ -75,7 +75,11 @@ class YearListField extends ListField
             ->whereIn($db->quoteName('s.access'), $groups)
             ->order($db->quoteName('value') . ' DESC');
 
-        CwmfilterHelper::applyCrossFilters($query, 'year');
+        CwmfilterHelper::applyCrossFilters(
+            $query,
+            'year',
+            CwmfilterHelper::contextFromForm($this->form)
+        );
 
         $db->setQuery($query);
         $years   = $db->loadObjectList() ?: [];
