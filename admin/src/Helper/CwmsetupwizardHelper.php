@@ -269,7 +269,7 @@ class CwmsetupwizardHelper
                 ];
             }
 
-            // Check if podcast is configured (if enabled)
+            // Check if a published podcast exists (Full/Multi-Campus)
             if ($style !== 'simple') {
                 $query = $db->createQuery()
                     ->select('COUNT(*)')
@@ -278,20 +278,19 @@ class CwmsetupwizardHelper
                 $db->setQuery($query);
                 $hasPodcast = (int) $db->loadResult() > 0;
 
-                // NOTE: enable_podcast is not persisted to either params
-                // store -- the setup wizard collects it, uses it to decide
-                // whether to create a podcast, and discards it. This condition
-                // is therefore never true and the item never appears. Left as
-                // found because making it appear is a product decision, not a
-                // correction; tracked separately.
-                if (!$hasPodcast && $params->get('enable_podcast', 0)) {
-                    $items[] = [
-                        'key'   => 'podcast_setup',
-                        'label' => 'JBS_CHECKLIST_PODCAST_SETUP',
-                        'done'  => false,
-                        'link'  => 'index.php?option=com_proclaim&task=cwmpodcast.add',
-                    ];
-                }
+                // Keyed off the podcast itself, like every other item here.
+                // This used to be gated on an `enable_podcast` param that is
+                // written nowhere -- the wizard collects it, uses it to decide
+                // whether to create a podcast, and discards it -- so the item
+                // could never appear. Persisting that answer would not have
+                // helped either: opting in makes the wizard create a published
+                // podcast, which satisfies this check immediately.
+                $items[] = [
+                    'key'   => 'podcast_setup',
+                    'label' => 'JBS_CHECKLIST_PODCAST_SETUP',
+                    'done'  => $hasPodcast,
+                    'link'  => 'index.php?option=com_proclaim&task=cwmpodcast.add',
+                ];
             }
 
             // Multi-Campus: check location wizard completed
