@@ -208,20 +208,25 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
             $teacherIds[] = $this->insertTeacher('Chunked Teacher ' . $i);
         }
 
-        // A limit below the item count forces the cursor across batch
-        // boundaries, where a keyset-paging off-by-one would skip or repeat rows.
+        // Start the cursor just below the first seeded id so the walk covers
+        // exactly these 5 rows -- an exact count is a real assertion, whereas a
+        // walk over whatever the database already holds only supports a
+        // greater-than-or-equal that any number satisfies.
         $synced = 0;
-        $lastId = 0;
+        $lastId = min($teacherIds) - 1;
         $rounds = 0;
 
+        // A limit below the item count forces the cursor across batch
+        // boundaries, where a keyset-paging off-by-one would skip or repeat rows.
         do {
             $result  = CwmschemaorgHelper::syncChunk(CwmschemaorgHelper::SYNC_FORCE, 'teachers', $lastId, 2);
             $synced += $result['counts']['teachers'];
             $lastId  = $result['lastId'];
             $rounds++;
-        } while ($result['type'] === 'teachers' && $rounds < 100);
+        } while ($result['type'] === 'teachers' && $rounds < 10);
 
-        $this->assertLessThan(100, $rounds, 'Chunk walk failed to terminate');
+        $this->assertLessThan(10, $rounds, 'Chunk walk failed to terminate');
+        $this->assertSame(\count($teacherIds), $synced, 'Chunked walk must sync each seeded teacher exactly once');
 
         // Every seeded teacher got exactly one row, none skipped at a boundary.
         foreach ($teacherIds as $teacherId) {
@@ -231,8 +236,6 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
                 'Teacher ' . $teacherId . ' must have exactly one schema row after a chunked walk'
             );
         }
-
-        $this->assertGreaterThanOrEqual(\count($teacherIds), $synced);
     }
 
     #[TestDox('syncChunk() reports done for an unrecognised cursor type instead of restarting the walk')]

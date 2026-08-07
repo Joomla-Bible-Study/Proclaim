@@ -877,6 +877,12 @@ class CwmschemaorgHelper
         $counts = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
         $type   = self::SYNC_TYPES[0];
         $lastId = 0;
+        $rounds = 0;
+
+        // Bounds the walk if a cursor ever stops advancing, mirroring the cap the
+        // admin JS puts on its own chunk loop. Generous enough that no real
+        // library reaches it: SYNC_CHUNK_SIZE items per round.
+        $maxRounds = 100000;
 
         do {
             $result = self::syncChunk($mode, $type, $lastId);
@@ -887,7 +893,8 @@ class CwmschemaorgHelper
 
             $type   = $result['type'];
             $lastId = $result['lastId'];
-        } while (!$result['done']);
+            $rounds++;
+        } while (!$result['done'] && $rounds < $maxRounds);
 
         return $counts;
     }
