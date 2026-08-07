@@ -75,6 +75,9 @@
 		<testsuite name="Integration Admin Table Tests">
 			<directory>tests/integration/Admin/Table</directory>
 		</testsuite>
+		<testsuite name="Integration Admin Model Tests">
+			<directory>tests/integration/Admin/Model</directory>
+		</testsuite>
 		<testsuite name="Integration Admin Addon Tests">
 			<directory>tests/integration/Admin/Addons</directory>
 		</testsuite>
