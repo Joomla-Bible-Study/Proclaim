@@ -207,3 +207,19 @@ WHERE `teacher_id` NOT IN (SELECT `id` FROM `#__bsms_teachers`);
 -- these, so any that exist predate that or came from a path that bypassed it.
 DELETE FROM `#__bsms_study_teachers`
 WHERE `study_id` NOT IN (SELECT `id` FROM `#__bsms_studies`);
+
+-- #1612: analytics stored the referrer verbatim, query string and all. That
+-- string is written by the *referring* site and routinely carries things that
+-- are not ours to hold -- search terms, session tokens, addresses in newsletter
+-- links, password-reset tokens. Capture now keeps only scheme, host and path;
+-- this reduces the rows already written.
+--
+-- Applied to every row rather than only the leaky-looking ones: a URL with no
+-- query string is unchanged by the same expression, so one statement covers it.
+-- SUBSTRING_INDEX strips from the first '?' or '#', whichever appears; nothing
+-- after either is a page identity. UTM tags are unaffected, being stored
+-- separately in utm_source / utm_medium / utm_campaign.
+UPDATE `#__bsms_analytics_events`
+SET `referrer_url` = SUBSTRING_INDEX(SUBSTRING_INDEX(`referrer_url`, '?', 1), '#', 1)
+WHERE `referrer_url` IS NOT NULL
+  AND (`referrer_url` LIKE '%?%' OR `referrer_url` LIKE '%#%');

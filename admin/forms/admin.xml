@@ -306,10 +306,6 @@
             <option value="domain">JBS_ANA_REFERRER_DOMAIN</option>
             <option value="full">JBS_ANA_REFERRER_FULL_URL</option>
         </field>
-        <field name="analytics_retention_days" type="number" default="90" min="7" max="3650" step="1"
-               label="JBS_ANA_RETENTION_LABEL" description="JBS_ANA_RETENTION_DESC"
-               filter="int"/>
-
         <!-- AI Assistant Settings -->
         <field name="ai_provider" type="list" default="claude"
                label="JBS_ADM_AI_PROVIDER" description="JBS_ADM_AI_PROVIDER_DESC">
