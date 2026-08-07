@@ -157,4 +157,67 @@ class CwmsetupwizardChecklistTest extends IntegrationTestCase
             $this->assertIsBool($item['done']);
         }
     }
+
+    // -------------------------------------------------------------------------
+    // #1626 -- the podcast step could never appear
+    // -------------------------------------------------------------------------
+
+    /**
+     * The step was gated on an `enable_podcast` param written to neither params
+     * store, so the condition was always false. It is now keyed off the podcast
+     * itself, like every sibling item.
+     */
+    #[TestDox('The podcast step is not gated on a param that is stored nowhere')]
+    public function testPodcastStepIsNotGatedOnAnUnstoredParam(): void
+    {
+        $ref   = new \ReflectionMethod(CwmsetupwizardHelper::class, 'getChecklistItems');
+        $lines = file($ref->getFileName());
+        $body  = implode('', \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1));
+
+        // Strip comments: the explanation of the old bug legitimately names it.
+        $code = preg_replace('#//[^\n]*#', '', $body);
+
+        $this->assertStringNotContainsString(
+            "get('enable_podcast'",
+            (string) $code,
+            'enable_podcast is persisted nowhere, so gating on it hides the step forever — see #1626'
+        );
+    }
+
+    /**
+     * Every other item is emitted unconditionally with a `done` flag, and the
+     * control panel counts "X of Y complete" over the whole list. An item that
+     * appears only while incomplete would shrink that denominator on completion.
+     */
+    #[TestDox('The podcast step reports done rather than disappearing when a podcast exists')]
+    public function testPodcastStepCarriesADoneFlag(): void
+    {
+        $items = CwmsetupwizardHelper::getChecklistItems();
+        $keys  = array_column($items, 'key');
+
+        // Simple-mode sites omit it by design, so only assert when it is present.
+        if (!\in_array('podcast_setup', $keys, true)) {
+            $this->assertNotContains('series_image', $keys, 'Non-simple styles must offer the podcast step');
+
+            return;
+        }
+
+        $podcast = $items[array_search('podcast_setup', $keys, true)];
+
+        $this->assertIsBool($podcast['done']);
+        $this->assertArrayHasKey('link', $podcast);
+
+        // Whether it is done must track the data, not a stored intention.
+        $db         = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseDriver::class);
+        $hasPodcast = (int) $db->setQuery(
+            'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_podcast')
+            . ' WHERE ' . $db->quoteName('published') . ' = 1'
+        )->loadResult() > 0;
+
+        $this->assertSame(
+            $hasPodcast,
+            $podcast['done'],
+            'The step\'s done state must reflect whether a published podcast exists'
+        );
+    }
 }
