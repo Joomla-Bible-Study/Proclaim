@@ -127,7 +127,7 @@ $EXPECTATIONS = [
     '10.5.6' => [
         'columns' => [
             // #1579 — uq_series_studynumber
-            '#__bsms_studies'   => ['studynumber_uk'],
+            '#__bsms_studies' => ['studynumber_uk'],
             // #1560 — uq_server_remote_playlist
             '#__bsms_playlists' => ['remote_playlist_uk'],
         ],

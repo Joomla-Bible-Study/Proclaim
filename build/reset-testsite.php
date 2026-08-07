@@ -114,6 +114,45 @@ foreach ($installs as $install) {
 
     echo '  removed ' . \count($ids) . " extension row(s) + their #__schemas rows\n";
 
+    // 2b. Module instances and their menu assignments. Removing the
+    //     #__extensions row leaves every published instance behind, and a
+    //     reinstall adds four more -- a test site cycled through the harness
+    //     accumulated 304 of them, which is enough to make the Modules screen
+    //     useless and to mask a genuine duplicate-instance bug.
+    $modules     = $prefix . 'modules';
+    $modulesMenu = $prefix . 'modules_menu';
+
+    $moduleIds = [];
+    $res       = $db->query("SELECT id FROM `{$modules}` WHERE module LIKE '%proclaim%'");
+
+    if ($res instanceof mysqli_result) {
+        while ($row = $res->fetch_row()) {
+            $moduleIds[] = (int) $row[0];
+        }
+    }
+
+    if ($moduleIds !== []) {
+        $moduleList = implode(',', $moduleIds);
+        $db->query("DELETE FROM `{$modulesMenu}` WHERE moduleid IN ({$moduleList})");
+        $db->query("DELETE FROM `{$modules}` WHERE id IN ({$moduleList})");
+    }
+
+    echo '  removed ' . \count($moduleIds) . " module instance(s) + menu assignments\n";
+
+    // 2c. Action-log registration. The install seeds #__action_logs_extensions
+    //     and #__action_log_config, uninstall removes neither, and nothing
+    //     de-duplicates on reinstall -- the same test site held 112 and 560
+    //     rows respectively where it should hold 1 and 13.
+    $logExt = $prefix . 'action_logs_extensions';
+    $logCfg = $prefix . 'action_log_config';
+
+    $db->query("DELETE FROM `{$logExt}` WHERE extension LIKE '%proclaim%'");
+    $logExtRows = $db->affected_rows;
+    $db->query("DELETE FROM `{$logCfg}` WHERE type_alias LIKE '%proclaim%'");
+    $logCfgRows = $db->affected_rows;
+
+    echo "  removed {$logExtRows} action-log extension row(s) + {$logCfgRows} action-log config row(s)\n";
+
     // 3. Clean up assets + categories owned by the component (best-effort).
     $assets = $prefix . 'assets';
     $cats   = $prefix . 'categories';
@@ -163,6 +202,7 @@ foreach ($installs as $install) {
         'plugins/content/scripturelinks',
         'plugins/task/cwmscripture',
         'administrator/manifests/packages/proclaim',
+        'administrator/manifests/packages/cwmscripture',
     ];
 
     $removed  = 0;
@@ -208,6 +248,8 @@ foreach ($installs as $install) {
     $globs = [
         'administrator/manifests/libraries/cwmscripture.xml',
         'administrator/manifests/packages/pkg_proclaim.xml',
+        'administrator/manifests/packages/pkg_cwmscripture.xml',
+        'administrator/logs/*proclaim*',
         'administrator/language/*/*proclaim*',
         'administrator/language/*/*cwmscripture*',
         'administrator/language/*/*scripturelinks*',
