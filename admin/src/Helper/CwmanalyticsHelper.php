@@ -166,7 +166,7 @@ class CwmanalyticsHelper
 
             if ($consentOn && $refUrl !== '') {
                 if ($refMode === 'full') {
-                    $referrerUrl = substr($refUrl, 0, 2048);
+                    $referrerUrl = self::stripUrlParameters($refUrl);
                 }
 
                 if ($refMode === 'full' || $refMode === 'domain') {
@@ -178,7 +178,7 @@ class CwmanalyticsHelper
             // Outbound click: repurpose destUrl as referrer_url column.
             // Gated on $consentOn like every other write to this column.
             if ($consentOn && $type === 'outbound_click' && $destUrl !== '') {
-                $referrerUrl = substr($destUrl, 0, 2048);
+                $referrerUrl = self::stripUrlParameters($destUrl);
             }
 
             $db  = Factory::getContainer()->get(DatabaseInterface::class);
@@ -264,6 +264,41 @@ class CwmanalyticsHelper
     public static function stripWwwPrefix(string $host): string
     {
         return str_starts_with($host, 'www.') ? substr($host, 4) : $host;
+    }
+
+    /**
+     * Reduce a URL to scheme, host and path, discarding query and fragment.
+     *
+     * The analytics signal is which page a visit came from, never the
+     * parameters attached to it. A referrer query string is written by the
+     * *referring* site and routinely carries things that are not ours to hold:
+     * search terms, session tokens, addresses in newsletter links, password
+     * reset and invite tokens. Expiring the column later does not help --
+     * what is never stored cannot leak. See #1612.
+     *
+     * UTM tags are unaffected: they are captured separately into utm_source,
+     * utm_medium and utm_campaign from the request, not parsed back out here.
+     *
+     * @param   string  $url  Absolute URL.
+     *
+     * @return  string|null  scheme://host/path, or null when no host is present.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function stripUrlParameters(string $url): ?string
+    {
+        $parts = parse_url($url);
+
+        // A malformed URL parses to false, and one with no host (a bare path,
+        // or a mailto:) has nothing worth recording as a source.
+        if (!\is_array($parts) || ($parts['host'] ?? '') === '') {
+            return null;
+        }
+
+        $scheme = $parts['scheme'] ?? 'https';
+        $port   = isset($parts['port']) ? ':' . $parts['port'] : '';
+
+        return substr($scheme . '://' . $parts['host'] . $port . ($parts['path'] ?? ''), 0, 2048);
     }
 
     public static function classifyReferrer(string $url, string $utmMedium = ''): array
