@@ -221,10 +221,16 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     /**
      * Run the model's delete(), tolerating the one failure this harness causes.
      *
-     * parent::delete() imports the content plugin group, and the test Joomla
-     * root has plugin rows whose classes it does not ship. The pruning under
-     * test happens before that point, so the by-reference $pks the caller
-     * inspects is already correct when it blows up.
+     * parent::delete() imports the content plugin group, and a test Joomla root
+     * has plugin rows whose classes it does not ship. The pruning under test
+     * happens before that point, so the by-reference $pks the caller inspects is
+     * already correct when it blows up.
+     *
+     * Catches \Throwable, not \Exception: locally this surfaces as a
+     * \ReflectionException, but on CI as a plain \Error ("Class ... not found"),
+     * which \Exception does not cover -- the same gap #1583 was about. The
+     * message is matched on the plugin namespace so a genuine failure in the
+     * code under test still fails the test.
      *
      * @param   CwmteacherModel  $model  Model under test.
      * @param   int[]            $pks    Batch, modified in place.
@@ -235,8 +241,8 @@ class CwmteacherDeleteTest extends IntegrationTestCase
     {
         try {
             $model->delete($pks);
-        } catch (\ReflectionException $e) {
-            if (!str_contains($e->getMessage(), 'does not exist')) {
+        } catch (\Throwable $e) {
+            if (!str_contains($e->getMessage(), 'Joomla\\Plugin\\')) {
                 throw $e;
             }
         }
