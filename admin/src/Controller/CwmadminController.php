@@ -2117,26 +2117,17 @@ class CwmadminController extends FormController
      *
      * 'mediatype' is a MIME type string (e.g. "video/mp4") -- the value of the
      * `mtFrom` MimeType field (see admin/forms/admin.xml), exactly what the
-     * non-AJAX CwmadminModel::playerByMediaType() also matches against. The
-     * previous version read it via getInt(), which strips non-digit
-     * characters (Joomla's INT filter), silently turning "video/mp4" into 4
-     * and "video/x-ms-wmv" into 0 -- neither is a usable value. It then
-     * compared that against 'media_image', a key that only exists inside the
-     * JSON params blob, not a real column on #__bsms_mediafiles, so every
-     * request that got past the mangled-value check still threw a DB error.
-     * See #1492.
+     * non-AJAX CwmadminModel::playerByMediaType() also matches against. It must
+     * be read as a string: getInt() applies Joomla's INT filter, which strips
+     * non-digit characters and turns "video/mp4" into 4 and "video/x-ms-wmv"
+     * into 0. Nor is it a column on #__bsms_mediafiles -- 'media_image' lives
+     * inside the JSON params blob, so matching against it as a column errors.
      *
-     * Deliberately left in the controller (not extracted to the Model) as
-     * part of #1443 -- the query itself was broken independent of where it
-     * lived, so moving it first would have just relocated the bug.
-     *
-     * Matching mirrors playerByMediaType()'s working logic (mime_type match,
-     * falling back to filename extension) without its dead-code bug (that
-     * method resets $from = '' at the top of every loop iteration, so its
-     * 'http'/'mediacode' branches can never fire). This version does not
-     * support the 'http'/'mediacode' sentinel values either -- that behavior
-     * was already non-functional in the method it mirrors, and reproducing
-     * it correctly is out of scope for this fix.
+     * Matching mirrors playerByMediaType()'s mime_type match falling back to
+     * filename extension, but not its dead code: that method resets $from = ''
+     * at the top of every loop iteration, so its 'http'/'mediacode' branches
+     * can never fire. This version does not support those sentinel values
+     * either.
      *
      * Unlike playerByMediaType(), this does not filter to published = 1 --
      * the point of a bulk "fix the player on files still using the wrong

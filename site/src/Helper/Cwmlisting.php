@@ -2478,8 +2478,8 @@ class Cwmlisting
                 break;
 
             case 4:
-                // Legacy "Link to Details with ToolTip" — downgrade to plain details link.
-                // The old hasTip tooltip was removed; scripture verse popovers replace it.
+                // Legacy "Link to Details with ToolTip" — downgrade to a plain
+                // details link. Scripture verse popovers cover this now.
                 $link = Route::_(
                     Cwmhelperroute::getArticleRoute($row->slug) . '&t=' . $params->get('detailstemplateid')
                 );

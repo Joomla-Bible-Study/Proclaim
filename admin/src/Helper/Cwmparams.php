@@ -71,10 +71,9 @@ class Cwmparams
     public static function getAdmin(): object
     {
         if (!isset(self::$admin)) {
-            // $app stays null when there is no application (CLI, early
-            // bootstrap). The previous version left it *undefined* on that
-            // path, so the enqueueMessage() below raised a second error while
-            // reporting the first.
+            // Initialised before the try: with no application (CLI, early
+            // bootstrap) $app is never assigned, and the enqueueMessage() below
+            // would then raise a second error while reporting the first.
             $app = null;
 
             try {
@@ -307,7 +306,8 @@ class Cwmparams
                 ->clean();
         } catch (\Throwable) {
             // A cache backend that cannot be cleared must not fail the save. The
-            // value is committed; the worst case is the old behaviour.
+            // value is committed either way; the worst case is that readers see
+            // the stale cached copy until it expires.
         }
     }
 }

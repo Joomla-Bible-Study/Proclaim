@@ -377,9 +377,9 @@ class CwmsermonController extends FormController
      * Method override to check if you can edit an existing record.
      *
      * Mirrors the admin-side CwmmessageController::allowEdit() for the same
-     * underlying #__bsms_studies table/asset scope (com_proclaim.message.*) —
-     * this override used to unconditionally return true, letting any caller
-     * edit any sermon regardless of ACL. See #1437.
+     * underlying #__bsms_studies table and asset scope (com_proclaim.message.*).
+     * Without the check, the inherited behaviour lets any caller edit any
+     * sermon regardless of ACL.
      *
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.

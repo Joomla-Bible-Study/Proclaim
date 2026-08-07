@@ -152,11 +152,10 @@ class CwmmediafileController extends FormController
 
         // Every UI that reaches this endpoint is a form field rendered on an
         // edit/create screen (PlaylistPickerField, the Youtube/Vimeo/Wistia
-        // browse buttons), so require the matching permission. Previously the
-        // only gate was the CSRF token, which any authenticated backend user
-        // with com_proclaim access already has -- letting them invoke
-        // state-changing addon methods they were never granted rights to.
-        // See #1599.
+        // browse buttons), so require the matching permission. A CSRF token
+        // alone is not a gate here: any authenticated backend user with
+        // com_proclaim access already has one, and could otherwise invoke
+        // state-changing addon methods they hold no rights to.
         $user = $app->getIdentity();
 
         if (!$user || (!$user->authorise('core.edit', 'com_proclaim') && !$user->authorise('core.create', 'com_proclaim'))) {
