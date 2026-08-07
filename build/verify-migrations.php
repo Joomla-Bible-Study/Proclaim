@@ -109,6 +109,35 @@ $EXPECTATIONS = [
         ],
         'schemaMin' => '10.5.3',
     ],
+    /*
+     * 10.5.6-20260807.sql carries four uniqueness/cleanup migrations.
+     *
+     * Both new columns are STORED generated columns that exist only to back a
+     * unique index: MySQL treats '' as a value, so a plain unique index would
+     * have collided across every unnumbered message and every hand-made
+     * playlist. Mapping the empty case to NULL leaves those rows
+     * unconstrained. Asserting the column and the index together is what
+     * catches half the pair being dropped.
+     *
+     * The DML halves are not asserted here: #1622's orphan cleanup, #1612's
+     * referrer rewrite and #1611's session_hash re-key all need a damaged-row
+     * fixture seeded before the upgrade, which this gate has no vocabulary for
+     * (same limitation noted on 10.4.1 above).
+     */
+    '10.5.6' => [
+        'columns' => [
+            // #1579 — uq_series_studynumber
+            '#__bsms_studies'   => ['studynumber_uk'],
+            // #1560 — uq_server_remote_playlist
+            '#__bsms_playlists' => ['remote_playlist_uk'],
+        ],
+        'indexes' => [
+            '#__bsms_studytopics' => ['uq_study_topic'],
+            '#__bsms_studies'     => ['uq_series_studynumber'],
+            '#__bsms_playlists'   => ['uq_server_remote_playlist', 'idx_remote_playlist'],
+        ],
+        'schemaMin' => '10.5.6',
+    ],
 ];
 
 // ---------------------------------------------------------------------------
