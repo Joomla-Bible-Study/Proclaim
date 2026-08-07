@@ -79,3 +79,93 @@ ALTER TABLE `#__bsms_studies`
 
 ALTER TABLE `#__bsms_studies`
     ADD UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`);
+
+-- #1560: nothing stopped two overlapping playlist imports from both creating a
+-- row for the same remote playlist. CwmplaylistSyncHelper::importChannelPlaylists()
+-- looks the playlist up and inserts when absent, with no constraint between the
+-- two steps, so a scheduled sync overlapping a manual "Import from YouTube" could
+-- have both pass the lookup before either had stored.
+
+-- Salvage the losing duplicates' junction rows before the rows go away. Each step
+-- runs against every duplicate group at once, keeping the earliest playlist of
+-- each group.
+
+-- 1. Carry a resolved media-file link over to the keeper where the keeper has
+--    none. Deleting the loser's row first would throw that link away.
+UPDATE `#__bsms_playlist_items` keep
+    JOIN `#__bsms_playlists` kp ON kp.`id` = keep.`playlist_id`
+    JOIN `#__bsms_playlists` lp
+        ON lp.`remote_playlist_id` = kp.`remote_playlist_id`
+       AND lp.`server_id` = kp.`server_id`
+       AND lp.`id` > kp.`id`
+    JOIN `#__bsms_playlist_items` lose
+        ON lose.`playlist_id` = lp.`id`
+       AND lose.`remote_video_id` = keep.`remote_video_id`
+SET keep.`mediafile_id` = lose.`mediafile_id`
+WHERE keep.`mediafile_id` IS NULL
+  AND lose.`mediafile_id` IS NOT NULL
+  AND kp.`remote_playlist_id` <> '';
+
+-- 2. Drop the losers' items the keeper already holds. #__bsms_playlist_items has
+--    UNIQUE KEY (playlist_id, remote_video_id), so remapping these in step 3
+--    would abort the migration on a duplicate key.
+DELETE lose FROM `#__bsms_playlist_items` lose
+    JOIN `#__bsms_playlists` lp ON lp.`id` = lose.`playlist_id`
+    JOIN `#__bsms_playlists` kp
+        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND kp.`server_id` = lp.`server_id`
+       AND kp.`id` < lp.`id`
+    JOIN `#__bsms_playlist_items` keep
+        ON keep.`playlist_id` = kp.`id`
+       AND keep.`remote_video_id` = lose.`remote_video_id`
+WHERE lp.`remote_playlist_id` <> '';
+
+-- 3. Move what survives onto the keeper, so a manual playlist assignment made
+--    against a duplicate is not silently lost.
+UPDATE `#__bsms_playlist_items` lose
+    JOIN `#__bsms_playlists` lp ON lp.`id` = lose.`playlist_id`
+    JOIN `#__bsms_playlists` kp
+        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND kp.`server_id` = lp.`server_id`
+       AND kp.`id` < lp.`id`
+SET lose.`playlist_id` = kp.`id`
+WHERE lp.`remote_playlist_id` <> '';
+
+-- 4. Release the losing rows' ACL assets, which nothing else would clean up once
+--    the rows are gone.
+DELETE a FROM `#__assets` a
+    JOIN `#__bsms_playlists` lp
+        ON a.`name` = CONCAT('com_proclaim.playlist.', lp.`id`)
+    JOIN `#__bsms_playlists` kp
+        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND kp.`server_id` = lp.`server_id`
+       AND kp.`id` < lp.`id`
+WHERE lp.`remote_playlist_id` <> '';
+
+-- 5. Remove the duplicates themselves. The constraint below cannot be created
+--    while any remain.
+DELETE lp FROM `#__bsms_playlists` lp
+    JOIN `#__bsms_playlists` kp
+        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND kp.`server_id` = lp.`server_id`
+       AND kp.`id` < lp.`id`
+WHERE lp.`remote_playlist_id` <> '';
+
+-- A remote playlist maps to one local row per server. remote_playlist_id is
+-- NOT NULL DEFAULT '' and the edit form does not require it, so a playlist
+-- created by hand in the admin carries ''. A plain unique index would let only
+-- one of those exist per server. Mapping '' to NULL leaves them unconstrained,
+-- because NULLs are distinct from each other in a unique index -- the same
+-- treatment uq_series_studynumber gives an absent episode number above.
+ALTER TABLE `#__bsms_playlists`
+    ADD COLUMN `remote_playlist_uk` VARCHAR(64)
+    GENERATED ALWAYS AS (IF(`remote_playlist_id` <> '', `remote_playlist_id`, NULL)) STORED;
+
+ALTER TABLE `#__bsms_playlists`
+    ADD UNIQUE KEY `uq_server_remote_playlist` (`server_id`, `remote_playlist_uk`);
+
+-- The unique index covers the generated column, which no query names. Lookups by
+-- (remote_playlist_id, server_id) -- every sync run does one per remote playlist
+-- -- would otherwise still fall back to idx_server alone.
+ALTER TABLE `#__bsms_playlists`
+    ADD KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`);

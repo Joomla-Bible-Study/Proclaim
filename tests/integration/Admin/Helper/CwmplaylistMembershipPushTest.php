@@ -70,50 +70,13 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             $this->markTestSkipped('Database not available for integration tests');
         }
 
-        $this->silenceDateLanguageWarnings();
+        $this->previousFactoryLanguage = $this->silenceDateLanguageWarnings();
 
         $this->db = Factory::getContainer()->get(DatabaseDriver::class);
         $this->db->transactionStart();
 
         $this->serverId = $this->insertServer();
         $this->seriesId = $this->insertSeries();
-    }
-
-    /**
-     * Stop Factory::getDate() from emitting PHP warnings in the test harness.
-     *
-     * pushMemberships() stamps junction rows via Factory::getDate(), which reads
-     * Factory::$language->getTag() — i.e. the language's metadata['tag']. The CI
-     * Joomla root carries no langmetadata files, so every Language instance here
-     * has metadata = null; getTag() then accesses an offset on null and the date
-     * path prints warnings that trip beStrictAboutOutputDuringTests. There is no
-     * public tag setter, so force a tag onto the metadata via reflection and make
-     * that language the one Factory::getDate() reads.
-     *
-     * @return  void
-     */
-    private function silenceDateLanguageWarnings(): void
-    {
-        // Remember the process-wide state so tearDown() can put it back --
-        // leaving the forced en-GB tag in place leaks into every later test
-        // in the run and masks the exact null-metadata warning class other
-        // suites' beStrictAboutOutputDuringTests would surface.
-        $this->previousFactoryLanguage = Factory::$language;
-
-        $lang = Factory::getApplication()->getLanguage();
-
-        try {
-            $prop = new \ReflectionProperty($lang, 'metadata');
-            $meta = $prop->getValue($lang);
-
-            if (!\is_array($meta) || ($meta['tag'] ?? null) === null) {
-                $prop->setValue($lang, array_merge(\is_array($meta) ? $meta : [], ['tag' => 'en-GB']));
-            }
-        } catch (\ReflectionException) {
-            // Property absent on this Joomla version — leave the language as-is.
-        }
-
-        Factory::$language = $lang;
     }
 
     /**

@@ -161,11 +161,19 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
     `asset_id`            INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`              INT(10) UNSIGNED NOT NULL DEFAULT '1',
     `ordering`            INT(11)          NOT NULL DEFAULT '0',
+    -- A remote playlist maps to one local row per server. remote_playlist_id is
+    -- NOT NULL DEFAULT '' and the edit form does not require it, so a playlist
+    -- created by hand in the admin carries ''. Mapping '' to NULL keeps those
+    -- unconstrained, because NULLs are distinct from each other in a unique index.
+    `remote_playlist_uk`  VARCHAR(64) GENERATED ALWAYS AS
+        (IF(`remote_playlist_id` <> '', `remote_playlist_id`, NULL)) STORED,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_server_remote_playlist` (`server_id`, `remote_playlist_uk`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_server` (`server_id`),
+    KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`),
     KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
