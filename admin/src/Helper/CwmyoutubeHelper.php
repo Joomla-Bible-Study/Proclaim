@@ -248,21 +248,35 @@ class CwmyoutubeHelper
 
         $parsed = self::parseVideoTitle($videoTitle);
 
-        // Strategy 1: part1 = message title, part2 = teacher name
+        // Strategies 1 and 2 exist to match a title against a *particular*
+        // teacher. When the name half resolves to no teacher, the search below
+        // would run with $teacherId = null -- which is the same call strategy 3
+        // makes, since findMessageByTitle()'s second argument defaults to null.
+        // Running it here just moves strategy 3 earlier, ahead of the reversed
+        // reading that was meant to be tried first, so a video whose leading
+        // part happens to match some other message's title never reaches the
+        // teacher-aware match that would have found the right one.
         if ($parsed['part2'] !== null) {
+            // Strategy 1: part1 = message title, part2 = teacher name
             $teacherId = self::findTeacherByName($parsed['part2']);
-            $message   = self::findMessageByTitle($parsed['part1'], $teacherId);
 
-            if ($message) {
-                return $message;
+            if ($teacherId !== null) {
+                $message = self::findMessageByTitle($parsed['part1'], $teacherId);
+
+                if ($message) {
+                    return $message;
+                }
             }
 
             // Strategy 2: part1 = teacher name, part2 = message title (reversed order)
             $teacherId = self::findTeacherByName($parsed['part1']);
-            $message   = self::findMessageByTitle($parsed['part2'], $teacherId);
 
-            if ($message) {
-                return $message;
+            if ($teacherId !== null) {
+                $message = self::findMessageByTitle($parsed['part2'], $teacherId);
+
+                if ($message) {
+                    return $message;
+                }
             }
         }
 
