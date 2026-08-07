@@ -258,14 +258,22 @@ class CwmproclaimHelper
 
                     // Collect the black- or whitelisted tags and attributes.
                     // Each list is cumulative.
+                    // $tempTags/$tempAttributes are flat arrays of strings.
+                    // Spreading them passed each string as a positional
+                    // argument to array_merge(), which requires arrays -- a
+                    // TypeError as soon as any group configured a tag. Merging
+                    // the two arrays also makes the lists cumulative across
+                    // groups, which is what the comment above already claimed
+                    // and the overwrite did not do. Matches core's
+                    // ComponentHelper::filterText().
                     if ($filterType == 'BL') {
                         $blackList           = true;
-                        $blackListTags       = array_merge([], ...$tempTags);
-                        $blackListAttributes = array_merge([], ...$tempAttributes);
+                        $blackListTags       = array_merge($blackListTags, $tempTags);
+                        $blackListAttributes = array_merge($blackListAttributes, $tempAttributes);
                     } elseif ($filterType == 'WL') {
                         $whiteList           = true;
-                        $whiteListTags       = array_merge([], ...$tempTags);
-                        $whiteListAttributes = array_merge([], ...$tempAttributes);
+                        $whiteListTags       = array_merge($whiteListTags, $tempTags);
+                        $whiteListAttributes = array_merge($whiteListAttributes, $tempAttributes);
                     }
                 }
             }
@@ -347,9 +355,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // $db      = $driver->getDriver();
-        $query = $db->createQuery();
+        $query   = $db->createQuery();
 
         $query->select('DISTINCT YEAR(' . $db->quoteName('createdate') . ') as value, YEAR(' . $db->quoteName('createdate') . ') as text');
         $query->from($db->quoteName('#__bsms_mediafiles'));
@@ -443,8 +449,12 @@ class CwmproclaimHelper
     public static function getTeachers(): array
     {
         $options = [];
-        $driver  = Factory::getContainer()->get(DatabaseInterface::class);
-        $db      = $driver->getDriver();
+        // The container returns the driver itself. Neither DatabaseInterface
+        // nor DatabaseDriver declares getDriver() -- that exists only as a
+        // static on DatabaseFactory -- so the extra hop was a fatal on the
+        // first call. Every sibling method here uses the container result
+        // directly.
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
         $query->select($db->quoteName('teacher.id', 'value') . ', ' . $db->quoteName('teacher.teachername', 'text'));
