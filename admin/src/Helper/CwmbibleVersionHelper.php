@@ -236,8 +236,18 @@ class CwmbibleVersionHelper
             }
         }
 
-        // If no translations found at all, provide common defaults
-        if (empty($versions)) {
+        // Fall back to common defaults only when there is no catalogue at all,
+        // which is the documented case: a site where the translation sync has
+        // not run yet.
+        //
+        // Not when $servableOnly emptied the list. That means a catalogue
+        // exists and nothing in it can currently be served -- every provider
+        // disabled under GDPR mode with nothing installed locally, for
+        // instance. Offering kjv/web/asv/ylt there presents four versions as
+        // selectable in a field that promises servable ones, and the reference
+        // then fails to resolve at render time. An empty list is the honest
+        // answer: install a translation or enable a provider.
+        if ($versions === [] && $rows === []) {
             $versions  = self::FALLBACK_VERSIONS;
             $languages = array_fill_keys(array_keys(self::FALLBACK_VERSIONS), 'en');
         }
