@@ -894,14 +894,13 @@ class CwmserverMigrationHelper
         }
 
         // Neither prefix check matched -- this filename was not served by
-        // the legacy server being migrated. Do NOT strip its host: a blind
-        // host-strip here previously produced a bare relative path (e.g.
-        // 'podcasts/sermon123.mp3' from an S3/CDN URL) that mediaBuildUrl()
-        // then silently concatenated onto the *new* local server's own base
-        // path -- a URL pointing at a file that was never actually moved
-        // there, and no trace left of where it really lives. Returning the
-        // untouched absolute URL preserves that information instead of
-        // destroying it, even though rendering it correctly end-to-end may
+        // the legacy server being migrated. Do NOT strip its host: doing so
+        // yields a bare relative path (e.g. 'podcasts/sermon123.mp3' from an
+        // S3/CDN URL) that mediaBuildUrl() then concatenates onto the *new*
+        // local server's base path, producing a URL for a file that was never
+        // moved there and losing any trace of where it really lives.
+        // Returning the untouched absolute URL preserves that information,
+        // even though rendering it correctly end-to-end may
         // still need admin follow-up depending on the target local server's
         // own configured base path.
         return $filename;

@@ -77,14 +77,11 @@ class CwmyoutubeQuota
      * this request. Once set, hasQuota() fails closed (denies further
      * usage) instead of silently behaving as though nothing was consumed.
      *
-     * This is process-local, in-memory state -- it resets every request,
-     * so a broken disk is only caught after at least one write attempt
-     * fails within the current request. That's still a meaningful
-     * improvement over the prior behavior (permanently and silently
-     * failing open forever): it stops a long-running batch (e.g. the
-     * platform-stats sync task, which can make many API calls in one
-     * process run) from continuing unprotected after the first failure.
-     * See #1549.
+     * Process-local, in-memory state: it resets every request, so a broken
+     * disk is only caught after at least one write attempt has failed within
+     * the current request. That is enough to stop a long-running batch -- the
+     * platform-stats sync task can make many API calls in one process run --
+     * from continuing unprotected after the first failure.
      *
      * @var    array<int, bool>
      * @since  __DEPLOY_VERSION__

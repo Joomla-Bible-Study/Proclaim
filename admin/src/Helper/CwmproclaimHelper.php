@@ -100,11 +100,11 @@ class CwmproclaimHelper
     /**
      * Define the legacy BIBLESTUDY_* path constants, if not already defined.
      *
-     * These used to be declared with `const` in admin/api.php, which is only
-     * included in the administrator and site applications — the API application
-     * never loads it, so code reachable from the API saw the constants as
-     * undefined and fatalled. Calling this from ProclaimComponent::boot()
-     * (which runs in every application) fixes that at the source.
+     * Declared here rather than with `const` in admin/api.php, which only the
+     * administrator and site applications include — the API application never
+     * loads it, so code reachable from the API would see the constants as
+     * undefined and fatal. ProclaimComponent::boot() calls this and runs in
+     * every application.
      *
      * admin/api.php still calls this too, guarded, for the paths that reach
      * that file without booting the component (e.g. postinstall messages).

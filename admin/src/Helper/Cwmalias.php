@@ -60,8 +60,9 @@ class Cwmalias
                 if (!$r['title']) {
                     // Do nothing
                 } else {
-                    // Two titles that slugify identically (reused series names,
-                    // teacher name variants) previously both got the same alias.
+                    // Two titles that slugify identically -- reused series
+                    // names, teacher name variants -- would otherwise get the
+                    // same alias.
                     // On #__bsms_studies/_series/_message_type there is no unique
                     // index, so the duplicate stuck and the SEF router -- which
                     // resolves by alias alone under "Remove IDs from URLs" -- served

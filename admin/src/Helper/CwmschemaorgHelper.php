@@ -970,9 +970,9 @@ class CwmschemaorgHelper
     /**
      * Load the `#__schemaorg` rows for a set of items in one query.
      *
-     * Serves both halves of the per-item work the bulk loop used to do with two
-     * queries each: the stored schema `shouldSyncStored()` needs, and the row id
-     * `upsertSchemaRow()` needs to choose insert vs update.
+     * Serves both halves of the per-item work in one query: the stored schema
+     * `shouldSyncStored()` needs, and the row id `upsertSchemaRow()` needs to
+     * choose insert vs update.
      *
      * @param   DatabaseInterface  $db       Database instance
      * @param   string             $context  Context string

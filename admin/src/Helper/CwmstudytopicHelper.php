@@ -74,10 +74,10 @@ class CwmstudytopicHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // Delete and reinsert as one unit. Previously a failure partway through
-        // the loop left the study with neither its old topics nor the intended
-        // set, and the only caller discards the return value, so the message
-        // save still reported success.
+        // Delete and reinsert as one unit: a failure partway through the loop
+        // would otherwise leave the study with neither its old topics nor the
+        // intended set, and the only caller discards the return value, so the
+        // message save would still report success.
         //
         // Savepoint-aware: MysqliDriver::transactionStart() calls
         // begin_transaction() unconditionally otherwise, and MySQL implicitly

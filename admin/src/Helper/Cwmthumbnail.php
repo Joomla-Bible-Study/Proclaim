@@ -343,18 +343,11 @@ class Cwmthumbnail
         $thumbPath    = $destFolder . '/' . $thumbName;
 
         // Superseded files are identified now but deleted only after the
-        // replacements are confirmed on disk (see the end of this method).
-        //
-        // Previously the delete ran here, before the new image was written.
-        // $versionHash is a content hash, so re-uploading a *different* photo
-        // for the same record produces a different filename -- meaning the
-        // live image was NOT in $keepFiles and was deleted first. If the
-        // File::copy() or the thumbnail encode below then failed, create()
-        // returned false, the calling model showed a generic warning and still
-        // called parent::save() without clearing the image fields: the record
-        // pointed at files that had just been deleted, leaving a broken image
-        // site-wide. (Re-uploading the *same* file was safe, since the hash and
-        // therefore the filename matched.) See #1570.
+        // replacements are confirmed on disk (see the end of this method), so a
+        // failed copy or encode leaves the record's existing image intact.
+        // $versionHash is a content hash, so a different photo for the same
+        // record yields a different filename and the live file is not among
+        // those kept.
         $supersededFiles = [];
 
         // Handle existing destination folder
@@ -399,9 +392,8 @@ class Cwmthumbnail
         $normalizedNew      = Path::clean($newImagePath);
 
         if ($normalizedOriginal !== $normalizedNew) {
-            // The cleanup that used to run before this point could remove the
-            // source itself; it is now deferred, so this can only fail if the
-            // source genuinely vanished.
+            // Cleanup is deferred until after the copy, so reaching here with
+            // no source file means it genuinely vanished.
             if (!is_file($originalPath)) {
                 return false;
             }
@@ -435,12 +427,10 @@ class Cwmthumbnail
 
         $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
 
-        // toFile() returns imagejpeg()'s bool rather than throwing. Ignoring it
-        // meant a failed encode still produced a success-shaped return, and the
-        // calling model wrote a path to a nonexistent file into the database --
-        // a 404 image on the public site with nothing logged. Returning false
-        // here is now safe for the record: the superseded files have not been
-        // deleted yet, so the previously-working image survives. See #1570.
+        // toFile() returns imagejpeg()'s bool rather than throwing, so the
+        // result has to be checked or a failed encode looks like success and
+        // the caller stores a path to a file that does not exist. Returning
+        // false is safe for the record: the superseded files are still on disk.
         if (!$thumbnail->toFile($thumbPath, IMAGETYPE_JPEG) || !is_file($thumbPath)) {
             Log::add('Thumbnail encode failed, keeping previous image: ' . $newImagePath, Log::WARNING, 'com_proclaim');
 
@@ -455,10 +445,9 @@ class Cwmthumbnail
         ];
 
         // Generate WebP variants if GD supports it. These are optional
-        // enhancements, so a failed encode is logged and the variant is left
-        // null rather than failing the whole operation -- but the path is only
-        // reported when the file actually exists, so the model never stores a
-        // reference to a file that was not written. See #1570.
+        // enhancements, so a failed encode is logged and the variant left null
+        // rather than failing the whole operation. The path is reported only
+        // when the file exists, so no reference to an unwritten file is stored.
         if (\function_exists('imagewebp')) {
             $webpThumbName = 'thumb_' . $baseFilename . '-' . $versionHash . '.webp';
             $webpThumbPath = $destFolder . '/' . $webpThumbName;
@@ -520,9 +509,8 @@ class Cwmthumbnail
         // CRITICAL: this method deletes every thumb_* sibling in the target
         // directory and writes new files there, and its only caller
         // (CwmadminController::createThumbnailXHR) takes `image_path` straight
-        // from request input. Without this check a crafted path reached any
-        // directory on disk. deleteFolder() has always validated; resize()
-        // never did. See #1570.
+        // from request input. Without this check a crafted path reaches any
+        // directory on disk.
         $resolvedPath = self::resolveWithinAllowedPaths($path);
 
         if ($resolvedPath === false) {
@@ -568,9 +556,8 @@ class Cwmthumbnail
         $thumbFilename = 'thumb_' . $filenameBase . '.' . $extension;
 
         // Old thumbnails are collected now but deleted only after the
-        // replacement is confirmed on disk (below). Deleting first meant a
-        // failed GD encode left the entity with no thumbnail at all, while
-        // this method still reported success. See #1570.
+        // replacement is confirmed on disk (below), so a failed GD encode
+        // leaves the existing thumbnail in place.
         $directory = \dirname($path);
         $oldThumbs = Folder::files($directory, '^thumb_' . preg_quote($filenameBase, '/'), false, true);
 
@@ -591,9 +578,9 @@ class Cwmthumbnail
         $newThumbPath = $directory . '/' . $thumbFilename;
 
         // Image::toFile() calls imagejpeg()/imagewebp() and returns their bool
-        // rather than throwing. The return value was ignored and this method
-        // unconditionally returned true, so a failed encode (disk full, GD
-        // hitting memory_limit) was reported as success. See #1570.
+        // rather than throwing, so the result has to be checked: a failed
+        // encode (disk full, GD hitting memory_limit) is otherwise
+        // indistinguishable from success.
         if (!$thumbnail->toFile($newThumbPath, $outputType) || !is_file($newThumbPath)) {
             Log::add('Thumbnail encode failed for: ' . $path, Log::WARNING, 'com_proclaim');
 

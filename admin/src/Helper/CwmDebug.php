@@ -260,13 +260,12 @@ class CwmDebug
     public static function getBuffer(): array
     {
         // Defence in depth alongside the JBSMDEBUG gate in admin/api.php.
-        // This accessor had no authorisation of any kind, unlike its sibling
-        // showToAdmin(), and its one production consumer
-        // (CwmsermonsController::filterAjax) ships the result to the browser
-        // as `_debug` on a public, CSRF-token-only endpoint. Returning an
-        // empty array rather than throwing keeps that caller's
-        // `if (!empty($debugBuffer))` working, so the key is simply omitted.
-        // See #1569.
+        // Its one production consumer (CwmsermonsController::filterAjax) ships
+        // the result to the browser as `_debug` on a public, CSRF-token-only
+        // endpoint, so this needs an authorisation check of its own like its
+        // sibling showToAdmin(). Returning an empty array rather than throwing
+        // keeps that caller's `if (!empty($debugBuffer))` working, so the key
+        // is simply omitted.
         if (!self::isEnabled()) {
             return [];
         }

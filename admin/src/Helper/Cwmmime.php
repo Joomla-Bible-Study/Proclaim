@@ -19,9 +19,9 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 /**
  * Shared MIME-type detection helper.
  *
- * Consolidates the extension→MIME maps and the mime_content_type → finfo →
- * extension detection chain that were previously duplicated across the backup
- * library, the addon base/local classes, and the podcast helper.
+ * The single home for the extension→MIME maps and the
+ * mime_content_type → finfo → extension detection chain, shared by the backup
+ * library, the addon base and local classes, and the podcast helper.
  *
  * @package  Proclaim.Admin
  * @since    10.3.3

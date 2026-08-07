@@ -144,11 +144,11 @@ class CwmlocationHelper
      * Validate that a user may assign a record to the given location, throwing
      * if not.
      *
-     * The edit-form dropdown (LocationListField) already restricts what a
-     * non-admin user can pick, but nothing previously enforced that
-     * server-side -- a restricted user could submit any location_id directly
-     * (devtools, a raw POST) and it would persist unchecked. Call this at the
-     * top of save() before any data is written. See #1561.
+     * The edit-form dropdown (LocationListField) restricts what a non-admin
+     * user can pick, but that is client-side only: a restricted user can
+     * submit any location_id directly, via devtools or a raw POST. This is the
+     * server-side enforcement, so call it at the top of save() before any data
+     * is written.
      *
      * Looking up the record's current location_id (when $recordId > 0) means
      * saving a record without changing its location is never blocked just

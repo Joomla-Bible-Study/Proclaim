@@ -534,17 +534,18 @@ class CwmdbHelper
                 $query = trim($query);
 
                 if ($query !== '' && $query[0] !== '#') {
-                    // execute() throws rather than returning false, so this
-                    // never returned the documented false and instead
-                    // propagated out of CwminstallModel::realRun() -- which
-                    // calls resetdb() as its migration-rollback recovery step
-                    // and has no try/catch. resetStack() then never ran,
-                    // leaving a dirty migration stack plus a fatal error
-                    // instead of the intended "not migrated" warning. Exactly
-                    // the situation this recovery path exists to handle (a
-                    // half-created table erroring on re-create) triggered it.
+                    // execute() throws rather than returning false, so the
+                    // documented false return has to be produced here. The
+                    // caller that depends on it, CwminstallModel::realRun(),
+                    // uses resetdb() as its migration-rollback recovery step
+                    // and has no try/catch: an escaping exception skips
+                    // resetStack() and leaves a dirty migration stack plus a
+                    // fatal instead of the intended "not migrated" warning --
+                    // in exactly the case this recovery path exists for, a
+                    // half-created table erroring on re-create.
+                    //
                     // setQuery() is inside the try because the MySQLi driver
-                    // prepares eagerly and throws there first. See #1566.
+                    // prepares eagerly and throws there first.
                     try {
                         $db->setQuery($query);
                         $db->execute();

@@ -247,13 +247,11 @@ class CwmanalyticsHelper
     /**
      * Strip a leading "www." from a hostname.
      *
-     * Replaces ltrim($host, 'www.'), which was a long-standing bug: ltrim()'s
-     * second argument is a *character mask*, not a prefix. It stripped any
-     * leading run of 'w', '.' — so 'worship.example.org' became
-     * 'orship.example.org' and 'watch.church.tv' became 'atch.church.tv'.
-     * Any host beginning with w (worship, watch, webex, wesleyan, wordoflife)
-     * was silently corrupted, both in the stored referrer_domain column and in
-     * the internal-vs-external comparison in classifyReferrer(). See #1571.
+     * Deliberately not ltrim($host, 'www.'): ltrim()'s second argument is a
+     * *character mask*, not a prefix, so it strips any leading run of 'w' and
+     * '.' -- turning 'worship.example.org' into 'orship.example.org'. Every
+     * host beginning with w is affected, in both the stored referrer_domain
+     * and the internal-vs-external comparison in classifyReferrer().
      *
      * @param   string  $host  Hostname, possibly prefixed with "www."
      *
@@ -590,13 +588,12 @@ class CwmanalyticsHelper
                 ->modify('-' . (int) $retentionDays . ' days')
                 ->format('Y-m-d H:i:s');
 
-            // The whole rollup+purge is one transaction. Previously the INSERT
-            // and the DELETE were independent statements: if the task died
-            // between them (execution-time limit, scheduler timeout, OOM,
-            // deploy restart) the raw events survived, the next run's cutoff
-            // still covered them, and they were aggregated a second time --
-            // permanently inflating the monthly totals with no self-correction.
-            // See #1571.
+            // The whole rollup+purge is one transaction. Were the INSERT and
+            // the DELETE independent, a task dying between them (execution-time
+            // limit, scheduler timeout, OOM, deploy restart) would leave the raw
+            // events in place, still inside the next run's cutoff, to be
+            // aggregated a second time -- permanently inflating the monthly
+            // totals with no self-correction.
             //
             // Savepoint-aware (the `true` argument) rather than a bare
             // transactionStart(): MysqliDriver::transactionStart() calls

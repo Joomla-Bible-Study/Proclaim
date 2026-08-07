@@ -279,12 +279,9 @@ class CwmsetupwizardHelper
                 $hasPodcast = (int) $db->loadResult() > 0;
 
                 // Keyed off the podcast itself, like every other item here.
-                // This used to be gated on an `enable_podcast` param that is
-                // written nowhere -- the wizard collects it, uses it to decide
-                // whether to create a podcast, and discards it -- so the item
-                // could never appear. Persisting that answer would not have
-                // helped either: opting in makes the wizard create a published
-                // podcast, which satisfies this check immediately.
+                // Not gated on the wizard's `enable_podcast` answer: that is
+                // never persisted, and opting in makes the wizard create a
+                // published podcast anyway, which satisfies this check.
                 $items[] = [
                     'key'   => 'podcast_setup',
                     'label' => 'JBS_CHECKLIST_PODCAST_SETUP',

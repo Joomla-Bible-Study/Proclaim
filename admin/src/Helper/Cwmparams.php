@@ -112,7 +112,7 @@ class Cwmparams
             } elseif (isset($admin->params)) {
                 $registry = new Registry();
 
-                // Used to Catch Jason Error's
+                // A malformed params column must not fatal the whole request.
                 try {
                     $registry->loadString($admin->params);
                 } catch (\Exception $e) {
@@ -123,11 +123,9 @@ class Cwmparams
                 $admin->params = $registry;
             }
 
-            // Add the current user id. getIdentity() may return null
-            // in CLI / pre-auth contexts, so fall back to Guest (0).
-            // Set unconditionally: previously this lived inside the
-            // params branch, so a row without a params column produced an
-            // object with no user_id at all.
+            // Add the current user id. getIdentity() may return null in CLI or
+            // pre-auth contexts, so fall back to Guest (0). Set outside the
+            // params branch above so a row with no params column still gets it.
             $user           = $app?->getIdentity();
             $admin->user_id = (int) ($user?->id ?? 0);
 
@@ -231,19 +229,17 @@ class Cwmparams
             );
         }
 
-        // Registry does NOT in fact tolerate a malformed params column -- the
-        // comment previously here said it did, and that is only true for a
-        // value Registry doesn't recognise as JSON at all. A truncated write
+        // Registry does not tolerate every malformed params column. It shrugs
+        // off a value it cannot recognise as JSON at all, but a truncated write
         // (disk full, interrupted store(), a hand-edit) leaves a string that
         // still starts with '{', and Json::stringToObject() throws
-        // \RuntimeException('Error decoding JSON data: ...') for exactly that
-        // shape -- verified empirically.
+        // \RuntimeException('Error decoding JSON data: ...') for exactly that.
         //
         // The only caller is CwmlicenseController::accept(), which has no
-        // try/catch, so a corrupted row produced a fatal that hard-blocked
-        // every admin action gated behind license acceptance, with no recovery
-        // short of editing the database by hand. Fall back to an empty
-        // Registry so the write can proceed and repair the row. See #1567.
+        // try/catch, so an uncaught throw here hard-blocks every admin action
+        // gated behind licence acceptance with no recovery short of editing the
+        // database by hand. Fall back to an empty Registry so the write can
+        // proceed and repair the row.
         try {
             $params = new Registry($table->params);
         } catch (\RuntimeException $e) {

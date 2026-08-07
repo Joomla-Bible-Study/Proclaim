@@ -95,13 +95,11 @@ class CwmpodcastTrackHelper
      * Resolve an episode's permanent RSS <guid>, freezing it on first use.
      *
      * Podcast apps key episode identity off the <guid> string, so it must never
-     * change once subscribers have seen it. Historically Proclaim recomputed the
-     * guid from the media URL every build, so any URL change (or the enclosure
-     * tracking switch) silently changed identity. This freezes the guid once — on
-     * the first feed build it stores the item's then-current value ($legacyGuid,
-     * byte-identical to what previously shipped, so existing subscribers see no
-     * change) and returns the stored value forever after. Best-effort: a write
-     * failure just falls back to emitting $legacyGuid.
+     * change once subscribers have seen it -- and a guid derived from the media
+     * URL changes whenever that URL does. This freezes it: the first feed build
+     * stores the item's then-current value ($legacyGuid, so existing
+     * subscribers see no change) and every later build returns the stored one.
+     * Best-effort -- a write failure falls back to emitting $legacyGuid.
      *
      * @param   DatabaseInterface  $db          Database driver.
      * @param   int            $mediaId     Media file ID.
@@ -479,9 +477,8 @@ class CwmpodcastTrackHelper
             CURLOPT_HTTPHEADER => $requestHeaders,
             CURLOPT_NOBODY     => $headOnly,
             // A redirect chain could point anywhere, including back at an
-            // internal host this check never sees — the live nfsda.org
-            // target this was built for is a direct file, not a redirect,
-            // so not following one costs nothing real here.
+            // internal host this check never sees. Podcast enclosure targets
+            // are direct files, so refusing to follow one costs nothing.
             CURLOPT_FOLLOWLOCATION => false,
             CURLOPT_PROTOCOLS      => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             // Pin resolution to the IP already validated above — curl would
@@ -574,11 +571,10 @@ class CwmpodcastTrackHelper
      * script end, so any code path that sets headers without ever echoing a
      * body (a HEAD request, a 304, a 416) sends nothing to the client until
      * Joomla's own later render forces the flush — silently replacing the
-     * intended response with Joomla's default page. This was caught live,
-     * not by a unit test: it's a whole-request-lifecycle interaction no
-     * PHPUnit test in this suite exercises directly (see
-     * testEveryStreamingBranchTerminatesInsteadOfReturning in
-     * CwmpodcastControllerTest for the source-level regression guard).
+     * intended response with Joomla's default page. This is a
+     * whole-request-lifecycle interaction that no PHPUnit test exercises
+     * directly; testEveryStreamingBranchTerminatesInsteadOfReturning in
+     * CwmpodcastControllerTest guards it at source level instead.
      *
      * @return  never
      *
@@ -612,16 +608,14 @@ class CwmpodcastTrackHelper
      *
      * $siteHost must be this site's own configured hostname (Uri::root()),
      * NOT the incoming request's Host header. The Host header is
-     * client-supplied and rewritable by any reverse proxy/CDN in front of
-     * the site, so it can legitimately differ from the site's real
-     * hostname in form (e.g. "site.com" vs "www.site.com") with no
-     * attacker involved at all -- comparing against it caused local media
-     * to be misrouted down the remote-proxy path (which then either
-     * self-proxies or 404s, depending on what that hostname resolves to)
-     * on any such mismatch. See #1552.
+     * client-supplied and rewritable by any reverse proxy or CDN in front of
+     * the site, so it can legitimately differ from the site's real hostname in
+     * form (e.g. "site.com" vs "www.site.com") with no attacker involved.
+     * Comparing against it misroutes local media down the remote-proxy path,
+     * which then self-proxies or 404s depending on what that hostname
+     * resolves to.
      *
-     * parse_url()'s PHP_URL_HOST never includes a port, but $siteHost may
-     * (every local dev site this was tested against runs on :8890) —
+     * parse_url()'s PHP_URL_HOST never includes a port but $siteHost may, so
      * strip the port from both sides before comparing.
      *
      * @param   string  $siteHost  This site's own configured hostname (may include a port)
