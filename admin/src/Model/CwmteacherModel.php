@@ -504,37 +504,91 @@ class CwmteacherModel extends AdminModel
      */
     protected function canDelete($record): bool
     {
-        $app        = Factory::getApplication();
-        $db         = Factory::getContainer()->get(DatabaseInterface::class);
-        $user       = $app->getIdentity();
-        $canDoState = $user->authorise('core.edit.state', $this->option);
-        $text       = '';
+        // Trash, then delete -- the two-step every core list uses, and the same
+        // shape as com_content's ArticleModel: a record is only ever deleted out
+        // of the trash, and the permission is checked on the record's own asset
+        // rather than the component.
+        if (empty($record->id) || (int) $record->published !== -2) {
+            return false;
+        }
 
-        // Iterate the items to delete each one.
-        $query = $db->createQuery();
-        $query->select($db->quoteName(['s.id', 's.studytitle']))
-            ->from($db->quoteName('#__bsms_studies', 's'))
-            ->innerJoin(
-                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
-                . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
-            )
-            ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $record->id);
-        $db->setQuery($query);
-        $studies = $db->loadObjectList();
+        return $this->getCurrentUser()->authorise('core.delete', 'com_proclaim.teacher.' . (int) $record->id);
+    }
 
-        if (!$studies && $canDoState) {
+    /**
+     * Method to delete one or more teachers.
+     *
+     * A teacher a study still credits is dropped from the batch rather than
+     * deleted, and the reason is reported. This mirrors com_users' LevelModel,
+     * which refuses an access level that is in use the same way: the referential
+     * check belongs here rather than in canDelete(), because canDelete() answers
+     * "may this user delete this record" and cannot explain a per-record refusal
+     * to the user or leave the rest of the batch to proceed.
+     *
+     * @param   array  $pks  An array of record primary keys.
+     *
+     * @return  bool  True if successful, false if an error occurs.
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    public function delete(&$pks): bool
+    {
+        $pks          = ArrayHelper::toInteger((array) $pks);
+        $teachersUsed = [];
+
+        if ($pks !== []) {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            // One query for the whole batch: every study still crediting any of
+            // these teachers, with the teacher's own name for the message.
+            $query = $db->createQuery()
+                ->select($db->quoteName(['st.teacher_id', 's.id', 's.studytitle', 't.teachername']))
+                ->from($db->quoteName('#__bsms_studies', 's'))
+                ->innerJoin(
+                    $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                    . $db->quoteName('st.study_id') . ' = ' . $db->quoteName('s.id')
+                )
+                ->innerJoin(
+                    $db->quoteName('#__bsms_teachers', 't') . ' ON '
+                    . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.teacher_id')
+                )
+                ->whereIn($db->quoteName('st.teacher_id'), $pks)
+                ->order($db->quoteName('s.id') . ' ASC');
+
+            foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+                $teachersUsed[(int) $row->teacher_id]['name']      = $row->teachername;
+                $teachersUsed[(int) $row->teacher_id]['studies'][] = $row->studytitle . ' (' . $row->id . ')';
+            }
+        }
+
+        if ($teachersUsed !== []) {
+            $app = Factory::getApplication();
+            $app->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE'), 'error');
+
+            foreach ($teachersUsed as $teacherId => $used) {
+                $app->enqueueMessage(
+                    Text::sprintf(
+                        'JBS_TCH_CAN_NOT_DELETE_DETAILS',
+                        $used['name'],
+                        implode(', ', $used['studies'])
+                    ),
+                    'error'
+                );
+
+                // Drop it from the batch; the rest still go.
+                foreach (array_keys($pks, $teacherId, true) as $i) {
+                    unset($pks[$i]);
+                }
+            }
+        }
+
+        if ($pks === []) {
+            // Everything was in use; the messages above already said so.
             return true;
         }
 
-        if ($record->published == '-2' || $record->published == '0') {
-            foreach ($studies as $studie) {
-                $text .= ' ' . $studie->id . '-"' . $studie->studytitle . '",';
-            }
-
-            $app->enqueueMessage(Text::_('JBS_TCH_CAN_NOT_DELETE') . $text);
-        }
-
-        return $this->getCurrentUser()->authorise('core.delete', $this->option);
+        return parent::delete($pks);
     }
 
     /**

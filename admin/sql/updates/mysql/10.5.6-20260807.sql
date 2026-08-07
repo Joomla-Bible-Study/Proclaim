@@ -31,6 +31,11 @@ ALTER TABLE `#__bsms_analytics_events`
     MODIFY `session_hash` VARCHAR(64) NULL DEFAULT NULL
     COMMENT 'Keyed hash of session ID, rotated daily; not linkable across days; consent-required';
 
+-- ⚠️ NOT RE-RUNNABLE. Every other statement in this file is idempotent; this
+-- one hashes whatever it finds. If this file is renamed forward again, apply
+-- only the newly appended statements to any database that already ran it,
+-- rather than replaying the whole file.
+--
 -- Re-key the existing history. Rows written before this release hold a bare,
 -- unsalted SHA-256 that is stable for all time, so one visitor could be traced
 -- across the whole table. Folding each row's own date into the digest gives
@@ -187,3 +192,18 @@ ALTER TABLE `#__bsms_playlists`
 -- -- would otherwise still fall back to idx_server alone.
 ALTER TABLE `#__bsms_playlists`
     ADD KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`);
+
+-- #1622: CwmteacherModel::canDelete() enqueued a "cannot delete" message and
+-- then returned a plain permission check, so the teacher was deleted anyway --
+-- and CwmteacherTable::delete() never cleared #__bsms_study_teachers. Both are
+-- fixed in code; these clear rows already orphaned by the old behaviour.
+
+-- Junction rows whose teacher is gone. Teacher listings and filters join
+-- against these, so they surface as blank entries rather than staying harmless.
+DELETE FROM `#__bsms_study_teachers`
+WHERE `teacher_id` NOT IN (SELECT `id` FROM `#__bsms_teachers`);
+
+-- The same in the other direction. CwmmessageTable::delete() has always cleared
+-- these, so any that exist predate that or came from a path that bypassed it.
+DELETE FROM `#__bsms_study_teachers`
+WHERE `study_id` NOT IN (SELECT `id` FROM `#__bsms_studies`);
