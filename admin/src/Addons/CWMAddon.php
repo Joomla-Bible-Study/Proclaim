@@ -37,6 +37,18 @@ use Joomla\Registry\Registry;
 abstract class CWMAddon
 {
     /**
+     * Seconds to wait on an addon API request before giving up.
+     *
+     * Joomla's curl transport only sets CURLOPT_TIMEOUT when one is given, so
+     * omitting it means no timeout at all. These calls run inside admin
+     * requests -- connection tests, description sync, stats -- so a
+     * unresponsive provider would hold a PHP worker open indefinitely.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected const int HTTP_TIMEOUT = 20;
+
+    /**
      * Addon configuration
      *
      * @var     bool|null|\SimpleXMLElement
@@ -1006,7 +1018,8 @@ abstract class CWMAddon
         string $url,
         array $headers = [],
         ?string $body = null,
-        string $label = ''
+        string $label = '',
+        int $timeout = self::HTTP_TIMEOUT
     ): Response {
         $http    = (new HttpFactory())->getHttp();
         $verb    = strtoupper($method);
@@ -1015,11 +1028,11 @@ abstract class CWMAddon
 
         try {
             $response = match ($verb) {
-                'GET'    => $http->get($url, $headers),
-                'DELETE' => $http->delete($url, $headers),
-                'POST'   => $http->post($url, (string) $body, $headers),
-                'PUT'    => $http->put($url, (string) $body, $headers),
-                'PATCH'  => $http->patch($url, (string) $body, $headers),
+                'GET'    => $http->get($url, $headers, $timeout),
+                'DELETE' => $http->delete($url, $headers, $timeout),
+                'POST'   => $http->post($url, (string) $body, $headers, $timeout),
+                'PUT'    => $http->put($url, (string) $body, $headers, $timeout),
+                'PATCH'  => $http->patch($url, (string) $body, $headers, $timeout),
                 default  => throw new \InvalidArgumentException('Unsupported HTTP method: ' . $verb),
             };
         } catch (\Exception $e) {
