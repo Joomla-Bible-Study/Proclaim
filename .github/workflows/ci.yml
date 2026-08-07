@@ -449,13 +449,28 @@ jobs:
       # until 2026-07-27.
       #
       # Ignore list: SER is the key-prefix legend for Series in the ini
-      # comments; pre-selected is legitimate English codespell would "fix".
+      # comments; pre-selected is legitimate English codespell would "fix";
+      # comparaison is French, quoted verbatim from CNIL's cookies
+      # recommendation in the data-protection review; serie is this codebase's
+      # own singular entity name (CwmserieTable, and the ACL section
+      # com_proclaim.serie) — "correcting" it would break ACL rules.
+      #
+      # The addon language directories were outside this scan until 2026-08-06
+      # and were shipping "Protocl" as a field label and "Protocal" in its
+      # description on the Legacy and Local server screens. Templates, layouts
+      # and forms are included too: they were clean when added, so this locks
+      # that in rather than fixing anything.
       - name: Spellcheck en-GB strings and documentation
         run: >
           codespell
-          --ignore-words-list ser,pre-selected
+          --ignore-words-list ser,pre-selected,comparaison,serie
           admin/language/en-GB
           site/language/en-GB
+          admin/src/Addons/Servers/*/language/en-GB
           plugins/*/proclaim/language/en-GB
+          plugins/content/scripturelinks/language/en-GB
+          plugins/content/scripturelinks/plg_*/language/en-GB
+          libraries/lib_cwmscripture/language/en-GB
           modules/*/*/language/en-GB
+          admin/tmpl site/tmpl admin/layouts site/layouts admin/forms
           README.md CLAUDE.md build/*.md
