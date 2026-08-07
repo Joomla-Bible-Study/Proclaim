@@ -1893,7 +1893,13 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Bulk-sync Schema.org data for all published items via AJAX.
+     * Sync one batch of Schema.org data via AJAX and report where to resume.
+     *
+     * Processes at most `CwmschemaorgHelper::SYNC_CHUNK_SIZE` items per request
+     * and returns a cursor, so a library of any size is synced across several
+     * short requests instead of one that can hit `max_execution_time` partway
+     * through. The caller repeats the request with the returned `cursor` until
+     * the response reports `done`.
      *
      * @return void
      *
@@ -1916,10 +1922,20 @@ class CwmadminController extends FormController
         }
 
         try {
-            $mode   = $app->getInput()->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
-            $valid  = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
-            $mode   = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
-            $counts = CwmschemaorgHelper::syncAll($mode);
+            $input = $app->getInput();
+            $mode  = $input->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
+            $valid = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
+            $mode  = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
+
+            $result = CwmschemaorgHelper::syncChunk(
+                $mode,
+                $input->getCmd('cursorType', 'messages'),
+                $input->getInt('cursorLastId', 0)
+            );
+
+            // Running totals live on the client across the chunk loop; this
+            // response only reports what this batch did.
+            $counts = $result['counts'];
             $total  = $counts['messages'] + $counts['teachers'] + $counts['series'];
 
             $message = Text::sprintf(
@@ -1937,6 +1953,8 @@ class CwmadminController extends FormController
                 'success' => true,
                 'count'   => $total,
                 'counts'  => $counts,
+                'done'    => $result['done'],
+                'cursor'  => ['type' => $result['type'], 'lastId' => $result['lastId']],
                 'message' => $message,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {

@@ -434,10 +434,67 @@
             if (footer) footer.style.display = 'none';
 
             try {
-                const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&mode=${mode}&${this.token}=1`;
-                const result = await this.fetchJson(url);
+                // The server processes a bounded batch per request and hands back a
+                // cursor, so a large library is synced across several short requests
+                // instead of one that can outlive max_execution_time. Keep the running
+                // totals here — each response only reports its own batch.
+                const totals = {
+                    messages: 0, teachers: 0, series: 0, skipped: 0,
+                };
+                let cursor = { type: 'messages', lastId: 0 };
+                let result;
+                let guard = 0;
+
+                // Bounds the loop if a server-side cursor bug ever stops advancing.
+                const MAX_CHUNKS = 5000;
+
+                do {
+                    const url = `index.php?option=com_proclaim&task=cwmadmin.schemaSyncXHR&mode=${mode}`
+                        + `&cursorType=${encodeURIComponent(cursor.type)}`
+                        + `&cursorLastId=${encodeURIComponent(cursor.lastId)}`
+                        + `&${this.token}=1`;
+                    result = await this.fetchJson(url);
+
+                    if (!result.success) break;
+
+                    Object.keys(totals).forEach((key) => {
+                        totals[key] += result.counts?.[key] || 0;
+                    });
+
+                    cursor = result.cursor || cursor;
+                    guard += 1;
+
+                    const processed = totals.messages + totals.teachers + totals.series + totals.skipped;
+
+                    if (statusText && !result.done) {
+                        statusText.textContent = t('JBS_ADM_SCHEMA_SYNCING', 'Syncing schema data...');
+                    }
+                    if (resultText && !result.done) {
+                        resultText.textContent = `${processed}`;
+                    }
+                } while (!result.done && guard < MAX_CHUNKS);
 
                 if (spinner) spinner.style.display = 'none';
+
+                // Each response only describes its own batch, so the final summary
+                // is composed here from the running totals.
+                const fmt = (key, fallback, values) => {
+                    let i = -1;
+                    return t(key, fallback).replace(/%d/g, () => {
+                        i += 1;
+                        return values[i] ?? 0;
+                    });
+                };
+
+                let summary = fmt(
+                    'JBS_ADM_SCHEMA_SYNC_RESULT',
+                    'Synced: %d messages, %d teachers, %d series',
+                    [totals.messages, totals.teachers, totals.series],
+                );
+
+                if (totals.skipped > 0) {
+                    summary += ` ${fmt('JBS_ADM_SCHEMA_SYNC_SKIPPED', '(%d skipped — manually edited)', [totals.skipped])}`;
+                }
 
                 if (result.success) {
                     if (statusText) {
@@ -445,10 +502,10 @@
                             t('JBS_ADM_SCHEMA_SYNC_COMPLETE', 'Schema sync complete!')}`;
                     }
                     if (resultText) {
-                        resultText.textContent = result.message || `${result.count} items synced`;
+                        resultText.textContent = summary;
                     }
 
-                    this.announceToScreenReader(result.message || 'Schema sync complete');
+                    this.announceToScreenReader(summary);
 
                     setTimeout(() => {
                         if (this.schemaSyncModal) this.schemaSyncModal.hide();

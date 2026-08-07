@@ -682,18 +682,6 @@ class CwmschemaorgHelper
     }
 
     /**
-     * Bulk-sync schema.org data for all published messages, teachers, and series.
-     *
-     * Inserts or updates rows in Joomla's #__schemaorg table with auto-generated
-     * structured data from item fields.
-     *
-     * @param   bool  $force  If true, overwrite existing schema entries
-     *
-     * @return  array{messages: int, teachers: int, series: int}  Count of synced items per type
-     *
-     * @since   10.3.0
-     */
-    /**
      * Sync mode: only create entries for items that have no schema row.
      *
      * @since 10.3.0
@@ -854,37 +842,173 @@ class CwmschemaorgHelper
         return true;
     }
 
+    /**
+     * Number of items processed per bulk-sync chunk.
+     *
+     * Sized so a chunk stays comfortably inside a default `max_execution_time`
+     * even on slow shared hosting, since each chunk is one HTTP round trip.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public const SYNC_CHUNK_SIZE = 100;
+
+    /**
+     * Ordered list of the item types a full sync walks through.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const SYNC_TYPES = ['messages', 'teachers', 'series'];
+
+    /**
+     * Bulk-sync every published message, teacher and series in one call.
+     *
+     * Drives `syncChunk()` to completion internally. On a large site prefer
+     * calling `syncChunk()` from the caller's own loop (the admin UI does, over
+     * successive AJAX requests) so no single request has to finish the whole job.
+     *
+     * @param   string  $mode  Sync mode (new, smart, force)
+     *
+     * @return  array{messages: int, teachers: int, series: int, skipped: int}
+     *
+     * @since   10.3.0
+     */
     public static function syncAll(string $mode = self::SYNC_SMART): array
     {
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $counts  = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
+        $counts = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
+        $type   = self::SYNC_TYPES[0];
+        $lastId = 0;
 
-        $result             = self::syncMessages($db, $mode);
-        $counts['messages'] = $result['synced'];
-        $counts['skipped'] += $result['skipped'];
+        do {
+            $result = self::syncChunk($mode, $type, $lastId);
 
-        $result             = self::syncTeachers($db, $mode);
-        $counts['teachers'] = $result['synced'];
-        $counts['skipped'] += $result['skipped'];
+            foreach ($counts as $key => $value) {
+                $counts[$key] = $value + ($result['counts'][$key] ?? 0);
+            }
 
-        $result           = self::syncSeries($db, $mode);
-        $counts['series'] = $result['synced'];
-        $counts['skipped'] += $result['skipped'];
+            $type   = $result['type'];
+            $lastId = $result['lastId'];
+        } while (!$result['done']);
 
         return $counts;
     }
 
     /**
-     * Sync schema.org data for all published messages.
+     * Sync one bounded batch of items and report where to resume.
      *
-     * @param   DatabaseInterface  $db    Database instance
-     * @param   string             $mode  Sync mode
+     * The cursor is a (`type`, `lastId`) pair walking messages, then teachers,
+     * then series in primary-key order. Keyset paging rather than OFFSET means a
+     * concurrent insert cannot make the walk skip or repeat a row.
      *
-     * @return  array{synced: int, skipped: int}
+     * Deliberately not wrapped in a transaction. Each item's schema row is
+     * independently valid, so a run cut short by a timeout leaves consistent
+     * data that the returned cursor can resume from — which is what finding 6 of
+     * issue #1562 wanted "no rollback" to buy. A transaction spanning thousands
+     * of upserts would instead hold row locks for the length of the whole sync.
+     *
+     * @param   string  $mode    Sync mode (new, smart, force)
+     * @param   string  $type    Cursor type: messages, teachers or series
+     * @param   int     $lastId  Highest primary key already processed for $type
+     * @param   int     $limit   Maximum items to process in this batch
+     *
+     * @return  array{type: string, lastId: int, done: bool, counts: array{messages: int, teachers: int, series: int, skipped: int}}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function syncChunk(
+        string $mode = self::SYNC_SMART,
+        string $type = 'messages',
+        int $lastId = 0,
+        int $limit = self::SYNC_CHUNK_SIZE
+    ): array {
+        $counts = ['messages' => 0, 'teachers' => 0, 'series' => 0, 'skipped' => 0];
+
+        $position = array_search($type, self::SYNC_TYPES, true);
+
+        // An unrecognised cursor type can only come from a tampered or stale
+        // request. Report completion rather than silently restarting the walk,
+        // which would let a caller's loop run forever.
+        if ($position === false) {
+            return ['type' => $type, 'lastId' => $lastId, 'done' => true, 'counts' => $counts];
+        }
+
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $lastId = max(0, $lastId);
+        $limit  = max(1, $limit);
+
+        $result = match ($type) {
+            'messages' => self::syncMessages($db, $mode, $lastId, $limit),
+            'teachers' => self::syncTeachers($db, $mode, $lastId, $limit),
+            'series'   => self::syncSeries($db, $mode, $lastId, $limit),
+        };
+
+        $counts[$type]     = $result['synced'];
+        $counts['skipped'] = $result['skipped'];
+
+        // Short batch means this type is exhausted; hand the cursor to the next
+        // type, or report done when there is no next type.
+        if ($result['exhausted']) {
+            $next = self::SYNC_TYPES[$position + 1] ?? null;
+
+            return [
+                'type'   => $next ?? $type,
+                'lastId' => $next === null ? $result['lastId'] : 0,
+                'done'   => $next === null,
+                'counts' => $counts,
+            ];
+        }
+
+        return ['type' => $type, 'lastId' => $result['lastId'], 'done' => false, 'counts' => $counts];
+    }
+
+    /**
+     * Load the `#__schemaorg` rows for a set of items in one query.
+     *
+     * Serves both halves of the per-item work the bulk loop used to do with two
+     * queries each: the stored schema `shouldSyncStored()` needs, and the row id
+     * `upsertSchemaRow()` needs to choose insert vs update.
+     *
+     * @param   DatabaseInterface  $db       Database instance
+     * @param   string             $context  Context string
+     * @param   int[]              $itemIds  Item primary keys
+     *
+     * @return  array<int, object>  Keyed by itemId, each with `id` and `schema`
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function prefetchSchemaRows(DatabaseInterface $db, string $context, array $itemIds): array
+    {
+        if ($itemIds === []) {
+            return [];
+        }
+
+        $query = $db->createQuery()
+            ->select([$db->quoteName('id'), $db->quoteName('itemId'), $db->quoteName('schema')])
+            ->from($db->quoteName('#__schemaorg'))
+            ->where($db->quoteName('context') . ' = ' . $db->quote($context))
+            ->whereIn($db->quoteName('itemId'), $itemIds);
+
+        $rows = [];
+
+        foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+            $rows[(int) $row->itemId] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Sync one batch of published messages.
+     *
+     * @param   DatabaseInterface  $db      Database instance
+     * @param   string             $mode    Sync mode
+     * @param   int                $lastId  Highest primary key already processed
+     * @param   int                $limit   Maximum items in this batch
+     *
+     * @return  array{synced: int, skipped: int, lastId: int, exhausted: bool}
      *
      * @since   10.3.0
      */
-    private static function syncMessages(DatabaseInterface $db, string $mode): array
+    private static function syncMessages(DatabaseInterface $db, string $mode, int $lastId, int $limit): array
     {
         $context = 'com_proclaim.cwmmessage';
         $synced  = 0;
@@ -903,99 +1027,181 @@ class CwmschemaorgHelper
                 $db->quoteName('m.location_id'),
             ])
             ->from($db->quoteName('#__bsms_studies', 'm'))
-            ->where($db->quoteName('m.published') . ' = 1');
-        $db->setQuery($query);
+            ->where($db->quoteName('m.published') . ' = 1')
+            ->where($db->quoteName('m.id') . ' > ' . $lastId)
+            ->order($db->quoteName('m.id') . ' ASC');
+        $db->setQuery($query, 0, $limit);
         $messages = $db->loadObjectList() ?: [];
 
+        if ($messages === []) {
+            return ['synced' => 0, 'skipped' => 0, 'lastId' => $lastId, 'exhausted' => true];
+        }
+
+        $ids      = array_map(static fn ($msg) => (int) $msg->id, $messages);
+        $existing = self::prefetchSchemaRows($db, $context, $ids);
+
+        // Narrow to the rows this mode will actually write before prefetching
+        // their related data, so a Smart Sync over a mostly-untouched site does
+        // not pay for lookups it will throw away.
+        $due = [];
+
         foreach ($messages as $msg) {
-            if (!self::shouldSync($db, (int) $msg->id, $context, $mode)) {
+            $stored = $existing[(int) $msg->id]->schema ?? null;
+
+            if (!self::shouldSyncStored(self::isSchemaManuallyEdited($stored), $mode)) {
                 $skipped++;
                 continue;
             }
 
-            $schema = self::buildSermonSchemaFromRow($db, $msg);
+            $due[] = $msg;
+        }
 
-            self::upsertSchemaRow($db, (int) $msg->id, $context, 'Sermon', $schema);
+        $maps = self::prefetchSermonMaps($db, $due);
+
+        foreach ($due as $msg) {
+            $schema = self::buildSermonSchemaFromRow($db, $msg, $maps);
+
+            self::upsertSchemaRow(
+                $db,
+                (int) $msg->id,
+                $context,
+                'Sermon',
+                $schema,
+                (int) ($existing[(int) $msg->id]->id ?? 0)
+            );
             $synced++;
         }
 
-        return ['synced' => $synced, 'skipped' => $skipped];
+        return [
+            'synced'    => $synced,
+            'skipped'   => $skipped,
+            'lastId'    => (int) end($messages)->id,
+            'exhausted' => \count($messages) < $limit,
+        ];
     }
 
     /**
-     * Sync schema.org data for all published teachers.
+     * Sync one batch of published teachers.
      *
-     * @param   DatabaseInterface  $db    Database instance
-     * @param   string             $mode  Sync mode
+     * @param   DatabaseInterface  $db      Database instance
+     * @param   string             $mode    Sync mode
+     * @param   int                $lastId  Highest primary key already processed
+     * @param   int                $limit   Maximum items in this batch
      *
-     * @return  array{synced: int, skipped: int}
+     * @return  array{synced: int, skipped: int, lastId: int, exhausted: bool}
      *
      * @since   10.3.0
      */
-    private static function syncTeachers(DatabaseInterface $db, string $mode): array
+    private static function syncTeachers(DatabaseInterface $db, string $mode, int $lastId, int $limit): array
     {
-        $context = 'com_proclaim.teacher';
+        return self::syncSimpleBatch(
+            $db,
+            $mode,
+            $lastId,
+            $limit,
+            '#__bsms_teachers',
+            'com_proclaim.teacher',
+            'Teacher',
+            static fn (object $row): array => self::buildTeacherSchemaFromRow($row)
+        );
+    }
+
+    /**
+     * Sync one batch of published series.
+     *
+     * @param   DatabaseInterface  $db      Database instance
+     * @param   string             $mode    Sync mode
+     * @param   int                $lastId  Highest primary key already processed
+     * @param   int                $limit   Maximum items in this batch
+     *
+     * @return  array{synced: int, skipped: int, lastId: int, exhausted: bool}
+     *
+     * @since   10.3.0
+     */
+    private static function syncSeries(DatabaseInterface $db, string $mode, int $lastId, int $limit): array
+    {
+        return self::syncSimpleBatch(
+            $db,
+            $mode,
+            $lastId,
+            $limit,
+            '#__bsms_series',
+            'com_proclaim.serie',
+            'Series',
+            static fn (object $row): array => self::buildSeriesSchemaFromRow($row)
+        );
+    }
+
+    /**
+     * Sync one batch of a table whose schema builder needs no related lookups.
+     *
+     * @param   DatabaseInterface  $db          Database instance
+     * @param   string             $mode        Sync mode
+     * @param   int                $lastId      Highest primary key already processed
+     * @param   int                $limit       Maximum items in this batch
+     * @param   string             $table       Source table name
+     * @param   string             $context     Context string
+     * @param   string             $schemaType  Schema type name
+     * @param   callable           $builder     Maps a source row to a schema array
+     *
+     * @return  array{synced: int, skipped: int, lastId: int, exhausted: bool}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function syncSimpleBatch(
+        DatabaseInterface $db,
+        string $mode,
+        int $lastId,
+        int $limit,
+        string $table,
+        string $context,
+        string $schemaType,
+        callable $builder
+    ): array {
         $synced  = 0;
         $skipped = 0;
 
         $query = $db->createQuery()
             ->select('*')
-            ->from($db->quoteName('#__bsms_teachers'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $teachers = $db->loadObjectList() ?: [];
+            ->from($db->quoteName($table))
+            ->where($db->quoteName('published') . ' = 1')
+            ->where($db->quoteName('id') . ' > ' . $lastId)
+            ->order($db->quoteName('id') . ' ASC');
+        $db->setQuery($query, 0, $limit);
+        $rows = $db->loadObjectList() ?: [];
 
-        foreach ($teachers as $teacher) {
-            if (!self::shouldSync($db, (int) $teacher->id, $context, $mode)) {
+        if ($rows === []) {
+            return ['synced' => 0, 'skipped' => 0, 'lastId' => $lastId, 'exhausted' => true];
+        }
+
+        $ids      = array_map(static fn ($row) => (int) $row->id, $rows);
+        $existing = self::prefetchSchemaRows($db, $context, $ids);
+
+        foreach ($rows as $row) {
+            $stored = $existing[(int) $row->id]->schema ?? null;
+
+            if (!self::shouldSyncStored(self::isSchemaManuallyEdited($stored), $mode)) {
                 $skipped++;
                 continue;
             }
 
-            $schema = self::buildTeacherSchemaFromRow($teacher);
-
-            self::upsertSchemaRow($db, (int) $teacher->id, $context, 'Teacher', $schema);
+            self::upsertSchemaRow(
+                $db,
+                (int) $row->id,
+                $context,
+                $schemaType,
+                $builder($row),
+                (int) ($existing[(int) $row->id]->id ?? 0)
+            );
             $synced++;
         }
 
-        return ['synced' => $synced, 'skipped' => $skipped];
-    }
-
-    /**
-     * Sync schema.org data for all published series.
-     *
-     * @param   DatabaseInterface  $db    Database instance
-     * @param   string             $mode  Sync mode
-     *
-     * @return  array{synced: int, skipped: int}
-     *
-     * @since   10.3.0
-     */
-    private static function syncSeries(DatabaseInterface $db, string $mode): array
-    {
-        $context = 'com_proclaim.serie';
-        $synced  = 0;
-        $skipped = 0;
-
-        $query = $db->createQuery()
-            ->select('*')
-            ->from($db->quoteName('#__bsms_series'))
-            ->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $allSeries = $db->loadObjectList() ?: [];
-
-        foreach ($allSeries as $series) {
-            if (!self::shouldSync($db, (int) $series->id, $context, $mode)) {
-                $skipped++;
-                continue;
-            }
-
-            $schema = self::buildSeriesSchemaFromRow($series);
-
-            self::upsertSchemaRow($db, (int) $series->id, $context, 'Series', $schema);
-            $synced++;
-        }
-
-        return ['synced' => $synced, 'skipped' => $skipped];
+        return [
+            'synced'    => $synced,
+            'skipped'   => $skipped,
+            'lastId'    => (int) end($rows)->id,
+            'exhausted' => \count($rows) < $limit,
+        ];
     }
 
     /**
@@ -1040,8 +1246,23 @@ class CwmschemaorgHelper
             ->from($db->quoteName('#__schemaorg'))
             ->where($db->quoteName('itemId') . ' = ' . $itemId)
             ->where($db->quoteName('context') . ' = ' . $db->quote($context));
-        $stored = $db->setQuery($query)->loadResult();
+        return self::isSchemaManuallyEdited($db->setQuery($query)->loadResult());
+    }
 
+    /**
+     * Decide whether a stored `#__schemaorg` payload has been manually edited.
+     *
+     * Split out from `isManuallyEdited()` so the bulk sync path can reuse the
+     * comparison against schema it already prefetched in one batched query.
+     *
+     * @param   string|null  $stored  Raw stored schema JSON, or null when no row exists
+     *
+     * @return  bool|null  True = manually edited, false = untouched, null = no row
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function isSchemaManuallyEdited(?string $stored): ?bool
+    {
         if ($stored === null) {
             return null;
         }
@@ -1076,8 +1297,14 @@ class CwmschemaorgHelper
      *
      * @since   10.3.0
      */
-    private static function buildSermonSchemaFromRow(DatabaseInterface $db, object $msg): array
+    private static function buildSermonSchemaFromRow(DatabaseInterface $db, object $msg, ?array $maps = null): array
     {
+        // Single source of truth for the related-data lookups: the per-item
+        // path prefetches a one-row map rather than running its own queries,
+        // so a bulk chunk and a single item can never build different schema
+        // (or different `computeAutoHash()` fingerprints) for the same row.
+        $maps ??= self::prefetchSermonMaps($db, [$msg]);
+
         $schema = ['@type' => 'CreativeWork'];
 
         if (!empty($msg->studytitle)) {
@@ -1101,16 +1328,7 @@ class CwmschemaorgHelper
         }
 
         // Teacher names
-        $tQuery = $db->createQuery()
-            ->select($db->quoteName('t.teachername'))
-            ->from($db->quoteName('#__bsms_teachers', 't'))
-            ->innerJoin(
-                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
-                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
-            )
-            ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id)
-            ->order($db->quoteName('st.ordering') . ' ASC');
-        $names = $db->setQuery($tQuery)->loadColumn() ?: [];
+        $names = $maps['teachers'][(int) $msg->id] ?? [];
 
         if (!empty($names)) {
             $schema['author'] = ['@type' => 'Person', 'name' => implode(', ', $names)];
@@ -1126,52 +1344,26 @@ class CwmschemaorgHelper
         // Custom fields: series, genre, location, topics
         $customFields = [];
 
-        if (!empty($msg->series_id) && (int) $msg->series_id > 0) {
-            $sQuery = $db->createQuery()
-                ->select($db->quoteName('series_text'))
-                ->from($db->quoteName('#__bsms_series'))
-                ->where($db->quoteName('id') . ' = ' . (int) $msg->series_id);
-            $seriesName = $db->setQuery($sQuery)->loadResult();
+        $seriesName = $maps['series'][(int) ($msg->series_id ?? 0)] ?? null;
 
-            if ($seriesName) {
-                $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
-            }
+        if ($seriesName) {
+            $customFields[] = ['genericTitle' => 'isPartOf', 'genericValue' => $seriesName];
         }
 
-        if (!empty($msg->messagetype) && (int) $msg->messagetype > 0) {
-            $mtQuery = $db->createQuery()
-                ->select($db->quoteName('message_type'))
-                ->from($db->quoteName('#__bsms_message_type'))
-                ->where($db->quoteName('id') . ' = ' . (int) $msg->messagetype);
-            $msgType = $db->setQuery($mtQuery)->loadResult();
+        $msgType = $maps['messagetype'][(int) ($msg->messagetype ?? 0)] ?? null;
 
-            if ($msgType) {
-                $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($msgType)];
-            }
+        if ($msgType) {
+            $customFields[] = ['genericTitle' => 'genre', 'genericValue' => Text::_($msgType)];
         }
 
-        if (!empty($msg->location_id) && (int) $msg->location_id > 0) {
-            $lQuery = $db->createQuery()
-                ->select($db->quoteName('location_text'))
-                ->from($db->quoteName('#__bsms_locations'))
-                ->where($db->quoteName('id') . ' = ' . (int) $msg->location_id);
-            $location = $db->setQuery($lQuery)->loadResult();
+        $location = $maps['locations'][(int) ($msg->location_id ?? 0)] ?? null;
 
-            if ($location) {
-                $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
-            }
+        if ($location) {
+            $customFields[] = ['genericTitle' => 'locationCreated', 'genericValue' => $location];
         }
 
         // Topics
-        $topQuery = $db->createQuery()
-            ->select($db->quoteName('t.topic_text'))
-            ->from($db->quoteName('#__bsms_topics', 't'))
-            ->innerJoin(
-                $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
-                . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
-            )
-            ->where($db->quoteName('st.study_id') . ' = ' . (int) $msg->id);
-        $topics = $db->setQuery($topQuery)->loadColumn() ?: [];
+        $topics = $maps['topics'][(int) $msg->id] ?? [];
 
         if (!empty($topics)) {
             $translated     = array_map(static fn ($t) => Text::_($t), $topics);
@@ -1183,6 +1375,115 @@ class CwmschemaorgHelper
         }
 
         return $schema;
+    }
+
+    /**
+     * Resolve every related-record lookup `buildSermonSchemaFromRow()` needs for a
+     * set of message rows, using one query per related table instead of one query
+     * per message per table.
+     *
+     * Both orderings below are pinned explicitly. `author` and the `about`
+     * genericField are built by imploding these lists, so an unstable row order
+     * would produce a different string — and therefore a different
+     * `computeAutoHash()` — for unchanged data, making every Smart Sync run
+     * rewrite every row.
+     *
+     * @param   DatabaseInterface  $db        Database instance
+     * @param   object[]           $messages  Message rows from `#__bsms_studies`
+     *
+     * @return  array{teachers: array<int, string[]>, topics: array<int, string[]>, series: array<int, string>, messagetype: array<int, string>, locations: array<int, string>}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function prefetchSermonMaps(DatabaseInterface $db, array $messages): array
+    {
+        $maps = ['teachers' => [], 'topics' => [], 'series' => [], 'messagetype' => [], 'locations' => []];
+
+        $studyIds = [];
+
+        foreach ($messages as $msg) {
+            $studyIds[] = (int) $msg->id;
+        }
+
+        $studyIds = array_values(array_unique(array_filter($studyIds)));
+
+        if ($studyIds === []) {
+            return $maps;
+        }
+
+        // Teacher names, grouped by study and kept in per-study ordering order.
+        $query = $db->createQuery()
+            ->select([$db->quoteName('st.study_id'), $db->quoteName('t.teachername')])
+            ->from($db->quoteName('#__bsms_teachers', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_study_teachers', 'st') . ' ON '
+                . $db->quoteName('st.teacher_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->whereIn($db->quoteName('st.study_id'), $studyIds)
+            ->order(
+                [
+                    $db->quoteName('st.study_id') . ' ASC',
+                    $db->quoteName('st.ordering') . ' ASC',
+                    $db->quoteName('st.id') . ' ASC',
+                ]
+            );
+
+        foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+            $maps['teachers'][(int) $row->study_id][] = $row->teachername;
+        }
+
+        // Topic names, grouped by study. `#__bsms_studytopics` has no ordering
+        // column, so its auto-increment id stands in for insertion order.
+        $query = $db->createQuery()
+            ->select([$db->quoteName('st.study_id'), $db->quoteName('t.topic_text')])
+            ->from($db->quoteName('#__bsms_topics', 't'))
+            ->innerJoin(
+                $db->quoteName('#__bsms_studytopics', 'st') . ' ON '
+                . $db->quoteName('st.topic_id') . ' = ' . $db->quoteName('t.id')
+            )
+            ->whereIn($db->quoteName('st.study_id'), $studyIds)
+            ->order(
+                [
+                    $db->quoteName('st.study_id') . ' ASC',
+                    $db->quoteName('st.id') . ' ASC',
+                ]
+            );
+
+        foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+            $maps['topics'][(int) $row->study_id][] = $row->topic_text;
+        }
+
+        // One lookup per single-valued foreign key, over the distinct ids in the set.
+        $lookups = [
+            'series'      => ['#__bsms_series', 'series_text', 'series_id'],
+            'messagetype' => ['#__bsms_message_type', 'message_type', 'messagetype'],
+            'locations'   => ['#__bsms_locations', 'location_text', 'location_id'],
+        ];
+
+        foreach ($lookups as $mapKey => [$table, $column, $property]) {
+            $ids = [];
+
+            foreach ($messages as $msg) {
+                $ids[] = (int) ($msg->$property ?? 0);
+            }
+
+            $ids = array_values(array_unique(array_filter($ids)));
+
+            if ($ids === []) {
+                continue;
+            }
+
+            $query = $db->createQuery()
+                ->select([$db->quoteName('id'), $db->quoteName($column)])
+                ->from($db->quoteName($table))
+                ->whereIn($db->quoteName('id'), $ids);
+
+            foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+                $maps[$mapKey][(int) $row->id] = $row->$column;
+            }
+        }
+
+        return $maps;
     }
 
     /**
@@ -1290,24 +1591,20 @@ class CwmschemaorgHelper
     }
 
     /**
-     * Determine whether an item should be synced based on mode.
+     * Decide whether an item should be written, given its already-known edited state.
      *
-     * @param   DatabaseInterface  $db       Database instance
-     * @param   int                $itemId   Item ID
-     * @param   string             $context  Context string
-     * @param   string             $mode     Sync mode (new, smart, force)
+     * @param   bool|null  $edited  Result of `isSchemaManuallyEdited()` (null = no row)
+     * @param   string     $mode    Sync mode (new, smart, force)
      *
      * @return  bool  True if the item should be written
      *
-     * @since   10.3.0
+     * @since   __DEPLOY_VERSION__
      */
-    private static function shouldSync(DatabaseInterface $db, int $itemId, string $context, string $mode): bool
+    private static function shouldSyncStored(?bool $edited, string $mode): bool
     {
         if ($mode === self::SYNC_FORCE) {
             return true;
         }
-
-        $edited = self::isManuallyEdited($db, $itemId, $context);
 
         if ($edited === null) {
             // No existing row — always sync
@@ -1331,6 +1628,8 @@ class CwmschemaorgHelper
      * @param   string             $context     Context string
      * @param   string             $schemaType  Schema type name
      * @param   array              $schema      Schema data array (without _autoHash)
+     * @param   int|null           $existingId  Known primary key of the existing row (0 when
+     *                                          known to be absent); null looks it up
      *
      * @return  void
      *
@@ -1341,30 +1640,53 @@ class CwmschemaorgHelper
         int $itemId,
         string $context,
         string $schemaType,
-        array $schema
+        array $schema,
+        ?int $existingId = null
     ): void {
         // Stamp auto-hash before saving
         $schema['_autoHash'] = self::computeAutoHash($schema);
 
-        // Check for existing row
-        $query = $db->createQuery()
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__schemaorg'))
-            ->where($db->quoteName('itemId') . ' = ' . $itemId)
-            ->where($db->quoteName('context') . ' = ' . $db->quote($context));
-        $existingId = (int) $db->setQuery($query)->loadResult();
-
-        $entry             = new \stdClass();
-        $entry->itemId     = $itemId;
-        $entry->context    = $context;
-        $entry->schemaType = $schemaType;
-        $entry->schema     = json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-
-        if ($existingId > 0) {
-            $entry->id = $existingId;
-            $db->updateObject('#__schemaorg', $entry, 'id');
-        } else {
-            $db->insertObject('#__schemaorg', $entry, 'id');
+        if ($existingId === null) {
+            $query = $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__schemaorg'))
+                ->where($db->quoteName('itemId') . ' = ' . $itemId)
+                ->where($db->quoteName('context') . ' = ' . $db->quote($context));
+            $existingId = (int) $db->setQuery($query)->loadResult();
         }
+
+        $json = json_encode($schema, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+
+        // Written as an explicit query rather than insertObject()/updateObject():
+        // those resolve the column list per call, so each one costs an extra
+        // SHOW FULL COLUMNS round trip — doubling the query count of a bulk sync.
+        if ($existingId > 0) {
+            $query = $db->createQuery()
+                ->update($db->quoteName('#__schemaorg'))
+                ->set($db->quoteName('itemId') . ' = ' . $itemId)
+                ->set($db->quoteName('context') . ' = ' . $db->quote($context))
+                ->set($db->quoteName('schemaType') . ' = ' . $db->quote($schemaType))
+                ->set($db->quoteName('schema') . ' = ' . $db->quote($json))
+                ->where($db->quoteName('id') . ' = ' . $existingId);
+        } else {
+            $query = $db->createQuery()
+                ->insert($db->quoteName('#__schemaorg'))
+                ->columns(
+                    [
+                        $db->quoteName('itemId'),
+                        $db->quoteName('context'),
+                        $db->quoteName('schemaType'),
+                        $db->quoteName('schema'),
+                    ]
+                )
+                ->values(
+                    implode(
+                        ',',
+                        [$itemId, $db->quote($context), $db->quote($schemaType), $db->quote($json)]
+                    )
+                );
+        }
+
+        $db->setQuery($query)->execute();
     }
 }
