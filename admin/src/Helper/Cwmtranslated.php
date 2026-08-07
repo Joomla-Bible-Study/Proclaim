@@ -74,12 +74,12 @@ class Cwmtranslated
         try {
             $app   = Factory::getApplication();
         } catch (\Exception $e) {
-            // Qualified: this file is namespaced, so an unqualified
-            // RuntimeException resolves against CWM\...\Helper rather than the
-            // global one. It previously resolved to an import of the PECL
-            // ext-http class, which is not a dependency and is not installed,
-            // so this line raised "class not found" -- an Error, which does not
-            // even extend Exception -- instead of the exception it names.
+            // Qualified deliberately: this file is namespaced, so an
+            // unqualified RuntimeException resolves against CWM\...\Helper
+            // rather than the global one -- and against an import of the PECL
+            // ext-http class, which is not a dependency here. That would raise
+            // "class not found", an Error that does not even extend Exception,
+            // instead of the exception this line names.
             throw new \RuntimeException('Unable to load Application: ' . $e->getMessage(), 0, $e);
         }
 

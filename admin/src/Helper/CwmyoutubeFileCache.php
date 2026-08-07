@@ -18,9 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 /**
  * File-based persistent cache for YouTube API data.
  *
- * Centralizes all file-cache operations that were previously scattered
- * across the YouTube module helper. This allows the admin addon, scheduled
- * tasks, and the module to share the same cache files.
+ * The single home for YouTube file-cache operations, so the admin addon,
+ * scheduled tasks and the site module all read and write the same files.
  *
  * Cache directory: JPATH_ROOT/media/com_proclaim/youtube_cache/
  *
@@ -659,11 +658,11 @@ class CwmyoutubeFileCache
      * Write deny-all .htaccess/web.config into a newly created cache
      * directory.
      *
-     * Unlike media/backup/ (which ships these files statically since its
-     * directory is created at install time), this directory is created
-     * dynamically at runtime and had no equivalent protection -- its
-     * contents (quota counters, cached video metadata, scheduled-stream
-     * times) were directly web-servable with no auth check. See #1551.
+     * media/backup/ ships these files statically because its directory is
+     * created at install time; this one is created at runtime, so the guards
+     * have to be written with it. Without them its contents -- quota counters,
+     * cached video metadata, scheduled-stream times -- are web-servable with
+     * no auth check.
      *
      * @param   string  $dir  The cache directory that was just created
      *
@@ -712,12 +711,10 @@ class CwmyoutubeFileCache
     /**
      * Read a cache file's contents under a shared lock.
      *
-     * Pairs with the LOCK_EX writes used throughout this class -- without
-     * this, a reader could open the file mid-write (after truncation but
-     * before the new content is fully flushed) and see a torn/partial
-     * document. This is the same pattern getSearchThrottle() already used
-     * correctly; the other three read methods in this class didn't apply
-     * it. See #1551.
+     * Pairs with the LOCK_EX writes used throughout this class: without a
+     * shared lock a reader can open the file mid-write, after truncation but
+     * before the new content is flushed, and see a torn document. Every read
+     * in this class goes through here for that reason.
      *
      * @param   string  $file  Absolute path to the cache file
      *

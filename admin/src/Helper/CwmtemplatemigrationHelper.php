@@ -182,7 +182,7 @@ class CwmtemplatemigrationHelper
         // Unconditional -- unlike the version-gated migrations below, this
         // has no version of its own to gate on, so it must run before the
         // early-return check that only looks at those gated migrations.
-        // Running it after that check meant it silently never ran for any
+        // Placed after that check it would silently never run for any
         // $fromVersion >= '10.1.0', since none of the four getXAfterVersion()
         // arrays have entries past that version.
         $updatedCount += $this->migrateRowspanImages();

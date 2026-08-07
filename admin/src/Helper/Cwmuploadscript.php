@@ -48,11 +48,9 @@ class Cwmuploadscript
      * Upload media files
      *
      * Reached through CwmmediafileController::xhr(), which passes the request
-     * Input object straight through to the addon's upload(). The declared type
-     * was previously an untyped `$data` documented as `Input|array`, while the
-     * body only ever used the Input API -- and the addon overrides declared
-     * `?array`, so every call raised a TypeError before this method was even
-     * entered. Typed to what is actually passed and actually used. See #1564.
+     * Input object straight through to the addon's upload(). Typed as Input
+     * because that is what arrives and what the body uses; the addon overrides
+     * must match, or the call raises a TypeError before this method is entered.
      *
      * @param   Input  $data  Request input carrying the upload target path
      *

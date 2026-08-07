@@ -52,9 +52,9 @@ class CwmaiHelper
     /**
      * Timeout in seconds for every outbound HTTP call in this class.
      *
-     * Previously unset, so a slow/hung provider or metadata API could tie up
-     * the PHP worker handling the synchronous AI-Assist AJAX request for up
-     * to max_execution_time (or longer, depending on SAPI/transport). See #1550.
+     * Bounded because AI Assist runs as a synchronous AJAX request: without a
+     * timeout a slow or hung provider ties up the PHP worker for up to
+     * max_execution_time, or longer depending on SAPI and transport.
      *
      * @since __DEPLOY_VERSION__
      */
@@ -193,11 +193,10 @@ class CwmaiHelper
                 default   => $empty,
             };
         } catch (\Exception $e) {
-            // Logged (unlike previously) so a transient network/API failure
-            // isn't indistinguishable from "this video genuinely has no
-            // metadata" -- the caller (syncFromYouTube()) reports a generic
-            // "no metadata found" message either way, which was misleading
-            // an admin about the real cause with no diagnostic trail. See #1550.
+            // Logged because the caller (syncFromYouTube()) reports a generic
+            // "no metadata found" message either way, so a transient network
+            // or API failure is otherwise indistinguishable from a video that
+            // genuinely has no metadata, with no diagnostic trail.
             CwmDebug::error('getVideoContext failed for media file ' . $mediaFileId, $e, 'ai');
 
             return $empty;
@@ -942,18 +941,15 @@ class CwmaiHelper
      */
     private static function parseJsonResponse(string $content): array
     {
-        // Extract JSON from response (may be wrapped in markdown code blocks
-        // or followed by trailing prose). A greedy regex from the first '{'
-        // to the LAST '}' in the whole response used to be here -- correct
-        // only when the model never emits a '}' character anywhere outside
-        // the JSON object. Gemini/OpenAI are protected from that by
-        // schema/JSON-mode constraints, but Claude (the default provider)
-        // has neither and can prepend/append prose; the system prompt also
-        // repeatedly discusses the literal '{scripture}...{/scripture}' tag
-        // syntax, so a follow-up remark referencing it reintroduces a '}'
-        // that the greedy match would swallow past, corrupting an otherwise
-        // well-formed object. extractFirstJsonObject() finds the '}' that
-        // actually matches the first '{' instead. See #1550.
+        // The response may be wrapped in markdown code blocks or followed by
+        // trailing prose, so the object has to be located rather than assumed.
+        // extractFirstJsonObject() finds the '}' matching the first '{'; a
+        // greedy match to the last '}' in the response is only safe when the
+        // model never emits '}' outside the object. Gemini and OpenAI are
+        // constrained by schema/JSON mode, but Claude -- the default provider
+        // -- is not, and the system prompt discusses the literal
+        // '{scripture}...{/scripture}' syntax, so trailing prose referencing
+        // it can contain one.
         $extracted = self::extractFirstJsonObject($content);
 
         if ($extracted !== null) {
