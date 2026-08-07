@@ -143,15 +143,158 @@ class CwmschemaorgHelperIntegrationTest extends IntegrationTestCase
         // directly (private, reached via reflection) rather than syncOne().
         $teacherId = $this->insertTeacher('Pastor Jane');
 
-        $method = new \ReflectionMethod(CwmschemaorgHelper::class, 'syncTeachers');
-        $result = $method->invoke(null, $this->db, CwmschemaorgHelper::SYNC_SMART);
+        // syncAll() rather than a single syncChunk(): the new teacher gets the
+        // highest id, so on a seeded database it can fall outside the first batch.
+        $counts = CwmschemaorgHelper::syncAll(CwmschemaorgHelper::SYNC_SMART);
 
-        $this->assertGreaterThan(0, $result['synced']);
+        $this->assertGreaterThan(0, $counts['teachers']);
 
         $schema = $this->loadStoredSchema($teacherId, 'com_proclaim.teacher');
 
         $this->assertArrayHasKey('worksFor', $schema);
         $this->assertEquals('Organization', $schema['worksFor']['@type']);
+    }
+
+    #[TestDox('Batched bulk sync builds a byte-identical schema (and auto-hash) to the per-item path')]
+    public function testBatchedAndPerItemBuildersAgree(): void
+    {
+        $locationId = $this->insertLocation('Main Campus');
+        $seriesId   = $this->insertSeries('Parables of Jesus');
+        $typeId     = $this->insertMessageType('Sermon');
+        $studyId    = $this->insertStudy($locationId, $seriesId, $typeId);
+
+        // Multi-valued relations are imploded into single strings (`author`,
+        // the `about` genericField), so an unstable batched row order would
+        // change the schema -- and therefore the auto-hash -- for unchanged
+        // data, making every Smart Sync run rewrite every row. Two of each,
+        // inserted out of ordering order, so a missing ORDER BY shows up.
+        $this->insertStudyTeacher($studyId, $this->insertTeacher('Pastor Zeta'), 1);
+        $this->insertStudyTeacher($studyId, $this->insertTeacher('Pastor Alpha'), 0);
+        $this->insertStudyTopic($studyId, $this->insertTopic('Compassion'));
+        $this->insertStudyTopic($studyId, $this->insertTopic('Adversity'));
+
+        $msg = $this->loadStudyRow($studyId);
+
+        $builder  = new \ReflectionMethod(CwmschemaorgHelper::class, 'buildSermonSchemaFromRow');
+        $prefetch = new \ReflectionMethod(CwmschemaorgHelper::class, 'prefetchSermonMaps');
+
+        // Per-item path: builder resolves its own lookups.
+        $perItem = $builder->invoke(null, $this->db, $msg, null);
+
+        // Bulk path: builder reads maps prefetched for a set of rows. Padding the
+        // set with a second study proves grouping keys the maps by study id.
+        $other = $this->loadStudyRow($this->insertStudy($locationId, $seriesId, $typeId));
+        $maps  = $prefetch->invoke(null, $this->db, [$other, $msg]);
+        $bulk  = $builder->invoke(null, $this->db, $msg, $maps);
+
+        $this->assertSame($perItem, $bulk, 'Bulk and per-item builders must produce identical schema');
+        $this->assertSame(
+            CwmschemaorgHelper::computeAutoHash($perItem),
+            CwmschemaorgHelper::computeAutoHash($bulk),
+            'Identical schema must yield an identical auto-hash'
+        );
+
+        // Ordering is the thing that silently drifts, so assert it directly
+        // rather than trusting the two paths to be wrong in the same way.
+        $this->assertSame('Pastor Alpha, Pastor Zeta', $bulk['author']['name']);
+    }
+
+    #[TestDox('A chunked walk syncs every item exactly once across batch boundaries')]
+    public function testChunkedWalkCoversEveryItemExactlyOnce(): void
+    {
+        $teacherIds = [];
+
+        for ($i = 0; $i < 5; $i++) {
+            $teacherIds[] = $this->insertTeacher('Chunked Teacher ' . $i);
+        }
+
+        // Start the cursor just below the first seeded id so the walk covers
+        // exactly these 5 rows -- an exact count is a real assertion, whereas a
+        // walk over whatever the database already holds only supports a
+        // greater-than-or-equal that any number satisfies.
+        $synced = 0;
+        $lastId = min($teacherIds) - 1;
+        $rounds = 0;
+
+        // A limit below the item count forces the cursor across batch
+        // boundaries, where a keyset-paging off-by-one would skip or repeat rows.
+        do {
+            $result  = CwmschemaorgHelper::syncChunk(CwmschemaorgHelper::SYNC_FORCE, 'teachers', $lastId, 2);
+            $synced += $result['counts']['teachers'];
+            $lastId  = $result['lastId'];
+            $rounds++;
+        } while ($result['type'] === 'teachers' && $rounds < 10);
+
+        $this->assertLessThan(10, $rounds, 'Chunk walk failed to terminate');
+        $this->assertSame(\count($teacherIds), $synced, 'Chunked walk must sync each seeded teacher exactly once');
+
+        // Every seeded teacher got exactly one row, none skipped at a boundary.
+        foreach ($teacherIds as $teacherId) {
+            $this->assertSame(
+                1,
+                $this->countSchemaRows($teacherId, 'com_proclaim.teacher'),
+                'Teacher ' . $teacherId . ' must have exactly one schema row after a chunked walk'
+            );
+        }
+    }
+
+    #[TestDox('syncChunk() reports done for an unrecognised cursor type instead of restarting the walk')]
+    public function testSyncChunkRejectsUnknownCursorType(): void
+    {
+        $result = CwmschemaorgHelper::syncChunk(CwmschemaorgHelper::SYNC_SMART, 'bogus');
+
+        $this->assertTrue($result['done']);
+        $this->assertSame(0, array_sum($result['counts']));
+    }
+
+    /**
+     * @param   int     $itemId   Item ID.
+     * @param   string  $context  Context string.
+     *
+     * @return  int  Number of schema rows for the item.
+     */
+    private function countSchemaRows(int $itemId, string $context): int
+    {
+        $query = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from($this->db->quoteName('#__schemaorg'))
+            ->where($this->db->quoteName('itemId') . ' = ' . $itemId)
+            ->where($this->db->quoteName('context') . ' = ' . $this->db->quote($context));
+
+        return (int) $this->db->setQuery($query)->loadResult();
+    }
+
+    /**
+     * @param   int  $studyId  Study ID.
+     *
+     * @return  object  Row shaped like the one the bulk sync query selects.
+     */
+    private function loadStudyRow(int $studyId): object
+    {
+        $query = $this->db->createQuery()
+            ->select(['id', 'studytitle', 'studyintro', 'studydate', 'modified', 'image', 'series_id', 'messagetype', 'location_id'])
+            ->from($this->db->quoteName('#__bsms_studies'))
+            ->where($this->db->quoteName('id') . ' = ' . $studyId);
+
+        return $this->db->setQuery($query)->loadObject();
+    }
+
+    /**
+     * @param   int  $studyId    Study ID.
+     * @param   int  $teacherId  Teacher ID.
+     * @param   int  $ordering   Position within the study.
+     *
+     * @return  void
+     */
+    private function insertStudyTeacher(int $studyId, int $teacherId, int $ordering): void
+    {
+        $row = (object) [
+            'study_id'   => $studyId,
+            'teacher_id' => $teacherId,
+            'ordering'   => $ordering,
+        ];
+
+        $this->db->insertObject('#__bsms_study_teachers', $row);
     }
 
     /**
