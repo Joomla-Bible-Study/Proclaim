@@ -107,6 +107,56 @@ class Cwmbackup
     private static array $primaryKeyOrderClauses = [];
 
     /**
+     * Cached per-table set of generated column names, keyed by table name.
+     * Populated on first use.
+     *
+     * @var array<string, array<string, true>>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static array $generatedColumns = [];
+
+    /**
+     * List the columns a table computes for itself.
+     *
+     * A generated column's value comes from its expression, and MySQL rejects
+     * any statement that writes one. The restored dump recreates the column
+     * from SHOW CREATE TABLE, so an exported INSERT naming it fails the whole
+     * restore. #__bsms_studies.studynumber_uk and
+     * #__bsms_playlists.remote_playlist_uk are two such columns.
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Full table name (with `#__` prefix)
+     *
+     * @return  array<string, true>  Column names as keys
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function getGeneratedColumns(DatabaseInterface $db, string $table): array
+    {
+        if (isset(self::$generatedColumns[$table])) {
+            return self::$generatedColumns[$table];
+        }
+
+        $generated = [];
+
+        try {
+            foreach ($db->getTableColumns($table, false) as $name => $column) {
+                if (stripos($column->Extra ?? '', 'GENERATED') !== false) {
+                    $generated[$name] = true;
+                }
+            }
+        } catch (\RuntimeException) {
+            // Treat an unreadable schema as "nothing generated" rather than
+            // aborting the backup; the restore would surface any real problem.
+        }
+
+        self::$generatedColumns[$table] = $generated;
+
+        return $generated;
+    }
+
+    /**
      * Build a deterministic ORDER BY clause from a table's primary key.
      *
      * Handles composite keys by ordering on every key column in index
@@ -704,12 +754,20 @@ class Cwmbackup
 
         $export = '';
 
+        $generated = self::getGeneratedColumns($db, $table);
+
         if ($results) {
             foreach ($results as $result) {
                 $data   = [];
                 $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
+                    // The table computes these itself and rejects any attempt to
+                    // write them, so naming one here would fail the restore.
+                    if (isset($generated[$key])) {
+                        continue;
+                    }
+
                     if ($value === null) {
                         $data[] = $db->quoteName($key) . "=NULL";
                     } else {

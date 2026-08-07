@@ -86,37 +86,46 @@ ALTER TABLE `#__bsms_studies`
 -- two steps, so a scheduled sync overlapping a manual "Import from YouTube" could
 -- have both pass the lookup before either had stored.
 
--- Salvage the losing duplicates' junction rows before the rows go away. Each step
--- runs against every duplicate group at once, keeping the earliest playlist of
--- each group.
+-- Salvage the losing duplicates' junction rows before the rows go away. Each
+-- step runs against every duplicate group at once. `g` names the row each group
+-- keeps: joining on "any playlist with a lower id" instead would, in a group of
+-- three, let MySQL pick either survivor arbitrarily -- and step 3 could then
+-- remap an item onto a playlist that step 5 goes on to delete.
 
 -- 1. Carry a resolved media-file link over to the keeper where the keeper has
 --    none. Deleting the loser's row first would throw that link away.
 UPDATE `#__bsms_playlist_items` keep
     JOIN `#__bsms_playlists` kp ON kp.`id` = keep.`playlist_id`
+    JOIN (SELECT `remote_playlist_id`, `server_id`, MIN(`id`) AS keep_id
+          FROM `#__bsms_playlists`
+          WHERE `remote_playlist_id` <> ''
+          GROUP BY `remote_playlist_id`, `server_id`) g
+        ON g.`keep_id` = kp.`id`
     JOIN `#__bsms_playlists` lp
-        ON lp.`remote_playlist_id` = kp.`remote_playlist_id`
-       AND lp.`server_id` = kp.`server_id`
-       AND lp.`id` > kp.`id`
+        ON lp.`remote_playlist_id` = g.`remote_playlist_id`
+       AND lp.`server_id` = g.`server_id`
+       AND lp.`id` <> g.`keep_id`
     JOIN `#__bsms_playlist_items` lose
         ON lose.`playlist_id` = lp.`id`
        AND lose.`remote_video_id` = keep.`remote_video_id`
 SET keep.`mediafile_id` = lose.`mediafile_id`
 WHERE keep.`mediafile_id` IS NULL
-  AND lose.`mediafile_id` IS NOT NULL
-  AND kp.`remote_playlist_id` <> '';
+  AND lose.`mediafile_id` IS NOT NULL;
 
 -- 2. Drop the losers' items the keeper already holds. #__bsms_playlist_items has
 --    UNIQUE KEY (playlist_id, remote_video_id), so remapping these in step 3
 --    would abort the migration on a duplicate key.
 DELETE lose FROM `#__bsms_playlist_items` lose
     JOIN `#__bsms_playlists` lp ON lp.`id` = lose.`playlist_id`
-    JOIN `#__bsms_playlists` kp
-        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
-       AND kp.`server_id` = lp.`server_id`
-       AND kp.`id` < lp.`id`
+    JOIN (SELECT `remote_playlist_id`, `server_id`, MIN(`id`) AS keep_id
+          FROM `#__bsms_playlists`
+          WHERE `remote_playlist_id` <> ''
+          GROUP BY `remote_playlist_id`, `server_id`) g
+        ON g.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND g.`server_id` = lp.`server_id`
+       AND g.`keep_id` <> lp.`id`
     JOIN `#__bsms_playlist_items` keep
-        ON keep.`playlist_id` = kp.`id`
+        ON keep.`playlist_id` = g.`keep_id`
        AND keep.`remote_video_id` = lose.`remote_video_id`
 WHERE lp.`remote_playlist_id` <> '';
 
@@ -124,11 +133,14 @@ WHERE lp.`remote_playlist_id` <> '';
 --    against a duplicate is not silently lost.
 UPDATE `#__bsms_playlist_items` lose
     JOIN `#__bsms_playlists` lp ON lp.`id` = lose.`playlist_id`
-    JOIN `#__bsms_playlists` kp
-        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
-       AND kp.`server_id` = lp.`server_id`
-       AND kp.`id` < lp.`id`
-SET lose.`playlist_id` = kp.`id`
+    JOIN (SELECT `remote_playlist_id`, `server_id`, MIN(`id`) AS keep_id
+          FROM `#__bsms_playlists`
+          WHERE `remote_playlist_id` <> ''
+          GROUP BY `remote_playlist_id`, `server_id`) g
+        ON g.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND g.`server_id` = lp.`server_id`
+       AND g.`keep_id` <> lp.`id`
+SET lose.`playlist_id` = g.`keep_id`
 WHERE lp.`remote_playlist_id` <> '';
 
 -- 4. Release the losing rows' ACL assets, which nothing else would clean up once
@@ -136,19 +148,25 @@ WHERE lp.`remote_playlist_id` <> '';
 DELETE a FROM `#__assets` a
     JOIN `#__bsms_playlists` lp
         ON a.`name` = CONCAT('com_proclaim.playlist.', lp.`id`)
-    JOIN `#__bsms_playlists` kp
-        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
-       AND kp.`server_id` = lp.`server_id`
-       AND kp.`id` < lp.`id`
+    JOIN (SELECT `remote_playlist_id`, `server_id`, MIN(`id`) AS keep_id
+          FROM `#__bsms_playlists`
+          WHERE `remote_playlist_id` <> ''
+          GROUP BY `remote_playlist_id`, `server_id`) g
+        ON g.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND g.`server_id` = lp.`server_id`
+       AND g.`keep_id` <> lp.`id`
 WHERE lp.`remote_playlist_id` <> '';
 
 -- 5. Remove the duplicates themselves. The constraint below cannot be created
 --    while any remain.
 DELETE lp FROM `#__bsms_playlists` lp
-    JOIN `#__bsms_playlists` kp
-        ON kp.`remote_playlist_id` = lp.`remote_playlist_id`
-       AND kp.`server_id` = lp.`server_id`
-       AND kp.`id` < lp.`id`
+    JOIN (SELECT `remote_playlist_id`, `server_id`, MIN(`id`) AS keep_id
+          FROM `#__bsms_playlists`
+          WHERE `remote_playlist_id` <> ''
+          GROUP BY `remote_playlist_id`, `server_id`) g
+        ON g.`remote_playlist_id` = lp.`remote_playlist_id`
+       AND g.`server_id` = lp.`server_id`
+       AND g.`keep_id` <> lp.`id`
 WHERE lp.`remote_playlist_id` <> '';
 
 -- A remote playlist maps to one local row per server. remote_playlist_id is
