@@ -329,6 +329,12 @@ class CwmplaylistTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
+        // remote_playlist_uk exists only to carry uq_server_remote_playlist; the
+        // database computes it from remote_playlist_id and rejects any statement
+        // that writes it. Table picks it up as an ordinary column, so load() sets
+        // it and the follow-up update would carry it into the SET clause.
+        unset($this->remote_playlist_uk);
+
         $result = parent::store($updateNulls);
 
         if ($result) {

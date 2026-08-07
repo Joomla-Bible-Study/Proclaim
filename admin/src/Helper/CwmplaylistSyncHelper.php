@@ -406,7 +406,35 @@ final class CwmplaylistSyncHelper
                 }
             }
 
-            if (!$table->bind($data) || !$table->check() || !$table->store()) {
+            if (!$table->bind($data) || !$table->check()) {
+                $out['error'] = $table->getError() ?: 'Failed to store playlist.';
+
+                return $out;
+            }
+
+            try {
+                $stored = $table->store();
+            } catch (\RuntimeException $e) {
+                // An insert can only fail this way once uq_server_remote_playlist
+                // exists, and findPlaylistId() found nothing moments ago -- so a
+                // concurrent run created this playlist in between. Its row is the
+                // winner; adopt it rather than failing the whole import over a
+                // race the constraint just resolved for us.
+                $raced = $isNew ? self::findPlaylistId($db, $remoteId, $serverId) : 0;
+
+                if ($raced === 0) {
+                    $out['error'] = $e->getMessage();
+
+                    return $out;
+                }
+
+                $out['playlistIds'][] = $raced;
+                $out['updated']++;
+
+                continue;
+            }
+
+            if (!$stored) {
                 $out['error'] = $table->getError() ?: 'Failed to store playlist.';
 
                 return $out;
@@ -1463,18 +1491,10 @@ final class CwmplaylistSyncHelper
     /**
      * Find an existing playlist by remote ID and server.
      *
-     * #__bsms_playlists has no unique constraint on (remote_playlist_id, server_id),
-     * so two importChannelPlaylists() runs racing each other (e.g. a scheduled sync
-     * overlapping a manual admin-triggered one) can each pass this lookup and both
-     * insert a row for the same remote playlist — a select-then-insert TOCTOU. A
-     * proper fix needs a unique index plus a de-dup migration first: existing sites
-     * that already hit the race may carry duplicate rows, and #__bsms_mediafiles'
-     * manual playlist assignments reference playlist IDs directly, so de-duping
-     * would also have to remap those — deliberately left as a follow-up rather than
-     * bundled here (see #1553). In the meantime, ORDER BY id makes the outcome of a
-     * duplicate deterministic: the lowest-id (originally-created) row always wins
-     * and keeps syncing, rather than each sync run nondeterministically picking a
-     * different duplicate to update.
+     * uq_server_remote_playlist keeps this pairing unique, so at most one row can
+     * match. ORDER BY id ASC LIMIT 1 still stands in for the pre-constraint case:
+     * a database that has not yet run the de-dup migration may hold duplicates,
+     * and the lowest-id (originally-created) row is the one that migration keeps.
      *
      * @param   DatabaseInterface  $db        Database driver.
      * @param   string             $remoteId  YouTube playlist ID.

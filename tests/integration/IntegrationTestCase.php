@@ -143,4 +143,44 @@ abstract class IntegrationTestCase extends ProclaimTestCase
         $prop = $ref->getProperty($property);
         $prop->setValue(null, $value);
     }
+
+    /**
+     * Give Factory::getDate() a language tag to read, and return the previous
+     * language so the caller can restore it.
+     *
+     * Any code under test that calls Factory::getDate() reaches
+     * Factory::$language->getTag(), i.e. the language's metadata['tag']. A test
+     * Joomla root carrying no langmetadata files leaves every Language instance
+     * with metadata = null, so getTag() reads an offset on null and the date path
+     * prints warnings that trip beStrictAboutOutputDuringTests. There is no public
+     * tag setter, so force one onto the metadata via reflection.
+     *
+     * Restore the returned value in tearDown(): leaving the forced tag in place
+     * leaks into every later test in the run and masks exactly this warning class
+     * for suites that would otherwise surface it.
+     *
+     * @return  mixed  The previous Factory::$language.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function silenceDateLanguageWarnings(): mixed
+    {
+        $previous = \Joomla\CMS\Factory::$language;
+        $lang     = \Joomla\CMS\Factory::getApplication()->getLanguage();
+
+        try {
+            $prop = new \ReflectionProperty($lang, 'metadata');
+            $meta = $prop->getValue($lang);
+
+            if (!\is_array($meta) || ($meta['tag'] ?? null) === null) {
+                $prop->setValue($lang, array_merge(\is_array($meta) ? $meta : [], ['tag' => 'en-GB']));
+            }
+        } catch (\ReflectionException) {
+            // Property absent on this Joomla version -- leave the language as-is.
+        }
+
+        \Joomla\CMS\Factory::$language = $lang;
+
+        return $previous;
+    }
 }

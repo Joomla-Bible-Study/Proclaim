@@ -671,6 +671,14 @@ class CwmmessageTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
+        // studynumber_uk exists only to carry uq_series_studynumber; the database
+        // computes it from series_id and studynumber, and rejects any statement
+        // that writes it. Table seeds it as an ordinary column and load() fills it
+        // in, so re-storing a loaded message would carry it into the SET clause --
+        // failing every save of a message that has both a series and an episode
+        // number, which are exactly the rows the generated column is non-null for.
+        unset($this->studynumber_uk);
+
         try {
             $result = parent::store($updateNulls);
         } catch (\Throwable $e) {
