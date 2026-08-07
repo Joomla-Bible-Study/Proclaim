@@ -26,9 +26,31 @@ try {
 // On admin pages the debug check runs immediately; on the site side we
 // default to off and let Cwmdownload (the only front-end consumer) check
 // on demand, avoiding a DB query on every module/page load.
-if ($app->isClient('administrator') || $app->getInput()->getInt('jbsmdbg', 0) === 1) {
+// A URL parameter is not authorisation. `?jbsmdbg=1` previously switched
+// JBSMDEBUG on for *any* client, so an anonymous site visitor could enable the
+// component's debug buffer -- and CwmsermonsController::filterAjax() ships that
+// buffer to the browser as `_debug`, handing out raw SQL for the sermon listing
+// query. Honour the parameter only for a user who actually holds core.admin.
+//
+// Checked on both clients rather than restricted to the administrator client:
+// Cwmdownload logs through CwmDebug on the front end, so an admin debugging a
+// site-side download still needs ?jbsmdbg=1 to work there. Anything that fails
+// to resolve an identity falls through to "not allowed". See #1569.
+$jbsmDebugRequested = $app->getInput()->getInt('jbsmdbg', 0) === 1;
+$jbsmDebugAllowed   = false;
+
+if ($jbsmDebugRequested) {
     try {
-        if (CwmproclaimHelper::debug() === 1 || $app->getInput()->getInt('jbsmdbg', 0) === 1) {
+        $jbsmDebugUser    = $app->getIdentity();
+        $jbsmDebugAllowed = $jbsmDebugUser && $jbsmDebugUser->authorise('core.admin', 'com_proclaim');
+    } catch (\Throwable $e) {
+        $jbsmDebugAllowed = false;
+    }
+}
+
+if ($app->isClient('administrator') || $jbsmDebugAllowed) {
+    try {
+        if (CwmproclaimHelper::debug() === 1 || $jbsmDebugAllowed) {
             \define('JBSMDEBUG', 1);
         } else {
             \define('JBSMDEBUG', 0);

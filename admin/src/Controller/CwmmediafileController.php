@@ -664,8 +664,10 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Sniff the first 64 bytes to confirm WEBVTT, SBV, or SRT magic —
-        // defends against a renamed binary slipping past the extension whitelist.
+        // Sniff the first 64 bytes to route the file to the right converter.
+        // This is a format hint, not a safety check: it says what the file
+        // claims to be, not what the rest of it contains. VTT is validated in
+        // full below, before anything is kept.
         $head     = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
         $detected = $head === false ? null : $validator->detectFormat($head);
 
@@ -677,6 +679,29 @@ class CwmmediafileController extends FormController
             Factory::getApplication()->close();
 
             return;
+        }
+
+        // SRT and SBV are parsed and re-serialised below, so only structurally
+        // valid cues survive them. VTT is stored byte-for-byte, so the same
+        // assurance has to come from reading it here: past byte 64 the sniff
+        // above knows nothing, and "WEBVTT" followed by arbitrary bytes would
+        // otherwise be kept verbatim and served from a public URL.
+        //
+        // Validated rather than rewritten -- rewriting would strip NOTE, STYLE
+        // and REGION blocks, cue settings and speaker tags from files that
+        // legitimately carry them.
+        if ($detected === 'vtt') {
+            $body = file_get_contents($userfile['tmp_name']);
+
+            if ($body === false || !$validator->isStructurallyVtt($body)) {
+                echo json_encode([
+                    'success' => false,
+                    'error'   => Text::_($body === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
+                ]);
+                Factory::getApplication()->close();
+
+                return;
+            }
         }
 
         $destDir = JPATH_ROOT . '/media/com_proclaim/captions';

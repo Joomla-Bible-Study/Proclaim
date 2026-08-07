@@ -235,8 +235,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
-            CwmstudyteacherHelper::syncLegacyColumn($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
         }
 
         // Save scriptures
@@ -244,8 +243,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 
@@ -333,8 +331,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
-            CwmstudyteacherHelper::syncLegacyColumn($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
         }
 
         // Update scriptures if provided
@@ -342,8 +339,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 

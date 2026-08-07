@@ -476,7 +476,7 @@ class CwmguidedtourHelper
      *
      * @since 10.1.0
      */
-    public function registerGuidedTours(): int
+    public function registerGuidedTours(bool $force = false): int
     {
         if (!$this->supportsGuidedTours()) {
             Log::add('Guided tours not supported on this Joomla version', Log::INFO, 'com_proclaim');
@@ -486,18 +486,53 @@ class CwmguidedtourHelper
         $count = 0;
 
         foreach ($this->tours as $key => $tour) {
-            if ($this->tourExists($tour['uid'])) {
-                if ($this->updateTour($key, $tour)) {
+            if (!$this->tourExists($tour['uid'])) {
+                if ($this->insertTour($key, $tour)) {
                     $count++;
-                    Log::add('Updated guided tour: ' . $key, Log::INFO, 'com_proclaim');
+                    Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
                 }
-            } elseif ($this->insertTour($key, $tour)) {
+
+                continue;
+            }
+
+            // The tour is already present. Once installed it belongs to the
+            // site: an administrator may have unpublished it, raised its access
+            // level, reworded steps or added translated rows through Joomla's
+            // Guided Tours UI. Rewriting it here would discard all of that, and
+            // this method runs on every Proclaim release including no-op patch
+            // bumps, so the loss would be silent and repeated.
+            //
+            // Refreshing from the shipped definition therefore has to be asked
+            // for explicitly.
+            if (!$force) {
+                Log::add('Preserved existing guided tour (admin-owned): ' . $key, Log::INFO, 'com_proclaim');
+
+                continue;
+            }
+
+            if ($this->updateTour($key, $tour)) {
                 $count++;
-                Log::add('Registered guided tour: ' . $key, Log::INFO, 'com_proclaim');
+                Log::add('Reset guided tour to shipped default: ' . $key, Log::INFO, 'com_proclaim');
             }
         }
 
         return $count;
+    }
+
+    /**
+     * Discard local changes and rewrite every tour from its shipped definition.
+     *
+     * Destructive: replaces tour metadata and deletes and reinserts all steps,
+     * losing admin edits and translated step rows. Exposed so a reset can be
+     * offered deliberately, rather than happening as a side effect of updating.
+     *
+     * @return  int  Number of tours rewritten
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function resetGuidedTours(): int
+    {
+        return $this->registerGuidedTours(true);
     }
 
 
@@ -529,17 +564,102 @@ class CwmguidedtourHelper
      */
     public function getTourId(string $uid): int
     {
+        $ids = $this->getTourIds($uid);
+
+        return $ids === [] ? 0 : $ids[0];
+    }
+
+    /**
+     * Get every tour id sharing a uid, lowest first.
+     *
+     * Core's #__guidedtours indexes uid with a plain KEY, not a UNIQUE one, so
+     * more than one row can carry the same uid. Ordering makes callers pick the
+     * same row every time instead of whichever the server happens to return.
+     *
+     * @param   string  $uid  Tour UID
+     *
+     * @return  int[]  Matching ids, ascending
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getTourIds(string $uid): array
+    {
         if (!$this->supportsGuidedTours()) {
-            return 0;
+            return [];
         }
 
         $query = $this->db->createQuery()
             ->select($this->db->quoteName('id'))
             ->from($this->db->quoteName('#__guidedtours'))
-            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid));
+            ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($uid))
+            ->order($this->db->quoteName('id') . ' ASC');
         $this->db->setQuery($query);
 
-        return (int) $this->db->loadResult();
+        return array_map('intval', $this->db->loadColumn() ?: []);
+    }
+
+    /**
+     * Collapse duplicate rows for a uid down to the earliest one.
+     *
+     * Registration is check-then-act with no lock, so two overlapping requests
+     * can both find the tour absent and both insert it. Nothing in core
+     * prevents that -- uid is not unique -- and the surplus rows are otherwise
+     * permanent: they survive a Proclaim uninstall because they live in core
+     * tables. Running this after an insert keeps the damage from accumulating
+     * and clears up sites that already have it.
+     *
+     * @param   string  $uid  Tour UID
+     *
+     * @return  int  Number of duplicate tours removed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function pruneDuplicateTours(string $uid): int
+    {
+        $ids = $this->getTourIds($uid);
+
+        if (\count($ids) < 2) {
+            return 0;
+        }
+
+        // Keep the earliest; anything after it is a duplicate.
+        $surplus = \array_slice($ids, 1);
+
+        foreach ($surplus as $id) {
+            $this->deleteTourById($id);
+        }
+
+        Log::add(
+            'Removed ' . \count($surplus) . ' duplicate guided tour(s) for uid ' . $uid,
+            Log::WARNING,
+            'com_proclaim'
+        );
+
+        return \count($surplus);
+    }
+
+    /**
+     * Delete one tour and its steps.
+     *
+     * @param   int  $tourId  Tour id
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function deleteTourById(int $tourId): void
+    {
+        $query = $this->db->createQuery()
+            ->delete($this->db->quoteName('#__guidedtour_steps'))
+            ->where($this->db->quoteName('tour_id') . ' = ' . $tourId);
+        $this->db->setQuery($query);
+        $this->db->execute();
+
+        $query = $this->db->createQuery()
+            ->delete($this->db->quoteName('#__guidedtours'))
+            ->where($this->db->quoteName('id') . ' = ' . $tourId);
+        $this->db->setQuery($query);
+        $this->db->execute();
     }
 
     /**
@@ -624,6 +744,11 @@ class CwmguidedtourHelper
 
             $this->db->insertObject('#__guidedtours', $tourObj, 'id');
             $tourId = $this->db->insertid();
+
+            // A concurrent request may have inserted the same uid between our
+            // existence check and this insert. Collapse any surplus rows now,
+            // while we still know which uid to look at.
+            $this->pruneDuplicateTours($tour['uid']);
 
             // Insert the steps
             $ordering = 1;
@@ -800,28 +925,11 @@ class CwmguidedtourHelper
         $count = 0;
 
         foreach ($this->tours as $tour) {
-            $query = $this->db->createQuery()
-                ->select($this->db->quoteName('id'))
-                ->from($this->db->quoteName('#__guidedtours'))
-                ->where($this->db->quoteName('uid') . ' = ' . $this->db->quote($tour['uid']));
-            $this->db->setQuery($query);
-            $tourId = $this->db->loadResult();
-
-            if ($tourId) {
-                // Delete steps first
-                $query = $this->db->createQuery()
-                    ->delete($this->db->quoteName('#__guidedtour_steps'))
-                    ->where($this->db->quoteName('tour_id') . ' = ' . (int) $tourId);
-                $this->db->setQuery($query);
-                $this->db->execute();
-
-                // Delete tour
-                $query = $this->db->createQuery()
-                    ->delete($this->db->quoteName('#__guidedtours'))
-                    ->where($this->db->quoteName('id') . ' = ' . (int) $tourId);
-                $this->db->setQuery($query);
-                $this->db->execute();
-
+            // Every row for the uid, not just one. uid is not unique in core,
+            // so a single-row delete would leave duplicates behind in core
+            // tables after Proclaim had been uninstalled.
+            foreach ($this->getTourIds($tour['uid']) as $tourId) {
+                $this->deleteTourById($tourId);
                 $count++;
             }
         }

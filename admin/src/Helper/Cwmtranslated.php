@@ -16,7 +16,6 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use http\Exception\RuntimeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -75,7 +74,13 @@ class Cwmtranslated
         try {
             $app   = Factory::getApplication();
         } catch (\Exception $e) {
-            throw new RuntimeException('Unable to load Application' . $e->getMessage());
+            // Qualified: this file is namespaced, so an unqualified
+            // RuntimeException resolves against CWM\...\Helper rather than the
+            // global one. It previously resolved to an import of the PECL
+            // ext-http class, which is not a dependency and is not installed,
+            // so this line raised "class not found" -- an Error, which does not
+            // even extend Exception -- instead of the exception it names.
+            throw new \RuntimeException('Unable to load Application: ' . $e->getMessage(), 0, $e);
         }
 
         // If there is no topic to translate, just return

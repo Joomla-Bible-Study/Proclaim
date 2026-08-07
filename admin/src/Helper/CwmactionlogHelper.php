@@ -19,6 +19,7 @@ use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\Component\Actionlogs\Administrator\Model\ActionlogModel;
 
 /**
@@ -71,14 +72,41 @@ class CwmactionlogHelper
                 'origin'      => Text::_(self::originLabel($app)),
             ], $extra);
 
-            /** @var ActionlogModel $model */
+            /** @var ?ActionlogModel $model */
             $model = $app->bootComponent('com_actionlogs')
                 ->getMVCFactory()
                 ->createModel('Actionlog', 'Administrator', ['ignore_request' => true]);
 
+            // createModel() returns null or false when the model cannot be
+            // resolved -- com_actionlogs enabled in #__extensions but its files
+            // missing after a partial removal or a failed update, for instance.
+            // Calling addLog() on that is an Error, not an Exception, so the
+            // catch below would not have stopped it before.
+            if (!$model instanceof ActionlogModel) {
+                return;
+            }
+
             $model->addLog([$message], $messageKey, 'com_proclaim', $user->id);
-        } catch (\Exception $e) {
-            // Silently fail — action logging should never break the main workflow
+        } catch (\Throwable $e) {
+            // Never break the main workflow. Throwable rather than Exception:
+            // the failures actually available here -- a method call on a
+            // null model, a type error out of the factory -- are Errors, which
+            // do not extend Exception, so the original catch documented a
+            // guarantee it did not provide.
+            //
+            // Recorded rather than swallowed outright, so a site that has
+            // stopped logging actions can find out why. The logging of the
+            // failure is itself guarded: it must not become the thing that
+            // breaks the save.
+            try {
+                Log::add(
+                    'Action log entry could not be written: ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            } catch (\Throwable) {
+                // Nothing further to do.
+            }
         }
     }
 

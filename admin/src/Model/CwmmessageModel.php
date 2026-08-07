@@ -582,8 +582,7 @@ class CwmmessageModel extends AdminModel
             $ordering++;
         }
 
-        CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-        CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+        CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
     }
 
     /**
@@ -603,8 +602,7 @@ class CwmmessageModel extends AdminModel
             return;
         }
 
-        CwmstudyteacherHelper::saveTeachers($studyId, $teachersData);
-        CwmstudyteacherHelper::syncLegacyColumn($studyId, $teachersData);
+        CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teachersData);
 
         // schemaorg's onContentAfterSave fires inside parent::save(), before the
         // junction is written here, so the auto-built schema has no author.

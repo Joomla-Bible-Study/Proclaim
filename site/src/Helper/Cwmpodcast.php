@@ -941,8 +941,12 @@ class Cwmpodcast
             return null;
         }
 
-        $extPath   = parse_url($path, PHP_URL_PATH) ?: $path;
-        $extension = strtolower(pathinfo((string) $extPath, PATHINFO_EXTENSION));
+        // $path may be a bare filesystem path, not a URL. Cwmmime::extensionOf()
+        // only strips a query or fragment when the value really is a URL --
+        // parse_url() alone would turn "Sermon #12.mp4" into "Sermon " and lose
+        // the extension, and an enclosure URL without one is what Apple refuses
+        // to ingest (#1424).
+        $extension = Cwmmime::extensionOf($path);
 
         if ($extension === '') {
             return null;

@@ -65,7 +65,11 @@ class CwmanalyticsHelper
      * Log an analytics event.
      *
      * Respects GDPR opt-out (DNT header + proclaim_analytics_optout cookie).
-     * Classifies UA, referrer, and GeoIP at log-time; raw signals never stored.
+     * Classifies UA and referrer at log-time; raw signals never stored.
+     *
+     * NOTE: no GeoIP happens here -- country_code is absent from the INSERT and
+     * is always NULL. Unimplemented on purpose: it means a new dependency and
+     * privacy surface, and no admin view renders a country breakdown.
      *
      * @param   string  $type      Event type: page_view|play|download|outbound_click
      * @param   int     $studyId   Study (message) ID, 0 if media-only
@@ -134,13 +138,23 @@ class CwmanalyticsHelper
             // Campus: resolved from study or media record
             $locationId = self::resolveLocationId($studyId, $mediaId);
 
-            // Session hash (personal data — consent-required)
+            // Session hash (personal data — consent-required).
+            // Left NULL without a secret rather than falling back to an
+            // unkeyed digest, which would be permanently linkable.
             $sessionHash = null;
 
             if ($consentOn) {
                 try {
-                    $sessionId   = $app->getSession()->getId();
-                    $sessionHash = hash('sha256', $sessionId);
+                    $sessionId = (string) $app->getSession()->getId();
+                    $secret    = (string) $app->get('secret');
+
+                    if ($sessionId !== '' && $secret !== '') {
+                        $sessionHash = self::hashSessionForDay(
+                            $sessionId,
+                            $secret,
+                            (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d')
+                        );
+                    }
                 } catch (\Exception $e) {
                     $sessionHash = null;
                 }
@@ -157,12 +171,13 @@ class CwmanalyticsHelper
 
                 if ($refMode === 'full' || $refMode === 'domain') {
                     $host           = parse_url($refUrl, PHP_URL_HOST) ?: '';
-                    $referrerDomain = substr(ltrim($host, 'www.'), 0, 255);
+                    $referrerDomain = substr(self::stripWwwPrefix($host), 0, 255);
                 }
             }
 
-            // Outbound click: repurpose destUrl as referrer_url column
-            if ($type === 'outbound_click' && $destUrl !== '') {
+            // Outbound click: repurpose destUrl as referrer_url column.
+            // Gated on $consentOn like every other write to this column.
+            if ($consentOn && $type === 'outbound_click' && $destUrl !== '') {
                 $referrerUrl = substr($destUrl, 0, 2048);
             }
 
@@ -229,6 +244,28 @@ class CwmanalyticsHelper
      *
      * @since   10.1.0
      */
+    /**
+     * Strip a leading "www." from a hostname.
+     *
+     * Replaces ltrim($host, 'www.'), which was a long-standing bug: ltrim()'s
+     * second argument is a *character mask*, not a prefix. It stripped any
+     * leading run of 'w', '.' — so 'worship.example.org' became
+     * 'orship.example.org' and 'watch.church.tv' became 'atch.church.tv'.
+     * Any host beginning with w (worship, watch, webex, wesleyan, wordoflife)
+     * was silently corrupted, both in the stored referrer_domain column and in
+     * the internal-vs-external comparison in classifyReferrer(). See #1571.
+     *
+     * @param   string  $host  Hostname, possibly prefixed with "www."
+     *
+     * @return  string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function stripWwwPrefix(string $host): string
+    {
+        return str_starts_with($host, 'www.') ? substr($host, 4) : $host;
+    }
+
     public static function classifyReferrer(string $url, string $utmMedium = ''): array
     {
         if ($url === '') {
@@ -239,12 +276,11 @@ class CwmanalyticsHelper
             return ['type' => 'direct', 'domain' => ''];
         }
 
-        $host     = strtolower(parse_url($url, PHP_URL_HOST) ?: '');
-        $host     = ltrim($host, 'www.');
+        $host     = self::stripWwwPrefix(strtolower(parse_url($url, PHP_URL_HOST) ?: ''));
         $siteHost = '';
 
         try {
-            $siteHost = strtolower(ltrim(Uri::getInstance()->getHost(), 'www.'));
+            $siteHost = self::stripWwwPrefix(strtolower(Uri::getInstance()->getHost()));
         } catch (\Throwable $e) {
             // In the CLI / unit-test context, there is no request URI
         }
@@ -336,8 +372,61 @@ class CwmanalyticsHelper
     }
 
     /**
+     * Domain-separation label, so the analytics key is not interchangeable
+     * with tokens minted elsewhere from the same site secret.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const string SESSION_HASH_CONTEXT = 'proclaim:analytics:session';
+
+    /**
+     * Fingerprint a visitor's session for one day.
+     *
+     * Stored in session_hash so COUNT(DISTINCT session_hash) can report the
+     * Sessions figure. Keyed with the site secret so an outsider cannot
+     * recompute it from a guessed session ID, and rotated daily so the same
+     * visitor is not linkable across days. Stable within a day, which is all
+     * the count needs.
+     *
+     * Secret and day are arguments rather than globals so the rotation is
+     * testable without a request context.
+     *
+     * @param   string  $sessionId  Raw session identifier; never stored.
+     * @param   string  $secret     Site secret used as key material.
+     * @param   string  $day        Rotation bucket, 'Y-m-d' in UTC.
+     *
+     * @return  string  64-character hex digest.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function hashSessionForDay(string $sessionId, string $secret, string $day): string
+    {
+        $dailyKey = hash_hmac('sha256', self::SESSION_HASH_CONTEXT . ':' . $day, $secret);
+
+        return hash_hmac('sha256', $sessionId, $dailyKey);
+    }
+
+    /**
+     * Cookie a site's own consent manager sets to suppress the personal-data
+     * columns. Any non-empty value counts.
+     *
+     * Proclaim ships no consent banner -- most Joomla sites already run one --
+     * so this is the published integration point, not a cookie Proclaim sets.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const string OPTOUT_COOKIE = 'proclaim_analytics_optout';
+
+    /**
      * Check whether the current visitor has opted out of personal-data tracking.
-     * Respects the DNT (Do Not Track) header and the proclaim_analytics_optout cookie.
+     *
+     * Any one of three signals suppresses the consent-required columns:
+     * Sec-GPC: 1, DNT: 1, or OPTOUT_COOKIE. DNT is kept for completeness but is
+     * effectively defunct, which is why GPC was added alongside it.
+     *
+     * Governs the personal-data tier only. Proclaim stores nothing on the
+     * visitor's device, so this is not answering the ePrivacy cookie-consent
+     * question. See #1613.
      *
      * @return  bool  True if opted out (skip personal-data columns).
      *
@@ -353,7 +442,11 @@ class CwmanalyticsHelper
                 return false;
             }
 
-            // GDPR mode — Proclaim keeps its own copy in component params
+            // GDPR mode — Proclaim keeps its own copy in component params.
+            // Note this parameter is primarily documented as governing outbound
+            // API calls and social sharing; that it also suppresses the
+            // analytics personal-data tier is called out in its own
+            // description so the coupling is not a surprise.
             if ($params->get('gdpr_mode', '0')) {
                 return true;
             }
@@ -361,11 +454,16 @@ class CwmanalyticsHelper
             // No params available — default to opt-out support enabled
         }
 
+        // Global Privacy Control — the signal that is actually alive.
+        if (($_SERVER['HTTP_SEC_GPC'] ?? '') === '1') {
+            return true;
+        }
+
         if (($_SERVER['HTTP_DNT'] ?? '') === '1') {
             return true;
         }
 
-        if (!empty($_COOKIE['proclaim_analytics_optout'])) {
+        if (!empty($_COOKIE[self::OPTOUT_COOKIE])) {
             return true;
         }
 
@@ -373,18 +471,83 @@ class CwmanalyticsHelper
     }
 
     /**
+     * Shortest retention window the purge will act on, matching the `min`
+     * on the task form's retention field.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const int MIN_RETENTION_DAYS = 7;
+
+    /**
+     * Is this retention window safe to delete raw events against?
+     *
+     * A window of zero or less puts the cutoff at (or, when negative, after)
+     * "now", so the purge DELETE would match every row rather than only aged
+     * ones. A blank field in the Scheduler UI saves as "" and casts to 0, so
+     * this is reachable from ordinary configuration. Adding filter="int" to
+     * that field does NOT help -- it converts "" to exactly the lethal 0.
+     *
+     * Pure and public so the guard can be tested without running the real
+     * DELETE.
+     *
+     * @param   int  $retentionDays  Proposed retention window in days.
+     *
+     * @return  bool  True when raw events may be deleted.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isPurgeSafe(int $retentionDays): bool
+    {
+        return $retentionDays >= self::MIN_RETENTION_DAYS;
+    }
+
+    /**
      * Roll up raw events older than $retentionDays into monthly aggregates,
      * then purge the rolled-up raw events. Called by the scheduled task plugin.
      *
-     * @param   int  $retentionDays  Events older than this are rolled up and purged.
+     * On an unsafe or disabled purge the rollup still runs -- aggregating is
+     * non-destructive -- but nothing is deleted and `purged` is 0. Guessing a
+     * "sensible" fallback window is deliberately avoided: an invalid setting
+     * carries no signal about intent, and an admin who meant 365 should not
+     * silently lose 275 days because the code assumed 90.
+     *
+     * The floor is enforced here, at the point of deletion, rather than only
+     * at the caller. Bad values can arrive from the Scheduler UI, a restored
+     * backup (Cwmbackup rewrites #__scheduler_tasks wholesale), a future
+     * migration, or a direct database edit -- enumerating those paths is not
+     * something the code can do, but guarding the DELETE covers all of them.
+     *
+     * @param   int   $retentionDays  Events older than this are rolled up, and purged when $purge is true.
+     * @param   bool  $purge          Whether to delete the raw events after aggregating them.
      *
      * @return  array{rolled: int, purged: int}
      *
      * @since   10.1.0
      */
-    public static function rollupAndPurge(int $retentionDays = 90): array
+    public static function rollupAndPurge(int $retentionDays = 90, bool $purge = true): array
     {
         $result = ['rolled' => 0, 'purged' => 0];
+
+        // An out-of-range window invalidates the whole run, not just the
+        // delete: $retentionDays *is* the cutoff, so a value of 0 would have
+        // the rollup summarise every event including today's while the raw
+        // rows survive -- inflating the monthly aggregates the next valid run
+        // cannot correct. Refuse both halves and leave the data untouched.
+        if (!self::isPurgeSafe($retentionDays)) {
+            CwmDebug::error(
+                \sprintf(
+                    'Analytics rollup aborted: retention of %d day(s) is below the %d-day minimum. A window of'
+                    . ' zero or less puts the cutoff at or after "now", which would have deleted every raw'
+                    . ' event. Check the Proclaim Analytics task\'s retention setting.',
+                    $retentionDays,
+                    self::MIN_RETENTION_DAYS
+                ),
+                null,
+                'analytics'
+            );
+
+            return $result;
+        }
 
         try {
             $db     = Factory::getContainer()->get(DatabaseInterface::class);
@@ -392,7 +555,75 @@ class CwmanalyticsHelper
                 ->modify('-' . (int) $retentionDays . ' days')
                 ->format('Y-m-d H:i:s');
 
-            // Rollup: aggregate into monthly table using ON DUPLICATE KEY UPDATE
+            // The whole rollup+purge is one transaction. Previously the INSERT
+            // and the DELETE were independent statements: if the task died
+            // between them (execution-time limit, scheduler timeout, OOM,
+            // deploy restart) the raw events survived, the next run's cutoff
+            // still covered them, and they were aggregated a second time --
+            // permanently inflating the monthly totals with no self-correction.
+            // See #1571.
+            //
+            // Savepoint-aware (the `true` argument) rather than a bare
+            // transactionStart(): MysqliDriver::transactionStart() calls
+            // begin_transaction() unconditionally when not asked for a
+            // savepoint, and MySQL *implicitly commits* any transaction
+            // already in progress. A bare call would therefore silently commit
+            // a caller's open transaction. With the flag set, a standalone run
+            // still opens a real transaction (depth 0) while a nested run
+            // takes a savepoint and leaves the caller's transaction intact.
+            $db->transactionStart(true);
+
+            // Collect the (month, dimension-tuple) groups this run will write,
+            // so their existing monthly rows can be replaced rather than
+            // duplicated.
+            //
+            // ON DUPLICATE KEY UPDATE cannot do this here: uq_aggregate spans
+            // five NULLable columns (series_id, study_id, media_id,
+            // location_id, country_code -- the last of which is *always* NULL,
+            // see the note on country_code below), and MySQL treats NULL as
+            // distinct from NULL in a unique index. The key therefore never
+            // matched, so every run inserted fresh rows instead of
+            // consolidating -- verified directly against MySQL. This mirrors
+            // the delete-then-reinsert workaround CwmanalyticsModel::
+            // seedFromLegacy() already uses for the same reason.
+            $groupCols = [
+                'series_id', 'study_id', 'media_id', 'location_id',
+                'event_type', 'referrer_type', 'country_code', 'device_type',
+            ];
+
+            $pending = $db->setQuery(
+                'SELECT DISTINCT ' . implode(',', array_map([$db, 'quoteName'], $groupCols))
+                . ', YEAR(' . $db->quoteName('created') . ') AS y'
+                . ', MONTH(' . $db->quoteName('created') . ') AS m'
+                . ' FROM ' . $db->quoteName('#__bsms_analytics_events')
+                . ' WHERE ' . $db->quoteName('created') . ' < ' . $db->quote($cutoff)
+            )->loadObjectList() ?: [];
+
+            foreach ($pending as $group) {
+                $conditions = [
+                    $db->quoteName('year') . ' = ' . (int) $group->y,
+                    $db->quoteName('month') . ' = ' . (int) $group->m,
+                ];
+
+                foreach ($groupCols as $col) {
+                    $value = $group->$col;
+
+                    // NULL has to be matched with IS NULL, which is the very
+                    // asymmetry that broke the unique key.
+                    $conditions[] = $value === null
+                        ? $db->quoteName($col) . ' IS NULL'
+                        : $db->quoteName($col) . ' = ' . $db->quote($value);
+                }
+
+                $db->setQuery(
+                    'DELETE FROM ' . $db->quoteName('#__bsms_analytics_monthly')
+                    . ' WHERE ' . implode(' AND ', $conditions)
+                )->execute();
+            }
+
+            // Rollup: aggregate into the monthly table. The ON DUPLICATE KEY
+            // clause is retained as a backstop for the rows whose dimensions
+            // happen to be entirely non-NULL, where the unique key does work.
             $rollupSql = 'INSERT INTO ' . $db->quoteName('#__bsms_analytics_monthly') . '
                 (' . implode(',', array_map([$db, 'quoteName'], [
                 'series_id', 'study_id', 'media_id', 'location_id', 'event_type',
@@ -427,17 +658,42 @@ class CwmanalyticsHelper
 
             $db->setQuery($rollupSql);
             $db->execute();
-            $result['rolled'] = $db->getAffectedRows();
 
-            // Purge rolled-up raw events
-            $purgeQuery = $db->createQuery()
-                ->delete($db->quoteName('#__bsms_analytics_events'))
-                ->where($db->quoteName('created') . ' < ' . $db->quote($cutoff));
-            $db->setQuery($purgeQuery);
-            $db->execute();
-            $result['purged'] = $db->getAffectedRows();
+            // Report the number of monthly groups written, not
+            // getAffectedRows(): after ON DUPLICATE KEY UPDATE, MySQL counts 1
+            // per inserted row but 2 per updated row, so the previous figure
+            // was never an accurate count of anything.
+            $result['rolled'] = \count($pending);
+
+            // Purge rolled-up raw events.
+            //
+            // This runs inside the same transaction as the aggregate INSERT
+            // above and against the same $cutoff, so the only rows it can
+            // delete are ones this run has already summarised. That ordering
+            // is the safety property: there is no path that deletes a raw
+            // event which was not written to #__bsms_analytics_monthly first.
+            if ($purge) {
+                $purgeQuery = $db->createQuery()
+                    ->delete($db->quoteName('#__bsms_analytics_events'))
+                    ->where($db->quoteName('created') . ' < ' . $db->quote($cutoff));
+                $db->setQuery($purgeQuery);
+                $db->execute();
+                $result['purged'] = $db->getAffectedRows();
+            }
+
+            $db->transactionCommit(true);
         } catch (\Exception $e) {
-            // Log to task output if needed
+            // Roll back so a partial rollup is never left behind for the next
+            // run to double-count.
+            try {
+                $db->transactionRollback(true);
+            } catch (\Throwable) {
+                // Nothing to roll back (connection lost, or never started).
+            }
+
+            CwmDebug::error('Analytics rollup failed, rolled back', $e, 'analytics');
+
+            return ['rolled' => 0, 'purged' => 0];
         }
 
         return $result;

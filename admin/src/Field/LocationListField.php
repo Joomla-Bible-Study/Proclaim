@@ -81,7 +81,11 @@ class LocationListField extends ListField
                 ->whereIn($db->quoteName('s.access'), $groups)
                 ->order($db->quoteName('loc.location_text'));
 
-            CwmfilterHelper::applyCrossFilters($query, 'location');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'location',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
 
             $db->setQuery($query);
             $rows    = $db->loadObjectList() ?: [];
