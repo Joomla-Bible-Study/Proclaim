@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -171,9 +172,14 @@ class Cwmbackup
         // Get current date in ISO format
         $date = date('Y-m-d');
 
-        // Get Proclaim version
-        $versionHelper = new Version();
-        $version       = $versionHelper->getShortVersion();
+        // Get Proclaim version.
+        //
+        // From the installed manifest, not Version.php's constants: those are
+        // maintained by hand and are not touched by the release tooling, so
+        // they drift. They read 10.3.1 while versions.json says 10.5.5, which
+        // put a version two minor releases stale into every backup filename --
+        // exactly the thing a filename like this exists to record.
+        $version = CwmproclaimHelper::getVersion();
 
         return \sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
     }
