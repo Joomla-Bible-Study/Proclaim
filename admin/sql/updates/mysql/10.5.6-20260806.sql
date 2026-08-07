@@ -24,3 +24,21 @@ ALTER TABLE `#__bsms_studytopics`
 -- them.
 DELETE FROM `#__bsms_studytopics`
 WHERE `study_id` NOT IN (SELECT `id` FROM `#__bsms_studies`);
+
+-- #1611: session_hash is now a keyed digest rotated daily, so a visitor cannot
+-- be followed across days. Update the column comment to say so.
+ALTER TABLE `#__bsms_analytics_events`
+    MODIFY `session_hash` VARCHAR(64) NULL DEFAULT NULL
+    COMMENT 'Keyed hash of session ID, rotated daily; not linkable across days; consent-required';
+
+-- Re-key the existing history. Rows written before this release hold a bare,
+-- unsalted SHA-256 that is stable for all time, so one visitor could be traced
+-- across the whole table. Folding each row's own date into the digest gives
+-- those rows the same cross-day unlinkability new rows get.
+--
+-- Rows from the same visitor on the same day still collide, so
+-- COUNT(DISTINCT session_hash) is unchanged and no historical Sessions figure
+-- moves. NULL stays NULL because CONCAT() propagates it.
+UPDATE `#__bsms_analytics_events`
+SET `session_hash` = SHA2(CONCAT(`session_hash`, DATE(`created`)), 256)
+WHERE `session_hash` IS NOT NULL;

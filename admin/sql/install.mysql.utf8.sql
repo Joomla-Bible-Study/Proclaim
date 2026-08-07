@@ -1193,7 +1193,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_analytics_events` (
     `os`              VARCHAR(50) NULL DEFAULT NULL,
     `language`        VARCHAR(10) NULL DEFAULT NULL,
     `is_guest`        TINYINT(1) NULL DEFAULT NULL COMMENT '0=logged in, 1=guest',
-    `session_hash`    VARCHAR(64) NULL DEFAULT NULL COMMENT 'SHA-256 of session ID; consent-required',
+    `session_hash`    VARCHAR(64) NULL DEFAULT NULL COMMENT 'Keyed hash of session ID, rotated daily; not linkable across days; consent-required',
     `created`         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_study_created`    (`study_id`, `created`),
