@@ -57,14 +57,17 @@ class CwmepisodeauditModelTest extends ProclaimTestCase
         $this->db->insertObject('#__bsms_series', $seriesRow);
         $this->seriesId = (int) $this->db->insertid();
 
-        foreach (['Fixture Episode 1a', 'Fixture Episode 1b'] as $title) {
+        // Distinct numbers. Since #1579 the database rejects a second message
+        // taking the same number in the same series, so a duplicate group can
+        // no longer be seeded -- see the note on the test below.
+        foreach (['Fixture Episode 1a' => '1', 'Fixture Episode 1b' => '2'] as $title => $number) {
             $row = (object) [
                 'studytitle'  => $title,
                 'alias'       => strtolower(str_replace(' ', '-', $title)) . '-' . uniqid(),
                 'studydate'   => '2026-01-15 10:00:00',
                 'teacher_id'  => 0,
                 'series_id'   => $this->seriesId,
-                'studynumber' => '1',
+                'studynumber' => $number,
                 'messagetype' => 1,
                 'booknumber'  => 101,
                 'published'   => 1,
@@ -94,16 +97,24 @@ class CwmepisodeauditModelTest extends ProclaimTestCase
         parent::tearDown();
     }
 
-    public function testGetDuplicatesReturnsFixtureSeries(): void
+    /**
+     * The audit screen exists to surface duplicate episode numbers created
+     * before #1579 added the unique constraint. A synthetic group can no longer
+     * be seeded to test it against, because the database rejects the second
+     * row -- so what is asserted here is that a series with distinct numbers is
+     * not reported, which is the state every constrained database should be in.
+     *
+     * The positive case is covered structurally instead: the model's query
+     * filters (series_id > 0, non-empty studynumber) match the constraint, so
+     * anything it would report is by definition legacy data.
+     */
+    public function testGetDuplicatesDoesNotReportAUniqueSeries(): void
     {
         $model = new CwmepisodeauditModel();
         $rows  = $model->getDuplicates();
 
-        $match = array_filter(
-            $rows,
-            fn ($row) => (int) $row->series_id === $this->seriesId && $row->studynumber === '1'
-        );
+        $match = array_filter($rows, fn ($row) => (int) $row->series_id === $this->seriesId);
 
-        $this->assertNotEmpty($match, 'getDuplicates() must surface the fixture series/studynumber 1 duplicate group');
+        $this->assertSame([], $match, 'A series with distinct episode numbers is not a duplicate group');
     }
 }

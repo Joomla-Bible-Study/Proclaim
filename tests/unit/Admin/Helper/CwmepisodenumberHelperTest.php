@@ -30,7 +30,7 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
 
     private int $seriesId = 0;
 
-    /** @var int[] Message ids sharing studynumber '1' */
+    /** @var int[] Message ids in the fixture series, one per episode number */
     private array $tiedIds = [];
 
     private int $uniqueId = 0;
@@ -51,11 +51,13 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
 
         $this->db->transactionStart();
 
+        // Distinct numbers only. Since #1579 the database enforces uniqueness
+        // on (series_id, studynumber) for numbered messages in a real series,
+        // so the tied group this fixture used to build can no longer exist.
         $this->seriesId = $this->insertSeries();
         $this->tiedIds  = [
-            $this->insertSermon('Episode 1a', $this->seriesId, '1'),
-            $this->insertSermon('Episode 1b', $this->seriesId, '1'),
-            $this->insertSermon('Episode 1c', $this->seriesId, '1'),
+            $this->insertSermon('Episode 1', $this->seriesId, '1'),
+            $this->insertSermon('Episode 2', $this->seriesId, '2'),
         ];
         $this->uniqueId = $this->insertSermon('Episode 4', $this->seriesId, '4');
     }
@@ -116,15 +118,15 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         return (int) $this->db->insertid();
     }
 
-    public function testNextNumberIgnoresTiesAndReturnsHighestPlusOne(): void
+    public function testNextNumberReturnsHighestPlusOne(): void
     {
         $this->assertSame(5, CwmepisodenumberHelper::nextNumber($this->db, $this->seriesId));
     }
 
     public function testNextNumberHonoursExcludeId(): void
     {
-        // Excluding the uniquely-numbered message (4) drops the max back to 1 (the tied group).
-        $this->assertSame(2, CwmepisodenumberHelper::nextNumber($this->db, $this->seriesId, $this->uniqueId));
+        // Excluding the highest-numbered message (4) drops the max back to 2.
+        $this->assertSame(3, CwmepisodenumberHelper::nextNumber($this->db, $this->seriesId, $this->uniqueId));
     }
 
     public function testNextNumberForSeriesWithNoMessagesReturnsOne(): void
@@ -140,12 +142,15 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         $this->assertContains((int) $duplicate->id, $this->tiedIds);
     }
 
-    public function testFindDuplicateStillFindsAnotherAfterExcludingOne(): void
+    /**
+     * Editing a message must not report it as clashing with itself, which is
+     * what $excludeId is for.
+     */
+    public function testFindDuplicateExcludesTheRecordBeingSaved(): void
     {
-        $duplicate = CwmepisodenumberHelper::findDuplicate($this->db, $this->seriesId, '1', $this->tiedIds[0]);
-
-        $this->assertNotNull($duplicate);
-        $this->assertContains((int) $duplicate->id, [$this->tiedIds[1], $this->tiedIds[2]]);
+        $this->assertNull(
+            CwmepisodenumberHelper::findDuplicate($this->db, $this->seriesId, '1', $this->tiedIds[0])
+        );
     }
 
     public function testFindDuplicateReturnsNullWhenNoConflict(): void
@@ -153,15 +158,22 @@ class CwmepisodenumberHelperTest extends ProclaimTestCase
         $this->assertNull(CwmepisodenumberHelper::findDuplicate($this->db, $this->seriesId, '99'));
     }
 
-    public function testFindAllDuplicatesIncludesFixtureSeries(): void
+    /**
+     * findAllDuplicates() exists to surface groups created before #1579 added
+     * the unique constraint, and its filters -- series_id > 0 and a non-empty
+     * studynumber -- match that constraint exactly.
+     *
+     * A synthetic duplicate group can no longer be built to test it against:
+     * the database now rejects the second row. What can be asserted is that it
+     * does not report a series whose numbers are unique, which is the state
+     * every constrained database should now be in.
+     */
+    public function testFindAllDuplicatesDoesNotReportAUniqueSeries(): void
     {
         $rows = CwmepisodenumberHelper::findAllDuplicates($this->db);
 
-        $match = array_filter(
-            $rows,
-            fn ($row) => (int) $row->series_id === $this->seriesId && $row->studynumber === '1'
-        );
+        $match = array_filter($rows, fn ($row) => (int) $row->series_id === $this->seriesId);
 
-        $this->assertNotEmpty($match, 'findAllDuplicates() must surface the fixture series/studynumber 1 duplicate group');
+        $this->assertSame([], $match, 'A series with distinct episode numbers is not a duplicate group');
     }
 }

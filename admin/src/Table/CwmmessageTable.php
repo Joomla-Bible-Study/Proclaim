@@ -671,13 +671,53 @@ class CwmmessageTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        $result = parent::store($updateNulls);
+        try {
+            $result = parent::store($updateNulls);
+        } catch (\Throwable $e) {
+            // check() looks for a clashing episode number before we get here,
+            // but that read and this write are not one operation: two saves in
+            // the same series can both pass the check and then both write. The
+            // database rejects the loser, and this turns that into the same
+            // message the pre-check would have produced rather than a fatal.
+            if (self::isDuplicateEpisodeNumber($e)) {
+                $this->setError(
+                    Text::sprintf('JBS_STY_DUPLICATE_EPISODE_RACE', (string) $this->studynumber)
+                );
+
+                return false;
+            }
+
+            throw $e;
+        }
 
         if ($result) {
             Cwmassets::stripEmptyAssetRow($this);
         }
 
         return $result;
+    }
+
+    /**
+     * Is this failure the episode-number unique constraint?
+     *
+     * Matched on the index name so an unrelated duplicate-key error is not
+     * mistaken for this one and reported with the wrong message.
+     *
+     * @param   \Throwable  $e  The failure raised by the write
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function isDuplicateEpisodeNumber(\Throwable $e): bool
+    {
+        for ($t = $e; $t !== null; $t = $t->getPrevious()) {
+            if (str_contains($t->getMessage(), 'uq_series_studynumber')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
