@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+use CWM\Component\Proclaim\Administrator\Field\MediaFileImagesField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -143,7 +144,11 @@ class Cwmhtml
     }
 
     /**
-     * Display a batch widget for the player selector.
+     * Display a batch widget for the media display selector.
+     *
+     * Offers the same display configurations (image, button, or icon) as the
+     * Image Tools screen, applied to the selected media files rather than to
+     * every file sharing a configuration.
      *
      * @return  string  The necessary HTML for the widget.
      *
@@ -157,25 +162,40 @@ class Cwmhtml
             . '::' . Text::_('JBS_MED_IMAGE_DESC') . '">',
             Text::_('JBS_MED_SELECT_MEDIA_TYPE'),
             '</label>',
-            // Deliberately left with no options beyond "No change".
-            //
-            // The obvious completion is to populate this the way every sibling
-            // widget does, but the handler behind it is not ready for that:
-            // CwmmediafileModel::batchMediatype() writes (int) $value into the
-            // media_image param, and media_image holds an image path --
-            // "images/biblestudy/streamingvideo24.png" and the like on a real
-            // database, never a number. Offering options here would give
-            // administrators a one-click way to replace every selected file's
-            // image path with an integer.
-            //
-            // The empty select is what currently prevents that, so it stays
-            // until the handler is fixed. Tracked separately.
             '<select name="batch[mediaType]" class="form-select" id="batch-mediaType">',
             '<option value="">' . Text::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
+            // Counts are suppressed: they describe the whole site, which reads
+            // as though it described the current selection.
+            HTMLHelper::_('select.options', self::mediaTypeList(), 'value', 'text'),
             '</select>',
         ];
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * The media display configurations a batch can apply.
+     *
+     * Delegates to the field that backs the Image Tools screen so the two
+     * offer the same choices and cannot drift apart.
+     *
+     * @return  object[]  Options whose value is a JSON blob of display params.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function mediaTypeList(): array
+    {
+        try {
+            return MediaFileImagesField::buildDisplayOptions(false);
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception) {
+                return [];
+            }
+
+            return [];
+        }
     }
 
     /**

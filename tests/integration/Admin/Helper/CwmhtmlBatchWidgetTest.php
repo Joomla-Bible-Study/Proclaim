@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Integration\Admin\Helper;
 
+use CWM\Component\Proclaim\Administrator\Field\MediaFileImagesField;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhtml;
 use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -144,26 +145,57 @@ class CwmhtmlBatchWidgetTest extends IntegrationTestCase
     }
 
     // -------------------------------------------------------------------------
-    // The media-type widget stays inert on purpose
+    // The media-type widget offers whole display configurations
     // -------------------------------------------------------------------------
 
     /**
-     * Completing this widget the obvious way would expose a batch action that
-     * writes an integer into media_image, which holds an image path. The empty
-     * select is what prevents that, so it must not be "finished" without the
-     * handler being fixed first -- see #1627.
+     * This widget was deliberately left empty while batchMediatype() wrote an
+     * integer into media_image, which holds an image path -- offering options
+     * would have exposed a one-click way to corrupt every selected file. The
+     * handler now applies a whole display configuration, so the widget carries
+     * the same choices as the Image Tools screen. See #1627.
      */
-    #[TestDox('The media-type widget offers nothing until its handler is fixed')]
-    public function testMediaTypeWidgetStaysInert(): void
+    #[TestDox('The media-type widget offers display configurations, each a complete parameter set')]
+    public function testMediaTypeWidgetOffersDisplayConfigurations(): void
     {
         $html = Cwmhtml::mediaType();
 
-        preg_match_all('/<option /', $html, $matches);
+        preg_match_all('/<option value="([^"]*)"/', $html, $matches);
 
-        $this->assertCount(
+        $this->assertGreaterThan(
             1,
-            $matches[0],
-            'Only the "No change" sentinel: batchMediatype() would overwrite image paths with integers — see #1627'
+            \count($matches[1]),
+            'The widget must offer more than the "No change" sentinel now the handler is fixed'
         );
+
+        // The first option is the sentinel; every other value must decode to a
+        // configuration carrying each display key, or applying it would leave a
+        // media file in a state the chosen label does not describe.
+        foreach (\array_slice($matches[1], 1) as $value) {
+            $decoded = json_decode(html_entity_decode($value, ENT_QUOTES), true);
+
+            $this->assertIsArray($decoded, 'Each option value must be a display configuration');
+
+            foreach (MediaFileImagesField::DISPLAY_KEYS as $key) {
+                $this->assertArrayHasKey($key, $decoded, $key . ' missing from an option the batch can apply');
+            }
+        }
+    }
+
+    /**
+     * A count is appended to the Image Tools labels to show how many files share
+     * a configuration. In a batch modal that number describes the whole site
+     * rather than the rows the administrator picked, so it is left off there.
+     */
+    #[TestDox('The batch widget omits the site-wide usage counts the Image Tools field shows')]
+    public function testBatchWidgetOmitsSiteWideCounts(): void
+    {
+        foreach (MediaFileImagesField::buildDisplayOptions(false) as $option) {
+            $this->assertDoesNotMatchRegularExpression(
+                '/\(\d+\)$/',
+                $option->text,
+                'A site-wide count next to a selection of rows misleads: ' . $option->text
+            );
+        }
     }
 }
