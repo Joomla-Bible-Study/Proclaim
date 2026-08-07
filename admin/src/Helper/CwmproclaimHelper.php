@@ -361,7 +361,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -396,7 +396,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -542,7 +542,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -572,7 +572,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
