@@ -60,6 +60,7 @@ $modes = [
     'assert-tables-present',
     'assert-tables-gone',
     'assert-no-other-consumer',
+    'other-consumer-ids',
     'assert-sql-armed',
     'assert-sql-disarmed',
     'disarm',
@@ -133,11 +134,95 @@ $connect = static function (object $install): array {
 };
 
 // --- value-printing modes: first test install only, for the shell to consume --
-if (\in_array($mode, ['site-path', 'ext-id'], true)) {
+if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids'], true)) {
     $install = $installs[0];
 
     if ($mode === 'site-path') {
         echo $install->path . "\n";
+
+        exit(0);
+    }
+
+    if ($mode === 'other-consumer-ids') {
+        // Extension ids for scripture consumers that are NOT part of pkg_proclaim,
+        // so the uninstall phases can clear the field before asserting that a
+        // package removal drops the shared tables.
+        //
+        // Deliberately not hardcoded to com_livingword: the phases broke once
+        // already because they assumed which consumers a test site carries
+        // (lib_cwmscripture#37). Anything FIRST_PARTY or registered counts.
+        //
+        // Prefers the parent package where one exists — removing com_livingword
+        // while pkg_livingword still owns it leaves a broken package behind.
+        [$db, $prefix] = $connect($install);
+
+        if ($db === null) {
+            fwrite(STDERR, "Could not connect to the test database.\n");
+
+            exit(1);
+        }
+
+        $wanted = [
+            ['pkg_livingword', 'package', ''],
+            ['com_livingword', 'component', ''],
+            ['cwmscripture',   'plugin',    'task'],
+        ];
+
+        $ids  = [];
+        $seen = false;
+
+        foreach ($wanted as [$element, $type, $folder]) {
+            $folderSql = $folder === ''
+                ? "AND (`folder` = '' OR `folder` IS NULL)"
+                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
+
+            $row = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT `extension_id` FROM `{$prefix}extensions`
+                 WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
+                   AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
+                 {$folderSql} LIMIT 1"
+            ) ?: null);
+
+            if ($row === null || $row === false) {
+                continue;
+            }
+
+            // pkg_livingword covers com_livingword; do not remove both.
+            if ($element === 'pkg_livingword') {
+                $seen = true;
+            }
+
+            if ($element === 'com_livingword' && $seen) {
+                continue;
+            }
+
+            $ids[] = $row[0];
+        }
+
+        // Registered third parties the hardcoded list cannot know about.
+        $consumersTable = $prefix . 'bsms_scripture_consumers';
+        $exists         = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $consumersTable) . "'");
+
+        if ($exists !== false && mysqli_num_rows($exists) > 0) {
+            $extra = mysqli_query(
+                $db,
+                "SELECT e.`extension_id` FROM `{$consumersTable}` c
+                 JOIN `{$prefix}extensions` e
+                   ON e.`element` = c.`element` AND e.`type` = c.`type`
+                 WHERE c.`element` NOT IN ('com_proclaim', 'scripturelinks', 'cwmscripture')"
+            );
+
+            while ($row = mysqli_fetch_row($extra ?: null)) {
+                if (!\in_array($row[0], $ids, true)) {
+                    $ids[] = $row[0];
+                }
+            }
+        }
+
+        mysqli_close($db);
+
+        echo implode("\n", $ids) . (empty($ids) ? '' : "\n");
 
         exit(0);
     }
