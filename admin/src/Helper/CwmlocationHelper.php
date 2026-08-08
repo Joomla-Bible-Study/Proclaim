@@ -45,6 +45,20 @@ class CwmlocationHelper
     private static array $locationCache = [];
 
     /**
+     * Whether an unreadable location_group_mapping has already been reported
+     * this request.
+     *
+     * getGroupMapping() runs once per user per request from two call sites, so
+     * without this a corrupt param would write the same line to the log
+     * repeatedly on a busy site.
+     *
+     * @var    bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private static bool $mappingWarned = false;
+
+    /**
      * Return the location IDs visible to a user.
      *
      * Super admins receive an empty array (meaning: no filter, see everything).
@@ -544,7 +558,9 @@ class CwmlocationHelper
         if (\is_string($raw)) {
             try {
                 $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException) {
+            } catch (\JsonException $e) {
+                self::reportUnreadableMapping($e);
+
                 return [];
             }
 
@@ -555,12 +571,48 @@ class CwmlocationHelper
         if ($raw instanceof \stdClass) {
             try {
                 return json_decode(json_encode($raw, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR) ?: [];
-            } catch (\JsonException) {
+            } catch (\JsonException $e) {
+                self::reportUnreadableMapping($e);
+
                 return [];
             }
         }
 
         return \is_array($raw) ? $raw : [];
+    }
+
+    /**
+     * Record that location_group_mapping could not be read.
+     *
+     * The empty array this accompanies is deliberately unchanged. An empty
+     * mapping is also the legitimate "campuses not configured yet" state, and
+     * getUserLocations() treats every unmapped location as unrestricted — so an
+     * unreadable param silently opens every campus to every user rather than
+     * closing them. Failing closed instead is not an option: it would lock out
+     * every site that has never configured campuses, which is most of them, and
+     * the two cases cannot be told apart by value.
+     *
+     * What can be fixed is the silence.
+     *
+     * @param   \JsonException  $e  The decode failure.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function reportUnreadableMapping(\JsonException $e): void
+    {
+        if (self::$mappingWarned) {
+            return;
+        }
+
+        self::$mappingWarned = true;
+
+        CwmlogHelper::error(
+            'The location_group_mapping component parameter could not be read, so campus filtering is '
+            . 'inactive and every location is visible to every user. Re-save Proclaim\'s Location '
+            . 'Management options to rebuild it. ' . $e->getMessage()
+        );
     }
 
     /**
