@@ -655,6 +655,90 @@ class CwmmessageTable extends Table
     }
 
     /**
+     * Publish or unpublish rows, clearing the pending-review mark on publish.
+     *
+     * The control panel counts records the API force-unpublished and marked
+     * awaiting review. Publishing one answers the review, so the mark is
+     * removed rather than left to reappear in the count if the record is ever
+     * unpublished again for an unrelated reason.
+     *
+     * @param   mixed  $pks     Primary keys, or null for the instance's own.
+     * @param   int    $state   The publishing state.
+     * @param   int    $userId  The user performing the change.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function publish($pks = null, $state = 1, $userId = 0): bool
+    {
+        if (!parent::publish($pks, $state, $userId)) {
+            return false;
+        }
+
+        if ((int) $state === 1) {
+            $this->clearPendingReview($pks ?? $this->id);
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove the pending-review mark from the given records' params.
+     *
+     * Best-effort: the publish itself has already succeeded, so a failure here
+     * must not turn a completed state change into an error. The only cost is a
+     * stale mark, which shows up again if the record is unpublished later.
+     *
+     * @param   mixed  $pks  Primary key, or an array of them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function clearPendingReview(mixed $pks): void
+    {
+        $ids = array_values(array_filter(array_map('intval', (array) $pks)));
+
+        if ($ids === []) {
+            return;
+        }
+
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', 'params']))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->whereIn($db->quoteName('id'), $ids)
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"pending_review"%'));
+
+            foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+                $params = new Registry($row->params);
+
+                if (!$params->exists('pending_review')) {
+                    continue;
+                }
+
+                $params->remove('pending_review');
+
+                $db->setQuery(
+                    $db->createQuery()
+                        ->update($db->quoteName('#__bsms_studies'))
+                        ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+                        ->where($db->quoteName('id') . ' = ' . (int) $row->id)
+                )->execute();
+            }
+        } catch (\RuntimeException $e) {
+            Log::add(
+                'Could not clear the pending-review mark: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
      * Method to store a row in the database from the JTable instance properties.
      * If a primary key value is set the row with that primary key value will be
      * updated with the instance property values.  If no primary key value is set
