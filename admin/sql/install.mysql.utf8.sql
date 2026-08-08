@@ -161,11 +161,19 @@ CREATE TABLE IF NOT EXISTS `#__bsms_playlists`
     `asset_id`            INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
     `access`              INT(10) UNSIGNED NOT NULL DEFAULT '1',
     `ordering`            INT(11)          NOT NULL DEFAULT '0',
+    -- A remote playlist maps to one local row per server. remote_playlist_id is
+    -- NOT NULL DEFAULT '' and the edit form does not require it, so a playlist
+    -- created by hand in the admin carries ''. Mapping '' to NULL keeps those
+    -- unconstrained, because NULLs are distinct from each other in a unique index.
+    `remote_playlist_uk`  VARCHAR(64) GENERATED ALWAYS AS
+        (IF(`remote_playlist_id` <> '', `remote_playlist_id`, NULL)) STORED,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_server_remote_playlist` (`server_id`, `remote_playlist_uk`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_server` (`server_id`),
+    KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`),
     KEY `idx_published_access` (`published`, `access`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -533,7 +541,10 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `ordering`            INT(11)                                          NOT NULL DEFAULT '0',
     `language`            CHAR(7)                                          NOT NULL COMMENT 'The language code for the Studies.',
     `download_id`         INT(10)                                          NOT NULL DEFAULT '0' COMMENT 'Used for link to download of mediafile',
+    `studynumber_uk`      VARCHAR(100) GENERATED ALWAYS AS
+        (IF(`series_id` > 0 AND `studynumber` <> '', `studynumber`, NULL)) STORED,
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`),
     KEY `idx_state` (`published`),
     KEY `idx_access` (`access`),
     KEY `idx_seriesid` (`series_id`),
@@ -610,7 +621,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studytopics`
     KEY `idx_access` (`access`),
     KEY `idx_study` (`study_id`),
     KEY `idx_topic` (`topic_id`),
-    KEY `idx_study_topic` (`study_id`, `topic_id`)
+    UNIQUE KEY `uq_study_topic` (`study_id`, `topic_id`)
 ) ENGINE InnoDB
   DEFAULT CHARSET = utf8mb4
   DEFAULT COLLATE = utf8mb4_unicode_ci;
@@ -1193,7 +1204,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_analytics_events` (
     `os`              VARCHAR(50) NULL DEFAULT NULL,
     `language`        VARCHAR(10) NULL DEFAULT NULL,
     `is_guest`        TINYINT(1) NULL DEFAULT NULL COMMENT '0=logged in, 1=guest',
-    `session_hash`    VARCHAR(64) NULL DEFAULT NULL COMMENT 'SHA-256 of session ID; consent-required',
+    `session_hash`    VARCHAR(64) NULL DEFAULT NULL COMMENT 'Keyed hash of session ID, rotated daily; not linkable across days; consent-required',
     `created`         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_study_created`    (`study_id`, `created`),

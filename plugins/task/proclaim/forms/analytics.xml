@@ -13,16 +13,21 @@
 				<option value="0">JNO</option>
 			</field>
 
+			<!-- Off by default: analytics history is kept indefinitely unless an
+			     administrator deliberately opts in to deleting it. Purging is
+			     irreversible and the raw events are the only per-event record. -->
 			<field name="enable_purge"
 				   type="radio"
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_LABEL"
 				   description="PLG_TASK_PROCLAIM_ANALYTICS_PURGE_DESC"
-				   default="1"
+				   default="0"
 				   class="btn-group btn-group-yesno">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 
+			<!-- Only consulted when enable_purge is on, so it is hidden otherwise
+			     rather than implying a retention limit that is not being applied. -->
 			<field name="retention_days"
 				   type="number"
 				   label="PLG_TASK_PROCLAIM_ANALYTICS_RETENTION_LABEL"
@@ -30,7 +35,8 @@
 				   default="90"
 				   min="7"
 				   max="3650"
-				   step="1"/>
+				   step="1"
+				   showon="enable_purge:1"/>
 
 			<field name="enable_email"
 				   type="radio"

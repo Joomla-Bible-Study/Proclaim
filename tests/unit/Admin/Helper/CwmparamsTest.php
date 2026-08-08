@@ -22,24 +22,6 @@ use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 class CwmparamsTest extends ProclaimTestCase
 {
     /**
-     * Reset static properties between tests
-     *
-     * @return void
-     */
-    protected function tearDown(): void
-    {
-        // Reset static properties using reflection
-        $reflection = new \ReflectionClass(Cwmparams::class);
-
-        if ($reflection->hasProperty('templateId')) {
-            $prop = $reflection->getProperty('templateId');
-            $prop->setValue(null, 1);
-        }
-
-        parent::tearDown();
-    }
-
-    /**
      * Test extension name constant
      *
      * @return void
@@ -47,15 +29,5 @@ class CwmparamsTest extends ProclaimTestCase
     public function testExtensionNameIsCorrect(): void
     {
         $this->assertEquals('com_proclaim', Cwmparams::$extension);
-    }
-
-    /**
-     * Test default template ID
-     *
-     * @return void
-     */
-    public function testDefaultTemplateIdIsOne(): void
-    {
-        $this->assertEquals(1, Cwmparams::$templateId);
     }
 }

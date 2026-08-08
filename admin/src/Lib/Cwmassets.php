@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -119,6 +120,23 @@ class Cwmassets
 
             return self::$parent_id;
         } catch (\Exception $e) {
+            // A concurrent first-run request may have won the race to
+            // create this row (unique constraint on `name`). Re-query
+            // before giving up so the loser doesn't return 0 and send
+            // callers down the "parent missing" fallback path.
+            $query = $db->createQuery()
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' = ' . $db->quote('com_proclaim'));
+            $db->setQuery($query);
+            $winnerId = (int) $db->loadResult();
+
+            if ($winnerId > 0) {
+                self::$parent_id = $winnerId;
+
+                return $winnerId;
+            }
+
             Log::add('Failed to create parent asset: ' . $e->getMessage(), Log::ERROR, 'com_proclaim');
 
             return 0;
@@ -196,7 +214,7 @@ class Cwmassets
      *
      * @since 10.3.0
      */
-    public const EMPTY_RULE_VARIANTS = [
+    public const array EMPTY_RULE_VARIANTS = [
         '',
         '{}',
         '[]',
@@ -497,13 +515,13 @@ class Cwmassets
      * no asset_id or the linked row has non-default rules, this is a
      * no-op.
      *
-     * @param   \Joomla\CMS\Table\Table  $table  Just-stored Proclaim table instance
+     * @param   Table  $table  Just-stored Proclaim table instance
      *
      * @return  void
      *
      * @since   10.3.0
      */
-    public static function stripEmptyAssetRow(\Joomla\CMS\Table\Table $table): void
+    public static function stripEmptyAssetRow(Table $table): void
     {
         $assetId = (int) ($table->asset_id ?? 0);
 
@@ -565,8 +583,8 @@ class Cwmassets
      * points at a missing row) and the only thing we could create would
      * be an empty-rules placeholder, we leave it alone — permission
      * checks fall through to the `com_proclaim` parent asset, which is
-     * what we want. The old behavior accumulated thousands of empty rows
-     * that slowed down `Access::preload('com_proclaim')` for no benefit.
+     * what we want. Creating them instead accumulates thousands of empty rows
+     * that slow `Access::preload('com_proclaim')` down for no benefit.
      *
      * What it still does:
      *   - Relink a record to an existing, real-rules asset row by name.
@@ -634,11 +652,28 @@ class Cwmassets
             return true;
         }
 
-        // Case 3 — real custom rules, but parent has drifted.
+        // Case 3 — real custom rules, but parent has drifted. A raw
+        // parent_id UPDATE leaves lft/rgt stale (still nested under the
+        // old parent), so Access::getAssetRules()'s containment walk
+        // (`b.lft <= a.lft AND b.rgt >= a.rgt`) never sees com_proclaim
+        // as an ancestor -- an asset row that exists but is silently
+        // broken, without a full Asset::rebuild() to catch it.
+        // moveByReference() performs a proper nested-set node move.
         if ((int) ($item->parent_id ?? 0) !== (int) $parentId) {
+            $assetTable = new \Joomla\CMS\Table\Asset($db);
+
+            if (!$assetTable->moveByReference($parentId, 'last-child', (int) $item->asset_id)) {
+                Log::add(
+                    'fixSingleRecord: failed to move asset ' . $item->asset_id . ' under parent ' . $parentId,
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+
+                return false;
+            }
+
             $query = $db->createQuery()
                 ->update($db->quoteName('#__assets'))
-                ->set($db->quoteName('parent_id') . ' = ' . (int) $parentId)
                 ->set($db->quoteName('name') . ' = ' . $db->quote($assetFullName))
                 ->where($db->quoteName('id') . ' = ' . (int) $item->asset_id);
             $db->setQuery($query);
@@ -826,80 +861,39 @@ class Cwmassets
             $sourceTbl = $info['name'];
             $assetName = $info['assetname'];
 
-            // Total source rows.
+            // numrows/inherited/custom_rules/needs_cleanup/drifted collapsed
+            // into one conditional-aggregation query per table (was 5).
+            // The LEFT JOIN keeps COUNT(*) equal to the source row count —
+            // a row with asset_id = 0 (or pointing at a deleted asset) joins
+            // to nothing but still counts once.
             try {
                 $db->setQuery(
                     $db->createQuery()
-                        ->select('COUNT(*)')
-                        ->from($db->quoteName($sourceTbl))
-                );
-                $numrows = (int) $db->loadResult();
-            } catch (\Exception) {
-                $numrows = 0;
-            }
-
-            // Inherited (asset_id = 0 — the new default for uncustomised records).
-            try {
-                $db->setQuery(
-                    $db->createQuery()
-                        ->select('COUNT(*)')
-                        ->from($db->quoteName($sourceTbl))
-                        ->where($db->quoteName('asset_id') . ' = 0')
-                );
-                $inherited = (int) $db->loadResult();
-            } catch (\Exception) {
-                $inherited = 0;
-            }
-
-            // Custom rules — real per-record ACL configured.
-            try {
-                $db->setQuery(
-                    $db->createQuery()
-                        ->select('COUNT(*)')
+                        ->select(
+                            'COUNT(*) AS numrows'
+                            . ', SUM(CASE WHEN ' . $db->quoteName('s.asset_id') . ' = 0 THEN 1 ELSE 0 END) AS inherited'
+                            . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
+                                . $db->quoteName('a.rules') . ' NOT IN (' . $emptyQuoted . ') THEN 1 ELSE 0 END) AS custom_rules'
+                            . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
+                                . $db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ') THEN 1 ELSE 0 END) AS needs_cleanup'
+                            . ', SUM(CASE WHEN ' . $db->quoteName('a.id') . ' IS NOT NULL AND '
+                                . $db->quoteName('a.parent_id') . ' <> ' . (int) $parentId . ' THEN 1 ELSE 0 END) AS drifted'
+                        )
                         ->from($db->quoteName($sourceTbl, 's'))
-                        ->innerJoin(
+                        ->leftJoin(
                             $db->quoteName('#__assets', 'a') . ' ON '
                             . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
                         )
-                        ->where($db->quoteName('a.rules') . ' NOT IN (' . $emptyQuoted . ')')
                 );
-                $customRules = (int) $db->loadResult();
-            } catch (\Exception) {
-                $customRules = 0;
-            }
-
-            // Needs cleanup — linked to an empty-rules asset.
-            try {
-                $db->setQuery(
-                    $db->createQuery()
-                        ->select('COUNT(*)')
-                        ->from($db->quoteName($sourceTbl, 's'))
-                        ->innerJoin(
-                            $db->quoteName('#__assets', 'a') . ' ON '
-                            . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
-                        )
-                        ->where($db->quoteName('a.rules') . ' IN (' . $emptyQuoted . ')')
-                );
-                $needsCleanup = (int) $db->loadResult();
-            } catch (\Exception) {
-                $needsCleanup = 0;
-            }
-
-            // Drifted parent — row exists but parented outside com_proclaim.
-            try {
-                $db->setQuery(
-                    $db->createQuery()
-                        ->select('COUNT(*)')
-                        ->from($db->quoteName($sourceTbl, 's'))
-                        ->innerJoin(
-                            $db->quoteName('#__assets', 'a') . ' ON '
-                            . $db->quoteName('s.asset_id') . ' = ' . $db->quoteName('a.id')
-                        )
-                        ->where($db->quoteName('a.parent_id') . ' <> ' . (int) $parentId)
-                );
-                $drifted = (int) $db->loadResult();
-            } catch (\Exception) {
-                $drifted = 0;
+                $counts       = (array) $db->loadAssoc();
+                $numrows      = (int) ($counts['numrows'] ?? 0);
+                $inherited    = (int) ($counts['inherited'] ?? 0);
+                $customRules  = (int) ($counts['custom_rules'] ?? 0);
+                $needsCleanup = (int) ($counts['needs_cleanup'] ?? 0);
+                $drifted      = (int) ($counts['drifted'] ?? 0);
+            } catch (\Exception $e) {
+                Log::add('getAssetStatus aggregate query failed for ' . $sourceTbl . ': ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+                $numrows = $inherited = $customRules = $needsCleanup = $drifted = 0;
             }
 
             // Orphans — asset row exists but the source record is gone.

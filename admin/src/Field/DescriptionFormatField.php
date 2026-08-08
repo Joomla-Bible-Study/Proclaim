@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 
@@ -87,14 +88,14 @@ class DescriptionFormatField extends FormField
 
         // Build placeholder badge row
         $html .= '<div class="mt-2">';
-        $html .= '<small class="text-muted d-block mb-1">'
+        $html .= '<small class="text-body-secondary d-block mb-1">'
             . Text::_('JBS_ADDON_DESC_FORMAT_INSERT') . '</small>';
         $html .= '<div class="d-flex flex-wrap gap-1">';
 
         foreach (self::PLACEHOLDERS as $token => $langKey) {
             $label = Text::_($langKey);
             $html .= \sprintf(
-                '<button type="button" class="btn btn-outline-secondary btn-sm cwm-desc-token-btn" '
+                '<button type="button" class="btn btn-secondary btn-sm cwm-desc-token-btn" '
                 . 'data-token="%s" data-target="%s" title="%s">%s</button>',
                 htmlspecialchars($token, ENT_QUOTES, 'UTF-8'),
                 htmlspecialchars($this->id, ENT_QUOTES, 'UTF-8'),
@@ -105,28 +106,23 @@ class DescriptionFormatField extends FormField
 
         $html .= '</div></div>';
 
-        // Add JavaScript (once per page)
-        $html .= $this->buildJavaScript();
+        $this->registerJavaScript();
 
         return $html;
     }
 
     /**
-     * Build the JavaScript for token insertion at cursor position.
+     * Register the token-insertion script via WebAssetManager. The asset
+     * manager keys inline scripts by a content hash, so repeated calls
+     * across multiple field instances on the same page register the same
+     * asset name and render once -- no manual "added" flag needed.
      *
-     * @return  string  The script tag
+     * @return  void
      *
-     * @since 10.2.0
+     * @since   __DEPLOY_VERSION__
      */
-    protected function buildJavaScript(): string
+    private function registerJavaScript(): void
     {
-        static $jsAdded = false;
-
-        if ($jsAdded) {
-            return '';
-        }
-        $jsAdded = true;
-
         $js = <<<'JS'
 document.addEventListener('click', function(e) {
     var btn = e.target.closest('.cwm-desc-token-btn');
@@ -145,6 +141,6 @@ document.addEventListener('click', function(e) {
 });
 JS;
 
-        return '<script>' . $js . '</script>';
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineScript($js);
     }
 }

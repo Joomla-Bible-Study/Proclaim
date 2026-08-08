@@ -40,12 +40,20 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
     private ?DatabaseDriver $db = null;
 
     /**
-     * @var  integer
+     * Factory::$language as it was before silenceDateLanguageWarnings()
+     * replaced it, so tearDown() can restore process-wide state.
+     *
+     * @var mixed
+     */
+    private mixed $previousFactoryLanguage = null;
+
+    /**
+     * @var  int
      */
     private int $serverId = 0;
 
     /**
-     * @var  integer
+     * @var  int
      */
     private int $seriesId = 0;
 
@@ -62,44 +70,13 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             $this->markTestSkipped('Database not available for integration tests');
         }
 
-        $this->silenceDateLanguageWarnings();
+        $this->previousFactoryLanguage = $this->silenceDateLanguageWarnings();
 
         $this->db = Factory::getContainer()->get(DatabaseDriver::class);
         $this->db->transactionStart();
 
         $this->serverId = $this->insertServer();
         $this->seriesId = $this->insertSeries();
-    }
-
-    /**
-     * Stop Factory::getDate() from emitting PHP warnings in the test harness.
-     *
-     * pushMemberships() stamps junction rows via Factory::getDate(), which reads
-     * Factory::$language->getTag() — i.e. the language's metadata['tag']. The CI
-     * Joomla root carries no langmetadata files, so every Language instance here
-     * has metadata = null; getTag() then accesses an offset on null and the date
-     * path prints warnings that trip beStrictAboutOutputDuringTests. There is no
-     * public tag setter, so force a tag onto the metadata via reflection and make
-     * that language the one Factory::getDate() reads.
-     *
-     * @return  void
-     */
-    private function silenceDateLanguageWarnings(): void
-    {
-        $lang = Factory::getApplication()->getLanguage();
-
-        try {
-            $prop = new \ReflectionProperty($lang, 'metadata');
-            $meta = $prop->getValue($lang);
-
-            if (!\is_array($meta) || ($meta['tag'] ?? null) === null) {
-                $prop->setValue($lang, array_merge(\is_array($meta) ? $meta : [], ['tag' => 'en-GB']));
-            }
-        } catch (\ReflectionException) {
-            // Property absent on this Joomla version — leave the language as-is.
-        }
-
-        Factory::$language = $lang;
     }
 
     /**
@@ -116,6 +93,8 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                 // Connection may have been lost — nothing to roll back.
             }
         }
+
+        Factory::$language = $this->previousFactoryLanguage;
 
         parent::tearDown();
     }
@@ -264,7 +243,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
         $playlistId = $this->insertPlaylist($this->seriesId, 1);
 
         // First insert fails with a quota error → the loop breaks before the second.
-        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded']]);
+        $addon = $this->fakeAddon(['__default__' => ['success' => false, 'error' => 'quotaExceeded', 'fatal' => true]]);
 
         $result = CwmplaylistSyncHelper::pushMemberships($this->db, $addon, $playlistId, false);
 
@@ -282,7 +261,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
      * deliberately overridden to a no-op so the double needs no config on disk,
      * and ID extraction delegates to the real YouTube extractor.
      *
-     * @param   array<string,array{success:bool,error?:string}>  $results  Result map.
+     * @param   array<string,array{success:bool,error?:string,fatal?:bool}>  $results  Result map.
      *
      * @return  CWMAddon
      */
@@ -292,7 +271,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
             /** @var array<int,array{videoId:string,playlistId:string}> */
             public array $calls = [];
 
-            /** @var array<string,array{success:bool,error?:string}> */
+            /** @var array<string,array{success:bool,error?:string,fatal?:bool}> */
             private array $results;
 
             public function __construct(array $results = [])
@@ -334,7 +313,7 @@ class CwmplaylistMembershipPushTest extends IntegrationTestCase
                 return '';
             }
 
-            protected function upload(?array $data): mixed
+            protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;
             }

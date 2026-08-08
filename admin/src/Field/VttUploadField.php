@@ -82,7 +82,7 @@ class VttUploadField extends FormField
 
         // Upload button
         $html .= \sprintf(
-            '<button type="button" class="btn btn-outline-secondary cwm-vtt-upload-btn"'
+            '<button type="button" class="btn btn-secondary cwm-vtt-upload-btn"'
             . ' title="%s"%s>'
             . '<span class="icon-upload" aria-hidden="true"></span> %s</button>',
             htmlspecialchars($uploadLabel, ENT_QUOTES, 'UTF-8'),
@@ -103,7 +103,7 @@ class VttUploadField extends FormField
             $filename     = basename((string) $this->value);
             $downloadable = (bool) preg_match('/^caption_\d+_[A-Za-z0-9_-]+\.vtt$/', $filename);
 
-            $html .= '<small class="text-muted mt-1 d-block cwm-vtt-current">'
+            $html .= '<small class="text-body-secondary mt-1 d-block cwm-vtt-current">'
                 . '<span class="icon-file" aria-hidden="true"></span> '
                 . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8');
 

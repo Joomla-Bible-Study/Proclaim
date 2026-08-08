@@ -19,6 +19,70 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.6                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.6</version>
+        <date>2026-08-08</date>
+        <security>
+            <item>Backup and restore only touch Proclaim's own tables. A crafted request could name any table in the database for export, and a restore file could carry statements unlike anything the backup writer produces</item>
+            <item>Image cleanup and image migration confine themselves to Proclaim's image directories. Both built delete paths from stored values without checking where they pointed, so a doctored record could remove files elsewhere on the server</item>
+            <item>Schema.org output is escaped. Text entered on a message or teacher could be carried into the structured-data block on the public page as markup</item>
+            <item>The Gemini API key is sent as a header rather than in the request URL, where it was written to any log or proxy that records addresses</item>
+            <item>The debug SQL buffer is no longer reachable by anonymous visitors, and the YouTube file cache is no longer served from a publicly readable directory</item>
+            <item>Media-file and CSV-import endpoints check permissions before acting. The media XHR route accepted any addon name and required no edit or create right; the CSV importer could be reached without one</item>
+            <item>Multi-campus location filtering can no longer be bypassed. When the filter could not resolve a user's campuses it allowed everything through instead of nothing</item>
+            <item>The delete-confirmation dialog sends a valid CSRF token again, so the warning modal is no longer silently skipped</item>
+            <item>PreachIT import validates access levels against the site's own view levels rather than trusting the imported value</item>
+            <item>The podcast download proxy routes on its configured host rather than the incoming Host header</item>
+        </security>
+        <fix>
+            <item>Admin list columns sort again. Clicking a column header submitted a name the list model did not recognise, and the click did nothing</item>
+            <item>Episode numbers are unique within a series. Two concurrent saves could allocate the same number, which podcast directories treat as one episode. Please note: where duplicates already exist, the update keeps the number on the earliest message and clears it on the others, returning them to the unnumbered state — renumber them from the episode audit screen, which reports every gap and collision</item>
+            <item>A remote playlist can only be linked once per server. Existing duplicate links are merged during the update, carrying their items and any manual media-file assignments onto the surviving playlist rather than discarding them</item>
+            <item>Teacher, topic and scripture associations are saved atomically. A failure part-way through a save could leave a message with some of its topics or references written and the rest missing</item>
+            <item>Guided tours edited in the admin are no longer overwritten on every update</item>
+            <item>Genesis verse counts are corrected. The built-in table listed 51 chapters for a 50-chapter book and held wrong counts from chapter 18 on — Genesis 24 was recorded as having 13 verses rather than 67. These figures drive the hints shown while typing a scripture reference ("Chapter 24 has 67 verses"), so those hints were wrong for most of Genesis. References were never rejected on this basis. The counts follow KJV numbering, which NKJV shares; translations that omit verses will differ, which is why the hint names KJV</item>
+            <item>Aliases generated for existing records are unique. The backfill could assign one alias to several records, and the wrong one was then served</item>
+            <item>One unreadable thumbnail no longer takes down the public podcast list</item>
+            <item>The Getting Started checklist reads the settings it is checking, so completed steps stay ticked — and the podcast step, which could never appear at all, now does</item>
+            <item>Each admin list applies its own filters. Several pages were reading the Sermons list's filter state, so filtering one screen changed the results on another</item>
+            <item>Uploaded caption files are validated in full rather than by their first lines, and files whose names contain # or ? keep their extension</item>
+            <item>The Bible version picker offers only versions the selected provider can actually serve</item>
+            <item>YouTube matching no longer mistakes a title for its reverse, log rotation failures are reported instead of being swallowed, and the rotated file is still read</item>
+            <item>Outbound requests to YouTube, Bible providers and AI services time out instead of hanging the request indefinitely</item>
+            <item>Action logging fails open: a logging error no longer aborts the operation being logged</item>
+            <item>Applying a media display setting in a batch applies the whole configuration. Writing one part of it left a combination no option on the form describes</item>
+            <item>Deleting a teacher follows Joomla's trash-then-delete flow, checks permissions, and refuses when the teacher is still in use</item>
+            <item>The series display pagination and the media file delete check no longer return a server error on every call</item>
+            <item>Podcast feeds are regenerated when podcast settings are saved</item>
+            <item>The media player switches correctly when the media type changes on the edit form</item>
+            <item>Proclaim reports its installed version from the extension manifest, so the version shown in the admin matches what is installed</item>
+            <item>JSON read and write failures are reported instead of being discarded. Corrupt stored settings previously produced empty values with no indication anything had gone wrong — including a campus mapping failure that quietly made every location unrestricted</item>
+            <item>Control panel tiles are hidden when the permission behind them is not held, and the awaiting-review count counts only content actually submitted for review</item>
+            <item>Proclaim no longer produces a fatal error when a record carries empty or corrupt saved settings, or when the component's own settings row is missing</item>
+            <item>The 9.x upgrade cleanup no longer drops a table that is still in use, and no longer runs after a failed upgrade</item>
+            <item>Updating no longer stops with a database error on a site whose sermon-topic table is missing an index the update expected to remove. Retiring that index is now cleanup that runs after the migration rather than a step that can abort it — which matters most on a database restored from a backup, where the tables and the recorded schema version can disagree</item>
+            <item>Admin form fields: corrected an inverted media-file label, stopped a template list caching one form's options into another's, escaped values in the colour picker and server-type and filter fields, and replaced classes that were unreadable in dark mode</item>
+            <item>Addon language files are spellchecked — "Protocl" had been on screen since 2022</item>
+            <item>The backup screen shows the current version rather than a stale one, and an alert type misspelled as "worning" now renders</item>
+        </fix>
+        <addition>
+            <item>Episode numbers can be filled in automatically for a series, duplicates are detected as you save, and an audit report lists every gap and collision across all series</item>
+            <item>A GET /v1/proclaim/info API endpoint reporting the installed version</item>
+        </addition>
+        <change>
+            <item>Analytics keeps only the scheme, host and path of a referring address. The query string is written by the referring site and routinely carries search terms, session tokens and newsletter recipient identifiers. Addresses already stored are trimmed during the update. UTM campaign tags are unaffected, being stored in their own columns. A retention setting that governed nothing has been removed</item>
+            <item>Analytics opt-out is honoured on every write. Opt-out is detected from a Sec-GPC (Global Privacy Control) header, a DNT header, or a proclaim_analytics_optout cookie your consent extension sets. Outbound link clicks recorded the destination address and time outside that check, so a visitor who had opted out was still logged; they no longer are. Proclaim ships no consent banner of its own</item>
+            <item>The analytics session identifier is a keyed digest that rotates daily, so one visitor cannot be traced across days. History written before this release held a plain unsalted hash, stable forever, and is re-keyed during the update — session counts are unchanged</item>
+            <item>Schema.org bulk sync runs in batches, and database backups stream to disk in chunks rather than being assembled in memory — both were liable to exhaust memory on large sites</item>
+            <item>Building Proclaim from source now requires Node 24; Node 20 has reached end of life. This affects contributors only, not sites running Proclaim</item>
+        </change>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.5                                                   -->
     <!-- ============================================================ -->
     <changelog>

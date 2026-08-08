@@ -78,7 +78,16 @@ class CwmDebug
 
         $entry = '[' . $category . '] ' . $message;
 
-        Log::add($entry, Log::DEBUG, 'com_proclaim.debug');
+        // An unwritable log directory makes FormattedtextLogger::addEntry()
+        // throw. Swallow it, matching CwmlogHelper::write(): logging must never
+        // be the reason a request fails. The buffer append stays outside the
+        // try so a logger failure doesn't also lose the on-screen entry.
+        // See #1569.
+        try {
+            Log::add($entry, Log::DEBUG, 'com_proclaim.debug');
+        } catch (\Throwable) {
+            // Diagnostics are best-effort.
+        }
 
         self::$buffer[] = $entry;
     }
@@ -106,7 +115,19 @@ class CwmDebug
             $entry .= ' — ' . $throwable::class . ': ' . $throwable->getMessage();
         }
 
-        Log::add($entry, Log::ERROR, 'com_proclaim');
+        // This is the call that actually mattered: error() always writes (that
+        // is its documented contract), and it is invoked from catch blocks
+        // across ~10 call sites that log and then rethrow the ORIGINAL
+        // exception -- e.g. CwmaiHelper::postJson(). An unwritable log
+        // directory made Log::add() throw RuntimeException('Cannot write to
+        // log file.') from inside those catch blocks, replacing the real error
+        // with an unrelated one and destroying the diagnostic. Swallow it, as
+        // CwmlogHelper::write() already does. See #1569.
+        try {
+            Log::add($entry, Log::ERROR, 'com_proclaim');
+        } catch (\Throwable) {
+            // Reporting a failure must not become a different failure.
+        }
 
         // Also buffer for on-screen display when debug is active
         if (self::isEnabled()) {
@@ -180,7 +201,13 @@ class CwmDebug
 
         $sql = (string) $query;
 
-        // Truncate very long queries for the buffer (full query goes to log file)
+        // Truncated for BOTH the buffer and the log file -- log() receives this
+        // same string. A previous comment here claimed the full query still
+        // reached the log file, which was never true. Left truncated rather
+        // than "fixed" to write complete SQL to disk: com_proclaim.debug.php
+        // is web-reachable under some Joomla layouts, and writing more raw SQL
+        // there is the wrong direction for a report about SQL exposure.
+        // See #1569.
         $truncated = \strlen($sql) > 500 ? substr($sql, 0, 500) . '...' : $sql;
 
         self::log($label . ': ' . $truncated, 'query');
@@ -232,6 +259,34 @@ class CwmDebug
      */
     public static function getBuffer(): array
     {
+        // Defence in depth alongside the JBSMDEBUG gate in admin/api.php.
+        // Its one production consumer (CwmsermonsController::filterAjax) ships
+        // the result to the browser as `_debug` on a public, CSRF-token-only
+        // endpoint, so this needs an authorisation check of its own like its
+        // sibling showToAdmin(). Returning an empty array rather than throwing
+        // keeps that caller's `if (!empty($debugBuffer))` working, so the key
+        // is simply omitted.
+        if (!self::isEnabled()) {
+            return [];
+        }
+
+        try {
+            $app = Factory::getApplication();
+
+            if ($app->isClient('administrator')) {
+                return self::$buffer;
+            }
+
+            $user = $app->getIdentity();
+
+            if (!$user || !$user->authorise('core.admin', 'com_proclaim')) {
+                return [];
+            }
+        } catch (\Throwable) {
+            // No application/identity to authorise against -- disclose nothing.
+            return [];
+        }
+
         return self::$buffer;
     }
 

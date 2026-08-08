@@ -361,17 +361,45 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
      */
     private function analyticsTask(ExecuteTaskEvent $event): int
     {
-        $params        = $event->getArgument('params');
-        $enableRollup  = (bool) ($params->enable_rollup ?? true);
-        $enablePurge   = (bool) ($params->enable_purge ?? true);
-        $retentionDays = (int) ($params->retention_days ?? 90);
+        $params       = $event->getArgument('params');
+        $enableRollup = (bool) ($params->enable_rollup ?? true);
+
+        // Defaults to OFF: analytics history is kept indefinitely unless an
+        // administrator deliberately opts in to deleting it.
+        //
+        // Deletion is irreversible and costs more than the rollup preserves.
+        // CwmanalyticsModel reads #__bsms_analytics_events in around twenty
+        // queries -- every breakdown, trend and top-content panel -- but reads
+        // #__bsms_analytics_monthly in exactly one, getLegacyKpiTotals(). The
+        // aggregates therefore do not back the dashboard, so purging blanks
+        // most of it for the purged period rather than compacting it.
+        //
+        // Note this also changes behaviour for existing installs: the setup
+        // wizard seeds this task with params '{}', so those tasks have been
+        // falling through to the previous `?? true` and purging. They stop.
+        $enablePurge = (bool) ($params->enable_purge ?? false);
+
+        // Validate the raw param before casting. `?? 90` only substitutes on
+        // NULL, and a blank retention field in the Scheduler UI is saved as
+        // "" -- which `(int)` turns into 0, putting the purge cutoff at "now"
+        // and matching every raw event. Non-numeric and negative values fail
+        // the same way. This is the only layer that can still tell a blank
+        // field from a deliberate 0; by the time CwmanalyticsHelper sees it,
+        // it is just an int. That helper enforces its own floor as well, for
+        // values arriving from anywhere else.
+        $rawRetention  = $params->retention_days ?? null;
+        $retentionDays = is_numeric($rawRetention) ? (int) $rawRetention : 90;
 
         $jLanguage = $this->getApplication()->getLanguage();
         $jLanguage->load('plg_task_proclaim', JPATH_ADMINISTRATOR, 'en-GB', true, true);
 
         try {
             if ($enableRollup || $enablePurge) {
-                $result = CwmanalyticsHelper::rollupAndPurge($retentionDays);
+                // $enablePurge is passed through, not just computed:
+                // rollupAndPurge() must not delete unless the administrator
+                // asked for it. Analytics history is kept indefinitely by
+                // default.
+                $result = CwmanalyticsHelper::rollupAndPurge($retentionDays, $enablePurge);
                 $this->logTask(
                     Text::sprintf(
                         'PLG_TASK_PROCLAIM_ANALYTICS_ROLLUP_SUCCESS',

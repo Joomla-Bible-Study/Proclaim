@@ -42,6 +42,16 @@ use Joomla\CMS\MVC\Controller\ApiController;
 abstract class AbstractWritableController extends ApiController
 {
     /**
+     * Params key marking a record the API force-unpublished pending review.
+     *
+     * Read by the control panel's review count, and cleared when the record is
+     * published.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public const string PENDING_REVIEW_KEY = 'pending_review';
+
+    /**
      * Entity type for the action log, e.g. 'topic'. Must have a matching
      * COM_PROCLAIM_ACTION_LOG_TYPE_* language key. Empty disables logging.
      *
@@ -66,9 +76,9 @@ abstract class AbstractWritableController extends ApiController
      * and update. A null $recordKey means a create. The parent throws on failure,
      * so reaching the log call means the write actually landed.
      *
-     * @param   integer|null  $recordKey  Key of the record being updated, null on create.
+     * @param   int|null  $recordKey  Key of the record being updated, null on create.
      *
-     * @return  integer  The record id.
+     * @return  int  The record id.
      *
      * @since   10.3.4
      */
@@ -88,7 +98,7 @@ abstract class AbstractWritableController extends ApiController
      * read it from — a log entry saying only "deleted #7" is of little use during
      * an audit.
      *
-     * @param   integer|null  $id  Record id, or null to read it from the request.
+     * @param   int|null  $id  Record id, or null to read it from the request.
      *
      * @return  mixed
      *
@@ -160,7 +170,7 @@ abstract class AbstractWritableController extends ApiController
      * client, a buggy one, or a key being used for something it should not be.
      *
      * @param   string   $verb  create, update or delete.
-     * @param   integer  $id    Record id, 0 when creating.
+     * @param   int  $id    Record id, 0 when creating.
      *
      * @return  void
      *
@@ -192,7 +202,7 @@ abstract class AbstractWritableController extends ApiController
      * Write one action-log entry for an API change.
      *
      * @param   string       $verb   ADDED, UPDATED or DELETED.
-     * @param   integer      $id     Record id.
+     * @param   int      $id     Record id.
      * @param   string|null  $title  Pre-read title, or null to read it now.
      *
      * @return  void
@@ -220,12 +230,59 @@ abstract class AbstractWritableController extends ApiController
     }
 
     /**
+     * Remove fields that should not be set directly via API.
+     *
+     * Prevents mass assignment of ownership, internal state, and
+     * system-managed fields. Published state requires core.edit.state.
+     * Subclasses with extra protected fields of their own (Locations'
+     * email_to/user_id/contact_id, Media's podcast_id) call this first and
+     * layer their own unset()/normalization on top.
+     *
+     * @param   array  $data  The incoming data
+     *
+     * @return  array  The cleaned data
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function stripProtectedFields(array $data): array
+    {
+        $user = $this->app->getIdentity();
+
+        // Never allow setting internal system fields via API
+        unset(
+            $data['asset_id'],
+            $data['checked_out'],
+            $data['checked_out_time'],
+            $data['modified_by'],
+        );
+
+        // Only admins can set created_by (creating on behalf of someone)
+        if (isset($data['created_by']) && !$user->authorise('core.admin', 'com_proclaim')) {
+            unset($data['created_by']);
+        }
+
+        // Restrict published state — users without core.edit.state default to
+        // unpublished, and the record is marked as awaiting review.
+        //
+        // The mark is what separates a submission from an administrator
+        // deliberately unpublishing something. Both leave published = 0, so
+        // counting that alone reports drafts and retired sermons as pending
+        // review and never reaches zero on a site that unpublishes routinely.
+        if (!$user->authorise('core.edit.state', 'com_proclaim')) {
+            $data['published'] = 0;
+            $data['params']    = self::markPendingReview($data['params'] ?? null);
+        }
+
+        return $data;
+    }
+
+    /**
      * Best-effort display title for a record.
      *
      * Never throws: a failure to read a title must not turn a successful write
      * into an error response.
      *
-     * @param   integer  $id  Record id.
+     * @param   int  $id  Record id.
      *
      * @return  string
      *
@@ -263,5 +320,37 @@ abstract class AbstractWritableController extends ApiController
 
             return $fallback;
         }
+    }
+
+    /**
+     * Flag a params payload as awaiting editorial review.
+     *
+     * Accepts the shapes params arrives in from the API -- a JSON string, an
+     * array, or absent -- and returns an array, which the models bind and
+     * Registry encodes.
+     *
+     * @param   mixed  $params  Existing params, if any
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function markPendingReview(mixed $params): array
+    {
+        if (\is_string($params) && $params !== '') {
+            try {
+                $params = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $params = [];
+            }
+        }
+
+        if (!\is_array($params)) {
+            $params = [];
+        }
+
+        $params[self::PENDING_REVIEW_KEY] = 1;
+
+        return $params;
     }
 }

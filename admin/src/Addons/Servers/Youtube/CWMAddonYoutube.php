@@ -77,16 +77,38 @@ class CWMAddonYoutube extends CWMAddon
     /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @since 9.0.0
      */
-    public function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Holds for nothing
         return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by addon-youtube-browser.es6.js (fetchChannelPlaylists, and the \${handler}
+     * variable resolving to fetchChannelVideos/searchChannelVideos/
+     * fetchPlaylistVideos/fetchLiveVideos) plus playlist-picker.es6.js
+     * (fetchRemotePlaylists).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'fetchChannelPlaylists',
+            'fetchChannelVideos',
+            'fetchLiveVideos',
+            'fetchPlaylistVideos',
+            'fetchRemotePlaylists',
+            'searchChannelVideos',
+        ];
     }
 
     /**
@@ -2702,11 +2724,11 @@ class CWMAddonYoutube extends CWMAddon
         $client = $this->createOAuthClient($serverId);
 
         if (!$client || !$client->getAccessToken()) {
-            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.', 'fatal' => true];
         }
 
         if (!CwmyoutubeQuota::hasQuota($serverId, CwmyoutubeQuota::COST_PLAYLIST_INSERT)) {
-            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted', 'fatal' => true];
         }
 
         try {
@@ -2728,11 +2750,18 @@ class CWMAddonYoutube extends CWMAddon
 
             return ['success' => true];
         } catch (Exception $e) {
+            $fatal = false;
+
             if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
                 CwmyoutubeQuota::markExhausted($serverId);
+                $fatal = true;
+            } elseif ($e->getCode() === 401) {
+                // Token revoked/expired mid-run — every further call would fail
+                // identically until the admin reconnects OAuth.
+                $fatal = true;
             }
 
-            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage(), 'fatal' => $fatal];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }
@@ -2762,14 +2791,14 @@ class CWMAddonYoutube extends CWMAddon
         $client = $this->createOAuthClient($serverId);
 
         if (!$client || !$client->getAccessToken()) {
-            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.'];
+            return ['success' => false, 'error' => 'YouTube OAuth not connected. Connect in server settings.', 'fatal' => true];
         }
 
         // Quota: playlistItems.list (1) + playlistItems.delete (50).
         $cost = CwmyoutubeQuota::COST_PLAYLIST_ITEMS + CwmyoutubeQuota::COST_PLAYLIST_DELETE;
 
         if (!CwmyoutubeQuota::hasQuota($serverId, $cost)) {
-            return ['success' => false, 'error' => 'YouTube daily quota exhausted'];
+            return ['success' => false, 'error' => 'YouTube daily quota exhausted', 'fatal' => true];
         }
 
         try {
@@ -2795,11 +2824,18 @@ class CWMAddonYoutube extends CWMAddon
 
             return ['success' => true];
         } catch (Exception $e) {
+            $fatal = false;
+
             if ($e->getCode() === 403 && CwmyoutubeQuota::isQuotaExceededError($e->getMessage())) {
                 CwmyoutubeQuota::markExhausted($serverId);
+                $fatal = true;
+            } elseif ($e->getCode() === 401) {
+                // Token revoked/expired mid-run — every further call would fail
+                // identically until the admin reconnects OAuth.
+                $fatal = true;
             }
 
-            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage()];
+            return ['success' => false, 'error' => 'YouTube API error: ' . $e->getMessage(), 'fatal' => $fatal];
         } catch (\Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
         }

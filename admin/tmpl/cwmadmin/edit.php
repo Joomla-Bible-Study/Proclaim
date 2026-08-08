@@ -873,7 +873,6 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYT
                     <?php echo $this->form->renderField('analytics_enabled', 'params'); ?>
                     <?php echo $this->form->renderField('analytics_gdpr_optout', 'params'); ?>
                     <?php echo $this->form->renderField('analytics_referrer_mode', 'params'); ?>
-                    <?php echo $this->form->renderField('analytics_retention_days', 'params'); ?>
                 </div>
 
                 <div class="cwmadmin-panel mb-4">

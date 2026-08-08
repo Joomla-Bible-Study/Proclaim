@@ -16,16 +16,20 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Language\Text;
 
 /**
  * Form Field class for the FileSize
  *
+ * Renders a plain text input, never a <select> — extends FormField rather
+ * than ListField, which it never actually used (getOptions() was never
+ * called; getInput() is fully overridden). See #1464.
+ *
  * @package  Proclaim.Admin
  * @since    7.0.0
  */
-class FilesizeField extends ListField
+class FilesizeField extends FormField
 {
     /**
      *  Set Naming of type
@@ -34,7 +38,7 @@ class FilesizeField extends ListField
      *
      * @since 9.0.0
      */
-    public $type = 'Filesize';
+    protected $type = 'Filesize';
 
     /**
      * Get impute of form

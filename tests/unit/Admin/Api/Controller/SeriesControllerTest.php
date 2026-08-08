@@ -12,43 +12,18 @@ namespace CWM\Component\Proclaim\Tests\Admin\Api\Controller;
 
 use CWM\Component\Proclaim\Api\Controller\SeriesController;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
-use Joomla\CMS\MVC\Controller\ApiController;
 
 /**
- * Test class for SeriesController
+ * Test class for SeriesController.
+ *
+ * Shared base-class boilerplate (extends ApiController, contentType/
+ * default_view, displayList() visibility + published filter) is covered
+ * once for all five entity controllers in ApiControllerBoilerplateTest.
  *
  * @since  10.3.0
  */
 class SeriesControllerTest extends ProclaimTestCase
 {
-    public function testExtendsApiController(): void
-    {
-        $this->assertTrue(
-            is_subclass_of(SeriesController::class, ApiController::class),
-            'SeriesController must extend Joomla ApiController'
-        );
-    }
-
-    public function testContentType(): void
-    {
-        $ref  = new \ReflectionClass(SeriesController::class);
-        $prop = $ref->getProperty('contentType');
-        $this->assertEquals('series', $prop->getDefaultValue());
-    }
-
-    public function testDefaultView(): void
-    {
-        $ref  = new \ReflectionClass(SeriesController::class);
-        $prop = $ref->getProperty('default_view');
-        $this->assertEquals('series', $prop->getDefaultValue());
-    }
-
-    public function testDisplayListMethodExists(): void
-    {
-        $ref = new \ReflectionMethod(SeriesController::class, 'displayList');
-        $this->assertTrue($ref->isPublic());
-    }
-
     public function testDisplayItemMethodExists(): void
     {
         $ref = new \ReflectionMethod(SeriesController::class, 'displayItem');
@@ -79,36 +54,43 @@ class SeriesControllerTest extends ProclaimTestCase
         $this->assertStringContainsString("'Cwmserie'", $source);
     }
 
-    public function testDisplayListSetsPublishedFilter(): void
+    /**
+     * Write operations (add/edit/delete) must set itemModelRequested so
+     * getModel() returns the singular CwmserieModel. Each check slices the
+     * specific method's body -- asserting the override merely EXISTS (the
+     * prior version) stayed green if the flag assignment was deleted from
+     * inside it, which breaks every series write.
+     *
+     * @param   string  $method  Overridden write method name
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('writeMethodProvider')]
+    public function testWriteMethodSetsItemModelFlag(string $method): void
     {
-        $ref    = new \ReflectionMethod(SeriesController::class, 'displayList');
-        $source = file_get_contents($ref->getFileName());
+        $ref = new \ReflectionMethod(SeriesController::class, $method);
+        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
 
-        $this->assertStringContainsString("'filter.published', [1, 2]", $source);
+        $lines = file($ref->getFileName());
+        $body  = implode(
+            '',
+            \array_slice($lines, $ref->getStartLine() - 1, $ref->getEndLine() - $ref->getStartLine() + 1)
+        );
+
+        $this->assertStringContainsString(
+            '$this->itemModelRequested = true;',
+            $body,
+            $method . '() must set itemModelRequested so getModel() resolves the singular CwmserieModel'
+        );
     }
 
     /**
-     * Write operations (add/edit/delete) must set itemModelRequested
-     * so getModel() returns the singular CwmserieModel.
+     * @return array<string, array{string}>
      */
-    public function testAddSetsItemModelFlag(): void
+    public static function writeMethodProvider(): array
     {
-        $this->assertTrue(method_exists(SeriesController::class, 'add'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'add');
-        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
-    }
-
-    public function testEditSetsItemModelFlag(): void
-    {
-        $this->assertTrue(method_exists(SeriesController::class, 'edit'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'edit');
-        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
-    }
-
-    public function testDeleteSetsItemModelFlag(): void
-    {
-        $this->assertTrue(method_exists(SeriesController::class, 'delete'));
-        $ref = new \ReflectionMethod(SeriesController::class, 'delete');
-        $this->assertEquals(SeriesController::class, $ref->getDeclaringClass()->getName());
+        return [
+            'add'    => ['add'],
+            'edit'   => ['edit'],
+            'delete' => ['delete'],
+        ];
     }
 }

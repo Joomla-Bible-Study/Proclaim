@@ -55,7 +55,7 @@ class IntegrationToggleField extends RadioField
      * @param   mixed              $value    The form field value to validate.
      * @param   string             $group    The field name group control value.
      *
-     * @return  boolean  True on success.
+     * @return  bool  True on success.
      *
      * @since 10.1.0
      */
@@ -74,7 +74,7 @@ class IntegrationToggleField extends RadioField
     /**
      * Check if the extension is installed.
      *
-     * @return boolean True if installed, false otherwise.
+     * @return bool True if installed, false otherwise.
      *
      * @since 10.1.0
      */
@@ -133,7 +133,7 @@ class IntegrationToggleField extends RadioField
 
         // If not installed, add visual indicator to label
         if (!$this->isExtensionInstalled()) {
-            $label = str_replace('</label>', ' <em class="text-muted">(' . Text::_('JBS_ADM_UNAVAILABLE') . ')</em></label>', $label);
+            $label = str_replace('</label>', ' <em class="text-body-secondary">(' . Text::_('JBS_ADM_UNAVAILABLE') . ')</em></label>', $label);
         }
 
         return $label;

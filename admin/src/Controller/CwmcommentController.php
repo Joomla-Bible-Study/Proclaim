@@ -61,7 +61,7 @@ class CwmcommentController extends FormController
     {
         // Set the model
         if ($model === null) {
-            $model = $this->getModel('Comment', '', []);
+            $model = $this->getModel('Cwmcomment', '', []);
         }
 
         // Preset the redirect

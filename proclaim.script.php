@@ -619,6 +619,61 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Drop the pre-10.5.6 (study_id, topic_id) index once its unique replacement exists.
+     *
+     * 10.5.6-20260807.sql replaces the non-unique idx_study_topic with a unique
+     * uq_study_topic over the same pair. Removing the old one is cleanup rather
+     * than correctness — the unique key already serves every lookup it served.
+     *
+     * It runs here instead of in the migration SQL because MySQL has no
+     * DROP INDEX IF EXISTS. A database whose table lacks that index while
+     * #__schemas still names an earlier version replays the file raw through
+     * Installer::parseSchemaUpdates(), which stops on error 1091 and aborts the
+     * entire update.
+     *
+     * Deliberately not written as guarded SQL. Joomla's MysqlChangeItem parses
+     * plain ALTER TABLE statements to decide whether a change has already been
+     * applied, and that is what makes the restore path idempotent — Cwmrestore
+     * clears #__schemas and calls DatabaseModel::fix(), which replays every
+     * migration through ChangeSet. Wrapping DDL in SET/PREPARE would make it
+     * unparseable, so ChangeItem would score it -1 and never run it at all.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function dropRedundantStudyTopicIndex(): void
+    {
+        if (!$this->tableExists('#__bsms_studytopics')) {
+            return;
+        }
+
+        $table = str_replace('#__', $this->dbo->getPrefix(), '#__bsms_studytopics');
+
+        try {
+            $indexes = $this->dbo
+                ->setQuery('SHOW INDEX FROM ' . $this->dbo->quoteName($table))
+                ->loadObjectList();
+
+            foreach ($indexes as $index) {
+                if ($index->Key_name !== 'idx_study_topic') {
+                    continue;
+                }
+
+                $this->dbo->setQuery(
+                    'ALTER TABLE ' . $this->dbo->quoteName($table)
+                    . ' DROP INDEX ' . $this->dbo->quoteName('idx_study_topic')
+                )->execute();
+
+                return;
+            }
+        } catch (\Exception $e) {
+            // Cleanup only. The unique key carries the lookups either way, so a
+            // failure here must not take down an otherwise successful update.
+        }
+    }
+
+    /**
      * Find the installation path for an extension
      *
      * @param   string  $src       The source directory
@@ -1281,6 +1336,12 @@ class com_proclaimInstallerScript extends InstallerScript
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
             $this->renameLegacyFolders();
+        }
+
+        // After the migration SQL has added uq_study_topic, retire the index it
+        // replaces. No-op on a fresh install, where install.sql never creates it.
+        if ($type !== 'uninstall') {
+            $this->dropRedundantStudyTopicIndex();
         }
 
         // Install subExtensions

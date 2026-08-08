@@ -235,8 +235,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
-            CwmstudyteacherHelper::syncLegacyColumn($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
         }
 
         // Save scriptures
@@ -244,8 +243,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 
@@ -272,6 +270,7 @@ class CwmcsvimportHelper
     {
         $autoCreate = (bool) ($settings['auto_create'] ?? true);
         $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $user       = Factory::getApplication()->getIdentity();
 
         $fields = [];
 
@@ -296,7 +295,12 @@ class CwmcsvimportHelper
         }
 
         if (!empty($rowData['location'])) {
-            $locationId = self::resolveOrCreateLocation($rowData['location'], $autoCreate);
+            // Must go through processLocation(), not resolveOrCreateLocation()
+            // directly -- the insert path (importRow()) enforces that the
+            // target location is within the current user's accessible
+            // locations to avoid cross-campus leaks; this update path must
+            // enforce the same rule, not silently skip it.
+            $locationId = self::processLocation($rowData['location'], $autoCreate, (int) ($user ? $user->id : 0));
 
             if ($locationId > 0) {
                 $fields[] = $db->quoteName('location_id') . ' = ' . $locationId;
@@ -327,8 +331,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
-            CwmstudyteacherHelper::syncLegacyColumn($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
         }
 
         // Update scriptures if provided
@@ -336,8 +339,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
-                CwmscriptureHelper::syncLegacyColumns($studyId, $scriptures);
+                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
             }
         }
 
@@ -420,6 +422,17 @@ class CwmcsvimportHelper
     /**
      * Resolve or auto-create a series by name.
      *
+     * Not safe against concurrent imports referencing the same not-yet-existing
+     * name: the check-then-insert below has a TOCTOU window, and #__bsms_series
+     * has no unique constraint on series_text to catch it -- same story for
+     * resolveOrCreateLocation()/resolveOrCreateMessageType()/resolveOrCreateTopic()
+     * below. Deliberately left unfixed: a unique index would need a de-dup
+     * migration first, since an install that already hit this race would
+     * already carry the duplicate rows a blind ADD UNIQUE INDEX would fail
+     * against. (Teachers are the exception -- #__bsms_teachers does have a
+     * unique alias constraint, so a collision there throws and is caught as a
+     * row error instead of silently duplicating.)
+     *
      * @param   string  $name        Series name
      * @param   bool    $autoCreate  Whether to auto-create if not found
      *
@@ -485,6 +498,8 @@ class CwmcsvimportHelper
 
     /**
      * Resolve or auto-create a location by name.
+     *
+     * TOCTOU race, same as resolveOrCreateSeries() above -- see its docblock.
      *
      * @param   string  $name        Location name
      * @param   bool    $autoCreate  Whether to auto-create if not found
@@ -552,6 +567,8 @@ class CwmcsvimportHelper
     /**
      * Resolve or auto-create a message type by name.
      *
+     * TOCTOU race, same as resolveOrCreateSeries() above -- see its docblock.
+     *
      * @param   string  $name        Message type name
      * @param   bool    $autoCreate  Whether to auto-create if not found
      *
@@ -617,6 +634,8 @@ class CwmcsvimportHelper
 
     /**
      * Resolve or auto-create a topic by name.
+     *
+     * TOCTOU race, same as resolveOrCreateSeries() above -- see its docblock.
      *
      * @param   string  $name        Topic name
      * @param   bool    $autoCreate  Whether to auto-create if not found
@@ -874,9 +893,22 @@ class CwmcsvimportHelper
         foreach ($formats as $format) {
             $date = \DateTime::createFromFormat($format, $input);
 
-            if ($date !== false) {
-                return $date->format('Y-m-d');
+            if ($date === false) {
+                continue;
             }
+
+            // createFromFormat() alone accepts out-of-range components via
+            // lenient overflow (e.g. "25/03/2024" against 'm/d/Y' silently
+            // becomes month 25 -> Jan 2026, instead of falling through to
+            // 'd/m/Y' below), silently corrupting any DD/MM/YYYY date whose
+            // day is > 12. getLastErrors() flags exactly that case.
+            $errors = $date->getLastErrors();
+
+            if ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
+                continue;
+            }
+
+            return $date->format('Y-m-d');
         }
 
         // Fallback to strtotime

@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
@@ -338,7 +339,7 @@ class CwminstallModel extends ListModel
             $this->callstack['install_type'] = 'install';
         } else {
             $installedMajor                  = (int) $this->callstack['subversiontype_version'];
-            $currentMajor                    = (int) BIBLESTUDY_VERSION;
+            $currentMajor                    = (int) CwmproclaimHelper::getVersion();
             $this->callstack['install_type'] = ($installedMajor < $currentMajor) ? 'migration' : 'upgrade';
         }
 
@@ -1097,7 +1098,7 @@ class CwminstallModel extends ListModel
     /**
      * Returns the current schema version from #__schemas
      *
-     * @return string The schema version for Proclaim, or BIBLESTUDY_VERSION as fallback
+     * @return string The schema version for Proclaim, or CwmproclaimHelper::getVersion() as fallback
      *
      * @since 10.1.0
      */
@@ -1128,7 +1129,7 @@ class CwminstallModel extends ListModel
             }
         }
 
-        return BIBLESTUDY_VERSION;
+        return CwmproclaimHelper::getVersion();
     }
 
     /**
@@ -1214,7 +1215,7 @@ class CwminstallModel extends ListModel
         $this->getDatabase()->execute();
         Factory::getApplication()->enqueueMessage(
             '<h2>' . Text::_('JBS_INS_UNINSTALLED') . ' ' .
-            BIBLESTUDY_VERSION . '</h2> <div>' . $drop_result . '</div>'
+            CwmproclaimHelper::getVersion() . '</h2> <div>' . $drop_result . '</div>'
         );
 
         // Remove Guided Tours

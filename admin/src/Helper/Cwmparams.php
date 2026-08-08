@@ -18,6 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Extension;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -69,11 +71,17 @@ class Cwmparams
     public static function getAdmin(): object
     {
         if (!isset(self::$admin)) {
+            // Initialised before the try: with no application (CLI, early
+            // bootstrap) $app is never assigned, and the enqueueMessage() below
+            // would then raise a second error while reporting the first.
+            $app = null;
+
             try {
                 $app = Factory::getApplication();
             } catch (\Exception $e) {
                 echo $e->getMessage();
             }
+
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->createQuery();
             $query->select('*')
@@ -82,24 +90,43 @@ class Cwmparams
             $db->setQuery($query);
             $admin = $db->loadObject();
 
-            if (isset($admin->params)) {
+            // The singleton #__bsms_admin row can be absent after an
+            // interrupted restore or a migration that failed to reseed it.
+            // loadObject() then returns null, and assigning that to the
+            // non-nullable `public static object $admin` raised
+            // "TypeError: Cannot assign null to property ... of type object",
+            // breaking all 12+ Cwmparams::getAdmin()->params callers. Fall
+            // back to a usable shape instead, mirroring what
+            // getTemplateparams() already does for a deleted template.
+            // See #1567.
+            if (!$admin) {
+                $admin         = new \stdClass();
+                $admin->id     = 1;
+                $admin->params = new Registry();
+
+                $app?->enqueueMessage(
+                    Text::_('JBS_CMN_ADMIN_ROW_MISSING'),
+                    'warning'
+                );
+            } elseif (isset($admin->params)) {
                 $registry = new Registry();
 
-                // Used to Catch Jason Error's
+                // A malformed params column must not fatal the whole request.
                 try {
                     $registry->loadString($admin->params);
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
-                    $app->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
+                    $app?->enqueueMessage('Can\'t load Admin Params - ' . $msg, 'error');
                 }
 
                 $admin->params = $registry;
-
-                // Add the current user id. getIdentity() may return null
-                // in CLI / pre-auth contexts, so fall back to Guest (0).
-                $user           = $app->getIdentity();
-                $admin->user_id = (int) ($user?->id ?? 0);
             }
+
+            // Add the current user id. getIdentity() may return null in CLI or
+            // pre-auth contexts, so fall back to Guest (0). Set outside the
+            // params branch above so a row with no params column still gets it.
+            $user           = $app?->getIdentity();
+            $admin->user_id = (int) ($user?->id ?? 0);
 
             self::$admin = $admin;
         }
@@ -201,10 +228,40 @@ class Cwmparams
             );
         }
 
-        // Registry tolerates an empty or malformed params column; a raw
-        // json_decode() with JSON_THROW_ON_ERROR turned that recoverable state
-        // into a fatal.
-        $params = new Registry($table->params);
+        // Registry does not tolerate every malformed params column. It shrugs
+        // off a value it cannot recognise as JSON at all, but a truncated write
+        // (disk full, interrupted store(), a hand-edit) leaves a string that
+        // still starts with '{', and Json::stringToObject() throws
+        // \RuntimeException('Error decoding JSON data: ...') for exactly that.
+        //
+        // The only caller is CwmlicenseController::accept(), which has no
+        // try/catch, so an uncaught throw here hard-blocks every admin action
+        // gated behind licence acceptance with no recovery short of editing the
+        // database by hand. Fall back to an empty Registry so the write can
+        // proceed and repair the row.
+        try {
+            $params = new Registry($table->params);
+        } catch (\RuntimeException $e) {
+            $params = new Registry();
+
+            // Not silent: the fallback discards whatever was in the corrupt
+            // blob, so the operator needs to know their stored settings were
+            // unreadable and are being replaced rather than merged.
+            Log::add(
+                'com_proclaim params were unreadable and have been reset: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            try {
+                Factory::getApplication()->enqueueMessage(
+                    Text::_('JBS_CMN_PARAMS_CORRUPT_RESET'),
+                    'warning'
+                );
+            } catch (\Exception) {
+                // No application (CLI) -- the log entry above still stands.
+            }
+        }
 
         foreach ($paramArray as $name => $value) {
             $params->set((string) $name, (string) $value);
@@ -249,7 +306,8 @@ class Cwmparams
                 ->clean();
         } catch (\Throwable) {
             // A cache backend that cannot be cleared must not fail the save. The
-            // value is committed; the worst case is the old behaviour.
+            // value is committed either way; the worst case is that readers see
+            // the stale cached copy until it expires.
         }
     }
 }

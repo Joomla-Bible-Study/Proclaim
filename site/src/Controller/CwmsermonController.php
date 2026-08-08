@@ -282,6 +282,10 @@ class CwmsermonController extends FormController
     /**
      * Email comment out.
      *
+     * Private: only meant to be called internally from comment(). Public
+     * visibility made `task=cwmsermon.commentsEmail` a directly dispatchable
+     * Joomla task with no CSRF token check of its own — see #1441.
+     *
      * @param   Registry  $params  Params to parse
      *
      * @return void
@@ -289,7 +293,7 @@ class CwmsermonController extends FormController
      * @throws Exception|\Exception
      * @since 7.0
      */
-    public function commentsEmail($params): void
+    private function commentsEmail($params): void
     {
         $input = Factory::getApplication()->getInput();
 
@@ -365,18 +369,17 @@ class CwmsermonController extends FormController
      */
     protected function allowAdd($data = []): bool
     {
-        $allow = null;
-
-        if ($allow === null) {
-            // In the absence of better information, revert to the component permissions.
-            return parent::allowAdd();
-        }
-
-        return $allow;
+        // In the absence of better information, revert to the component permissions.
+        return parent::allowAdd();
     }
 
     /**
      * Method override to check if you can edit an existing record.
+     *
+     * Mirrors the admin-side CwmmessageController::allowEdit() for the same
+     * underlying #__bsms_studies table and asset scope (com_proclaim.message.*).
+     * Without the check, the inherited behaviour lets any caller edit any
+     * sermon regardless of ACL.
      *
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.
@@ -387,7 +390,32 @@ class CwmsermonController extends FormController
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {
-        return true;
+        $recordId = (int) ($data[$key] ?? 0);
+        $user     = Factory::getApplication()->getIdentity();
+
+        if ($user->authorise('core.edit', 'com_proclaim.message.' . $recordId)) {
+            return true;
+        }
+
+        if ($user->authorise('core.edit.own', 'com_proclaim.message.' . $recordId)) {
+            $ownerId = (int) ($data['created_by'] ?? 0);
+
+            if (empty($ownerId) && $recordId) {
+                $record = $this->getModel()->getItem($recordId);
+
+                if (empty($record)) {
+                    return false;
+                }
+
+                $ownerId = (int) $record->created_by;
+            }
+
+            if ($ownerId === (int) $user->id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

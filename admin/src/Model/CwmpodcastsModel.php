@@ -43,12 +43,13 @@ class CwmpodcastsModel extends ListModel
             $config['filter_fields'] = [
                 'id',
                 'podcast.id',
+                'title',
+                'podcast.title',
                 'filename',
                 'podcast.filename',
                 'published',
                 'podcast.published',
                 'ordering',
-                'podcast.ordering',
                 'language',
                 'podcast.language',
             ];

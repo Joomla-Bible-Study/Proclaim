@@ -106,7 +106,11 @@ class TeacherListField extends ListField
                 ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->whereIn($db->quoteName('s.access'), $groups);
 
-            CwmfilterHelper::applyCrossFilters($query, 'teacher');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'teacher',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
         }
 
         $query->order($db->quoteName('t.teachername'));

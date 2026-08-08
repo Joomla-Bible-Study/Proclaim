@@ -13,6 +13,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
@@ -198,10 +199,19 @@ class CwmsetupwizardHelper
             $db->setQuery($query, 0, 1);
             $params = new Registry($db->loadResult() ?: '{}');
 
+            // Proclaim keeps settings in two places, and this checklist reads
+            // from both. #__bsms_admin holds the component's own params;
+            // #__extensions holds the ones Joomla manages, which is where
+            // CwmsetupwizardModel::setComponentParam() writes
+            // enable_location_filtering and where CwmlocationwizardModel saves
+            // its mapping and dismissal. Reading those from the admin table
+            // returns nothing at all, so every value silently defaults.
+            $componentParams = ComponentHelper::getParams('com_proclaim');
+
             $style = 'simple';
 
             if ((int) $params->get('simple_mode', 0) === 0) {
-                $style = $params->get('enable_location_filtering', 0) ? 'multi_campus' : 'full_media';
+                $style = $componentParams->get('enable_location_filtering', 0) ? 'multi_campus' : 'full_media';
             }
 
             $items = [];
@@ -259,7 +269,7 @@ class CwmsetupwizardHelper
                 ];
             }
 
-            // Check if podcast is configured (if enabled)
+            // Check if a published podcast exists (Full/Multi-Campus)
             if ($style !== 'simple') {
                 $query = $db->createQuery()
                     ->select('COUNT(*)')
@@ -268,25 +278,27 @@ class CwmsetupwizardHelper
                 $db->setQuery($query);
                 $hasPodcast = (int) $db->loadResult() > 0;
 
-                if (!$hasPodcast && $params->get('enable_podcast', 0)) {
-                    $items[] = [
-                        'key'   => 'podcast_setup',
-                        'label' => 'JBS_CHECKLIST_PODCAST_SETUP',
-                        'done'  => false,
-                        'link'  => 'index.php?option=com_proclaim&task=cwmpodcast.add',
-                    ];
-                }
+                // Keyed off the podcast itself, like every other item here.
+                // Not gated on the wizard's `enable_podcast` answer: that is
+                // never persisted, and opting in makes the wizard create a
+                // published podcast anyway, which satisfies this check.
+                $items[] = [
+                    'key'   => 'podcast_setup',
+                    'label' => 'JBS_CHECKLIST_PODCAST_SETUP',
+                    'done'  => $hasPodcast,
+                    'link'  => 'index.php?option=com_proclaim&task=cwmpodcast.add',
+                ];
             }
 
             // Multi-Campus: check location wizard completed
             if ($style === 'multi_campus') {
-                $mapping     = $params->get('location_group_mapping', '');
+                $mapping     = $componentParams->get('location_group_mapping', '');
                 $hasMappings = !empty($mapping) && $mapping !== '{}' && $mapping !== '[]';
 
                 $items[] = [
                     'key'   => 'location_wizard',
                     'label' => 'JBS_CHECKLIST_LOCATION_WIZARD',
-                    'done'  => $hasMappings || (int) $params->get('location_system_dismissed', 0) === 1,
+                    'done'  => $hasMappings || (int) $componentParams->get('location_system_dismissed', 0) === 1,
                     'link'  => 'index.php?option=com_proclaim&view=cwmlocationwizard',
                 ];
             }

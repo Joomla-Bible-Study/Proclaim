@@ -53,6 +53,16 @@ class WebservicesPluginTest extends ProclaimTestCase
         $methodSource = implode('', $lines);
 
         $this->assertStringContainsString("'public'    => false", $methodSource);
+
+        // The positive check alone stays green if a per-route override
+        // (e.g. array_merge($defaults, ['public' => true]) on one verb)
+        // is added while the false default survives -- also forbid any
+        // public=true anywhere in the method, whatever the spacing.
+        $this->assertDoesNotMatchRegularExpression(
+            '/[\'"]public[\'"]\s*=>\s*true/',
+            $methodSource,
+            'No write route may ever be public, including per-route overrides'
+        );
     }
 
     /**

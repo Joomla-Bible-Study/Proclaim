@@ -55,53 +55,28 @@ class CwmrelatedstudiesTest extends ProclaimTestCase
     }
 
     /**
-     * Test scores property starts empty
+     * The production ranking sort lives inside buildCards()
+     * (site/src/Helper/Cwmrelatedstudies.php), which needs a DB to run.
+     * A prior version of this test called arsort() on the scores itself
+     * and asserted the result -- which only verified PHP's arsort(), and
+     * stayed green if buildCards() dropped its own sort. Until buildCards()
+     * gets integration coverage, pin the sort's presence structurally.
      *
      * @return void
      */
-    public function testScoresDefaultEmpty(): void
+    public function testBuildCardsRanksByScore(): void
     {
-        $helper = new Cwmrelatedstudies();
+        $reflection = new \ReflectionMethod(Cwmrelatedstudies::class, 'buildCards');
+        $lines      = file($reflection->getFileName());
+        $body       = implode(
+            '',
+            \array_slice($lines, $reflection->getStartLine() - 1, $reflection->getEndLine() - $reflection->getStartLine() + 1)
+        );
 
-        $this->assertIsArray($helper->scores);
-        $this->assertEmpty($helper->scores);
-    }
-
-    /**
-     * Test scoring order is correct after arsort
-     *
-     * @return void
-     */
-    public function testScoreSortOrder(): void
-    {
-        $helper = new Cwmrelatedstudies();
-
-        // Simulate different scoring dimensions
-        $helper->addScore(10, 3); // series match
-        $helper->addScore(20, 2); // teacher match
-        $helper->addScore(30, 4); // topic: 2 overlaps
-        $helper->addScore(10, 2); // teacher match (same study)
-
-        arsort($helper->scores);
-        $sorted = array_keys($helper->scores);
-
-        // Study 10 has 5 points, study 30 has 4, study 20 has 2
-        $this->assertSame(10, $sorted[0]);
-        $this->assertSame(30, $sorted[1]);
-        $this->assertSame(20, $sorted[2]);
-    }
-
-    /**
-     * Test class existence and method signatures
-     *
-     * @return void
-     */
-    public function testClassStructure(): void
-    {
-        $helper = new Cwmrelatedstudies();
-
-        $this->assertInstanceOf(Cwmrelatedstudies::class, $helper);
-        $this->assertTrue(method_exists($helper, 'getRelated'));
-        $this->assertTrue(method_exists($helper, 'addScore'));
+        $this->assertStringContainsString(
+            'arsort($this->scores)',
+            $body,
+            'buildCards() must rank related studies by descending score before building cards'
+        );
     }
 }

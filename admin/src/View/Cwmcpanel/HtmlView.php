@@ -48,11 +48,12 @@ class HtmlView extends BaseHtmlView
     public string $total_messages;
 
     /**
-     * Count of studies awaiting editorial review (unpublished).
+     * Count of studies submitted through the API and awaiting review.
      *
      * Surfaced as a dashboard notice for users who can publish, so content
-     * submitted via the API by non-editors (forced to published=0) does not
-     * sit unnoticed. 0 when the current user lacks core.edit.state.
+     * submitted by non-editors does not sit unnoticed. Counts only records the
+     * API marked, not everything unpublished -- a draft or a retired sermon is
+     * not awaiting anything. 0 when the current user lacks core.edit.state.
      *
      * @var    int
      * @since  10.3.3
@@ -118,7 +119,7 @@ class HtmlView extends BaseHtmlView
         $user = Factory::getApplication()->getIdentity();
 
         if ($user && $user->authorise('core.edit.state', 'com_proclaim')) {
-            $this->pendingReview = CwmcountHelper::getCountByState('#__bsms_studies', 0, 'location');
+            $this->pendingReview = CwmcountHelper::getPendingReviewCount('location');
         }
 
         // Display the template

@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Administrator\Helper;
 
+use CWM\Component\Proclaim\Administrator\Field\MediaFileImagesField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -40,7 +41,7 @@ class Cwmhtml
     {
         // Create the batch selector to change the player on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-linkType" class="hasTip" title="' . Text::_(
+            '<label id="batch-linkType-lbl" for="batch-linkType" class="hasTip" title="' . Text::_(
                 'JBS_MED_SHOW_DOWNLOAD_ICON'
             )
             . '::' . Text::_('JBS_MED_SHOW_DOWNLOAD_ICON_DESC') . '">',
@@ -106,7 +107,7 @@ class Cwmhtml
     {
         // Create the batch selector to change the popup on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-popup" class="hasTip" title="' . Text::_('JBS_MED_INTERNAL_POPUP')
+            '<label id="batch-popup-lbl" for="batch-popup" class="hasTip" title="' . Text::_('JBS_MED_INTERNAL_POPUP')
             . '::' . Text::_('JBS_MED_INTERNAL_POPUP_DESC') . '">',
             Text::_('JBS_MED_POPUP'),
             '</label>',
@@ -143,7 +144,11 @@ class Cwmhtml
     }
 
     /**
-     * Display a batch widget for the player selector.
+     * Display a batch widget for the media display selector.
+     *
+     * Offers the same display configurations (image, button, or icon) as the
+     * Image Tools screen, applied to the selected media files rather than to
+     * every file sharing a configuration.
      *
      * @return  string  The necessary HTML for the widget.
      *
@@ -153,16 +158,44 @@ class Cwmhtml
     {
         // Create the batch selector to change the mediaType on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-mediaType" class="hasTip" title="' . Text::_('JBS_CMN_IMAGE')
+            '<label id="batch-mediaType-lbl" for="batch-mediaType" class="hasTip" title="' . Text::_('JBS_CMN_IMAGE')
             . '::' . Text::_('JBS_MED_IMAGE_DESC') . '">',
             Text::_('JBS_MED_SELECT_MEDIA_TYPE'),
             '</label>',
             '<select name="batch[mediaType]" class="form-select" id="batch-mediaType">',
             '<option value="">' . Text::_('JBS_BAT_MEDIATYPE_NOCHANGE') . '</option>',
+            // Counts are suppressed: they describe the whole site, which reads
+            // as though it described the current selection.
+            HTMLHelper::_('select.options', self::mediaTypeList(), 'value', 'text'),
             '</select>',
         ];
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * The media display configurations a batch can apply.
+     *
+     * Delegates to the field that backs the Image Tools screen so the two
+     * offer the same choices and cannot drift apart.
+     *
+     * @return  object[]  Options whose value is a JSON blob of display params.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function mediaTypeList(): array
+    {
+        try {
+            return MediaFileImagesField::buildDisplayOptions(false);
+        } catch (\Exception $e) {
+            try {
+                Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
+            } catch (\Exception) {
+                return [];
+            }
+
+            return [];
+        }
     }
 
     /**
@@ -176,7 +209,7 @@ class Cwmhtml
     {
         // Create the batch selector to change the teacher on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-teacher" class="hasTip" title="' .
+            '<label id="batch-teacher-lbl" for="batch-teacher" class="hasTip" title="' .
             Text::_('JBS_CMN_TEACHER') . '::' . Text::_('JBS_BAT_TEACHER_DESC') . '">',
             Text::_('JBS_CMN_TEACHER'),
             '</label>',
@@ -196,9 +229,8 @@ class Cwmhtml
      *
      * @since    1.6
      */
-    public static function teacherList(): ?array
+    public static function teacherList(): array
     {
-        $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
@@ -210,7 +242,7 @@ class Cwmhtml
         $db->setQuery($query);
 
         try {
-            $options = $db->loadObjectList();
+            return $db->loadObjectList() ?: [];
         } catch (\Exception $e) {
             try {
                 Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
@@ -219,7 +251,11 @@ class Cwmhtml
             }
         }
 
-        return $options;
+        // Never null. HTMLHelper::_('select.options', ...) foreach()es this
+        // straight away and core has no null guard, so a failed query used to
+        // emit a TypeError warning into the middle of the batch dialog's markup.
+        // locationList() already did this correctly.
+        return [];
     }
 
     /**
@@ -233,7 +269,7 @@ class Cwmhtml
     {
         // Create the batch selector to change the message type on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-messageType" class="hasTip" title="' .
+            '<label id="batch-messageType-lbl" for="batch-messageType" class="hasTip" title="' .
             Text::_('JBS_CMN_MESSAGETYPE') . '::' . Text::_('JBS_BAT_MESSAGETYPE_DESC') . '">',
             Text::_('JBS_CMN_MESSAGETYPE'),
             '</label>',
@@ -253,9 +289,8 @@ class Cwmhtml
      *
      * @since    1.6
      */
-    public static function messageTypeList(): ?array
+    public static function messageTypeList(): array
     {
-        $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
@@ -267,7 +302,7 @@ class Cwmhtml
         $db->setQuery($query);
 
         try {
-            $options = $db->loadObjectList();
+            return $db->loadObjectList() ?: [];
         } catch (\Exception $e) {
             try {
                 Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
@@ -276,7 +311,11 @@ class Cwmhtml
             }
         }
 
-        return $options;
+        // Never null. HTMLHelper::_('select.options', ...) foreach()es this
+        // straight away and core has no null guard, so a failed query used to
+        // emit a TypeError warning into the middle of the batch dialog's markup.
+        // locationList() already did this correctly.
+        return [];
     }
 
     /**
@@ -290,7 +329,7 @@ class Cwmhtml
     {
         // Create the batch selector to change the series on a selection list.
         $lines = [
-            '<label id="batch-client-lbl" for="batch-series" class="hasTip" title="' .
+            '<label id="batch-series-lbl" for="batch-series" class="hasTip" title="' .
             Text::_('JBS_CMN_SERIES') . '::' . Text::_('JBS_BAT_SERIES_DESC') . '">',
             Text::_('JBS_CMN_SERIES'),
             '</label>',
@@ -310,9 +349,8 @@ class Cwmhtml
      *
      * @since    1.6
      */
-    public static function seriesList(): ?array
+    public static function seriesList(): array
     {
-        $options = null;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
@@ -324,7 +362,7 @@ class Cwmhtml
         $db->setQuery($query);
 
         try {
-            $options = $db->loadObjectList();
+            return $db->loadObjectList() ?: [];
         } catch (\Exception $e) {
             try {
                 Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
@@ -333,7 +371,11 @@ class Cwmhtml
             }
         }
 
-        return $options;
+        // Never null. HTMLHelper::_('select.options', ...) foreach()es this
+        // straight away and core has no null guard, so a failed query used to
+        // emit a TypeError warning into the middle of the batch dialog's markup.
+        // locationList() already did this correctly.
+        return [];
     }
 
     /**

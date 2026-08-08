@@ -49,6 +49,6 @@ class CwmseriesdisplayController extends BaseController
      */
     public function display($cachable = false, $urlparams = []): static
     {
-        return parent::display();
+        return parent::display($cachable, $urlparams);
     }
 }

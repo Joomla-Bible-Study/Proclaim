@@ -16,8 +16,10 @@ namespace CWM\Component\Proclaim\Administrator\Table;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmepisodenumberHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudytopicHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmthumbnail;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Access\Rules;
@@ -539,6 +541,44 @@ class CwmmessageTable extends Table
             $this->location_id = null;
         }
 
+        // Reject a newly-introduced duplicate episode number within a series.
+        // Only re-validates when series_id or studynumber actually changed on
+        // this save — pre-existing duplicates stay editable for unrelated
+        // field changes (title, date, etc.); see #1505.
+        if ((int) $this->series_id > 0 && trim((string) $this->studynumber) !== '') {
+            $db      = $this->getDatabase();
+            $changed = empty($this->id);
+
+            if (!$changed) {
+                $query = $db->createQuery()
+                    ->select($db->quoteName(['series_id', 'studynumber']))
+                    ->from($db->quoteName('#__bsms_studies'))
+                    ->where($db->quoteName('id') . ' = ' . (int) $this->id);
+                $db->setQuery($query);
+                $original = $db->loadObject();
+
+                $changed = $original === null
+                    || (int) $original->series_id !== (int) $this->series_id
+                    || (string) $original->studynumber !== (string) $this->studynumber;
+            }
+
+            if ($changed) {
+                $duplicate = CwmepisodenumberHelper::findDuplicate(
+                    $db,
+                    (int) $this->series_id,
+                    (string) $this->studynumber,
+                    empty($this->id) ? null : (int) $this->id
+                );
+
+                if ($duplicate !== null) {
+                    $link = 'index.php?option=com_proclaim&task=cwmmessage.edit&id=' . (int) $duplicate->id;
+                    throw new \UnexpectedValueException(
+                        Text::sprintf('JBS_STY_DUPLICATE_EPISODE_LINK', $this->studynumber, $duplicate->studytitle, $link)
+                    );
+                }
+            }
+        }
+
         // Normalise studydate: ensure it has full HH:MM:SS for DATETIME column
         if (!empty($this->studydate)) {
             $d = trim($this->studydate);
@@ -615,6 +655,90 @@ class CwmmessageTable extends Table
     }
 
     /**
+     * Publish or unpublish rows, clearing the pending-review mark on publish.
+     *
+     * The control panel counts records the API force-unpublished and marked
+     * awaiting review. Publishing one answers the review, so the mark is
+     * removed rather than left to reappear in the count if the record is ever
+     * unpublished again for an unrelated reason.
+     *
+     * @param   mixed  $pks     Primary keys, or null for the instance's own.
+     * @param   int    $state   The publishing state.
+     * @param   int    $userId  The user performing the change.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function publish($pks = null, $state = 1, $userId = 0): bool
+    {
+        if (!parent::publish($pks, $state, $userId)) {
+            return false;
+        }
+
+        if ((int) $state === 1) {
+            $this->clearPendingReview($pks ?? $this->id);
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove the pending-review mark from the given records' params.
+     *
+     * Best-effort: the publish itself has already succeeded, so a failure here
+     * must not turn a completed state change into an error. The only cost is a
+     * stale mark, which shows up again if the record is unpublished later.
+     *
+     * @param   mixed  $pks  Primary key, or an array of them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function clearPendingReview(mixed $pks): void
+    {
+        $ids = array_values(array_filter(array_map('intval', (array) $pks)));
+
+        if ($ids === []) {
+            return;
+        }
+
+        try {
+            $db    = $this->getDatabase();
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', 'params']))
+                ->from($db->quoteName('#__bsms_studies'))
+                ->whereIn($db->quoteName('id'), $ids)
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"pending_review"%'));
+
+            foreach ($db->setQuery($query)->loadObjectList() ?: [] as $row) {
+                $params = new Registry($row->params);
+
+                if (!$params->exists('pending_review')) {
+                    continue;
+                }
+
+                $params->remove('pending_review');
+
+                $db->setQuery(
+                    $db->createQuery()
+                        ->update($db->quoteName('#__bsms_studies'))
+                        ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
+                        ->where($db->quoteName('id') . ' = ' . (int) $row->id)
+                )->execute();
+            }
+        } catch (\RuntimeException $e) {
+            Log::add(
+                'Could not clear the pending-review mark: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
      * Method to store a row in the database from the JTable instance properties.
      * If a primary key value is set the row with that primary key value will be
      * updated with the instance property values.  If no primary key value is set
@@ -631,13 +755,61 @@ class CwmmessageTable extends Table
     #[\Override]
     public function store($updateNulls = false): bool
     {
-        $result = parent::store($updateNulls);
+        // studynumber_uk exists only to carry uq_series_studynumber; the database
+        // computes it from series_id and studynumber, and rejects any statement
+        // that writes it. Table seeds it as an ordinary column and load() fills it
+        // in, so re-storing a loaded message would carry it into the SET clause --
+        // failing every save of a message that has both a series and an episode
+        // number, which are exactly the rows the generated column is non-null for.
+        unset($this->studynumber_uk);
+
+        try {
+            $result = parent::store($updateNulls);
+        } catch (\Throwable $e) {
+            // check() looks for a clashing episode number before we get here,
+            // but that read and this write are not one operation: two saves in
+            // the same series can both pass the check and then both write. The
+            // database rejects the loser, and this turns that into the same
+            // message the pre-check would have produced rather than a fatal.
+            if (self::isDuplicateEpisodeNumber($e)) {
+                $this->setError(
+                    Text::sprintf('JBS_STY_DUPLICATE_EPISODE_RACE', (string) $this->studynumber)
+                );
+
+                return false;
+            }
+
+            throw $e;
+        }
 
         if ($result) {
             Cwmassets::stripEmptyAssetRow($this);
         }
 
         return $result;
+    }
+
+    /**
+     * Is this failure the episode-number unique constraint?
+     *
+     * Matched on the index name so an unrelated duplicate-key error is not
+     * mistaken for this one and reported with the wrong message.
+     *
+     * @param   \Throwable  $e  The failure raised by the write
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function isDuplicateEpisodeNumber(\Throwable $e): bool
+    {
+        for ($t = $e; $t !== null; $t = $t->getPrevious()) {
+            if (str_contains($t->getMessage(), 'uq_series_studynumber')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -683,6 +855,9 @@ class CwmmessageTable extends Table
 
         // Delete associated study_teachers junction records
         CwmstudyteacherHelper::deleteTeachers((int) $pk);
+
+        // Delete associated study_topics junction records
+        CwmstudytopicHelper::deleteTopics((int) $pk);
 
         // Cascade-delete associated media files (triggers physical file cleanup)
         $this->deleteMediaFiles((int) $pk);

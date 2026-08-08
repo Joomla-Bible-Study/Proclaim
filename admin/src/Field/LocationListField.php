@@ -81,7 +81,11 @@ class LocationListField extends ListField
                 ->whereIn($db->quoteName('s.access'), $groups)
                 ->order($db->quoteName('loc.location_text'));
 
-            CwmfilterHelper::applyCrossFilters($query, 'location');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'location',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
 
             $db->setQuery($query);
             $rows    = $db->loadObjectList() ?: [];
@@ -132,7 +136,7 @@ class LocationListField extends ListField
         foreach ($rows as $row) {
             $id = (int) $row->id;
 
-            if ($enabled && !$isAdmin && !empty($allowedIds)) {
+            if ($enabled && !$isAdmin) {
                 if (!\in_array($id, $allowedIds, true)) {
                     if ($id !== $currentId) {
                         continue;

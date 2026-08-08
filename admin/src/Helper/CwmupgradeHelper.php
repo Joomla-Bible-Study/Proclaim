@@ -19,7 +19,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\MVC\Model\DatabaseModel;
+use Joomla\Component\Installer\Administrator\Model\DatabaseModel;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
@@ -430,8 +430,8 @@ class CwmupgradeHelper
             $count      = $tourHelper->registerGuidedTours();
             $steps[]    = ['name' => 'registerGuidedTours', 'success' => true, 'detail' => $count . ' registered'];
         } catch (\Exception $e) {
-            // Non-critical: guided tours may not be supported on all Joomla versions
-            $steps[] = ['name' => 'registerGuidedTours', 'success' => true, 'detail' => 'skipped'];
+            $errors[] = 'registerGuidedTours: ' . $e->getMessage();
+            $steps[]  = ['name' => 'registerGuidedTours', 'success' => false, 'detail' => $e->getMessage()];
         }
 
         return [
@@ -535,6 +535,11 @@ class CwmupgradeHelper
     /**
      * Drop legacy 9.x artifact tables that are no longer needed.
      *
+     * Callers must only invoke this after verify() reports success -- it is
+     * destructive and, on a partially-failed upgrade, would drop the only
+     * tables detect9xSchema() checks for, permanently hiding the wizard's
+     * re-entry point for a site stuck mid-migration.
+     *
      * @return  int  Number of tables dropped
      *
      * @since   10.1.0
@@ -546,10 +551,13 @@ class CwmupgradeHelper
         $tableList = $db->getTableList();
         $dropped   = 0;
 
+        // #__bsms_timeset is NOT a 9.x artifact -- it's part of the current
+        // 10.x schema (seeded by install SQL, PK-repaired on every update by
+        // proclaim.script.php). Dropping it here breaks every subsequent
+        // update. Only genuinely 9.x-only tables belong in this list.
         $legacyTables = [
             '#__bsms_version',
             '#__bsms_schemaversion',
-            '#__bsms_timeset',
         ];
 
         foreach ($legacyTables as $table) {

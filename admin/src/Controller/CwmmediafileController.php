@@ -148,22 +148,44 @@ class CwmmediafileController extends FormController
 
             return;
         }
-        $input = Factory::getApplication()->getInput();
+        $app = Factory::getApplication();
+
+        // Every UI that reaches this endpoint is a form field rendered on an
+        // edit/create screen (PlaylistPickerField, the Youtube/Vimeo/Wistia
+        // browse buttons), so require the matching permission. A CSRF token
+        // alone is not a gate here: any authenticated backend user with
+        // com_proclaim access already has one, and could otherwise invoke
+        // state-changing addon methods they hold no rights to.
+        $user = $app->getIdentity();
+
+        if (!$user || (!$user->authorise('core.edit', 'com_proclaim') && !$user->authorise('core.create', 'com_proclaim'))) {
+            throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+        }
+
+        $input = $app->getInput();
 
         $addonType = $input->get('type', 'Legacy', 'string');
-        $handler   = $input->get('handler');
+        $handler   = (string) $input->get('handler', '', 'cmd');
 
         // Load the addon
         $addon = CWMAddon::getInstance($addonType);
 
-        if (method_exists($addon, $handler)) {
-            echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
-
-            $app = Factory::getApplication();
-            $app->close();
-        } else {
-            throw new \RuntimeException(Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')), 404);
+        // Dispatch only to handlers the addon explicitly opted in. The old
+        // method_exists() check made every public method on every addon
+        // callable by request-supplied name -- including createLiveEvent()
+        // and cancelLiveEvent(), which act on the connected platform account.
+        // Those are invoked server-side (CwmmediafileModel/CwmmediafileTable)
+        // and deliberately stay off the allow-list. See #1599.
+        if (!\in_array($handler, $addon->getXhrHandlers(), true) || !method_exists($addon, $handler)) {
+            throw new \RuntimeException(
+                Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')),
+                404
+            );
         }
+
+        echo json_encode($addon->$handler($input), JSON_THROW_ON_ERROR);
+
+        $app->close();
     }
 
     /**
@@ -455,6 +477,12 @@ class CwmmediafileController extends FormController
             return;
         }
 
+        if (!$this->allowEdit(['id' => $mediaId])) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED')]);
+
+            return;
+        }
+
         // Parse chapters from POST body (JSON)
         $rawBody = file_get_contents('php://input');
 
@@ -498,29 +526,36 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->select($db->quoteName('params'))
-            ->from($db->quoteName('#__bsms_mediafiles'))
-            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
-        $db->setQuery($query);
-        $paramsJson = $db->loadResult();
+        /** @var CwmmediafileTable $table */
+        $table = $this->getModel('Cwmmediafile', 'Administrator', [])->getTable();
 
-        if ($paramsJson === null) {
+        if (!$table->load($mediaId)) {
             CWMAddon::outputJson(['success' => false, 'error' => 'Media file not found']);
 
             return;
         }
 
-        $params = new \Joomla\Registry\Registry($paramsJson ?: '{}');
+        if ($table->isCheckedOut((int) $app->getIdentity()->id)) {
+            CWMAddon::outputJson(['success' => false, 'error' => Text::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH')]);
+
+            return;
+        }
+
+        $params = new \Joomla\Registry\Registry($table->params ?: '{}');
         $params->set('chapters', $clean);
 
-        $update = $db->createQuery()
-            ->update($db->quoteName('#__bsms_mediafiles'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote($params->toString()))
-            ->where($db->quoteName('id') . ' = ' . (int) $mediaId);
-        $db->setQuery($update);
-        $db->execute();
+        if (!$table->bind(['id' => $mediaId, 'params' => $params->toString()]) || !$table->check() || !$table->store()) {
+            CWMAddon::outputJson(['success' => false, 'error' => $table->getError() ?: 'Unable to save chapters']);
+
+            return;
+        }
+
+        CwmactionlogHelper::log(
+            'COM_PROCLAIM_ACTION_LOG_ITEM_UPDATED',
+            $params->get('filename', '#' . $mediaId),
+            'mediafile',
+            $mediaId
+        );
 
         CWMAddon::outputJson(['success' => true, 'count' => \count($clean)]);
     }
@@ -628,8 +663,10 @@ class CwmmediafileController extends FormController
             return;
         }
 
-        // Sniff the first 64 bytes to confirm WEBVTT, SBV, or SRT magic —
-        // defends against a renamed binary slipping past the extension whitelist.
+        // Sniff the first 64 bytes to route the file to the right converter.
+        // This is a format hint, not a safety check: it says what the file
+        // claims to be, not what the rest of it contains. VTT is validated in
+        // full below, before anything is kept.
         $head     = file_get_contents($userfile['tmp_name'], false, null, 0, 64);
         $detected = $head === false ? null : $validator->detectFormat($head);
 
@@ -641,6 +678,29 @@ class CwmmediafileController extends FormController
             Factory::getApplication()->close();
 
             return;
+        }
+
+        // SRT and SBV are parsed and re-serialised below, so only structurally
+        // valid cues survive them. VTT is stored byte-for-byte, so the same
+        // assurance has to come from reading it here: past byte 64 the sniff
+        // above knows nothing, and "WEBVTT" followed by arbitrary bytes would
+        // otherwise be kept verbatim and served from a public URL.
+        //
+        // Validated rather than rewritten -- rewriting would strip NOTE, STYLE
+        // and REGION blocks, cue settings and speaker tags from files that
+        // legitimately carry them.
+        if ($detected === 'vtt') {
+            $body = file_get_contents($userfile['tmp_name']);
+
+            if ($body === false || !$validator->isStructurallyVtt($body)) {
+                echo json_encode([
+                    'success' => false,
+                    'error'   => Text::_($body === false ? 'JBS_MED_VTT_UPLOAD_FAILED' : 'JBS_MED_VTT_INVALID_CONTENT'),
+                ]);
+                Factory::getApplication()->close();
+
+                return;
+            }
         }
 
         $destDir = JPATH_ROOT . '/media/com_proclaim/captions';

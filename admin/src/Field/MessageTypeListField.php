@@ -73,7 +73,11 @@ class MessageTypeListField extends ListField
                 ->whereIn($db->quoteName('s.published'), [1, 2])
                 ->whereIn($db->quoteName('s.access'), $groups);
 
-            CwmfilterHelper::applyCrossFilters($query, 'messagetype');
+            CwmfilterHelper::applyCrossFilters(
+                $query,
+                'messagetype',
+                CwmfilterHelper::contextFromForm($this->form)
+            );
         }
 
         $query->order($db->quoteName('mt.message_type'));

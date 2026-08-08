@@ -34,6 +34,7 @@ use CWM\Component\Proclaim\Administrator\Lib\CwmpIconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmssconvert;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -143,41 +144,26 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db   = Factory::getContainer()->get(DatabaseInterface::class);
-        $msg  = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
         $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
         $from = $reg->get('from', 'x');
         $to   = $reg->get('to', 'x');
 
-        if ($from !== 'x' && $to !== 'x') {
-            $query = $db->createQuery();
-            $query->select($db->quoteName(['id', 'params']))
-                ->from($db->quoteName('#__bsms_mediafiles'));
-            $db->setQuery($query);
+        if ($from === 'x' || $to === 'x') {
+            $this->setRedirect(
+                'index.php?option=com_proclaim&view=cwmadmin',
+                Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To'
+            );
 
-            foreach ($db->loadObjectList() as $media) {
-                $reg = new Registry();
-                $reg->loadString($media->params);
+            return;
+        }
 
-                if ($reg->get('player', 0) == $from) {
-                    $reg->set('player', $to);
-
-                    $query = $db->createQuery();
-                    $query->update($db->quoteName('#__bsms_mediafiles'))
-                        ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                        ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                    $db->setQuery($query);
-
-                    if (!$db->execute()) {
-                        $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                        $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
-                    }
-                }
-            }
-        } else {
-            $msg = Text::_('JBS_ADM_ERROR_OCCURED') . ': Missed setting the From or To';
+        try {
+            $this->getModel()->changePlayer($from, $to);
+            $msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
+        } catch (\Exception) {
+            $msg = Text::_('JBS_ADM_ERROR_OCCURED');
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
@@ -200,44 +186,17 @@ class CwmadminController extends FormController
             return;
         }
 
-        $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $post = $this->input->post->get('jform', [], 'array');
         $reg  = new Registry();
         $reg->loadArray($post['params']);
-        $from  = $reg->get('pFrom', 'x');
-        $form2 = '';
-        $to    = $reg->get('pTo', 'x');
-        $msg   = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
-        $query = $db->createQuery();
-        $query->select($db->quoteName(['id', 'params']))
-            ->from($db->quoteName('#__bsms_mediafiles'));
-        $db->setQuery($query);
+        $from = $reg->get('pFrom', 'x');
+        $to   = $reg->get('pTo', 'x');
 
-        foreach ($db->loadObjectList() as $media) {
-            $reg = new Registry();
-            $reg->loadString($media->params);
-
-            if ($from == '100') {
-                $from  = '0';
-                $form2 = '100';
-            } elseif ($to == '100') {
-                $to = '';
-            }
-
-            if ($reg->get('popup', 0) == $from || $reg->get('popup', 0) == $form2) {
-                $reg->set('popup', $to);
-
-                $query = $db->createQuery();
-                $query->update($db->quoteName('#__bsms_mediafiles'))
-                    ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                    ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                $db->setQuery($query);
-
-                if (!$db->execute()) {
-                    $msg = Text::_('JBS_ADM_ERROR_OCCURED');
-                    $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
-                }
-            }
+        try {
+            $this->getModel()->changePopup($from, $to);
+            $msg = Text::_('JBS_CMN_OPERATION_SUCCESSFUL');
+        } catch (\Exception) {
+            $msg = Text::_('JBS_ADM_ERROR_OCCURED');
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
@@ -260,196 +219,20 @@ class CwmadminController extends FormController
             return;
         }
 
-        $post    = $this->input->post->get('jform', [], 'raw');
-        $decoded = json_decode($post['mediaimage'], true, 512, JSON_THROW_ON_ERROR);
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->createQuery();
-        $query->select($db->quoteName(['id', 'params']))
-            ->from($db->quoteName('#__bsms_mediafiles'));
-        $db->setQuery($query);
-        $images    = $db->loadObjectList();
-        $error     = 0;
-        $added     = 0;
-        $errortext = '';
-        $msg       = Text::_('JBS_RESULTS') . ': ';
+        $post = $this->input->post->get('jform', [], 'raw');
+        // Decoded as an object (not an associative array) -- the matcher below
+        // uses `->` property access throughout, matching how this payload has
+        // always been consumed here.
+        $decoded = json_decode($post['mediaimage'], false, 512, JSON_THROW_ON_ERROR);
 
-        switch ($decoded->media_use_button_icon) {
-            case 1:
-                // Button only
-                $buttontype = $decoded->media_button_type;
-                $buttontext = $decoded->media_button_text;
+        $result = $this->getModel()->changeMediaImages($decoded, $post);
 
-                if (!isset($post['media_icon_type'])) {
-                    $post['media_icon_type'] = 0;
-                }
-
-                foreach ($images as $media) {
-                    $reg = new Registry();
-                    $reg->loadString($media->params);
-
-                    if (
-                        $reg->get('media_button_type') == $buttontype && $reg->get(
-                            'media_button_text'
-                        ) == $buttontext
-                    ) {
-                        $query = $db->createQuery();
-                        $reg->set('media_button_color', $post['media_button_color']);
-                        $reg->set('media_button_text', $post['media_button_text']);
-                        $reg->set('media_button_type', $post['media_button_type']);
-                        $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_type', $post['media_icon_type']);
-                        $reg->set('media_image', $post['media_image']);
-                        $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $db->setQuery($query);
-
-                        try {
-                            $query->update($db->quoteName('#__bsms_mediafiles'))
-                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                            $db->execute();
-                            $rows  = $db->getAffectedRows();
-                            $added = $added + $rows;
-                        } catch (\RuntimeException $e) {
-                            $errortext .= $e->getMessage() . '<br />';
-                            $error++;
-                        }
-                    }
-                }
-
-                $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                    'JBS_RESULTS'
-                ) .
-                    ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
-                break;
-            case 2:
-                $buttontype = $decoded->media_button_type;
-                $icontype   = $decoded->media_icon_type;
-
-                foreach ($images as $media) {
-                    $reg = new Registry();
-                    $reg->loadString($media->params);
-
-                    if ($reg->get('media_button_type') == $buttontype && $reg->get('media_icon_type') == $icontype) {
-                        $query = $db->createQuery();
-                        $reg->set('media_button_color', $post['media_button_color']);
-                        $reg->set('media_button_text', $post['media_button_text']);
-                        $reg->set('media_button_type', $post['media_button_type']);
-                        $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_type', $post['media_icon_type']);
-                        $reg->set('media_image', $post['media_image']);
-                        $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $db->setQuery($query);
-
-                        try {
-                            $query->update($db->quoteName('#__bsms_mediafiles'))
-                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                            $db->execute();
-                            $rows  = $db->getAffectedRows();
-                            $added = $added + $rows;
-                        } catch (\RuntimeException $e) {
-                            $errortext .= $e->getMessage() . '<br />';
-                            $error++;
-                        }
-                    }
-                }
-
-                $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                    'JBS_RESULTS'
-                ) .
-                    ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
-                break;
-            case 3:
-                // Icon only
-                $icontype = $decoded->media_icon_type;
-
-                if (!isset($post['media_button_type'])) {
-                    $post['media_button_type'] = 0;
-                }
-
-                foreach ($images as $media) {
-                    $reg = new Registry();
-                    $reg->loadString($media->params);
-
-                    if ($reg->get('media_icon_type') == $icontype) {
-                        $query = $db->createQuery();
-                        $reg->set('media_button_color', $post['media_button_color']);
-                        $reg->set('media_button_text', $post['media_button_text']);
-                        $reg->set('media_button_type', $post['media_button_type']);
-                        $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_type', $post['media_icon_type']);
-                        $reg->set('media_image', $post['media_image']);
-                        $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-                        $db->setQuery($query);
-
-                        try {
-                            $query->update($db->quoteName('#__bsms_mediafiles'))
-                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                            $db->execute();
-                            $rows  = $db->getAffectedRows();
-                            $added = $added + $rows;
-                        } catch (\RuntimeException $e) {
-                            $errortext .= $e->getMessage() . '<br />';
-                            $error++;
-                        }
-                    }
-                }
-
-                $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                    'JBS_RESULTS'
-                ) .
-                    ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
-                break;
-            case 0:
-                // It's an image
-                $mediaimage = $decoded->media_image;
-
-                if (!isset($post['media_icon_type'])) {
-                    $post['media_icon_type'] = 0;
-                }
-
-                if (!isset($post['media_button_type'])) {
-                    $post['media_button_type'] = 0;
-                }
-
-                foreach ($images as $media) {
-                    $reg = new Registry();
-                    $reg->loadString($media->params);
-
-                    if ($reg->get('media_image') == $mediaimage) {
-                        $query = $db->createQuery();
-                        $reg->set('media_button_color', $post['media_button_color']);
-                        $reg->set('media_button_text', $post['media_button_text']);
-                        $reg->set('media_button_type', $post['media_button_type']);
-                        $reg->set('media_custom_icon', $post['media_custom_icon']);
-                        $reg->set('media_icon_type', $post['media_icon_type']);
-                        $reg->set('media_image', $post['media_image']);
-                        $reg->set('media_use_button_icon', $post['media_use_button_icon']);
-
-                        try {
-                            $db->setQuery($query);
-                            $query->update($db->quoteName('#__bsms_mediafiles'))
-                                ->set($db->quoteName('params') . ' = ' . $db->q($reg->toString()))
-                                ->where($db->quoteName('id') . ' = ' . (int)$media->id);
-                            $db->execute();
-                            $rows  = $db->getAffectedRows();
-                            $added += $rows;
-                        } catch (\RuntimeException $e) {
-                            $errortext .= $e->getMessage() . '<br />';
-                            $error++;
-                        }
-                    }
-                }
-
-                $msg .= Text::_('JBS_ERROR') . ': ' . $error . '<br />' . $errortext . '<br />' . Text::_(
-                    'JBS_RESULTS'
-                ) .
-                    ': ' . $added . ' ' . Text::_('JBS_SUCCESS');
-                break;
-            default:
-                $msg = Text::_('JBS_NOTHING_MATCHED');
-                break;
+        if (!$result['matched']) {
+            $msg = Text::_('JBS_NOTHING_MATCHED');
+        } else {
+            $msg = Text::_('JBS_RESULTS') . ': ' . Text::_('JBS_ERROR') . ': ' . $result['error'] . '<br />'
+                . $result['errortext'] . '<br />' . Text::_('JBS_RESULTS') . ': ' . $result['added'] . ' '
+                . Text::_('JBS_SUCCESS');
         }
 
         $this->setRedirect('index.php?option=com_proclaim&view=cwmadmin', $msg);
@@ -2110,7 +1893,13 @@ class CwmadminController extends FormController
     }
 
     /**
-     * Bulk-sync Schema.org data for all published items via AJAX.
+     * Sync one batch of Schema.org data via AJAX and report where to resume.
+     *
+     * Processes at most `CwmschemaorgHelper::SYNC_CHUNK_SIZE` items per request
+     * and returns a cursor, so a library of any size is synced across several
+     * short requests instead of one that can hit `max_execution_time` partway
+     * through. The caller repeats the request with the returned `cursor` until
+     * the response reports `done`.
      *
      * @return void
      *
@@ -2133,10 +1922,20 @@ class CwmadminController extends FormController
         }
 
         try {
-            $mode   = $app->getInput()->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
-            $valid  = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
-            $mode   = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
-            $counts = CwmschemaorgHelper::syncAll($mode);
+            $input = $app->getInput();
+            $mode  = $input->getCmd('mode', CwmschemaorgHelper::SYNC_SMART);
+            $valid = [CwmschemaorgHelper::SYNC_NEW, CwmschemaorgHelper::SYNC_SMART, CwmschemaorgHelper::SYNC_FORCE];
+            $mode  = \in_array($mode, $valid, true) ? $mode : CwmschemaorgHelper::SYNC_SMART;
+
+            $result = CwmschemaorgHelper::syncChunk(
+                $mode,
+                $input->getCmd('cursorType', 'messages'),
+                $input->getInt('cursorLastId', 0)
+            );
+
+            // Running totals live on the client across the chunk loop; this
+            // response only reports what this batch did.
+            $counts = $result['counts'];
             $total  = $counts['messages'] + $counts['teachers'] + $counts['series'];
 
             $message = Text::sprintf(
@@ -2154,6 +1953,8 @@ class CwmadminController extends FormController
                 'success' => true,
                 'count'   => $total,
                 'counts'  => $counts,
+                'done'    => $result['done'],
+                'cursor'  => ['type' => $result['type'], 'lastId' => $result['lastId']],
                 'message' => $message,
             ], JSON_THROW_ON_ERROR);
         } catch (\Exception $e) {
@@ -2237,20 +2038,7 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            // Use optimized batch update with JSON functions
-            // This replaces the N+1 query pattern with a single UPDATE
-            $query = $db->createQuery()
-                ->update($db->quoteName('#__bsms_mediafiles'))
-                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
-                    . $db->quote('"player":"' . $from . '"') . ', '
-                    . $db->quote('"player":"' . $to . '"') . ')')
-                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"player":"' . $from . '"%'));
-
-            $db->setQuery($query);
-            $db->execute();
-            $count = $db->getAffectedRows();
+            $count = $this->getModel()->changePlayer($from, $to);
 
             echo json_encode([
                 'success' => true,
@@ -2307,44 +2095,7 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            // Handle legacy value mapping (100 = 0, etc.)
-            $searchFrom  = $from;
-            $searchFrom2 = null;
-
-            if ($from === '100') {
-                $searchFrom  = '0';
-                $searchFrom2 = '100';
-            }
-
-            $replaceTo = $to === '100' ? '' : $to;
-
-            // Use optimized batch update
-            $query = $db->createQuery()
-                ->update($db->quoteName('#__bsms_mediafiles'))
-                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
-                    . $db->quote('"popup":"' . $searchFrom . '"') . ', '
-                    . $db->quote('"popup":"' . $replaceTo . '"') . ')')
-                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom . '"%'));
-
-            $db->setQuery($query);
-            $db->execute();
-            $count = $db->getAffectedRows();
-
-            // If there's a secondary search pattern (for legacy 100 value)
-            if ($searchFrom2 !== null) {
-                $query = $db->createQuery()
-                    ->update($db->quoteName('#__bsms_mediafiles'))
-                    ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
-                        . $db->quote('"popup":"' . $searchFrom2 . '"') . ', '
-                        . $db->quote('"popup":"' . $replaceTo . '"') . ')')
-                    ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom2 . '"%'));
-
-                $db->setQuery($query);
-                $db->execute();
-                $count += $db->getAffectedRows();
-            }
+            $count = $this->getModel()->changePopup($from, $to);
 
             echo json_encode([
                 'success' => true,
@@ -2364,6 +2115,24 @@ class CwmadminController extends FormController
     /**
      * Change Player by Media Type XHR - AJAX version with optimized batch update
      *
+     * 'mediatype' is a MIME type string (e.g. "video/mp4") -- the value of the
+     * `mtFrom` MimeType field (see admin/forms/admin.xml), exactly what the
+     * non-AJAX CwmadminModel::playerByMediaType() also matches against. It must
+     * be read as a string: getInt() applies Joomla's INT filter, which strips
+     * non-digit characters and turns "video/mp4" into 4 and "video/x-ms-wmv"
+     * into 0. Nor is it a column on #__bsms_mediafiles -- 'media_image' lives
+     * inside the JSON params blob, so matching against it as a column errors.
+     *
+     * Matching mirrors playerByMediaType()'s mime_type match falling back to
+     * filename extension, but not its dead code: that method resets $from = ''
+     * at the top of every loop iteration, so its 'http'/'mediacode' branches
+     * can never fire. This version does not support those sentinel values
+     * either.
+     *
+     * Unlike playerByMediaType(), this does not filter to published = 1 --
+     * the point of a bulk "fix the player on files still using the wrong
+     * one" tool is to catch everything, not just currently-published rows.
+     *
      * @return void
      *
      * @throws \Exception
@@ -2371,8 +2140,8 @@ class CwmadminController extends FormController
      */
     public function changePlayerByMediaTypeXHR(): void
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
+        $app   = Factory::getApplication();
+        $input = $app->getInput();
 
         header('Content-Type: application/json; charset=utf-8');
 
@@ -2387,10 +2156,18 @@ class CwmadminController extends FormController
             return;
         }
 
-        $mediaType = $input->getInt('mediatype', 0);
+        $mediaType = $input->getString('mediatype', 'x');
         $player    = $input->getCmd('player', 'x');
 
-        if ($mediaType === 0 || $player === 'x') {
+        // Not validated against Cwmmedia::getMimetypes()'s current value list --
+        // that list dropped the legacy 'audio/mp3' string in favor of the
+        // IANA-registered 'audio/mpeg' (#1397), but existing rows can still
+        // have 'audio/mp3' stored, and MimeTypeField deliberately keeps a
+        // stored-but-no-longer-offered value selectable in the mtFrom dropdown
+        // (see MimeTypeField::getOptions()). Rejecting it here would silently
+        // break matching for exactly the records #1397 was written to keep
+        // working. An unrecognized value just matches zero rows below.
+        if ($mediaType === 'x' || $mediaType === '' || $player === 'x') {
             echo json_encode([
                 'success' => false,
                 'message' => Text::_('JBS_ADM_ERROR_OCCURED') . ': ' . Text::_('JBS_ADM_SELECT_MEDIATYPE_PLAYER'),
@@ -2401,13 +2178,15 @@ class CwmadminController extends FormController
         }
 
         try {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
+            $mimetypes  = (new Cwmmedia())->getMimetypes();
+            $extensions = explode('|', (string) array_search($mediaType, $mimetypes, true));
 
-            // Get all media files with matching media type
+            // Match happens in PHP against the decoded params blob, not in SQL --
+            // mime_type / filename are JSON keys, not columns.
             $query = $db->createQuery()
                 ->select([$db->quoteName('id'), $db->quoteName('params')])
-                ->from($db->quoteName('#__bsms_mediafiles'))
-                ->where($db->quoteName('media_image') . ' = ' . $mediaType);
+                ->from($db->quoteName('#__bsms_mediafiles'));
 
             $db->setQuery($query);
             $mediaFiles = $db->loadObjectList();
@@ -2417,6 +2196,17 @@ class CwmadminController extends FormController
             foreach ($mediaFiles as $media) {
                 $reg = new Registry();
                 $reg->loadString($media->params);
+
+                $filename  = $reg->get('filename', '');
+                $extension = strtolower((string) substr($filename, strrpos($filename, '.') ?: 0));
+
+                $matches = $reg->get('mime_type', '') === $mediaType
+                    || ($extension !== '' && \in_array(ltrim($extension, '.'), $extensions, true));
+
+                if (!$matches) {
+                    continue;
+                }
+
                 $reg->set('player', $player);
 
                 $updateQuery = $db->createQuery()
@@ -3060,7 +2850,11 @@ class CwmadminController extends FormController
 
         try {
             $verifyResult = CwmupgradeHelper::verify();
-            $dropped      = CwmupgradeHelper::cleanup9xArtifacts();
+            // Only clean up once verify() confirms the 10.x schema is fully
+            // present -- on a partial/failed upgrade this must not run, or
+            // it destroys the only tables detect9xSchema() uses to detect
+            // that the wizard still needs to be re-run.
+            $dropped      = $verifyResult['success'] ? CwmupgradeHelper::cleanup9xArtifacts() : 0;
 
             $verifyResult['artifacts_dropped'] = $dropped;
             echo json_encode($verifyResult, JSON_THROW_ON_ERROR);

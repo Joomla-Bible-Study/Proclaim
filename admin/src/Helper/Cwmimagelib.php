@@ -25,6 +25,16 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 class Cwmimagelib
 {
     /**
+     * Largest source edge, in pixels, that will be decoded.
+     *
+     * Output is a 300x169 thumbnail, so anything approaching this is already
+     * far larger than needed.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const int MAX_SOURCE_DIMENSION = 8000;
+
+    /**
      * Extension Name
      *
      * @var string
@@ -78,8 +88,11 @@ class Cwmimagelib
                 self::resizeImage($newFilePath, $origFilePath);
 
                 return $newFileName;
-            } catch (\Exception $e) {
-                // Fall back to original if resize fails
+            } catch (\Throwable $e) {
+                // Fall back to the original image. Throwable rather than
+                // Exception because GD raises TypeError -- an Error -- when
+                // handed a failed decode, and that would otherwise escape and
+                // take down every page rendering this list.
                 return $img;
             }
         }
@@ -109,8 +122,14 @@ class Cwmimagelib
         float $canv_width = 300,
         float $canv_height = 169
     ): void {
-        $info = getimagesize($originalFile);
-        $mime = $info['mime'];
+        $info = @getimagesize($originalFile);
+
+        if (!\is_array($info) || (int) ($info[0] ?? 0) < 1 || (int) ($info[1] ?? 0) < 1) {
+            throw new \RuntimeException('Could not read image dimensions from ' . $originalFile);
+        }
+
+        [$width, $height] = [(int) $info[0], (int) $info[1]];
+        $mime             = (string) ($info['mime'] ?? '');
 
         switch ($mime) {
             case 'image/jpeg':
@@ -135,8 +154,33 @@ class Cwmimagelib
                 throw new \RuntimeException('Unknown image type.');
         }
 
-        $img              = $image_create_func($originalFile);
-        [$width, $height] = getimagesize($originalFile);
+        // PNG and GIF compress well enough that a small file can declare huge
+        // dimensions, and decoding is what allocates the memory -- 20000x20000
+        // is roughly 1.6GB as RGBA. Exceeding memory_limit is a raw fatal, not
+        // a Throwable, so nothing downstream could catch it. The only place to
+        // stop it is before the decode.
+        if ($width > self::MAX_SOURCE_DIMENSION || $height > self::MAX_SOURCE_DIMENSION) {
+            throw new \RuntimeException(
+                \sprintf(
+                    'Refusing to decode %dx%d image %s: over the %dpx limit',
+                    $width,
+                    $height,
+                    $originalFile,
+                    self::MAX_SOURCE_DIMENSION
+                )
+            );
+        }
+
+        $img = @$image_create_func($originalFile);
+
+        // A file can satisfy getimagesize() and still fail to decode -- a
+        // truncated PNG reports its header dimensions correctly and then
+        // returns false here. Passing that false on to imagecopyresampled()
+        // raises a TypeError, which is an Error rather than an Exception and so
+        // escapes the caller's catch, taking the whole page down.
+        if (!$img instanceof \GdImage) {
+            throw new \RuntimeException('Could not decode image ' . $originalFile);
+        }
 
         // Scale to fit within canvas while preserving aspect ratio (letterbox)
         $scale     = min($canv_width / $width, $canv_height / $height);
@@ -146,6 +190,10 @@ class Cwmimagelib
         $dst_y     = (int) round(($canv_height - $newHeight) / 2);
 
         $tmp = imagecreatetruecolor((int) $canv_width, (int) $canv_height);
+
+        if (!$tmp instanceof \GdImage) {
+            throw new \RuntimeException('Could not allocate the target canvas');
+        }
 
         // Fill background with neutral grey matching the CSS placeholder colour
         $bg = imagecolorallocate($tmp, 233, 236, 239);

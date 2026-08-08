@@ -50,6 +50,111 @@ class CwmproclaimHelper
     public static string $extension = 'com_proclaim';
 
     /**
+     * Cached installed component version.
+     *
+     * @var  ?string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?string $version = null;
+
+    /**
+     * Get the installed Proclaim version.
+     *
+     * Reads `#__extensions.manifest_cache`, which every Joomla application
+     * (site, admin, API, CLI) can query. This replaces the old
+     * BIBLESTUDY_VERSION constant, which admin/api.php only populated by
+     * parsing proclaim.xml off the filesystem, and only when the current
+     * client was 'administrator' — everywhere else, including the API
+     * application, it was an empty string. See #1429.
+     *
+     * @return  string  Semver version string, or '0.0.0' if unavailable
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getVersion(): string
+    {
+        if (self::$version !== null) {
+            return self::$version;
+        }
+
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName('manifest_cache'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'));
+            $db->setQuery($query);
+            $cache = $db->loadResult();
+
+            // JSON_THROW_ON_ERROR matters here: without it a corrupt
+            // manifest_cache decodes to null and this reports '0.0.0' with
+            // nothing written anywhere. CwminstallModel casts the result to an
+            // int to decide migration branching, so a silent 0 is a decision
+            // made on bad data rather than a failure someone can act on.
+            $manifest      = $cache ? json_decode($cache, true, 512, JSON_THROW_ON_ERROR) : null;
+            self::$version = $manifest['version'] ?? '0.0.0';
+        } catch (\Throwable $e) {
+            self::$version = '0.0.0';
+
+            // Still '0.0.0' — callers rely on that fallback — but no longer silent.
+            CwmlogHelper::error(
+                'Could not read the installed Proclaim version from #__extensions.manifest_cache; '
+                . 'reporting 0.0.0. ' . $e->getMessage()
+            );
+        }
+
+        return self::$version;
+    }
+
+    /**
+     * Define the legacy BIBLESTUDY_* path constants, if not already defined.
+     *
+     * Declared here rather than with `const` in admin/api.php, which only the
+     * administrator and site applications include — the API application never
+     * loads it, so code reachable from the API would see the constants as
+     * undefined and fatal. ProclaimComponent::boot() calls this and runs in
+     * every application.
+     *
+     * admin/api.php still calls this too, guarded, for the paths that reach
+     * that file without booting the component (e.g. postinstall messages).
+     *
+     * @return void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function defineLegacyPathConstants(): void
+    {
+        if (!\defined('BIBLESTUDY_COMPONENT_NAME')) {
+            \define('BIBLESTUDY_COMPONENT_NAME', 'com_proclaim');
+        }
+
+        if (!\defined('BIBLESTUDY_COMPONENT_RELPATH')) {
+            \define('BIBLESTUDY_COMPONENT_RELPATH', 'components' . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_NAME);
+        }
+
+        if (!\defined('BIBLESTUDY_ROOT_PATH')) {
+            \define('BIBLESTUDY_ROOT_PATH', JPATH_ROOT);
+        }
+
+        if (!\defined('BIBLESTUDY_ROOT_PATH_ADMIN')) {
+            \define('BIBLESTUDY_ROOT_PATH_ADMIN', JPATH_ADMINISTRATOR);
+        }
+
+        if (!\defined('BIBLESTUDY_MEDIA_PATH')) {
+            \define(
+                'BIBLESTUDY_MEDIA_PATH',
+                JPATH_ROOT . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'com_proclaim'
+            );
+        }
+
+        if (!\defined('BIBLESTUDY_PATH_ADMIN')) {
+            \define('BIBLESTUDY_PATH_ADMIN', BIBLESTUDY_ROOT_PATH_ADMIN . DIRECTORY_SEPARATOR . BIBLESTUDY_COMPONENT_RELPATH);
+        }
+    }
+
+    /**
      * Update View and Controller to work with Namespace Case-Sensitive
      *
      * @param   string  $defaultController  Default Controller
@@ -164,14 +269,22 @@ class CwmproclaimHelper
 
                     // Collect the black- or whitelisted tags and attributes.
                     // Each list is cumulative.
+                    // $tempTags/$tempAttributes are flat arrays of strings.
+                    // Spreading them passed each string as a positional
+                    // argument to array_merge(), which requires arrays -- a
+                    // TypeError as soon as any group configured a tag. Merging
+                    // the two arrays also makes the lists cumulative across
+                    // groups, which is what the comment above already claimed
+                    // and the overwrite did not do. Matches core's
+                    // ComponentHelper::filterText().
                     if ($filterType == 'BL') {
                         $blackList           = true;
-                        $blackListTags       = array_merge([], ...$tempTags);
-                        $blackListAttributes = array_merge([], ...$tempAttributes);
+                        $blackListTags       = array_merge($blackListTags, $tempTags);
+                        $blackListAttributes = array_merge($blackListAttributes, $tempAttributes);
                     } elseif ($filterType == 'WL') {
                         $whiteList           = true;
-                        $whiteListTags       = array_merge([], ...$tempTags);
-                        $whiteListAttributes = array_merge([], ...$tempAttributes);
+                        $whiteListTags       = array_merge($whiteListTags, $tempTags);
+                        $whiteListAttributes = array_merge($whiteListAttributes, $tempAttributes);
                     }
                 }
             }
@@ -253,9 +366,7 @@ class CwmproclaimHelper
     {
         $options = [];
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // $db      = $driver->getDriver();
-        $query = $db->createQuery();
+        $query   = $db->createQuery();
 
         $query->select('DISTINCT YEAR(' . $db->quoteName('createdate') . ') as value, YEAR(' . $db->quoteName('createdate') . ') as text');
         $query->from($db->quoteName('#__bsms_mediafiles'));
@@ -267,7 +378,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -302,7 +413,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -349,8 +460,12 @@ class CwmproclaimHelper
     public static function getTeachers(): array
     {
         $options = [];
-        $driver  = Factory::getContainer()->get(DatabaseInterface::class);
-        $db      = $driver->getDriver();
+        // The container returns the driver itself. Neither DatabaseInterface
+        // nor DatabaseDriver declares getDriver() -- that exists only as a
+        // static on DatabaseFactory -- so the extra hop was a fatal on the
+        // first call. Every sibling method here uses the container result
+        // directly.
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
         $query->select($db->quoteName('teacher.id', 'value') . ', ' . $db->quoteName('teacher.teachername', 'text'));
@@ -448,7 +563,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;
@@ -478,7 +593,7 @@ class CwmproclaimHelper
         try {
             $options = $db->loadObjectList();
         } catch (\RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage($e->getMessage(), 'worning');
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'warning');
         }
 
         return $options;

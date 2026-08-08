@@ -148,6 +148,20 @@ Include:
 - Expected vs actual behavior
 - Error messages/logs
 
+### Issue Hygiene
+
+- **Triage on read**: if you open an issue that's missing a label (`priority:*`, `area:*`, `status:*`), a milestone, or template fields (repro steps, version info), fill in what you can before moving on — don't leave it for someone else to re-derive later.
+- **Multi-issue features**: apply the `epic` label and use an `epic/{N}-{slug}` integration branch, with sub-PRs targeting that branch instead of `development`.
+- **Link branches to their issue**: don't just name a branch after the issue number — run `gh issue develop <issue-number> --branch <name>` (or use the issue's "Create a branch" button) so the branch and its PR show up under the issue's Development section automatically.
+
+### PR Hygiene
+
+PRs need the same metadata as issues — a linked branch alone isn't enough:
+
+- **Mirror the linked issue's labels** (`priority:*`, `area:*`, `bug`/`enhancement`) onto the PR. Docs-only or other PRs with no linked issue just skip labels.
+- **Assign the PR** (and its linked issue, if not already) to whoever is doing the work.
+- **Milestone**: use the milestone matching `active_development` in `build/versions.json` (e.g. `10.5.6`) for patch/bugfix work; create it if it doesn't exist yet. Larger breaking work goes in the next major milestone (e.g. `v11.0.0`) instead.
+
 ## Versioning
 
 Check `build/versions.json` for version numbers:

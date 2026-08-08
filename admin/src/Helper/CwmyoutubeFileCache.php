@@ -18,9 +18,8 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 /**
  * File-based persistent cache for YouTube API data.
  *
- * Centralizes all file-cache operations that were previously scattered
- * across the YouTube module helper. This allows the admin addon, scheduled
- * tasks, and the module to share the same cache files.
+ * The single home for YouTube file-cache operations, so the admin addon,
+ * scheduled tasks and the site module all read and write the same files.
  *
  * Cache directory: JPATH_ROOT/media/com_proclaim/youtube_cache/
  *
@@ -66,9 +65,22 @@ class CwmyoutubeFileCache
         ];
 
         try {
-            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), LOCK_EX);
+            $json = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
         } catch (\JsonException $e) {
             // Video data contained unencodable values — skip caching
+            return;
+        }
+
+        if (@file_put_contents($file, $json, LOCK_EX) === false) {
+            // This is the last-resort fallback the class docblock promises
+            // "ensures module can always show a video instead of 'no video
+            // available'" -- a silent write failure here means that
+            // guarantee silently stops holding with no trace. See #1551.
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_ERROR,
+                'Failed to write last-known-video fallback cache',
+                ['server_id' => $serverId, 'file' => $file]
+            );
         }
     }
 
@@ -86,14 +98,9 @@ class CwmyoutubeFileCache
     public static function getLastKnownVideo(int $serverId): ?array
     {
         $file = self::dir() . '/last_video_' . $serverId . '.json';
+        $raw  = self::readWithSharedLock($file);
 
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
+        if ($raw === null) {
             return null;
         }
 
@@ -134,9 +141,18 @@ class CwmyoutubeFileCache
         ];
 
         try {
-            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), LOCK_EX);
+            $json = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
         } catch (\JsonException $e) {
             // Skip caching
+            return;
+        }
+
+        if (@file_put_contents($file, $json, LOCK_EX) === false) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Failed to write video cache entry',
+                ['cache_key' => $cacheKey, 'file' => $file]
+            );
         }
     }
 
@@ -152,14 +168,9 @@ class CwmyoutubeFileCache
     public static function getVideoCache(string $cacheKey): ?array
     {
         $file = self::dir() . '/vcache_' . md5($cacheKey) . '.json';
+        $raw  = self::readWithSharedLock($file);
 
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
+        if ($raw === null) {
             return null;
         }
 
@@ -246,9 +257,18 @@ class CwmyoutubeFileCache
         ];
 
         try {
-            @file_put_contents($file, json_encode($data, JSON_THROW_ON_ERROR), LOCK_EX);
+            $json = json_encode($data, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             // Should never happen with string data — skip caching
+            return;
+        }
+
+        if (@file_put_contents($file, $json, LOCK_EX) === false) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Failed to write scheduled-start cache entry',
+                ['server_id' => $serverId, 'video_id' => $videoId, 'file' => $file]
+            );
         }
     }
 
@@ -268,14 +288,9 @@ class CwmyoutubeFileCache
     public static function getStoredScheduledStart(int $serverId, string $videoId): string
     {
         $file = self::dir() . '/schedule_' . $serverId . '_' . self::sanitizeId($videoId) . '.json';
+        $raw  = self::readWithSharedLock($file);
 
-        if (!file_exists($file)) {
-            return '';
-        }
-
-        $raw = @file_get_contents($file);
-
-        if ($raw === false) {
+        if ($raw === null) {
             return '';
         }
 
@@ -335,18 +350,32 @@ class CwmyoutubeFileCache
         }
 
         // Use fopen + flock for atomic read-write (prevents race conditions)
-        $fp = @fopen($file, 'c');
+        $fp = @fopen($file, 'cb');
 
         if ($fp === false) {
+            CwmyoutubeLogHelper::log(
+                CwmyoutubeLogHelper::LEVEL_WARNING,
+                'Failed to open search throttle file for writing',
+                ['server_id' => $serverId, 'file' => $file]
+            );
+
             return;
         }
 
         if (flock($fp, LOCK_EX)) {
             ftruncate($fp, 0);
             rewind($fp);
-            fwrite($fp, $json);
+            $written = fwrite($fp, $json);
             fflush($fp);
             flock($fp, LOCK_UN);
+
+            if ($written === false) {
+                CwmyoutubeLogHelper::log(
+                    CwmyoutubeLogHelper::LEVEL_WARNING,
+                    'Failed to write search throttle file',
+                    ['server_id' => $serverId, 'file' => $file]
+                );
+            }
         }
 
         fclose($fp);
@@ -366,28 +395,9 @@ class CwmyoutubeFileCache
     public static function getSearchThrottle(int $serverId): ?array
     {
         $file = self::dir() . '/search_throttle_' . $serverId . '.json';
+        $raw  = self::readWithSharedLock($file);
 
-        if (!file_exists($file)) {
-            return null;
-        }
-
-        // Use fopen + flock for consistent reads (prevents torn reads during writes)
-        $fp = @fopen($file, 'r');
-
-        if ($fp === false) {
-            return null;
-        }
-
-        $raw = '';
-
-        if (flock($fp, LOCK_SH)) {
-            $raw = stream_get_contents($fp);
-            flock($fp, LOCK_UN);
-        }
-
-        fclose($fp);
-
-        if ($raw === '' || $raw === false) {
+        if ($raw === null) {
             return null;
         }
 
@@ -624,10 +634,15 @@ class CwmyoutubeFileCache
      */
     private static function ensureDir(): void
     {
-        $dir = self::dir();
+        $dir     = self::dir();
+        $existed = is_dir($dir);
 
-        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        if (!$existed && !mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new \RuntimeException(\sprintf('Directory "%s" was not created', $dir));
+        }
+
+        if (!$existed) {
+            self::writeAccessDenyFiles($dir);
         }
 
         // One-time migration from old JPATH_CACHE location
@@ -637,6 +652,98 @@ class CwmyoutubeFileCache
             $migrated = true;
             self::migrateFromOldLocation();
         }
+    }
+
+    /**
+     * Write deny-all .htaccess/web.config into a newly created cache
+     * directory.
+     *
+     * media/backup/ ships these files statically because its directory is
+     * created at install time; this one is created at runtime, so the guards
+     * have to be written with it. Without them its contents -- quota counters,
+     * cached video metadata, scheduled-stream times -- are web-servable with
+     * no auth check.
+     *
+     * @param   string  $dir  The cache directory that was just created
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function writeAccessDenyFiles(string $dir): void
+    {
+        $htaccess = $dir . '/.htaccess';
+
+        if (!file_exists($htaccess)) {
+            @file_put_contents(
+                $htaccess,
+                "<IfModule !mod_authz_core.c>\n"
+                . "Order deny,allow\n"
+                . "Deny from all\n"
+                . "</IfModule>\n"
+                . "<IfModule mod_authz_core.c>\n"
+                . "  <RequireAll>\n"
+                . "    Require all denied\n"
+                . "  </RequireAll>\n"
+                . "</IfModule>\n"
+            );
+        }
+
+        $webConfig = $dir . '/web.config';
+
+        if (!file_exists($webConfig)) {
+            @file_put_contents(
+                $webConfig,
+                "<?xml version=\"1.0\"?>\n"
+                . "<configuration>\n"
+                . "    <system.webServer>\n"
+                . "        <security>\n"
+                . "            <requestFiltering>\n"
+                . "                <fileExtensions allowUnlisted=\"false\" />\n"
+                . "            </requestFiltering>\n"
+                . "        </security>\n"
+                . "    </system.webServer>\n"
+                . "</configuration>\n"
+            );
+        }
+    }
+
+    /**
+     * Read a cache file's contents under a shared lock.
+     *
+     * Pairs with the LOCK_EX writes used throughout this class: without a
+     * shared lock a reader can open the file mid-write, after truncation but
+     * before the new content is flushed, and see a torn document. Every read
+     * in this class goes through here for that reason.
+     *
+     * @param   string  $file  Absolute path to the cache file
+     *
+     * @return  string|null  File contents, or null if missing/unreadable
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function readWithSharedLock(string $file): ?string
+    {
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        $fp = @fopen($file, 'rb');
+
+        if ($fp === false) {
+            return null;
+        }
+
+        $raw = '';
+
+        if (flock($fp, LOCK_SH)) {
+            $raw = stream_get_contents($fp);
+            flock($fp, LOCK_UN);
+        }
+
+        fclose($fp);
+
+        return ($raw === '' || $raw === false) ? null : $raw;
     }
 
     /**

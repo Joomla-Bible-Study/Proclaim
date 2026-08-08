@@ -178,8 +178,20 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
             'CwmmediafileModel::save() must normalize the duration parts'
         );
 
-        // Mirror of the normalization the model applies, pinned so a change to
-        // the padding rule has to be a deliberate one.
+        // The normalization expression itself must survive in the model --
+        // an earlier version of this test re-ran a local copy of the padding
+        // math and asserted on its own result, which stayed green if the
+        // model's actual str_pad line was changed or removed while the
+        // foreach header stood.
+        $this->assertStringContainsString(
+            "str_pad((string) (int) \$value, 2, '0', STR_PAD_LEFT)",
+            $source,
+            'CwmmediafileModel::save() must left-pad each non-empty duration part to two digits'
+        );
+
+        // With the model's expression pinned above, evaluating the same
+        // expression against the provider cases documents the expected
+        // input/output table for reviewers.
         $value  = trim($typed);
         $result = $value === '' ? '' : str_pad((string) (int) $value, 2, '0', STR_PAD_LEFT);
 
@@ -202,10 +214,13 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         foreach ($files as $file) {
             $source = file_get_contents(\dirname(__DIR__, 4) . $file);
 
+            // Any duration part, either strictness, either quote style --
+            // the original pattern only covered $hours with strict
+            // operators, so `$minutes != '00'` slipped straight through.
             $this->assertDoesNotMatchRegularExpression(
-                "/\\\$hours\s*[!=]==\s*'00'/",
+                '/\$(hours|minutes|seconds|media_hours|media_minutes|media_seconds)\s*!==?\s*[\'"]00[\'"]/',
                 $source,
-                \sprintf('%s still compares a duration against the string \'00\'', $file)
+                \sprintf('%s still compares a duration part against the string \'00\'', $file)
             );
         }
     }
@@ -397,10 +412,22 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         foreach ($files as $file) {
             $source = file_get_contents($root . $file);
 
-            $this->assertStringNotContainsString(
-                "get('protocol', 'http://')",
+            // Regex instead of the previous exact-literal check: a fallback
+            // reintroduced with double quotes or different spacing
+            // (get("protocol", "http://")) evaded the single fixed spelling.
+            $this->assertDoesNotMatchRegularExpression(
+                '/get\(\s*[\'"]protocol[\'"]\s*,\s*[\'"]http:\/\/[\'"]\s*\)/',
                 $source,
                 \sprintf('%s still falls back to http://', $file)
+            );
+
+            // And require the https:// fallback to actually be present, so
+            // the negative check above can't be satisfied by the protocol
+            // lookup disappearing entirely.
+            $this->assertMatchesRegularExpression(
+                '/get\(\s*[\'"]protocol[\'"]\s*,\s*[\'"]https:\/\/[\'"]\s*\)/',
+                $source,
+                \sprintf('%s must fall back to https://', $file)
             );
         }
     }
@@ -446,6 +473,18 @@ class CwmpodcastFeedSpecTest extends ProclaimTestCase
         string $stored,
         bool $expected
     ): void {
+        // validatePodcastMedia() is DB-bound, so the comparison can't be
+        // invoked directly here. Pin the exact comparison expression in the
+        // source first -- without this, the local mirror below checked only
+        // itself, and inverting/deleting the validator's comparison stayed
+        // green.
+        $source = file_get_contents(\dirname(__DIR__, 4) . '/site/src/Helper/Cwmpodcast.php');
+        $this->assertStringContainsString(
+            '$derived !== null && $derived !== $mimeType',
+            $source,
+            'validatePodcastMedia() must warn exactly when detection disagrees with a non-null derived type'
+        );
+
         $derived = \CWM\Component\Proclaim\Administrator\Helper\Cwmmime::fromExtension($filename);
         $warns   = $derived !== null && $derived !== $stored;
 

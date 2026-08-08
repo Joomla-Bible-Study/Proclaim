@@ -25,6 +25,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 use Joomla\Input\Input;
+use Joomla\Registry\Registry;
 
 /**
  * Class UploadScript
@@ -46,14 +47,19 @@ class Cwmuploadscript
     /**
      * Upload media files
      *
-     * @param   Input|array  $data  Data to upload
+     * Reached through CwmmediafileController::xhr(), which passes the request
+     * Input object straight through to the addon's upload(). Typed as Input
+     * because that is what arrives and what the body uses; the addon overrides
+     * must match, or the call raises a TypeError before this method is entered.
+     *
+     * @param   Input  $data  Request input carrying the upload target path
      *
      * @return array
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function upload($data): array
+    public function upload(Input $data): array
     {
         Session::checkToken('get') or die('Invalid Token');
         $params = ComponentHelper::getParams('com_proclaim');
@@ -108,6 +114,8 @@ class Cwmuploadscript
         PluginHelper::importPlugin('content');
         $app = Factory::getApplication();
 
+        self::applyConfiguredExtensions($params);
+
         if (!$mediaHelper->canUpload($file, 'com_proclaim')) {
             // The file can't be uploaded
             return ['data' => '', 'error' => 'The file can\'t be uploaded by types allowed'];
@@ -136,6 +144,40 @@ class Cwmuploadscript
                 'size'     => $_FILES['file']['size'],
             ],
         ];
+    }
+
+    /**
+     * Make the admin's configured "Legal Extensions" the list actually enforced.
+     *
+     * MediaHelper::canUpload() reads its extension allow-list from
+     * `restrict_uploads_extensions` (com_media's key name), which
+     * com_proclaim's config.xml never defines -- it defines `upload_extensions`
+     * instead. Registry::get() therefore fell back to Joomla's hardcoded
+     * default list every time, so the admin's setting was silently ignored:
+     * adding e.g. `vtt` to "Legal Extensions" still got the upload rejected,
+     * with no way to fix it from the UI.
+     *
+     * canUpload() re-reads the params internally via
+     * ComponentHelper::getParams('com_proclaim'), which returns this same
+     * cached Registry instance, so setting the key here is observed by it.
+     *
+     * Copied only when non-empty -- an empty list would make canUpload()
+     * reject every file, which is worse than falling back to Joomla's
+     * defaults (the pre-fix behaviour).
+     *
+     * @param   Registry  $params  com_proclaim's params (the shared instance)
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    protected static function applyConfiguredExtensions(Registry $params): void
+    {
+        $legalExtensions = trim((string) $params->get('upload_extensions', ''));
+
+        if ($legalExtensions !== '') {
+            $params->set('restrict_uploads_extensions', $legalExtensions);
+        }
     }
 
     /**

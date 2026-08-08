@@ -65,7 +65,12 @@ class CwmliveEventTest extends IntegrationTestCase
      */
     protected function tearDown(): void
     {
-        $this->db->transactionRollback();
+        // When setUp() skips (no DB), $this->db was never initialized and an
+        // unconditional dereference turns every skip into an error on
+        // DB-less machines.
+        if (isset($this->db)) {
+            $this->db->transactionRollback();
+        }
 
         parent::tearDown();
     }
@@ -311,7 +316,7 @@ class CwmliveEventTest extends IntegrationTestCase
                 return '';
             }
 
-            protected function upload(?array $data): mixed
+            protected function upload(\Joomla\Input\Input $data): mixed
             {
                 return null;
             }

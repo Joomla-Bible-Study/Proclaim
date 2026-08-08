@@ -66,8 +66,10 @@ class CwmyoutubeLogHelper
     {
         $dir = JPATH_CACHE . self::LOG_DIR;
 
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0755, true);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            error_log(\sprintf('[Proclaim] CwmyoutubeLogHelper: directory "%s" was not created', $dir));
+
+            return;
         }
 
         $file = JPATH_CACHE . self::LOG_FILE;
@@ -75,12 +77,18 @@ class CwmyoutubeLogHelper
         // Auto-rotate before writing
         self::rotate($file);
 
-        $entry = json_encode([
-            'timestamp' => (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('c'),
-            'level'     => $level,
-            'message'   => $message,
-            'context'   => $context,
-        ], JSON_UNESCAPED_SLASHES);
+        try {
+            $entry = json_encode([
+                'timestamp' => (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('c'),
+                'level'     => $level,
+                'message'   => $message,
+                'context'   => $context,
+            ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+        } catch (\JsonException $e) {
+            error_log(\sprintf('[Proclaim] CwmyoutubeLogHelper: failed to encode log entry: %s', $e->getMessage()));
+
+            return;
+        }
 
         @file_put_contents($file, $entry . "\n", FILE_APPEND | LOCK_EX);
     }
@@ -97,20 +105,47 @@ class CwmyoutubeLogHelper
      */
     public static function getEntries(int $limit = 100, ?string $level = null): array
     {
-        $file = JPATH_CACHE . self::LOG_FILE;
+        $file    = JPATH_CACHE . self::LOG_FILE;
+        $entries = [];
 
+        // Newest first, so the active file is read before the rotated backup.
+        // Reading only the active file meant that the moment rotation fired the
+        // admin log viewer went nearly empty, with the recent history sitting
+        // unread one file away and nothing to say it existed.
+        self::readInto($entries, $file, $limit, $level);
+
+        if (\count($entries) < $limit) {
+            self::readInto($entries, $file . '.1', $limit, $level);
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Append entries from one log file, newest first, up to $limit in total.
+     *
+     * @param   array    $entries  Collected entries, appended to in place.
+     * @param   string   $file     Absolute path to a log file.
+     * @param   int      $limit    Total number of entries wanted.
+     * @param   ?string  $level    Restrict to one level, or null for all.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function readInto(array &$entries, string $file, int $limit, ?string $level): void
+    {
         if (!file_exists($file)) {
-            return [];
+            return;
         }
 
         $raw = @file_get_contents($file);
 
-        if ($raw === false || $raw === '') {
-            return [];
+        if ($raw === false || trim($raw) === '') {
+            return;
         }
 
-        $lines   = explode("\n", trim($raw));
-        $entries = [];
+        $lines = explode("\n", trim($raw));
 
         // Read in reverse order (newest first)
         for ($i = \count($lines) - 1; $i >= 0 && \count($entries) < $limit; $i--) {
@@ -120,7 +155,11 @@ class CwmyoutubeLogHelper
 
             try {
                 $entry = json_decode($lines[$i], true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
+            } catch (\JsonException) {
+                continue;
+            }
+
+            if (!\is_array($entry)) {
                 continue;
             }
 
@@ -130,8 +169,6 @@ class CwmyoutubeLogHelper
 
             $entries[] = $entry;
         }
-
-        return $entries;
     }
 
     /**
@@ -199,6 +236,32 @@ class CwmyoutubeLogHelper
         $backup = $file . '.1';
 
         // Overwrite previous backup
-        @rename($file, $backup);
+        if (@rename($file, $backup)) {
+            return;
+        }
+
+        // rename() can fail for reasons that have nothing to do with this code
+        // -- an NFS mount, an SELinux or AppArmor rule, another process holding
+        // the destination open. Suppressed and unchecked, every later log()
+        // call re-checked the still-oversized file, re-failed the same rename,
+        // and appended anyway, so the file grew without bound and nothing said
+        // so.
+        //
+        // Copy-then-truncate reaches the same end state without renaming.
+        if (@copy($file, $backup) && @file_put_contents($file, '') !== false) {
+            error_log('Proclaim: YouTube log rotated by copy; rename() failed for ' . $file);
+
+            return;
+        }
+
+        // Last resort. This loses the entries, which is worse than rotating
+        // them -- but a log that grows until it fills the disk is worse still.
+        if (@file_put_contents($file, '') !== false) {
+            error_log('Proclaim: YouTube log truncated; could not rotate ' . $file);
+
+            return;
+        }
+
+        error_log('Proclaim: YouTube log could not be rotated or truncated: ' . $file);
     }
 }

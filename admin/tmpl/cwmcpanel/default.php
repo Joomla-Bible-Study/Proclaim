@@ -22,6 +22,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmsetupwizardHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -116,23 +117,6 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <?php
             endif; ?>
 
-            <?php if (\Joomla\CMS\Component\ComponentHelper::isEnabled('com_actionlogs')) : ?>
-            <div class="col-12">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            <span class="icon-list-2" aria-hidden="true"></span>
-                            <?php echo Text::_('JBS_CPANEL_ACTIONLOG_TITLE'); ?>
-                        </h3>
-                        <p><?php echo Text::_('JBS_CPANEL_ACTIONLOG_DESC'); ?></p>
-                        <a href="<?php echo Route::_('index.php?option=com_actionlogs&view=actionlogs&filter[extension]=com_proclaim'); ?>"
-                           class="btn btn-primary btn-large">
-                            <?php echo Text::_('JBS_CPANEL_ACTIONLOG_LINK'); ?>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
         <?php
             if ($simple->mode === 1 && $simple->display === 1) {
                 ?>
@@ -266,22 +250,21 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
         <?php endif; ?>
         <?php
-            // Content awaiting editorial review (unpublished studies) — shown to publishers only
+            // Submitted through the API and awaiting review — publishers only.
             if ($this->pendingReview > 0) :
         ?>
             <div class="col-12">
-                <div class="alert alert-info">
+                <div class="alert alert-info d-flex align-items-center gap-2 py-2">
                     <span class="icon-pencil-2" aria-hidden="true"></span>
-                    <strong><?php echo Text::_('JBS_CPL_PENDING_REVIEW_TITLE'); ?></strong>
-                    <p class="mb-1">
+                    <span class="flex-grow-1">
                         <?php echo Text::plural('JBS_CPL_PENDING_REVIEW_DESC_N', $this->pendingReview); ?>
-                    </p>
+                    </span>
                     <?php // btn-primary, not btn-info: inside an .alert Atum's link
                           // colour overrides the button text and lands dark-on-blue
                           // at 1.68:1. The PIM alert above uses btn-primary and
                           // passes; match it. ?>
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmmessages&filter[published]=0'); ?>"
-                       class="btn btn-primary btn-sm">
+                       class="btn btn-primary btn-sm flex-shrink-0">
                         <?php echo Text::_('JBS_CPL_PENDING_REVIEW_BUTTON'); ?>
                     </a>
                 </div>
@@ -350,7 +333,27 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             <h2 class="text-center">
                 <?php echo Text::_('JBS_CPL_MENUE_LINKS'); ?>
             </h2>
-            <?php $isAdmin = $cpanelUser->authorise('core.admin'); ?>
+            <?php
+            $isAdmin = $cpanelUser->authorise('core.admin');
+
+            // One rule for every tile: show a destination only to someone who
+            // could do something once they arrive. access.xml defines a section
+            // per entity, so each tile asks about its own -- previously a few
+            // were gated on core.admin (Super User only, hiding them from
+            // legitimate managers) and the rest on nothing at all, which sent
+            // users to a 403 the component dispatcher raises.
+            $canSee = static fn (string $section): bool =>
+                $cpanelUser->authorise('core.edit', 'com_proclaim.' . $section)
+                || $cpanelUser->authorise('core.create', 'com_proclaim.' . $section)
+                || $cpanelUser->authorise('core.edit.own', 'com_proclaim.' . $section);
+
+            // Message types, topics, templates, template files and the action
+            // log configure how Proclaim works rather than what it holds.
+            // Simple mode hides them, and anyone below Super User gets that same
+            // reduced set whatever the site setting says -- a manager runs the
+            // content, an administrator configures the component.
+            $advanced = !$simple->mode && $isAdmin;
+            ?>
             <div class="container">
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
                     <?php if ($isAdmin) : ?>
@@ -362,6 +365,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
+                    <?php if ($canSee('message')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessages'); ?>"
                            title="<?php echo Text::_('JBS_CMN_STUDIES'); ?>" class="cpanel-btn">
@@ -369,6 +373,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_STUDIES'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($canSee('mediafile')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmediafiles'); ?>"
                            title="<?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?>" class="cpanel-btn">
@@ -376,6 +382,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_MEDIA_FILES'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($canSee('teacher')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmteachers'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TEACHERS'); ?>" class="cpanel-btn">
@@ -383,6 +391,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TEACHERS'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($canSee('serie')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmseries'); ?>"
                            title="<?php echo Text::_('JBS_CMN_SERIES'); ?>" class="cpanel-btn">
@@ -390,7 +400,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_SERIES'); ?></span>
                         </a>
                     </div>
-                    <?php if (!$simple->mode && $isAdmin) : ?>
+                    <?php endif; ?>
+                    <?php if ($advanced && $canSee('messagetype')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
                            title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="cpanel-btn">
@@ -399,7 +410,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($isAdmin) : ?>
+                    <?php if ($canSee('location')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
                            title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="cpanel-btn">
@@ -408,7 +419,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if (!$simple->mode && $isAdmin) : ?>
+                    <?php if ($advanced && $canSee('topic')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="cpanel-btn">
@@ -416,6 +427,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TOPICS'); ?></span>
                         </a>
                     </div>
+                    <?php if ($canSee('comment')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
                            title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="cpanel-btn">
@@ -424,7 +436,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($isAdmin) : ?>
+                    <?php endif; ?>
+                    <?php if ($canSee('server')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmservers'); ?>"
                            title="<?php echo Text::_('JBS_CMN_SERVERS'); ?>" class="cpanel-btn">
@@ -433,6 +446,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
+                    <?php if ($canSee('podcast')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmpodcasts'); ?>"
                            title="<?php echo Text::_('JBS_CMN_PODCASTS'); ?>" class="cpanel-btn">
@@ -440,6 +454,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_PODCASTS'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($cpanelUser->authorise('core.manage', 'com_proclaim')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmanalytics'); ?>"
                            title="<?php echo Text::_('JBS_ANA_ANALYTICS'); ?>" class="cpanel-btn">
@@ -447,7 +463,9 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_ANA_ANALYTICS'); ?></span>
                         </a>
                     </div>
-                    <?php if (!$simple->mode) : ?>
+                    <?php endif; ?>
+                    <?php if ($advanced) : ?>
+                    <?php if ($canSee('template')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TEMPLATES'); ?>" class="cpanel-btn">
@@ -455,6 +473,8 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TEMPLATES'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($canSee('templatecode')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplatecodes'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?>" class="cpanel-btn">
@@ -462,6 +482,22 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TEMPLATECODE'); ?></span>
                         </a>
                     </div>
+                    <?php endif; ?>
+                    <?php
+                    // The action log lives in com_actionlogs, so the permission
+                    // that matters is that component's -- the dispatcher refuses
+                    // anyone without core.manage on it, and a Proclaim-only
+                    // editor has no reason to hold that.
+                    if (ComponentHelper::isEnabled('com_actionlogs')
+                        && $cpanelUser->authorise('core.manage', 'com_actionlogs')) : ?>
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_actionlogs&view=actionlogs&filter[extension]=com_proclaim'); ?>"
+                           title="<?php echo Text::_('JBS_CPANEL_ACTIONLOG_TITLE'); ?>" class="cpanel-btn">
+                            <i class="icon-list-2 fa-3x"></i>
+                            <span><?php echo Text::_('JBS_CPANEL_ACTIONLOG_TITLE'); ?></span>
+                        </a>
+                    </div>
+                    <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>

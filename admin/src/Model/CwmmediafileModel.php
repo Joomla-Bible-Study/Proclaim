@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Field\MediaFileImagesField;
 use CWM\Component\Proclaim\Administrator\Helper\CwmImageCleanup;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmplaylistSyncHelper;
@@ -903,9 +904,18 @@ class CwmmediafileModel extends AdminModel
     }
 
     /**
-     * Batch pop-up changes for a group of media files.
+     * Batch display changes (image, button or icon) for a group of media files.
      *
-     * @param   string  $value     The new value matching a client.
+     * $value is the JSON blob Cwmhtml::mediaType() offers, describing one whole
+     * display configuration. Applying it to a media file means writing every
+     * key in it: setting media_use_button_icon to "button" while leaving the
+     * previous button type and text behind would produce a configuration the
+     * administrator never chose.
+     *
+     * The same change Image Tools makes to every file sharing a configuration,
+     * scoped instead to the selected rows.
+     *
+     * @param   string  $value     JSON display configuration from the batch widget.
      * @param   array   $pks       An array of row IDs.
      * @param   array   $contexts  An array of item contexts.
      *
@@ -916,24 +926,57 @@ class CwmmediafileModel extends AdminModel
      */
     protected function batchMediatype($value, $pks, $contexts): bool
     {
-        // Set the variables
+        try {
+            $decoded = json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            $decoded = null;
+        }
+
+        if (!\is_array($decoded)) {
+            $this->setError(Text::_('JBS_BAT_MEDIATYPE_INVALID'));
+
+            return false;
+        }
+
+        // $value arrives from the request, so take only the keys that describe
+        // a display configuration and ignore anything else the payload carries.
+        // These params are rendered into the page, so writing arbitrary keys
+        // from a hand-edited POST would be an injection surface.
+        $settings = [];
+
+        foreach (MediaFileImagesField::DISPLAY_KEYS as $key) {
+            if (\array_key_exists($key, $decoded) && \is_scalar($decoded[$key])) {
+                $settings[$key] = (string) $decoded[$key];
+            }
+        }
+
+        if ($settings === []) {
+            $this->setError(Text::_('JBS_BAT_MEDIATYPE_INVALID'));
+
+            return false;
+        }
+
         $user  = Factory::getApplication()->getIdentity();
         $table = $this->getTable();
 
         foreach ($pks as $pk) {
-            if ($user->authorise('core.edit', $contexts[$pk])) {
-                $table->reset();
-                $table->load($pk);
-                $reg = new Registry();
-                $reg->loadString($table->params);
-                $reg->set('media_image', (int)$value);
-                $table->params = $reg->toString();
-
-                if (!$table->store()) {
-                    throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
-                }
-            } else {
+            if (!$user->authorise('core.edit', $contexts[$pk])) {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
+            }
+
+            $table->reset();
+            $table->load($pk);
+            $reg = new Registry();
+            $reg->loadString($table->params);
+
+            foreach ($settings as $key => $setting) {
+                $reg->set($key, $setting);
+            }
+
+            $table->params = $reg->toString();
+
+            if (!$table->store()) {
+                throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
             }
         }
 

@@ -19,8 +19,10 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Version;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
@@ -46,17 +48,152 @@ class Cwmbackup
      */
     protected string $dumpFile = '';
 
-    /** @var string Data cache, used to cache data before being written to disk
-     *
-     * @since 9.0.0
-     */
-    protected string $data_cache = '';
-
     /** @var string Relative path of how the file should be saved in the archive
      *
      * @since 9.0.0
      */
     protected string $saveAsName = '';
+
+    /**
+     * Cached list of this component's own table names (with `#__` prefix), as
+     * returned by CwmdbHelper::getObjects(). Populated on first use.
+     *
+     * @var string[]|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?array $knownTables = null;
+
+    /**
+     * Reject any table name that isn't one of this component's own tables.
+     *
+     * The table-export methods below take `$table` from AJAX request input
+     * (see CwmbackupController::exportTableXHR()) and interpolate it directly
+     * into `SHOW CREATE TABLE`/`SELECT *` queries. Without this check, a
+     * request for e.g. `#__users` would export Joomla's user table — including
+     * password hashes — through an endpoint meant only for this component's
+     * own `#__bsms_*` tables. Validating here (not just in the controller)
+     * keeps every export method safe regardless of caller.
+     *
+     * @param   string  $table  Full table name (with `#__` prefix) to check
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function isKnownProclaimTable(string $table): bool
+    {
+        if (self::$knownTables === null) {
+            self::$knownTables = array_column(CwmdbHelper::getObjects(), 'name');
+        }
+
+        if (\in_array($table, self::$knownTables, true)) {
+            return true;
+        }
+
+        Log::add('Rejected export/count request for non-Proclaim table: ' . $table, Log::WARNING, 'com_proclaim');
+
+        return false;
+    }
+
+    /**
+     * Cached per-table ORDER BY clause (built from the table's actual
+     * primary key), keyed by table name. Populated on first use.
+     *
+     * @var array<string, string>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static array $primaryKeyOrderClauses = [];
+
+    /**
+     * Cached per-table set of generated column names, keyed by table name.
+     * Populated on first use.
+     *
+     * @var array<string, array<string, true>>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static array $generatedColumns = [];
+
+    /**
+     * List the columns a table computes for itself.
+     *
+     * A generated column's value comes from its expression, and MySQL rejects
+     * any statement that writes one. The restored dump recreates the column
+     * from SHOW CREATE TABLE, so an exported INSERT naming it fails the whole
+     * restore. #__bsms_studies.studynumber_uk and
+     * #__bsms_playlists.remote_playlist_uk are two such columns.
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Full table name (with `#__` prefix)
+     *
+     * @return  array<string, true>  Column names as keys
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function getGeneratedColumns(DatabaseInterface $db, string $table): array
+    {
+        if (isset(self::$generatedColumns[$table])) {
+            return self::$generatedColumns[$table];
+        }
+
+        $generated = [];
+
+        try {
+            foreach ($db->getTableColumns($table, false) as $name => $column) {
+                if (stripos($column->Extra ?? '', 'GENERATED') !== false) {
+                    $generated[$name] = true;
+                }
+            }
+        } catch (\RuntimeException) {
+            // Treat an unreadable schema as "nothing generated" rather than
+            // aborting the backup; the restore would surface any real problem.
+        }
+
+        self::$generatedColumns[$table] = $generated;
+
+        return $generated;
+    }
+
+    /**
+     * Build a deterministic ORDER BY clause from a table's primary key.
+     *
+     * Handles composite keys by ordering on every key column in index
+     * sequence. Returns an empty string for a table with no primary key
+     * (rare; the caller falls back to unordered in that case).
+     *
+     * @param   DatabaseInterface  $db     Database driver
+     * @param   string             $table  Full table name (with `#__` prefix)
+     *
+     * @return  string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function getPrimaryKeyOrderClause(DatabaseInterface $db, string $table): string
+    {
+        if (isset(self::$primaryKeyOrderClauses[$table])) {
+            return self::$primaryKeyOrderClauses[$table];
+        }
+
+        $keys              = $db->getTableKeys($table);
+        $primaryKeyColumns = [];
+
+        foreach ($keys as $key) {
+            if (($key->Key_name ?? '') === 'PRIMARY') {
+                $primaryKeyColumns[(int) $key->Seq_in_index] = $key->Column_name;
+            }
+        }
+
+        ksort($primaryKeyColumns);
+
+        $clause = implode(', ', array_map(
+            static fn ($column) => $db->quoteName($column) . ' ASC',
+            $primaryKeyColumns
+        ));
+
+        return self::$primaryKeyOrderClauses[$table] = $clause;
+    }
 
     /**
      * Generate a standardized backup filename
@@ -85,9 +222,14 @@ class Cwmbackup
         // Get current date in ISO format
         $date = date('Y-m-d');
 
-        // Get Proclaim version
-        $versionHelper = new Version();
-        $version       = $versionHelper->getShortVersion();
+        // Get Proclaim version.
+        //
+        // From the installed manifest, not Version.php's constants: those are
+        // maintained by hand and are not touched by the release tooling, so
+        // they drift. They read 10.3.1 while versions.json says 10.5.5, which
+        // put a version two minor releases stale into every backup filename --
+        // exactly the thing a filename like this exists to record.
+        $version = CwmproclaimHelper::getVersion();
 
         return \sprintf('proclaim-backup_%s_%s_v%s.sql', $siteName, $date, $version);
     }
@@ -344,6 +486,17 @@ class Cwmbackup
     }
 
     /**
+     * Number of rows read and written per chunk in exportdb()'s per-table
+     * loop. Keeps peak memory bounded to one chunk's worth of row objects
+     * plus generated SQL text, regardless of table size.
+     *
+     * @var int
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const int EXPORT_CHUNK_SIZE = 500;
+
+    /**
      * Export DB//
      *
      * @param   int  $run  ID
@@ -359,25 +512,50 @@ class Cwmbackup
         $objects          = CwmdbHelper::getObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
-        $path1            = '';
 
+        $this->dumpFile = $run === 2
+            ? JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName
+            : $path;
+
+        // Truncate/create the dump file before the first append below.
+        if (file_put_contents($this->dumpFile, '') === false) {
+            return false;
+        }
+
+        // Stream each table's DDL + rows in bounded chunks and flush to
+        // disk immediately, rather than buffering the entire database dump
+        // in memory before a single write.
         foreach ($objects as $object) {
-            $this->getExportTable($object['name']);
+            $table = $object['name'];
+
+            if (!$this->writeln($this->getExportTableStructure($table))) {
+                return false;
+            }
+
+            $rowCount = $this->getTableRowCount($table);
+
+            for ($offset = 0; $offset < $rowCount; $offset += self::EXPORT_CHUNK_SIZE) {
+                if (!$this->writeln($this->getExportTableRows($table, $offset, self::EXPORT_CHUNK_SIZE))) {
+                    return false;
+                }
+            }
+
+            if (!$this->writeln("\n-- --------------------------------------------------------\n\n")) {
+                return false;
+            }
         }
 
         // Append component configuration, scheduled tasks, and asset ACLs.
-        $this->data_cache .= $this->getComponentConfigExport();
-        $this->data_cache .= $this->getScheduledTasksExport();
-        $this->data_cache .= $this->getProclaimAssetsExport();
+        if (
+            !$this->writeln($this->getComponentConfigExport())
+            || !$this->writeln($this->getScheduledTasksExport())
+            || !$this->writeln($this->getProclaimAssetsExport())
+        ) {
+            return false;
+        }
 
         switch ($run) {
             case 1:
-                $this->dumpFile = $path;
-
-                if (!$this->writeln($this->data_cache)) {
-                    return false;
-                }
-
                 $mime_type = 'text/x-sql';
 
                 if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
@@ -389,12 +567,6 @@ class Cwmbackup
 
                 break;
             case 2:
-                $this->dumpFile = JPATH_SITE . '/media/com_proclaim/backup/' . $this->saveAsName;
-
-                if (!$this->writeln($this->data_cache)) {
-                    return false;
-                }
-
                 if (Factory::getApplication()->getInput()->getInt('jbs_compress', 1)) {
                     $path = $this->compress();
                 }
@@ -465,65 +637,15 @@ class Cwmbackup
             return $this->getProclaimAssetsExport();
         }
 
-        // Reset the execution time limit for long-running exports
-        if (\function_exists('set_time_limit')) {
-            set_time_limit(\ini_get('max_execution_time'));
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
         }
 
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // Get the prefix
-        $prefix = $db->getPrefix();
-        $export = '';
-
-        // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
-
-        // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
-        $db->setQuery($query);
-        $table_def = $db->loadObject();
-
-        foreach ($table_def as $value) {
-            if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=', 'ENGINE=', $export);
-            }
-        }
-
-        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Get the table rows and create insert statements from them
-        $query = $db->createQuery();
-        $query->select('*')
-            ->from($db->quoteName($table));
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-
-        if ($results) {
-            foreach ($results as $result) {
-                $data   = [];
-                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
-
-                foreach ($result as $key => $value) {
-                    if ($value === null) {
-                        $data[] = $db->quoteName($key) . "=NULL";
-                    } else {
-                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
-                    }
-                }
-
-                $export .= implode(',', $data);
-                $export .= ";\n";
-            }
-        }
-
-        $export .= "\n-- --------------------------------------------------------\n\n";
-
-        return $export;
+        // Delegate to the chunked pair (limit 0 = unbounded) so the DDL
+        // and row-dump logic lives in exactly one place.
+        return $this->getExportTableStructure($table)
+            . $this->getExportTableRows($table, 0, 0)
+            . "\n-- --------------------------------------------------------\n\n";
     }
 
     /**
@@ -537,6 +659,10 @@ class Cwmbackup
      */
     public function getTableRowCount(string $table): int
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return 0;
+        }
+
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery()
             ->select('COUNT(*)')
@@ -557,6 +683,10 @@ class Cwmbackup
      */
     public function getExportTableStructure(string $table): string
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
+        }
+
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $prefix = $db->getPrefix();
         $export = '';
@@ -593,6 +723,10 @@ class Cwmbackup
      */
     public function getExportTableRows(string $table, int $offset, int $limit): string
     {
+        if (!self::isKnownProclaimTable($table)) {
+            return '';
+        }
+
         if (\function_exists('set_time_limit')) {
             set_time_limit(\ini_get('max_execution_time'));
         }
@@ -602,10 +736,25 @@ class Cwmbackup
         $query = $db->createQuery()
             ->select('*')
             ->from($db->quoteName($table));
+
+        // A bounded LIMIT/OFFSET with no ORDER BY has no guaranteed row
+        // order across separate queries -- paging in chunks (as exportdb()
+        // now does) could then skip or duplicate rows between calls. Order
+        // by the table's actual primary key (composite-key safe) so paging
+        // is deterministic; tables with no primary key fall back to
+        // unordered (matches the pre-chunking behavior for that edge case).
+        $orderBy = self::getPrimaryKeyOrderClause($db, $table);
+
+        if ($orderBy !== '') {
+            $query->order($orderBy);
+        }
+
         $db->setQuery($query, $offset, $limit);
         $results = $db->loadObjectList();
 
         $export = '';
+
+        $generated = self::getGeneratedColumns($db, $table);
 
         if ($results) {
             foreach ($results as $result) {
@@ -613,6 +762,12 @@ class Cwmbackup
                 $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
 
                 foreach ($result as $key => $value) {
+                    // The table computes these itself and rejects any attempt to
+                    // write them, so naming one here would fail the restore.
+                    if (isset($generated[$key])) {
+                        continue;
+                    }
+
                     if ($value === null) {
                         $data[] = $db->quoteName($key) . "=NULL";
                     } else {
@@ -628,84 +783,6 @@ class Cwmbackup
     }
 
     /**
-     * Get Export Table
-     *
-     * @param   string  $table  Table name
-     *
-     * @return bool
-     *
-     * @since 9.0.0
-     */
-    public function getExportTable(string $table): bool
-    {
-        if (!$table) {
-            return false;
-        }
-
-        // Reset the execution time limit for long-running exports
-        if (\function_exists('set_time_limit')) {
-            set_time_limit(\ini_get('max_execution_time'));
-        }
-
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // Get the prefix
-        $prefix = $db->getPrefix();
-        $export = '';
-
-        // Start of Tables
-        $export .= "--\n-- Table structure for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Drop the existing table
-        $export .= 'DROP TABLE IF EXISTS ' . $db->quoteName($table) . ";\n";
-
-        // Create a new table definition based on the incoming database
-        $query = 'SHOW CREATE TABLE ' . $db->quoteName($table);
-        $db->setQuery($query);
-        $table_def = $db->loadObject();
-
-        foreach ($table_def as $value) {
-            if (substr_count($value, 'CREATE')) {
-                $export .= str_replace($prefix, '#__', $value) . ";\n";
-                $export = str_replace('TYPE=', 'ENGINE=', $export);
-            }
-        }
-
-        $export .= "\n\n--\n-- Dumping data for table " . $db->quoteName($table) . "\n--\n\n";
-
-        // Get the table rows and create insert statements from them
-        $query = $db->createQuery();
-        $query->select('*')
-            ->from($db->quoteName($table));
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-
-        if ($results) {
-            foreach ($results as $result) {
-                $data   = [];
-                $export .= 'INSERT INTO ' . $db->quoteName($table) . ' SET ';
-
-                foreach ($result as $key => $value) {
-                    if ($value === null) {
-                        $data[] = $db->quoteName($key) . "=NULL";
-                    } else {
-                        $data[] = $db->quoteName($key) . "=" . $db->q(trim(str_replace(["\r\n", "\r"], "\n", $value)));
-                    }
-                }
-
-                $export .= implode(',', $data);
-                $export .= ";\n";
-            }
-        }
-
-        $export .= "\n-- --------------------------------------------------------\n\n";
-
-        $this->data_cache .= $export;
-
-        return true;
-    }
-
-    /**
      * Saves the string in $fileData to the file.
      *
      * @param   string  $fileData  Data to write. Set to null to close the file handle.
@@ -717,6 +794,17 @@ class Cwmbackup
      */
     protected function writeln(string $fileData): bool
     {
+        // file_put_contents() returns 0 (falsy) for an empty string, which
+        // would otherwise read as a write failure and abort the export.
+        // Every chunk exportdb() currently produces is non-empty (each
+        // export method emits a header/section comment unconditionally),
+        // but that's true by accident of the string content, not by any
+        // contract this method enforces -- guard it directly now that this
+        // is called per-chunk instead of once for the whole dump.
+        if ($fileData === '') {
+            return true;
+        }
+
         if (file_put_contents($this->dumpFile, $fileData, FILE_APPEND)) {
             return true;
         }
@@ -803,10 +891,10 @@ class Cwmbackup
      */
     private function fileSizeHeader(string $file): void
     {
-        // Get File Size
+        // Get File Size. filesize() is safe from the historical 32-bit
+        // signed-integer overflow under PHP 8.3+ (64-bit builds only).
         $size = filesize($file);
 
-        // Modified by Rene
         // HTTP Range - see RFC2616 for more information's (http://www.ietf.org/rfc/rfc2616.txt)
         $newFileSize = $size - 1;
 
@@ -814,19 +902,16 @@ class Cwmbackup
         $resultLength = (string)$size;
         $resultRange  = "0-" . $newFileSize;
 
-        // Workaround for int overflow
-        if ($size < 0) {
-            $size = exec('ls -al ' . escapeshellarg($file) . ' | awk \'BEGIN {FS=" "}{print $5}\'');
-        }
+        $httpRangeHeader = Factory::getApplication()->getInput()->server->get('HTTP_RANGE', '', 'raw');
 
         /* We support requests for a single range only.
                  * So we check if we have a range field.
                  * If yes, ensure that it is valid.
                  * If it is not valid, we ignore it and send the whole file.
                  * */
-        if (isset($_SERVER['HTTP_RANGE']) && preg_match('%^bytes=\d*\-\d*$%', $_SERVER['HTTP_RANGE'])) {
+        if ($httpRangeHeader !== '' && preg_match('%^bytes=\d*\-\d*$%', $httpRangeHeader)) {
             // Let's take the right side
-            [, $httpRange] = explode('=', $_SERVER['HTTP_RANGE']);
+            [, $httpRange] = explode('=', $httpRangeHeader);
 
             // And get the two values (as strings!)
             $httpRange = explode('-', $httpRange);

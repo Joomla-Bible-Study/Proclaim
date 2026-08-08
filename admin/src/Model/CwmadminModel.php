@@ -630,6 +630,198 @@ class CwmadminModel extends AdminModel
     }
 
     /**
+     * Bulk-change the player used by all media files currently set to $from.
+     *
+     * Uses a single batch UPDATE ... REPLACE() rather than a per-row PHP loop.
+     * Live params data always stores 'player' as a quoted JSON string value
+     * (verified against j5-dev: all Server addons write it via Registry::set()
+     * with a string), so the LIKE/REPLACE substring match is equivalent to the
+     * legacy loose-compare ($reg->get('player', 0) == $from) it replaces.
+     *
+     * @param   string  $from  The player value to match.
+     * @param   string  $to    The player value to change matching rows to.
+     *
+     * @return  int  Number of rows updated.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public function changePlayer(string $from, string $to): int
+    {
+        $db = $this->getDatabase();
+
+        $query = $db->createQuery()
+            ->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                . $db->quote('"player":"' . $from . '"') . ', '
+                . $db->quote('"player":"' . $to . '"') . ')')
+            ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"player":"' . $from . '"%'));
+
+        $db->setQuery($query);
+        $db->execute();
+
+        return $db->getAffectedRows();
+    }
+
+    /**
+     * Bulk-change the popup setting used by all media files currently set to $from.
+     *
+     * Value '100' is a legacy alias: as a "from" it also matches rows still
+     * storing the old '0' popup value, and as a "to" it maps to an empty
+     * string. The from/to normalization is resolved once up front (matching
+     * the batch pattern), not re-evaluated per row.
+     *
+     * @param   string  $from  The popup value to match ('100' also matches '0').
+     * @param   string  $to    The popup value to change matching rows to ('100' maps to '').
+     *
+     * @return  int  Number of rows updated.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public function changePopup(string $from, string $to): int
+    {
+        $db = $this->getDatabase();
+
+        $searchFrom  = $from;
+        $searchFrom2 = null;
+
+        if ($from === '100') {
+            $searchFrom  = '0';
+            $searchFrom2 = '100';
+        }
+
+        $replaceTo = $to === '100' ? '' : $to;
+
+        $query = $db->createQuery()
+            ->update($db->quoteName('#__bsms_mediafiles'))
+            ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                . $db->quote('"popup":"' . $searchFrom . '"') . ', '
+                . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+            ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom . '"%'));
+
+        $db->setQuery($query);
+        $db->execute();
+        $count = $db->getAffectedRows();
+
+        if ($searchFrom2 !== null) {
+            $query = $db->createQuery()
+                ->update($db->quoteName('#__bsms_mediafiles'))
+                ->set($db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+                    . $db->quote('"popup":"' . $searchFrom2 . '"') . ', '
+                    . $db->quote('"popup":"' . $replaceTo . '"') . ')')
+                ->where($db->quoteName('params') . ' LIKE ' . $db->quote('%"popup":"' . $searchFrom2 . '"%'));
+
+            $db->setQuery($query);
+            $db->execute();
+            $count += $db->getAffectedRows();
+        }
+
+        return $count;
+    }
+
+    /**
+     * Determine which media_* params key(s) identify the matching rows for a
+     * mediaimages() bulk update, based on $decoded->media_use_button_icon.
+     *
+     * Pure decision logic (no DB access), split out so it can be unit tested
+     * without a database. Returns null for an unrecognized mode.
+     *
+     * @param   object  $decoded  Decoded 'mediaimage' JSON payload from the request.
+     *
+     * @return  array{keys: string[], values: array<int, mixed>}|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function resolveMediaImageMatcher(object $decoded): ?array
+    {
+        return match ((int) $decoded->media_use_button_icon) {
+            1       => ['keys' => ['media_button_type', 'media_button_text'], 'values' => [$decoded->media_button_type, $decoded->media_button_text]],
+            2       => ['keys' => ['media_button_type', 'media_icon_type'], 'values' => [$decoded->media_button_type, $decoded->media_icon_type]],
+            3       => ['keys' => ['media_icon_type'], 'values' => [$decoded->media_icon_type]],
+            0       => ['keys' => ['media_image'], 'values' => [$decoded->media_image]],
+            default => null,
+        };
+    }
+
+    /**
+     * Bulk-update the button/icon/image display params of all media files
+     * matching the mode described by $decoded (see resolveMediaImageMatcher()).
+     *
+     * Replaces mediaimages()'s four near-identical switch-case blocks (one
+     * per media_use_button_icon mode) with a single parameterized loop.
+     *
+     * @param   object  $decoded  Decoded 'mediaimage' JSON payload from the request.
+     * @param   array   $post     The raw 'jform' POST array with the new display values.
+     *
+     * @return  array{added: int, error: int, errortext: string, matched: bool}
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public function changeMediaImages(object $decoded, array $post): array
+    {
+        $matcher = self::resolveMediaImageMatcher($decoded);
+
+        if ($matcher === null) {
+            return ['added' => 0, 'error' => 0, 'errortext' => '', 'matched' => false];
+        }
+
+        $post['media_icon_type']   = $post['media_icon_type'] ?? 0;
+        $post['media_button_type'] = $post['media_button_type'] ?? 0;
+
+        $db    = $this->getDatabase();
+        $query = $db->createQuery();
+        $query->select($db->quoteName(['id', 'params']))
+            ->from($db->quoteName('#__bsms_mediafiles'));
+        $db->setQuery($query);
+        $images = $db->loadObjectList();
+
+        $added     = 0;
+        $error     = 0;
+        $errortext = '';
+
+        foreach ($images as $media) {
+            $reg = new Registry();
+            $reg->loadString($media->params);
+
+            $matches = true;
+
+            foreach ($matcher['keys'] as $i => $key) {
+                if ($reg->get($key) != $matcher['values'][$i]) {
+                    $matches = false;
+
+                    break;
+                }
+            }
+
+            if (!$matches) {
+                continue;
+            }
+
+            $reg->set('media_button_color', $post['media_button_color']);
+            $reg->set('media_button_text', $post['media_button_text']);
+            $reg->set('media_button_type', $post['media_button_type']);
+            $reg->set('media_custom_icon', $post['media_custom_icon']);
+            $reg->set('media_icon_type', $post['media_icon_type']);
+            $reg->set('media_image', $post['media_image']);
+            $reg->set('media_use_button_icon', $post['media_use_button_icon']);
+
+            try {
+                $updateQuery = $db->createQuery();
+                $updateQuery->update($db->quoteName('#__bsms_mediafiles'))
+                    ->set($db->quoteName('params') . ' = ' . $db->quote($reg->toString()))
+                    ->where($db->quoteName('id') . ' = ' . (int) $media->id);
+                $db->setQuery($updateQuery);
+                $db->execute();
+                $added += $db->getAffectedRows();
+            } catch (\RuntimeException $e) {
+                $errortext .= $e->getMessage() . '<br />';
+                $error++;
+            }
+        }
+
+        return ['added' => $added, 'error' => $error, 'errortext' => $errortext, 'matched' => true];
+    }
+
+    /**
      * Method to test whether a record can be deleted.
      *
      * @param   object  $record  A record object.

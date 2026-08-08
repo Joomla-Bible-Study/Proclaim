@@ -37,6 +37,18 @@ use Joomla\Http\Response;
 class CwmpodcastIndexHelper
 {
     /**
+     * Seconds to wait on a Podcast Index request before giving up.
+     *
+     * Joomla's curl transport only sets CURLOPT_TIMEOUT when one is given, so
+     * omitting it means no timeout at all. submitFeed() runs synchronously
+     * inside an admin AJAX request, so an unresponsive api.podcastindex.org
+     * would hold a PHP worker open indefinitely.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const int HTTP_TIMEOUT = 20;
+
+    /**
      * API base URL
      *
      * @var string
@@ -113,7 +125,7 @@ class CwmpodcastIndexHelper
         $startNs = CwmDebug::isEnabled() ? hrtime(true) : null;
 
         try {
-            $response = $http->get($url, $this->getAuthHeaders());
+            $response = $http->get($url, $this->getAuthHeaders(), self::HTTP_TIMEOUT);
         } catch (\Exception $e) {
             CwmDebug::error('Podcast Index ' . $label . ' request failed', $e, 'api');
 

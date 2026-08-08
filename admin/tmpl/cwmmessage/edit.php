@@ -332,6 +332,7 @@ echo Route::_(
                 <?php echo $this->form->renderField('teachers'); ?>
 
                 <?php echo $this->form->renderField('series_id', null, $series_id); ?>
+                <?php echo $this->form->renderField('studynumber'); ?>
 
             </div>
         </div>
@@ -352,7 +353,6 @@ echo Route::_(
             <div class="row">
                 <div class="col-lg-12">
                     <?php echo $this->form->renderField('location_id', null, $location_id); ?>
-                    <?php echo $this->form->renderField('studynumber'); ?>
                     <?php echo $this->form->renderField('comments'); ?>
                     <?php echo $this->form->renderField('access'); ?>
                     <?php echo $this->form->renderField('language'); ?>

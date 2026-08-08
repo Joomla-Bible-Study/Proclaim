@@ -54,6 +54,22 @@ class CWMAddonWistia extends CWMAddon
     protected $description = 'Used for Wistia server access';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by addon-wistia-browser.es6.js (fetchProjects, fetchVideos, getMetadata).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'fetchProjects',
+            'fetchVideos',
+            'getMetadata',
+        ];
+    }
+
+    /**
      * URL patterns that identify Wistia content.
      *
      * @return  string[]
@@ -965,7 +981,7 @@ class CWMAddonWistia extends CWMAddon
      *
      * @since   10.1.0
      */
-    protected function upload(?array $data): mixed
+    protected function upload(Input $data): mixed
     {
         // Wistia videos are referenced by URL, not uploaded
         return false;

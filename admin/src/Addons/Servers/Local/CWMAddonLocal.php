@@ -27,6 +27,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
+use Joomla\Input\Input;
 use Joomla\Registry\Registry;
 
 /**
@@ -54,16 +55,30 @@ class CWMAddonLocal extends CWMAddon
     protected $description = 'Used for local server files';
 
     /**
+     * {@inheritdoc}
+     *
+     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [
+            'upload',
+        ];
+    }
+
+    /**
      * Upload
      *
-     * @param ?array $data  Data to upload
+     * @param   Input  $data  Data to upload
      *
      * @return array
      *
      * @throws \Exception
      * @since 9.0.0
      */
-    public function upload(?array $data): array
+    public function upload(Input $data): array
     {
         return (new Cwmuploadscript())->upload($data);
     }

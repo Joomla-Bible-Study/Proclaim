@@ -381,6 +381,24 @@ class CwmmigrationHelper
                 );
                 $db->execute();
 
+                // UPDATE IGNORE above silently skips a dup->keeper reassignment
+                // whenever the target (study_id, keeper_id) already exists --
+                // either because the study already had a keeper row, or because
+                // another dup for the same merge group was reassigned to it
+                // earlier in this same statement. Any junction row still
+                // pointing at a dup_id at this point is exactly that skipped
+                // case: its update failed, and the dup teacher is about to be
+                // deleted below, so it must go too. The study already retains
+                // the relationship via the row that *did* get remapped to
+                // keeper_id (or the keeper row it collided with), so removing
+                // it here is a safe cleanup, not a data loss.
+                $db->setQuery(
+                    'DELETE st FROM ' . $db->quoteName('#__bsms_study_teachers') . ' st '
+                    . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON st.'
+                    . $db->quoteName('teacher_id') . ' = m.dup_id'
+                );
+                $db->execute();
+
                 // Delete junction rows that became duplicates after reassignment
                 $db->setQuery(
                     'DELETE st1 FROM ' . $db->quoteName('#__bsms_study_teachers') . ' st1 '
@@ -927,6 +945,17 @@ class CwmmigrationHelper
      * Create a location record named after the given Joomla view level.
      * If a location with the same name already exists it is reused (idempotent).
      *
+     * Not safe against concurrent calls for the same name: the check-then-insert
+     * below has a TOCTOU window, and #__bsms_locations has no unique constraint
+     * on location_text to catch it. Deliberately left unfixed -- a unique index
+     * would need a de-dup migration first, since an install that already hit
+     * this exact race would already carry the duplicate rows a blind
+     * ADD UNIQUE INDEX would fail against; a SELECT ... FOR UPDATE lock would
+     * scan (and lock) the whole table since location_text is unindexed. The
+     * caller-level idempotency guard (Scenario 2B in detectMigrationScenario())
+     * covers sequential re-runs, which is the realistic case for a one-time
+     * admin migration wizard step.
+     *
      * @param   \stdClass  $accessLevel  Object with ->id and ->title properties.
      *
      * @return  int  The location ID (new or existing).
@@ -968,12 +997,20 @@ class CwmmigrationHelper
     /**
      * Persist the group→location mappings array in component parameters.
      *
-     * Merges with existing mappings so repeated calls are safe.
+     * Merges with existing mappings so repeated calls are safe, and adds only
+     * keys the stored mapping does not already hold — an administrator's manual
+     * entries always win. If the stored mapping cannot be read, nothing is
+     * written at all, because merging into an empty array would silently drop
+     * those entries.
+     *
+     * Only the location_group_mapping key is touched; every other component
+     * parameter is left as it stands.
      *
      * @param   array<int, int[]>  $mappings  locationId → [groupId, ...]
      *
      * @return  void
      *
+     * @throws  \RuntimeException  If the component params row cannot be written.
      * @since   10.1.0
      */
     public static function createGroupLocationMappings(array $mappings): void
@@ -984,8 +1021,19 @@ class CwmmigrationHelper
         if (\is_string($existing)) {
             try {
                 $existing = json_decode($existing, true, 512, JSON_THROW_ON_ERROR) ?: [];
-            } catch (\JsonException) {
-                $existing = [];
+            } catch (\JsonException $e) {
+                // Refuse rather than merge into an empty array. The loop below
+                // only adds keys it cannot already see, so starting from []
+                // would write back a mapping containing none of the entries an
+                // administrator had configured by hand -- destroying exactly
+                // what the comment below promises to preserve.
+                CwmlogHelper::error(
+                    'Cannot merge migrated group-to-location mappings: the existing '
+                    . 'location_group_mapping parameter could not be read, and overwriting it would '
+                    . 'discard any mappings configured by hand. No changes made. ' . $e->getMessage()
+                );
+
+                return;
             }
         }
 
@@ -998,14 +1046,19 @@ class CwmmigrationHelper
             }
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote(json_encode($existing, JSON_THROW_ON_ERROR)))
-            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
-        $db->setQuery($query);
-        $db->execute();
+        // Write through Cwmparams, which merges into the stored params Registry
+        // and clears the _system cache.
+        //
+        // This previously ran its own UPDATE that set #__extensions.params to
+        // json_encode($existing) -- the mapping array alone, as the whole params
+        // column. Every other Proclaim setting on the site was replaced by it,
+        // and because the write bypassed ComponentHelper's cache the damage was
+        // invisible until the next request. Scenario 2A of
+        // migrateAccessToLocations() is the only caller, so a multi-campus
+        // migration wiped the component's configuration as a side effect.
+        Cwmparams::setCompParams(
+            ['location_group_mapping' => json_encode($existing, JSON_THROW_ON_ERROR)]
+        );
     }
 
     /**
@@ -1154,6 +1207,9 @@ class CwmmigrationHelper
 
     /**
      * Create a "Main Campus" default location if none exists yet.
+     *
+     * Same TOCTOU caveat as createLocationFromAccess() above -- see its
+     * docblock for why this is deliberately left unfixed.
      *
      * @return  int  The location ID (new or existing).
      *
@@ -1371,15 +1427,24 @@ class CwmmigrationHelper
 
                 $targetServerId = $targetServerIds[$targetType];
 
-                // Migrate in batches
-                $offset = 0;
-                $limit  = 25;
+                // Migrate in batches. getLegacyMediaFileIds() re-queries
+                // WHERE server_id = $server['id'] fresh on every call, and a
+                // successful migrateMediaBatch() moves rows out of that same
+                // pool by changing their server_id -- so the pool shrinks out
+                // from under a naive `$offset += $limit` loop and later pages
+                // get silently skipped. Track only failed rows in the offset:
+                // they're the ones that stay in the pool (same id-ordered
+                // position) after a batch, so re-querying at
+                // offset = failedInGroup always skips exactly the
+                // already-attempted failures and never a not-yet-tried row.
+                $limit         = 25;
+                $failedInGroup = 0;
 
                 while (true) {
                     $ids = CwmserverMigrationHelper::getLegacyMediaFileIds(
                         $server['id'],
                         $detectedType,
-                        $offset,
+                        $failedInGroup,
                         $limit
                     );
 
@@ -1397,12 +1462,12 @@ class CwmmigrationHelper
                     $report['migrated'] += $batchResult['migrated'];
                     $report['errors']    = array_merge($report['errors'], $batchResult['errors']);
 
+                    $failedInGroup += \count($ids) - $batchResult['migrated'];
+
                     // If we got fewer IDs than the limit, this group is exhausted
                     if (\count($ids) < $limit) {
                         break;
                     }
-
-                    $offset += $limit;
                 }
             }
         }

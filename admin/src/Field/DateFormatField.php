@@ -16,9 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 // phpcs:enable PSR1.Files.SideEffects
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Form\Field\PredefinedlistField;
 
 /**
  * Date format dropdown — single source of truth for date display options.
@@ -28,7 +26,7 @@ use Joomla\CMS\Language\Text;
  * @package  Proclaim.Admin
  * @since    10.2.0
  */
-class DateFormatField extends ListField
+class DateFormatField extends PredefinedlistField
 {
     /**
      * The field type.
@@ -40,26 +38,22 @@ class DateFormatField extends ListField
     protected $type = 'DateFormat';
 
     /**
-     * Get the field options.
+     * A fixed set of options, not DB-backed. See #1464.
      *
-     * @return  array  Array of HTMLHelper option objects
+     * @var  array
      *
-     * @since   10.2.0
+     * @since __DEPLOY_VERSION__
      */
-    protected function getOptions(): array
-    {
-        $options   = parent::getOptions();
-        $options[] = HTMLHelper::_('select.option', '0', Text::_('JBS_TPL_DATE_FORMAT_MMM_D_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '1', Text::_('JBS_TPL_DATE_FORMAT_MMM_D'));
-        $options[] = HTMLHelper::_('select.option', '2', Text::_('JBS_TPL_DATE_FORMAT_M_D_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '3', Text::_('JBS_TPL_DATE_FORMAT_M_D'));
-        $options[] = HTMLHelper::_('select.option', '4', Text::_('JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '5', Text::_('JBS_TPL_DATE_FORMAT_MMMM_D_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '6', Text::_('JBS_TPL_DATE_FORMAT_D_MMMM_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '7', Text::_('JBS_TPL_DATE_FORMAT_D_M_YYYY'));
-        $options[] = HTMLHelper::_('select.option', '8', Text::_('JBS_TPL_DATE_FORMAT_USE_GLOBAL'));
-        $options[] = HTMLHelper::_('select.option', '9', Text::_('JBS_TPL_DATE_FORMAT_YYYY_MM_DD'));
-
-        return $options;
-    }
+    protected $predefinedOptions = [
+        '0' => 'JBS_TPL_DATE_FORMAT_MMM_D_YYYY',
+        '1' => 'JBS_TPL_DATE_FORMAT_MMM_D',
+        '2' => 'JBS_TPL_DATE_FORMAT_M_D_YYYY',
+        '3' => 'JBS_TPL_DATE_FORMAT_M_D',
+        '4' => 'JBS_TPL_DATE_FORMAT_WD_MMMM_D_YYYY',
+        '5' => 'JBS_TPL_DATE_FORMAT_MMMM_D_YYYY',
+        '6' => 'JBS_TPL_DATE_FORMAT_D_MMMM_YYYY',
+        '7' => 'JBS_TPL_DATE_FORMAT_D_M_YYYY',
+        '8' => 'JBS_TPL_DATE_FORMAT_USE_GLOBAL',
+        '9' => 'JBS_TPL_DATE_FORMAT_YYYY_MM_DD',
+    ];
 }

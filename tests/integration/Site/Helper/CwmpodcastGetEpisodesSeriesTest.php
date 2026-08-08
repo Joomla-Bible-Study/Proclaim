@@ -11,7 +11,9 @@
 namespace CWM\Component\Proclaim\Tests\Integration\Site\Helper;
 
 use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
-use CWM\Component\Proclaim\Tests\Integration\Admin\Api\ApiDataTestCase;
+use CWM\Component\Proclaim\Tests\Integration\IntegrationTestCase;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseDriver;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 
@@ -22,11 +24,105 @@ use PHPUnit\Framework\Attributes\TestDox;
  * `(se.published = 1 OR series_id = -1)` filter and every seriesless episode
  * was silently dropped from the podcast feed. Regression coverage for that fix.
  *
+ * Self-contained fixtures: this file previously extended the Api suite's
+ * ApiDataTestCase, which was removed in the 2026-08 test-correctness pass
+ * (its own tests only verified the test helper against itself); the insert
+ * helpers this genuine regression test needs were inlined here instead.
+ *
  * @since  __DEPLOY_VERSION__
  */
 #[CoversClass(Cwmpodcast::class)]
-class CwmpodcastGetEpisodesSeriesTest extends ApiDataTestCase
+class CwmpodcastGetEpisodesSeriesTest extends IntegrationTestCase
 {
+    /**
+     * @var  DatabaseDriver|null
+     */
+    private ?DatabaseDriver $db = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
+            $this->markTestSkipped('Database not available for integration tests');
+        }
+
+        $this->db = Factory::getContainer()->get(DatabaseDriver::class);
+        $this->db->transactionStart();
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->db !== null) {
+            try {
+                $this->db->transactionRollback();
+            } catch (\Throwable) {
+                // Connection may have been lost — nothing to roll back.
+            }
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * Insert a test series and return the ID.
+     *
+     * @param   string  $title      Series title
+     * @param   int     $published  Published state
+     *
+     * @return  int
+     */
+    private function insertSeries(string $title, int $published = 1): int
+    {
+        $row = (object) [
+            'series_text' => $title,
+            'alias'       => strtolower(str_replace(' ', '-', $title)),
+            'published'   => $published,
+            'access'      => 1,
+            'language'    => '*',
+            'ordering'    => 0,
+        ];
+
+        $this->db->insertObject('#__bsms_series', $row);
+
+        return (int) $this->db->insertid();
+    }
+
+    /**
+     * Insert a test sermon (study) and return the ID.
+     *
+     * @param   string  $title      Sermon title
+     * @param   int     $published  Published state
+     * @param   int     $seriesId   Series ID (0 = seriesless)
+     *
+     * @return  int
+     */
+    private function insertSermon(string $title, int $published = 1, int $seriesId = 0): int
+    {
+        $row = (object) [
+            'studytitle'  => $title,
+            'alias'       => strtolower(str_replace(' ', '-', $title)),
+            'studydate'   => '2026-01-15 10:00:00',
+            'teacher_id'  => 0,
+            'series_id'   => $seriesId,
+            'messagetype' => 1,
+            'booknumber'  => 101,
+            'published'   => $published,
+            'access'      => 1,
+            'language'    => '*',
+            'ordering'    => 0,
+            'hits'        => 0,
+            'checked_out' => 0,
+            'asset_id'    => 0,
+            'created_by'  => 0,
+            'modified_by' => 0,
+        ];
+
+        $this->db->insertObject('#__bsms_studies', $row);
+
+        return (int) $this->db->insertid();
+    }
+
     /**
      * Insert a podcast channel and return its ID.
      *
@@ -37,10 +133,14 @@ class CwmpodcastGetEpisodesSeriesTest extends ApiDataTestCase
     private function insertPodcast(string $title = 'Test Podcast'): int
     {
         $row = (object) [
-            'title'     => $title,
-            'filename'  => 'test-podcast.xml',
-            'published' => 1,
-            'access'    => 1,
+            'title'    => $title,
+            'filename' => 'test-podcast.xml',
+            // Explicit empty string: current install SQL allows NULL, but
+            // older dev DBs carry podcastlink as NOT NULL with no default
+            // (schema drift), where omitting it makes the INSERT fail.
+            'podcastlink' => '',
+            'published'   => 1,
+            'access'      => 1,
         ];
 
         $this->db->insertObject('#__bsms_podcast', $row);

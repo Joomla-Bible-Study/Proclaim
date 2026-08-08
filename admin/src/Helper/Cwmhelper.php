@@ -78,15 +78,6 @@ class Cwmhelper
             return 0;
         }
 
-        // Skip streaming platforms — file size is meaningless for embedded players
-        $host = (string) parse_url($url, PHP_URL_HOST);
-
-        foreach (self::$streamingHosts as $streamHost) {
-            if (str_contains($host, $streamHost)) {
-                return 0;
-            }
-        }
-
         // Removes a bad url problem in some DB's
         if (substr_count($url, '/http')) {
             $url = ltrim($url, '/');
@@ -97,6 +88,19 @@ class Cwmhelper
                 $url = 'https:' . $url;
             } else {
                 $url = 'https://' . $url;
+            }
+        }
+
+        // Skip streaming platforms — file size is meaningless for embedded
+        // players. This has to come after the normalisation above:
+        // parse_url() only reports a host when the value carries a scheme, so
+        // a stored "youtube.com/watch?v=..." yields no host and the skip never
+        // fires, sending a real HEAD request to a streaming platform instead.
+        $host = (string) parse_url($url, PHP_URL_HOST);
+
+        foreach (self::$streamingHosts as $streamHost) {
+            if (str_contains($host, $streamHost)) {
+                return 0;
             }
         }
 
@@ -182,27 +186,29 @@ class Cwmhelper
     /**
      * Media Build URL Fix up for '/' and protocol.
      *
-     * @param   string    $spath        Server Path
-     * @param   string    $path         File
-     * @param   Registry  $params       Parameters.
-     * @param   bool      $setProtocol  True add protocol els no
-     * @param   bool      $local        Local server
-     * @param   bool      $podcast      True if from a precast
+     * @param   string     $spath        Server Path
+     * @param   string     $path         File
+     * @param   ?Registry  $params       Parameters. Only read when $setProtocol
+     *                                   is true; site callers pass null.
+     * @param   bool       $setProtocol  True add protocol els no
+     * @param   bool       $local        Unused. Retained because callers pass
+     *                                   $podcast positionally after it.
+     * @param   bool       $podcast      True if from a precast
      *
-     * @return string Completed path.
+     * @return string Completed path, or an empty string when $path is empty.
      *
      * @since 9.0.3
      */
     public static function mediaBuildUrl(
         $spath,
         $path,
-        Registry $params,
+        ?Registry $params = null,
         bool $setProtocol = false,
         bool $local = false,
         bool $podcast = false
     ): string {
         if (empty($path)) {
-            return false;
+            return '';
         }
 
         if ($spath) {
@@ -212,13 +218,7 @@ class Cwmhelper
         }
 
         $path     = ltrim($path, '/');
-        $host     = $_SERVER['HTTP_HOST'];
         $protocol = Uri::root();
-
-        // To see if the server is local
-        if (str_contains($spath, $host)) {
-            $local = true;
-        }
 
         if (substr_count($path, 'http://') && $podcast) {
             return str_replace('http://', "", $path);
@@ -237,7 +237,7 @@ class Cwmhelper
                 return $protocol . $path;
             }
 
-            $protocol = $params->get('protocol', 'https://');
+            $protocol = $params?->get('protocol', 'https://') ?? 'https://';
 
             if ((substr_count($spath, '://') || substr_count($spath, '//')) && !empty($spath)) {
                 if (substr_count($spath, '//')) {

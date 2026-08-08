@@ -82,7 +82,11 @@ class BookListField extends ListField
             ->group($db->quoteName('book.id'))
             ->order($db->quoteName('book.booknumber') . ' ASC');
 
-        CwmfilterHelper::applyCrossFilters($query, 'book');
+        CwmfilterHelper::applyCrossFilters(
+            $query,
+            'book',
+            CwmfilterHelper::contextFromForm($this->form)
+        );
 
         $db->setQuery($query);
         $books   = $db->loadObjectList() ?: [];

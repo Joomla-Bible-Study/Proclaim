@@ -15,14 +15,6 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-/**
- * Convert Class
- * PreachIT Converter system
- *
- * @package  Proclaim.Admin
- * @since    7.1.0
- */
-
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
@@ -30,6 +22,13 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
+/**
+ * Convert Class
+ * PreachIT Converter system
+ *
+ * @package  Proclaim.Admin
+ * @since    7.1.0
+ */
 class CwmpIconvert
 {
     /**
@@ -200,6 +199,21 @@ class CwmpIconvert
     /** @var int|null YouTube server ID @since 10.1.0 */
     public ?int $youtube = null;
 
+    /** @var int[]|null Cached #__viewlevels ids, populated on first use @since __DEPLOY_VERSION__ */
+    private ?array $validAccessLevels = null;
+
+    /**
+     * Cached published #__pipodcast rows, populated on first use.
+     * insertPodcast() is called up to 4x per study (once per media type),
+     * and reloading the whole table on every call is unnecessary -- the
+     * source table doesn't change during a single conversion run.
+     *
+     * @var array|null
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private ?array $piPodcastsCache = null;
+
     /**
      * Convert PreachIT
      *
@@ -208,7 +222,7 @@ class CwmpIconvert
      * @throws \Exception
      * @since 7.1.0
      */
-    public function convertPI(): void
+    public function convertPI(): string
     {
         // Check for request forgeries.
         if (!Session::checkToken('get') && !Session::checkToken()) {
@@ -292,10 +306,7 @@ class CwmpIconvert
             $this->tnoadd++;
         } else {
             $this->tadd++;
-            $query = $db->createQuery();
-            $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
-            $db->setQuery($query, 0, 1);
-            $this->genericteacher = $db->loadResult();
+            $this->genericteacher = $teach->id;
         }
         $query = $db->createQuery();
         $query->select('*')->from($db->quoteName('#__piteachers'));
@@ -324,13 +335,7 @@ class CwmpIconvert
                 } else {
                     $this->tadd++;
 
-                    // Get the new teacherid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_teachers'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid               = $db->loadResult();
-                    $oldid               = $pi->id;
-                    $this->teachersids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->teachersids[] = ['newid' => $datateachers->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -349,7 +354,7 @@ class CwmpIconvert
                 $locations->id            = null;
                 $locations->published     = $pi->published;
                 $locations->location_text = $pi->name;
-                $locations->access        = $pi->access;
+                $locations->access        = $this->resolveAccessLevel($pi->access);
                 $locations->ordering      = $pi->ordering;
                 $locations->misc          = $pi->description;
                 $locations->image         = $pi->image_folderlrg . $pi->ministry_image_lrg;
@@ -359,13 +364,7 @@ class CwmpIconvert
                 } else {
                     $this->ladd++;
 
-                    // Get the new locationid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_locations'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid             = $db->loadResult();
-                    $oldid             = $pi->id;
-                    $this->locations[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->locations[] = ['newid' => $locations->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -394,13 +393,7 @@ class CwmpIconvert
                 } else {
                     $this->sradd++;
 
-                    // Get the new seriesid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_series'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid             = $db->loadResult();
-                    $oldid             = $pi->id;
-                    $this->seriesids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->seriesids[] = ['newid' => $dataseries->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -439,13 +432,7 @@ class CwmpIconvert
                 } else {
                     $this->padd++;
 
-                    // Get the new podcast id so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_podcast'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid              = $db->loadResult();
-                    $oldid              = $pi->id;
-                    $this->podcastids[] = ['newid' => $newid, 'oldid' => $oldid];
+                    $this->podcastids[] = ['newid' => $podcast->id, 'oldid' => $pi->id];
                 }
             }
         }
@@ -477,14 +464,12 @@ class CwmpIconvert
                 }
 
                 $studynumber = $pi->id;
-                $booknumber  = null;
+                $booknumber  = '101';
                 $booknumber2 = null;
 
                 foreach ($books as $book) {
                     if ($book['id'] == $pi->study_book) {
                         $booknumber = $book['jbs'];
-                    } else {
-                        $booknumber = '101';
                     }
 
                     if ($book['id'] == $pi->study_book2) {
@@ -546,7 +531,7 @@ class CwmpIconvert
 
                 $published = $pi->published;
                 $params    = '{"metakey":"' . $pi->metakey . '","metadesc":""}';
-                $access    = $pi->saccess;
+                $access    = $this->resolveAccessLevel($pi->saccess);
 
                 // Create the study then get the id to create the media file and comments
                 $datastudies                 = new \stdClass();
@@ -585,18 +570,14 @@ class CwmpIconvert
                 } else {
                     $this->sadd++;
 
-                    // Get the new studiesid so we can later connect it to a study
-                    $query = $db->createQuery();
-                    $query->select($db->quoteName('id'))->from($db->quoteName('#__bsms_studies'))->order($db->quoteName('id') . ' DESC');
-                    $db->setQuery($query, 0, 1);
-                    $newid              = $db->loadResult();
+                    $newid              = $datastudies->id;
                     $oldid              = $pi->id;
                     $this->studiesids[] = ['newid' => $newid, 'oldid' => $oldid];
                 }
 
                 // Create the mediafiles
                 if ($pi->audio_link) {
-                    if (!$audio = $this->insertMedia($pi, $type = 'audio', $newid, $oldid)) {
+                    if (!$this->insertMedia($pi, 'audio', $newid)) {
                         $this->mnoadd++;
                     } else {
                         $this->madd++;
@@ -604,7 +585,7 @@ class CwmpIconvert
                 }
 
                 if ($pi->video_link) {
-                    if (!$video = $this->insertMedia($pi, $type = 'video', $newid, $oldid)) {
+                    if (!$this->insertMedia($pi, 'video', $newid)) {
                         $this->mnoadd++;
                     } else {
                         $this->madd++;
@@ -612,7 +593,7 @@ class CwmpIconvert
                 }
 
                 if ($pi->slides_link) {
-                    if (!$slides = $this->insertMedia($pi, $type = 'slides', $newid, $oldid)) {
+                    if (!$this->insertMedia($pi, 'slides', $newid)) {
                         $this->mnoadd++;
                     } else {
                         $this->madd++;
@@ -620,7 +601,7 @@ class CwmpIconvert
                 }
 
                 if ($pi->notes_link) {
-                    if (!$notes = $this->insertMedia($pi, $type = 'notes', $newid, $oldid)) {
+                    if (!$this->insertMedia($pi, 'notes', $newid)) {
                         $this->mnoadd++;
                     } else {
                         $this->madd++;
@@ -631,18 +612,16 @@ class CwmpIconvert
             }
             // Endforeach study
         }
-        /**$piconvertresults = '<table><tr><td><h3>' . Text::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_SERVERS') . '<strong>' . $this->svadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->svnoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_SERIES') . '<strong>' . $$this->sradd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
-         * . '<tr><td>' . Text::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED')
-         * . $this->cnoadd . '</td></tr>'
-         * . '</table>';
-         *
-         * Factory::getApplication()->enqueueMessage(Text::_($piconvertresults), 'message'); ;*/
+        $piconvertresults = '<table><tr><td><h3>' . Text::_('JBS_IBM_PREACHIT_RESULTS') . '</h3></td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_TEACHERS') . '<strong>' . $this->tadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->tnoadd . '</td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_SERIES') . '<strong>' . $this->sradd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->srnoadd . '</td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_PODCAST') . '<strong>' . $this->padd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->pnoadd . '</td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_STUDIES') . '<strong>' . $this->sadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->snoadd . '</td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_MEDIA') . '<strong>' . $this->madd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->mnoadd . '</td></tr>'
+            . '<tr><td>' . Text::_('JBS_IBM_PI_COMMENTS') . '<strong>' . $this->cadd . '</strong> - ' . Text::_('JBS_IBM_NOT_CONVERTED') . $this->cnoadd . '</td></tr>'
+            . '</table>';
+
+        return $piconvertresults;
     }
 
     /**
@@ -682,7 +661,7 @@ class CwmpIconvert
             ['id' => '25', 'book_name' => 'Lamentations', 'published' => '1', 'jbs' => '125'],
             ['id' => '26', 'book_name' => 'Ezekiel', 'published' => '1', 'jbs' => '126'],
             ['id' => '27', 'book_name' => 'Daniel', 'published' => '1', 'jbs' => '127'],
-            ['id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '129'],
+            ['id' => '28', 'book_name' => 'Hosea', 'published' => '1', 'jbs' => '128'],
             ['id' => '29', 'book_name' => 'Joel', 'published' => '1', 'jbs' => '129'],
             ['id' => '30', 'book_name' => 'Amos', 'published' => '1', 'jbs' => '130'],
             ['id' => '31', 'book_name' => 'Obadiah', 'published' => '1', 'jbs' => '131'],
@@ -727,46 +706,52 @@ class CwmpIconvert
     }
 
     /**
+     * Validate a PreachIT-supplied access/view-level value against this site's
+     * `#__viewlevels` table, falling back to Public (id 1 — a protected system
+     * level guaranteed to exist on every Joomla install) when the value doesn't
+     * correspond to a real view level here. PreachIT's own access-code numbering
+     * has no guaranteed relationship to the target site's view level ids, which
+     * aren't even guaranteed contiguous (e.g. 1,2,3,5,6,7) — writing it through
+     * unvalidated can silently assign an imported record to a view level no
+     * user holds, making it permanently invisible with no error at import time.
+     *
+     * @param mixed $value  Raw PreachIT access/accesscode value
+     *
+     * @return int
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private function resolveAccessLevel(mixed $value): int
+    {
+        $value = (int) $value;
+
+        if ($this->validAccessLevels === null) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__viewlevels'));
+            $db->setQuery($query);
+            $this->validAccessLevels = array_map('intval', $db->loadColumn());
+        }
+
+        return \in_array($value, $this->validAccessLevels, true) ? $value : 1;
+    }
+
+    /**
      * Insert Media into Proclaim
      *
-     * @param object $pi ?
-     * @param string $type Type of Media
-     * @param int $newid New ID
-     * @param int $oldid Old ID
+     * @param object $pi     PreachIT study row being converted
+     * @param string $type   Type of Media (audio|video|slides|notes)
+     * @param int    $newid  New Proclaim study ID
      *
      * @return bool
      *
+     * @throws \JsonException
      * @since 9.0.0
-     *
      */
-    public function insertMedia($pi, $type, $newid, $oldid): bool
+    public function insertMedia(object $pi, string $type, int $newid): bool
     {
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__pifilepath'));
-        $db->setQuery($query);
-        $folders     = $db->loadObjectList();
-        $podcast_id  = '0';
-        $media       = new \stdClass();
-        $study_id    = $newid;
-        $media_image = '';
-        $path        = '';
-        $filename    = '';
-        $size        = '';
-        $mime_type   = '';
-        $podcast_id  = '';
-        $filesize    = '';
-        $mediacode   = '';
-        $link_type   = '';
-        $player      = '';
-        $pod         = [];
-        $query       = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $podcasts = $db->loadObjectList();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         if ($type == 'video') {
-            $filesize = $pi->videofs;
             switch ($pi->video_type) {
                 case 4:
                     // Bliptv no longer exists
@@ -784,18 +769,37 @@ class CwmpIconvert
                     $query = $db->createQuery();
                     $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->video_link);
                     $db->setQuery($query);
-                    $object            = $db->loadObject();
-                    $path              = $object->folder;
-                    $filename          = $path . $pi->video_link;
-                    $filename          = $db->escape($filename);
+                    $object   = $db->loadObject();
+                    $filename = $object->folder . $pi->video_link;
+
                     $media             = new \stdClass();
-                    $media->params     = '{"size":"' . $filesize . ',"filename":"' . $filename . ',"link_type":"","player":"3","popup":"1","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-solid fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1"":"","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = json_encode([
+                        'size'                  => $pi->videofs,
+                        'filename'              => $filename,
+                        'link_type'             => '',
+                        'player'                => '3',
+                        'popup'                 => '1',
+                        'mediacode'             => '',
+                        'media_image'           => '',
+                        'media_use_button_icon' => '3',
+                        'media_button_text'     => 'Video',
+                        'media_button_type'     => 'btn-link',
+                        'media_button_color'    => '',
+                        'media_icon_type'       => 'fa-solid fa-video',
+                        'media_custom_icon'     => '',
+                        'media_icon_text_size'  => '24',
+                        'mime_type'             => 'image/jpeg',
+                        'autostart'             => '1',
+                        'media_hours'           => $pi->dur_hrs,
+                        'media_minutes'         => $pi->dur_mins,
+                        'media_seconds'         => $pi->dur_secs,
+                    ], JSON_THROW_ON_ERROR);
                     $media->study_id   = $newid;
                     $media->server_id  = $this->legacyvideo;
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {
@@ -808,16 +812,35 @@ class CwmpIconvert
 
                 case 2:
                     // Vimeo
+                    $mediacode = '<iframe src="https://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0" loading="lazy"></iframe> ';
+
                     $media             = new \stdClass();
-                    $mediacode         = '<iframe src="https://player.vimeo.com/video/' . $pi->video_link . '" width="500" height="500" frameborder="0" loading="lazy"></iframe> ';
-                    $mediacode         = $db->escape($mediacode);
-                    $media->params     = '{"filename":"' . $pi->video_link . '","link_type":"","player":"5","popup":"1","mediacode":"' . $mediacode . '","media_image":"","media_use_button_icon":"3","media_button_text":"Video","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-solid fa-video","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = json_encode([
+                        'filename'              => $pi->video_link,
+                        'link_type'             => '',
+                        'player'                => '5',
+                        'popup'                 => '1',
+                        'mediacode'             => $mediacode,
+                        'media_image'           => '',
+                        'media_use_button_icon' => '3',
+                        'media_button_text'     => 'Video',
+                        'media_button_type'     => 'btn-link',
+                        'media_button_color'    => '',
+                        'media_icon_type'       => 'fa-solid fa-video',
+                        'media_custom_icon'     => '',
+                        'media_icon_text_size'  => '24',
+                        'mime_type'             => 'image/jpeg',
+                        'autostart'             => '1',
+                        'media_hours'           => $pi->dur_hrs,
+                        'media_minutes'         => $pi->dur_mins,
+                        'media_seconds'         => $pi->dur_secs,
+                    ], JSON_THROW_ON_ERROR);
                     $media->study_id   = $newid;
                     $media->server_id  = $this->legacyvideo;
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {
@@ -830,17 +853,33 @@ class CwmpIconvert
 
                 case 3:
                     // Youtube
-                    $mediacode = '<iframe width="500" height="500" src="https://www.youtube.com/embed/' . $pi->video_link
-                        . '" allowfullscreen loading="lazy"></iframe>';
                     $media             = new \stdClass();
-                    $mediacode         = $db->escape($mediacode);
-                    $media->params     = '{"filename":"https:\/\/youtu.be\/' . $pi->video_link . '","link_type":"","player":"1","popup":"3","mediacode":"","media_image":"","media_use_button_icon":"3","media_button_text":"Watch","media_button_type":"btn-link","media_button_color":"","media_icon_type":"fa-brands fa-youtube","media_custom_icon":"","media_icon_text_size":"24","mime_type":"image\/jpeg","autostart":"1","media_hours":"' . $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs . '"}';
+                    $media->params     = json_encode([
+                        'filename'              => 'https://youtu.be/' . $pi->video_link,
+                        'link_type'             => '',
+                        'player'                => '1',
+                        'popup'                 => '3',
+                        'mediacode'             => '',
+                        'media_image'           => '',
+                        'media_use_button_icon' => '3',
+                        'media_button_text'     => 'Watch',
+                        'media_button_type'     => 'btn-link',
+                        'media_button_color'    => '',
+                        'media_icon_type'       => 'fa-brands fa-youtube',
+                        'media_custom_icon'     => '',
+                        'media_icon_text_size'  => '24',
+                        'mime_type'             => 'image/jpeg',
+                        'autostart'             => '1',
+                        'media_hours'           => $pi->dur_hrs,
+                        'media_minutes'         => $pi->dur_mins,
+                        'media_seconds'         => $pi->dur_secs,
+                    ], JSON_THROW_ON_ERROR);
                     $media->study_id   = $newid;
                     $media->server_id  = $this->youtube;
                     $media->podcast_id = $this->insertPodcast($pi);
                     $media->createdate = $pi->date;
                     $media->hits       = $pi->hits;
-                    $media->access     = $pi->accesscode;
+                    $media->access     = $this->resolveAccessLevel($pi->accesscode);
                     $media->language   = '*';
                     $media->created_by = $pi->user;
                     if (!$this->insertMediaRecord($media)) {
@@ -854,19 +893,39 @@ class CwmpIconvert
         }
 
         if ($type == 'audio') {
-            foreach ($folders as $folder) {
-                if ($folder->id == $pi->audio_folder) {
-                    $filename = $folder->folder . $pi->audio_link;
-                    $filename = $db->escape($filename);
-                }
-            }
+            $query = $db->createQuery();
+            $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->audio_folder);
+            $db->setQuery($query);
+            $object   = $db->loadObject();
+            $filename = $object->folder . $pi->audio_link;
+
             $media         = new \stdClass();
-            $media->params = '{"filename":"' . $filename . '","mediacode":"","size":"' . $pi->audiofs .
-                '","special":"","player":"7","popup":"3","link_type":"1","media_hours":"' .
-                $pi->dur_hrs . '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs .
-                '","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3","media_button_text":"Listen",' .
-                '"media_button_color":"","media_icon_type":"fa-solid fa-play","media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3",' .
-                '"playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"1"}';
+            $media->params = json_encode([
+                'filename'              => $filename,
+                'mediacode'             => '',
+                'size'                  => $pi->audiofs,
+                'special'               => '',
+                'player'                => '7',
+                'popup'                 => '3',
+                'link_type'             => '1',
+                'media_hours'           => $pi->dur_hrs,
+                'media_minutes'         => $pi->dur_mins,
+                'media_seconds'         => $pi->dur_secs,
+                'media_image'           => 'images/biblestudy/speaker24.png',
+                'media_use_button_icon' => '3',
+                'media_button_text'     => 'Listen',
+                'media_button_color'    => '',
+                'media_icon_type'       => 'fa-solid fa-play',
+                'media_custom_icon'     => '',
+                'media_icon_text_size'  => '24',
+                'mime_type'             => 'audio/mp3',
+                'playerwidth'           => '',
+                'playerheight'          => '',
+                'itempopuptitle'        => '',
+                'itempopupfooter'       => '',
+                'popupmargin'           => '50',
+                'autostart'             => '1',
+            ], JSON_THROW_ON_ERROR);
             $media->study_id   = $newid;
             $media->server_id  = 1;
             $media->podcast_id = $this->insertPodcast($pi);
@@ -875,9 +934,6 @@ class CwmpIconvert
             $media->downloads  = $pi->downloads;
             $media->language   = '*';
             $media->created_by = $pi->user;
-            if ($podcasts) {
-                $media->podcast_id = $this->insertPodcast($pi);
-            }
             if (!$this->insertMediaRecord($media)) {
                 $this->mnoadd++;
             } else {
@@ -887,22 +943,43 @@ class CwmpIconvert
 
 
         if ($type == 'notes') {
-            $filesize = $pi->notesfs;
-            $query    = $db->createQuery();
+            $query = $db->createQuery();
             $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->notes_folder);
             $db->setQuery($query);
-            $object           = $db->loadObject();
-            $path             = $object->folder;
-            $filename         = $path . $pi->notes_link;
-            $filename         = $db->escape($filename);
+            $object   = $db->loadObject();
+            $filename = $object->folder . $pi->notes_link;
+
             $media            = new \stdClass();
             $media->server_id = 3;
-            $media->params    = '{"filename":"' . $filename . '","mediacode":"","size":"' . $filesize .
-                '","special":"","player":"0","popup":"3","link_type":"0","media_hours":"","media_minutes":"","media_seconds":"",' .
-                '"docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png","media_use_button_icon":"3",' .
-                '"media_button_text":"Text","media_button_color":"","media_icon_type":"fa-solid fa-note-sticky","media_custom_icon":"",' .
-                '"media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"","itempopuptitle":"","itempopupfooter":"",' .
-                '"popupmargin":"50","autostart":"false"}';
+            $media->params    = json_encode([
+                'filename'              => $filename,
+                'mediacode'             => '',
+                'size'                  => $pi->notesfs,
+                'special'               => '',
+                'player'                => '0',
+                'popup'                 => '3',
+                'link_type'             => '0',
+                'media_hours'           => '',
+                'media_minutes'         => '',
+                'media_seconds'         => '',
+                'docMan_id'             => '0',
+                'article_id'            => '',
+                'virtueMart_id'         => '0',
+                'media_image'           => 'images/biblestudy/speaker24.png',
+                'media_use_button_icon' => '3',
+                'media_button_text'     => 'Text',
+                'media_button_color'    => '',
+                'media_icon_type'       => 'fa-solid fa-note-sticky',
+                'media_custom_icon'     => '',
+                'media_icon_text_size'  => '24',
+                'mime_type'             => 'audio/mp3',
+                'playerwidth'           => '',
+                'playerheight'          => '',
+                'itempopuptitle'        => '',
+                'itempopupfooter'       => '',
+                'popupmargin'           => '50',
+                'autostart'             => 'false',
+            ], JSON_THROW_ON_ERROR);
             $media->study_id   = $newid;
             $media->podcast_id = $this->insertPodcast($pi);
             $media->createdate = $pi->date;
@@ -919,22 +996,42 @@ class CwmpIconvert
 
 
         if ($type == 'slides') {
-            $filesize = $pi->slidesfs;
-            $query    = $db->createQuery();
+            $query = $db->createQuery();
             $query->select($db->quoteName('folder'))->from($db->quoteName('#__pifilepath'))->where($db->quoteName('id') . ' = ' . (int) $pi->slides_folder);
             $db->setQuery($query);
-            $object        = $db->loadObject();
-            $path          = $object->folder;
-            $filename      = $path . $pi->slides_link;
-            $filename      = $db->escape($filename);
+            $object   = $db->loadObject();
+            $filename = $object->folder . $pi->slides_link;
+
             $media         = new \stdClass();
-            $media->params = '{"filename":"' . $filename . '","mediacode":"","size":"' . $filesize .
-                '","special":"","player":"0","popup":"3","link_type":"0","media_hours":"' . $pi->dur_hrs .
-                '","media_minutes":"' . $pi->dur_mins . '","media_seconds":"' . $pi->dur_secs .
-                '","docMan_id":"0","article_id":"","virtueMart_id":"0","media_image":"images\/biblestudy\/speaker24.png",' .
-                '"media_use_button_icon":"3","media_button_text":"Audio","media_button_color":"","media_icon_type":"fa-solid fa-file-powerpoint",' .
-                '"media_custom_icon":"","media_icon_text_size":"24","mime_type":"audio\/mp3","playerwidth":"","playerheight":"",' .
-                '"itempopuptitle":"","itempopupfooter":"","popupmargin":"50","autostart":"false"}';
+            $media->params = json_encode([
+                'filename'              => $filename,
+                'mediacode'             => '',
+                'size'                  => $pi->slidesfs,
+                'special'               => '',
+                'player'                => '0',
+                'popup'                 => '3',
+                'link_type'             => '0',
+                'media_hours'           => $pi->dur_hrs,
+                'media_minutes'         => $pi->dur_mins,
+                'media_seconds'         => $pi->dur_secs,
+                'docMan_id'             => '0',
+                'article_id'            => '',
+                'virtueMart_id'         => '0',
+                'media_image'           => 'images/biblestudy/speaker24.png',
+                'media_use_button_icon' => '3',
+                'media_button_text'     => 'Audio',
+                'media_button_color'    => '',
+                'media_icon_type'       => 'fa-solid fa-file-powerpoint',
+                'media_custom_icon'     => '',
+                'media_icon_text_size'  => '24',
+                'mime_type'             => 'audio/mp3',
+                'playerwidth'           => '',
+                'playerheight'          => '',
+                'itempopuptitle'        => '',
+                'itempopupfooter'       => '',
+                'popupmargin'           => '50',
+                'autostart'             => 'false',
+            ], JSON_THROW_ON_ERROR);
             $media->study_id   = $newid;
             $media->server_id  = 3;
             $media->podcast_id = $this->insertPodcast($pi);
@@ -943,9 +1040,6 @@ class CwmpIconvert
             $media->downloads  = $pi->downloads;
             $media->language   = '*';
             $media->created_by = $pi->user;
-            if ($podcasts) {
-                $podcast_id = $this->insertPodcast($pi);
-            }
             if (!$this->insertMediaRecord($media)) {
                 $this->mnoadd++;
             } else {
@@ -958,20 +1052,23 @@ class CwmpIconvert
     }
 
     /**
-     * @param $pi
+     * @param object $pi PreachIT study row being matched against podcast inclusion/exclusion rules
      *
-     * @return false|mixed|void
+     * @return int|null  Matching Proclaim podcast ID, or null if no podcast matches / exclusion applies
      *
      * @since 9.0.0
      */
-    private function insertPodcast($pi): mixed
+    private function insertPodcast(object $pi): ?int
     {
-        $podtest = 0;
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $query   = $db->createQuery();
-        $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
-        $db->setQuery($query);
-        $podcasts        = $db->loadObjectList();
+        if ($this->piPodcastsCache === null) {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery();
+            $query->select('*')->from($db->quoteName('#__pipodcast'))->where($db->quoteName('published') . ' = 1');
+            $db->setQuery($query);
+            $this->piPodcastsCache = $db->loadObjectList();
+        }
+
+        $podcasts        = $this->piPodcastsCache;
         $includeteacher  = [];
         $includeministry = [];
         $includeseries   = [];
@@ -1008,9 +1105,12 @@ class CwmpIconvert
                 $registry = new Registry();
                 $registry->loadString($podcast->teacher_list);
                 $teacher_list = $registry->toArray();
+                $registry     = new Registry();
+                $registry->loadString($pi->teacher);
+                $excludedTeachers = $registry->toArray();
                 foreach ($teacher_list as $t) {
-                    if (\in_array($t, $pi->teacher)) {
-                        return false;
+                    if (\in_array($t, $excludedTeachers)) {
+                        return null;
                     }
                 }
             }
@@ -1021,7 +1121,7 @@ class CwmpIconvert
                 $series_list = $registry->toArray();
                 foreach ($series_list as $s) {
                     if ($s == $pi->series) {
-                        return false;
+                        return null;
                     }
                 }
             }
@@ -1030,9 +1130,12 @@ class CwmpIconvert
                 $registry = new Registry();
                 $registry->loadString($podcast->ministry_list);
                 $ministry_list = $registry->toArray();
+                $registry      = new Registry();
+                $registry->loadString($pi->ministry);
+                $excludedMinistries = $registry->toArray();
                 foreach ($ministry_list as $m) {
-                    if (\in_array($m, $pi->ministry)) {
-                        return false;
+                    if (\in_array($m, $excludedMinistries)) {
+                        return null;
                     }
                 }
             }
@@ -1065,7 +1168,7 @@ class CwmpIconvert
                 $registry     = new Registry();
                 $registry->loadString($pi->teacher);
                 $teacher = $registry->toArray();
-                if (\count($teacher) > 1) {
+                if (\count($teacher_list) > 1) {
                     foreach ($teacher_list as $ti) {
                         if (\in_array($ti, $teacher) || $podcast->teacher == 0) {
                             return $this->checkMedia($includemedia, $pi, $podcast);
@@ -1073,7 +1176,7 @@ class CwmpIconvert
                     }
                 } elseif ($teacher_list[0]) {
                     $value = $teacher_list[0];
-                    if ($value == $pi->teacher) {
+                    if (\in_array($value, $teacher)) {
                         return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
@@ -1094,28 +1197,30 @@ class CwmpIconvert
                     }
                 } elseif ($ministry_list[0]) {
                     $value = $ministry_list[0];
-                    if ($value == $pi->ministry) {
+                    if (\in_array($value, $ministry)) {
                         return $this->checkMedia($includemedia, $pi, $podcast);
                     }
                 }
             }
             //Use include/exclude lists to determine if the media file is in which podcast
         } // end foreach podcast
+
+        return null;
     }
 
     /**
-     * @param $includemedia
-     * @param $pi
-     * @param $podcast
+     * @param array  $includemedia  Media types this podcast includes (or ['all'])
+     * @param object $pi            PreachIT study row being matched
+     * @param object $podcast       PreachIT podcast row being matched against
      *
-     * @return mixed|void
+     * @return int|null  Matching Proclaim podcast ID, or null if no media type matches
      *
      * @since 9.0.0
      */
-    private function checkMedia($includemedia, $pi, $podcast): mixed
+    private function checkMedia(array $includemedia, object $pi, object $podcast): ?int
     {
         //check for which media to include
-        if ($includemedia == 'all') {
+        if (\in_array('all', $includemedia, true)) {
             foreach ($this->podcastids as $pods) {
                 if ($pods['oldid'] == $podcast->id) {
                     $podcast_id = $pods['newid'];
@@ -1152,16 +1257,18 @@ class CwmpIconvert
                 }
             }
         }
+
+        return null;
     }
 
     /**
-     * @param $mediafiles
+     * @param object $mediafiles  Media file row to insert
      *
      * @return bool
      *
      * @since 9.0.0
      */
-    private function insertMediaRecord($mediafiles): bool
+    private function insertMediaRecord(object $mediafiles): bool
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         if (!$db->insertObject('#__bsms_mediafiles', $mediafiles, 'id')) {
@@ -1174,14 +1281,14 @@ class CwmpIconvert
     /**
      * Insert Comments
      *
-     * @param int $oldid ?
-     * @param int $newid ?
+     * @param int $oldid  PreachIT study ID the comments belonged to
+     * @param int $newid  Newly created Proclaim study ID
      *
      * @return bool
      *
      * @since 9.0.0
      */
-    private function insertComments($oldid, $newid): bool
+    private function insertComments(int $oldid, int $newid): bool
     {
         if (!$this->picomments) {
             return false;

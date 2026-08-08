@@ -59,8 +59,11 @@ $modes = [
     'seed-detected-consumer',
     'assert-tables-present',
     'assert-tables-gone',
+    'assert-no-other-consumer',
+    'other-consumer-ids',
     'assert-sql-armed',
     'assert-sql-disarmed',
+    'arm',
     'disarm',
     'assert-translation-survived',
     'assert-translation-destroyed',
@@ -92,6 +95,30 @@ const PROBE_ROWS  = 3;
  * every cached passage back out to GetBible / API.Bible to be re-fetched.
  */
 const PROBE_CACHE_ROWS = 2;
+
+/**
+ * The uninstall SQL lib_cwmscripture shipped up to 1.1.4, verbatim.
+ *
+ * The negative control needs a library that still destroys data, and no
+ * released baseline supplies one any more: the file has shipped disarmed since
+ * 1.1.5, so asserting the baseline carries it fails for good. The harness
+ * plants the hazard itself instead.
+ *
+ * plg_system_proclaim rewrites this file on sight, but only while an admin is
+ * on com_installer in a web request. Every install here runs through the CLI,
+ * so nothing disarms the planted file before the phase can use it.
+ */
+const ARMED_UNINSTALL_SQL = <<<'SQL'
+--
+-- CWM Scripture Library - Uninstall SQL
+-- Only runs when the library is uninstalled standalone (not locked by Proclaim).
+--
+
+DROP TABLE IF EXISTS `#__bsms_scripture_cache`;
+DROP TABLE IF EXISTS `#__bsms_bible_verses`;
+DROP TABLE IF EXISTS `#__bsms_bible_translations`;
+
+SQL;
 
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
@@ -132,11 +159,95 @@ $connect = static function (object $install): array {
 };
 
 // --- value-printing modes: first test install only, for the shell to consume --
-if (\in_array($mode, ['site-path', 'ext-id'], true)) {
+if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids'], true)) {
     $install = $installs[0];
 
     if ($mode === 'site-path') {
         echo $install->path . "\n";
+
+        exit(0);
+    }
+
+    if ($mode === 'other-consumer-ids') {
+        // Extension ids for scripture consumers that are NOT part of pkg_proclaim,
+        // so the uninstall phases can clear the field before asserting that a
+        // package removal drops the shared tables.
+        //
+        // Deliberately not hardcoded to com_livingword: the phases broke once
+        // already because they assumed which consumers a test site carries
+        // (lib_cwmscripture#37). Anything FIRST_PARTY or registered counts.
+        //
+        // Prefers the parent package where one exists — removing com_livingword
+        // while pkg_livingword still owns it leaves a broken package behind.
+        [$db, $prefix] = $connect($install);
+
+        if ($db === null) {
+            fwrite(STDERR, "Could not connect to the test database.\n");
+
+            exit(1);
+        }
+
+        $wanted = [
+            ['pkg_livingword', 'package', ''],
+            ['com_livingword', 'component', ''],
+            ['cwmscripture',   'plugin',    'task'],
+        ];
+
+        $ids  = [];
+        $seen = false;
+
+        foreach ($wanted as [$element, $type, $folder]) {
+            $folderSql = $folder === ''
+                ? "AND (`folder` = '' OR `folder` IS NULL)"
+                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
+
+            $row = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT `extension_id` FROM `{$prefix}extensions`
+                 WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
+                   AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
+                 {$folderSql} LIMIT 1"
+            ) ?: null);
+
+            if ($row === null || $row === false) {
+                continue;
+            }
+
+            // pkg_livingword covers com_livingword; do not remove both.
+            if ($element === 'pkg_livingword') {
+                $seen = true;
+            }
+
+            if ($element === 'com_livingword' && $seen) {
+                continue;
+            }
+
+            $ids[] = $row[0];
+        }
+
+        // Registered third parties the hardcoded list cannot know about.
+        $consumersTable = $prefix . 'bsms_scripture_consumers';
+        $exists         = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $consumersTable) . "'");
+
+        if ($exists !== false && mysqli_num_rows($exists) > 0) {
+            $extra = mysqli_query(
+                $db,
+                "SELECT e.`extension_id` FROM `{$consumersTable}` c
+                 JOIN `{$prefix}extensions` e
+                   ON e.`element` = c.`element` AND e.`type` = c.`type`
+                 WHERE c.`element` NOT IN ('com_proclaim', 'scripturelinks', 'cwmscripture')"
+            );
+
+            while ($row = mysqli_fetch_row($extra ?: null)) {
+                if (!\in_array($row[0], $ids, true)) {
+                    $ids[] = $row[0];
+                }
+            }
+        }
+
+        mysqli_close($db);
+
+        echo implode("\n", $ids) . (empty($ids) ? '' : "\n");
 
         exit(0);
     }
@@ -230,6 +341,50 @@ foreach ($installs as $install) {
         $res = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $table) . "'");
 
         return $res !== false && mysqli_num_rows($res) > 0;
+    };
+
+    /**
+     * Consumers of the scripture tables other than the ones pkg_proclaim ships.
+     *
+     * The package excludes its own children when it asks "is anyone left", so
+     * anything this returns is a legitimate reason for the tables to survive a
+     * package removal. Both sources the library consults have to be checked:
+     * the registry, and FIRST_PARTY members that are recognised without a
+     * registry row.
+     *
+     * lib_cwmscripture#37 was filed because step 11 asserted the tables were
+     * dropped on a site with com_livingword installed. Living Word is
+     * FIRST_PARTY and genuinely uses the tables, so keeping them was correct —
+     * the probe was asserting an outcome its own preconditions ruled out, and
+     * had no way to say so.
+     */
+    $otherConsumers = static function (mysqli $db, string $consumers, string $extensions) use ($tableExists): array {
+        $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
+        $blockers    = [];
+
+        if ($tableExists($db, $consumers)) {
+            $registered = mysqli_query(
+                $db,
+                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
+            );
+
+            while ($row = mysqli_fetch_row($registered ?: null)) {
+                $blockers[] = $row[0] . ' (registered)';
+            }
+        }
+
+        $firstParty = mysqli_query(
+            $db,
+            "SELECT `element` FROM `{$extensions}`
+             WHERE (`type` = 'component' AND `element` = 'com_livingword')
+                OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
+        );
+
+        while ($row = mysqli_fetch_row($firstParty ?: null)) {
+            $blockers[] = $row[0] . ' (first-party, installed)';
+        }
+
+        return $blockers;
     };
 
     switch ($mode) {
@@ -394,15 +549,108 @@ foreach ($installs as $install) {
 
         case 'assert-sql-armed':
         case 'assert-sql-disarmed':
+        case 'arm':
         case 'disarm':
         case 'assert-translation-survived':
         case 'assert-translation-destroyed':
             $sqlFile = $install->path . '/libraries/cwmscripture/sql/uninstall.mysql.utf8.sql';
 
-            if (\in_array($mode, ['assert-sql-armed', 'assert-sql-disarmed', 'disarm'], true)) {
+            if (\in_array($mode, ['assert-sql-armed', 'assert-sql-disarmed', 'arm', 'disarm'], true)) {
                 if (!is_file($sqlFile)) {
                     fwrite(STDERR, "  FAIL {$sqlFile} not found — is the library installed?\n");
                     $failures++;
+
+                    break;
+                }
+
+                // arm — restore the pre-1.1.5 hazard the negative control needs.
+                // Written and then read back: a silently failed write would leave
+                // the phase asserting nothing, which is the exact failure this
+                // whole phase exists to rule out.
+                if ($mode === 'arm') {
+                    if (file_put_contents($sqlFile, ARMED_UNINSTALL_SQL) === false) {
+                        fwrite(STDERR, "  FAIL could not write {$sqlFile}.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    if (!sqlIsArmed((string) file_get_contents($sqlFile))) {
+                        fwrite(STDERR, "  FAIL planted the uninstall SQL but it does not read back as armed.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    // The file alone is inert. LibraryAdapter runs uninstall SQL
+                    // only because the *manifest* declares it, and the shipped
+                    // manifest drops that block deliberately — so the pre-1.1.5
+                    // manifest has to come back too, or the update reads nothing
+                    // and the negative control passes while proving nothing.
+                    $manifest = $install->path . '/administrator/manifests/libraries/cwmscripture.xml';
+
+                    if (!is_file($manifest)) {
+                        fwrite(STDERR, "  FAIL {$manifest} not found — is the library installed?\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    // Edited through DOM, not string replacement: the shipped
+                    // manifest carries a comment *explaining* the absent
+                    // <uninstall><sql> block, so a substring test for it matches
+                    // the prose and skips the edit.
+                    $doc                     = new DOMDocument();
+                    $doc->preserveWhiteSpace = false;
+                    $doc->formatOutput       = true;
+
+                    if (!@$doc->load($manifest)) {
+                        fwrite(STDERR, "  FAIL {$manifest} is not parseable XML.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    $xpath = new DOMXPath($doc);
+
+                    if ($xpath->query('/extension/uninstall/sql/file')->length === 0) {
+                        $file = $doc->createElement('file', 'sql/uninstall.mysql.utf8.sql');
+                        $file->setAttribute('driver', 'mysql');
+                        $file->setAttribute('charset', 'utf8');
+
+                        $sql = $doc->createElement('sql');
+                        $sql->appendChild($file);
+
+                        $uninstall = $doc->createElement('uninstall');
+                        $uninstall->appendChild($sql);
+
+                        $doc->documentElement->appendChild(
+                            $doc->createComment(' Planted by the upgrade harness to restore the pre-1.1.5 hazard. ')
+                        );
+                        $doc->documentElement->appendChild($uninstall);
+
+                        if ($doc->save($manifest) === false) {
+                            fwrite(STDERR, "  FAIL could not write {$manifest}.\n");
+                            $failures++;
+
+                            break;
+                        }
+                    }
+
+                    // Re-read from disk: a malformed manifest would make Joomla
+                    // skip the library silently, and the phase would pass while
+                    // proving nothing.
+                    $check = new DOMDocument();
+
+                    if (!@$check->load($manifest)
+                        || (new DOMXPath($check))->query('/extension/uninstall/sql/file')->length !== 1) {
+                        fwrite(STDERR, "  FAIL {$manifest} does not parse with exactly one uninstall SQL file.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    echo "  OK   planted the 1.1.4-style armed uninstall SQL and its manifest declaration\n";
 
                     break;
                 }
@@ -414,7 +662,7 @@ foreach ($installs as $install) {
                         echo "  OK   the installed library's uninstall SQL is armed (the real pre-fix hazard)\n";
                     } else {
                         fwrite(STDERR, "  FAIL expected an armed 1.1.4-style uninstall SQL, found none.\n");
-                        fwrite(STDERR, "       Without it this phase proves nothing — check the baseline install.\n");
+                        fwrite(STDERR, "       Without it this phase proves nothing — check the preceding arm step.\n");
                         $failures++;
                     }
 
@@ -568,31 +816,7 @@ foreach ($installs as $install) {
             // own "is anyone left" question. Anything else (a leftover fixture, or a
             // FIRST_PARTY entry that happens to be installed) would keep the tables on
             // its own and make this phase vacuous.
-            $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
-
-            $others = mysqli_query(
-                $db,
-                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
-            );
-
-            $blockers = [];
-
-            while ($row = mysqli_fetch_row($others ?: null)) {
-                $blockers[] = $row[0] . ' (registered)';
-            }
-
-            // FIRST_PARTY members are recognised without a registry row, so an installed
-            // one is just as much of a confound.
-            $firstParty = mysqli_query(
-                $db,
-                "SELECT `element` FROM `{$extensions}`
-                 WHERE (`type` = 'component' AND `element` = 'com_livingword')
-                    OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
-            );
-
-            while ($row = mysqli_fetch_row($firstParty ?: null)) {
-                $blockers[] = $row[0] . ' (first-party, installed)';
-            }
+            $blockers = $otherConsumers($db, $consumers, $extensions);
 
             if ($blockers !== []) {
                 fwrite(STDERR, '  FAIL something else already keeps the tables: ' . implode(', ', $blockers) . ".\n");
@@ -670,13 +894,55 @@ foreach ($installs as $install) {
 
             break;
 
+        case 'assert-no-other-consumer':
+            // Precondition for assert-tables-gone. Run it BEFORE the removal:
+            // afterwards the registry rows and extension rows are gone and the
+            // question can no longer be answered.
+            $blockers = $otherConsumers($db, $consumers, $extensions);
+
+            if ($blockers !== []) {
+                fwrite(STDERR, '  FAIL another scripture consumer is installed: ' . implode(', ', $blockers) . ".\n");
+                fwrite(STDERR, "       Removing pkg_proclaim will correctly KEEP the tables, so asserting\n");
+                fwrite(STDERR, "       they are dropped would be asserting a bug. Remove it first, or run\n");
+                fwrite(STDERR, "       this phase on a site with no other consumer.\n");
+                $failures++;
+
+                break;
+            }
+
+            echo "  OK   no other scripture consumer — a package removal should drop the tables\n";
+
+            break;
+
         case 'assert-tables-gone':
+            $survivors = [];
+
             foreach ([$translations, $verses, $cache, $consumers] as $table) {
                 if ($tableExists($db, $table)) {
                     fwrite(STDERR, "  FAIL {$table} still exists after the last consumer was removed.\n");
+                    $survivors[] = $table;
                     $failures++;
                 } else {
                     echo "  OK   {$table} removed — nothing was left using it\n";
+                }
+            }
+
+            // Say WHY, rather than leaving the reader to guess. "Kept because
+            // Living Word is installed" and "kept because the cleanup never ran"
+            // look identical from the outside, and the first was mistaken for the
+            // second in lib_cwmscripture#37.
+            if ($survivors !== []) {
+                $blockers = $otherConsumers($db, $consumers, $extensions);
+
+                if ($blockers !== []) {
+                    fwrite(STDERR, '       Reason: another consumer is installed — ' . implode(', ', $blockers) . ".\n");
+                    fwrite(STDERR, "       That makes keeping the tables CORRECT. This phase needed\n");
+                    fwrite(STDERR, "       assert-no-other-consumer to run before the removal.\n");
+                } else {
+                    fwrite(STDERR, "       No other consumer is installed, so the cleanup in pkg_proclaim's\n");
+                    fwrite(STDERR, "       script.install.php::uninstall() should have dropped these and did not.\n");
+                    fwrite(STDERR, "       Note it logs to the 'jerror' category, which has no logger in CLI —\n");
+                    fwrite(STDERR, "       its messages are discarded there, so silence is not evidence.\n");
                 }
             }
 

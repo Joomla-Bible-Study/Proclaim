@@ -37,6 +37,18 @@ use Joomla\Registry\Registry;
 abstract class CWMAddon
 {
     /**
+     * Seconds to wait on an addon API request before giving up.
+     *
+     * Joomla's curl transport only sets CURLOPT_TIMEOUT when one is given, so
+     * omitting it means no timeout at all. These calls run inside admin
+     * requests -- connection tests, description sync, stats -- so a
+     * unresponsive provider would hold a PHP worker open indefinitely.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected const int HTTP_TIMEOUT = 20;
+
+    /**
      * Addon configuration
      *
      * @var     bool|null|\SimpleXMLElement
@@ -309,13 +321,40 @@ abstract class CWMAddon
     /**
      * Upload
      *
-     * @param ?array $data Data to upload
+     * @param   Input  $data Data to upload
      *
      * @return mixed
      *
      * @since 9.0.0
      */
-    abstract protected function upload(?array $data): mixed;
+    abstract protected function upload(Input $data): mixed;
+
+    /**
+     * Handler names this addon exposes to CwmmediafileController::xhr().
+     *
+     * xhr() is a generic dispatcher: it takes a `handler` name straight from
+     * the request and invokes it on the resolved addon, passing the request
+     * Input. Gating on method_exists() alone would make every public method on
+     * every addon callable by name -- including state-changing ones such as
+     * createLiveEvent()/cancelLiveEvent() -- with no permission check.
+     *
+     * Returning an empty list here means an addon exposes nothing: an addon
+     * must opt each handler in explicitly. This mirrors getAjaxActions(),
+     * which already guards the other (handleAjaxAction) dispatch path.
+     *
+     * Only list handlers a UI actually calls through xhr(). Methods invoked
+     * server-side -- createLiveEvent() from CwmmediafileModel, cancelLiveEvent()
+     * from CwmmediafileTable -- are called directly on the addon object and do
+     * not need, and must not have, dispatcher exposure.
+     *
+     * @return  array  List of handler names callable via cwmmediafile.xhr
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getXhrHandlers(): array
+    {
+        return [];
+    }
 
     /**
      * Get available AJAX actions for this addon
@@ -813,21 +852,27 @@ abstract class CWMAddon
      * Called by the sync engine to ensure a video Proclaim considers a member of
      * a playlist (e.g. via the playlist's linked series) is actually in that
      * playlist on the platform. Override in a write-back-capable addon. Must
-     * return ['success' => bool, 'error' => ?string]. The engine only calls this
-     * for videos not already recorded as members, but a duplicate insert should
-     * still fail gracefully.
+     * return ['success' => bool, 'error' => ?string, 'fatal' => ?bool]. The engine
+     * only calls this for videos not already recorded as members, but a duplicate
+     * insert should still fail gracefully.
+     *
+     * 'fatal' tells the caller this failure is systemic (quota exhausted, OAuth
+     * unusable) rather than specific to this one video/playlist — further calls in
+     * the same batch would only repeat it, so the caller stops early instead of
+     * burning quota on doomed retries. Omit (or false) for a per-item failure that
+     * later items may still succeed at.
      *
      * @param   int     $serverId          The server record ID.
      * @param   string  $remotePlaylistId  The platform playlist ID.
      * @param   string  $remoteVideoId     The platform video ID to add.
      *
-     * @return  array{success: bool, error?: string}
+     * @return  array{success: bool, error?: string, fatal?: bool}
      *
      * @since   10.3.3
      */
     public function addPlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
-        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'fatal' => true];
     }
 
     /**
@@ -835,20 +880,21 @@ abstract class CWMAddon
      *
      * Called by the sync engine when a media file's playlist assignment is removed
      * and the site opted in to platform-side removal. Override in a write-back-capable
-     * addon. Must return ['success' => bool, 'error' => ?string]. A video that is
-     * already absent from the playlist should be treated as a success (idempotent).
+     * addon. Must return ['success' => bool, 'error' => ?string, 'fatal' => ?bool]. A
+     * video that is already absent from the playlist should be treated as a success
+     * (idempotent). See addPlaylistMembership() for the meaning of 'fatal'.
      *
      * @param   int     $serverId          The server record ID.
      * @param   string  $remotePlaylistId  The platform playlist ID.
      * @param   string  $remoteVideoId     The platform video ID to remove.
      *
-     * @return  array{success: bool, error?: string}
+     * @return  array{success: bool, error?: string, fatal?: bool}
      *
      * @since   10.3.3
      */
     public function removePlaylistMembership(int $serverId, string $remotePlaylistId, string $remoteVideoId): array
     {
-        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED')];
+        return ['success' => false, 'error' => Text::_('JBS_PLAYLIST_NOT_SUPPORTED'), 'fatal' => true];
     }
 
     /**
@@ -971,7 +1017,8 @@ abstract class CWMAddon
         string $url,
         array $headers = [],
         ?string $body = null,
-        string $label = ''
+        string $label = '',
+        int $timeout = self::HTTP_TIMEOUT
     ): Response {
         $http    = (new HttpFactory())->getHttp();
         $verb    = strtoupper($method);
@@ -980,11 +1027,11 @@ abstract class CWMAddon
 
         try {
             $response = match ($verb) {
-                'GET'    => $http->get($url, $headers),
-                'DELETE' => $http->delete($url, $headers),
-                'POST'   => $http->post($url, (string) $body, $headers),
-                'PUT'    => $http->put($url, (string) $body, $headers),
-                'PATCH'  => $http->patch($url, (string) $body, $headers),
+                'GET'    => $http->get($url, $headers, $timeout),
+                'DELETE' => $http->delete($url, $headers, $timeout),
+                'POST'   => $http->post($url, (string) $body, $headers, $timeout),
+                'PUT'    => $http->put($url, (string) $body, $headers, $timeout),
+                'PATCH'  => $http->patch($url, (string) $body, $headers, $timeout),
                 default  => throw new \InvalidArgumentException('Unsupported HTTP method: ' . $verb),
             };
         } catch (\Exception $e) {

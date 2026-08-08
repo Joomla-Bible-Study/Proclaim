@@ -18,10 +18,12 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Table\CwmpodcastTable;
+use CWM\Component\Proclaim\Site\Helper\Cwmpodcast;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
@@ -111,6 +113,38 @@ class CwmpodcastModel extends AdminModel
         }
 
         return $data;
+    }
+
+    /**
+     * Save the podcast, then regenerate its RSS feed so settings changes
+     * (image, category, explicit flag, etc.) take effect immediately instead
+     * of waiting for the next manual "Generate Feeds" click or scheduled task run.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return  bool  True on success.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function save($data): bool
+    {
+        CwmlocationHelper::assertLocationAssignable(
+            '#__bsms_podcast',
+            (int) ($data['id'] ?? 0),
+            (int) ($data['location_id'] ?? 0)
+        );
+
+        if (!parent::save($data)) {
+            return false;
+        }
+
+        try {
+            (new Cwmpodcast())->makePodcasts();
+        } catch (\Exception $e) {
+            Log::add('Podcast feed regeneration after save failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        return true;
     }
 
     /**
@@ -206,7 +240,11 @@ class CwmpodcastModel extends AdminModel
         if ($locationId > 0 && CwmlocationHelper::isEnabled() && !$user->authorise('core.admin')) {
             $accessible = CwmlocationHelper::getUserLocations((int) $user->id);
 
-            if (!empty($accessible) && !\in_array($locationId, $accessible, true)) {
+            // core.admin already excluded above, so an empty $accessible here
+            // means a real zero-access user, not a super admin -- in_array()
+            // against an empty array is always false, so this denies rather
+            // than silently skipping the check. See #1561.
+            if (!\in_array($locationId, $accessible, true)) {
                 throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
             }
         }

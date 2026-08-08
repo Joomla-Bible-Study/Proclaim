@@ -127,6 +127,106 @@ class Cwmthumbnail
     }
 
     /**
+     * Resolve a path and confirm it really lands inside ALLOWED_PATHS.
+     *
+     * The previous check was `str_starts_with($relative, $prefix)` followed by
+     * Path::clean(). Path::clean() normalises separators but does NOT collapse
+     * '..', so 'images/biblestudy/studies/../../../administrator' satisfied the
+     * prefix test and still resolved outside the allowed tree once the
+     * filesystem walked it -- the same defect fixed in CwmImageMigration
+     * (#1537) and CwmImageCleanup (#1563).
+     *
+     * Resolution is lexical rather than realpath()-based: callers legitimately
+     * pass paths that do not exist yet (deleteFolder() reports success for an
+     * already-absent folder, create() writes new files), and realpath() returns
+     * false for those. Both the candidate and each allowed base go through the
+     * same normaliser so the comparison is like-for-like.
+     *
+     * @param   string  $path  Absolute path, or one relative to JPATH_ROOT
+     *
+     * @return  string|false  Normalised path, or false if outside the allow-list
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function resolveWithinAllowedPaths(string $path): string|false
+    {
+        $candidate = Path::clean(
+            str_starts_with($path, JPATH_ROOT) ? $path : JPATH_ROOT . '/' . ltrim($path, '/')
+        );
+
+        $resolved = self::normaliseLexically($candidate);
+
+        if ($resolved === false) {
+            return false;
+        }
+
+        foreach (self::ALLOWED_PATHS as $prefix) {
+            // The base goes through the same normaliser as the candidate --
+            // comparing a normalised path against a raw one silently never
+            // matches (JPATH_ROOT is './' under phpunit.xml, so the base keeps
+            // a './' the candidate has already shed).
+            $base = self::normaliseLexically(Path::clean(JPATH_ROOT . '/' . $prefix));
+
+            if ($base === false) {
+                continue;
+            }
+
+            $base = rtrim($base, \DIRECTORY_SEPARATOR);
+
+            if ($resolved === $base || str_starts_with($resolved, $base . \DIRECTORY_SEPARATOR)) {
+                return $resolved;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Collapse '.' and '..' segments without requiring the path to exist.
+     *
+     * Path::clean() normalises separators but leaves '..' in place, which is
+     * what allowed the old prefix checks to be walked out of. realpath() would
+     * collapse them but returns false for paths that do not exist yet, and
+     * callers legitimately pass those.
+     *
+     * Relative-vs-absolute is preserved rather than assumed: JPATH_ROOT is not
+     * always absolute (phpunit.xml defines it as '.'), so forcing a leading
+     * separator would turn a repo-relative path into a filesystem-root one.
+     *
+     * @param   string  $path  Path to normalise
+     *
+     * @return  string|false  Normalised path, or false if it escapes its start
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function normaliseLexically(string $path): string|false
+    {
+        $isAbsolute = str_starts_with($path, \DIRECTORY_SEPARATOR);
+        $normalised = [];
+
+        foreach (explode(\DIRECTORY_SEPARATOR, $path) as $part) {
+            if ($part === '' || $part === '.') {
+                continue;
+            }
+
+            if ($part === '..') {
+                if ($normalised === []) {
+                    // Walked out past the starting point — reject outright.
+                    return false;
+                }
+
+                array_pop($normalised);
+
+                continue;
+            }
+
+            $normalised[] = $part;
+        }
+
+        return ($isAbsolute ? \DIRECTORY_SEPARATOR : '') . implode(\DIRECTORY_SEPARATOR, $normalised);
+    }
+
+    /**
      * Delete an image folder safely (only within allowed paths)
      *
      * @param   string  $folderPath  Relative path to folder (e.g., 'images/biblestudy/studies/alias-123')
@@ -140,16 +240,9 @@ class Cwmthumbnail
         // Normalize path
         $folderPath = trim($folderPath, '/');
 
-        // CRITICAL: Validate path is within allowed scope
-        $isAllowed = false;
-        foreach (self::ALLOWED_PATHS as $prefix) {
-            if (str_starts_with($folderPath, $prefix)) {
-                $isAllowed = true;
-                break;
-            }
-        }
+        $absolutePath = self::resolveWithinAllowedPaths($folderPath);
 
-        if (!$isAllowed) {
+        if ($absolutePath === false) {
             Log::add(
                 'Attempted to delete folder outside allowed scope: ' . $folderPath,
                 Log::WARNING,
@@ -158,8 +251,6 @@ class Cwmthumbnail
 
             return false;
         }
-
-        $absolutePath = Path::clean(JPATH_ROOT . '/' . $folderPath);
 
         if (is_dir($absolutePath)) {
             $result = Folder::delete($absolutePath);
@@ -251,10 +342,17 @@ class Cwmthumbnail
         $newImagePath = $destFolder . '/' . $newFilename;
         $thumbPath    = $destFolder . '/' . $thumbName;
 
+        // Superseded files are identified now but deleted only after the
+        // replacements are confirmed on disk (see the end of this method), so a
+        // failed copy or encode leaves the record's existing image intact.
+        // $versionHash is a content hash, so a different photo for the same
+        // record yields a different filename and the live file is not among
+        // those kept.
+        $supersededFiles = [];
+
         // Handle existing destination folder
         if (is_dir($destFolder)) {
             if ($preserveOld) {
-                // Clean up old files so we don't accumulate stale images across re-uploads.
                 // Matches both versioned (name-hash.ext) and pre-versioning (name.ext) files.
                 // Protect both the new target files and the source file from deletion
                 $keepFiles = [$newFilename, $thumbName, basename($originalPath)];
@@ -271,7 +369,7 @@ class Cwmthumbnail
                     if ($oldFiles) {
                         foreach ($oldFiles as $oldFile) {
                             if (!\in_array(basename($oldFile), $keepFiles, true)) {
-                                File::delete($oldFile);
+                                $supersededFiles[] = $oldFile;
                             }
                         }
                     }
@@ -294,7 +392,8 @@ class Cwmthumbnail
         $normalizedNew      = Path::clean($newImagePath);
 
         if ($normalizedOriginal !== $normalizedNew) {
-            // Source may have been removed during cleanup above (same folder, different version hash)
+            // Cleanup is deferred until after the copy, so reaching here with
+            // no source file means it genuinely vanished.
             if (!is_file($originalPath)) {
                 return false;
             }
@@ -327,7 +426,16 @@ class Cwmthumbnail
         }
 
         $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
-        $thumbnail->toFile($thumbPath, IMAGETYPE_JPEG);
+
+        // toFile() returns imagejpeg()'s bool rather than throwing, so the
+        // result has to be checked or a failed encode looks like success and
+        // the caller stores a path to a file that does not exist. Returning
+        // false is safe for the record: the superseded files are still on disk.
+        if (!$thumbnail->toFile($thumbPath, IMAGETYPE_JPEG) || !is_file($thumbPath)) {
+            Log::add('Thumbnail encode failed, keeping previous image: ' . $newImagePath, Log::WARNING, 'com_proclaim');
+
+            return false;
+        }
 
         $result = [
             'image'          => $path . '/' . $newFilename,
@@ -336,22 +444,49 @@ class Cwmthumbnail
             'thumbnail_webp' => null,
         ];
 
-        // Generate WebP variants if GD supports it
+        // Generate WebP variants if GD supports it. These are optional
+        // enhancements, so a failed encode is logged and the variant left null
+        // rather than failing the whole operation. The path is reported only
+        // when the file exists, so no reference to an unwritten file is stored.
         if (\function_exists('imagewebp')) {
             $webpThumbName = 'thumb_' . $baseFilename . '-' . $versionHash . '.webp';
             $webpThumbPath = $destFolder . '/' . $webpThumbName;
-            $thumbnail->toFile($webpThumbPath, IMAGETYPE_WEBP);
-            $result['thumbnail_webp'] = $path . '/' . $webpThumbName;
+
+            if ($thumbnail->toFile($webpThumbPath, IMAGETYPE_WEBP) && is_file($webpThumbPath)) {
+                $result['thumbnail_webp'] = $path . '/' . $webpThumbName;
+            } else {
+                Log::add('WebP thumbnail encode failed for: ' . $newImagePath, Log::WARNING, 'com_proclaim');
+            }
 
             // Generate WebP of the full-size image (skip if source is already WebP)
             if ($extension !== 'webp') {
                 $webpImageName = $baseFilename . '-' . $versionHash . '.webp';
                 $webpImagePath = $destFolder . '/' . $webpImageName;
                 $fullImage     = new Image($newImagePath);
-                $fullImage->toFile($webpImagePath, IMAGETYPE_WEBP);
-                $result['image_webp'] = $path . '/' . $webpImageName;
+
+                if ($fullImage->toFile($webpImagePath, IMAGETYPE_WEBP) && is_file($webpImagePath)) {
+                    $result['image_webp'] = $path . '/' . $webpImageName;
+                } else {
+                    Log::add('WebP full-image encode failed for: ' . $newImagePath, Log::WARNING, 'com_proclaim');
+                }
             } else {
                 $result['image_webp'] = $result['image'];
+            }
+        }
+
+        // Every replacement is now confirmed on disk — retire the superseded
+        // files. Anything we just wrote is excluded defensively, in case a
+        // glob pattern above matched a name we then reused.
+        $justWritten = array_filter([
+            $newFilename,
+            $thumbName,
+            basename((string) ($result['thumbnail_webp'] ?? '')),
+            basename((string) ($result['image_webp'] ?? '')),
+        ]);
+
+        foreach ($supersededFiles as $oldFile) {
+            if (!\in_array(basename($oldFile), $justWritten, true)) {
+                File::delete($oldFile);
             }
         }
 
@@ -371,6 +506,25 @@ class Cwmthumbnail
      */
     public static function resize(string $path, int $newSize, ?int $outputType = null): bool
     {
+        // CRITICAL: this method deletes every thumb_* sibling in the target
+        // directory and writes new files there, and its only caller
+        // (CwmadminController::createThumbnailXHR) takes `image_path` straight
+        // from request input. Without this check a crafted path reaches any
+        // directory on disk.
+        $resolvedPath = self::resolveWithinAllowedPaths($path);
+
+        if ($resolvedPath === false) {
+            Log::add(
+                'Attempted to resize an image outside allowed scope: ' . $path,
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return false;
+        }
+
+        $path = $resolvedPath;
+
         // Verify source image exists
         if (!is_file($path)) {
             return false;
@@ -401,13 +555,11 @@ class Cwmthumbnail
         $filenameBase  = pathinfo($filename, PATHINFO_FILENAME);
         $thumbFilename = 'thumb_' . $filenameBase . '.' . $extension;
 
-        // Delete existing thumbnails in this directory
+        // Old thumbnails are collected now but deleted only after the
+        // replacement is confirmed on disk (below), so a failed GD encode
+        // leaves the existing thumbnail in place.
         $directory = \dirname($path);
         $oldThumbs = Folder::files($directory, '^thumb_' . preg_quote($filenameBase, '/'), false, true);
-
-        foreach ($oldThumbs as $thumb) {
-            File::delete($thumb);
-        }
 
         // Create new thumbnail preserving original aspect ratio
         $image        = new Image($path);
@@ -422,13 +574,37 @@ class Cwmthumbnail
             $thumbWidth  = (int) round($newSize * ($sourceWidth / $sourceHeight));
         }
 
-        $thumbnail = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
-        $thumbnail->toFile($directory . '/' . $thumbFilename, $outputType);
+        $thumbnail    = $image->resize($thumbWidth, $thumbHeight, true, self::SCALE_INSIDE);
+        $newThumbPath = $directory . '/' . $thumbFilename;
 
-        // Generate WebP variant alongside
+        // Image::toFile() calls imagejpeg()/imagewebp() and returns their bool
+        // rather than throwing, so the result has to be checked: a failed
+        // encode (disk full, GD hitting memory_limit) is otherwise
+        // indistinguishable from success.
+        if (!$thumbnail->toFile($newThumbPath, $outputType) || !is_file($newThumbPath)) {
+            Log::add('Thumbnail encode failed for: ' . $path, Log::WARNING, 'com_proclaim');
+
+            return false;
+        }
+
+        // Generate WebP variant alongside. Optional: a failure here is logged
+        // and tolerated, since the primary thumbnail above already succeeded.
         if (\function_exists('imagewebp')) {
             $webpThumbFilename = 'thumb_' . $filenameBase . '.webp';
-            $thumbnail->toFile($directory . '/' . $webpThumbFilename, IMAGETYPE_WEBP);
+
+            if (!$thumbnail->toFile($directory . '/' . $webpThumbFilename, IMAGETYPE_WEBP)) {
+                Log::add('WebP thumbnail encode failed for: ' . $path, Log::WARNING, 'com_proclaim');
+            }
+        }
+
+        // Replacement confirmed — now retire the superseded thumbnails, skipping
+        // anything we just wrote.
+        $justWritten = [$thumbFilename, 'thumb_' . $filenameBase . '.webp'];
+
+        foreach ($oldThumbs as $thumb) {
+            if (!\in_array(basename($thumb), $justWritten, true)) {
+                File::delete($thumb);
+            }
         }
 
         return true;

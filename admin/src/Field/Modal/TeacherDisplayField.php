@@ -17,20 +17,18 @@ namespace CWM\Component\Proclaim\Administrator\Field\Modal;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
-use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Form\Field\ModalSelectField;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
-use Joomla\Database\DatabaseInterface;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Database\ParameterType;
 
 /**
- * Supports a modal study picker.
+ * Supports a modal teacher picker using Joomla's ModalSelectField (PostMessage + JoomlaDialog).
  *
- * @package  Proclaim.Admin
- * @since    7.0.0
+ * @since  __DEPLOY_VERSION__
  */
-class TeacherDisplayField extends FormField
+class TeacherDisplayField extends ModalSelectField
 {
     /**
      * The form field type.
@@ -41,254 +39,109 @@ class TeacherDisplayField extends FormField
     protected $type = 'Modal_TeacherDisplay';
 
     /**
-     * Method to get the field label markup.
+     * Method to attach a Form object to the field.
      *
-     * @return  string  The field label markup.
+     * @param   \SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag.
+     * @param   mixed              $value    The form field value to validate.
+     * @param   string             $group    The field name group control value.
      *
-     * @since   9.0.0
+     * @return  bool  True on success.
+     *
+     * @since   __DEPLOY_VERSION__
      */
     #[\Override]
-    protected function getLabel(): string
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
     {
-        return str_replace($this->id, $this->id . '_name', parent::getLabel());
-    }
-
-    /**
-     * Method to get the field input markup.
-     *
-     * @return  string  The field input markup.
-     *
-     * @throws \Exception
-     * @since    1.6
-     */
-    #[\Override]
-    protected function getInput(): string
-    {
-        $allowNew       = ((string)$this->element['new'] == 'true');
-        $allowEdit      = ((string)$this->element['edit'] == 'true');
-        $allowClear     = ((string)$this->element['clear'] != 'false');
-        $allowSelect    = ((string)$this->element['select'] != 'false');
-        $allowPropagate = ((string)$this->element['propagate'] == 'true');
-
-        // Load language
-        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
-
-        // The active article ID field.
-        $value = (int)$this->value ?: '';
-
-        // Create the modal ID.
-        $modalId = 'Teacher_' . $this->id;
-
-        /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
-        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
-
-        // Add the modal field script to the document head.
-        $wa->useScript('field.modal-fields');
-
-        // Script to proxy the select modal function to the modal-fields.js file.
-        if ($allowSelect) {
-            static $scriptSelect = null;
-
-            if (\is_null($scriptSelect)) {
-                $scriptSelect = [];
-            }
-
-            if (!isset($scriptSelect[$this->id])) {
-                $wa->addInlineScript(
-                    "
-				window.jSelectTeachers_" . $this->id . " = function (id, title, catid, object, url, language) {
-					window.processModalSelect('Teacher', '" . $this->id . "', id, title, catid, object, url, language);
-				}",
-                    [],
-                    ['type' => 'module']
-                );
-
-                Text::script('JGLOBAL_ASSOCIATIONS_PROPAGATE_FAILED');
-
-                $scriptSelect[$this->id] = true;
-            }
+        // Normalize legacy "no selection" values (-1, 0) to empty
+        if ((int) $value <= 0) {
+            $value = '';
         }
 
-        // Setup variables for display.
-        $linkSeries = 'index.php?option=com_proclaim&amp;view=cwmteachers&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-        ) . '=1';
-        $linkSerie  = 'index.php?option=com_proclaim&amp;view=cwmteacher&amp;layout=modal&amp;tmpl=component&amp;' . Session::getFormToken(
-        ) . '=1';
+        $result = parent::setup($element, $value, $group);
 
-        if (isset($this->element['language'])) {
-            $linkSeries .= '&amp;forcedLanguage=' . $this->element['language'];
-            $linkSerie .= '&amp;forcedLanguage=' . $this->element['language'];
-            $modalTitle = Text::_('JBS_CMN_SELECT_TEACHER') . ' &#8212; ' . $this->element['label'];
+        if (!$result) {
+            return $result;
+        }
+
+        Factory::getApplication()->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
+
+        $language = (string) $this->element['language'];
+
+        // Build URLs using Uri objects (no &amp; encoding issues)
+        $linkTeachers = (new Uri())->setPath(Uri::base(true) . '/index.php');
+        $linkTeachers->setQuery([
+            'option'                => 'com_proclaim',
+            'view'                  => 'cwmteachers',
+            'layout'                => 'modal',
+            'tmpl'                  => 'component',
+            Session::getFormToken() => 1,
+        ]);
+        $linkTeacher = clone $linkTeachers;
+        $linkTeacher->setVar('view', 'cwmteacher');
+
+        if ($language) {
+            $linkTeachers->setVar('forcedLanguage', $language);
+            $linkTeacher->setVar('forcedLanguage', $language);
+
+            $modalTitle = Text::_('JBS_CMN_SELECT_TEACHER') . ' &#8212; ' . $this->getTitle();
+
+            $this->dataAttributes['data-language'] = $language;
         } else {
             $modalTitle = Text::_('JBS_CMN_SELECT_TEACHER');
         }
 
-        $urlSelect = $linkSeries . '&amp;function=jSelectTeachers_' . $this->id;
-        $urlEdit   = $linkSerie . '&amp;task=cwmteacher.edit&amp;id=\' + document.getElementById(&quot;' . $this->id . '_id&quot;).value + \'';
-        $urlNew    = $linkSerie . '&amp;task=cwmteacher.add';
+        $urlSelect = $linkTeachers;
+        $urlEdit   = clone $linkTeacher;
+        $urlEdit->setVar('layout', 'modal');
+        $urlEdit->setVar('task', 'cwmteacher.edit');
+        $urlNew    = clone $linkTeacher;
+        $urlNew->setVar('layout', 'modal');
+        $urlNew->setVar('task', 'cwmteacher.add');
+
+        $this->urls['select'] = (string) $urlSelect;
+        $this->urls['new']    = (string) $urlNew;
+        $this->urls['edit']   = (string) $urlEdit;
+
+        // Modal titles
+        $this->modalTitles['select'] = $modalTitle;
+        $this->modalTitles['new']    = Text::_('JBS_TITLE_TEACHER_CREATING');
+        $this->modalTitles['edit']   = Text::_('JBS_TITLE_TEACHER_EDITING');
+
+        $this->hint = $this->hint ?: Text::_('JBS_CMN_SELECT_TEACHER');
+
+        return $result;
+    }
+
+    /**
+     * Method to retrieve the title of a selected item.
+     *
+     * @return int|string
+     *
+     * @throws \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    protected function getValueTitle(): int|string
+    {
+        $value = (int) $this->value ?: '';
+        $title = '';
 
         if ($value) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->createQuery()
-                ->select($db->quoteName('teachername') . 'AS name')
-                ->from($db->quoteName('#__bsms_teachers'))
-                ->where($db->quoteName('id') . ' = :value')
-                ->bind(':value', $value, ParameterType::INTEGER);
-            $db->setQuery($query);
-
             try {
+                $db    = $this->getDatabase();
+                $query = $db->createQuery()
+                    ->select($db->quoteName('teachername'))
+                    ->from($db->quoteName('#__bsms_teachers'))
+                    ->where($db->quoteName('id') . ' = :value')
+                    ->bind(':value', $value, ParameterType::INTEGER);
+                $db->setQuery($query);
+
                 $title = $db->loadResult();
-            } catch (\RuntimeException $e) {
+            } catch (\Throwable $e) {
                 Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
             }
         }
 
-        $title = empty($title) ? Text::_('JBS_CMN_SELECT_TEACHER') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
-
-        // The current teacher display field.
-        $html = '';
-
-        if ($allowSelect || $allowNew || $allowEdit || $allowClear) {
-            $html .= '<span class="input-group">';
-        }
-
-        $html .= '<input class="form-control" id="' . $this->id . '_name" type="text" value="' . $title . '" readonly size="35">';
-
-        // Select teacher button
-        if ($allowSelect) {
-            $html .= '<button'
-                . ' class="btn btn-primary' . ($value ? ' hidden' : '') . '"'
-                . ' id="' . $this->id . '_select"'
-                . ' data-bs-toggle="modal"'
-                . ' type="button"'
-                . ' data-bs-target="#ModalSelect' . $modalId . '">'
-                . '<span class="icon-file" aria-hidden="true"></span> ' . Text::_('JSELECT')
-                . '</button>';
-        }
-
-        // New teacher button
-        if ($allowNew) {
-            $html .= '<button'
-                . ' class="btn btn-secondary' . ($value ? ' hidden' : '') . '"'
-                . ' id="' . $this->id . '_new"'
-                . ' data-bs-toggle="modal"'
-                . ' type="button"'
-                . ' data-bs-target="#ModalNew' . $modalId . '">'
-                . '<span class="icon-plus" aria-hidden="true"></span> ' . Text::_('JACTION_CREATE')
-                . '</button>';
-        }
-
-        // Edit teacher button
-        if ($allowEdit) {
-            $html .= '<button'
-                . ' class="btn btn-primary' . ($value ? '' : ' hidden') . '"'
-                . ' id="' . $this->id . '_edit"'
-                . ' data-bs-toggle="modal"'
-                . ' type="button"'
-                . ' data-bs-target="#ModalEdit' . $modalId . '">'
-                . '<span class="icon-pen-square" aria-hidden="true"></span> ' . Text::_('JACTION_EDIT')
-                . '</button>';
-        }
-
-        // Clear teacher button
-        if ($allowClear) {
-            $html .= '<button'
-                . ' class="btn btn-secondary' . ($value ? '' : ' hidden') . '"'
-                . ' id="' . $this->id . '_clear"'
-                . ' type="button"'
-                . ' onclick="window.processModalParent(\'' . $this->id . '\'); return false;">'
-                . '<span class="icon-times" aria-hidden="true"></span> ' . Text::_('JCLEAR')
-                . '</button>';
-        }
-
-        if ($allowSelect || $allowNew || $allowEdit || $allowClear) {
-            $html .= '</span>';
-        }
-
-        // Select teacher modal
-        if ($allowSelect) {
-            $html .= HTMLHelper::_(
-                'bootstrap.renderModal',
-                'ModalSelect' . $modalId,
-                [
-                    'title'      => $modalTitle,
-                    'url'        => $urlSelect,
-                    'height'     => '400px',
-                    'width'      => '800px',
-                    'bodyHeight' => 70,
-                    'modalWidth' => 80,
-                    'footer'     => '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
-                        . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                ]
-            );
-        }
-
-        // New teacher modal
-        if ($allowNew) {
-            $html .= HTMLHelper::_(
-                'bootstrap.renderModal',
-                'ModalNew' . $modalId,
-                [
-                    'title'       => Text::_('JBS_TITLE_TEACHER_CREATING'),
-                    'backdrop'    => 'static',
-                    'keyboard'    => false,
-                    'closeButton' => false,
-                    'url'         => $urlNew,
-                    'height'      => '400px',
-                    'width'       => '800px',
-                    'bodyHeight'  => 70,
-                    'modalWidth'  => 80,
-                    'footer'      => '<button type="button" class="btn btn-secondary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmteacher\', \'cancel\', \'item-form\'); return false;">'
-                        . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
-                        . '<button type="button" class="btn btn-primary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmteacher\', \'save\', \'item-form\'); return false;">'
-                        . Text::_('JSAVE') . '</button>'
-                        . '<button type="button" class="btn btn-success"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'add\', \'cwmteacher\', \'apply\', \'item-form\'); return false;">'
-                        . Text::_('JAPPLY') . '</button>',
-                ]
-            );
-        }
-
-        // Edit Message modal
-        if ($allowEdit) {
-            $html .= HTMLHelper::_(
-                'bootstrap.renderModal',
-                'ModalEdit' . $modalId,
-                [
-                    'title'       => Text::_('JBS_TITLE_TEACHER_EDITING'),
-                    'backdrop'    => 'static',
-                    'keyboard'    => false,
-                    'closeButton' => false,
-                    'url'         => $urlEdit,
-                    'height'      => '400px',
-                    'width'       => '800px',
-                    'bodyHeight'  => 70,
-                    'modalWidth'  => 80,
-                    'footer'      => '<button type="button" class="btn btn-secondary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmteacher\', \'cancel\', \'item-form\'); return false;">'
-                        . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
-                        . '<button type="button" class="btn btn-primary"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmteacher\', \'save\', \'item-form\'); return false;">'
-                        . Text::_('JSAVE') . '</button>'
-                        . '<button type="button" class="btn btn-success"'
-                        . ' onclick="window.processModalEdit(this, \'' . $this->id . '\', \'edit\', \'cwmteacher\', \'apply\', \'item-form\'); return false;">'
-                        . Text::_('JAPPLY') . '</button>',
-                ]
-            );
-        }
-
-        // Note: class='required' for client side validation.
-        $class = $this->required ? ' class="required modal-value"' : '';
-
-        $html .= '<input type="hidden" id="' . $this->id . '_id"' . $class . ' data-required="' . (int)$this->required . '" name="' . $this->name
-            . '" data-text="' . htmlspecialchars(
-                Text::_('JBS_CMN_SELECT_TEACHER'),
-                ENT_COMPAT,
-                'UTF-8'
-            ) . '" value="' . $value . '">';
-
-        return $html;
+        return $title ?: $value;
     }
 }

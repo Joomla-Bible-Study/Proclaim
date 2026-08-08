@@ -48,6 +48,10 @@ use Joomla\Router\Route;
  * view levels by the underlying model, so a public read never returns rows a
  * user could not see in the site itself.
  *
+ * One extra singleton endpoint, not a RESOURCES entry — component metadata, not
+ * a database resource:
+ *   GET  /api/index.php/v1/proclaim/info — installed Proclaim version
+ *
  * @since  10.3.0
  */
 class Proclaim extends CMSPlugin implements SubscriberInterface
@@ -147,6 +151,8 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
                 $this->createWriteRoutes($router, "v1/proclaim/$resource", $resource);
             }
         }
+
+        $this->createInfoRoute($router, $isPublic);
 
         $this->explainUnroutableRequest();
     }
@@ -289,6 +295,31 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
         ];
 
         $router->addRoutes($routes);
+    }
+
+    /**
+     * Register the info route.
+     *
+     * Not a RESOURCES entry: info is a singleton (component metadata, not a
+     * database entity — see CwminfoModel), so it gets one GET route straight to
+     * displayItem rather than the list + list/:id pair createReadOnlyRoutes()
+     * registers for real resources. See #1429.
+     *
+     * @param   ApiRouter  $router    The API router
+     * @param   bool       $isPublic  Whether the route is publicly accessible
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function createInfoRoute(ApiRouter $router, bool $isPublic): void
+    {
+        $router->addRoutes([
+            new Route(['GET'], 'v1/proclaim/info', 'info.displayItem', [], [
+                'component' => 'com_proclaim',
+                'public'    => $isPublic,
+            ]),
+        ]);
     }
 
 }

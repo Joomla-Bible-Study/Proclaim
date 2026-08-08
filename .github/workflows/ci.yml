@@ -154,6 +154,243 @@ jobs:
           sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
           mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
 
+      - name: Create Joomla #__schemaorg and #__scheduler_tasks tables
+        run: |
+          # base.sql (imported above) doesn't include these tables -- they're
+          # defined in Joomla core's extensions.sql, which also carries a lot
+          # of unrelated seed data we don't want in the test fixture. The
+          # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
+          # read/write #__schemaorg directly, and Cwmbackup's scheduled-tasks
+          # export needs #__scheduler_tasks to exist to exercise its real
+          # (non-"table not found") branch, so integration tests need both.
+          mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
+            CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`itemId\` int unsigned,
+              \`context\` varchar(100),
+              \`schemaType\` varchar(100),
+              \`schema\` text,
+              PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+            CREATE TABLE IF NOT EXISTS \`proclaim_scheduler_tasks\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`asset_id\` int unsigned NOT NULL DEFAULT 0,
+              \`title\` varchar(255) NOT NULL DEFAULT '',
+              \`type\` varchar(128) NOT NULL,
+              \`execution_rules\` text,
+              \`cron_rules\` text,
+              \`state\` tinyint NOT NULL DEFAULT 0,
+              \`last_exit_code\` int NOT NULL DEFAULT 0,
+              \`last_execution\` datetime,
+              \`next_execution\` datetime,
+              \`times_executed\` int DEFAULT 0,
+              \`times_failed\` int DEFAULT 0,
+              \`locked\` datetime,
+              \`priority\` smallint NOT NULL DEFAULT 0,
+              \`ordering\` int NOT NULL DEFAULT 0,
+              \`cli_exclusive\` smallint NOT NULL DEFAULT 0,
+              \`params\` text NOT NULL,
+              \`note\` text,
+              \`created\` datetime NOT NULL,
+              \`created_by\` int unsigned NOT NULL DEFAULT 0,
+              \`checked_out\` int unsigned,
+              \`checked_out_time\` datetime,
+              PRIMARY KEY (\`id\`),
+              KEY \`idx_type\` (\`type\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+          "
+
+      - name: Check PHP syntax
+        run: composer lint:syntax
+
+      - name: Check query builder usage
+        run: composer lint:queries
+
+      - name: Run PHPUnit tests
+        run: composer test
+        env:
+          JOOMLA_CMS_PATH: /home/runner/work/Proclaim/joomla-cms
+          JTEST_DB_HOST: 127.0.0.1
+          JTEST_DB_NAME: proclaim_test
+          JTEST_DB_USER: proclaim_test
+          JTEST_DB_PASSWORD: proclaim_test
+          JTEST_DB_PREFIX: proclaim_
+
+  # Forward-compatibility coverage for the next PHP release. Blocking since
+  # 2026-08-05: the suite is verified clean on 8.5, so a failure here means a
+  # real forward-compat regression (e.g. a newly-deprecated API) and must be
+  # fixed before merge, not discovered at the 8.5 support cutover.
+  php-checks-85:
+    name: PHP Lint & Tests (8.5)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_USER: proclaim_test
+          MYSQL_PASSWORD: proclaim_test
+          MYSQL_ROOT_PASSWORD: proclaim_test
+          MYSQL_DATABASE: proclaim_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, json, xml, mysqli
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php85-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php85-composer-
+
+      - name: Clone joomla-cms for test framework
+        run: git clone --depth 1 --branch 5.4.3 https://github.com/joomla/joomla-cms.git $GITHUB_WORKSPACE/../joomla-cms
+
+      - name: Cache joomla-cms composer dependencies
+        id: joomla-cms-cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/../joomla-cms/libraries/vendor
+          key: joomla-cms-vendor-5.4.3-${{ runner.os }}-php85
+
+      - name: Install joomla-cms composer dependencies
+        if: steps.joomla-cms-cache.outputs.cache-hit != 'true'
+        run: |
+          cd $GITHUB_WORKSPACE/../joomla-cms
+          composer install --no-dev --no-interaction --prefer-dist
+
+      - name: Generate minimal configuration.php for tests
+        run: |
+          cat > $GITHUB_WORKSPACE/../joomla-cms/configuration.php <<'PHP'
+          <?php
+          class JConfig
+          {
+              public $dbtype          = 'mysqli';
+              public $host            = '127.0.0.1';
+              public $user            = 'proclaim_test';
+              public $password        = 'proclaim_test';
+              public $db              = 'proclaim_test';
+              public $dbprefix        = 'proclaim_';
+              public $secret          = 'proclaim-test-secret-key-0123456789abcdef';
+              public $sitename        = 'Proclaim Test';
+              public $editor          = 'none';
+              public $captcha         = '0';
+              public $language        = 'en-GB';
+              public $mailer          = 'smtp';
+              public $mailfrom        = 'test@example.com';
+              public $fromname        = 'Proclaim Test';
+              public $sendmail        = '/usr/sbin/sendmail';
+              public $smtpauth        = '0';
+              public $smtpuser        = '';
+              public $smtppass        = '';
+              public $smtphost        = 'localhost';
+              public $smtpsecure      = 'none';
+              public $smtpport        = '25';
+              public $caching         = '0';
+              public $cache_handler   = 'file';
+              public $cachetime       = '15';
+              public $MetaDesc        = '';
+              public $MetaAuthor      = '1';
+              public $sef             = '1';
+              public $sef_rewrite     = '0';
+              public $sef_suffix      = '0';
+              public $unicodeslugs    = '0';
+              public $tmp_path        = '/tmp';
+              public $log_path        = '/tmp';
+              public $offline         = '0';
+              public $debug           = '0';
+              public $debug_lang      = '0';
+              public $error_reporting = 'default';
+              public $cookie_domain   = '';
+              public $cookie_path     = '';
+              public $lifetime        = '15';
+              public $session_handler = 'database';
+              public $session_metadata = '1';
+              public $force_ssl       = '0';
+              public $log_deprecated  = '0';
+          }
+          PHP
+
+      - name: Install Composer dependencies
+        run: composer install --dev --no-interaction --prefer-dist
+
+      - name: Import Joomla core database schema
+        run: |
+          sed 's/#__/proclaim_/g' $GITHUB_WORKSPACE/../joomla-cms/installation/sql/mysql/base.sql > /tmp/joomla-base.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/joomla-base.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Import Proclaim database schema
+        run: |
+          sed 's/#__/proclaim_/g' admin/sql/install.mysql.utf8.sql > /tmp/schema.sql
+          mysql --force -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test < /tmp/schema.sql 2>&1 | grep -v "doesn't exist" || true
+
+      - name: Create Joomla #__schemaorg and #__scheduler_tasks tables
+        run: |
+          # base.sql (imported above) doesn't include these tables -- they're
+          # defined in Joomla core's extensions.sql, which also carries a lot
+          # of unrelated seed data we don't want in the test fixture. The
+          # schemaorg system plugin (and CwmschemaorgHelper's per-item sync)
+          # read/write #__schemaorg directly, and Cwmbackup's scheduled-tasks
+          # export needs #__scheduler_tasks to exist to exercise its real
+          # (non-"table not found") branch, so integration tests need both.
+          mysql -h 127.0.0.1 -u proclaim_test -pproclaim_test proclaim_test -e "
+            CREATE TABLE IF NOT EXISTS \`proclaim_schemaorg\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`itemId\` int unsigned,
+              \`context\` varchar(100),
+              \`schemaType\` varchar(100),
+              \`schema\` text,
+              PRIMARY KEY (\`id\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+            CREATE TABLE IF NOT EXISTS \`proclaim_scheduler_tasks\` (
+              \`id\` int unsigned NOT NULL AUTO_INCREMENT,
+              \`asset_id\` int unsigned NOT NULL DEFAULT 0,
+              \`title\` varchar(255) NOT NULL DEFAULT '',
+              \`type\` varchar(128) NOT NULL,
+              \`execution_rules\` text,
+              \`cron_rules\` text,
+              \`state\` tinyint NOT NULL DEFAULT 0,
+              \`last_exit_code\` int NOT NULL DEFAULT 0,
+              \`last_execution\` datetime,
+              \`next_execution\` datetime,
+              \`times_executed\` int DEFAULT 0,
+              \`times_failed\` int DEFAULT 0,
+              \`locked\` datetime,
+              \`priority\` smallint NOT NULL DEFAULT 0,
+              \`ordering\` int NOT NULL DEFAULT 0,
+              \`cli_exclusive\` smallint NOT NULL DEFAULT 0,
+              \`params\` text NOT NULL,
+              \`note\` text,
+              \`created\` datetime NOT NULL,
+              \`created_by\` int unsigned NOT NULL DEFAULT 0,
+              \`checked_out\` int unsigned,
+              \`checked_out_time\` datetime,
+              PRIMARY KEY (\`id\`),
+              KEY \`idx_type\` (\`type\`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+          "
+
       - name: Check PHP syntax
         run: composer lint:syntax
 
@@ -183,7 +420,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install npm dependencies
@@ -212,13 +449,28 @@ jobs:
       # until 2026-07-27.
       #
       # Ignore list: SER is the key-prefix legend for Series in the ini
-      # comments; pre-selected is legitimate English codespell would "fix".
+      # comments; pre-selected is legitimate English codespell would "fix";
+      # comparaison is French, quoted verbatim from CNIL's cookies
+      # recommendation in the data-protection review; serie is this codebase's
+      # own singular entity name (CwmserieTable, and the ACL section
+      # com_proclaim.serie) — "correcting" it would break ACL rules.
+      #
+      # The addon language directories were outside this scan until 2026-08-06
+      # and were shipping "Protocl" as a field label and "Protocal" in its
+      # description on the Legacy and Local server screens. Templates, layouts
+      # and forms are included too: they were clean when added, so this locks
+      # that in rather than fixing anything.
       - name: Spellcheck en-GB strings and documentation
         run: >
           codespell
-          --ignore-words-list ser,pre-selected
+          --ignore-words-list ser,pre-selected,comparaison,serie
           admin/language/en-GB
           site/language/en-GB
+          admin/src/Addons/Servers/*/language/en-GB
           plugins/*/proclaim/language/en-GB
+          plugins/content/scripturelinks/language/en-GB
+          plugins/content/scripturelinks/plg_*/language/en-GB
+          libraries/lib_cwmscripture/language/en-GB
           modules/*/*/language/en-GB
+          admin/tmpl site/tmpl admin/layouts site/layouts admin/forms
           README.md CLAUDE.md build/*.md

@@ -107,14 +107,18 @@ class CwmseriesdisplaysModel extends ListModel
         }
 
         // Load the parameters.
-        $params = $app->getParams();
-        $this->setState('params', $params);
+        $params   = $app->getParams();
         $template = Cwmparams::getTemplateparams();
         $admin    = Cwmparams::getAdmin();
 
         $template->params->merge($params);
         $template->params->merge($admin->params);
         $params = $template->params;
+        // Re-persist after the merge — 'params' must hold the template-merged
+        // Registry (with the per-field row/column layout settings the
+        // listing helper needs), not the raw application params captured
+        // above. Matches the equivalent line in CwmsermonsModel. See #1502.
+        $this->setState('params', $params);
 
         $t = (int)$params->get('seriesid');
 

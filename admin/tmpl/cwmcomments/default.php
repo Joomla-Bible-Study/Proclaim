@@ -138,7 +138,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMT_CREATE_DATE',
-                                    'comment.studydate',
+                                    'comment.comment_date',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
