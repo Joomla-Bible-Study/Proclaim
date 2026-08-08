@@ -103,6 +103,37 @@ if [ ! -f "$JCLI" ]; then
     exit 1
 fi
 
+# Phase 11 asserts that removing pkg_proclaim drops the shared scripture tables,
+# which is only true when nothing else uses them. Any other consumer -- Living
+# Word is the one that actually bit us (lib_cwmscripture#37) -- makes keeping
+# them correct, so the assertion would be testing for a bug.
+#
+# Clear them here rather than in phase 11 itself: phases 12 and 13 install their
+# own consumers to prove the opposite case, and an unrelated one already present
+# would let those pass without their fixtures doing anything.
+#
+# NOTE: reset-testsite.php only removes the Proclaim family, so anything taken
+# out here stays out. That is fine for a role=test site -- everything from this
+# point is destructive by design -- but it does mean a consumer must be
+# reinstalled by hand if a later run needs it.
+# grep to digits only: this mode prints bare ids with no header, so a stray PHP
+# notice on stdout would otherwise be passed to extension:remove as an id.
+OTHER_CONSUMERS="$(php build/verify-scripture-uninstall.php other-consumer-ids | grep -E '^[0-9]+$' || true)"
+
+if [ -n "$OTHER_CONSUMERS" ]; then
+    echo "   clearing other scripture consumers before the uninstall phases:"
+
+    for CID in $OTHER_CONSUMERS; do
+        if php "$JCLI" extension:remove -n "$CID" >/dev/null 2>&1; then
+            echo "     removed extension id ${CID}"
+        else
+            echo "ERROR: could not remove scripture consumer id ${CID}." >&2
+            echo "       Phase 11 would then fail for the wrong reason." >&2
+            exit 1
+        fi
+    done
+fi
+
 echo "-- [10/15] STILL NEEDED: removing the library alone must be refused"
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
 
@@ -116,9 +147,23 @@ echo "   extension:remove exited non-zero, as expected"
 php build/verify-scripture-uninstall.php assert-library-present
 
 echo "-- [11/15] COMPLETE UNINSTALL: package removal with no other consumer drops the tables"
+# The precondition has to be checked BEFORE the removal — afterwards the registry
+# and extension rows are gone and "was anything else using these?" is unanswerable.
+# lib_cwmscripture#37 was filed because this phase asserted the drop on a site with
+# com_livingword installed, where keeping the tables is the correct behaviour.
+php build/verify-scripture-uninstall.php assert-no-other-consumer
 php build/verify-scripture-uninstall.php seed-translation
 PKGID="$(php build/verify-scripture-uninstall.php ext-id package pkg_proclaim | tail -n1)"
-php "$JCLI" extension:remove -n "$PKGID" || true
+
+# No `|| true`. A removal that failed and a removal that succeeded then declined to
+# drop look identical in the table check, and that ambiguity is what turned correct
+# behaviour into a filed bug.
+if ! php "$JCLI" extension:remove -n "$PKGID"; then
+    echo "ERROR: extension:remove failed for pkg_proclaim (id ${PKGID})." >&2
+    echo "       The table assertions below would be meaningless, so stopping here." >&2
+    exit 1
+fi
+
 php build/verify-scripture-uninstall.php assert-tables-gone
 
 echo "-- [12/15] STILL NEEDED: a registered third-party consumer keeps the tables"
