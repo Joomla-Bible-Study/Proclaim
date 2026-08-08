@@ -63,6 +63,7 @@ $modes = [
     'other-consumer-ids',
     'assert-sql-armed',
     'assert-sql-disarmed',
+    'arm',
     'disarm',
     'assert-translation-survived',
     'assert-translation-destroyed',
@@ -94,6 +95,30 @@ const PROBE_ROWS  = 3;
  * every cached passage back out to GetBible / API.Bible to be re-fetched.
  */
 const PROBE_CACHE_ROWS = 2;
+
+/**
+ * The uninstall SQL lib_cwmscripture shipped up to 1.1.4, verbatim.
+ *
+ * The negative control needs a library that still destroys data, and no
+ * released baseline supplies one any more: the file has shipped disarmed since
+ * 1.1.5, so asserting the baseline carries it fails for good. The harness
+ * plants the hazard itself instead.
+ *
+ * plg_system_proclaim rewrites this file on sight, but only while an admin is
+ * on com_installer in a web request. Every install here runs through the CLI,
+ * so nothing disarms the planted file before the phase can use it.
+ */
+const ARMED_UNINSTALL_SQL = <<<'SQL'
+--
+-- CWM Scripture Library - Uninstall SQL
+-- Only runs when the library is uninstalled standalone (not locked by Proclaim).
+--
+
+DROP TABLE IF EXISTS `#__bsms_scripture_cache`;
+DROP TABLE IF EXISTS `#__bsms_bible_verses`;
+DROP TABLE IF EXISTS `#__bsms_bible_translations`;
+
+SQL;
 
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
@@ -524,15 +549,108 @@ foreach ($installs as $install) {
 
         case 'assert-sql-armed':
         case 'assert-sql-disarmed':
+        case 'arm':
         case 'disarm':
         case 'assert-translation-survived':
         case 'assert-translation-destroyed':
             $sqlFile = $install->path . '/libraries/cwmscripture/sql/uninstall.mysql.utf8.sql';
 
-            if (\in_array($mode, ['assert-sql-armed', 'assert-sql-disarmed', 'disarm'], true)) {
+            if (\in_array($mode, ['assert-sql-armed', 'assert-sql-disarmed', 'arm', 'disarm'], true)) {
                 if (!is_file($sqlFile)) {
                     fwrite(STDERR, "  FAIL {$sqlFile} not found — is the library installed?\n");
                     $failures++;
+
+                    break;
+                }
+
+                // arm — restore the pre-1.1.5 hazard the negative control needs.
+                // Written and then read back: a silently failed write would leave
+                // the phase asserting nothing, which is the exact failure this
+                // whole phase exists to rule out.
+                if ($mode === 'arm') {
+                    if (file_put_contents($sqlFile, ARMED_UNINSTALL_SQL) === false) {
+                        fwrite(STDERR, "  FAIL could not write {$sqlFile}.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    if (!sqlIsArmed((string) file_get_contents($sqlFile))) {
+                        fwrite(STDERR, "  FAIL planted the uninstall SQL but it does not read back as armed.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    // The file alone is inert. LibraryAdapter runs uninstall SQL
+                    // only because the *manifest* declares it, and the shipped
+                    // manifest drops that block deliberately — so the pre-1.1.5
+                    // manifest has to come back too, or the update reads nothing
+                    // and the negative control passes while proving nothing.
+                    $manifest = $install->path . '/administrator/manifests/libraries/cwmscripture.xml';
+
+                    if (!is_file($manifest)) {
+                        fwrite(STDERR, "  FAIL {$manifest} not found — is the library installed?\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    // Edited through DOM, not string replacement: the shipped
+                    // manifest carries a comment *explaining* the absent
+                    // <uninstall><sql> block, so a substring test for it matches
+                    // the prose and skips the edit.
+                    $doc                     = new DOMDocument();
+                    $doc->preserveWhiteSpace = false;
+                    $doc->formatOutput       = true;
+
+                    if (!@$doc->load($manifest)) {
+                        fwrite(STDERR, "  FAIL {$manifest} is not parseable XML.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    $xpath = new DOMXPath($doc);
+
+                    if ($xpath->query('/extension/uninstall/sql/file')->length === 0) {
+                        $file = $doc->createElement('file', 'sql/uninstall.mysql.utf8.sql');
+                        $file->setAttribute('driver', 'mysql');
+                        $file->setAttribute('charset', 'utf8');
+
+                        $sql = $doc->createElement('sql');
+                        $sql->appendChild($file);
+
+                        $uninstall = $doc->createElement('uninstall');
+                        $uninstall->appendChild($sql);
+
+                        $doc->documentElement->appendChild(
+                            $doc->createComment(' Planted by the upgrade harness to restore the pre-1.1.5 hazard. ')
+                        );
+                        $doc->documentElement->appendChild($uninstall);
+
+                        if ($doc->save($manifest) === false) {
+                            fwrite(STDERR, "  FAIL could not write {$manifest}.\n");
+                            $failures++;
+
+                            break;
+                        }
+                    }
+
+                    // Re-read from disk: a malformed manifest would make Joomla
+                    // skip the library silently, and the phase would pass while
+                    // proving nothing.
+                    $check = new DOMDocument();
+
+                    if (!@$check->load($manifest)
+                        || (new DOMXPath($check))->query('/extension/uninstall/sql/file')->length !== 1) {
+                        fwrite(STDERR, "  FAIL {$manifest} does not parse with exactly one uninstall SQL file.\n");
+                        $failures++;
+
+                        break;
+                    }
+
+                    echo "  OK   planted the 1.1.4-style armed uninstall SQL and its manifest declaration\n";
 
                     break;
                 }
@@ -544,7 +662,7 @@ foreach ($installs as $install) {
                         echo "  OK   the installed library's uninstall SQL is armed (the real pre-fix hazard)\n";
                     } else {
                         fwrite(STDERR, "  FAIL expected an armed 1.1.4-style uninstall SQL, found none.\n");
-                        fwrite(STDERR, "       Without it this phase proves nothing — check the baseline install.\n");
+                        fwrite(STDERR, "       Without it this phase proves nothing — check the preceding arm step.\n");
                         $failures++;
                     }
 
