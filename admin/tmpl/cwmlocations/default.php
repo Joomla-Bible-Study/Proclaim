@@ -88,7 +88,7 @@ if (empty($this->items)) : ?>
                 echo HTMLHelper::_(
                     'searchtools.sort',
                     'JBS_CMN_LOCATIONS',
-                    'location.locations_text',
+                    'location.location_text',
                     $listDirn,
                     $listOrder
                 ); ?>

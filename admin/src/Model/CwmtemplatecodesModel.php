@@ -47,8 +47,9 @@ class CwmtemplatecodesModel extends ListModel
                 'templatecode.published',
                 'type',
                 'templatecode.type',
+                'filename',
+                'templatecode.filename',
                 'access',
-                'templatecode.access',
             ];
         }
 

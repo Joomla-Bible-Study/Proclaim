@@ -107,7 +107,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JPUBLISHED',
-                                    'cwmservers.published',
+                                    'server.published',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -117,7 +117,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_SERVERS',
-                                    'cwmservers.server_name',
+                                    'server.server_name',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -132,7 +132,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ID',
-                                    'cwmservers.id',
+                                    'server.id',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -166,7 +166,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                 <td class="text-center d-none d-md-table-cell">
                                     <?php
                                     $options = [
-                                        'task_prefix' => 'cwmservers.',
+                                        'task_prefix' => 'server.',
                                         'disabled'    => $workflow_state || !$canChange,
                                         'id'          => 'state-' . $item->id,
                                     ];
@@ -178,7 +178,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                                     <div class="float-left">
                                         <?php if ($item->checked_out) : ?>
                                             <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'cwmservers.', $canCheckin); ?>
+                                                $item->checked_out_time, 'server.', $canCheckin); ?>
                                         <?php endif; ?>
                                         <?php
                                 if ($canEdit || $canEditOwn) : ?>
