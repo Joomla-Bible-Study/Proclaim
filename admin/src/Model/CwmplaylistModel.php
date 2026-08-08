@@ -16,9 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
@@ -65,8 +67,27 @@ class CwmplaylistModel extends AdminModel
         $item = parent::getItem($pk);
 
         if ($item && !empty($item->default_settings) && \is_string($item->default_settings)) {
-            $decoded                = json_decode($item->default_settings, true);
-            $item->default_settings = \is_array($decoded) ? $decoded : [];
+            try {
+                $decoded                = json_decode($item->default_settings, true, 512, JSON_THROW_ON_ERROR);
+                $item->default_settings = \is_array($decoded) ? $decoded : [];
+            } catch (\JsonException $e) {
+                // The fallback stays [], because the form has to render something.
+                // What changes is that the administrator is told: the fields below
+                // will show defaults, and saving replaces the stored value with
+                // them. Silently substituting [] turned an unreadable column into
+                // a wiped one on the next save.
+                $item->default_settings = [];
+
+                CwmlogHelper::warning(
+                    'Playlist ' . (int) ($item->id ?? 0) . ' has an unreadable default_settings column; '
+                    . 'the edit form is showing defaults: ' . $e->getMessage()
+                );
+
+                Factory::getApplication()->enqueueMessage(
+                    Text::_('JBS_CMN_PLAYLIST_SETTINGS_UNREADABLE'),
+                    'warning'
+                );
+            }
         }
 
         return $item;

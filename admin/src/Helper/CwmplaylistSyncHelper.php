@@ -900,7 +900,19 @@ final class CwmplaylistSyncHelper
             return 0;
         }
 
-        $decoded = json_decode($params, true);
+        try {
+            $decoded = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            // Without JSON_THROW_ON_ERROR this returned null and fell into the
+            // is_array() guard below, so a media file with a corrupt params
+            // column was dropped from playlist sync with nothing recorded.
+            CwmlogHelper::warning(
+                'Media file ' . $mediafileId . ' has an unreadable params column and was skipped '
+                . 'during playlist linking: ' . $e->getMessage()
+            );
+
+            return 0;
+        }
 
         if (!\is_array($decoded) || empty($decoded['filename'])) {
             return 0;
@@ -1158,7 +1170,19 @@ final class CwmplaylistSyncHelper
             }
 
             // Additions need the media's remote video ID as the junction key.
-            $decoded = json_decode($params, true);
+            try {
+                $decoded = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                // Previously decoded to null and left $videoId null, so the
+                // requested playlist additions were dropped without a word.
+                CwmlogHelper::warning(
+                    'Media file ' . $mediafileId . ' has an unreadable params column; its manual '
+                    . 'playlist assignments were not applied: ' . $e->getMessage()
+                );
+
+                return;
+            }
+
             $videoId = \is_array($decoded) && !empty($decoded['filename'])
                 ? self::extractAnyRemoteId((string) $decoded['filename'])
                 : null;
@@ -1310,7 +1334,19 @@ final class CwmplaylistSyncHelper
                 continue;
             }
 
-            $decoded = json_decode($params, true);
+            try {
+                $decoded = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                // Skipping stays the behaviour — a row whose params cannot be
+                // read has no video ID to map — but it is now a stated decision
+                // rather than a null falling through the is_array() guard.
+                CwmlogHelper::warning(
+                    'Media file ' . (int) ($row['id'] ?? 0) . ' has an unreadable params column and was '
+                    . 'left out of the local video map: ' . $e->getMessage()
+                );
+
+                continue;
+            }
 
             if (!\is_array($decoded) || empty($decoded['filename'])) {
                 continue;
@@ -1354,7 +1390,18 @@ final class CwmplaylistSyncHelper
                 continue;
             }
 
-            $decoded = json_decode($params, true);
+            try {
+                $decoded = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                // Same contract as extractVideoMapFromRows(): the row is skipped,
+                // but the reason is now recorded rather than inferred from a null.
+                CwmlogHelper::warning(
+                    'Media file ' . (int) ($row['id'] ?? 0) . ' has an unreadable params column and was '
+                    . 'not queued for pushing to the remote playlist: ' . $e->getMessage()
+                );
+
+                continue;
+            }
 
             if (!\is_array($decoded) || empty($decoded['filename'])) {
                 continue;

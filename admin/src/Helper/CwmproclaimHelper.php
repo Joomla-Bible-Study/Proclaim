@@ -88,10 +88,21 @@ class CwmproclaimHelper
             $db->setQuery($query);
             $cache = $db->loadResult();
 
-            $manifest      = $cache ? json_decode($cache, true) : null;
+            // JSON_THROW_ON_ERROR matters here: without it a corrupt
+            // manifest_cache decodes to null and this reports '0.0.0' with
+            // nothing written anywhere. CwminstallModel casts the result to an
+            // int to decide migration branching, so a silent 0 is a decision
+            // made on bad data rather than a failure someone can act on.
+            $manifest      = $cache ? json_decode($cache, true, 512, JSON_THROW_ON_ERROR) : null;
             self::$version = $manifest['version'] ?? '0.0.0';
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             self::$version = '0.0.0';
+
+            // Still '0.0.0' — callers rely on that fallback — but no longer silent.
+            CwmlogHelper::error(
+                'Could not read the installed Proclaim version from #__extensions.manifest_cache; '
+                . 'reporting 0.0.0. ' . $e->getMessage()
+            );
         }
 
         return self::$version;
