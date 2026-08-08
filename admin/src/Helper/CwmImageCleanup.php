@@ -158,7 +158,7 @@ class CwmImageCleanup
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function looksLikeAppManagedFolder(string $absoluteFolderPath): bool
     {
@@ -354,7 +354,7 @@ class CwmImageCleanup
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function isWithinAllowedBases(string $realPath): bool
     {
@@ -522,7 +522,7 @@ class CwmImageCleanup
      *
      * @return  int
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function countOtherReferences(DatabaseInterface $db, string $filename, int $serverId, int $recordId): int
     {

@@ -44,7 +44,7 @@ class CwmpodcastIndexHelper
      * inside an admin AJAX request, so an unresponsive api.podcastindex.org
      * would hold a PHP worker open indefinitely.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private const int HTTP_TIMEOUT = 20;
 

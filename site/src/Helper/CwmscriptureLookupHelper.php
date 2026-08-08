@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
 /**
  * Passage lookup with provider fallback for the scripture AJAX endpoint.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmscriptureLookupHelper
 {
@@ -41,7 +41,7 @@ class CwmscriptureLookupHelper
      *
      * @return  array  Response payload, ready to serialize as the AJAX response
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function lookupPassage(string $reference, string $version, Registry $scriptureParams): array
     {

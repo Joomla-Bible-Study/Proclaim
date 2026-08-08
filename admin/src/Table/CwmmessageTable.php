@@ -668,7 +668,7 @@ class CwmmessageTable extends Table
      *
      * @return  bool  True on success.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     public function publish($pks = null, $state = 1, $userId = 0): bool
@@ -695,7 +695,7 @@ class CwmmessageTable extends Table
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private function clearPendingReview(mixed $pks): void
     {
@@ -799,7 +799,7 @@ class CwmmessageTable extends Table
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function isDuplicateEpisodeNumber(\Throwable $e): bool
     {

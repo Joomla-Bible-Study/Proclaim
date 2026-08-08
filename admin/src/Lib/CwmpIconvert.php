@@ -199,7 +199,7 @@ class CwmpIconvert
     /** @var int|null YouTube server ID @since 10.1.0 */
     public ?int $youtube = null;
 
-    /** @var int[]|null Cached #__viewlevels ids, populated on first use @since __DEPLOY_VERSION__ */
+    /** @var int[]|null Cached #__viewlevels ids, populated on first use @since 10.5.6 */
     private ?array $validAccessLevels = null;
 
     /**
@@ -210,7 +210,7 @@ class CwmpIconvert
      *
      * @var array|null
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private ?array $piPodcastsCache = null;
 
@@ -719,7 +719,7 @@ class CwmpIconvert
      *
      * @return int
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private function resolveAccessLevel(mixed $value): int
     {

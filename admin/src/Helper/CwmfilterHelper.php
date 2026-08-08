@@ -68,7 +68,7 @@ abstract class CwmfilterHelper
      *                  determined -- the previous behaviour, kept so a caller
      *                  without a form is no worse off than before.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function contextFromForm(?Form $form): string
     {

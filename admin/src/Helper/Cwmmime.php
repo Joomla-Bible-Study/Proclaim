@@ -111,7 +111,7 @@ final class Cwmmime
      *
      * @return  string  Lower-cased extension, or an empty string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function extensionOf(string $pathOrFilename): string
     {

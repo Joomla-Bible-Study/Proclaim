@@ -47,7 +47,7 @@ abstract class AbstractWritableController extends ApiController
      * Read by the control panel's review count, and cleared when the record is
      * published.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public const string PENDING_REVIEW_KEY = 'pending_review';
 
@@ -242,7 +242,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  array  The cleaned data
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function stripProtectedFields(array $data): array
     {
@@ -333,7 +333,7 @@ abstract class AbstractWritableController extends ApiController
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected static function markPendingReview(mixed $params): array
     {

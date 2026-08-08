@@ -59,7 +59,7 @@ class CWMAddonLocal extends CWMAddon
      *
      * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getXhrHandlers(): array
     {

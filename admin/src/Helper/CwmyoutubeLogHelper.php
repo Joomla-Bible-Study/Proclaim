@@ -131,7 +131,7 @@ class CwmyoutubeLogHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function readInto(array &$entries, string $file, int $limit, ?string $level): void
     {

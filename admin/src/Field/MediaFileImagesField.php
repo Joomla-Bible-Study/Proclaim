@@ -49,7 +49,7 @@ class MediaFileImagesField extends ListField
      *
      * @var  string[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public const DISPLAY_KEYS = [
         'media_use_button_icon',
@@ -89,7 +89,7 @@ class MediaFileImagesField extends ListField
      * @return  object[]  HTMLHelper select options; value is a JSON blob of the
      *                    display params, text is a human-readable label.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function buildDisplayOptions(bool $withCounts = true): array
     {
@@ -205,7 +205,7 @@ class MediaFileImagesField extends ListField
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function buildOptionValueJson(Registry $params, string $mediaImage = ''): string
     {

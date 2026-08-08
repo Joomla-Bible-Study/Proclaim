@@ -97,7 +97,7 @@ class CWMAddonYoutube extends CWMAddon
      * fetchPlaylistVideos/fetchLiveVideos) plus playlist-picker.es6.js
      * (fetchRemotePlaylists).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getXhrHandlers(): array
     {

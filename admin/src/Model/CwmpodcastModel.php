@@ -124,7 +124,7 @@ class CwmpodcastModel extends AdminModel
      *
      * @return  bool  True on success.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function save($data): bool
     {

@@ -62,7 +62,7 @@ class CwmserversModel extends ListModel
      * @param   MVCFactoryInterface|null  $factory  The factory.
      *
      * @throws \Exception
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public function __construct($config = [], ?MVCFactoryInterface $factory = null)
     {

@@ -21,7 +21,7 @@ use Joomla\Database\DatabaseInterface;
  * Episode numbering (#__bsms_studies.studynumber) within a series.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.6
  */
 class CwmepisodenumberHelper
 {
@@ -38,7 +38,7 @@ class CwmepisodenumberHelper
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function nextNumber(DatabaseInterface $db, int $seriesId, ?int $excludeId = null): int
     {
@@ -68,7 +68,7 @@ class CwmepisodenumberHelper
      *
      * @return  \stdClass|null  The conflicting row ({id, studytitle}), or null if none
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function findDuplicate(DatabaseInterface $db, int $seriesId, string $studynumber, ?int $excludeId = null): ?\stdClass
     {
@@ -95,7 +95,7 @@ class CwmepisodenumberHelper
      *
      * @return  array  Rows: {series_id, series_text, studynumber, message_ids, titles}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function findAllDuplicates(DatabaseInterface $db): array
     {

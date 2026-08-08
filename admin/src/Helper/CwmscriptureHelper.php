@@ -203,7 +203,7 @@ class CwmscriptureHelper extends ScriptureHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function saveScripturesAndSync(int $studyId, array $scriptures): void
     {
@@ -238,7 +238,7 @@ class CwmscriptureHelper extends ScriptureHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function writeScriptures(DatabaseInterface $db, int $studyId, array $scriptures): void
     {

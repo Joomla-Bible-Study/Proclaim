@@ -1037,7 +1037,7 @@ class CwmbackupController extends BaseController
      *
      * @return void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private function registerFatalErrorShutdownHandler(): void
     {

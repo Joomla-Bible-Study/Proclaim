@@ -32,7 +32,7 @@ use Joomla\CMS\Log\Log;
  * Only the plumbing was unified — every consuming controller already
  * produced this exact envelope shape, so no JS consumer is affected.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 trait CwmJsonResponseTrait
 {
@@ -46,7 +46,7 @@ trait CwmJsonResponseTrait
      * @return never
      *
      * @throws \Exception
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private function sendJsonResponse(bool $success, string $message = '', array $data = []): never
     {

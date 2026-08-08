@@ -260,7 +260,7 @@ class LayoutEditorField extends FormField
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function computeParamsPrefix(): string
     {

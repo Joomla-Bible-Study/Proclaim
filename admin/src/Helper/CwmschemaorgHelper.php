@@ -848,14 +848,14 @@ class CwmschemaorgHelper
      * Sized so a chunk stays comfortably inside a default `max_execution_time`
      * even on slow shared hosting, since each chunk is one HTTP round trip.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public const SYNC_CHUNK_SIZE = 100;
 
     /**
      * Ordered list of the item types a full sync walks through.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private const SYNC_TYPES = ['messages', 'teachers', 'series'];
 
@@ -919,7 +919,7 @@ class CwmschemaorgHelper
      *
      * @return  array{type: string, lastId: int, done: bool, counts: array{messages: int, teachers: int, series: int, skipped: int}}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function syncChunk(
         string $mode = self::SYNC_SMART,
@@ -980,7 +980,7 @@ class CwmschemaorgHelper
      *
      * @return  array<int, object>  Keyed by itemId, each with `id` and `schema`
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function prefetchSchemaRows(DatabaseInterface $db, string $context, array $itemIds): array
     {
@@ -1153,7 +1153,7 @@ class CwmschemaorgHelper
      *
      * @return  array{synced: int, skipped: int, lastId: int, exhausted: bool}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function syncSimpleBatch(
         DatabaseInterface $db,
@@ -1266,7 +1266,7 @@ class CwmschemaorgHelper
      *
      * @return  bool|null  True = manually edited, false = untouched, null = no row
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function isSchemaManuallyEdited(?string $stored): ?bool
     {
@@ -1400,7 +1400,7 @@ class CwmschemaorgHelper
      *
      * @return  array{teachers: array<int, string[]>, topics: array<int, string[]>, series: array<int, string>, messagetype: array<int, string>, locations: array<int, string>}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function prefetchSermonMaps(DatabaseInterface $db, array $messages): array
     {
@@ -1605,7 +1605,7 @@ class CwmschemaorgHelper
      *
      * @return  bool  True if the item should be written
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function shouldSyncStored(?bool $edited, string $mode): bool
     {

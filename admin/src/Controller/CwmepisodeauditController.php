@@ -21,7 +21,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
  * Duplicate episode number audit report controller.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.6
  */
 class CwmepisodeauditController extends BaseController
 {

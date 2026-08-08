@@ -18,7 +18,7 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
 /**
  * JSON:API view for component metadata.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class JsonapiView extends BaseApiView
 {
@@ -26,7 +26,7 @@ class JsonapiView extends BaseApiView
      * The fields to render in the item response.
      *
      * @var    array
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     protected $fieldsToRenderItem = [
         'id',

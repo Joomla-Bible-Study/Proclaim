@@ -54,7 +54,7 @@ class CwmlocationHelper
      *
      * @var    bool
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private static bool $mappingWarned = false;
 
@@ -180,7 +180,7 @@ class CwmlocationHelper
      *
      * @throws  \RuntimeException  If the user may not assign this location.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function assertLocationAssignable(
         string $table,
@@ -266,7 +266,7 @@ class CwmlocationHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function isSuperAdmin(int $userId = 0): bool
     {
@@ -598,7 +598,7 @@ class CwmlocationHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function reportUnreadableMapping(\JsonException $e): void
     {

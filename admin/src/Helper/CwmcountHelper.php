@@ -100,7 +100,7 @@ class CwmcountHelper
      *
      * @return  int
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function getPendingReviewCount(?string $locationMode = 'location'): int
     {

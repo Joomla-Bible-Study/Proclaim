@@ -122,7 +122,7 @@ class Cwmalias
      *
      * @return  string  An alias free for this row
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function makeUniqueAlias(DatabaseInterface $db, string $table, string $base, int $id): string
     {
@@ -162,7 +162,7 @@ class Cwmalias
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function aliasInUse(DatabaseInterface $db, string $table, string $alias, int $excludeId): bool
     {

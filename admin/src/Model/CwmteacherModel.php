@@ -530,7 +530,7 @@ class CwmteacherModel extends AdminModel
      * @return  bool  True if successful, false if an error occurs.
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function delete(&$pks): bool
     {

@@ -33,7 +33,7 @@ use Joomla\Database\DatabaseInterface;
  * correct; only the bulk delete (which never touched assets, even in the
  * original controller code) uses a raw query.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmstudytopicHelper
 {
@@ -44,7 +44,7 @@ class CwmstudytopicHelper
      *
      * @return  int  The matching topic ID, or 0 if none found.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public static function findTopicIdByText(string $text): int
     {
@@ -68,7 +68,7 @@ class CwmstudytopicHelper
      * @return  bool  True if every insert succeeded (a delete failure alone does not fail the call).
      *
      * @throws \Exception
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public static function saveTopics(int $studyId, array $topicIds): bool
     {
@@ -159,7 +159,7 @@ class CwmstudytopicHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function deleteTopics(int $studyId): void
     {

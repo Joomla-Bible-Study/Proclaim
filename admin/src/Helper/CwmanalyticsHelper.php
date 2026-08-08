@@ -257,7 +257,7 @@ class CwmanalyticsHelper
      *
      * @return  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public static function stripWwwPrefix(string $host): string
     {
@@ -281,7 +281,7 @@ class CwmanalyticsHelper
      *
      * @return  string|null  scheme://host/path, or null when no host is present.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public static function stripUrlParameters(string $url): ?string
     {
@@ -408,7 +408,7 @@ class CwmanalyticsHelper
      * Domain-separation label, so the analytics key is not interchangeable
      * with tokens minted elsewhere from the same site secret.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private const string SESSION_HASH_CONTEXT = 'proclaim:analytics:session';
 
@@ -430,7 +430,7 @@ class CwmanalyticsHelper
      *
      * @return  string  64-character hex digest.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function hashSessionForDay(string $sessionId, string $secret, string $day): string
     {
@@ -446,7 +446,7 @@ class CwmanalyticsHelper
      * Proclaim ships no consent banner -- most Joomla sites already run one --
      * so this is the published integration point, not a cookie Proclaim sets.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public const string OPTOUT_COOKIE = 'proclaim_analytics_optout';
 
@@ -507,7 +507,7 @@ class CwmanalyticsHelper
      * Shortest retention window the purge will act on, matching the `min`
      * on the task form's retention field.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public const int MIN_RETENTION_DAYS = 7;
 
@@ -527,7 +527,7 @@ class CwmanalyticsHelper
      *
      * @return  bool  True when raw events may be deleted.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function isPurgeSafe(int $retentionDays): bool
     {

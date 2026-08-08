@@ -25,7 +25,7 @@ use Joomla\Registry\Registry;
  * Field/BibleVersionField.php so the field stays a thin Joomla-form
  * adapter over this helper. See #1484.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmbibleVersionHelper
 {
@@ -33,7 +33,7 @@ class CwmbibleVersionHelper
      * ISO language code to human-readable name map.
      *
      * @var  array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private const LANGUAGE_NAMES = [
         'af' => 'Afrikaans',  'am' => 'Amharic',      'ar' => 'Arabic',
@@ -62,7 +62,7 @@ class CwmbibleVersionHelper
      * (e.g. during install, before the translation sync has run).
      *
      * @var  array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private const FALLBACK_VERSIONS = [
         'kjv' => 'King James Version',
@@ -77,7 +77,7 @@ class CwmbibleVersionHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function getDefaultVersion(): string
     {
@@ -111,7 +111,7 @@ class CwmbibleVersionHelper
      *
      * @return  array<int, array{value: string, text: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function getVersionOptions(bool $servableOnly = false): array
     {
@@ -131,7 +131,7 @@ class CwmbibleVersionHelper
      *
      * @return  string[]
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function getEnabledProviderSources(): array
     {
@@ -164,7 +164,7 @@ class CwmbibleVersionHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function detectCurrentLanguage(): string
     {
@@ -182,7 +182,7 @@ class CwmbibleVersionHelper
      *
      * @return  array<int, \stdClass>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function fetchTranslationRows(): array
     {
@@ -212,7 +212,7 @@ class CwmbibleVersionHelper
      *
      * @return  array<int, array{value: string, text: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function buildOptions(array $rows, bool $servableOnly, array $enabledSources, string $currentLang): array
     {

@@ -30,7 +30,7 @@ class Cwmimagelib
      * Output is a 300x169 thumbnail, so anything approaching this is already
      * far larger than needed.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public const int MAX_SOURCE_DIMENSION = 8000;
 

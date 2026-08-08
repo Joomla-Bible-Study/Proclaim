@@ -643,7 +643,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  int  Number of rows updated.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public function changePlayer(string $from, string $to): int
     {
@@ -675,7 +675,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  int  Number of rows updated.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public function changePopup(string $from, string $to): int
     {
@@ -729,7 +729,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  array{keys: string[], values: array<int, mixed>}|null
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function resolveMediaImageMatcher(object $decoded): ?array
     {
@@ -754,7 +754,7 @@ class CwmadminModel extends AdminModel
      *
      * @return  array{added: int, error: int, errortext: string, matched: bool}
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public function changeMediaImages(object $decoded, array $post): array
     {

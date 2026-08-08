@@ -59,7 +59,7 @@ class CWMAddonVimeo extends CWMAddon
      * Called through cwmmediafile.xhr by addon-vimeo-browser.es6.js (fetchFolders, fetchVideos, getMetadata)
      * plus playlist-picker.es6.js (fetchRemotePlaylists).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getXhrHandlers(): array
     {

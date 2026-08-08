@@ -22,7 +22,7 @@ use Joomla\Registry\Registry;
  * Shared item-prep logic for series-display listings.
  *
  * @package  Proclaim.Site
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.6
  */
 class CwmseriesdisplaysHelper
 {
@@ -40,7 +40,7 @@ class CwmseriesdisplaysHelper
      *
      * @return  array  The same $items, mutated in place
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function prepareItems(array $items, ?Registry $params, ?object $template): array
     {

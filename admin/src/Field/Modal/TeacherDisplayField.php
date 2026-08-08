@@ -26,7 +26,7 @@ use Joomla\Database\ParameterType;
 /**
  * Supports a modal teacher picker using Joomla's ModalSelectField (PostMessage + JoomlaDialog).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class TeacherDisplayField extends ModalSelectField
 {
@@ -47,7 +47,7 @@ class TeacherDisplayField extends ModalSelectField
      *
      * @return  bool  True on success.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     public function setup(\SimpleXMLElement $element, $value, $group = null)
@@ -118,7 +118,7 @@ class TeacherDisplayField extends ModalSelectField
      * @return int|string
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     protected function getValueTitle(): int|string

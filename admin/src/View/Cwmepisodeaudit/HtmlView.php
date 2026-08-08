@@ -26,7 +26,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
  * Duplicate episode number audit report view.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.6
  */
 class HtmlView extends BaseHtmlView
 {
@@ -34,7 +34,7 @@ class HtmlView extends BaseHtmlView
      * Every series with more than one message sharing the same episode number.
      *
      * @var array
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public array $duplicates = [];
 
@@ -46,7 +46,7 @@ class HtmlView extends BaseHtmlView
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     public function display($tpl = null): void
