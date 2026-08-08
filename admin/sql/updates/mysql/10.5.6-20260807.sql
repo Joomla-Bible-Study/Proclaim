@@ -11,8 +11,13 @@ DELETE t1 FROM `#__bsms_studytopics` t1
    AND t1.`topic_id` = t2.`topic_id`
    AND t1.`id` > t2.`id`;
 
--- Drop the non-unique index it replaces, if present.
-ALTER TABLE `#__bsms_studytopics` DROP INDEX `idx_study_topic`;
+-- The non-unique index this replaces, idx_study_topic, is dropped from
+-- proclaim.script.php::dropRedundantStudyTopicIndex() in postflight instead of
+-- here. MySQL has no DROP INDEX IF EXISTS, so a database that lacks the index
+-- while #__schemas still names an earlier version stops this file with error
+-- 1091 and aborts the whole update. Dropping it is cleanup — uq_study_topic
+-- below already covers the same pair — so it does not belong on the path that
+-- can fail the migration.
 
 -- A study may hold a topic once. Enforced by the database rather than by the
 -- application remembering to check.
