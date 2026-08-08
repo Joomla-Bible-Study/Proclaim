@@ -30,7 +30,7 @@ use Joomla\Utilities\ArrayHelper;
  * "local"), not a numeric id, so its title comes from
  * CwmserversModel::getTypeReverseLookup() rather than a SQL row lookup.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class ServerTypeField extends ModalSelectField
 {
@@ -52,7 +52,7 @@ class ServerTypeField extends ModalSelectField
      *
      * @return  bool  True on success.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     public function setup(\SimpleXMLElement $element, $value, $group = null)
@@ -132,7 +132,7 @@ class ServerTypeField extends ModalSelectField
      * @return int|string
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     #[\Override]
     protected function getValueTitle(): int|string

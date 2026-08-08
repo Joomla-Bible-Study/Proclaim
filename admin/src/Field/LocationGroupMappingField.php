@@ -219,7 +219,7 @@ class LocationGroupMappingField extends FormField
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private function registerSerializationScript(string $fieldName, string $fieldId): void
     {

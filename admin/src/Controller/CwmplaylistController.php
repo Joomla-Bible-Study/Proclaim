@@ -43,7 +43,7 @@ class CwmplaylistController extends FormController
      * The database table for access level checks.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     protected string $accessTable = '#__bsms_playlists';
 
@@ -61,7 +61,7 @@ class CwmplaylistController extends FormController
      * @return  bool
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function allowEdit($data = [], $key = 'id'): bool
     {

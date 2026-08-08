@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * the DB schema version to guess the installed release got stale answers,
  * because the schema version only advances on releases that ship DB changes.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwminfoModel extends BaseDatabaseModel
 {
@@ -35,7 +35,7 @@ class CwminfoModel extends BaseDatabaseModel
      *
      * @return  \stdClass
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getItem($pk = null): \stdClass
     {

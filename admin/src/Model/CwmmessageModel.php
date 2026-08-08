@@ -624,7 +624,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  string[]
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private static function normalizeTopicTags(array|string $topicsRaw): array
     {
@@ -652,7 +652,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private function saveTopics(array|string $topicsRaw, string $studyIntro, string $studyText, string $language): void
     {

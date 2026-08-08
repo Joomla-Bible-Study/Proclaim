@@ -84,7 +84,7 @@ class CwmyoutubeQuota
      * from continuing unprotected after the first failure.
      *
      * @var    array<int, bool>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     private static array $persistenceBroken = [];
 
@@ -109,7 +109,7 @@ class CwmyoutubeQuota
     /**
      * Get the UTC hour when the quota resets (YouTube resets at midnight PT).
      *
-     * @deprecated __DEPLOY_VERSION__ No longer consulted by currentQuotaDate()
+     * @deprecated 10.5.6 No longer consulted by currentQuotaDate()
      *             -- the quota-day boundary is now computed directly from the
      *             America/Los_Angeles timezone (DST-aware), since no single
      *             static UTC hour is correct year-round. See #1549. Will be
@@ -400,7 +400,7 @@ class CwmyoutubeQuota
      * @return  bool  True if the write succeeded
      *
      * @throws \JsonException
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function mutateQuotaFile(int $serverId, callable $mutator): bool
     {

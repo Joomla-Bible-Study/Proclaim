@@ -668,7 +668,7 @@ class CwmyoutubeFileCache
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function writeAccessDenyFiles(string $dir): void
     {
@@ -720,7 +720,7 @@ class CwmyoutubeFileCache
      *
      * @return  string|null  File contents, or null if missing/unreadable
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function readWithSharedLock(string $file): ?string
     {

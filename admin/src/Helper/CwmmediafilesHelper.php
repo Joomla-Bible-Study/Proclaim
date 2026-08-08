@@ -24,7 +24,7 @@ use Joomla\Registry\Registry;
  * study_id) — both need to warn the admin when the delete would also remove
  * physical files on a delete-enabled server.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class CwmmediafilesHelper
 {
@@ -40,7 +40,7 @@ class CwmmediafilesHelper
      *
      * @return  array<int, array{id: int, filename: string, message: string, server: string}>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function findFilesForDelete(DatabaseInterface $db, array $ids, string $idColumn): array
     {

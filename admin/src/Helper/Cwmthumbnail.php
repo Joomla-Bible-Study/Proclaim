@@ -146,7 +146,7 @@ class Cwmthumbnail
      *
      * @return  string|false  Normalised path, or false if outside the allow-list
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function resolveWithinAllowedPaths(string $path): string|false
     {
@@ -197,7 +197,7 @@ class Cwmthumbnail
      *
      * @return  string|false  Normalised path, or false if it escapes its start
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function normaliseLexically(string $path): string|false
     {

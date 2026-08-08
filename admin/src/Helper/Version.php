@@ -46,12 +46,12 @@ final class Version
     /**
      * NOTE: these constants are maintained by hand and are not updated by the
      * release tooling -- cwm-bump and cwm-release rewrite versions.json,
-     * package.json and __DEPLOY_VERSION__ tokens, but not this file. They have
+     * package.json and 10.5.6 tokens, but not this file. They have
      * drifted before and will again. Anything that needs the version actually
      * installed should call CwmproclaimHelper::getVersion(), which reads the
      * manifest cache.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     public const int MAJOR_VERSION = 10;
 

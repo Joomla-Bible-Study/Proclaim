@@ -640,7 +640,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private function dropRedundantStudyTopicIndex(): void
     {

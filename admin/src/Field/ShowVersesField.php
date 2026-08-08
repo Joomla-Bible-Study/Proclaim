@@ -42,7 +42,7 @@ class ShowVersesField extends PredefinedlistField
      *
      * @var  array
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     protected $predefinedOptions = [
         '0' => 'JBS_TPL_SHOW_ONLY_CHAPTERS',

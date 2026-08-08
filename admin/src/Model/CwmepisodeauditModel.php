@@ -23,7 +23,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * Duplicate episode number audit report model.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.6
  */
 class CwmepisodeauditModel extends BaseDatabaseModel
 {
@@ -32,7 +32,7 @@ class CwmepisodeauditModel extends BaseDatabaseModel
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getDuplicates(): array
     {

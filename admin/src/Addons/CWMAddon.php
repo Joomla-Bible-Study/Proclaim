@@ -44,7 +44,7 @@ abstract class CWMAddon
      * requests -- connection tests, description sync, stats -- so a
      * unresponsive provider would hold a PHP worker open indefinitely.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.6
      */
     protected const int HTTP_TIMEOUT = 20;
 
@@ -349,7 +349,7 @@ abstract class CWMAddon
      *
      * @return  array  List of handler names callable via cwmmediafile.xhr
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getXhrHandlers(): array
     {

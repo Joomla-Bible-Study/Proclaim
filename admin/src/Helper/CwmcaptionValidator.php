@@ -190,7 +190,7 @@ class CwmcaptionValidator
      * @return  bool  True when every block is a header, comment, style,
      *                region, or a cue with a parseable timestamp line.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function isStructurallyVtt(string $body): bool
     {

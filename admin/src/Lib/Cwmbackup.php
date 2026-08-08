@@ -60,7 +60,7 @@ class Cwmbackup
      *
      * @var string[]|null
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static ?array $knownTables = null;
 
@@ -79,7 +79,7 @@ class Cwmbackup
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function isKnownProclaimTable(string $table): bool
     {
@@ -102,7 +102,7 @@ class Cwmbackup
      *
      * @var array<string, string>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static array $primaryKeyOrderClauses = [];
 
@@ -112,7 +112,7 @@ class Cwmbackup
      *
      * @var array<string, array<string, true>>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static array $generatedColumns = [];
 
@@ -130,7 +130,7 @@ class Cwmbackup
      *
      * @return  array<string, true>  Column names as keys
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function getGeneratedColumns(DatabaseInterface $db, string $table): array
     {
@@ -168,7 +168,7 @@ class Cwmbackup
      *
      * @return  string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function getPrimaryKeyOrderClause(DatabaseInterface $db, string $table): string
     {
@@ -492,7 +492,7 @@ class Cwmbackup
      *
      * @var int
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private const int EXPORT_CHUNK_SIZE = 500;
 

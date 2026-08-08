@@ -181,7 +181,7 @@ class Cwmhtml
      *
      * @return  object[]  Options whose value is a JSON blob of display params.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function mediaTypeList(): array
     {

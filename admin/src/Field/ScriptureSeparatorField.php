@@ -42,7 +42,7 @@ class ScriptureSeparatorField extends PredefinedlistField
      *
      * @var  array
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     protected $predefinedOptions = [
         'newline'   => 'JBS_TPL_SEPARATOR_STACKED',

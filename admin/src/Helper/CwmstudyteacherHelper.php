@@ -213,7 +213,7 @@ class CwmstudyteacherHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function saveTeachersAndSync(int $studyId, array $teachers): void
     {
@@ -248,7 +248,7 @@ class CwmstudyteacherHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function writeTeachers(DatabaseInterface $db, int $studyId, array $teachers): void
     {

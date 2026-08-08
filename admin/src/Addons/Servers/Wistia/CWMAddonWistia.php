@@ -58,7 +58,7 @@ class CWMAddonWistia extends CWMAddon
      *
      * Called through cwmmediafile.xhr by addon-wistia-browser.es6.js (fetchProjects, fetchVideos, getMetadata).
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getXhrHandlers(): array
     {

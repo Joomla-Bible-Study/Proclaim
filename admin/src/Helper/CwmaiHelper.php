@@ -56,7 +56,7 @@ class CwmaiHelper
      * timeout a slow or hung provider ties up the PHP worker for up to
      * max_execution_time, or longer depending on SAPI and transport.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private const int HTTP_TIMEOUT = 20;
 
@@ -797,7 +797,7 @@ class CwmaiHelper
      *
      * @return  array
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function geminiResponseSchema(): array
     {
@@ -892,7 +892,7 @@ class CwmaiHelper
      * @return  void
      *
      * @throws  \RuntimeException
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function assertNormalFinish(string $provider, string $reason): void
     {
@@ -987,7 +987,7 @@ class CwmaiHelper
      * @return  ?string  The matched object substring, or null if no
      *                    balanced object was found
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function extractFirstJsonObject(string $content): ?string
     {

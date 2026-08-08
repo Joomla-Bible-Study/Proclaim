@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * displayItem is ever routed to this controller (see the webservices plugin);
  * there is no list variant and no :id segment.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.6
  */
 class InfoController extends AbstractReadOnlyController
 {
@@ -41,7 +41,7 @@ class InfoController extends AbstractReadOnlyController
      *
      * @return  BaseDatabaseModel|false
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getModel($name = '', $prefix = '', $config = [])
     {

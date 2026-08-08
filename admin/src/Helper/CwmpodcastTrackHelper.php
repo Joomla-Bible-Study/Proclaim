@@ -264,7 +264,7 @@ class CwmpodcastTrackHelper
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public static function serveMedia(
         string $target,
@@ -302,7 +302,7 @@ class CwmpodcastTrackHelper
      *
      * @return  ?string  Absolute filesystem path, or null if it can't be served locally
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function resolveLocalPath(string $target): ?string
     {
@@ -334,7 +334,7 @@ class CwmpodcastTrackHelper
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function streamLocalFile(
         string $filePath,
@@ -423,7 +423,7 @@ class CwmpodcastTrackHelper
      * @return  void
      *
      * @throws \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function streamRemoteFile(
         string $url,
@@ -578,7 +578,7 @@ class CwmpodcastTrackHelper
      *
      * @return  never
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function terminate(): never
     {
@@ -593,7 +593,7 @@ class CwmpodcastTrackHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function flushBuffers(): void
     {
@@ -721,7 +721,7 @@ class CwmpodcastTrackHelper
      *
      * @return  never
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function fail(int $code): never
     {

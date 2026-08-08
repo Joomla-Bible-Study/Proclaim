@@ -45,7 +45,7 @@ class Cwmrestore
      *
      * @var string[]
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private const array ALLOWED_RESTORE_TABLES = ['#__extensions', '#__assets', '#__scheduler_tasks'];
 
@@ -54,7 +54,7 @@ class Cwmrestore
      *
      * @var string[]|null
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static ?array $bsmsTables = null;
 
@@ -76,7 +76,7 @@ class Cwmrestore
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function isSafeRestoreStatement(string $statement): bool
     {

@@ -54,7 +54,7 @@ class CwmproclaimHelper
      *
      * @var  ?string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static ?string $version = null;
 
@@ -70,7 +70,7 @@ class CwmproclaimHelper
      *
      * @return  string  Semver version string, or '0.0.0' if unavailable
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public static function getVersion(): string
     {
@@ -122,7 +122,7 @@ class CwmproclaimHelper
      *
      * @return void
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     public static function defineLegacyPathConstants(): void
     {

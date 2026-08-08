@@ -1847,7 +1847,7 @@ class CwmImageMigration
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.6
      */
     private static function isWithinAllowedBases(string $realDir, array $allowedBases): bool
     {

@@ -455,7 +455,7 @@ class ColorPickerField extends FormField
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function registerStyles(): void
     {
@@ -479,7 +479,7 @@ CSS;
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function registerJavaScript(): void
     {

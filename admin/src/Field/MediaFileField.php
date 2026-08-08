@@ -96,7 +96,7 @@ class MediaFileField extends ListField
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private static function buildOptionLabel(int $id, Registry $params): string
     {

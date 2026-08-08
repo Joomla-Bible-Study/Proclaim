@@ -528,7 +528,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Number of tours rewritten
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function resetGuidedTours(): int
     {
@@ -580,7 +580,7 @@ class CwmguidedtourHelper
      *
      * @return  int[]  Matching ids, ascending
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     public function getTourIds(string $uid): array
     {
@@ -612,7 +612,7 @@ class CwmguidedtourHelper
      *
      * @return  int  Number of duplicate tours removed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function pruneDuplicateTours(string $uid): int
     {
@@ -645,7 +645,7 @@ class CwmguidedtourHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     protected function deleteTourById(int $tourId): void
     {

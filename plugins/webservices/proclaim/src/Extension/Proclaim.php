@@ -310,7 +310,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.6
      */
     private function createInfoRoute(ApiRouter $router, bool $isPublic): void
     {
