@@ -997,12 +997,20 @@ class CwmmigrationHelper
     /**
      * Persist the group→location mappings array in component parameters.
      *
-     * Merges with existing mappings so repeated calls are safe.
+     * Merges with existing mappings so repeated calls are safe, and adds only
+     * keys the stored mapping does not already hold — an administrator's manual
+     * entries always win. If the stored mapping cannot be read, nothing is
+     * written at all, because merging into an empty array would silently drop
+     * those entries.
+     *
+     * Only the location_group_mapping key is touched; every other component
+     * parameter is left as it stands.
      *
      * @param   array<int, int[]>  $mappings  locationId → [groupId, ...]
      *
      * @return  void
      *
+     * @throws  \RuntimeException  If the component params row cannot be written.
      * @since   10.1.0
      */
     public static function createGroupLocationMappings(array $mappings): void
@@ -1013,8 +1021,19 @@ class CwmmigrationHelper
         if (\is_string($existing)) {
             try {
                 $existing = json_decode($existing, true, 512, JSON_THROW_ON_ERROR) ?: [];
-            } catch (\JsonException) {
-                $existing = [];
+            } catch (\JsonException $e) {
+                // Refuse rather than merge into an empty array. The loop below
+                // only adds keys it cannot already see, so starting from []
+                // would write back a mapping containing none of the entries an
+                // administrator had configured by hand -- destroying exactly
+                // what the comment below promises to preserve.
+                CwmlogHelper::error(
+                    'Cannot merge migrated group-to-location mappings: the existing '
+                    . 'location_group_mapping parameter could not be read, and overwriting it would '
+                    . 'discard any mappings configured by hand. No changes made. ' . $e->getMessage()
+                );
+
+                return;
             }
         }
 
@@ -1027,14 +1046,19 @@ class CwmmigrationHelper
             }
         }
 
-        $db    = Factory::getContainer()->get(DatabaseInterface::class);
-        $query = $db->createQuery()
-            ->update($db->quoteName('#__extensions'))
-            ->set($db->quoteName('params') . ' = ' . $db->quote(json_encode($existing, JSON_THROW_ON_ERROR)))
-            ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
-        $db->setQuery($query);
-        $db->execute();
+        // Write through Cwmparams, which merges into the stored params Registry
+        // and clears the _system cache.
+        //
+        // This previously ran its own UPDATE that set #__extensions.params to
+        // json_encode($existing) -- the mapping array alone, as the whole params
+        // column. Every other Proclaim setting on the site was replaced by it,
+        // and because the write bypassed ComponentHelper's cache the damage was
+        // invisible until the next request. Scenario 2A of
+        // migrateAccessToLocations() is the only caller, so a multi-campus
+        // migration wiped the component's configuration as a side effect.
+        Cwmparams::setCompParams(
+            ['location_group_mapping' => json_encode($existing, JSON_THROW_ON_ERROR)]
+        );
     }
 
     /**
