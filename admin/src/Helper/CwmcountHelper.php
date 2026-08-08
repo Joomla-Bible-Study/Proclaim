@@ -83,6 +83,51 @@ class CwmcountHelper
     }
 
     /**
+     * Count studies the API force-unpublished pending editorial review.
+     *
+     * Deliberately narrower than "unpublished": an administrator unpublishing
+     * a draft or retiring an old sermon also leaves published = 0, so counting
+     * that alone reports content nobody submitted and never reaches zero on a
+     * site that unpublishes routinely.
+     *
+     * Matched on the params key rather than its value, and with LIKE rather
+     * than a JSON function: params is a longtext that not every row holds valid
+     * JSON in, and MySQL's JSON_EXTRACT errors on those instead of skipping
+     * them. The key is written only by AbstractWritableController and removed
+     * when the record is published.
+     *
+     * @param   string|null  $locationMode  Location filtering mode (null, 'location', 'study', 'access')
+     *
+     * @return  int
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getPendingReviewCount(?string $locationMode = 'location'): int
+    {
+        $suffix = self::buildCacheKeySuffix($locationMode);
+        $key    = '#__bsms_studies:pendingreview' . $suffix;
+
+        if (isset(self::$cache[$key])) {
+            return self::$cache[$key];
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_studies', 't'))
+            ->where($db->quoteName('t.published') . ' = 0')
+            ->where($db->quoteName('t.params') . ' LIKE ' . $db->quote('%"pending_review"%'));
+
+        self::applyLocationFilter($query, $db, $locationMode);
+
+        $db->setQuery($query);
+
+        self::$cache[$key] = (int) $db->loadResult();
+
+        return self::$cache[$key];
+    }
+
+    /**
      * Count total rows in the given table (all states except trashed).
      *
      * Results are cached per request.

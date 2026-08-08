@@ -42,6 +42,16 @@ use Joomla\CMS\MVC\Controller\ApiController;
 abstract class AbstractWritableController extends ApiController
 {
     /**
+     * Params key marking a record the API force-unpublished pending review.
+     *
+     * Read by the control panel's review count, and cleared when the record is
+     * published.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public const string PENDING_REVIEW_KEY = 'pending_review';
+
+    /**
      * Entity type for the action log, e.g. 'topic'. Must have a matching
      * COM_PROCLAIM_ACTION_LOG_TYPE_* language key. Empty disables logging.
      *
@@ -251,9 +261,16 @@ abstract class AbstractWritableController extends ApiController
             unset($data['created_by']);
         }
 
-        // Restrict published state — users without core.edit.state default to unpublished
+        // Restrict published state — users without core.edit.state default to
+        // unpublished, and the record is marked as awaiting review.
+        //
+        // The mark is what separates a submission from an administrator
+        // deliberately unpublishing something. Both leave published = 0, so
+        // counting that alone reports drafts and retired sermons as pending
+        // review and never reaches zero on a site that unpublishes routinely.
         if (!$user->authorise('core.edit.state', 'com_proclaim')) {
             $data['published'] = 0;
+            $data['params']    = self::markPendingReview($data['params'] ?? null);
         }
 
         return $data;
@@ -303,5 +320,37 @@ abstract class AbstractWritableController extends ApiController
 
             return $fallback;
         }
+    }
+
+    /**
+     * Flag a params payload as awaiting editorial review.
+     *
+     * Accepts the shapes params arrives in from the API -- a JSON string, an
+     * array, or absent -- and returns an array, which the models bind and
+     * Registry encodes.
+     *
+     * @param   mixed  $params  Existing params, if any
+     *
+     * @return  array
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function markPendingReview(mixed $params): array
+    {
+        if (\is_string($params) && $params !== '') {
+            try {
+                $params = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                $params = [];
+            }
+        }
+
+        if (!\is_array($params)) {
+            $params = [];
+        }
+
+        $params[self::PENDING_REVIEW_KEY] = 1;
+
+        return $params;
     }
 }
