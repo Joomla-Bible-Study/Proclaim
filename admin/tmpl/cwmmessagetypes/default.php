@@ -61,7 +61,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method=
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JPUBLISHED',
-                                    'messagetypes.published',
+                                    'messagetype.published',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -71,7 +71,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method=
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_MESSAGETYPES',
-                                    'messagetypes.message_type',
+                                    'messagetype.message_type',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -81,7 +81,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method=
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ID',
-                                    'messagetypes.id',
+                                    'messagetype.id',
                                     $listDirn,
                                     $listOrder
                                 ); ?>

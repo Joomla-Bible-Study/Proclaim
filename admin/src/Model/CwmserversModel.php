@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseInterface;
@@ -47,6 +48,44 @@ class CwmserversModel extends ListModel
      * @since    9.0.0
      */
     protected array $rlu_type = [];
+
+    /**
+     * Constructor.
+     *
+     * Declares the columns the list may be ordered and filtered by. Without this
+     * whitelist ListModel::populateState() rejects every value the column headers
+     * submit, so clicking a header reloaded the page without reordering it.
+     *
+     * Dotted names must match the query alias in getListQuery() -- `server`.
+     *
+     * @param   array                     $config   An optional associative array of configuration settings.
+     * @param   MVCFactoryInterface|null  $factory  The factory.
+     *
+     * @throws \Exception
+     * @since  __DEPLOY_VERSION__
+     */
+    public function __construct($config = [], ?MVCFactoryInterface $factory = null)
+    {
+        if (empty($config['filter_fields'])) {
+            $config['filter_fields'] = [
+                'id',
+                'server.id',
+                'server_name',
+                'server.server_name',
+                'published',
+                'server.published',
+                'access',
+                'server.access',
+                'access_level',
+                'type',
+                'server.type',
+                'location',
+                'server.location_id',
+            ];
+        }
+
+        parent::__construct($config, $factory);
+    }
 
     /**
      * Method to get the reverse lookup of the server_id to server_name

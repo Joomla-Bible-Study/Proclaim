@@ -82,7 +82,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_PUBLISHED',
-                                    'cwmteacher.published',
+                                    'teacher.published',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -91,7 +91,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JBS_CMN_TEACHER',
-                                    'cwmteacher.teachername',
+                                    'teacher.teachername',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -100,7 +100,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ACCESS',
-                                    'cwmteacher.access',
+                                    'teacher.access',
                                     $listDirn,
                                     $listOrder
                                 ); ?>
@@ -138,7 +138,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmteachers'); ?>" method="pos
                                 <?php echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'JGRID_HEADING_ID',
-                                    'cwmteacher.id',
+                                    'teacher.id',
                                     $listDirn,
                                     $listOrder
                                 ); ?>

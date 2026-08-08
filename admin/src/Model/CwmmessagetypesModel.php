@@ -60,7 +60,6 @@ class CwmmessagetypesModel extends ListModel
                 'messagetype.access',
                 'access_level',
                 'language',
-                'messagetype.language',
             ];
         }
 
