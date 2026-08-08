@@ -346,6 +346,13 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                 $cpanelUser->authorise('core.edit', 'com_proclaim.' . $section)
                 || $cpanelUser->authorise('core.create', 'com_proclaim.' . $section)
                 || $cpanelUser->authorise('core.edit.own', 'com_proclaim.' . $section);
+
+            // Message types, topics, templates, template files and the action
+            // log configure how Proclaim works rather than what it holds.
+            // Simple mode hides them, and anyone below Super User gets that same
+            // reduced set whatever the site setting says -- a manager runs the
+            // content, an administrator configures the component.
+            $advanced = !$simple->mode && $isAdmin;
             ?>
             <div class="container">
                 <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3 justify-content-center">
@@ -394,7 +401,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if (!$simple->mode && $canSee('messagetype')) : ?>
+                    <?php if ($advanced && $canSee('messagetype')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmmessagetypes'); ?>"
                            title="<?php echo Text::_('JBS_CMN_MESSAGETYPES'); ?>" class="cpanel-btn">
@@ -412,7 +419,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if (!$simple->mode && $canSee('topic')) : ?>
+                    <?php if ($advanced && $canSee('topic')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtopics'); ?>"
                            title="<?php echo Text::_('JBS_CMN_TOPICS'); ?>" class="cpanel-btn">
@@ -457,7 +464,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if (!$simple->mode) : ?>
+                    <?php if ($advanced) : ?>
                     <?php if ($canSee('template')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmtemplates'); ?>"
