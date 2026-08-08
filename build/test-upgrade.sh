@@ -116,9 +116,23 @@ echo "   extension:remove exited non-zero, as expected"
 php build/verify-scripture-uninstall.php assert-library-present
 
 echo "-- [11/15] COMPLETE UNINSTALL: package removal with no other consumer drops the tables"
+# The precondition has to be checked BEFORE the removal — afterwards the registry
+# and extension rows are gone and "was anything else using these?" is unanswerable.
+# lib_cwmscripture#37 was filed because this phase asserted the drop on a site with
+# com_livingword installed, where keeping the tables is the correct behaviour.
+php build/verify-scripture-uninstall.php assert-no-other-consumer
 php build/verify-scripture-uninstall.php seed-translation
 PKGID="$(php build/verify-scripture-uninstall.php ext-id package pkg_proclaim | tail -n1)"
-php "$JCLI" extension:remove -n "$PKGID" || true
+
+# No `|| true`. A removal that failed and a removal that succeeded then declined to
+# drop look identical in the table check, and that ambiguity is what turned correct
+# behaviour into a filed bug.
+if ! php "$JCLI" extension:remove -n "$PKGID"; then
+    echo "ERROR: extension:remove failed for pkg_proclaim (id ${PKGID})." >&2
+    echo "       The table assertions below would be meaningless, so stopping here." >&2
+    exit 1
+fi
+
 php build/verify-scripture-uninstall.php assert-tables-gone
 
 echo "-- [12/15] STILL NEEDED: a registered third-party consumer keeps the tables"

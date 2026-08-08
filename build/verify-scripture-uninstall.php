@@ -59,6 +59,7 @@ $modes = [
     'seed-detected-consumer',
     'assert-tables-present',
     'assert-tables-gone',
+    'assert-no-other-consumer',
     'assert-sql-armed',
     'assert-sql-disarmed',
     'disarm',
@@ -230,6 +231,50 @@ foreach ($installs as $install) {
         $res = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $table) . "'");
 
         return $res !== false && mysqli_num_rows($res) > 0;
+    };
+
+    /**
+     * Consumers of the scripture tables other than the ones pkg_proclaim ships.
+     *
+     * The package excludes its own children when it asks "is anyone left", so
+     * anything this returns is a legitimate reason for the tables to survive a
+     * package removal. Both sources the library consults have to be checked:
+     * the registry, and FIRST_PARTY members that are recognised without a
+     * registry row.
+     *
+     * lib_cwmscripture#37 was filed because step 11 asserted the tables were
+     * dropped on a site with com_livingword installed. Living Word is
+     * FIRST_PARTY and genuinely uses the tables, so keeping them was correct —
+     * the probe was asserting an outcome its own preconditions ruled out, and
+     * had no way to say so.
+     */
+    $otherConsumers = static function (mysqli $db, string $consumers, string $extensions) use ($tableExists): array {
+        $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
+        $blockers    = [];
+
+        if ($tableExists($db, $consumers)) {
+            $registered = mysqli_query(
+                $db,
+                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
+            );
+
+            while ($row = mysqli_fetch_row($registered ?: null)) {
+                $blockers[] = $row[0] . ' (registered)';
+            }
+        }
+
+        $firstParty = mysqli_query(
+            $db,
+            "SELECT `element` FROM `{$extensions}`
+             WHERE (`type` = 'component' AND `element` = 'com_livingword')
+                OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
+        );
+
+        while ($row = mysqli_fetch_row($firstParty ?: null)) {
+            $blockers[] = $row[0] . ' (first-party, installed)';
+        }
+
+        return $blockers;
     };
 
     switch ($mode) {
@@ -568,31 +613,7 @@ foreach ($installs as $install) {
             // own "is anyone left" question. Anything else (a leftover fixture, or a
             // FIRST_PARTY entry that happens to be installed) would keep the tables on
             // its own and make this phase vacuous.
-            $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
-
-            $others = mysqli_query(
-                $db,
-                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
-            );
-
-            $blockers = [];
-
-            while ($row = mysqli_fetch_row($others ?: null)) {
-                $blockers[] = $row[0] . ' (registered)';
-            }
-
-            // FIRST_PARTY members are recognised without a registry row, so an installed
-            // one is just as much of a confound.
-            $firstParty = mysqli_query(
-                $db,
-                "SELECT `element` FROM `{$extensions}`
-                 WHERE (`type` = 'component' AND `element` = 'com_livingword')
-                    OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
-            );
-
-            while ($row = mysqli_fetch_row($firstParty ?: null)) {
-                $blockers[] = $row[0] . ' (first-party, installed)';
-            }
+            $blockers = $otherConsumers($db, $consumers, $extensions);
 
             if ($blockers !== []) {
                 fwrite(STDERR, '  FAIL something else already keeps the tables: ' . implode(', ', $blockers) . ".\n");
@@ -670,13 +691,55 @@ foreach ($installs as $install) {
 
             break;
 
+        case 'assert-no-other-consumer':
+            // Precondition for assert-tables-gone. Run it BEFORE the removal:
+            // afterwards the registry rows and extension rows are gone and the
+            // question can no longer be answered.
+            $blockers = $otherConsumers($db, $consumers, $extensions);
+
+            if ($blockers !== []) {
+                fwrite(STDERR, '  FAIL another scripture consumer is installed: ' . implode(', ', $blockers) . ".\n");
+                fwrite(STDERR, "       Removing pkg_proclaim will correctly KEEP the tables, so asserting\n");
+                fwrite(STDERR, "       they are dropped would be asserting a bug. Remove it first, or run\n");
+                fwrite(STDERR, "       this phase on a site with no other consumer.\n");
+                $failures++;
+
+                break;
+            }
+
+            echo "  OK   no other scripture consumer — a package removal should drop the tables\n";
+
+            break;
+
         case 'assert-tables-gone':
+            $survivors = [];
+
             foreach ([$translations, $verses, $cache, $consumers] as $table) {
                 if ($tableExists($db, $table)) {
                     fwrite(STDERR, "  FAIL {$table} still exists after the last consumer was removed.\n");
+                    $survivors[] = $table;
                     $failures++;
                 } else {
                     echo "  OK   {$table} removed — nothing was left using it\n";
+                }
+            }
+
+            // Say WHY, rather than leaving the reader to guess. "Kept because
+            // Living Word is installed" and "kept because the cleanup never ran"
+            // look identical from the outside, and the first was mistaken for the
+            // second in lib_cwmscripture#37.
+            if ($survivors !== []) {
+                $blockers = $otherConsumers($db, $consumers, $extensions);
+
+                if ($blockers !== []) {
+                    fwrite(STDERR, '       Reason: another consumer is installed — ' . implode(', ', $blockers) . ".\n");
+                    fwrite(STDERR, "       That makes keeping the tables CORRECT. This phase needed\n");
+                    fwrite(STDERR, "       assert-no-other-consumer to run before the removal.\n");
+                } else {
+                    fwrite(STDERR, "       No other consumer is installed, so the cleanup in pkg_proclaim's\n");
+                    fwrite(STDERR, "       script.install.php::uninstall() should have dropped these and did not.\n");
+                    fwrite(STDERR, "       Note it logs to the 'jerror' category, which has no logger in CLI —\n");
+                    fwrite(STDERR, "       its messages are discarded there, so silence is not evidence.\n");
                 }
             }
 
