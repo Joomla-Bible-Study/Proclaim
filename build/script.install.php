@@ -114,7 +114,99 @@ return new class () implements InstallerScriptInterface {
         // Ensure the scripture links plugin is enabled
         $this->enablePlugin('scripturelinks', 'content');
 
+        // Retire update sites left registered against com_proclaim
+        $this->removeComponentUpdateSites();
+
         return true;
+    }
+
+    /**
+     * Retire update sites still registered against com_proclaim.
+     *
+     * Until 10.4.0 the component manifest carried its own <updateservers>, so
+     * every site installed before then holds an update site owned by
+     * com_proclaim. Joomla does not remove an update site when a manifest stops
+     * declaring one, so those rows outlive the change: a site with history ends
+     * up polling the stream twice and reporting Proclaim as a *component*
+     * update, while a fresh install polls once as a package.
+     *
+     * Some of those rows point at ARS stream id=2, which only ever served
+     * 9.2.x. A site carrying one polls a stream whose newest entry predates
+     * every 10.x release, so it can never be offered anything from it.
+     *
+     * Updates belong to the package in the bundled-package distribution model,
+     * so the package's own update site is the one to keep.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function removeComponentUpdateSites(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        try {
+            $sitesFor = function (string $element, string $type) use ($db): array {
+                $query = $db->createQuery()
+                    ->select($db->quoteName('se.update_site_id'))
+                    ->from($db->quoteName('#__update_sites_extensions', 'se'))
+                    ->join(
+                        'INNER',
+                        $db->quoteName('#__extensions', 'e'),
+                        $db->quoteName('e.extension_id') . ' = ' . $db->quoteName('se.extension_id')
+                    )
+                    ->where($db->quoteName('e.element') . ' = :element')
+                    ->where($db->quoteName('e.type') . ' = :type')
+                    ->bind(':element', $element)
+                    ->bind(':type', $type);
+
+                return array_map('intval', $db->setQuery($query)->loadColumn() ?: []);
+            };
+
+            $packageSites = $sitesFor('pkg_proclaim', 'package');
+
+            // Never leave a site with no way to hear about updates. If the
+            // package has not registered its own update site — a partial
+            // install, or a component-only site that has not taken the package
+            // yet — the component's row is the only channel there is, so it
+            // stays. The next successful package install runs this again.
+            if ($packageSites === []) {
+                return;
+            }
+
+            $stale = array_diff($sitesFor('com_proclaim', 'component'), $packageSites);
+
+            if ($stale === []) {
+                return;
+            }
+
+            $ids = implode(',', $stale);
+
+            // #__updates rows are keyed to the site and would otherwise be
+            // orphaned, leaving phantom entries on Extensions > Update.
+            foreach (['#__updates', '#__update_sites_extensions', '#__update_sites'] as $table) {
+                $db->setQuery(
+                    $db->createQuery()
+                        ->delete($db->quoteName($table))
+                        ->where($db->quoteName('update_site_id') . ' IN (' . $ids . ')')
+                )->execute();
+            }
+
+            Log::add(
+                'pkg_proclaim: retired ' . \count($stale) . ' com_proclaim update site(s); '
+                . 'the package now owns updates.',
+                Log::INFO,
+                'com_proclaim'
+            );
+        } catch (\Throwable $e) {
+            // Housekeeping. A site that keeps a duplicate update site still
+            // updates correctly, so this must never fail an install.
+            Log::add(
+                'pkg_proclaim: could not retire com_proclaim update sites: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
     }
 
     /**
