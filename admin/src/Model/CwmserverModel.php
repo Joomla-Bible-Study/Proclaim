@@ -423,7 +423,7 @@ class CwmserverModel extends AdminModel
     {
         return Factory::getApplication()->getIdentity()->authorise(
             'core.delete',
-            'com_proclaim.cwmserver.' . (int)$record->id
+            'com_proclaim.server.' . (int)$record->id
         );
     }
 
@@ -444,7 +444,7 @@ class CwmserverModel extends AdminModel
 
         // Check for existing server record
         if (!empty($record->id)) {
-            return $user->authorise('core.edit.state', 'com_proclaim.cwmserver.' . (int)$record->id);
+            return $user->authorise('core.edit.state', 'com_proclaim.server.' . (int)$record->id);
         }
 
         return parent::canEditState($record);

@@ -99,7 +99,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                             $canCheckin          = $user->authorise('core.manage', 'com_checkin')
                                 || $item->checked_out == $userId || \is_null($item->checked_out);
                             $canCreate          = $user->authorise('core.create');
-                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.templatcode.' . $item->id);
+                            $canEdit            = $user->authorise('core.edit', 'com_proclaim.templatecode.' . $item->id);
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.templatecode.' . $item->id);
                             $canChange          = $user->authorise('core.edit.state', 'com_proclaim.templatecode.' . $item->id);
                             ?>
