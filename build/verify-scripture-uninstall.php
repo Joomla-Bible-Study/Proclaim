@@ -58,6 +58,7 @@ $modes = [
     'assert-detected-consumer',
     'seed-detected-consumer',
     'assert-tables-present',
+    'assert-registry-pruned',
     'assert-tables-gone',
     'assert-no-other-consumer',
     'other-consumer-ids',
@@ -492,6 +493,47 @@ foreach ($installs as $install) {
 
             echo '  OK   seeded ' . PROBE_ROWS . ' probe verses and '
                 . PROBE_CACHE_ROWS . " provider cache rows\n";
+
+            break;
+
+        case 'assert-registry-pruned':
+            // After a package removal that KEPT the tables (another consumer
+            // still needs them), the registry must no longer name the two
+            // extensions this package just took away.
+            //
+            // installedExcluding() prunes stale rows, but it runs from the
+            // manifest script — which InstallerAdapter::uninstall() calls
+            // BEFORE removeExtensionFiles(). At that moment the children are
+            // still installed, so it correctly leaves them alone, and nothing
+            // runs afterwards. Hence the explicit unregister this asserts.
+            $consumers = $prefix . 'bsms_scripture_consumers';
+
+            if (!$tableExists($db, $consumers)) {
+                fwrite(STDERR, "  FAIL {$consumers} is missing — this phase expects the tables to have been KEPT.\n");
+                $failures++;
+
+                break;
+            }
+
+            foreach ([['com_proclaim', 'component'], ['scripturelinks', 'plugin']] as [$element, $type]) {
+                $row = mysqli_fetch_row(mysqli_query(
+                    $db,
+                    "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = '"
+                    . mysqli_real_escape_string($db, $element) . "' AND `type` = '"
+                    . mysqli_real_escape_string($db, $type) . "'"
+                ) ?: null);
+
+                $left = ($row === null || $row === false) ? 0 : (int) $row[0];
+
+                if ($left === 0) {
+                    echo "  OK   registry no longer names {$element} ({$type})\n";
+                } else {
+                    fwrite(STDERR, "  FAIL registry still names {$element} ({$type}) after its removal.\n");
+                    fwrite(STDERR, "       A reinstall would inherit a registry describing the previous install,\n");
+                    fwrite(STDERR, "       and anything reading the table directly sees extensions that do not exist.\n");
+                    $failures++;
+                }
+            }
 
             break;
 

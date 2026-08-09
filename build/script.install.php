@@ -298,20 +298,43 @@ return new class () implements InstallerScriptInterface {
             }
 
             // Everything this package removes; anything left is someone else's.
-            $remaining = ConsumerRegistry::installedExcluding([
+            $members = [
                 ['element' => 'com_proclaim',   'type' => 'component', 'folder' => ''],
                 ['element' => 'scripturelinks', 'type' => 'plugin',    'folder' => 'content'],
-            ]);
+            ];
+
+            $remaining = ConsumerRegistry::installedExcluding($members);
 
             if ($remaining !== []) {
+                // Another consumer keeps the tables — so the registry survives
+                // too, still naming the two extensions this uninstall is about
+                // to take away. installedExcluding() does prune stale rows, but
+                // it runs here, and InstallerAdapter::uninstall() calls the
+                // manifest script BEFORE removeExtensionFiles(): the children
+                // are still installed at this moment, so it correctly leaves
+                // them alone. Nothing runs afterwards to reconsider.
+                //
+                // Left behind, a reinstall inherits a registry describing the
+                // previous installation, and anything reading the table
+                // directly rather than through installedExcluding() sees
+                // extensions that do not exist. That is what sent
+                // lib_cwmscripture#37 down the wrong path to begin with.
+                foreach ($members as $member) {
+                    ConsumerRegistry::unregister($member['element'], $member['type'], $member['folder']);
+                }
+
                 Log::add(
-                    'pkg_proclaim: scripture tables still used by ' . implode(', ', $remaining) . ' — keeping them.',
+                    'pkg_proclaim: scripture tables still used by ' . implode(', ', $remaining)
+                    . ' — keeping them, and unregistered this package\'s own consumers.',
                     Log::INFO,
                     'jerror'
                 );
 
                 return;
             }
+
+            // The other branch needs no pruning: the consumers table itself is
+            // among the tables dropped below.
 
             $db = Factory::getContainer()->get(DatabaseInterface::class);
 
