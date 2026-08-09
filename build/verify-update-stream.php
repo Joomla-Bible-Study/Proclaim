@@ -11,19 +11,23 @@
  *
  *   1. A `com_proclaim` entry exists AT the version just released.
  *
- *      Sites installed before 10.4.0 hold an update site owned by the
- *      component, and the stream's `com_proclaim` entry is what reaches them.
- *      It only ever wins by TIE: Joomla's ExtensionAdapter keeps a single
- *      update per update site and replaces it only on a strictly greater
- *      version. Let the component entry go stale by one release and
- *      version_compare('10.5.7', '10.5.6', '>') is true — the package entry
- *      wins outright, position stops mattering, and those sites are stranded.
+ *      Sites that installed the old standalone component have no
+ *      `pkg_proclaim` registered, so the package update never matches them.
+ *      plg_system_cwmarsmigrate on the ARS server clones the newest
+ *      `pkg_proclaim` block, re-types the clone as a component, and inserts it
+ *      at the top of the feed. Because it is generated per request it cannot go
+ *      stale — but it can stop appearing entirely if the plugin is disabled
+ *      during maintenance, its stream id drifts, or an ARS upgrade breaks the
+ *      onAfterRender hook. Nothing on the release side would notice: the feed
+ *      stays valid and the package entry is still served, while component-only
+ *      sites quietly go back to seeing "no updates".
  *
  *   2. It sorts BEFORE the `pkg_proclaim` entry of the same version.
  *
- *      With both at the same version neither replaces the other, so the first
- *      one parsed keeps the slot. That ordering is load-bearing and lives
- *      nowhere except the order of two items in the ARS admin UI.
+ *      Joomla keeps a single $latest per feed and replaces it only on a
+ *      strictly greater version, so at equal versions the first block parsed
+ *      wins. The plugin inserts first for exactly this reason; asserting it
+ *      catches a regression in that insertion point.
  *
  * Also asserts php_minimum and targetplatform are present. Null ARS
  * environments mis-shipped 10.3.4 through 10.4.0, and the symptom was the same
@@ -53,10 +57,12 @@ declare(strict_types=1);
  * site, up to a year for one touched annually.
  *
  * Past this date the check stops requiring the entry rather than nagging, so
- * retiring it is a deliberate act and not something that rots into a warning
- * everyone ignores. Revisit rather than extend blindly: if the two entries are
- * ever split across separate update sites, the straggler count becomes
- * measurable and this date can be replaced with evidence (#1666).
+ * retiring the plugin is a deliberate act and not something that rots into a
+ * warning everyone ignores. Revisit rather than extend blindly: if the two
+ * entries are ever split across separate update sites, the straggler count
+ * becomes measurable and this date can be replaced with evidence (#1666).
+ *
+ * See the wiki's ARS-Migration-Plugin page for how the entry is produced.
  */
 const COMPONENT_ENTRY_SUNSET = '2027-08-09';
 
@@ -216,9 +222,10 @@ if ($sunset) {
     echo "       If the entry is still published, decide deliberately whether to retire it (#1666).\n";
 } elseif ($component === null) {
     echo "{$red}FAIL{$reset} no com_proclaim entry at {$version}.\n";
-    echo "       Sites installed before 10.4.0 hold a component-owned update site and are\n";
-    echo "       reached ONLY by this entry. Without it they are offered nothing, silently.\n";
-    echo "       Republish the ARS item for the component element at this version.\n";
+    echo "       Component-only sites are reached ONLY by this entry, which\n";
+    echo "       plg_system_cwmarsmigrate injects into the feed on the ARS server.\n";
+    echo "       Its absence means that plugin is disabled, misconfigured (stream id),\n";
+    echo "       or no longer firing. Those sites now see 'no updates', silently.\n";
     $failures++;
 } else {
     echo "{$green}PASS{$reset} com_proclaim entry present at {$version} (not stale)\n";
@@ -229,8 +236,8 @@ if ($sunset) {
             . "(positions {$component['position']} vs {$package['position']}).\n";
         echo "       Equal versions never replace one another, so the first entry parsed wins\n";
         echo "       and the other is discarded. In this order the component entry is dropped\n";
-        echo "       and pre-10.3.0 sites stop being offered updates.\n";
-        echo "       Reorder the ARS items so the component entry sorts first.\n";
+        echo "       and component-only sites stop being offered updates.\n";
+        echo "       plg_system_cwmarsmigrate must insert its clone at the TOP of the feed.\n";
         $failures++;
     } elseif ($package !== null) {
         echo "{$green}PASS{$reset} com_proclaim sorts before pkg_proclaim "
