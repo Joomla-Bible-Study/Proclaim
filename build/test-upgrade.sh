@@ -175,6 +175,9 @@ php build/verify-scripture-uninstall.php seed-translation
 PKGID="$(php build/verify-scripture-uninstall.php ext-id package pkg_proclaim | tail -n1)"
 php "$JCLI" extension:remove -n "$PKGID" || true
 php build/verify-scripture-uninstall.php assert-tables-present
+# Only meaningful in this phase: the registry survives here because the tables
+# were kept, so it is the one place a stale row can outlive its extension (#1662).
+php build/verify-scripture-uninstall.php assert-registry-pruned
 
 echo "-- [13/16] STILL NEEDED: an UNregistered consumer keeps the tables (detection, not registration)"
 "$BIN/cwm-install-zip" --zip "$NEWZIP"
