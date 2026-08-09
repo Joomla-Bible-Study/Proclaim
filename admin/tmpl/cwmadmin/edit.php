@@ -1069,6 +1069,63 @@ $logSize    = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::
 </div>
 <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+<?php
+/*
+ * Permissions — one grid per section declared in access.xml (#1653).
+ *
+ * Gated on core.admin, matching how Joomla gates com_config's Permissions tab:
+ * changing who may do what is an administrator action, not a settings action,
+ * so holding core.options is not enough. CwmadminModel::saveSectionRules()
+ * refuses a post that carries rules without core.admin, so hiding the tab is
+ * presentation rather than the security boundary.
+ */
+if (Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) :
+    $sectionFields = [];
+
+    foreach (\CWM\Component\Proclaim\Administrator\Lib\Cwmassets::declaredSections() as $permSection) {
+        $field = $this->form->getField('rules_' . $permSection, null);
+
+        if ($field !== false) {
+            $sectionFields[$permSection] = $field;
+        }
+    }
+    ?>
+<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'permissions', Text::_('JBS_ADM_PERMISSIONS_TAB')); ?>
+    <div class="row" id="permissions-tab">
+        <div class="col-12">
+            <div class="cwmadmin-panel mb-4">
+                <p class="tab-description"><?php echo Text::_('JBS_ADM_PERMISSIONS_DESC'); ?></p>
+
+                <?php if (empty($sectionFields)) : ?>
+                    <div class="alert alert-warning">
+                        <?php echo Text::_('JBS_ADM_PERMISSIONS_NO_SECTIONS'); ?>
+                    </div>
+                <?php else : ?>
+                    <?php
+                    /*
+                     * Stacked, not a nested tab set. The outer 'myTab' set never
+                     * emits an endTabSet, so a tab set opened inside one of its
+                     * tabs produces markup joomla-tab cannot drive: the panels
+                     * render but never become visible, and the permission
+                     * selects inside them are unreachable.
+                     */
+                    ?>
+                    <?php foreach ($sectionFields as $permSection => $permField) : ?>
+                        <details class="cwm-permissions-section mb-3">
+                            <summary class="h4 py-2">
+                                <?php echo Text::_('JBS_ADM_PERMISSIONS_SECTION_' . strtoupper($permSection)); ?>
+                            </summary>
+                            <?php echo $this->form->renderField('asset_id_' . $permSection); ?>
+                            <?php echo $permField->input; ?>
+                        </details>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php echo HTMLHelper::_('uitab.endTab'); ?>
+<?php endif; ?>
+
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
                value="<?php

@@ -19,16 +19,21 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeFileCache;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Table\CwmadminTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
 use CWM\Library\Scripture\Helper\ScriptureParamsHelper;
+use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Schema\ChangeSet;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Extension as ExtensionTable;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Versioning\VersionableModelTrait;
@@ -100,7 +105,77 @@ class CwmadminModel extends AdminModel
             return false;
         }
 
+        $this->addSectionPermissionFields($form);
+
         return $form;
+    }
+
+    /**
+     * Add one permissions grid per section declared in access.xml.
+     *
+     * Built here rather than written into admin.xml so access.xml stays the
+     * single source of truth for which sections exist. A hardcoded field list
+     * would drift from it, and a section with a UI but no asset — or an asset
+     * with no UI — is the failure this whole change exists to avoid.
+     *
+     * Each grid needs its own asset: `RulesField` reads the id from the field
+     * named in `asset_field`, defaulting to `asset_id`. One shared `asset_id`
+     * would point every grid at the same asset, so each section gets its own
+     * hidden field. They are top-level because `RulesField` resolves the value
+     * with `$form->getValue($assetField)`, which does not search field groups.
+     *
+     * @param   Form  $form  The form to extend
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function addSectionPermissionFields(Form $form): void
+    {
+        $sections = Cwmassets::declaredSections();
+
+        if ($sections === []) {
+            return;
+        }
+
+        $xml = new \SimpleXMLElement('<form/>');
+        $set = $xml->addChild('fieldset');
+        $set->addAttribute('name', 'sectionpermissions');
+
+        foreach ($sections as $section) {
+            $hidden = $set->addChild('field');
+            $hidden->addAttribute('name', 'asset_id_' . $section);
+            $hidden->addAttribute('type', 'hidden');
+            $hidden->addAttribute('filter', 'unset');
+
+            $rules = $set->addChild('field');
+            $rules->addAttribute('name', 'rules_' . $section);
+            $rules->addAttribute('type', 'rules');
+            $rules->addAttribute('label', 'JCONFIG_PERMISSIONS_LABEL');
+            $rules->addAttribute('translate_label', 'false');
+            $rules->addAttribute('class', 'inputbox');
+            $rules->addAttribute('component', 'com_proclaim');
+            $rules->addAttribute('section', $section);
+            $rules->addAttribute('asset_field', 'asset_id_' . $section);
+            $rules->addAttribute('validate', 'rules');
+            $rules->addAttribute('filter', 'rules');
+        }
+
+        $form->load($xml->asXML(), false);
+
+        // Bind the ids here, not in loadFormData(). These fields are added
+        // after loadForm() has already bound its data, so anything set on the
+        // data object never reaches them — they render empty, and an empty
+        // asset_field makes RulesField fall back to the component asset. Every
+        // grid would then show, and save, com_proclaim's own rules under a
+        // section label.
+        foreach ($sections as $section) {
+            $assetId = Cwmassets::sectionId($section);
+
+            if ($assetId > 0) {
+                $form->setValue('asset_id_' . $section, null, $assetId);
+            }
+        }
     }
 
     /**
@@ -159,6 +234,10 @@ class CwmadminModel extends AdminModel
 
     public function save($data): bool
     {
+        // Before anything else: section rules live on #__assets, not on
+        // #__bsms_admin, and must not reach parent::save() as table columns.
+        $this->saveSectionRules($data);
+
         $params = new Registry();
         $params->loadArray($data['params']);
 
@@ -189,6 +268,80 @@ class CwmadminModel extends AdminModel
         $data['params'] = $params->toArray();
 
         return parent::save($data);
+    }
+
+    /**
+     * Write each section's permissions grid to its own asset.
+     *
+     * Strips `rules_<section>` and `asset_id_<section>` from $data on the way
+     * through, because they are not columns on `#__bsms_admin` and would
+     * otherwise be handed to the table.
+     *
+     * Follows com_config's ComponentModel: build a Rules object from the posted
+     * grid, write it to the asset, and refuse outright without `core.admin`.
+     * The Permissions tab only renders for users who hold it, so a post that
+     * carries these keys without it is a stale form or a forged request —
+     * neither should be answered by silently discarding the values.
+     *
+     * @param   array  $data  Form data, modified in place
+     *
+     * @return  void
+     *
+     * @throws  \RuntimeException  When rules are posted without core.admin
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function saveSectionRules(array &$data): void
+    {
+        $posted = [];
+
+        foreach (Cwmassets::declaredSections() as $section) {
+            $key = 'rules_' . $section;
+
+            if (isset($data[$key]) && \is_array($data[$key])) {
+                $posted[$section] = $data[$key];
+            }
+
+            unset($data[$key], $data['asset_id_' . $section]);
+        }
+
+        if ($posted === []) {
+            return;
+        }
+
+        if (!$this->getCurrentUser()->authorise('core.admin', 'com_proclaim')) {
+            throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+        }
+
+        $db = $this->getDatabase();
+
+        foreach ($posted as $section => $grid) {
+            $assetId = Cwmassets::sectionId($section);
+
+            if ($assetId < 1) {
+                Log::add("No asset for section '{$section}'; its permissions were not saved", Log::WARNING, 'com_proclaim');
+
+                continue;
+            }
+
+            $asset = new Asset($db);
+
+            if (!$asset->load($assetId)) {
+                Log::add("Asset {$assetId} for section '{$section}' could not be loaded", Log::WARNING, 'com_proclaim');
+
+                continue;
+            }
+
+            $asset->rules = (string) new Rules($grid);
+
+            if (!$asset->check() || !$asset->store()) {
+                Log::add(
+                    "Could not save permissions for section '{$section}': " . $asset->getError(),
+                    Log::ERROR,
+                    'com_proclaim'
+                );
+            }
+        }
     }
 
     /**
