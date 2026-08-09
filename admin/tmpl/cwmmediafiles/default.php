@@ -251,9 +251,9 @@ if ($saveOrder && !empty($this->items)) {
                     <?php echo $this->pagination->getListFooter(); ?>
 
                     <?php if (
-                        $user->authorise('core.create', 'com_proclaim')
-                        && $user->authorise('core.edit', 'com_proclaim')
-                        && $user->authorise('core.edit.state', 'com_proclaim')
+                        $user->authorise('core.create', 'com_proclaim.mediafile')
+                        && $user->authorise('core.edit', 'com_proclaim.mediafile')
+                        && $user->authorise('core.edit.state', 'com_proclaim.mediafile')
                     ) : ?>
                         <?php echo HTMLHelper::_(
                             'bootstrap.renderModal',

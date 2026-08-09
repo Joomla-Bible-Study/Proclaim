@@ -163,9 +163,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessagetypes'); ?>" method=
                     <?php
                     // Load the batch processing form.?>
                     <?php
-                    if ($user->authorise('core.create', 'com_proclaim')
-                        && $user->authorise('core.edit', 'com_proclaim')
-                        && $user->authorise('core.edit.state', 'com_proclaim')
+                    if ($user->authorise('core.create', 'com_proclaim.messagetype')
+                        && $user->authorise('core.edit', 'com_proclaim.messagetype')
+                        && $user->authorise('core.edit.state', 'com_proclaim.messagetype')
                     ) : ?>
                         <?php
                         echo HTMLHelper::_(

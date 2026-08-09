@@ -232,9 +232,9 @@ if (str_contains($listOrder, 'publish_up')) {
                     <?php
                     // Load the batch processing form.?>
                     <?php
-                    if ($user->authorise('core.create', 'com_proclaim')
-                        && $user->authorise('core.edit', 'com_proclaim')
-                        && $user->authorise('core.edit.state', 'com_proclaim')
+                    if ($user->authorise('core.create', 'com_proclaim.serie')
+                        && $user->authorise('core.edit', 'com_proclaim.serie')
+                        && $user->authorise('core.edit.state', 'com_proclaim.serie')
                     ) : ?>
                         <?php
                         echo HTMLHelper::_(
