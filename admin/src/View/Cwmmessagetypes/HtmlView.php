@@ -169,9 +169,9 @@ class HtmlView extends BaseHtmlView
 
             // Add a batch button
             if (
-                $user->authorise('core.create', 'com_proclaim')
-                && $user->authorise('core.edit', 'com_proclaim')
-                && $user->authorise('core.edit.state', 'com_proclaim')
+                $user->authorise('core.create', 'com_proclaim.messagetype')
+                && $user->authorise('core.edit', 'com_proclaim.messagetype')
+                && $user->authorise('core.edit.state', 'com_proclaim.messagetype')
             ) {
                 $childBar->popupButton('batch')
                     ->text('JTOOLBAR_BATCH')

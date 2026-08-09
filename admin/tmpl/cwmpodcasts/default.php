@@ -208,9 +208,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmpodcasts'); ?>" method="pos
                 <?php
                 // Load the batch processing form.?>
                 <?php
-                if ($user->authorise('core.create', 'com_proclaim')
-                    && $user->authorise('core.edit', 'com_proclaim')
-                    && $user->authorise('core.edit.state', 'com_proclaim')
+                if ($user->authorise('core.create', 'com_proclaim.podcast')
+                    && $user->authorise('core.edit', 'com_proclaim.podcast')
+                    && $user->authorise('core.edit.state', 'com_proclaim.podcast')
                 ) : ?>
                     <?php
                     echo HTMLHelper::_(

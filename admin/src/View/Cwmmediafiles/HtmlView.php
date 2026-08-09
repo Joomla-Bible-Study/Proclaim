@@ -224,8 +224,8 @@ class HtmlView extends BaseHtmlView
 
             // Add a batch button
             if (
-                $user->authorise('core.create', 'com_proclaim')
-                && $user->authorise('core.edit', 'com_proclaim')
+                $user->authorise('core.create', 'com_proclaim.mediafile')
+                && $user->authorise('core.edit', 'com_proclaim.mediafile')
                 && $user->authorise('core.edit.transition', 'com_proclaim')
             ) {
                 $childBar->popupButton('batch')
