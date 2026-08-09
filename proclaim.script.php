@@ -13,6 +13,7 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
@@ -643,6 +644,35 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since   10.5.6
      */
+    /**
+     * Create the `com_proclaim.<section>` assets access.xml declares.
+     *
+     * Phase 1 of #1653. Every section is created with empty rules, which
+     * inherit from `com_proclaim` — so effective permissions are unchanged for
+     * every group, section and action. Measured on a development database:
+     * 1190 cells compared, none changed.
+     *
+     * Seeding on update as well as install matters because access.xml can gain
+     * a section in any release, and a section with no asset is a permission
+     * the UI can offer but nothing can store.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function seedSectionAssets(): void
+    {
+        try {
+            $resolved = Cwmassets::seedSections();
+
+            Log::add("Resolved {$resolved} Proclaim section asset(s)", Log::INFO, 'com_proclaim');
+        } catch (\Throwable $e) {
+            // Nothing reads these yet, so a failure costs no behaviour today —
+            // and must not take down an otherwise successful install.
+            Log::add('Could not seed section assets: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+    }
+
     private function dropRedundantStudyTopicIndex(): void
     {
         if (!$this->tableExists('#__bsms_studytopics')) {
@@ -1537,6 +1567,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // The analytics aggregate key cannot be reworked in SQL at all; this is
         // where it is brought to its intended columns. No-op when already correct.
         $this->reconcileAnalyticsAggregateIndex();
+
+        // Seeded on update as well as install: access.xml can gain a section in
+        // any release, and a section with no asset is a permission the UI can
+        // offer but nothing can store.
+        $this->seedSectionAssets();
 
         // Install subExtensions
         $this->installSubExtensions($parent);

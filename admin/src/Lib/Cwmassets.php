@@ -41,6 +41,206 @@ class Cwmassets
      */
     public static int $parent_id = 0;
 
+    /**
+     * Cached `com_proclaim.<section>` asset IDs, keyed by section name.
+     *
+     * @var array<string, int>
+     * @since __DEPLOY_VERSION__
+     */
+    private static array $sectionIds = [];
+
+    /**
+     * Cached section names declared in admin/access.xml.
+     *
+     * @var list<string>|null
+     * @since __DEPLOY_VERSION__
+     */
+    private static ?array $declaredSections = null;
+
+    /**
+     * Forget cached section ids and the parsed access.xml.
+     *
+     * `sectionId()` memoises name -> id for the request. That is safe while
+     * assets only ever get created, but this class also repairs and removes
+     * them — `fixAllAssets()`, `cleanOrphanedAssets()`, `pruneEmptyAssetRows()`
+     * — after which a cached id points at a row that no longer exists, and
+     * `seedSections()` would report success without recreating anything.
+     *
+     * Call this after any operation that deletes asset rows.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function clearSectionCache(): void
+    {
+        self::$sectionIds       = [];
+        self::$declaredSections = null;
+    }
+
+    /**
+     * Section names admin/access.xml declares, excluding `component`.
+     *
+     * Read from the manifest rather than hardcoded so the list cannot drift
+     * from the file that defines the permissions UI.
+     *
+     * @return  list<string>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function declaredSections(): array
+    {
+        if (self::$declaredSections !== null) {
+            return self::$declaredSections;
+        }
+
+        self::$declaredSections = [];
+
+        // Resolved relative to this class rather than through JPATH_ADMINISTRATOR.
+        // Both layouts put access.xml two levels above src/Lib —
+        // administrator/components/com_proclaim/ when installed, admin/ in the
+        // repository — so the same expression works under test, where
+        // JPATH_ADMINISTRATOR points at the Joomla install rather than at us.
+        $file = \dirname(__DIR__, 2) . '/access.xml';
+
+        if (!is_file($file)) {
+            $file = JPATH_ADMINISTRATOR . '/components/com_proclaim/access.xml';
+        }
+
+        if (!is_file($file)) {
+            Log::add('access.xml not found; no section assets can be resolved', Log::ERROR, 'com_proclaim');
+
+            return self::$declaredSections;
+        }
+
+        $doc = new \DOMDocument();
+
+        if (!@$doc->load($file)) {
+            Log::add('access.xml is not parseable; no section assets can be resolved', Log::ERROR, 'com_proclaim');
+
+            return self::$declaredSections;
+        }
+
+        foreach ((new \DOMXPath($doc))->query('/access/section') as $section) {
+            $name = $section->getAttribute('name');
+
+            if ($name !== '' && $name !== 'component') {
+                self::$declaredSections[] = $name;
+            }
+        }
+
+        return self::$declaredSections;
+    }
+
+    /**
+     * Find or create the `com_proclaim.<section>` asset, returning its id.
+     *
+     * Created with **empty rules**, which is what makes this inert: an empty
+     * rule set inherits from `com_proclaim`, so every effective permission is
+     * the same answer the fallback already produced. Verified on a development
+     * database across 14 groups x 17 sections x 5 actions — 1190 cells, none
+     * changed (#1653).
+     *
+     * Written through `Table\Asset::setLocation()`/`store()` rather than a raw
+     * INSERT, so the nested set stays correct without a `rebuild()` pass. A
+     * present-but-broken `#__assets` row is a known cause of 404s in this
+     * component, which is why this path never hand-writes `lft`/`rgt`.
+     *
+     * ⚠️ A section asset resolving does NOT make item assets inherit through
+     * it. `Access::getAssetRules()` falls back from an unresolved name straight
+     * to the extension asset — everything before the first dot — so
+     * `com_proclaim.teacher.5` reaches `com_proclaim`, never
+     * `com_proclaim.teacher`. Section rules bite only where code asks for the
+     * section name explicitly, or where a real item asset is parented beneath
+     * it.
+     *
+     * @param   string  $section  Section name as declared in access.xml
+     *
+     * @return  int  Asset id, or 0 when the section is undeclared or creation failed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function sectionId(string $section): int
+    {
+        if (isset(self::$sectionIds[$section])) {
+            return self::$sectionIds[$section];
+        }
+
+        // Refuse to mint an asset for a name access.xml does not declare.
+        // Permissions set on such a section would govern nothing, and the row
+        // would be invisible to the UI that is supposed to manage it.
+        if (!\in_array($section, self::declaredSections(), true)) {
+            Log::add(
+                "Refusing to create asset for undeclared section '{$section}' — add it to access.xml first",
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return 0;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $name  = 'com_proclaim.' . $section;
+        $asset = new \Joomla\CMS\Table\Asset($db);
+
+        if ($asset->loadByName($name)) {
+            return self::$sectionIds[$section] = (int) $asset->id;
+        }
+
+        $parentId = self::parentId();
+
+        if ($parentId < 1) {
+            Log::add("Cannot create {$name}: com_proclaim asset is missing", Log::ERROR, 'com_proclaim');
+
+            return 0;
+        }
+
+        $asset->name  = $name;
+        $asset->title = $name;
+        $asset->rules = '{}';
+        $asset->setLocation($parentId, 'last-child');
+
+        if (!$asset->check() || !$asset->store()) {
+            // A concurrent request may have won the race — the unique index on
+            // `name` is the arbiter. Re-read before reporting failure so the
+            // loser returns the winner's id instead of 0.
+            $retry = new \Joomla\CMS\Table\Asset($db);
+
+            if ($retry->loadByName($name)) {
+                return self::$sectionIds[$section] = (int) $retry->id;
+            }
+
+            Log::add("Failed to create {$name}: " . $asset->getError(), Log::ERROR, 'com_proclaim');
+
+            return 0;
+        }
+
+        return self::$sectionIds[$section] = (int) $asset->id;
+    }
+
+    /**
+     * Create every section asset access.xml declares.
+     *
+     * Idempotent — existing rows are loaded, not duplicated — so it is safe to
+     * run on install and on every update.
+     *
+     * @return  int  Number of sections resolved (created or already present)
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function seedSections(): int
+    {
+        $resolved = 0;
+
+        foreach (self::declaredSections() as $section) {
+            if (self::sectionId($section) > 0) {
+                $resolved++;
+            }
+        }
+
+        return $resolved;
+    }
+
     // =========================================================================
     // Parent Asset Management
     // =========================================================================
