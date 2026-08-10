@@ -92,7 +92,14 @@ return new class () implements InstallerScriptInterface {
 
         // Also before the children: com_proclaim's own preflight refuses to
         // install when the scripture library is absent.
-        if (!$this->installScriptureStack($adapter)) {
+        //
+        // Install paths only. Joomla calls preflight with $type === 'uninstall'
+        // too, and without this guard a package REMOVAL reinstalled the
+        // scripture stack on its way out — which re-registered com_proclaim as
+        // a consumer immediately after com_proclaim's own uninstall had
+        // unregistered it, leaving a row describing an extension that was being
+        // removed in the same request.
+        if ($type !== 'uninstall' && !$this->installScriptureStack($adapter)) {
             return false;
         }
 

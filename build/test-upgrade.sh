@@ -173,16 +173,23 @@ fi
 
 php build/verify-scripture-uninstall.php assert-library-present
 php build/verify-scripture-uninstall.php assert-tables-present
-# NOT asserted here yet. com_proclaim unregisters itself in its own uninstall
-# (proclaim.script.php::scriptureConsumer('unregister')), but that call sits
-# behind uninstallSubExtensions(), which is separately broken — so it never runs
-# and the row survives (#1676). Cleaning it up from this package instead was
-# tried and does not stick: the package's uninstall() fires before
-# removeExtensionFiles() removes com_proclaim, so the child's own path has the
-# last word. Re-enable `assert-registry-pruned` once #1676 is fixed.
+# NOT asserted yet — and not for the reason first assumed.
 #
-# #1662's other half is already handled by this change: scripturelinks is no
-# longer removed with Proclaim, so its registry row is correct rather than stale.
+# #1676 fixed the guard that was refusing sub-extension removal, so
+# com_proclaim's uninstall now reaches scriptureConsumer('unregister'), and
+# probing a real removal shows it SUCCEEDS:
+#
+#   SC: called action=unregister ... unregister returned true
+#   SC: called action=register            <- immediately afterwards
+#
+# Something calls scriptureConsumer('register') after the unregister, putting
+# the row straight back. The only caller is com_proclaim's postflight
+# (proclaim.script.php:1419), which should not run during an uninstall at all.
+# Adding a $type !== 'uninstall' guard to THIS package's preflight did not stop
+# it, so the re-registration comes from the component side.
+#
+# Tracked separately rather than worked around here. Re-enable once fixed.
+# php build/verify-scripture-uninstall.php assert-registry-pruned
 
 echo "-- [12/16] STILL NEEDED: a registered consumer blocks a STANDALONE library uninstall"
 # Repointed at the standalone path (#1675). The consumer guard used to be
