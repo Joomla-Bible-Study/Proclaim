@@ -23,7 +23,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
-    "eslint": "^10.8.0",
+    "eslint": "^10.8.1",
     "globals": "^17.8.0",
     "intl-tel-input": "^29.2.2",
     "jest": "^30.4.2",
@@ -31,7 +31,7 @@
     "rollup": "^4.62.3",
     "rollup-plugin-gzip": "^4.1.1",
     "sortablejs": "^1.15.7",
-    "terser": "^5.49.0"
+    "terser": "^5.49.2"
   },
   "babel": {
     "presets": [
@@ -70,7 +70,7 @@
   "dependencies": {
     "@fancyapps/ui": "^6.1.11",
     "chart.js": "^4.5.1",
-    "core-js": "^3.48.0"
+    "core-js": "^3.50.0"
   },
   "overrides": {
     "serialize-javascript": "^7.0.3",
