@@ -1192,7 +1192,7 @@ class Cwmlanding
      *
      * @return  array  The same rows, named, minus any that cannot be.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.7
      */
     private static function nameBooks(array $rows): array
     {
