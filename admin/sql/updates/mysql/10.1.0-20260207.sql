@@ -66,5 +66,20 @@ ALTER TABLE `#__bsms_topics` ADD KEY `idx_published_access` (`published`, `acces
 -- Locations: Published + access composite
 ALTER TABLE `#__bsms_locations` ADD KEY `idx_published_access` (`published`, `access`);
 
--- Study-Topics junction: Covering composite for dual-direction lookups
-ALTER TABLE `#__bsms_studytopics` ADD KEY `idx_study_topic` (`study_id`, `topic_id`);
+-- Study-Topics junction: covering composite for dual-direction lookups.
+--
+-- The statement that created idx_study_topic is deliberately gone. 10.5.6
+-- replaced it with the UNIQUE uq_study_topic over the same pair and dropped
+-- this one as redundant, so on every site that has taken that update the index
+-- named here no longer exists.
+--
+-- Joomla's schema check reads every historical file in this folder and tests it
+-- against the CURRENT schema — it has no notion of a change being superseded.
+-- Left in place, this line reported a permanent error in System → Maintenance →
+-- Database on every upgraded site, for an index the component removed on
+-- purpose. Removing the statement removes the check with it.
+--
+-- Safe to remove rather than merely comment out: a site replaying history from
+-- an earlier version now skips straight to uq_study_topic, which covers the
+-- same columns, and install.mysql.utf8.sql never created idx_study_topic
+-- either.
