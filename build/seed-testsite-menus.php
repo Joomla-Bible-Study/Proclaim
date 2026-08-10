@@ -172,6 +172,7 @@ function seedInstall(\mysqli $db, string $prefix): void
     }
 
     enableLandingSections($db, $prefix, (int) $templateId);
+    ensureCitedBook($db, $prefix, (int) $studyId);
 
     $items = [
         [
@@ -221,6 +222,50 @@ function seedInstall(\mysqli $db, string $prefix): void
     rebuildTree($db, $prefix);
 
     echo "  menu tree rebuilt (menutype '{$menutype}', template {$templateId}, study {$studyId})\n";
+}
+
+/**
+ * Make sure some published study cites a book, so the Books section has a row.
+ *
+ * The Books section lists the books the studies are actually in (#1687), so with
+ * no scripture reference anywhere it renders nothing and the strongest assertion
+ * in verify-frontend.php quietly skips itself. That is what happens on the CI
+ * disposable install, whose seed study carries no reference — the check reported
+ * "no cited book" and passed, covering none of the path it exists for.
+ *
+ * Colossians (booknumber 151) for no reason beyond it being what the shipped
+ * sample data uses, so a site that already has data and one that does not end up
+ * looking the same.
+ *
+ * Only ever adds. A study that already cites something is left exactly as it is,
+ * because the point is to guarantee a floor, not to impose a fixture.
+ *
+ * @param   \mysqli  $db       Open connection
+ * @param   string   $prefix   Table prefix
+ * @param   int      $studyId  Study to attach the reference to
+ *
+ * @return  void
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function ensureCitedBook(\mysqli $db, string $prefix, int $studyId): void
+{
+    $existing = scalar($db, "SELECT COUNT(*) FROM {$prefix}bsms_study_scriptures AS s "
+        . "INNER JOIN {$prefix}bsms_studies AS st ON st.id = s.study_id "
+        . "WHERE st.published = 1 AND s.reference_text <> ''");
+
+    if ((int) $existing > 0) {
+        echo "  cited book already present ({$existing} reference(s))\n";
+
+        return;
+    }
+
+    run($db, "INSERT INTO {$prefix}bsms_study_scriptures "
+        . '(study_id, ordering, booknumber, chapter_begin, verse_begin, chapter_end, verse_end, '
+        . 'bible_version, reference_text) '
+        . "VALUES ({$studyId}, 0, 151, 3, 5, 3, 11, '', 'Colossians 3:5-11')");
+
+    echo "  cited book added to study {$studyId}: Colossians 3:5-11\n";
 }
 
 /**
