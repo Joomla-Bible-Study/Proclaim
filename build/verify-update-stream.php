@@ -66,6 +66,20 @@ declare(strict_types=1);
  */
 const COMPONENT_ENTRY_SUNSET = '2027-08-09';
 
+/**
+ * When to reconsider the sunset rather than wait for it.
+ *
+ * Half the window. The date above was chosen without evidence and cannot be
+ * checked against any: both entries point at the same download URL, so no count
+ * distinguishes a straggler taking the update from anyone else. Splitting the
+ * two entries across separate update sites would make that number observable and
+ * let the entry retire on evidence instead of a guess (#1666).
+ *
+ * A notice, never a failure. The point is that the release that crosses this date
+ * says so out loud, which prose in a docblock cannot do.
+ */
+const COMPONENT_ENTRY_REVIEW = '2027-02-09';
+
 $root   = \dirname(__DIR__);
 $red    = "\033[31m";
 $green  = "\033[32m";
@@ -229,6 +243,13 @@ if ($sunset) {
     $failures++;
 } else {
     echo "{$green}PASS{$reset} com_proclaim entry present at {$version} (not stale)\n";
+
+    if (strtotime(COMPONENT_ENTRY_REVIEW) < time()) {
+        echo "{$yellow}NOTE{$reset} the " . COMPONENT_ENTRY_REVIEW . " review of this entry is due (#1666).\n";
+        echo "       It carries sites that predate pkg_proclaim (10.3.0, 2026-05-01); each converts\n";
+        echo "       itself on one update check. Retire it early if that population is done, or let\n";
+        echo "       it run to " . COMPONENT_ENTRY_SUNSET . " — but decide, rather than defaulting.\n";
+    }
 
     // --- the tie-break ------------------------------------------------------
     if ($package !== null && $component['position'] > $package['position']) {
