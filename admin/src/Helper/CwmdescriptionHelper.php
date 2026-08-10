@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
@@ -403,17 +404,13 @@ class CwmdescriptionHelper
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery()
             ->select([
-                $db->quoteName('b.bookname'),
+                $db->quoteName('ss.booknumber'),
                 $db->quoteName('ss.chapter_begin'),
                 $db->quoteName('ss.verse_begin'),
                 $db->quoteName('ss.chapter_end'),
                 $db->quoteName('ss.verse_end'),
             ])
             ->from($db->quoteName('#__bsms_study_scriptures', 'ss'))
-            ->leftJoin(
-                $db->quoteName('#__bsms_books', 'b') .
-                ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('ss.booknumber')
-            )
             ->where($db->quoteName('ss.study_id') . ' = ' . (int) $studyId)
             ->order($db->quoteName('ss.ordering') . ' ASC');
         $db->setQuery($query);
@@ -422,8 +419,12 @@ class CwmdescriptionHelper
         $refs = [];
 
         foreach ($rows as $row) {
-            $bookname = $row->bookname ?? '';
-            $ref      = Text::_($bookname) . ' ' . ($row->chapter_begin ?? '');
+            // The book name comes from the scripture library rather than a
+            // #__bsms_books JOIN: the table stored the same language keys this
+            // resolves, against the same numbers (#1687). getBookName()
+            // translates, so no Text::_() call is needed here.
+            $ref = ScriptureHelper::getBookName((int) ($row->booknumber ?? 0))
+                . ' ' . ($row->chapter_begin ?? '');
 
             if (!empty($row->verse_begin)) {
                 $ref .= ':' . $row->verse_begin;

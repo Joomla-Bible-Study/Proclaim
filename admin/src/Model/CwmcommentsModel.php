@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
@@ -222,13 +223,6 @@ class CwmcommentsModel extends ListModel
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('comment.study_id')
         );
 
-        // Join over books
-        $query->select($db->quoteName('book.bookname', 'bookname'));
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
-        );
-
         // Join over the asset groups.
         $query->select($db->quoteName('ag.title', 'access_level'));
         $query->join(
@@ -284,5 +278,34 @@ class CwmcommentsModel extends ListModel
         $query->order($db->escape($orderCol) . ' ' . $db->escape($orderDirn));
 
         return $query;
+    }
+
+    /**
+     * Attach each comment's book name.
+     *
+     * Was a #__bsms_books JOIN in the list query. That table stores language
+     * keys, not names, so the join fetched a key the scripture library already
+     * holds against the same number (#1687).
+     *
+     * Set on the item rather than resolved in the layout because this list has
+     * a template a site can override, and an override may read $item->bookname.
+     *
+     * @return  mixed  An array of data items on success, false on failure.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getItems(): mixed
+    {
+        $items = parent::getItems();
+
+        if (!\is_array($items)) {
+            return $items;
+        }
+
+        foreach ($items as $item) {
+            $item->bookname = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
+        }
+
+        return $items;
     }
 }
