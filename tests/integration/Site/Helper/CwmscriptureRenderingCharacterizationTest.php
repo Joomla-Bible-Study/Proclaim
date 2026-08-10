@@ -153,6 +153,38 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
         $this->assertSame('John 3', $out, 'Chapters-only mode renders "Book Chapter"');
     }
 
+    /**
+     * The fallback every caller relies on once the #__bsms_books JOIN is gone.
+     *
+     * A row that arrives without a bookname resolves the name from the book
+     * number instead. Nothing exercised that path before — every fixture here
+     * supplied a bookname, so the branch was invisible — and #1687 makes it the
+     * normal case rather than the exception, since removing the JOIN is exactly
+     * what stops rows carrying a name.
+     *
+     * @return  void
+     */
+    #[TestDox('A row with no bookname resolves the name from its book number')]
+    public function testBookNameIsResolvedWhenTheRowCarriesNone(): void
+    {
+        $withName = $this->legacyRow();
+
+        $withoutName = $this->legacyRow();
+        unset($withoutName->bookname);
+
+        $this->assertSame(
+            $this->listing->getScripture($this->params(), $withName, 0, 1),
+            $this->listing->getScripture($this->params(), $withoutName, 0, 1),
+            'Dropping the JOIN must not change what renders — see #1687'
+        );
+
+        $this->assertSame(
+            'John 3',
+            $this->listing->getScripture($this->params(), $withoutName, 0, 1),
+            'and it must be the right book, not an empty string that happens to match'
+        );
+    }
+
     #[TestDox('Chapters-only and with-verses modes render differently')]
     public function testShowVersesChangesTheOutput(): void
     {

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
@@ -2141,7 +2142,18 @@ class Cwmlisting
     }
 
     /**
-     * Get book name from database with caching
+     * Get a translated book name.
+     *
+     * Reads the scripture library's own book map rather than #__bsms_books. The
+     * table stores language keys (JBS_BBK_GENESIS), not names, so this method
+     * queried the database to fetch a key it then handed to Text::_() — and the
+     * library holds the same 73 keys against the same 101-173 numbers, in code.
+     * Verified identical: same count, same numbers, no key differing either way
+     * (#1687).
+     *
+     * The method name and the local cache stay: getBookName() resolves through
+     * array_search over BOOK_KEYS, so caching still earns its place on a listing
+     * that asks for the same handful of books repeatedly.
      *
      * @param   int  $booknumber  The book number to look up
      *
@@ -2155,22 +2167,11 @@ class Cwmlisting
             return '';
         }
 
-        // Preload all book names on first call (66 rows, tiny table)
-        if (empty(self::$bookNameCache)) {
-            $db    = Factory::getContainer()->get(DatabaseInterface::class);
-            $query = $db->createQuery()
-                ->select([$db->quoteName('booknumber'), $db->quoteName('bookname')])
-                ->from($db->quoteName('#__bsms_books'));
-            $db->setQuery($query);
-            $books = $db->loadObjectList();
-
-            foreach ($books as $book) {
-                $name                                         = $book->bookname ? Text::_($book->bookname) : '';
-                self::$bookNameCache[(int) $book->booknumber] = $name;
-            }
+        if (!\array_key_exists($booknumber, self::$bookNameCache)) {
+            self::$bookNameCache[$booknumber] = ScriptureHelper::getBookName($booknumber);
         }
 
-        return self::$bookNameCache[$booknumber] ?? '';
+        return self::$bookNameCache[$booknumber];
     }
 
     /**
