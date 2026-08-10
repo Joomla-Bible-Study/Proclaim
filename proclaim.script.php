@@ -11,6 +11,7 @@
  * */
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
@@ -757,12 +758,29 @@ class com_proclaimInstallerScript extends InstallerScript
              * and taking down an otherwise good update over an analytics index
              * would be a far worse trade.
              */
-            Log::add(
-                'Proclaim could not reconcile the analytics aggregate index: ' . $e->getMessage()
-                . ' Duplicate monthly rows must be merged before uq_aggregate can be restored.',
-                Log::WARNING,
-                'jerror'
-            );
+            $message = 'Proclaim could not restore the analytics aggregate index (uq_aggregate): '
+                . $e->getMessage()
+                . ' Merge the duplicate #__bsms_analytics_monthly rows, then run a Proclaim update '
+                . 'again to rebuild it.';
+
+            /*
+             * Two channels on purpose, because neither covers both routes.
+             * enqueueMessage is what an administrator updating through the
+             * browser sees; under CLI nothing renders that queue. A file logger
+             * survives CLI — and this method only ever does work on an update, so
+             * CwmlogHelper is already installed and loadable by the time it runs.
+             */
+            try {
+                Factory::getApplication()->enqueueMessage($message, 'warning');
+            } catch (\Throwable) {
+                // No application to talk to; the log below is the record.
+            }
+
+            try {
+                CwmlogHelper::warning($message);
+            } catch (\Throwable) {
+                Log::add($message, Log::WARNING, 'com_proclaim');
+            }
         }
     }
 
