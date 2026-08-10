@@ -25,7 +25,7 @@
     "csso": "^5.0.5",
     "eslint": "^10.8.0",
     "globals": "^17.8.0",
-    "intl-tel-input": "^29.1.2",
+    "intl-tel-input": "^29.2.2",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "rollup": "^4.62.3",
