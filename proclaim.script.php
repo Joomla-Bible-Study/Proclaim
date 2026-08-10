@@ -674,6 +674,99 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Bring #__bsms_analytics_monthly's uq_aggregate key to the ten dimensions the
+     * rollup groups by, whatever state it is in.
+     *
+     * 10.1.0 widened this key to include series_id, as one ALTER that added the
+     * column, dropped the old key and added the new one. That statement could not
+     * stay in SQL (#1664):
+     *
+     *   - MySQL has no DROP INDEX IF EXISTS, so a database missing the key stops
+     *     it with error 1091 and takes the whole update down with it.
+     *   - Joomla reads a statement's meaning from its third and fourth words, so
+     *     the compound ALTER read as "ADD COLUMN". Once series_id existed the
+     *     statement counted as applied and the index half could never run —
+     *     including on the restore path, where Cwmrestore clears #__schemas
+     *     precisely so migrations replay.
+     *   - Splitting it does not help either: a lone DROP INDEX becomes a check
+     *     that expects the index to be absent, and the next statement puts it
+     *     back, so every check would report it unapplied and every fix re-drop it.
+     *
+     * Here the state can simply be read first. That also covers the one case no
+     * SQL formulation reaches — a key that exists over the wrong columns, which
+     * ChangeSet cannot detect because its index check only looks at the name.
+     *
+     * Column order matters and is compared as a sequence: the same ten columns in
+     * a different order is a different key.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function reconcileAnalyticsAggregateIndex(): void
+    {
+        if (!$this->tableExists('#__bsms_analytics_monthly')) {
+            return;
+        }
+
+        // The dimensions CwmanalyticsHelper's rollup groups by, in order.
+        $wanted = [
+            'series_id', 'study_id', 'media_id', 'location_id', 'event_type',
+            'referrer_type', 'country_code', 'device_type', 'year', 'month',
+        ];
+
+        $table = str_replace('#__', $this->dbo->getPrefix(), '#__bsms_analytics_monthly');
+        $name  = $this->dbo->quoteName('uq_aggregate');
+
+        try {
+            $columns = [];
+
+            foreach (
+                $this->dbo
+                    ->setQuery('SHOW INDEX FROM ' . $this->dbo->quoteName($table) . ' WHERE Key_name = ' . $this->dbo->quote('uq_aggregate'))
+                    ->loadObjectList() as $row
+            ) {
+                $columns[(int) $row->Seq_in_index] = $row->Column_name;
+            }
+
+            ksort($columns);
+
+            if (array_values($columns) === $wanted) {
+                return;
+            }
+
+            if ($columns !== []) {
+                $this->dbo->setQuery(
+                    'ALTER TABLE ' . $this->dbo->quoteName($table) . ' DROP INDEX ' . $name
+                )->execute();
+            }
+
+            $this->dbo->setQuery(
+                'ALTER TABLE ' . $this->dbo->quoteName($table)
+                . ' ADD UNIQUE KEY ' . $name
+                . ' (' . implode(', ', array_map([$this->dbo, 'quoteName'], $wanted)) . ')'
+            )->execute();
+        } catch (Exception $e) {
+            /*
+             * Re-adding the key fails when the table already holds rows that
+             * violate it — a real possibility on a database that has been running
+             * without the correct key, which is exactly the database this method
+             * exists for. Report it and carry on rather than failing the update:
+             * the rollup deletes each matching group before inserting it, so the
+             * counts stay right without the key (CwmanalyticsHelper::rollup()),
+             * and taking down an otherwise good update over an analytics index
+             * would be a far worse trade.
+             */
+            Log::add(
+                'Proclaim could not reconcile the analytics aggregate index: ' . $e->getMessage()
+                . ' Duplicate monthly rows must be merged before uq_aggregate can be restored.',
+                Log::WARNING,
+                'jerror'
+            );
+        }
+    }
+
+    /**
      * Find the installation path for an extension
      *
      * @param   string  $src       The source directory
@@ -1422,6 +1515,10 @@ class com_proclaimInstallerScript extends InstallerScript
         // After the migration SQL has added uq_study_topic, retire the index it
         // replaces. No-op on a fresh install, where install.sql never creates it.
         $this->dropRedundantStudyTopicIndex();
+
+        // The analytics aggregate key cannot be reworked in SQL at all; this is
+        // where it is brought to its intended columns. No-op when already correct.
+        $this->reconcileAnalyticsAggregateIndex();
 
         // Install subExtensions
         $this->installSubExtensions($parent);
