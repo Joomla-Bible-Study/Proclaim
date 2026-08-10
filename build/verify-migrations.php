@@ -16,15 +16,18 @@
  * add an entry describing the tables/columns/indexes it introduces and the
  * #__schemas version it should advance to.
  *
- * Version resolution — a release that ships no migrations must not fail the gate,
- * but a release that ships migrations nobody described must:
- *   - exact x.y.z entry exists      => verify it
+ * Every entry at or below the version under test is verified, not just the newest.
+ * The release being cut has to carry what all of its predecessors introduced, and
+ * checking only one of them meant an assertion added to an older entry — the usual
+ * way a gap gets recorded once it is found — quietly never ran again.
+ *
+ * A release that ships no migrations must not fail the gate, but one that ships
+ * migrations nobody described must:
+ *   - exact x.y.z entry exists      => verify it, plus every earlier entry
  *   - no entry, but update SQL for  => FAIL; the expectations were forgotten
  *     this version exists
- *   - no entry and no update SQL    => re-verify the newest earlier entry as
- *     regression cover. A fresh install of a no-migration release still has to
- *     carry everything its predecessors introduced, so this is what catches
- *     install.sql drifting behind the update SQL.
+ *   - no entry and no update SQL    => verify every earlier entry as regression
+ *     cover, which is what catches install.sql drifting behind the update SQL.
  *
  * Usage:   php build/verify-migrations.php [version]
  *   version  Optional override; defaults to active_development in versions.json.
@@ -56,6 +59,37 @@ require $root . '/libraries/vendor/autoload.php';
  * Table names use the Joomla `#__` prefix placeholder; it is expanded per install.
  */
 $EXPECTATIONS = [
+    /*
+     * 10.1.0 shipped three ALTER statements that each carried several clauses.
+     * MysqlChangeItem reads only words 3 and 4 of a statement, so all three read
+     * as "ADD COLUMN" and everything after the first clause was neither checked
+     * nor repairable. Splitting them (#1664) made these visible; asserting them
+     * here is what proves the split actually reaches a database.
+     *
+     * itunes_category is deliberately listed alongside the three that were
+     * hidden: it was the one clause the checker could see, so it is the control.
+     */
+    '10.1.0' => [
+        'columns' => [
+            '#__bsms_analytics_events'  => ['series_id'],
+            '#__bsms_analytics_monthly' => ['series_id'],
+            '#__bsms_mediafiles'        => ['content_origin'],
+            '#__bsms_podcast'           => [
+                'itunes_category',
+                'itunes_subcategory',
+                'itunes_explicit',
+                'itunes_type',
+            ],
+        ],
+        'indexes' => [
+            '#__bsms_analytics_events' => ['idx_series_created'],
+            // Reconciled by proclaim.script.php rather than by SQL: the rework
+            // needs a DROP that MySQL cannot make conditional, and a standalone
+            // DROP INDEX item expects zero rows forever after the key is re-added.
+            '#__bsms_analytics_monthly' => ['uq_aggregate'],
+        ],
+        'schemaMin' => '10.1.0',
+    ],
     '10.3.3' => [
         'tables' => [
             '#__bsms_playlists',
@@ -71,6 +105,12 @@ $EXPECTATIONS = [
         ],
         'indexes' => [
             '#__bsms_studies' => ['idx_transcript'],
+            // Declared inside the CREATE TABLE, which MysqlChangeItem reduces to
+            // SHOW TABLES LIKE — so System → Database cannot see this index, let
+            // alone restore it. CwmplaylistSyncHelper's upserts depend on it
+            // firing (#1658); without it they silently duplicate rows instead of
+            // updating them. This gate is the only thing that checks.
+            '#__bsms_playlist_items' => ['idx_playlist_video'],
         ],
         'schemaMin' => '10.3.3',
     ],
@@ -165,14 +205,18 @@ if (preg_match('/^(\d+\.\d+\.\d+)/', $version, $m) !== 1) {
 $base = $m[1];
 
 /*
- * Resolve which expectation set to verify.
+ * Resolve which expectation sets to verify.
  *
- * An exact match is used when present. Otherwise the version either ships
- * migrations nobody described — a real gap, so fail — or ships none at all, in
- * which case the newest earlier set is re-verified rather than skipping the
- * check. That matters: a fresh install of a no-migration release must still
- * carry every table/column/index its predecessors introduced, which is what
- * catches install.sql drifting behind the update SQL.
+ * An exact match names the release under test; when there is none, the version
+ * either ships migrations nobody described — a real gap, so fail — or ships none
+ * at all, which is not a reason to skip the check.
+ *
+ * Either way every entry at or below the version is verified. A fresh install of
+ * any release must carry every table, column and index its predecessors
+ * introduced, and that is what catches install.sql drifting behind the update
+ * SQL. It also keeps an assertion added to an older entry alive: verifying only
+ * the newest set meant such an assertion ran on the release that introduced it
+ * and never again.
  */
 $mode = 'exact';
 
@@ -205,7 +249,13 @@ if ($key === null) {
     exit(0);
 }
 
-$expected = $EXPECTATIONS[$key];
+// Everything the release must carry, oldest first, so failures read in the order
+// the schema was built up.
+$keys = array_filter(
+    array_keys($EXPECTATIONS),
+    static fn (string $k): bool => version_compare($k, $base, '<=')
+);
+usort($keys, 'version_compare');
 
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
@@ -224,11 +274,11 @@ $reset   = "\033[0m";
 $overall = true;
 
 if ($mode === 'regression') {
-    echo "Version {$base} ships no migrations — re-verifying the {$key} schema as regression cover\n";
-    echo "(a fresh {$base} install must still carry everything {$key} introduced).\n";
+    echo "Version {$base} ships no migrations — verifying earlier schemas as regression cover\n";
+    echo "(a fresh {$base} install must still carry everything they introduced).\n";
 }
 
-echo "Verifying {$key} migrations across " . \count($installs) . " test install(s)\n";
+echo 'Verifying ' . implode(', ', $keys) . ' migrations across ' . \count($installs) . " test install(s)\n";
 
 foreach ($installs as $install) {
     echo "\n=== {$install->id} ({$install->path}) ===\n";
@@ -276,41 +326,64 @@ foreach ($installs as $install) {
 
     $expand = static fn (string $t): string => str_replace('#__', $db['prefix'], $t);
 
+    /*
+     * Proclaim's tables outlive Proclaim: an uninstall keeps them unless the
+     * administrator opts out. So a site can pass every table, column and index
+     * assertion here while having no com_proclaim row at all, and the only sign
+     * would be the #__schemas check failing for a reason that reads like schema
+     * drift. Say what actually happened instead.
+     */
+    if (!proclaimInstalled($mysqli, $db['prefix'])) {
+        echo "{$red}FAIL{$reset} com_proclaim is not installed on this site — nothing to verify a schema against.\n";
+        echo "       Its bsms_ tables may still be present; an uninstall keeps them by default.\n";
+        echo "       Install Proclaim here (composer test:install) and run this again.\n";
+        $overall = false;
+        $mysqli->close();
+
+        continue;
+    }
+
     $results = [];
 
-    // --- tables -----------------------------------------------------------
-    foreach ($expected['tables'] ?? [] as $table) {
-        $real      = $expand($table);
-        $ok        = tableExists($mysqli, $db['name'], $real);
-        $results[] = [$ok, "table {$table}"];
-    }
+    foreach ($keys as $version) {
+        $expected = $EXPECTATIONS[$version];
 
-    // --- columns ----------------------------------------------------------
-    foreach ($expected['columns'] ?? [] as $table => $cols) {
-        $real = $expand($table);
-
-        foreach ($cols as $col) {
-            $ok        = columnExists($mysqli, $db['name'], $real, $col);
-            $results[] = [$ok, "column {$table}.{$col}"];
+        // --- tables -------------------------------------------------------
+        foreach ($expected['tables'] ?? [] as $table) {
+            $real      = $expand($table);
+            $ok        = tableExists($mysqli, $db['name'], $real);
+            $results[] = [$ok, "[{$version}] table {$table}"];
         }
-    }
 
-    // --- indexes ----------------------------------------------------------
-    foreach ($expected['indexes'] ?? [] as $table => $idxs) {
-        $real = $expand($table);
+        // --- columns ------------------------------------------------------
+        foreach ($expected['columns'] ?? [] as $table => $cols) {
+            $real = $expand($table);
 
-        foreach ($idxs as $idx) {
-            $ok        = indexExists($mysqli, $db['name'], $real, $idx);
-            $results[] = [$ok, "index {$table}.{$idx}"];
+            foreach ($cols as $col) {
+                $ok        = columnExists($mysqli, $db['name'], $real, $col);
+                $results[] = [$ok, "[{$version}] column {$table}.{$col}"];
+            }
+        }
+
+        // --- indexes ------------------------------------------------------
+        foreach ($expected['indexes'] ?? [] as $table => $idxs) {
+            $real = $expand($table);
+
+            foreach ($idxs as $idx) {
+                $ok        = indexExists($mysqli, $db['name'], $real, $idx);
+                $results[] = [$ok, "[{$version}] index {$table}.{$idx}"];
+            }
         }
     }
 
     // --- #__schemas version -----------------------------------------------
-    if (!empty($expected['schemaMin'])) {
+    // Only the newest applicable minimum is asserted; it implies every earlier one.
+    if (!empty($EXPECTATIONS[$key]['schemaMin'])) {
+        $schemaMin     = $EXPECTATIONS[$key]['schemaMin'];
         $schemaVersion = schemaVersion($mysqli, $db['prefix']);
         $ok            = $schemaVersion !== null
-            && version_compare($schemaVersion, $expected['schemaMin'], '>=');
-        $label         = "#__schemas >= {$expected['schemaMin']} (found " . ($schemaVersion ?? 'none') . ')';
+            && version_compare($schemaVersion, $schemaMin, '>=');
+        $label         = "#__schemas >= {$schemaMin} (found " . ($schemaVersion ?? 'none') . ')';
         $results[]     = [$ok, $label];
     }
 
@@ -329,12 +402,12 @@ foreach ($installs as $install) {
 echo "\n";
 
 if ($overall) {
-    echo "{$green}All {$key} migration assertions passed.{$reset}\n";
+    echo "{$green}All migration assertions passed (" . implode(", ", $keys) . ").{$reset}\n";
 
     exit(0);
 }
 
-echo "{$red}One or more {$key} migration assertions FAILED.{$reset}\n";
+echo "{$red}One or more migration assertions FAILED.{$reset}\n";
 
 exit(1);
 
@@ -417,7 +490,32 @@ function indexExists(mysqli $db, string $schema, string $table, string $index): 
 }
 
 /**
- * Latest schema version recorded for com_proclaim in #__schemas, or null.
+ * Whether com_proclaim is registered on this install.
+ *
+ * @param   mysqli  $db      Connection to the install's database.
+ * @param   string  $prefix  That install's table prefix.
+ *
+ * @return  bool
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function proclaimInstalled(mysqli $db, string $prefix): bool
+{
+    $res = $db->query(
+        'SELECT extension_id FROM ' . $prefix . "extensions"
+        . " WHERE element = 'com_proclaim' AND type = 'component' LIMIT 1"
+    );
+
+    return $res !== false && $res->num_rows > 0;
+}
+
+/**
+ * The recorded schema version for com_proclaim, or null when there is none.
+ *
+ * @param   mysqli  $db      Connection to the install's database.
+ * @param   string  $prefix  That install's table prefix.
+ *
+ * @return  string|null
  *
  * @since __DEPLOY_VERSION__
  */

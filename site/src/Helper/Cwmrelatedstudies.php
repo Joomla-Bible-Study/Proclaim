@@ -395,7 +395,6 @@ class Cwmrelatedstudies
                 's.booknumber', 's.chapter_begin', 's.thumbnailm', 's.image',
             ]))
             ->select($db->quoteName('t.teachername'))
-            ->select($db->quoteName('b.bookname'))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->leftJoin(
                 $db->quoteName('#__bsms_study_teachers', 'stj2') . ' ON '
@@ -405,10 +404,6 @@ class Cwmrelatedstudies
             ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't')
                 . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj2.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')'
-            )
-            ->leftJoin(
-                $db->quoteName('#__bsms_books', 'b')
-                . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber')
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_series', 'ser')

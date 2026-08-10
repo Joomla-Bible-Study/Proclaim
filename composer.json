@@ -132,6 +132,7 @@
     "test:all": ["@test", "@test:js"],
     "test:reset-testsite": "@php build/reset-testsite.php",
     "test:migrations": "@php build/verify-migrations.php",
+    "verify:update-stream": "@php build/verify-update-stream.php",
     "test:install": "bash build/test-install.sh",
     "test:upgrade": "bash build/test-upgrade.sh",
     "test:release": ["@test:install", "@test:upgrade", "@test:e2e"],

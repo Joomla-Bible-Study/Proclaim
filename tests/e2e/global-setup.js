@@ -95,15 +95,30 @@ async function loginAdmin(browser, baseUrl, username, password, storageStatePath
     try {
         const page = await ctx.newPage();
 
-        // Load the login page
-        await page.goto(`${baseUrl}/administrator/index.php`, { waitUntil: 'networkidle' });
+        // Load the login page. domcontentloaded because every check below waits
+        // for its own element anyway; networkidle here spent the whole retry
+        // budget waiting for a dev server that had run out of workers.
+        await page.goto(`${baseUrl}/administrator/index.php`, { waitUntil: 'domcontentloaded' });
+
+        const loginForm = page.locator('#form-login');
+        const adminUi   = page.locator('#menu-collapse');
+
+        // Settle on whichever arrives first. isVisible() answers for the
+        // instant it is called, which networkidle used to make safe by having
+        // already waited for everything; under domcontentloaded it would be
+        // asking an empty document and getting "no login form" from a page
+        // that simply had not rendered yet.
+        await Promise.race([
+            loginForm.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {}),
+            adminUi.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {}),
+        ]);
 
         // Confirm the login form is present. Already-authenticated is only
         // claimed on the positive signal (the admin sidebar), never on the
         // form's mere absence.
-        const loginVisible = await page.locator('#form-login').isVisible().catch(() => false);
+        const loginVisible = await loginForm.isVisible().catch(() => false);
         if (!loginVisible) {
-            const authed = await page.locator('#menu-collapse')
+            const authed = await adminUi
                 .waitFor({ state: 'visible', timeout: 5000 })
                 .then(() => true, () => false);
             if (authed) {

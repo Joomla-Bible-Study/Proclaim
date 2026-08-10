@@ -23,6 +23,7 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
@@ -1094,7 +1095,6 @@ class Cwmpodcast
                 'se.series_text', 'se.published',
                 'sr.id AS srid', 'sr.params as srparams',
                 't.id AS tid', 't.teachername',
-                'b.id AS bid', 'b.booknumber AS bnumber', 'b.bookname',
                 'loc.location_text',
             ]
         )
@@ -1102,7 +1102,6 @@ class Cwmpodcast
             ->leftJoin($db->quoteName('#__bsms_studies', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('mf.study_id'))
             ->leftJoin($db->quoteName('#__bsms_series', 'se') . ' ON ' . $db->quoteName('se.id') . ' = ' . $db->quoteName('s.series_id'))
             ->leftJoin($db->quoteName('#__bsms_servers', 'sr') . ' ON ' . $db->quoteName('sr.id') . ' = ' . $db->quoteName('mf.server_id'))
-            ->leftJoin($db->quoteName('#__bsms_books', 'b') . ' ON ' . $db->quoteName('b.booknumber') . ' = ' . $db->quoteName('s.booknumber'))
             ->leftJoin($db->quoteName('#__bsms_study_teachers', 'stj') . ' ON '
                 . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
@@ -1125,6 +1124,13 @@ class Cwmpodcast
         foreach ($episodes as $e) {
             $e->params   = new Registry($e->params);
             $e->srparams = new Registry($e->srparams);
+
+            // Was a #__bsms_books JOIN, which fetched the same language keys the
+            // scripture library already holds against the same numbers (#1687).
+            // Still set on the row rather than resolved at the point of use: an
+            // episode reaches template overrides outside this repository, and
+            // one of those may read $episode->bookname.
+            $e->bookname = ScriptureHelper::getBookName((int) ($e->booknumber ?? 0));
         }
 
         return $episodes;

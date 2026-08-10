@@ -14,10 +14,29 @@
     <scriptfile>script.install.php</scriptfile>
     <blockChildUninstall>true</blockChildUninstall>
 
+    <!--
+        The scripture stack is NOT listed here, deliberately.
+
+        PackageAdapter::removeExtensionFiles() walks this list and uninstalls
+        every entry by element + type lookup. It never consults package_id, so a
+        package removes whatever it names regardless of who installed it. While
+        lib_cwmscripture and plg_content_scripturelinks were listed, removing
+        Proclaim removed them too — out from under ScriptureLinks or Living Word
+        on any site that also runs those, and taking the downloaded Bible
+        translations with them.
+
+        There is no supported way to install a child here and keep it: a child
+        that refuses its uninstall makes the parent throw, and
+        <blockChildUninstall> does the opposite of what its name suggests (it
+        stops an administrator removing a child on its own).
+
+        So packages/pkg_cwmscripture.zip rides along in the archive without
+        being declared, and script.install.php installs it in preflight —
+        before com_proclaim, whose own preflight refuses to install without the
+        library. Removing Proclaim now leaves the scripture stack alone, and
+        removing that is a deliberate act by the administrator (#1675).
+    -->
     <files folder="packages">
-        <!-- Install order: library first, then plugin, then component -->
-        <file type="library" id="cwmscripture" required="true">lib_cwmscripture.zip</file>
-        <file type="plugin" group="content" id="scripturelinks" required="true">plg_content_scripturelinks.zip</file>
         <file type="component" id="com_proclaim" required="true">com_proclaim.zip</file>
     </files>
 

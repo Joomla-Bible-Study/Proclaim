@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -199,9 +200,9 @@ class Cwmserieslist extends Cwmlisting
             . $db->quoteName('t.teacher_thumbnail') . ', ' . $db->quoteName('se.series_text') . ', '
             . $db->quoteName('se.description', 'sdescription') . ', '
             . $db->quoteName('se.series_thumbnail') . ', '
+            . $db->quoteName('s.booknumber') . ', '
             . $db->quoteName('#__bsms_message_type.id', 'mid') . ', '
             . $db->quoteName('#__bsms_message_type.message_type', 'message_type') . ', '
-            . $db->quoteName('#__bsms_books.bookname') . ', '
             . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id') . ', '
             . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.topic_text') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_text') . ', '
             . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.params') . ' SEPARATOR ", ") AS ' . $db->quoteName('topic_params') . ', '
@@ -221,10 +222,6 @@ class Cwmserieslist extends Cwmlisting
             ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't') . ' ON ('
                 . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('st.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
-            )
-            ->leftJoin(
-                $db->quoteName('#__bsms_books') . ' ON ('
-                . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('#__bsms_books.booknumber') . ')'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_message_type') . ' ON ('
@@ -266,6 +263,11 @@ class Cwmserieslist extends Cwmlisting
         foreach ($items as $item) {
             // Concat topic_text and concat topic_params do not fit, so translate individually
             $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
+
+            // Was a #__bsms_books JOIN for a language key the scripture library
+            // already holds (#1687). Still set on the row: these items reach
+            // templates a site can override, and one may read $item->bookname.
+            $item->bookname = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
         }
 
         return $items;

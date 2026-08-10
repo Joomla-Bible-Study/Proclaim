@@ -18,10 +18,10 @@ namespace CWM\Component\Proclaim\Administrator\Field;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmfilterHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 
 /**
@@ -67,20 +67,20 @@ class BookListField extends ListField
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->createQuery();
 
-        $query->select(
-            $db->quoteName('book.booknumber', 'value') . ', '
-            . $db->quoteName('book.bookname', 'text')
-        )
-            ->from($db->quoteName('#__bsms_books', 'book'))
-            ->join(
-                'INNER',
-                $db->quoteName('#__bsms_studies', 's') . ' ON '
-                . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('book.booknumber')
-            )
+        // Driven by the studies rather than by #__bsms_books, whose bookname
+        // column holds the same language keys the scripture library already has
+        // (#1687). The studies keep the alias `s`: applyCrossFilters() below
+        // writes s.booknumber, s.series_id and s.id, so the alias is part of
+        // that helper's contract even though the table it joined has gone.
+        //
+        // booknumber > 0 is what the INNER JOIN used to do implicitly — a study
+        // with no book matched no row, so it never became an option.
+        $query->select('DISTINCT ' . $db->quoteName('s.booknumber', 'value'))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->where($db->quoteName('s.booknumber') . ' > 0')
             ->whereIn($db->quoteName('s.published'), [1, 2])
             ->whereIn($db->quoteName('s.access'), $groups)
-            ->group($db->quoteName('book.id'))
-            ->order($db->quoteName('book.booknumber') . ' ASC');
+            ->order($db->quoteName('s.booknumber') . ' ASC');
 
         CwmfilterHelper::applyCrossFilters(
             $query,
@@ -93,7 +93,13 @@ class BookListField extends ListField
         $options = [];
 
         foreach ($books as $book) {
-            $options[] = HTMLHelper::_('select.option', $book->value, Text::_($book->text));
+            $name = ScriptureHelper::getBookName((int) $book->value);
+
+            // A number the library cannot name would render as a blank entry,
+            // which the old query could not produce: the row existed or it did not.
+            if ($name !== '') {
+                $options[] = HTMLHelper::_('select.option', $book->value, $name);
+            }
         }
 
         return array_merge(parent::getOptions(), $options);
