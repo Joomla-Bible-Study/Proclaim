@@ -80,6 +80,10 @@ echo "-- [6/16] install ${NEWVER} over ${BASEVER} (triggers update() + migration
 echo "-- [7/16] verify registration + migrations"
 "$BIN/cwm-verify" --target test
 php build/verify-migrations.php "$NEWVER"
+# The upgraded state is what a real site is in, and it is the state that
+# reported a Database Maintenance error on a live site after 10.5.6 while
+# every other assertion here passed.
+php build/verify-schema-check.php
 
 echo "-- [8/16] verify the downloaded translation and cached passages survived"
 php build/verify-scripture-upgrade.php verify
@@ -287,5 +291,6 @@ php build/reset-testsite.php
 "$BIN/cwm-install-zip" --zip "$NEWZIP" >/dev/null
 "$BIN/cwm-verify" --target test
 php build/verify-migrations.php "$NEWVER"
+php build/verify-schema-check.php
 
 echo "UPGRADE TEST PASSED ${BASEVER} -> ${NEWVER}."

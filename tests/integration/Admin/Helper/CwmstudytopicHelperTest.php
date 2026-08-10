@@ -235,7 +235,12 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
         $migrations = glob(JPATH_ROOT . '/admin/sql/updates/mysql/*.sql') ?: [];
         $adds       = array_filter(
             $migrations,
-            static fn (string $f): bool => str_contains((string) file_get_contents($f), 'uq_study_topic')
+            // The statement, not the name. A comment in another migration that
+            // explains why the index exists also contains the word.
+            static fn (string $f): bool => str_contains(
+                (string) file_get_contents($f),
+                'ADD UNIQUE KEY `uq_study_topic`'
+            )
         );
 
         $this->assertNotEmpty($adds, 'Existing installs need a migration, not just a changed install file');
@@ -253,7 +258,10 @@ class CwmstudytopicHelperTest extends IntegrationTestCase
         foreach ($migrations as $file) {
             $sql = (string) file_get_contents($file);
 
-            if (!str_contains($sql, 'uq_study_topic')) {
+            // Selected by the statement rather than the name: glob() returns
+            // these in order, so prose mentioning the index in an earlier file
+            // used to win the scan and be asserted against instead.
+            if (!str_contains($sql, 'ADD UNIQUE KEY `uq_study_topic`')) {
                 continue;
             }
 
