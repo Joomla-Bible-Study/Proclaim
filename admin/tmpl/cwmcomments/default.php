@@ -243,12 +243,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmcomments'); ?>" method="pos
                                             <a href="<?php
                                             echo $link; ?>"><?php
                                                 echo $this->escape($item->studytitle) . ' - '
-                                                    . Text::_($item->bookname) . ' ' . $item->chapter_begin; ?></a>
+                                                    . $this->escape($item->bookname) . ' ' . $item->chapter_begin; ?></a>
                                             <?php else : ?>
                                             <?php
-                                            echo $this->escape($item->studytitle) . ' - ' . Text::_(
-                                                $item->bookname
-                                            ) . ' ' . $item->chapter_begin; ?>
+                                            echo $this->escape($item->studytitle) . ' - '
+                                                . $this->escape($item->bookname) . ' ' . $item->chapter_begin; ?>
                                             <?php
                                             endif; ?>
                                     </div>
