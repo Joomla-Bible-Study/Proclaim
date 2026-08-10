@@ -25,7 +25,7 @@
         <element>pkg_proclaim</element>
         <type>package</type>
         <version>10.5.7</version>
-        <date>2026-08-09</date>
+        <date>2026-08-10</date>
         <fix>
             <item>Uninstalling Proclaim no longer removes the scripture library, the Scripture Links plugin, or your downloaded Bible translations. Those are shared — Scripture Links and Living Word can use the same library — and removing Proclaim was taking them away from those extensions too, along with translations that can run to hundreds of megabytes. They are now left in place, and a message after the uninstall names what remains so you can remove it yourself if you want to</item>
             <item>Uninstalling Proclaim now removes its own modules and plugins. Nine extensions — the four Proclaim modules and the finder, Schema.org, system, task and web services plugins — stayed registered after every uninstall, along with any module positions you had set. Reinstalling then inherited them. This has been the case since 10.3.0</item>
