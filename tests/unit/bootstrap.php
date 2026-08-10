@@ -199,6 +199,34 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JPATH_MANIFESTS', JPATH_ADMINISTRATOR . '/manifests');
         }
 
+        /*
+         * Make the site component resolvable from JPATH_SITE.
+         *
+         * Joomla's LayoutHelper looks for a component layout under
+         * JPATH_SITE/components/<component>/layouts. The CMS clone is a bare
+         * Joomla with nothing installed into it, so anything rendered through a
+         * layout returned an empty string — and a test comparing two empty
+         * strings passes while verifying nothing. Two characterization tests for
+         * multi-reference scripture rendering skipped for exactly this reason,
+         * which left the seam #1623 has to move through uncovered.
+         *
+         * A symlink is what a linked dev install already does (composer symlink),
+         * so this only reproduces the layout a real site has. Created once and
+         * left in place; never replaced, so a clone that has Proclaim genuinely
+         * installed is not disturbed.
+         */
+        $siteComponentLink = $rootDir . '/components/com_proclaim';
+
+        if (!file_exists($siteComponentLink) && is_dir($componentRoot . '/site')) {
+            if (!is_dir(\dirname($siteComponentLink))) {
+                @mkdir(\dirname($siteComponentLink), 0755, true);
+            }
+
+            // Failure is not fatal: the tests that need it skip with a message
+            // saying so, which is how this was found in the first place.
+            @symlink($componentRoot . '/site', $siteComponentLink);
+        }
+
         if (!\defined('JDEBUG')) {
             \define('JDEBUG', false);
         }
