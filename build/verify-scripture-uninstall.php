@@ -188,10 +188,14 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids'], true)) {
             exit(1);
         }
 
+        // plg_task_cwmscripture is deliberately NOT here. Since 10.5.7 it ships
+        // inside pkg_cwmscripture, which Proclaim bundles but does not own
+        // (#1675) — so it is part of our own stack, not a third party to clear.
+        // It is also a package child, and Joomla refuses to remove one
+        // individually, which aborted this phase when it was listed.
         $wanted = [
             ['pkg_livingword', 'package', ''],
             ['com_livingword', 'component', ''],
-            ['cwmscripture',   'plugin',    'task'],
         ];
 
         $ids  = [];
@@ -497,9 +501,12 @@ foreach ($installs as $install) {
             break;
 
         case 'assert-registry-pruned':
-            // After a package removal that KEPT the tables (another consumer
-            // still needs them), the registry must no longer name the two
-            // extensions this package just took away.
+            // After a package removal, the registry must no longer name
+            // com_proclaim — the one extension the package still removes.
+            //
+            // The registry now outlives every Proclaim uninstall, because the
+            // scripture stack is not removed with it (#1675), so a stale row
+            // persists rather than vanishing with the dropped table.
             //
             // installedExcluding() prunes stale rows, but it runs from the
             // manifest script — which InstallerAdapter::uninstall() calls
@@ -515,7 +522,9 @@ foreach ($installs as $install) {
                 break;
             }
 
-            foreach ([['com_proclaim', 'component'], ['scripturelinks', 'plugin']] as [$element, $type]) {
+            // com_proclaim only. scripturelinks is no longer removed with
+            // Proclaim (#1675), so its registry row is correct and must stay.
+            foreach ([['com_proclaim', 'component']] as [$element, $type]) {
                 $row = mysqli_fetch_row(mysqli_query(
                     $db,
                     "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = '"

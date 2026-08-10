@@ -105,17 +105,12 @@
             { "from": "build/language/en-GB/en-GB.pkg_proclaim.sys.ini",
               "to":   "language/en-GB/en-GB.pkg_proclaim.sys.ini" }
         ],
-        "_includes_comment": "The two sibling extensions are independent repos (git submodules) with their own build toolchains — lib_cwmscripture builds via cwm-build, scripturelinks via cwm-package. They are built fresh into their own build/dist by build/build-subpackages.sh (run before cwm-package), and consumed here as `prebuilt` artifacts. The former `subBuild` entries referenced a build/build-package.php that no longer exists in either submodule.",
+        "_includes_comment": "The scripture stack ships as pkg_cwmscripture but is deliberately NOT a child of pkg_proclaim — build/pkg_proclaim.xml does not list it. A package removes exactly what its <files> declares, by element+type lookup and without consulting package_id, so listing it would make uninstalling Proclaim remove a stack that ScriptureLinks or Living Word may still be using (#1675). It rides along in packages/ and script.install.php's preflight installs it. `includes` decides what goes INTO the zip; <files> decides what Joomla installs and removes — the two lists are independent, which is what makes this possible. Built fresh by build/build-subpackages.sh (run before cwm-package) and consumed here as a `prebuilt` artifact.",
         "includes": [
             {
                 "type":       "prebuilt",
-                "distGlob":   "libraries/lib_cwmscripture/build/dist/lib_cwmscripture-*.zip",
-                "outputName": "lib_cwmscripture.zip"
-            },
-            {
-                "type":       "prebuilt",
-                "distGlob":   "plugins/content/scripturelinks/build/dist/plg_content_scripturelinks*.zip",
-                "outputName": "plg_content_scripturelinks.zip"
+                "distGlob":   "plugins/content/scripturelinks/build/dist/pkg_cwmscripture-*.zip",
+                "outputName": "pkg_cwmscripture.zip"
             },
             {
                 "type":       "self",
@@ -127,8 +122,7 @@
                 "pkg_proclaim.xml",
                 "script.install.php",
                 "language/en-GB/en-GB.pkg_proclaim.sys.ini",
-                "packages/lib_cwmscripture.zip",
-                "packages/plg_content_scripturelinks.zip",
+                "packages/pkg_cwmscripture.zip",
                 "packages/com_proclaim.zip"
             ]
         }
