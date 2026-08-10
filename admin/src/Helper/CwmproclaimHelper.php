@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -507,16 +508,17 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
-        $query->select(
-            $db->quoteName('book.booknumber', 'value') . ', ' . $db->quoteName('book.bookname', 'text') . ', ' . $db->quoteName('book.id')
-        );
-        $query->from($db->quoteName('#__bsms_books', 'book'));
-        $query->join(
-            'INNER',
-            $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.booknumber') . ' = ' . $db->quoteName('book.booknumber')
-        );
-        $query->group($db->quoteName('book.id'));
-        $query->order($db->quoteName('value') . ' ASC');
+        // Asks the studies which books are in use, rather than asking
+        // #__bsms_books which of its rows a study points at. Same set, and the
+        // name comes from the scripture library, which holds the language keys
+        // that table stored (#1687).
+        //
+        // booknumber > 0 replaces what the INNER JOIN used to do implicitly: a
+        // study with no book selected matched no row, so it never appeared.
+        $query->select('DISTINCT ' . $db->quoteName('booknumber', 'value'))
+            ->from($db->quoteName('#__bsms_studies'))
+            ->where($db->quoteName('booknumber') . ' > 0')
+            ->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
         $db->setQuery($query);
@@ -528,10 +530,12 @@ class CwmproclaimHelper
         }
 
         foreach ($options as $option) {
-            $option->text = Text::_($option->text);
+            $option->text = ScriptureHelper::getBookName((int) $option->value);
         }
 
-        return $options;
+        // A number the library does not know names nothing, and an option with
+        // no label is worse than an absent one.
+        return array_values(array_filter($options, static fn ($o): bool => $o->text !== ''));
     }
 
     /**
