@@ -1207,6 +1207,16 @@ final class CwmplaylistSyncHelper
      * the platform — it is left in place with its source preserved and only its
      * mediafile_id ensured; otherwise a new source='manual' row is inserted.
      *
+     * One statement, on the same unique key upsertItem() relies on, so a media save
+     * racing a playlist sync updates the row the sync just created rather than
+     * failing on it. Failing here is silent — the caller swallows exceptions so
+     * bookkeeping can never break a media save — which would have dropped the
+     * remaining assignments in the same run without a trace.
+     *
+     * Only mediafile_id and source are updated: title and position belong to the
+     * platform's own ordering, and blanking a title a later sync backfilled is
+     * exactly what an existing row must be protected from.
+     *
      * @param   DatabaseInterface  $db           Database driver.
      * @param   int            $playlistId   Playlist row ID.
      * @param   string             $videoId      Remote video ID (junction key).
@@ -1219,46 +1229,35 @@ final class CwmplaylistSyncHelper
      */
     private static function upsertManualItem(DatabaseInterface $db, int $playlistId, string $videoId, int $mediafileId, string $now): void
     {
-        $existingId = (int) ($db->setQuery(
-            $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_playlist_items'))
-                ->where($db->quoteName('playlist_id') . ' = :pid')
-                ->where($db->quoteName('remote_video_id') . ' = :vid')
-                ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER)
-                ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
-        )->loadResult() ?? 0);
-
-        if ($existingId > 0) {
-            // Already a member (imported or manual): ensure it links here. If it was
-            // queued for removal, re-selecting it cancels that — it is confirmed on
-            // the platform, so restore it to 'remote'.
-            $query = $db->createQuery()
-                ->update($db->quoteName('#__bsms_playlist_items'))
-                ->set($db->quoteName('mediafile_id') . ' = :mid')
-                ->set(
-                    $db->quoteName('source') . ' = CASE WHEN ' . $db->quoteName('source')
-                    . ' = ' . $db->quote('remove_pending') . ' THEN ' . $db->quote('remote')
-                    . ' ELSE ' . $db->quoteName('source') . ' END'
-                )
-                ->where($db->quoteName('id') . ' = :rid')
-                ->bind(':mid', $mediafileId, \Joomla\Database\ParameterType::INTEGER)
-                ->bind(':rid', $existingId, \Joomla\Database\ParameterType::INTEGER);
-
-            $db->setQuery($query)->execute();
-
+        // See upsertItem(): an empty ID is a shared key, not an absent one.
+        if ($videoId === '') {
             return;
         }
 
-        $db->insertObject('#__bsms_playlist_items', (object) [
-            'playlist_id'     => $playlistId,
-            'mediafile_id'    => $mediafileId,
-            'remote_video_id' => $videoId,
-            'title'           => '',
-            'position'        => 0,
-            'source'          => 'manual',
-            'created'         => $now,
-        ]);
+        // In ON DUPLICATE KEY UPDATE an unqualified column reads the stored row, so
+        // the CASE still sees the source the row arrived with: re-selecting a video
+        // queued for removal cancels that — it is confirmed on the platform, so it
+        // goes back to 'remote' — and any other source is preserved.
+        $query = $db->createQuery()
+            ->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__bsms_playlist_items')
+                . ' (' . implode(', ', $db->quoteName(
+                    ['playlist_id', 'mediafile_id', 'remote_video_id', 'title', 'position', 'source', 'created']
+                )) . ')'
+                . ' VALUES (:pid, :mid, :vid, ' . $db->quote('') . ', 0, ' . $db->quote('manual') . ', :created)'
+                . ' ON DUPLICATE KEY UPDATE '
+                . $db->quoteName('mediafile_id') . ' = :midNew, '
+                . $db->quoteName('source') . ' = CASE WHEN ' . $db->quoteName('source')
+                . ' = ' . $db->quote('remove_pending') . ' THEN ' . $db->quote('remote')
+                . ' ELSE ' . $db->quoteName('source') . ' END'
+            )
+            ->bind(':pid', $playlistId, ParameterType::INTEGER)
+            ->bind(':mid', $mediafileId, ParameterType::INTEGER)
+            ->bind(':vid', $videoId)
+            ->bind(':created', $now)
+            ->bind(':midNew', $mediafileId, ParameterType::INTEGER);
+
+        $db->setQuery($query)->execute();
     }
 
     /**
@@ -1463,6 +1462,22 @@ final class CwmplaylistSyncHelper
     /**
      * Insert or update a junction row for a playlist/video pair.
      *
+     * A single statement, so there is no window between deciding the row is absent
+     * and inserting it: two concurrent syncs of the same playlist — a scheduled run
+     * overlapping a manual one — both land on the update branch instead of the
+     * second raising a duplicate-key error that aborts the whole run.
+     *
+     * Correctness rests on `idx_playlist_video`, the unique key over
+     * (playlist_id, remote_video_id). That index is declared inside a CREATE TABLE,
+     * and Joomla's schema checker reduces CREATE TABLE to `SHOW TABLES LIKE`, so
+     * System → Database can neither report nor restore it if a site loses it —
+     * `build/verify-migrations.php` asserts it at release time instead.
+     *
+     * The update list is deliberately narrower than the insert list: `created` keeps
+     * the original timestamp, and `source` is left to upsertManualItem(). Passing a
+     * null $mediafileId leaves an existing link in place rather than clearing it,
+     * matching updateObject()'s null-skipping default that this replaces.
+     *
      * @param   DatabaseInterface  $db           Database driver.
      * @param   int            $playlistId   Playlist row ID.
      * @param   string             $videoId      YouTube video ID.
@@ -1477,33 +1492,39 @@ final class CwmplaylistSyncHelper
      */
     private static function upsertItem(DatabaseInterface $db, int $playlistId, string $videoId, string $title, ?int $mediafileId, int $position, string $now): void
     {
-        $existingId = (int) ($db->setQuery(
-            $db->createQuery()
-                ->select($db->quoteName('id'))
-                ->from($db->quoteName('#__bsms_playlist_items'))
-                ->where($db->quoteName('playlist_id') . ' = :pid')
-                ->where($db->quoteName('remote_video_id') . ' = :vid')
-                ->bind(':pid', $playlistId, \Joomla\Database\ParameterType::INTEGER)
-                ->bind(':vid', $videoId, \Joomla\Database\ParameterType::STRING)
-        )->loadResult() ?? 0);
-
-        $item = (object) [
-            'playlist_id'     => $playlistId,
-            'mediafile_id'    => $mediafileId,
-            'remote_video_id' => $videoId,
-            'title'           => $title,
-            'position'        => $position,
-        ];
-
-        if ($existingId > 0) {
-            $item->id = $existingId;
-            $db->updateObject('#__bsms_playlist_items', $item, 'id');
-
+        // Only one row per playlist may carry an empty remote_video_id, so an empty
+        // ID would merge unrelated videos into a single row rather than error.
+        if ($videoId === '') {
             return;
         }
 
-        $item->created = $now;
-        $db->insertObject('#__bsms_playlist_items', $item);
+        $mediafileType = $mediafileId === null ? ParameterType::NULL : ParameterType::INTEGER;
+
+        // Each reused value needs its own placeholder: a named parameter may not
+        // appear twice in one prepared statement.
+        $query = $db->createQuery()
+            ->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__bsms_playlist_items')
+                . ' (' . implode(', ', $db->quoteName(
+                    ['playlist_id', 'mediafile_id', 'remote_video_id', 'title', 'position', 'created']
+                )) . ')'
+                . ' VALUES (:pid, :mid, :vid, :title, :pos, :created)'
+                . ' ON DUPLICATE KEY UPDATE '
+                . $db->quoteName('mediafile_id') . ' = COALESCE(:midKeep, ' . $db->quoteName('mediafile_id') . '), '
+                . $db->quoteName('title') . ' = :titleNew, '
+                . $db->quoteName('position') . ' = :posNew'
+            )
+            ->bind(':pid', $playlistId, ParameterType::INTEGER)
+            ->bind(':mid', $mediafileId, $mediafileType)
+            ->bind(':vid', $videoId)
+            ->bind(':title', $title)
+            ->bind(':pos', $position, ParameterType::INTEGER)
+            ->bind(':created', $now)
+            ->bind(':midKeep', $mediafileId, $mediafileType)
+            ->bind(':titleNew', $title)
+            ->bind(':posNew', $position, ParameterType::INTEGER);
+
+        $db->setQuery($query)->execute();
     }
 
     /**

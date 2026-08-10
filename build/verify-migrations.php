@@ -71,6 +71,12 @@ $EXPECTATIONS = [
         ],
         'indexes' => [
             '#__bsms_studies' => ['idx_transcript'],
+            // Declared inside the CREATE TABLE, which MysqlChangeItem reduces to
+            // SHOW TABLES LIKE — so System → Database cannot see this index, let
+            // alone restore it. CwmplaylistSyncHelper's upserts depend on it
+            // firing (#1658); without it they silently duplicate rows instead of
+            // updating them. This gate is the only thing that checks.
+            '#__bsms_playlist_items' => ['idx_playlist_video'],
         ],
         'schemaMin' => '10.3.3',
     ],
