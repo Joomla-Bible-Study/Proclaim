@@ -32,6 +32,7 @@
             <item>Uninstalling no longer reinstalls parts of Proclaim on its way out, or shows the "installation complete" page when you are removing it</item>
             <item>Proclaim's own database tables are still kept on uninstall unless you set Drop Tables on Uninstall to Yes, which remains the default. Nothing about that has changed</item>
             <item>Sites that installed Proclaim before 10.4.0 were checking for updates twice, and Extensions - Update listed Proclaim as a component rather than a package. The leftover update site is removed, so the duplicate entry disappears and the row reads Package. Some of those sites carried an update address that only ever served 9.2.x and could never offer them anything</item>
+            <item>A playlist sync that overlapped another one - a scheduled sync running while you started one by hand, or an impatient second click - could stop partway through with a database error, or quietly drop the rest of a media file's playlist assignments. Each video is now recorded in a single step, so the two runs agree instead of colliding</item>
         </fix>
         <addition>
             <item>The scripture package now installs the Scripture task and system plugins alongside the library. The task plugin downloads Bible translations in the background instead of adding around forty seconds to every install</item>
