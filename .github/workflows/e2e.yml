@@ -138,6 +138,19 @@ jobs:
           # showed the tour modal. No tours for a disposable site.
           mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci \
             -e "UPDATE jos_extensions SET enabled = 0 WHERE folder = 'system' AND element = 'guidedtours';"
+          # The admin dashboard's update quickicons call out to update.joomla.org
+          # and to every registered update site — which, once test:install has
+          # run, includes Proclaim's own on christianwebministries.org. Each of
+          # those AJAX calls holds a dev-server worker for the length of an
+          # internet round trip, so CI runs took a dependency on servers it does
+          # not control and gets nothing in return: no test asserts on an update
+          # count. Statistics reporting goes the same way — a disposable site
+          # should not phone home either.
+          mysql -h 127.0.0.1 -u root -pjoomla_ci joomla_ci -e "
+            UPDATE jos_extensions SET enabled = 0
+             WHERE (folder = 'quickicon'
+                    AND element IN ('joomlaupdate','extensionupdate','autoupdate','downloadkey','eos'))
+                OR (folder = 'system' AND element = 'stats');"
 
       - name: Write build.properties for the disposable site
         # The harness discovers the test site by role, not by name (#1353),
@@ -159,8 +172,15 @@ jobs:
           EOF
 
       - name: Serve the site
+        # Workers must exceed Chromium's 6-connections-per-host limit. At 4, a
+        # page opening six parallel requests left two queued behind whichever
+        # worker was slowest, and Playwright's `networkidle` — 500ms with no
+        # in-flight request — could not reach its window inside the 30s
+        # navigation timeout. That is the whole flake: an intermittent
+        # "page.goto: Timeout 30000ms exceeded" on /administrator/index.php,
+        # which retried green and so read as noise for weeks.
         run: |
-          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8890 -t "$SITE_DIR" &> /tmp/php-server.log &
+          PHP_CLI_SERVER_WORKERS=10 php -S 127.0.0.1:8890 -t "$SITE_DIR" &> /tmp/php-server.log &
           sleep 2
           curl -sSf -o /dev/null "$SITE_URL/index.php"
 
