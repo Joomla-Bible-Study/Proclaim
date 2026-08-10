@@ -762,6 +762,9 @@ class com_proclaimInstallerScript extends InstallerScript
         // Clean up post-install messages
         $this->cleanupPostInstallMessages();
 
+        // Clean up the action log registration
+        $this->cleanupActionLogConfig();
+
         // We no longer depend on lib_cwmscripture — stop blocking its removal
         $this->scriptureConsumer('unregister');
 
@@ -769,6 +772,43 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->renderPostUninstallation($this->status, $parent);
 
         return true;
+    }
+
+    /**
+     * Remove Proclaim's rows from Joomla's action-log tables.
+     *
+     * `install.mysql.utf8.sql` seeds `#__action_log_config` with one row per
+     * loggable entity, and `10.1.0-20260207.sql` adds to it, but nothing has
+     * ever taken them out again — five rows survived every uninstall (#1676).
+     *
+     * Deliberately not part of `dropTablesIfRequested()`. That is gated on the
+     * administrator's `drop_tables` setting because it destroys sermons; these
+     * rows are Joomla's own configuration describing an extension that no longer
+     * exists, so they should always go. Leaving them makes com_actionlogs offer
+     * filters for a component that is not installed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function cleanupActionLogConfig(): void
+    {
+        foreach (['#__action_log_config' => 'type_alias', '#__action_logs_extensions' => 'extension'] as $table => $column) {
+            try {
+                $query = $this->dbo->getQuery(true)
+                    ->delete($this->dbo->quoteName($table))
+                    ->where($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim%'));
+
+                $this->dbo->setQuery($query)->execute();
+            } catch (\Throwable $e) {
+                // Housekeeping only — never fail an uninstall over it.
+                Log::add(
+                    'com_proclaim: could not clean ' . $table . ': ' . $e->getMessage(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+        }
     }
 
     /**
@@ -1152,7 +1192,21 @@ class com_proclaimInstallerScript extends InstallerScript
             if ($id) {
                 $installer = new Installer();
                 $installer->setDatabase($this->dbo);
-                $result = $installer->uninstall('module', $id, 1);
+
+                // pkg_proclaim declares <blockChildUninstall>, which makes
+                // Access's guard refuse any removal of a package child that is
+                // not itself part of a package teardown:
+                //
+                //   package_id && !isPackageUninstall() && !canUninstallPackageChild()
+                //
+                // That protection is for administrators picking off a single
+                // module; this IS the teardown, so say so. Without it every call
+                // here returned false with
+                // JLIB_INSTALLER_ERROR_CANNOT_UNINSTALL_CHILD_OF_PACKAGE and the
+                // rows leaked (#1676).
+                $installer->setPackageUninstall(true);
+
+                $result = $installer->uninstall('module', $id);
 
                 $this->status->modules[] = [
                     'name'   => $element,
@@ -1180,7 +1234,11 @@ class com_proclaimInstallerScript extends InstallerScript
             if ($id) {
                 $installer = new Installer();
                 $installer->setDatabase($this->dbo);
-                $result = $installer->uninstall('plugin', $id, 1);
+
+                // See uninstallModules() — same guard, same reason (#1676).
+                $installer->setPackageUninstall(true);
+
+                $result = $installer->uninstall('plugin', $id);
 
                 $this->status->plugins[] = [
                     'name'   => 'plg_' . $plugin,
