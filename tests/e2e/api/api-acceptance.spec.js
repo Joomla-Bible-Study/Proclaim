@@ -88,11 +88,16 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
         // user is saved with the plugin active, so a fresh install's
         // installer-created admin has no field at all until saved once.
         // That is the state every CI run starts from.
-        await page.goto('/administrator/index.php', { waitUntil: 'networkidle' });
+        // domcontentloaded, not networkidle: the assertion below already waits
+        // for the thing this navigation exists to reach, and it waits for that
+        // specific element rather than for the whole page to stop talking.
+        // Under the dev server, networkidle here was the flake — see the Serve
+        // step in e2e.yml.
+        await page.goto('/administrator/index.php', { waitUntil: 'domcontentloaded' });
 
         const editAccount = page.locator('a[href*="task=user.edit"]', { hasText: 'Edit Account' }).first();
         await expect(editAccount, 'No "Edit Account" link in the admin header').toBeAttached();
-        await page.goto(await editAccount.getAttribute('href'), { waitUntil: 'networkidle' });
+        await page.goto(await editAccount.getAttribute('href'), { waitUntil: 'domcontentloaded' });
 
         if (!(await page.locator('#jform_joomlatoken_token').count())) {
             // Pristine account: save once to generate the seed, which lands
