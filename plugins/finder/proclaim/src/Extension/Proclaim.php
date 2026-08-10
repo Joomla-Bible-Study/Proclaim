@@ -19,6 +19,7 @@ namespace CWM\Plugin\Finder\Proclaim\Extension;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmhelperroute;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Event\Finder as FinderEvent;
 use Joomla\CMS\Language\Text;
@@ -531,16 +532,13 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Add Scripture/Book
         if (!empty($item->booknumber)) {
-            $query = $db->createQuery()
-                ->select($db->quoteName('bookname'))
-                ->from($db->quoteName('#__bsms_books'))
-                ->where($db->quoteName('booknumber') . ' = ' . (int) $item->booknumber);
-            $db->setQuery($query);
-            $bookname = $db->loadResult();
+            // From the scripture library rather than #__bsms_books, which stores
+            // the same language keys against the same numbers and was costing a
+            // query per indexed item to fetch one (#1687). getBookName()
+            // translates on the way out, so no Text::_() call is needed here.
+            $bookname = ScriptureHelper::getBookName((int) $item->booknumber);
 
             if ($bookname) {
-                // Translate bookname if it's a language key
-                $bookname = Text::_($bookname);
 
                 // Construct reference string
                 $reference = $bookname . ' ' . $item->chapter_begin;
