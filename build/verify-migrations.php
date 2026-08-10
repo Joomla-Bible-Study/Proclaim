@@ -326,6 +326,23 @@ foreach ($installs as $install) {
 
     $expand = static fn (string $t): string => str_replace('#__', $db['prefix'], $t);
 
+    /*
+     * Proclaim's tables outlive Proclaim: an uninstall keeps them unless the
+     * administrator opts out. So a site can pass every table, column and index
+     * assertion here while having no com_proclaim row at all, and the only sign
+     * would be the #__schemas check failing for a reason that reads like schema
+     * drift. Say what actually happened instead.
+     */
+    if (!proclaimInstalled($mysqli, $db['prefix'])) {
+        echo "{$red}FAIL{$reset} com_proclaim is not installed on this site — nothing to verify a schema against.\n";
+        echo "       Its bsms_ tables may still be present; an uninstall keeps them by default.\n";
+        echo "       Install Proclaim here (composer test:install) and run this again.\n";
+        $overall = false;
+        $mysqli->close();
+
+        continue;
+    }
+
     $results = [];
 
     foreach ($keys as $version) {
@@ -473,7 +490,32 @@ function indexExists(mysqli $db, string $schema, string $table, string $index): 
 }
 
 /**
- * Latest schema version recorded for com_proclaim in #__schemas, or null.
+ * Whether com_proclaim is registered on this install.
+ *
+ * @param   mysqli  $db      Connection to the install's database.
+ * @param   string  $prefix  That install's table prefix.
+ *
+ * @return  bool
+ *
+ * @since __DEPLOY_VERSION__
+ */
+function proclaimInstalled(mysqli $db, string $prefix): bool
+{
+    $res = $db->query(
+        'SELECT extension_id FROM ' . $prefix . "extensions"
+        . " WHERE element = 'com_proclaim' AND type = 'component' LIMIT 1"
+    );
+
+    return $res !== false && $res->num_rows > 0;
+}
+
+/**
+ * The recorded schema version for com_proclaim, or null when there is none.
+ *
+ * @param   mysqli  $db      Connection to the install's database.
+ * @param   string  $prefix  That install's table prefix.
+ *
+ * @return  string|null
  *
  * @since __DEPLOY_VERSION__
  */
