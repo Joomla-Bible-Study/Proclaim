@@ -42,6 +42,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# issues: write is for the nightly failure issue at the end of the job. Declared
+# explicitly rather than relying on the repository default, so tightening that
+# default later cannot silently take the monitoring away again.
+permissions:
+  contents: read
+  issues: write
+
 env:
   JOOMLA_VERSION: '5.4.3'
   SITE_DIR: /home/runner/joomla-site
@@ -216,3 +223,67 @@ jobs:
           name: php-server-log
           path: /tmp/php-server.log
           retention-days: 7
+
+      # A nightly nobody hears about is not a monitor. Until now the only thing
+      # a scheduled failure produced was two artifacts on a page no one opens,
+      # so this job failed on 2026-08-07 and again on 2026-08-08 without ever
+      # reaching a human. A failure on a pull request is already visible on that
+      # pull request; the scheduled run is the one with no audience, so only it
+      # opens an issue.
+      #
+      # One issue, reopened and updated rather than one per night, and closed
+      # automatically when the job comes back green — the same shape
+      # vendor-check.yml uses, so there is one pattern here rather than two.
+      - name: Open or update the nightly failure issue
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          LABEL: 'ci: nightly'
+        run: |
+          TITLE="Nightly E2E is failing"
+          BODY="The scheduled E2E run failed on $(date -u +%Y-%m-%d).
+
+          **Run:** $RUN_URL
+
+          The Playwright report and the PHP server log are attached to that run as
+          artifacts, kept for 7 days. This issue is updated on each further failure
+          and closed automatically once the nightly is green again.
+
+          A red nightly does not block merges: E2E is deliberately not a required
+          check, because its path filter means it does not report at all on most
+          pull requests and a required check that never reports blocks them forever."
+
+          # Found by label, not by title search. `--search "in:title …"` is fuzzy
+          # — it matches a renamed or similarly-titled issue — and it reads
+          # GitHub's search index, which lags creation by seconds to minutes. A
+          # re-run or a manual dispatch landing inside that window would each
+          # find nothing and open its own duplicate. --label queries the API
+          # directly and is exact.
+          NUM=$(gh issue list --repo "$REPO" --state open --label "$LABEL" --json number --jq '.[0].number // ""')
+
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --repo "$REPO" --body "Still failing on $(date -u +%Y-%m-%d): $RUN_URL"
+          else
+            gh issue create --repo "$REPO" \
+              --title "$TITLE" \
+              --label "$LABEL" \
+              --label "bug" \
+              --body "$BODY"
+          fi
+
+      - name: Close the nightly failure issue when green
+        if: success() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          LABEL: 'ci: nightly'
+        run: |
+          NUM=$(gh issue list --repo "$REPO" --state open --label "$LABEL" --json number --jq '.[0].number // ""')
+
+          if [ -n "$NUM" ]; then
+            gh issue close "$NUM" --repo "$REPO" \
+              --comment "Nightly E2E passed on $(date -u +%Y-%m-%d): $RUN_URL. Closing automatically."
+          fi
