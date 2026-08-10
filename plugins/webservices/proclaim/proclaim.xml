@@ -7,7 +7,7 @@
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>support@christianwebministries.org</authorEmail>
     <authorUrl>https://www.christianwebministries.org</authorUrl>
-    <version>10.5.7</version>
+    <version>10.5.8-dev</version>
     <description>PLG_WEBSERVICES_PROCLAIM_DESCRIPTION</description>
     <namespace path="src">CWM\Plugin\WebServices\Proclaim</namespace>
     <files>
