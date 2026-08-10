@@ -292,7 +292,7 @@ class CwmcommentsModel extends ListModel
      *
      * @return  mixed  An array of data items on success, false on failure.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.7
      */
     public function getItems(): mixed
     {
