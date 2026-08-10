@@ -1391,6 +1391,29 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function postflight(string $type, ComponentAdapter $parent): void
     {
+        // Joomla calls postflight on UNINSTALL too — InstallerAdapter::uninstall()
+        // runs triggerManifestScript('postflight') after removing the extension
+        // (InstallerAdapter.php:1249). Everything below this guard is install-time
+        // work, and it was all running on the way out:
+        //
+        //   - installSubExtensions() reinstalling the modules and plugins that
+        //     uninstallSubExtensions() had just removed
+        //   - renderPostInstallation() showing the "installation complete" page
+        //   - scriptureConsumer('register') putting the consumer row straight
+        //     back after uninstall() had removed it (#1679)
+        //
+        // Most of it failed quietly because removeExtensionFiles() has already
+        // taken the source away by then, which is why only the row — a plain DB
+        // write needing no files — survived visibly. lib_cwmscripture's own
+        // script has carried this guard from the start; the component never did.
+        //
+        // Caches are still cleared below: that is worth doing on the way out.
+        if ($type === 'uninstall') {
+            $this->clearCaches();
+
+            return;
+        }
+
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
             $this->renameLegacyFolders();
@@ -1398,9 +1421,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // After the migration SQL has added uq_study_topic, retire the index it
         // replaces. No-op on a fresh install, where install.sql never creates it.
-        if ($type !== 'uninstall') {
-            $this->dropRedundantStudyTopicIndex();
-        }
+        $this->dropRedundantStudyTopicIndex();
 
         // Install subExtensions
         $this->installSubExtensions($parent);

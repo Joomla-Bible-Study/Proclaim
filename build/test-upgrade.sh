@@ -173,23 +173,14 @@ fi
 
 php build/verify-scripture-uninstall.php assert-library-present
 php build/verify-scripture-uninstall.php assert-tables-present
-# NOT asserted yet — and not for the reason first assumed.
+# com_proclaim's own uninstall unregisters it, and that now sticks: postflight
+# was re-registering it immediately afterwards, because Joomla calls postflight
+# on uninstall too and every install-time step in it ran unguarded (#1679).
 #
-# #1676 fixed the guard that was refusing sub-extension removal, so
-# com_proclaim's uninstall now reaches scriptureConsumer('unregister'), and
-# probing a real removal shows it SUCCEEDS:
-#
-#   SC: called action=unregister ... unregister returned true
-#   SC: called action=register            <- immediately afterwards
-#
-# Something calls scriptureConsumer('register') after the unregister, putting
-# the row straight back. The only caller is com_proclaim's postflight
-# (proclaim.script.php:1419), which should not run during an uninstall at all.
-# Adding a $type !== 'uninstall' guard to THIS package's preflight did not stop
-# it, so the re-registration comes from the component side.
-#
-# Tracked separately rather than worked around here. Re-enable once fixed.
-# php build/verify-scripture-uninstall.php assert-registry-pruned
+# The registry outlives every Proclaim uninstall now that the scripture stack is
+# not removed with it, so a stale row would persist rather than vanish with the
+# dropped table (#1662).
+php build/verify-scripture-uninstall.php assert-registry-pruned
 
 echo "-- [12/16] STILL NEEDED: a registered consumer blocks a STANDALONE library uninstall"
 # Repointed at the standalone path (#1675). The consumer guard used to be
