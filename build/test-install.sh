@@ -30,10 +30,10 @@ echo "========================================================================"
 echo " CLEAN-INSTALL TEST — pkg_proclaim ${VERSION}"
 echo "========================================================================"
 
-echo "-- [1/7] reset test site(s) to a clean slate"
+echo "-- [1/9] reset test site(s) to a clean slate"
 php build/reset-testsite.php
 
-echo "-- [2/7] build full package ${VERSION}"
+echo "-- [2/9] build full package ${VERSION}"
 bash build/build-package.sh "$VERSION"
 
 if [ ! -f "$ZIP" ]; then
@@ -41,19 +41,25 @@ if [ ! -f "$ZIP" ]; then
     exit 1
 fi
 
-echo "-- [3/7] install ${ZIP} (fresh)"
+echo "-- [3/9] install ${ZIP} (fresh)"
 "$BIN/cwm-install-zip" --zip "$ZIP"
 
-echo "-- [4/7] verify extension registration"
+echo "-- [4/9] verify extension registration"
 "$BIN/cwm-verify" --target test
 
-echo "-- [5/7] verify migrations landed"
+echo "-- [5/9] verify migrations landed"
 php build/verify-migrations.php "$VERSION"
 
-echo "-- [6/7] verify the REST API landed (#1309/#1310/#1331 guards)"
+echo "-- [6/9] verify the REST API landed (#1309/#1310/#1331 guards)"
 php build/verify-api-install.php
 
-echo "-- [7/7] verify the scripture library landed (tables, seed, plugin enabled)"
+echo "-- [7/9] verify the scripture library landed (tables, seed, plugin enabled)"
 php build/verify-scripture-install.php
+
+echo "-- [8/9] seed the site menu items the front end is reached through (#1701)"
+php build/seed-testsite-menus.php
+
+echo "-- [9/9] verify the front end renders (#1701 guards)"
+php build/verify-frontend.php
 
 echo "CLEAN-INSTALL TEST PASSED for ${VERSION}."
