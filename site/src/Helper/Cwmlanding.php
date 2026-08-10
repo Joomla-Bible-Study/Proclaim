@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -397,6 +398,19 @@ class Cwmlanding
             $grouped[$row->type][] = $row;
         }
 
+        // The books branch could not name its own rows in SQL; do it here, where
+        // the union's shared column shape no longer constrains anything. Keyed
+        // on `id`, which for that branch is the book number.
+        if (!empty($grouped['books'])) {
+            foreach ($grouped['books'] as $row) {
+                $row->text = ScriptureHelper::getBookName((int) $row->id);
+            }
+
+            $grouped['books'] = array_values(
+                array_filter($grouped['books'], static fn ($row): bool => $row->text !== '')
+            );
+        }
+
         foreach ($grouped as $type => &$items) {
             $orderKey = match ($type) {
                 'teachers'     => 'teachers_order',
@@ -563,18 +577,23 @@ class Cwmlanding
                 break;
 
             case 'books':
+                // `text` is a placeholder here, filled by nameBooks() once the
+                // union has loaded. Every branch of this union has to produce
+                // the same five columns, and a book's name is no longer
+                // available to SQL: #__bsms_books held language keys the
+                // scripture library already carries, so the join it needed
+                // earned nothing (#1687).
+                //
+                // booknumber > 0 is what that INNER JOIN did implicitly.
                 $query->select(
-                    'DISTINCT ' . $this->db->quoteName('a.booknumber', 'id') . ', '
-                    . $this->db->quoteName('a.bookname', 'text') . ', '
+                    'DISTINCT ' . $this->db->quoteName('b.booknumber', 'id') . ', '
+                    . $null . ' AS ' . $this->db->quoteName('text') . ', '
                     . '0 AS ' . $this->db->quoteName('landing_show') . ', '
                     . $null . ' AS ' . $this->db->quoteName('params') . ', '
                     . $this->db->quote('books') . ' AS ' . $this->db->quoteName('type')
                 )
-                    ->from($this->db->quoteName('#__bsms_books', 'a'))
-                    ->innerJoin(
-                        $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                        . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
-                    )
+                    ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                    ->where($this->db->quoteName('b.booknumber') . ' > 0')
                     ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                     ->where($this->db->quoteName('b.published') . ' = 1');
                 $this->addAccessFilter($query);
@@ -1107,17 +1126,21 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
+            // Asks the studies which books are in use rather than asking
+            // #__bsms_books which of its rows a study points at — same set, and
+            // the name is attached afterwards from the scripture library, which
+            // holds the language keys that table stored (#1687).
+            //
+            // The studies keep the alias `b`, which addAccessFilter() writes as
+            // b.access. booknumber > 0 is what the INNER JOIN did implicitly: a
+            // study with no book matched no row, so it never became an entry.
             $query = $this->db->createQuery();
-            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
-                ->from($this->db->quoteName('#__bsms_books', 'a'))
-                ->innerJoin(
-                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                    . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
-                )
+            $query->select('DISTINCT ' . $this->db->quoteName('b.booknumber'))
+                ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                ->where($this->db->quoteName('b.booknumber') . ' > 0')
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('b.published') . ' = 1')
-                ->group($this->db->quoteName('a.bookname'))
-                ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
+                ->order($this->db->quoteName('b.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
 
@@ -1127,7 +1150,7 @@ class Cwmlanding
                 $this->db->setQuery($query);
             }
 
-            $items = $this->db->loadObjectList();
+            $items = self::nameBooks($this->db->loadObjectList() ?: []);
         } else {
             foreach ($items as $item) {
                 $item->booknumber = $item->id;
@@ -1152,6 +1175,33 @@ class Cwmlanding
     // =========================================================================
     // Data-returning methods for layout-based rendering (Phase 1)
     // =========================================================================
+
+    /**
+     * Attach a book name to each row returned by the books queries.
+     *
+     * Those queries used to join #__bsms_books for a `bookname` column holding a
+     * JBS_BBK_* language key, which the callers then passed to Text::_(). The
+     * scripture library holds the same keys against the same numbers, so the
+     * join earned nothing (#1687).
+     *
+     * Rows whose number the library cannot name are dropped. The join could not
+     * produce one — the row existed or it did not — and an entry with no label
+     * links somewhere the reader cannot identify.
+     *
+     * @param   array  $rows  Rows carrying a booknumber.
+     *
+     * @return  array  The same rows, named, minus any that cannot be.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function nameBooks(array $rows): array
+    {
+        foreach ($rows as $row) {
+            $row->bookname = ScriptureHelper::getBookName((int) ($row->booknumber ?? 0));
+        }
+
+        return array_values(array_filter($rows, static fn ($row): bool => $row->bookname !== ''));
+    }
 
     /**
      * Split landing items into visible (above fold) and hidden (below fold) arrays.
@@ -1665,24 +1715,28 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
+            // Asks the studies which books are in use rather than asking
+            // #__bsms_books which of its rows a study points at — same set, and
+            // the name is attached afterwards from the scripture library, which
+            // holds the language keys that table stored (#1687).
+            //
+            // The studies keep the alias `b`, which addAccessFilter() writes as
+            // b.access. booknumber > 0 is what the INNER JOIN did implicitly: a
+            // study with no book matched no row, so it never became an entry.
             $query = $this->db->createQuery();
-            $query->select('DISTINCT ' . $this->db->quoteName('a') . '.*')
-                ->from($this->db->quoteName('#__bsms_books', 'a'))
-                ->innerJoin(
-                    $this->db->quoteName('#__bsms_studies', 'b') . ' ON '
-                    . $this->db->quoteName('a.booknumber') . ' = ' . $this->db->quoteName('b.booknumber')
-                )
+            $query->select('DISTINCT ' . $this->db->quoteName('b.booknumber'))
+                ->from($this->db->quoteName('#__bsms_studies', 'b'))
+                ->where($this->db->quoteName('b.booknumber') . ' > 0')
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('b.published') . ' = 1')
-                ->group($this->db->quoteName('a.bookname'))
-                ->order($this->db->quoteName('a.booknumber') . ' ' . $order);
+                ->order($this->db->quoteName('b.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
 
             // Fetch all items — splitItems() handles visible/hidden split in PHP
             $this->db->setQuery($query);
 
-            $items = $this->db->loadObjectList();
+            $items = self::nameBooks($this->db->loadObjectList() ?: []);
         } else {
             foreach ($items as $item) {
                 $item->booknumber = $item->id;
