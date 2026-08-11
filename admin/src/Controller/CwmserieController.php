@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -32,6 +33,7 @@ use Joomla\CMS\Router\Route;
 class CwmserieController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
     use ModalFormTrait;
 
     /**
@@ -49,6 +51,14 @@ class CwmserieController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_series';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'serie';
 
     /**
      * Method to cancel an edit — redirects to modalreturn when in modal layout.
@@ -129,6 +139,6 @@ class CwmserieController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 }

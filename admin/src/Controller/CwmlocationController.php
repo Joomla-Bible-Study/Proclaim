@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmlocationModel;
 use Joomla\CMS\MVC\Controller\FormController;
@@ -33,6 +34,7 @@ use Joomla\CMS\Router\Route;
 class CwmlocationController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
     use ModalFormTrait;
 
     /**
@@ -50,6 +52,14 @@ class CwmlocationController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_locations';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'location';
 
     /**
      * Method to cancel an edit — redirects to modalreturn when in modal layout.
@@ -87,7 +97,7 @@ class CwmlocationController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 
     /**

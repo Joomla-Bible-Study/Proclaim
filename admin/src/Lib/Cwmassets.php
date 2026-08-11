@@ -108,6 +108,45 @@ class Cwmassets
     }
 
     /**
+     * The access.xml section each entity belongs to, keyed by view name.
+     *
+     * The single place that knows which section governs which entity;
+     * controllers ask rather than carry their own copy.
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const SECTION_BY_VIEW = [
+        'cwmcomment'      => 'comment',
+        'cwmlocation'     => 'location',
+        'cwmmediafile'    => 'mediafile',
+        'cwmmessage'      => 'message',
+        'cwmmessagetype'  => 'messagetype',
+        'cwmplaylist'     => 'playlist',
+        'cwmpodcast'      => 'podcast',
+        'cwmserie'        => 'serie',
+        'cwmserver'       => 'server',
+        'cwmteacher'      => 'teacher',
+        'cwmtemplate'     => 'template',
+        'cwmtemplatecode' => 'templatecode',
+        'cwmtopic'        => 'topic',
+    ];
+
+    /**
+     * The section governing an entity's edit view, or an empty string.
+     *
+     * @param   string  $view  A view name, such as `cwmteacher`
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function sectionForView(string $view): string
+    {
+        return self::SECTION_BY_VIEW[$view] ?? '';
+    }
+
+    /**
      * The permissions a user holds on `com_proclaim.<section>`.
      *
      * ⚠️ Use this, not `ContentHelper::getActions()`, for a section question:

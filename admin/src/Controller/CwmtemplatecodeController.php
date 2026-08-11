@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
@@ -33,6 +34,7 @@ use Joomla\Database\ParameterType;
 class CwmtemplatecodeController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
 
     /**
      * The database table for access level checks.
@@ -41,6 +43,14 @@ class CwmtemplatecodeController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_templatecode';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'templatecode';
 
     /**
      * Protect the view
@@ -124,6 +134,6 @@ class CwmtemplatecodeController extends FormController
             }
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 }

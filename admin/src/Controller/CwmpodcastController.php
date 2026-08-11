@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastIndexHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmpodcastModel;
@@ -39,6 +40,7 @@ use Joomla\Database\ParameterType;
 class CwmpodcastController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
 
     /**
      * The database table for access level checks.
@@ -47,6 +49,14 @@ class CwmpodcastController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_podcast';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'podcast';
 
     /**
      * Method override to check if you can edit an existing record.
@@ -66,7 +76,7 @@ class CwmpodcastController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 
     /**
