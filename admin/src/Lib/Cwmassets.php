@@ -545,6 +545,112 @@ class Cwmassets
     }
 
     /**
+     * Move existing item assets under their section.
+     *
+     * `_getAssetParentId()` handles every asset created from now on; this is for
+     * rows written before that, which hang off `com_proclaim` and so ignore
+     * their section's rules.
+     *
+     * ⚠️ Uses `moveByReference()`, not `setLocation()` + `store()`: store() on a
+     * loaded nested row rewrites lft/rgt from values that may be stale if
+     * anything else moved the tree first.
+     *
+     * `<section>.0` rows are skipped — they belong to no record and are reported
+     * for `fixAllAssets()` to clean rather than silently relocated.
+     *
+     * @return  array{moved: int, skipped: list<string>}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function reparentItemAssets(): array
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $moved   = 0;
+        $skipped = [];
+
+        foreach (self::declaredSections() as $section) {
+            $sectionId = self::sectionId($section);
+
+            if ($sectionId < 1) {
+                continue;
+            }
+
+            $like  = 'com_proclaim.' . $section . '.%';
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', 'name']))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' LIKE :like')
+                ->where($db->quoteName('parent_id') . ' <> :section')
+                ->bind(':like', $like)
+                ->bind(':section', $sectionId, ParameterType::INTEGER);
+
+            foreach ((array) $db->setQuery($query)->loadObjectList() as $row) {
+                $suffix = substr((string) $row->name, \strlen('com_proclaim.' . $section . '.'));
+
+                // Only ever move com_proclaim.<section>.<id>; a further dot means
+                // something this method does not understand.
+                if (!ctype_digit($suffix)) {
+                    continue;
+                }
+
+                if ((int) $suffix === 0) {
+                    $skipped[] = (string) $row->name;
+
+                    continue;
+                }
+
+                $asset = new \Joomla\CMS\Table\Asset($db);
+
+                if (!$asset->load((int) $row->id)) {
+                    continue;
+                }
+
+                if ($asset->moveByReference($sectionId, 'last-child', (int) $row->id)) {
+                    $moved++;
+                } else {
+                    Log::add("Could not reparent '{$row->name}': " . $asset->getError(), Log::WARNING, 'com_proclaim');
+                }
+            }
+        }
+
+        if ($moved > 0) {
+            self::clearSectionCache();
+        }
+
+        return ['moved' => $moved, 'skipped' => $skipped];
+    }
+
+    /**
+     * The asset a section's item rows should hang from.
+     *
+     * Item assets used to be parented to `com_proclaim`, which meant a rule on
+     * `com_proclaim.<section>` never reached them — a record with per-record
+     * permissions escaped its section entirely (#1653).
+     *
+     * Falls back to the component for a section access.xml does not declare, so
+     * `message_type`, `cwmadmin` and `studytopics` keep their old parent until
+     * their names are corrected.
+     *
+     * @param   string  $section  Section name as declared in access.xml
+     *
+     * @return  int  Section asset id, or the component asset id
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function sectionParentId(string $section): int
+    {
+        if (\in_array($section, self::declaredSections(), true)) {
+            $id = self::sectionId($section);
+
+            if ($id > 0) {
+                return $id;
+            }
+        }
+
+        return self::parentId();
+    }
+
+    /**
      * Get the com_proclaim parent asset ID, creating it if missing.
      *
      * CRITICAL: This method MUST never return 0.  All 14 Table classes call

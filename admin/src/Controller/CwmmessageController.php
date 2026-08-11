@@ -392,6 +392,6 @@ class CwmmessageController extends FormController
         }
 
         // Since there is no asset tracking, revert to the component permissions.
-        return $this->allowSectionEdit();
+        return $this->allowSectionEdit((int) ($data[$key] ?? 0));
     }
 }

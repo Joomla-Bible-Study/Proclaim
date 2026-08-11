@@ -211,14 +211,24 @@ class CwmassetsSectionTest extends IntegrationTestCase
         Cwmassets::seedSections();
         $this->rememberCreated($existing);
 
-        foreach ($this->created as $id) {
-            $asset = new Asset($this->db);
-            $asset->load($id);
+        // Asserted over every declared section, not just the ones this test
+        // created: another test in the same run may have seeded them already,
+        // in which case $this->created is empty and the loop asserts nothing.
+        $sections = Cwmassets::declaredSections();
 
+        $this->assertNotEmpty($sections, 'No sections declared; the assertion would be vacuous.');
+
+        foreach ($sections as $section) {
+            $asset = new Asset($this->db);
+
+            $this->assertTrue(
+                $asset->loadByName('com_proclaim.' . $section),
+                "Section asset com_proclaim.{$section} does not exist after seeding."
+            );
             $this->assertSame(
                 '{}',
                 (string) $asset->rules,
-                "Section asset {$asset->name} was created with rules other than '{}'. "
+                "Section asset {$asset->name} carries rules other than '{}'. "
                 . 'Empty rules are what make seeding inert.'
             );
         }
