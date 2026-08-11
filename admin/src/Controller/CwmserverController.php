@@ -15,6 +15,7 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Addons\Servers\Youtube\CWMAddonYoutube;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
@@ -38,6 +39,7 @@ use Joomla\CMS\Uri\Uri;
 class CwmserverController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
     use ModalFormTrait;
 
     /**
@@ -47,6 +49,14 @@ class CwmserverController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_servers';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'server';
 
     /**
      * Method to add a new record.
@@ -113,7 +123,7 @@ class CwmserverController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 
     /**

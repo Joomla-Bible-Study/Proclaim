@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcaptionValidator;
 use CWM\Component\Proclaim\Administrator\Table\CwmmediafileTable;
@@ -39,6 +40,7 @@ use Joomla\Database\DatabaseInterface;
 class CwmmediafileController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
 
     /**
      * Prevents Joomla's pluralization mechanism from altering the view name.
@@ -63,6 +65,14 @@ class CwmmediafileController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_mediafiles';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'mediafile';
 
     /**
      * Method to add a new record.
@@ -130,7 +140,7 @@ class CwmmediafileController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 
     /**

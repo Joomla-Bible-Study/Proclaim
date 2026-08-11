@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -29,6 +30,7 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 class CwmtopicController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
 
     /**
      * The database table for access level checks.
@@ -37,6 +39,14 @@ class CwmtopicController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_topics';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'topic';
 
     /**
      * Method to run after a successful save — records the action in Joomla's logs.
@@ -75,6 +85,6 @@ class CwmtopicController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 }

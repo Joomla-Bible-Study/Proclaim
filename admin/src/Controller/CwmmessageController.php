@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\ModalFormTrait;
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtopicSuggestionHelper;
@@ -38,6 +39,7 @@ use Joomla\Database\DatabaseInterface;
 class CwmmessageController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
     use ModalFormTrait;
 
     /**
@@ -55,6 +57,14 @@ class CwmmessageController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_studies';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'message';
 
     /**
      * Reset Hits
@@ -382,6 +392,6 @@ class CwmmessageController extends FormController
         }
 
         // Since there is no asset tracking, revert to the component permissions.
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 }

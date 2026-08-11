@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Controller\Trait\MultiCampusAccessTrait;
+use CWM\Component\Proclaim\Administrator\Controller\Trait\SectionAccessTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmactionlogHelper;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -31,6 +32,7 @@ use Joomla\CMS\Router\Route;
 class CwmmessagetypeController extends FormController
 {
     use MultiCampusAccessTrait;
+    use SectionAccessTrait;
 
     /**
      * The database table for access level checks.
@@ -39,6 +41,14 @@ class CwmmessagetypeController extends FormController
      * @since  10.3.0
      */
     protected string $accessTable = '#__bsms_message_type';
+
+    /**
+     * The access.xml section these records belong to.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    protected string $aclSection = 'messagetype';
 
     /**
      * Method to run after a successful save — records the action in Joomla's logs.
@@ -77,7 +87,7 @@ class CwmmessagetypeController extends FormController
             return false;
         }
 
-        return parent::allowEdit($data, $key);
+        return $this->allowSectionEdit();
     }
 
     /**

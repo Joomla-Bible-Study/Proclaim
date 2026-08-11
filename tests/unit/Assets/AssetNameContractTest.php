@@ -248,6 +248,34 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    #[TestDox('every controller $aclSection is declared in access.xml')]
+    public function testControllerSectionsAreDeclaredSections(): void
+    {
+        // Built from a property, so the authorise() scan above cannot see it.
+        $declared = self::declaredSections();
+        $offences = [];
+
+        foreach (glob(self::root() . '/admin/src/Controller/*.php') as $file) {
+            $code = self::codeWithoutComments($file);
+
+            if (!preg_match('/\$aclSection\s*=\s*[\'"]([a-z_]*)[\'"]/i', $code, $match)) {
+                continue;
+            }
+
+            if (!\in_array($match[1], $declared, true)) {
+                $offences[] = basename($file) . ' -> ' . $match[1];
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offences,
+            "A controller gates create and edit on a section admin/access.xml does not declare.\n"
+            . 'The asset never resolves, so the check falls back to the component and the '
+            . 'section rule governs nothing.'
+        );
+    }
+
     #[TestDox('every asset name written by a Table is declared in access.xml')]
     public function testTableAssetNamesAreDeclaredSections(): void
     {
