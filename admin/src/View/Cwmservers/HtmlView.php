@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmservers;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmserversModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -108,7 +108,7 @@ class HtmlView extends BaseHtmlView
         $this->items         = $model->getItems();
         $this->pagination    = $model->getPagination();
         $this->state         = $model->getState();
-        $this->canDo         = ContentHelper::getActions('com_proclaim', 'server');
+        $this->canDo         = Cwmassets::sectionActions('server');
         $this->types         = $model->getServerOptions();
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();

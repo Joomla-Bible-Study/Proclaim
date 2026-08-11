@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -25,7 +26,6 @@ use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -140,7 +140,7 @@ class HtmlView extends BaseHtmlView
         $this->items         = $model->getItems();
         $this->pagination    = $model->getPagination();
         $this->state         = $model->getState();
-        $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
+        $this->canDo         = Cwmassets::sectionActions('mediafile');
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
 
@@ -189,7 +189,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo   = ContentHelper::getActions('com_proclaim');
+        $canDo   = Cwmassets::sectionActions('mediafile');
         $user    = Factory::getApplication()->getIdentity();
         /** @var Toolbar $toolbar **/
         $toolbar = $this->getDocument()->getToolbar();

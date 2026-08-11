@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmserver;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmserverModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
@@ -148,7 +149,7 @@ class HtmlView extends BaseHtmlView
     {
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
         $isNew = ($this->item->id < 1);
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $canDo = Cwmassets::sectionActions('server');
         $title = $isNew ? Text::_('JBS_CMN_NEW') : Text::_('JBS_CMN_EDIT');
         ToolbarHelper::title(
             Text::_('JBS_CMN_SERVERS') . ': <small><small>[' . $title . ']</small></small>',

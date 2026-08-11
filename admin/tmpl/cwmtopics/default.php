@@ -101,7 +101,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtopics'); ?>" method="post"
                             $link       = Route::_('index.php?option=com_proclaim&task=topic.edit&id=' . (int)$item->id);
                             $canCheckin  = $user->authorise('core.manage', 'com_checkin')
                                 || $item->checked_out == $userId || \is_null($item->checked_out);
-                            $canCreate  = $user->authorise('core.create');
+                            $canCreate  = $user->authorise('core.create', 'com_proclaim.topic');
                             $canEdit    = $user->authorise('core.edit', 'com_proclaim.topic.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.topic.' . $item->id);
                             $canChange  = $user->authorise('core.edit.state', 'com_proclaim.topic.' . $item->id);

@@ -14,13 +14,13 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmtemplatecodes;
 
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmtemplatecodesModel;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -155,7 +155,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $canDo = Cwmassets::sectionActions('templatecode');
         $user  = $this->getCurrentUser();
 
         // Get the toolbar object instance
