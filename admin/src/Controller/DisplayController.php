@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Administrator\Controller;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -68,6 +69,31 @@ class DisplayController extends BaseController
     }
 
     /**
+     * Where a refused edit request goes back to, keyed by edit view.
+     *
+     * Routing only; which section governs an entity is
+     * `Cwmassets::sectionForView()`.
+     *
+     * @var    array<string, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const EDIT_VIEW_LISTS = [
+        'cwmcomment'      => 'cwmcomments',
+        'cwmlocation'     => 'cwmlocations',
+        'cwmmediafile'    => 'cwmmediafiles',
+        'cwmmessage'      => 'cwmmessages',
+        'cwmmessagetype'  => 'cwmmessagetypes',
+        'cwmplaylist'     => 'cwmplaylists',
+        'cwmpodcast'      => 'cwmpodcasts',
+        'cwmserie'        => 'cwmseries',
+        'cwmserver'       => 'cwmservers',
+        'cwmteacher'      => 'cwmteachers',
+        'cwmtemplate'     => 'cwmtemplates',
+        'cwmtemplatecode' => 'cwmtemplatecodes',
+        'cwmtopic'        => 'cwmtopics',
+    ];
+
+    /**
      * Method to display a view.
      *
      * @param   bool   $cachable   If true, the view output will be cached
@@ -86,15 +112,30 @@ class DisplayController extends BaseController
         $id      = $this->input->getInt('id');
 
         // Check for an edit form.
-        if ($vName === 'cwmmessage' && $lName === 'edit' && !$this->checkEditId('com_proclaim.edit.cwmmessage', $id)) {
-            // Somehow the person just went to the form - we don't allow that.
-            if (!\count($this->app->getMessageQueue())) {
-                $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
+        if ($lName === 'edit' && isset(self::EDIT_VIEW_LISTS[$vName])) {
+            $redirect = Route::_('index.php?option=com_proclaim&view=' . self::EDIT_VIEW_LISTS[$vName], false);
+            $section  = Cwmassets::sectionForView($vName);
+
+            // A task-less GET never reaches the entity controller, so
+            // allowAdd()/allowEdit() do not run. Without this the form renders
+            // for a section the user is denied, and only refuses on save.
+            if ($section !== '' && !$this->app->getIdentity()->authorise($id ? 'core.edit' : 'core.create', 'com_proclaim.' . $section)) {
+                $this->setMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+                $this->setRedirect($redirect);
+
+                return $this;
             }
 
-            $this->setRedirect(Route::_('index.php?option=com_proclaim&view=cwmmessages', false));
+            if (!$this->checkEditId('com_proclaim.edit.' . $vName, $id)) {
+                // Somehow the person just went to the form - we don't allow that.
+                if (!\count($this->app->getMessageQueue())) {
+                    $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
+                }
 
-            return $this;
+                $this->setRedirect($redirect);
+
+                return $this;
+            }
         }
 
         $safeurlparams = [

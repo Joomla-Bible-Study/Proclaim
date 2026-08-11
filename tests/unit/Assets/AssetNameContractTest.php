@@ -276,6 +276,48 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    #[TestDox("Cwmassets' entity section map matches the controllers' \$aclSection")]
+    public function testEntitySectionMapMatchesTheControllers(): void
+    {
+        // The edit form is gated from the map and the save from $aclSection.
+        // A mismatch gates the two on different sections.
+        $lib = self::codeWithoutComments(self::root() . '/admin/src/Lib/Cwmassets.php');
+
+        preg_match_all(
+            '/[\'"](cwm[a-z]+)[\'"]\s*=>\s*[\'"]([a-z_]+)[\'"]/i',
+            substr($lib, strpos($lib, 'SECTION_BY_VIEW')),
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        $this->assertNotEmpty($matches, 'No entity section map found; the guard would be vacuous.');
+
+        $declared    = self::declaredSections();
+        $mismatches  = [];
+
+        foreach ($matches as [, $view, $section]) {
+            if (!\in_array($section, $declared, true)) {
+                $mismatches[] = "{$view}: '{$section}' is not declared in access.xml";
+            }
+
+            $file = self::root() . '/admin/src/Controller/' . ucfirst($view) . 'Controller.php';
+
+            if (!is_file($file)) {
+                $mismatches[] = $view . ' -> no such controller';
+
+                continue;
+            }
+
+            preg_match('/\$aclSection\s*=\s*[\'"]([a-z_]*)[\'"]/i', self::codeWithoutComments($file), $own);
+
+            if (($own[1] ?? null) !== $section) {
+                $mismatches[] = $view . ": map says '{$section}', controller says '" . ($own[1] ?? 'nothing') . "'";
+            }
+        }
+
+        $this->assertSame([], $mismatches, 'The edit form and its save are gated on different sections.');
+    }
+
     #[TestDox('every asset name written by a Table is declared in access.xml')]
     public function testTableAssetNamesAreDeclaredSections(): void
     {
