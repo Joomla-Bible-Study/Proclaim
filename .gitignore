@@ -115,3 +115,6 @@ build.properties
 .claude/settings.local.json
 .claude/settings.local.json.bak
 /.claude/settings.json
+
+# Local Codex CLI config, not part of the extension
+.codex/

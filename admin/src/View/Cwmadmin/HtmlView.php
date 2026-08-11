@@ -346,6 +346,16 @@ class HtmlView extends BaseHtmlView
         $toolbar->divider();
 
         $toolbar->preferences('com_proclaim', 'JBS_ADM_PERMISSIONS');
+
+        // ⚠️ Per-section permissions get their own screen: 17 grids on this form
+        // exceeds PHP's max_input_vars and the whole save fails silently (#1653).
+        if (Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+            $toolbar->linkButton('sectionpermissions', 'JBS_ADM_PERMISSIONS_TITLE')
+                ->url('index.php?option=com_proclaim&view=cwmpermissions')
+                ->icon('fa-solid fa-lock')
+                ->listCheck(false);
+        }
+
         ToolbarHelper::help('admin', true);
     }
 

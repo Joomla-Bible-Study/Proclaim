@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	One section's permissions. One grid per page keeps the posted field count at
+	actions × user groups; all 17 at once exceeds PHP's max_input_vars (#1653).
+
+	`section` and the `asset_id` value are set per request by
+	CwmpermissionsModel::getForm().
+-->
+<form>
+	<fieldset name="permissions">
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			translate_label="false"
+			class="inputbox"
+			component="com_proclaim"
+			section="component"
+			asset_field="asset_id"
+			validate="rules"
+			filter="rules"
+		/>
+	</fieldset>
+</form>
