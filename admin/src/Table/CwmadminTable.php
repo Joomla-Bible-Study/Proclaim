@@ -178,7 +178,7 @@ class CwmadminTable extends Table
     {
         $k = $this->_tbl_key;
 
-        return 'com_proclaim.cwmadmin.' . (int)$this->$k;
+        return 'com_proclaim.admin.' . (int)$this->$k;
     }
 
     /**
@@ -210,7 +210,8 @@ class CwmadminTable extends Table
     #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
-        // Get Proclaim Root ID
-        return Cwmassets::parentId();
+        // Parent to the section, so a rule on com_proclaim.admin reaches
+        // this record's own asset instead of being bypassed by it.
+        return Cwmassets::sectionParentId('admin');
     }
 }
