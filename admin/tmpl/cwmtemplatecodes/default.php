@@ -98,7 +98,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmtemplatecodes'); ?>" method
                             $item->max_ordering = 0; //??
                             $canCheckin          = $user->authorise('core.manage', 'com_checkin')
                                 || $item->checked_out == $userId || \is_null($item->checked_out);
-                            $canCreate          = $user->authorise('core.create');
+                            $canCreate          = $user->authorise('core.create', 'com_proclaim.templatecode');
                             $canEdit            = $user->authorise('core.edit', 'com_proclaim.templatecode.' . $item->id);
                             $canEditOwn         = $user->authorise('core.edit.own', 'com_proclaim.templatecode.' . $item->id);
                             $canChange          = $user->authorise('core.edit.state', 'com_proclaim.templatecode.' . $item->id);

@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmessages;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmessagesModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
@@ -31,7 +32,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
  * View class for a list of Messages.
@@ -121,7 +121,7 @@ class HtmlView extends BaseHtmlView
         $this->items         = $model->getItems();
         $this->pagination    = $model->getPagination();
         $this->state         = $model->getState();
-        $this->canDo         = ContentHelper::getActions('com_proclaim', 'message');
+        $this->canDo         = Cwmassets::sectionActions('message');
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
 
@@ -170,7 +170,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo   = ContentHelper::getActions('com_proclaim');
+        $canDo   = Cwmassets::sectionActions('message');
         $user    = $this->getCurrentUser();
         $toolbar = $this->getDocument()->getToolbar();
 

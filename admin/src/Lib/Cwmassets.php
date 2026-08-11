@@ -16,8 +16,11 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\MVC\View\CanDo;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 
@@ -79,6 +82,116 @@ class Cwmassets
     }
 
     /**
+     * Absolute path to admin/access.xml, or an empty string when it is missing.
+     *
+     * Resolved relative to this class rather than through JPATH_ADMINISTRATOR.
+     * Both layouts put access.xml two levels above src/Lib —
+     * administrator/components/com_proclaim/ when installed, admin/ in the
+     * repository — so the same expression works under test, where
+     * JPATH_ADMINISTRATOR points at the Joomla install rather than at us.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function accessFile(): string
+    {
+        $file = \dirname(__DIR__, 2) . '/access.xml';
+
+        if (is_file($file)) {
+            return $file;
+        }
+
+        $file = JPATH_ADMINISTRATOR . '/components/com_proclaim/access.xml';
+
+        return is_file($file) ? $file : '';
+    }
+
+    /**
+     * The permissions a user holds on `com_proclaim.<section>`.
+     *
+     * ⚠️ Use this, not `ContentHelper::getActions()`, for a section question:
+     * core discards its `$section` argument unless an item id comes with it and
+     * always reads the component's action list, so the two-argument form
+     * returns exactly what the bare one returns.
+     *
+     * Falls back to the component for an undeclared section. A section asset
+     * carrying empty rules inherits, so this is inert until a rule is set.
+     *
+     * @param   string  $section  Section name as declared in access.xml
+     *
+     * @return  CanDo
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function sectionActions(string $section): CanDo
+    {
+        if (!\in_array($section, self::declaredSections(), true)) {
+            Log::add(
+                "No '{$section}' section in access.xml; falling back to component permissions",
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return self::componentActions();
+        }
+
+        return self::actionsFor($section, 'com_proclaim.' . $section) ?? self::componentActions();
+    }
+
+    /**
+     * The permissions a user holds on `com_proclaim` itself.
+     *
+     * Equivalent to `ContentHelper::getActions('com_proclaim')`, but resolves
+     * access.xml through `accessFile()`. ⚠️ Core reads only from
+     * `JPATH_ADMINISTRATOR`, so under test it returns an all-null CanDo and any
+     * comparison against it passes vacuously.
+     *
+     * @return  CanDo
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function componentActions(): CanDo
+    {
+        return self::actionsFor('component', 'com_proclaim')
+            ?? ContentHelper::getActions('com_proclaim');
+    }
+
+    /**
+     * Build a CanDo from one access.xml section, answered against one asset.
+     *
+     * @param   string  $section    Section name to read the action list from
+     * @param   string  $assetName  Asset the actions are authorised against
+     *
+     * @return  CanDo|null  Null when access.xml cannot be read
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function actionsFor(string $section, string $assetName): ?CanDo
+    {
+        $file = self::accessFile();
+
+        if ($file === '') {
+            return null;
+        }
+
+        $actions = Access::getActionsFromFile($file, '/access/section[@name="' . $section . '"]/');
+
+        if ($actions === false) {
+            return null;
+        }
+
+        $result = new CanDo();
+        $user   = Factory::getApplication()->getIdentity();
+
+        foreach ($actions as $action) {
+            $result->set($action->name, $user->authorise($action->name, $assetName));
+        }
+
+        return $result;
+    }
+
+    /**
      * Section names admin/access.xml declares, excluding `component`.
      *
      * Read from the manifest rather than hardcoded so the list cannot drift
@@ -96,18 +209,9 @@ class Cwmassets
 
         self::$declaredSections = [];
 
-        // Resolved relative to this class rather than through JPATH_ADMINISTRATOR.
-        // Both layouts put access.xml two levels above src/Lib —
-        // administrator/components/com_proclaim/ when installed, admin/ in the
-        // repository — so the same expression works under test, where
-        // JPATH_ADMINISTRATOR points at the Joomla install rather than at us.
-        $file = \dirname(__DIR__, 2) . '/access.xml';
+        $file = self::accessFile();
 
-        if (!is_file($file)) {
-            $file = JPATH_ADMINISTRATOR . '/components/com_proclaim/access.xml';
-        }
-
-        if (!is_file($file)) {
+        if ($file === '') {
             Log::add('access.xml not found; no section assets can be resolved', Log::ERROR, 'com_proclaim');
 
             return self::$declaredSections;

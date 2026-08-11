@@ -16,9 +16,9 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmcomments;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmcommentsModel;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -117,7 +117,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $canDo = Cwmassets::sectionActions('comment');
         $user  = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance

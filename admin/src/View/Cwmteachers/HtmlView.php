@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmteachers;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Extension\ProclaimComponent;
+use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmteachersModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -24,7 +25,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 
 /**
  * View class for Teachers
@@ -115,7 +115,7 @@ class HtmlView extends BaseHtmlView
         $this->state         = $model->getState();
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
-        $this->canDo         = ContentHelper::getActions('com_proclaim', 'teacher');
+        $this->canDo         = Cwmassets::sectionActions('teacher');
 
         // Check for errors.
         if (\count($errors = $model->getErrors())) {
@@ -147,7 +147,7 @@ class HtmlView extends BaseHtmlView
      */
     protected function addToolbar(): void
     {
-        $canDo = ContentHelper::getActions('com_proclaim');
+        $canDo = Cwmassets::sectionActions('teacher');
         $user  = Factory::getApplication()->getIdentity();
 
         // Get the toolbar object instance

@@ -242,7 +242,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                                 'core.manage',
                                 'com_checkin'
                             ) || $item->checked_out == $userId || \is_null($item->checked_out);
-                            $canCreate  = $user->authorise('core.create');
+                            $canCreate  = $user->authorise('core.create', 'com_proclaim.message');
                             $canEdit    = $user->authorise('core.edit', 'com_proclaim.message.' . $item->id);
                             $canEditOwn = $user->authorise('core.edit.own', 'com_proclaim.message.' . $item->id);
                             $canChange  = $user->authorise('core.edit.state', 'com_proclaim.message.' . $item->id);

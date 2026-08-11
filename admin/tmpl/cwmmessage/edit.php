@@ -17,7 +17,6 @@
 use CWM\Component\Proclaim\Administrator\Helper\CwmaiHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -32,7 +31,6 @@ CwmlangHelper::registerAllForJs();
 $this->configFieldsets  = ['editorConfig'];
 $this->hiddenFieldsets  = ['basic-limited'];
 $this->ignore_fieldsets = ['jmetadata', 'item_associations'];
-$this->canDo            = ContentHelper::getActions('com_proclaim', 'message');
 
 // Create shortcut to parameters.
 $params = $this->form->getFieldsets('params');

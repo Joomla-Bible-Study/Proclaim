@@ -115,6 +115,41 @@ class AssetNameContractTest extends TestCase
         return $files;
     }
 
+    /**
+     * A file's PHP source with comments removed.
+     *
+     * These tests match call shapes with regular expressions, and the docblocks
+     * on this feature quote the very calls being guarded against -- explaining
+     * why `getActions('com_proclaim', 'teacher')` is inert is the whole point of
+     * the comment on `Cwmassets::sectionActions()`. Scanning raw text flags the
+     * explanation as the offence.
+     *
+     * @param   string  $file  Absolute path to a PHP file
+     *
+     * @return  string
+     * @since __DEPLOY_VERSION__
+     */
+    private static function codeWithoutComments(string $file): string
+    {
+        $code = '';
+
+        foreach (token_get_all((string) file_get_contents($file)) as $token) {
+            if (\is_array($token)) {
+                if ($token[0] === \T_COMMENT || $token[0] === \T_DOC_COMMENT) {
+                    continue;
+                }
+
+                $code .= $token[1];
+
+                continue;
+            }
+
+            $code .= $token;
+        }
+
+        return $code;
+    }
+
     #[TestDox('every section passed to authorise() is declared in access.xml')]
     public function testAuthoriseTargetsAreDeclaredSections(): void
     {
@@ -122,7 +157,7 @@ class AssetNameContractTest extends TestCase
         $offences = [];
 
         foreach (self::sourceFiles() as $file) {
-            $code = (string) file_get_contents($file);
+            $code = self::codeWithoutComments($file);
 
             // Only authorise() calls. loadForm('com_proclaim.server.<type>'),
             // setUserState() and $typeAlias share the prefix but are unrelated
@@ -150,6 +185,69 @@ class AssetNameContractTest extends TestCase
         );
     }
 
+    #[TestDox('every section passed to Cwmassets::sectionActions() is declared in access.xml')]
+    public function testSectionActionsTargetsAreDeclaredSections(): void
+    {
+        $declared = self::declaredSections();
+        $offences = [];
+
+        foreach (self::sourceFiles() as $file) {
+            $code = self::codeWithoutComments($file);
+
+            preg_match_all('/sectionActions\(\s*[\'"]([a-z_]+)[\'"]/i', $code, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $match) {
+                if (!\in_array($match[1], $declared, true)) {
+                    $offences[] = str_replace(self::root() . '/', '', $file) . ' -> ' . $match[1];
+                }
+            }
+        }
+
+        $this->assertSame(
+            [],
+            array_values(array_unique($offences)),
+            "Cwmassets::sectionActions() named a section admin/access.xml does not declare.\n"
+            . "It falls back to the component's own permissions, so the toolbar looks correct\n"
+            . 'while the section rules govern nothing. Declare the section, or correct the name.'
+        );
+    }
+
+    #[TestDox('nothing passes a section to ContentHelper::getActions() without an item id')]
+    public function testGetActionsIsNeverGivenASectionWithoutAnId(): void
+    {
+        // Core drops the section unless an id comes with it, so the two-argument
+        // form reads as section-scoped and is not. Use sectionActions() instead.
+        $offences = [];
+
+        foreach (self::sourceFiles() as $file) {
+            $code = self::codeWithoutComments($file);
+
+            preg_match_all(
+                '/getActions\(\s*[\'"]com_proclaim[\'"]\s*,\s*[\'"]([a-z_]+)[\'"]\s*([,)])/i',
+                $code,
+                $matches,
+                PREG_SET_ORDER
+            );
+
+            foreach ($matches as $match) {
+                // A third argument follows, so the section genuinely reaches the asset name.
+                if ($match[2] === ',') {
+                    continue;
+                }
+
+                $offences[] = str_replace(self::root() . '/', '', $file) . " -> getActions('com_proclaim', '{$match[1]}')";
+            }
+        }
+
+        $this->assertSame(
+            [],
+            array_values(array_unique($offences)),
+            "ContentHelper::getActions() was given a section but no item id, so core drops the\n"
+            . "section and answers for com_proclaim. Use Cwmassets::sectionActions('<section>')\n"
+            . 'for a section question, or pass the item id for an item question.'
+        );
+    }
+
     #[TestDox('every asset name written by a Table is declared in access.xml')]
     public function testTableAssetNamesAreDeclaredSections(): void
     {
@@ -157,7 +255,7 @@ class AssetNameContractTest extends TestCase
         $offences = [];
 
         foreach (glob(self::root() . '/admin/src/Table/*.php') as $file) {
-            $code = (string) file_get_contents($file);
+            $code = self::codeWithoutComments($file);
 
             if (!preg_match('/function\s+_getAssetName\b(.+?)\n    }/s', $code, $body)) {
                 continue;
