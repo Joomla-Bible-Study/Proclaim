@@ -545,6 +545,108 @@ class Cwmassets
     }
 
     /**
+     * Asset name prefixes that disagreed with access.xml, and their correction.
+     *
+     * A null target means the rows are removed rather than renamed.
+     *
+     * @var    array<string, string|null>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const LEGACY_ASSET_PREFIXES = [
+        'message_type' => 'messagetype',
+        'cwmadmin'     => 'admin',
+        'studytopics'  => null,
+    ];
+
+    /**
+     * Correct asset names written before they were bound to access.xml.
+     *
+     * Renaming is a plain column update: id, parent_id, lft and rgt are
+     * untouched, so the nested set is unaffected. `reparentItemAssets()` runs
+     * afterwards and moves the corrected rows under their section.
+     *
+     * @return  array{renamed: int, removed: int, collided: list<string>}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function renameLegacyAssetNames(): array
+    {
+        $db       = Factory::getContainer()->get(DatabaseInterface::class);
+        $renamed  = 0;
+        $removed  = 0;
+        $collided = [];
+
+        foreach (self::LEGACY_ASSET_PREFIXES as $from => $to) {
+            $like  = 'com_proclaim.' . $from . '.%';
+            $query = $db->createQuery()
+                ->select($db->quoteName(['id', 'name']))
+                ->from($db->quoteName('#__assets'))
+                ->where($db->quoteName('name') . ' LIKE :like')
+                ->bind(':like', $like);
+
+            foreach ((array) $db->setQuery($query)->loadObjectList() as $row) {
+                $suffix = substr((string) $row->name, \strlen('com_proclaim.' . $from . '.'));
+
+                if (!ctype_digit($suffix)) {
+                    continue;
+                }
+
+                // A link row between a study and a topic is not permissionable.
+                if ($to === null) {
+                    $asset = new \Joomla\CMS\Table\Asset($db);
+
+                    if ($asset->load((int) $row->id) && $asset->delete((int) $row->id)) {
+                        $removed++;
+                    }
+
+                    continue;
+                }
+
+                $target = 'com_proclaim.' . $to . '.' . $suffix;
+
+                // `name` is unique. A row already carrying the correct name means
+                // both were minted at some point; keep it and drop the stale one.
+                $exists = $db->setQuery(
+                    $db->createQuery()
+                        ->select($db->quoteName('id'))
+                        ->from($db->quoteName('#__assets'))
+                        ->where($db->quoteName('name') . ' = :target')
+                        ->bind(':target', $target)
+                )->loadResult();
+
+                if ($exists) {
+                    $collided[] = (string) $row->name;
+                    $asset      = new \Joomla\CMS\Table\Asset($db);
+
+                    if ($asset->load((int) $row->id)) {
+                        $asset->delete((int) $row->id);
+                    }
+
+                    continue;
+                }
+
+                $id = (int) $row->id;
+                $db->setQuery(
+                    $db->createQuery()
+                        ->update($db->quoteName('#__assets'))
+                        ->set($db->quoteName('name') . ' = :target')
+                        ->where($db->quoteName('id') . ' = :id')
+                        ->bind(':target', $target)
+                        ->bind(':id', $id, ParameterType::INTEGER)
+                )->execute();
+
+                $renamed++;
+            }
+        }
+
+        if ($renamed > 0 || $removed > 0) {
+            self::clearSectionCache();
+        }
+
+        return ['renamed' => $renamed, 'removed' => $removed, 'collided' => $collided];
+    }
+
+    /**
      * Move existing item assets under their section.
      *
      * `_getAssetParentId()` handles every asset created from now on; this is for

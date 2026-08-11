@@ -301,7 +301,7 @@ class CwmmessagetypeTable extends Table
     {
         $k = $this->_tbl_key;
 
-        return 'com_proclaim.message_type.' . (int)$this->$k;
+        return 'com_proclaim.messagetype.' . (int)$this->$k;
     }
 
     /**

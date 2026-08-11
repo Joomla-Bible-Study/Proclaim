@@ -231,6 +231,64 @@ class CwmassetsReparentTest extends IntegrationTestCase
         );
     }
 
+    #[TestDox('legacy asset names are corrected, and link-row assets removed')]
+    public function testLegacyAssetNamesAreCorrected(): void
+    {
+        Cwmassets::seedSections();
+        $component = Cwmassets::parentId();
+
+        $this->makeAsset('com_proclaim.message_type.999996', $component);
+        $this->makeAsset('com_proclaim.cwmadmin.999995', $component);
+        $this->makeAsset('com_proclaim.studytopics.999994', $component);
+
+        $result = Cwmassets::renameLegacyAssetNames();
+
+        $this->assertGreaterThanOrEqual(2, $result['renamed'], 'The two renamable names were not corrected.');
+        $this->assertGreaterThanOrEqual(1, $result['removed'], 'The link-row asset was not removed.');
+
+        foreach (['com_proclaim.messagetype.999996', 'com_proclaim.admin.999995'] as $name) {
+            $asset = new Asset($this->db);
+            $this->assertTrue($asset->loadByName($name), "{$name} does not exist after the rename.");
+        }
+
+        foreach (['com_proclaim.message_type.999996', 'com_proclaim.cwmadmin.999995'] as $name) {
+            $asset = new Asset($this->db);
+            $this->assertFalse($asset->loadByName($name), "{$name} still exists; the old name was not replaced.");
+        }
+
+        $gone = new Asset($this->db);
+        $this->assertFalse(
+            $gone->loadByName('com_proclaim.studytopics.999994'),
+            'A study-topic link row is not permissionable and its asset must be removed, not renamed.'
+        );
+    }
+
+    #[TestDox('a rename that would collide drops the stale row instead of failing')]
+    public function testRenameCollisionDropsTheStaleRow(): void
+    {
+        Cwmassets::seedSections();
+        $component = Cwmassets::parentId();
+
+        // Both names present: the old one is stale, the correct one wins.
+        $this->makeAsset('com_proclaim.messagetype.999993', $component);
+        $this->makeAsset('com_proclaim.message_type.999993', $component);
+
+        $result = Cwmassets::renameLegacyAssetNames();
+
+        $this->assertContains(
+            'com_proclaim.message_type.999993',
+            $result['collided'],
+            'The collision was not reported. `name` is unique, so an unreported collision is a '
+            . 'failed UPDATE that would abort the whole migration.'
+        );
+
+        $kept = new Asset($this->db);
+        $this->assertTrue($kept->loadByName('com_proclaim.messagetype.999993'), 'The correct row was dropped.');
+
+        $stale = new Asset($this->db);
+        $this->assertFalse($stale->loadByName('com_proclaim.message_type.999993'), 'The stale row survived.');
+    }
+
     #[TestDox('reparenting leaves the nested set valid')]
     public function testNestedSetSurvivesReparenting(): void
     {

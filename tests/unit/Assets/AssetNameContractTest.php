@@ -41,11 +41,9 @@ class AssetNameContractTest extends TestCase
     /**
      * Sections written to #__assets that access.xml does not declare.
      *
-     * These are real mismatches, deliberately not fixed here. Unlike the names
-     * that live only in code, each of these has already been persisted as an
-     * #__assets row on every existing site, so correcting them means renaming
-     * live rows through Joomla's nested set rather than editing a string --
-     * see #1653 items 3-5.
+     * Empty, and it must stay that way. It held three entries until #1653:
+     * `message_type` and `cwmadmin` are now written under their declared names,
+     * and `CwmstudytopicsTable` no longer tracks assets at all.
      *
      * This list must only ever shrink. Adding to it means shipping a section
      * whose permissions govern nothing.
@@ -53,11 +51,7 @@ class AssetNameContractTest extends TestCase
      * @var array<string, string>
      * @since __DEPLOY_VERSION__
      */
-    private const KNOWN_UNDECLARED = [
-        'message_type' => 'CwmmessagetypeTable writes message_type; access.xml declares messagetype (#1653)',
-        'cwmadmin'     => 'CwmadminTable writes cwmadmin; access.xml declares admin (#1653)',
-        'studytopics'  => 'CwmstudytopicsTable writes an asset for a section access.xml never declares (#1653)',
-    ];
+    private const KNOWN_UNDECLARED = [];
 
     /**
      * Section names declared in admin/access.xml.
@@ -283,9 +277,16 @@ class AssetNameContractTest extends TestCase
         // A mismatch gates the two on different sections.
         $lib = self::codeWithoutComments(self::root() . '/admin/src/Lib/Cwmassets.php');
 
+        // Bounded to the SECTION_BY_VIEW block. Scanning everything after it
+        // sweeps up any later const of the same shape.
+        $start = strpos($lib, 'SECTION_BY_VIEW');
+        $end   = strpos($lib, '];', $start === false ? 0 : $start);
+
+        $this->assertNotFalse($start, 'SECTION_BY_VIEW not found in Cwmassets.');
+
         preg_match_all(
             '/[\'"](cwm[a-z]+)[\'"]\s*=>\s*[\'"]([a-z_]+)[\'"]/i',
-            substr($lib, strpos($lib, 'SECTION_BY_VIEW')),
+            substr($lib, $start, $end - $start),
             $matches,
             PREG_SET_ORDER
         );
@@ -355,6 +356,15 @@ class AssetNameContractTest extends TestCase
     #[TestDox('the known-undeclared list only shrinks')]
     public function testKnownUndeclaredEntriesStillApply(): void
     {
+        // Asserted rather than looped, because a loop over an empty list passes
+        // without checking anything -- and the list is empty now.
+        $this->assertSame(
+            [],
+            self::KNOWN_UNDECLARED,
+            'A Table is writing an asset name access.xml does not declare. The list was emptied '
+            . 'in #1653; a new entry means shipping a section whose permissions govern nothing.'
+        );
+
         $declared = self::declaredSections();
 
         foreach (self::KNOWN_UNDECLARED as $section => $why) {

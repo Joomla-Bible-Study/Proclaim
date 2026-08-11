@@ -675,6 +675,26 @@ class com_proclaimInstallerScript extends InstallerScript
                 Log::add('Removed undeclared section asset(s): ' . implode(', ', $removed), Log::INFO, 'com_proclaim');
             }
 
+            // Names written before they were bound to access.xml. Must run
+            // before reparenting, which keys off the corrected section name.
+            $renames = Cwmassets::renameLegacyAssetNames();
+
+            if ($renames['renamed'] > 0 || $renames['removed'] > 0) {
+                Log::add(
+                    "Corrected {$renames['renamed']} asset name(s), removed {$renames['removed']}",
+                    Log::INFO,
+                    'com_proclaim'
+                );
+            }
+
+            if ($renames['collided'] !== []) {
+                Log::add(
+                    'Dropped stale duplicate asset(s): ' . implode(', ', $renames['collided']),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
+
             // Item assets written before sections existed hang off the component
             // and so ignore their section's rules.
             $reparented = Cwmassets::reparentItemAssets();

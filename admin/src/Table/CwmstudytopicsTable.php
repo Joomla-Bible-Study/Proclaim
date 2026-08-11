@@ -83,6 +83,12 @@ class CwmstudytopicsTable extends Table
     public function __construct(&$db)
     {
         parent::__construct('#__bsms_studytopics', 'id', $db);
+
+        // A link row between a study and a topic is not something anyone
+        // permissions. Table enables asset tracking for any table carrying an
+        // asset_id column, which minted an asset per link for a section
+        // access.xml never declared (#1653).
+        $this->_trackAssets = false;
     }
 
     /**
@@ -111,53 +117,6 @@ class CwmstudytopicsTable extends Table
         return $result;
     }
 
-    /**
-     * Method to compute the default name of the asset.
-     * The default name is in the form `table_name.id`
-     * where id is the value of the primary key of the table.
-     *
-     * @return      string
-     *
-     * @since       1.6
-     */
-    #[\Override]
-    protected function _getAssetName(): string
-    {
-        $k = $this->_tbl_key;
 
-        return 'com_proclaim.studytopics.' . (int)$this->$k;
-    }
 
-    /**
-     * Method to return the title to use for the asset table.
-     *
-     * @return      string
-     *
-     * @since       1.6
-     */
-    #[\Override]
-    protected function _getAssetTitle(): string
-    {
-        return 'JBS StudyTopics: ' . $this->id;
-    }
-
-    /**
-     * Method to get the parent asset under which to register this one.
-     * By default, all assets are registered to the ROOT node with ID 1.
-     * The extended class can define a table and id to lookup.  If the
-     * asset does not exist it will be created.
-     *
-     * @param   ?Table  $table  A Table object for the asset parent.
-     * @param   null    $id     Id to look up
-     *
-     * @return  int
-     *
-     * @since   11.1
-     */
-    #[\Override]
-    protected function _getAssetParentId(?Table $table = null, $id = null): int
-    {
-        // Get Proclaim Root ID
-        return Cwmassets::parentId();
-    }
 }
