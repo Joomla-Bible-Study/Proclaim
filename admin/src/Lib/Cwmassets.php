@@ -23,6 +23,7 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\View\CanDo;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Centralised Proclaim asset management.
@@ -382,6 +383,63 @@ class Cwmassets
         }
 
         return $resolved;
+    }
+
+    /**
+     * Remove `com_proclaim.<section>` assets access.xml no longer declares.
+     *
+     * The counterpart to seeding: a section dropped from access.xml leaves a row
+     * that the permissions screen no longer lists, so its rules would keep
+     * applying with nothing able to show or change them.
+     *
+     * Only ever removes section rows — item assets carry a third segment and are
+     * left alone.
+     *
+     * @return  list<string>  Names removed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function pruneUndeclaredSections(): array
+    {
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $parent = self::parentId();
+
+        if ($parent < 1) {
+            return [];
+        }
+
+        $query = $db->createQuery()
+            ->select($db->quoteName(['id', 'name']))
+            ->from($db->quoteName('#__assets'))
+            ->where($db->quoteName('parent_id') . ' = :parent')
+            ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%'))
+            ->bind(':parent', $parent, ParameterType::INTEGER);
+
+        $declared = self::declaredSections();
+        $removed  = [];
+
+        foreach ((array) $db->setQuery($query)->loadObjectList() as $row) {
+            $suffix = substr((string) $row->name, \strlen('com_proclaim.'));
+
+            // Item assets are com_proclaim.<section>.<id>; leave them be.
+            if (str_contains($suffix, '.') || \in_array($suffix, $declared, true)) {
+                continue;
+            }
+
+            $asset = new \Joomla\CMS\Table\Asset($db);
+
+            if ($asset->load((int) $row->id) && $asset->delete((int) $row->id)) {
+                $removed[] = (string) $row->name;
+            } else {
+                Log::add("Could not remove undeclared section asset '{$row->name}'", Log::WARNING, 'com_proclaim');
+            }
+        }
+
+        if ($removed !== []) {
+            self::clearSectionCache();
+        }
+
+        return $removed;
     }
 
     // =========================================================================

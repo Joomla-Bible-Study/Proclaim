@@ -295,6 +295,71 @@ class CwmassetsSectionTest extends IntegrationTestCase
         );
     }
 
+    #[TestDox('pruning removes an undeclared section but never an item asset')]
+    public function testPruneRemovesOnlyUndeclaredSectionRows(): void
+    {
+        $parent = Cwmassets::parentId();
+
+        if ($parent < 1) {
+            $this->fail('com_proclaim has no parent asset; nothing to parent the fixtures to.');
+        }
+
+        // A section access.xml no longer declares, and an item asset that must
+        // survive -- eating those would drop real per-record permissions.
+        $fixtures = [];
+
+        foreach (['com_proclaim.notasection', 'com_proclaim.teacher.999999'] as $name) {
+            $asset = new Asset($this->db);
+            $asset->setLocation($parent, 'last-child');
+            $asset->name  = $name;
+            $asset->title = $name;
+            $asset->rules = '{}';
+
+            $this->assertTrue($asset->check() && $asset->store(), "Could not create fixture {$name}");
+            $fixtures[$name] = (int) $asset->id;
+        }
+
+        $existing = $this->existingSections();
+        Cwmassets::seedSections();
+        $this->rememberCreated($existing);
+
+        try {
+            $removed = Cwmassets::pruneUndeclaredSections();
+
+            $this->assertContains(
+                'com_proclaim.notasection',
+                $removed,
+                'An undeclared section asset survived the prune; its rules would keep applying '
+                . 'with no screen able to show them.'
+            );
+
+            $survivor = new Asset($this->db);
+            $this->assertTrue(
+                $survivor->loadByName('com_proclaim.teacher.999999'),
+                'The prune removed an item asset. Item rows carry per-record permissions and '
+                . 'must never be touched by section cleanup.'
+            );
+
+            foreach (Cwmassets::declaredSections() as $section) {
+                $still = new Asset($this->db);
+                $this->assertTrue(
+                    $still->loadByName('com_proclaim.' . $section),
+                    "The prune removed '{$section}', which access.xml still declares."
+                );
+            }
+        } finally {
+            foreach ($fixtures as $id) {
+                $asset = new Asset($this->db);
+
+                if ($asset->load($id)) {
+                    $asset->delete($id);
+                }
+            }
+
+            Cwmassets::clearSectionCache();
+        }
+    }
+
     /**
      * How many `com_proclaim.<section>` assets exist right now.
      *

@@ -666,10 +666,17 @@ class com_proclaimInstallerScript extends InstallerScript
             $resolved = Cwmassets::seedSections();
 
             Log::add("Resolved {$resolved} Proclaim section asset(s)", Log::INFO, 'com_proclaim');
+
+            // Sections can leave access.xml as well as join it. A row for one
+            // that is gone still carries rules, and no screen lists it.
+            $removed = Cwmassets::pruneUndeclaredSections();
+
+            if ($removed !== []) {
+                Log::add('Removed undeclared section asset(s): ' . implode(', ', $removed), Log::INFO, 'com_proclaim');
+            }
         } catch (\Throwable $e) {
-            // Nothing reads these yet, so a failure costs no behaviour today —
-            // and must not take down an otherwise successful install.
-            Log::add('Could not seed section assets: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+            // Must not take down an otherwise successful install.
+            Log::add('Could not reconcile section assets: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
         }
     }
 
