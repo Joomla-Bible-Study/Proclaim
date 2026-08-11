@@ -389,6 +389,11 @@
                class="alert alert-warning"
                showon="archive_auto:1"/>
     </fieldset>
+    <fieldset name="customcss">
+        <field name="custom_css" type="editor" editor="codemirror|none" buttons="no"
+               rows="20" cols="200" syntax="css" filter="raw"
+               label="JBS_ADM_CUSTOM_CSS" description="JBS_ADM_CUSTOM_CSS_DESC"/>
+    </fieldset>
     <fieldset addfieldprefix="CWM\Component\Proclaim\Administrator\Field"
               addrulepath="/administrator/components/com_proclaim/models/rules">
         <field name="mediaimage" type="MediaFileImages"
