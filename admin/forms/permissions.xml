@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	One section's permissions, and only one.
+
+	The 17 grids that used to live on the Administration screen posted 1217
+	fields against PHP's default max_input_vars of 1000, so $_POST was truncated
+	at request startup, the `task` field was dropped, and the save silently did
+	nothing (#1653). A page carries a single grid so the field count is
+	actions × user groups, about 70 on a fourteen-group site, and stays bounded
+	however many sections access.xml grows.
+
+	`section` and the `asset_id` value are set per request by
+	CwmpermissionsModel::getForm(). Declared here rather than built as XML at
+	runtime so Form binds the value normally: fields added after loadForm() has
+	bound its data never receive it, and an empty asset_field makes RulesField
+	fall back to the component asset and show com_proclaim's own rules under a
+	section label.
+-->
+<form>
+	<fieldset name="permissions">
+		<field
+			name="asset_id"
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field
+			name="rules"
+			type="rules"
+			label="JCONFIG_PERMISSIONS_LABEL"
+			translate_label="false"
+			class="inputbox"
+			component="com_proclaim"
+			section="component"
+			asset_field="asset_id"
+			validate="rules"
+			filter="rules"
+		/>
+	</fieldset>
+</form>
