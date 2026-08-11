@@ -173,61 +173,12 @@ class CwmmessageTable extends Table
      */
     public ?string $verse_end2 = null;
 
-    /**
-     * Prod DVD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $prod_dvd = null;
 
-    /**
-     * Prod CD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $prod_cd = null;
 
-    /**
-     * Server CD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $server_cd = null;
 
-    /**
-     * Server DVD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $server_dvd = null;
 
-    /**
-     * Image CD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $image_cd = null;
 
-    /**
-     * Image DVD
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $image_dvd = null;
 
-    /**
-     * Study Text 2
-     *
-     * @var string|null
-     * @since 9.0.0
-     */
-    public ?string $studytext2 = null;
 
     /**
      * Comments
