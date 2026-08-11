@@ -297,9 +297,12 @@ class CwmmediafileTable extends Table
     {
         $result = parent::store($updateNulls);
 
-        if ($result) {
-            Cwmassets::stripEmptyAssetRow($this);
+        // Unconditional: Table::store() runs its asset block even when the
+        // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
+        // behind for a record that was never created (#1723).
+        Cwmassets::stripEmptyAssetRow($this);
 
+        if ($result) {
             // Immediately attach this media file to any playlist that already
             // lists its remote video (local-only; safe no-op for non-playlist
             // platforms and on sites without the playlist tables).

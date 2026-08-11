@@ -1152,11 +1152,30 @@ class Cwmassets
                 return;
             }
 
-            $query = $db->createQuery()
-                ->delete($db->quoteName('#__assets'))
-                ->where($db->quoteName('id') . ' = ' . $assetId);
-            $db->setQuery($query);
-            $db->execute();
+            // Through Table\Asset, not a raw DELETE: #__assets is a nested set,
+            // and removing a row without closing its lft/rgt gap leaves numbers
+            // only a full rebuild() reclaims — which fixAllAssets() skips on its
+            // fast path precisely because it is expensive (#1724).
+            $asset = new \Joomla\CMS\Table\Asset($db);
+
+            if (!$asset->load($assetId)) {
+                return;
+            }
+
+            if (!$asset->delete($assetId)) {
+                Log::add(
+                    "Could not remove empty asset {$assetId}: " . $asset->getError(),
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+
+                return;
+            }
+
+            // Keep the in-memory instance consistent whether or not the record
+            // itself exists — after a failed insert there is no row to update,
+            // but the object must not keep pointing at a deleted asset.
+            $table->asset_id = 0;
 
             // Null the record's asset_id so it stops pointing at the
             // row we just deleted. Use the table's own name/key so we
@@ -1171,9 +1190,6 @@ class Cwmassets
                     ->where($db->quoteName($keyName) . ' = ' . (int) $table->$keyName);
                 $db->setQuery($query);
                 $db->execute();
-
-                // Keep the in-memory table instance consistent with the DB.
-                $table->asset_id = 0;
             }
         } catch (\Exception $e) {
             Log::add(
