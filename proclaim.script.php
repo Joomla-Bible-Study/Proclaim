@@ -1667,47 +1667,51 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
-        // Legacy data migrations run on UPGRADES only. A fresh install's SQL
-        // already creates the current schema, so there is nothing to migrate —
-        // running these against freshly seeded default rows only produces
-        // spurious warnings (e.g. the podcast-link "could not be matched" notice)
-        // and, historically, fatals when a moved helper no longer exists.
-        if ($type === 'update') {
-            // Migrate legacy scripture columns to junction table
-            try {
-                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+        // ⚠️ The scripture migration is the one that also runs on a fresh install.
+        // install.mysql.utf8.sql seeds the sample study with legacy flat columns
+        // and no junction row, so an install that skipped this shipped a study
+        // whose reference the junction never knew about (#1623).
+        try {
+            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-                if (file_exists($migrationPath)) {
-                    require_once $migrationPath;
-                    // These helpers moved to lib_cwmscripture in 10.3.0 and the
-                    // migration autoloads the library class via the namespace
-                    // registered in preflight(). Only require a legacy in-component
-                    // copy if one is still present — a bare require_once of the
-                    // (now missing) file is a fatal that the catch below can't trap.
-                    $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
+            if (file_exists($migrationPath)) {
+                require_once $migrationPath;
+                // These helpers moved to lib_cwmscripture in 10.3.0 and the
+                // migration autoloads the library class via the namespace
+                // registered in preflight(). Only require a legacy in-component
+                // copy if one is still present — a bare require_once of the
+                // (now missing) file is a fatal that the catch below can't trap.
+                $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
 
-                    foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
-                        if (is_file($helperDir . $legacyHelper)) {
-                            require_once $helperDir . $legacyHelper;
-                        }
-                    }
-
-                    $migrated = CwmscriptureMigration::migrate();
-
-                    if ($migrated > 0) {
-                        Factory::getApplication()->enqueueMessage(
-                            $migrated . ' study scripture reference(s) migrated to new format.',
-                            'message'
-                        );
+                foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
+                    if (is_file($helperDir . $legacyHelper)) {
+                        require_once $helperDir . $legacyHelper;
                     }
                 }
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage(
-                    'Scripture migration notice: ' . $e->getMessage(),
-                    'warning'
-                );
-            }
 
+                $migrated = CwmscriptureMigration::migrate();
+
+                if ($migrated > 0 && $type === 'update') {
+                    Factory::getApplication()->enqueueMessage(
+                        $migrated . ' study scripture reference(s) migrated to new format.',
+                        'message'
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Scripture migration notice: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+
+        // The remaining legacy data migrations run on UPGRADES only. A fresh
+        // install's SQL already creates the current schema, so there is nothing
+        // to migrate — running these against freshly seeded default rows only
+        // produces spurious warnings (e.g. the podcast-link "could not be
+        // matched" notice) and, historically, fatals when a moved helper no
+        // longer exists.
+        if ($type === 'update') {
             // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
             try {
                 CwmmigrationHelper::fixMediafileLegacyPaths();
