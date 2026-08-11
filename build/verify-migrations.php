@@ -14,7 +14,8 @@
  *
  * Data-driven: EXPECTATIONS is keyed by version. When a release adds migrations,
  * add an entry describing the tables/columns/indexes it introduces and the
- * #__schemas version it should advance to.
+ * #__schemas version it should advance to. `columnsAbsent` asserts a DROP
+ * actually happened, which is the only way a removal can be proven.
  *
  * Every entry at or below the version under test is verified, not just the newest.
  * The release being cut has to carry what all of its predecessors introduced, and
@@ -177,6 +178,30 @@ $EXPECTATIONS = [
             '#__bsms_playlists'   => ['uq_server_remote_playlist', 'idx_remote_playlist'],
         ],
         'schemaMin' => '10.5.6',
+    ],
+    /*
+     * 10.5.8 removes seven columns from #__bsms_studies that were declared and
+     * never used: the CD/DVD production set from when messages shipped on
+     * physical media, plus a second study-text field (#1690). Empty on every
+     * database available, including one carrying 827 imported studies.
+     *
+     * Asserted by absence, one per column. The migration deliberately issues
+     * seven separate ALTER statements: MysqlChangeItem reads only words 3 and 4,
+     * so a compound DROP would register as one and leave six unchecked.
+     */
+    '10.5.8' => [
+        'columnsAbsent' => [
+            '#__bsms_studies' => [
+                'prod_dvd',
+                'prod_cd',
+                'server_cd',
+                'server_dvd',
+                'image_cd',
+                'image_dvd',
+                'studytext2',
+            ],
+        ],
+        'schemaMin' => '10.5.8',
     ],
 ];
 
@@ -362,6 +387,20 @@ foreach ($installs as $install) {
             foreach ($cols as $col) {
                 $ok        = columnExists($mysqli, $db['name'], $real, $col);
                 $results[] = [$ok, "[{$version}] column {$table}.{$col}"];
+            }
+        }
+
+        // --- columns that must be gone ------------------------------------
+        // A DROP migration is only proven by absence. Joomla's MysqlChangeItem
+        // reads words 3 and 4 of a statement, so a compound ALTER drops every
+        // column but registers only the first — asserting each one is what
+        // catches that.
+        foreach ($expected['columnsAbsent'] ?? [] as $table => $cols) {
+            $real = $expand($table);
+
+            foreach ($cols as $col) {
+                $ok        = !columnExists($mysqli, $db['name'], $real, $col);
+                $results[] = [$ok, "[{$version}] column {$table}.{$col} removed"];
             }
         }
 
