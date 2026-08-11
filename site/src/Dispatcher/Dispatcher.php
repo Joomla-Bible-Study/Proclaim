@@ -21,6 +21,7 @@ if (!\defined('CWM_LOADED')) {
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use CWM\Component\Proclaim\Site\Helper\CwmcustomcssHelper;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
 use Joomla\CMS\Language\Text;
 
@@ -49,6 +50,10 @@ class Dispatcher extends ComponentDispatcher
     public function dispatch(): void
     {
         CwmproclaimHelper::applyViewAndController($this->defaultController);
+
+        // Once per component request, ahead of the views, so a rule can reach
+        // anything Proclaim renders.
+        CwmcustomcssHelper::apply();
 
         if ($this->input->get('view') === 'cwmlandingpage' && $this->input->get('layout') === 'modal') {
             if (!$this->app->getIdentity()->authorise('core.create', 'com_proclaim')) {

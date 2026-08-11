@@ -103,6 +103,10 @@
                    label="JBS_TPL_SERIES_TEMPLATE" description="JBS_TPL_SERMONS_TEMPLATE_DESC">
                 <option value="0">JBS_CMN_USE_DEFAULT</option>
             </field>
+
+            <field name="custom_css" type="editor" editor="codemirror|none" buttons="no"
+                   rows="15" cols="200" syntax="css" filter="raw"
+                   label="JBS_TPL_CUSTOM_CSS" description="JBS_TPL_CUSTOM_CSS_DESC"/>
         </fieldset>
         <fieldset name="FILTERS" label="JBS_TPL_FILTERS"
                   addfieldprefix="CWM\Component\Proclaim\Administrator\Field">

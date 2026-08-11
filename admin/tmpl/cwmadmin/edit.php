@@ -835,6 +835,18 @@ $wa->useScript('com_proclaim.admin-imagetools');
 echo HTMLHelper::_('uitab.endTab'); ?>
 
         <?php
+echo HTMLHelper::_('uitab.addTab', 'myTab', 'customcss', Text::_('JBS_ADM_CUSTOM_CSS_TAB')); ?>
+    <div class="row">
+        <div class="col-12">
+            <div class="cwmadmin-panel mb-4">
+                <p class="tab-description"><?php echo Text::_('JBS_ADM_CUSTOM_CSS_TAB_DESC'); ?></p>
+                <?php echo $this->form->renderField('custom_css', 'params'); ?>
+            </div>
+        </div>
+    </div>
+<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+<?php
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'scripture', Text::_('JBS_ADM_SCRIPTURE_TAB'));
 
 // Single shared renderer for the entire Scripture tab —
