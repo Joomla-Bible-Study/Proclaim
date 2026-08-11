@@ -86,49 +86,45 @@ class CwmassetsStripTest extends IntegrationTestCase
         )->loadResult();
     }
 
-    #[TestDox('a failed save leaves no asset for the record that was never created')]
-    public function testFailedStoreLeavesNoOrphanAsset(): void
+    #[TestDox('the asset a failed save leaves behind is removed, and the record detached from it')]
+    public function testOrphanAssetFromAFailedSaveIsRemoved(): void
     {
-        $before = (int) $this->db->setQuery(
-            'SELECT COUNT(*) FROM ' . $this->db->quoteName('#__assets')
-            . ' WHERE ' . $this->db->quoteName('name') . ' = ' . $this->db->quote('com_proclaim.teacher.0')
-        )->loadResult();
+        // Reproduces the state a failed save leaves: Table::store() runs its
+        // asset block even after the insert throws, so the asset exists while
+        // the record does not and the key is still null.
+        //
+        // Built directly rather than by forcing a real insert failure. Whether
+        // an insert fails at all depends on the server's sql_mode and on
+        // whether the column has a default in that schema — both differ between
+        // a developer machine and CI, and either turns a forced failure into a
+        // test that silently measures nothing.
+        $asset = new Asset($this->db);
+        $asset->setLocation(Cwmassets::sectionId('teacher') ?: Cwmassets::parentId(), 'last-child');
+        $asset->name  = 'com_proclaim.teacher.0';
+        $asset->title = 'com_proclaim.teacher.0';
+        $asset->rules = '{}';
 
-        $this->assertSame(0, $before, 'A com_proclaim.teacher.0 asset exists before the test runs.');
+        $this->assertTrue($asset->check() && $asset->store(), 'Could not create the orphan fixture.');
 
-        // ⚠️ Strict mode is set here rather than assumed. Whether omitting a
-        // NOT NULL column raises an error or is silently coerced is a server
-        // setting: local MySQL runs STRICT_TRANS_TABLES, CI's does not, so
-        // without this the insert succeeds and the test measures nothing.
-        $mode = (string) $this->db->setQuery('SELECT @@SESSION.sql_mode')->loadResult();
-        $this->db->setQuery("SET SESSION sql_mode = 'STRICT_ALL_TABLES'")->execute();
+        $table           = new CwmteacherTable($this->db);
+        $table->id       = null;
+        $table->asset_id = (int) $asset->id;
 
-        try {
-            // Table::store() runs its asset block even after the insert throws,
-            // which is the path that minted the orphan.
-            $table              = new CwmteacherTable($this->db);
-            $table->id          = null;
-            $table->teachername = null;
+        Cwmassets::stripEmptyAssetRow($table);
 
-            $stored = $table->store();
-        } finally {
-            $this->db->setQuery('SET SESSION sql_mode = ' . $this->db->quote($mode))->execute();
-        }
+        $survivor = new Asset($this->db);
 
-        $this->assertFalse($stored, 'The insert was expected to fail; this test proves nothing if it succeeded.');
-
-        $after = (int) $this->db->setQuery(
-            'SELECT COUNT(*) FROM ' . $this->db->quoteName('#__assets')
-            . ' WHERE ' . $this->db->quoteName('name') . ' = ' . $this->db->quote('com_proclaim.teacher.0')
-        )->loadResult();
-
+        $this->assertFalse(
+            $survivor->loadByName('com_proclaim.teacher.0'),
+            'The orphan survived. It belongs to no record, and now that item assets are parented to '
+            . 'their section it would read as a real per-record permission.'
+        );
         $this->assertSame(
             0,
-            $after,
-            'A failed save left com_proclaim.teacher.0 behind. It belongs to no record, and now that item '
-            . 'assets are parented to their section it would read as a real per-record permission.'
+            (int) $table->asset_id,
+            'The table still points at the asset that was removed. There is no record row to update '
+            . 'after a failed insert, so the in-memory value is all there is to correct.'
         );
-        $this->assertSame(0, (int) $table->asset_id, 'The table still points at the asset that was removed.');
     }
 
     #[TestDox('removing an empty asset closes its gap in the nested set')]
