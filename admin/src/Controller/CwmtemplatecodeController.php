@@ -134,6 +134,6 @@ class CwmtemplatecodeController extends FormController
             }
         }
 
-        return $this->allowSectionEdit();
+        return $this->allowSectionEdit((int) ($data[$key] ?? 0));
     }
 }

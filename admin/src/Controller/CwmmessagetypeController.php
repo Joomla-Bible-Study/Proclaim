@@ -87,7 +87,7 @@ class CwmmessagetypeController extends FormController
             return false;
         }
 
-        return $this->allowSectionEdit();
+        return $this->allowSectionEdit((int) ($data[$key] ?? 0));
     }
 
     /**

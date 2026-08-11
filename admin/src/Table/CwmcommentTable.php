@@ -307,7 +307,8 @@ class CwmcommentTable extends Table
     #[\Override]
     protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
-        // Get Proclaim Root ID
-        return Cwmassets::parentId();
+        // Parent to the section, so a rule on com_proclaim.comment reaches
+        // this record's own asset instead of being bypassed by it.
+        return Cwmassets::sectionParentId('comment');
     }
 }

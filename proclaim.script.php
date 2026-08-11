@@ -674,6 +674,23 @@ class com_proclaimInstallerScript extends InstallerScript
             if ($removed !== []) {
                 Log::add('Removed undeclared section asset(s): ' . implode(', ', $removed), Log::INFO, 'com_proclaim');
             }
+
+            // Item assets written before sections existed hang off the component
+            // and so ignore their section's rules.
+            $reparented = Cwmassets::reparentItemAssets();
+
+            if ($reparented['moved'] > 0) {
+                Log::add("Reparented {$reparented['moved']} item asset(s) under their section", Log::INFO, 'com_proclaim');
+            }
+
+            if ($reparented['skipped'] !== []) {
+                Log::add(
+                    'Left item asset(s) belonging to no record: ' . implode(', ', $reparented['skipped'])
+                    . ' — run Database Maintenance to clean them',
+                    Log::WARNING,
+                    'com_proclaim'
+                );
+            }
         } catch (\Throwable $e) {
             // Must not take down an otherwise successful install.
             Log::add('Could not reconcile section assets: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');

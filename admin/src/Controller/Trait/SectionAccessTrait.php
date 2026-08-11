@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Controller\Trait;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Answers create and edit against `com_proclaim.<section>` rather than the component.
@@ -43,18 +45,59 @@ trait SectionAccessTrait
     /**
      * The asset create and edit are authorised against.
      *
-     * Always the section, never `com_proclaim.<section>.<id>`. Item assets are
-     * parented to the component, so asking one lets any record that happens to
-     * carry an `#__assets` row escape the section rule entirely. Records with an
-     * explicit item grant are therefore governed by the section too.
+     * The record's own asset when it has one — those are parented to the section
+     * now, so its rules are inherited and an item rule refines within them
+     * rather than escaping them. A deny on the section still wins, because
+     * `Rule::mergeIdentity()` merges root-first and an explicit deny survives
+     * every later merge.
+     *
+     * ⚠️ Only when `asset_id > 0`. Joomla resolves an unknown
+     * `com_proclaim.teacher.5` to everything before the **first** dot, so a
+     * row-less record would fall back to `com_proclaim` and skip the section.
+     *
+     * @param   int  $recordId  The record being edited, 0 when creating
      *
      * @return  string
      *
      * @since   __DEPLOY_VERSION__
      */
-    protected function sectionAsset(): string
+    protected function sectionAsset(int $recordId = 0): string
     {
-        return isset($this->aclSection) ? 'com_proclaim.' . $this->aclSection : 'com_proclaim';
+        if (!isset($this->aclSection)) {
+            return 'com_proclaim';
+        }
+
+        $section = 'com_proclaim.' . $this->aclSection;
+
+        return $recordId > 0 && $this->recordHasAsset($recordId) ? $section . '.' . $recordId : $section;
+    }
+
+    /**
+     * Whether a record carries an `#__assets` row of its own.
+     *
+     * Most do not: Proclaim strips an item asset again when its rules are empty,
+     * so one exists only where per-record permissions were actually set.
+     *
+     * @param   int  $recordId  The record primary key
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function recordHasAsset(int $recordId): bool
+    {
+        if (!isset($this->accessTable)) {
+            return false;
+        }
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select($db->quoteName('asset_id'))
+            ->from($db->quoteName($this->accessTable))
+            ->where($db->quoteName('id') . ' = :id')
+            ->bind(':id', $recordId, ParameterType::INTEGER);
+
+        return (int) $db->setQuery($query)->loadResult() > 0;
     }
 
     /**
@@ -83,8 +126,8 @@ trait SectionAccessTrait
      * @throws  \Exception
      * @since   __DEPLOY_VERSION__
      */
-    protected function allowSectionEdit(): bool
+    protected function allowSectionEdit(int $recordId = 0): bool
     {
-        return Factory::getApplication()->getIdentity()->authorise('core.edit', $this->sectionAsset());
+        return Factory::getApplication()->getIdentity()->authorise('core.edit', $this->sectionAsset($recordId));
     }
 }
