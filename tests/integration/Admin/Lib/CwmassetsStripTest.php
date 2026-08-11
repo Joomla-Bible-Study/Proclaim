@@ -96,13 +96,24 @@ class CwmassetsStripTest extends IntegrationTestCase
 
         $this->assertSame(0, $before, 'A com_proclaim.teacher.0 asset exists before the test runs.');
 
-        // Force the INSERT to fail. Table::store() still runs its asset block
-        // afterwards, so this is the path that minted the orphan.
-        $table              = new CwmteacherTable($this->db);
-        $table->id          = null;
-        $table->teachername = null;
+        // ⚠️ Strict mode is set here rather than assumed. Whether omitting a
+        // NOT NULL column raises an error or is silently coerced is a server
+        // setting: local MySQL runs STRICT_TRANS_TABLES, CI's does not, so
+        // without this the insert succeeds and the test measures nothing.
+        $mode = (string) $this->db->setQuery('SELECT @@SESSION.sql_mode')->loadResult();
+        $this->db->setQuery("SET SESSION sql_mode = 'STRICT_ALL_TABLES'")->execute();
 
-        $stored = $table->store();
+        try {
+            // Table::store() runs its asset block even after the insert throws,
+            // which is the path that minted the orphan.
+            $table              = new CwmteacherTable($this->db);
+            $table->id          = null;
+            $table->teachername = null;
+
+            $stored = $table->store();
+        } finally {
+            $this->db->setQuery('SET SESSION sql_mode = ' . $this->db->quote($mode))->execute();
+        }
 
         $this->assertFalse($stored, 'The insert was expected to fail; this test proves nothing if it succeeded.');
 
