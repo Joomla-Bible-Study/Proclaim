@@ -225,9 +225,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmservers'); ?>" method="post
                 <?php
                 // Load the batch processing form.?>
                 <?php
-                if ($user->authorise('core.create', 'com_proclaim')
-                    && $user->authorise('core.edit', 'com_proclaim')
-                    && $user->authorise('core.edit.state', 'com_proclaim')
+                if ($user->authorise('core.create', 'com_proclaim.server')
+                    && $user->authorise('core.edit', 'com_proclaim.server')
+                    && $user->authorise('core.edit.state', 'com_proclaim.server')
                 ) : ?>
                     <?php
                     echo HTMLHelper::_(

@@ -233,9 +233,9 @@ if (empty($this->items)) : ?>
                 <?php
                 // Load the batch processing form.?>
                 <?php
-                if ($user->authorise('core.create', 'com_proclaim')
-                    && $user->authorise('core.edit', 'com_proclaim')
-                    && $user->authorise('core.edit.state', 'com_proclaim')
+                if ($user->authorise('core.create', 'com_proclaim.location')
+                    && $user->authorise('core.edit', 'com_proclaim.location')
+                    && $user->authorise('core.edit.state', 'com_proclaim.location')
                 ) : ?>
                     <?php
                     echo HTMLHelper::_(
@@ -250,8 +250,8 @@ if (empty($this->items)) : ?>
                 <?php
                 endif; ?>
                 <?php
-                if ($user->authorise('core.delete', 'com_proclaim')
-                    && $user->authorise('core.edit', 'com_proclaim')
+                if ($user->authorise('core.delete', 'com_proclaim.location')
+                    && $user->authorise('core.edit', 'com_proclaim.location')
                 ) : ?>
                     <?php
                     echo HTMLHelper::_(

@@ -380,9 +380,9 @@ echo Route::_('index.php?option=com_proclaim&view=cwmmessages'); ?>" method="pos
                     // Load the batch processing form.?>
                     <?php
                     if (
-                        $user->authorise('core.create', 'com_proclaim')
-                        && $user->authorise('core.edit', 'com_proclaim')
-                        && $user->authorise('core.edit.state', 'com_proclaim')
+                        $user->authorise('core.create', 'com_proclaim.message')
+                        && $user->authorise('core.edit', 'com_proclaim.message')
+                        && $user->authorise('core.edit.state', 'com_proclaim.message')
                     ) : ?>
                         <?php
                         echo HTMLHelper::_(
