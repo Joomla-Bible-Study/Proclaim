@@ -234,9 +234,10 @@ class CwmlocationTable extends Table
     {
         $result = parent::store($updateNulls);
 
-        if ($result) {
-            Cwmassets::stripEmptyAssetRow($this);
-        }
+        // Unconditional: Table::store() runs its asset block even when the
+        // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
+        // behind for a record that was never created (#1723).
+        Cwmassets::stripEmptyAssetRow($this);
 
         return $result;
     }

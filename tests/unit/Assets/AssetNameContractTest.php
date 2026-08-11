@@ -319,6 +319,38 @@ class AssetNameContractTest extends TestCase
         $this->assertSame([], $mismatches, 'The edit form and its save are gated on different sections.');
     }
 
+    #[TestDox('no Table strips its empty asset only when the save succeeded')]
+    public function testStripEmptyAssetRowIsNotConditionalOnSuccess(): void
+    {
+        // Table::store() runs its asset block even when the insert threw, so a
+        // failed save creates com_proclaim.<section>.0 for a record that never
+        // existed. Guarded here rather than by forcing a real insert failure:
+        // whether an insert fails depends on the server's sql_mode and on the
+        // column defaults in that schema, neither of which a test controls.
+        $offences = [];
+
+        foreach (glob(self::root() . '/admin/src/Table/*.php') as $file) {
+            $code = self::codeWithoutComments($file);
+
+            if (!str_contains($code, 'stripEmptyAssetRow')) {
+                continue;
+            }
+
+            // The call sitting inside an `if ($result) {` block, with nothing
+            // but whitespace between, is the shape that skipped the cleanup.
+            if (preg_match('/if\s*\(\s*\$result\s*\)\s*\{\s*Cwmassets::stripEmptyAssetRow/', $code)) {
+                $offences[] = basename($file);
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offences,
+            "A Table strips its empty asset only when the save succeeded.\n"
+            . 'A failed save is exactly when the orphan is created, so the cleanup has to run either way.'
+        );
+    }
+
     #[TestDox('every asset name written by a Table is declared in access.xml')]
     public function testTableAssetNamesAreDeclaredSections(): void
     {
