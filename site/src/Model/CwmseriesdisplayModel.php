@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -178,13 +179,6 @@ class CwmseriesdisplayModel extends ItemModel
         );
         $query->join('LEFT', $db->quoteName('#__bsms_series', 'series') . ' ON ' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id'));
 
-        // Join over Books
-        $query->select($db->quoteName('book.bookname'));
-        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book') . ' ON ' . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber'));
-
-        $query->select($db->quoteName('book2.bookname', 'bookname2'));
-        $query->join('LEFT', $db->quoteName('#__bsms_books', 'book2') . ' ON ' . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2'));
-
         // Join over Locations
         $query->select($db->quoteName('locations.location_text'));
         $query->join('LEFT', $db->quoteName('#__bsms_locations', 'locations') . ' ON ' . $db->quoteName('study.location_id') . ' = ' . $db->quoteName('locations.id'));
@@ -307,6 +301,14 @@ class CwmseriesdisplayModel extends ItemModel
                 $study->totaldownloads = (int) ($stats->totaldownloads ?? 0);
                 $study->study_id       = (int) $study->id;
             }
+        }
+
+        // Was a #__bsms_books JOIN for a language key the scripture library
+        // already holds (#1687). Still set on the row: these studies reach
+        // templates a site can override, and one may read $study->bookname.
+        foreach ($studies as $study) {
+            $study->bookname  = ScriptureHelper::getBookName((int) ($study->booknumber ?? 0));
+            $study->bookname2 = ScriptureHelper::getBookName((int) ($study->booknumber2 ?? 0));
         }
 
         return $studies ?: [];

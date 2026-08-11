@@ -14,6 +14,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 // No Direct Access
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -435,21 +436,6 @@ class Cwmpagebuilder
             . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
         );
 
-        // Join over Books
-        $query->select($db->quoteName('book.bookname'));
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_books', 'book') . ' ON '
-            . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
-        );
-
-        $query->select($db->quoteName('book2.bookname', 'bookname2'));
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_books', 'book2') . ' ON '
-            . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2')
-        );
-
         // Join over Plays/Downloads
         $query->select(
             'GROUP_CONCAT(DISTINCT ' . $db->quoteName('mediafile.id') . ') AS ' . $db->quoteName('mids') . ', '
@@ -575,6 +561,14 @@ class Cwmpagebuilder
 
         $db->setQuery($query, 0, $limit);
         $items = $db->loadObjectList();
+
+        foreach ($items ?: [] as $item) {
+            // Was a #__bsms_books JOIN for a language key the scripture library
+            // already holds (#1687). Still set on the row: these items reach
+            // templates a site can override, and one may read $item->bookname.
+            $item->bookname  = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
+            $item->bookname2 = ScriptureHelper::getBookName((int) ($item->booknumber2 ?? 0));
+        }
 
         // Batch-load all teachers for teachers-list element
         if (!empty($items)) {

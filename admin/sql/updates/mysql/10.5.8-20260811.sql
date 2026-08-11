@@ -31,3 +31,14 @@ ALTER TABLE `#__bsms_studies`
 
 ALTER TABLE `#__bsms_studies`
     DROP COLUMN `studytext2`;
+
+-- Retire #__bsms_books (#1687).
+--
+-- 73 rows holding `JBS_BBK_*` language keys, never written by anything, and the
+-- same 101-173 -> key map the scripture library already carries in
+-- ScriptureHelper::BOOK_KEYS. Every consumer JOINed it and then called Text::_()
+-- on the result, so the round trip to the database existed to fetch a
+-- translation key. Its `published` column was read only by the two type="SQL"
+-- form fields that are now BookList fields.
+
+DROP TABLE IF EXISTS `#__bsms_books`;
