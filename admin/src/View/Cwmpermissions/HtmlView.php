@@ -70,6 +70,21 @@ class HtmlView extends BaseHtmlView
     #[\Override]
     public function display($tpl = null): void
     {
+        $app = Factory::getApplication();
+
+        // Gated here as well as on the controller, because they guard different
+        // requests. A bare `view=cwmpermissions` GET carries no task, so the
+        // dispatcher routes it to DisplayController and never touches
+        // CwmpermissionsController::execute() -- its check covers the save
+        // tasks only. Without this, anyone who can reach the admin could read
+        // every section's current rules.
+        if (!$app->getIdentity()->authorise('core.admin', 'com_proclaim')) {
+            $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'warning');
+            $app->redirect('index.php?option=com_proclaim&view=cwmcpanel');
+
+            return;
+        }
+
         /** @var CwmpermissionsModel $model */
         $model = $this->getModel();
 
