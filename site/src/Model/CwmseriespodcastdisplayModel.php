@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
@@ -320,7 +321,13 @@ class CwmseriespodcastdisplayModel extends ItemModel
         $db->setQuery($mediaQuery);
         $mediaStats = $db->loadObjectList('study_id');
 
+        // Junction is the real model; the flat columns hold at most two
+        // references. Cwmlisting::getAllScriptures() prefers ->scriptures when it
+        // is populated and falls back to the flat columns otherwise (#1623).
+        $scriptureMap = CwmscriptureHelper::getScripturesForStudies(array_column($studies, 'id'));
+
         foreach ($studies as $study) {
+            $study->scriptures     = $scriptureMap[(int) $study->id] ?? [];
             $stats                 = $mediaStats[$study->id] ?? null;
             $study->mids           = $stats->mids ?? null;
             $study->totalplays     = (int) ($stats->totalplays ?? 0);
