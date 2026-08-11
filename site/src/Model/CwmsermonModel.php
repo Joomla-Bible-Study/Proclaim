@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Site\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -141,21 +142,6 @@ class CwmsermonModel extends FormModel
                     . $db->quoteName('s.messagetype') . ' = ' . $db->quoteName('mt.id')
                 );
 
-                // Join over books
-                $query->select($db->quoteName('b.bookname', 'bookname'));
-                $query->join(
-                    'LEFT',
-                    $db->quoteName('#__bsms_books', 'b') . ' ON '
-                    . $db->quoteName('s.booknumber') . ' = ' . $db->quoteName('b.booknumber')
-                );
-
-                $query->select($db->quoteName('book2.bookname', 'bookname2'));
-                $query->join(
-                    'LEFT',
-                    $db->quoteName('#__bsms_books', 'book2') . ' ON '
-                    . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('s.booknumber2')
-                );
-
                 // Join over locations
                 $query->select($db->quoteName('l.id', 'lid') . ', ' . $db->quoteName('l.location_text'));
                 $query->join(
@@ -229,6 +215,12 @@ class CwmsermonModel extends FormModel
                 if (empty($data)) {
                     return null;
                 }
+
+                // Was a #__bsms_books JOIN for a language key the scripture library
+                // already holds (#1687). Still set on the row: this item reaches
+                // templates a site can override, and one may read $data->bookname.
+                $data->bookname  = ScriptureHelper::getBookName((int) ($data->booknumber ?? 0));
+                $data->bookname2 = ScriptureHelper::getBookName((int) ($data->booknumber2 ?? 0));
 
                 // Load media stats in a separate query to avoid Cartesian product with topics
                 $mediaQuery = $db->createQuery()

@@ -16,6 +16,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
+use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -523,21 +524,6 @@ class CwmsermonsModel extends ListModel
             . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id')
         );
 
-        // Join over Books
-        $query->select($db->quoteName('book.bookname'));
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_books', 'book') . ' ON '
-            . $db->quoteName('book.booknumber') . ' = ' . $db->quoteName('study.booknumber')
-        );
-
-        $query->select($db->quoteName('book2.bookname', 'bookname2'));
-        $query->join(
-            'LEFT',
-            $db->quoteName('#__bsms_books', 'book2') . ' ON '
-            . $db->quoteName('book2.booknumber') . ' = ' . $db->quoteName('study.booknumber2')
-        );
-
         // NOTE: Mediafile aggregation (mids, totalplays, totaldownloads) is
         // batch-loaded in getItems() to avoid a Cartesian product with topics
         // that inflates SUM(plays) and SUM(downloads).
@@ -763,6 +749,14 @@ class CwmsermonsModel extends ListModel
 
         if (empty($items) || !\is_array($items)) {
             return [];
+        }
+
+        foreach ($items as $item) {
+            // Was a #__bsms_books JOIN for a language key the scripture library
+            // already holds (#1687). Still set on the row: these items reach
+            // templates a site can override, and one may read $item->bookname.
+            $item->bookname  = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
+            $item->bookname2 = ScriptureHelper::getBookName((int) ($item->booknumber2 ?? 0));
         }
 
         // Collect study IDs for batch loading

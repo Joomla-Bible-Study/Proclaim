@@ -14,8 +14,8 @@
  *
  * Data-driven: EXPECTATIONS is keyed by version. When a release adds migrations,
  * add an entry describing the tables/columns/indexes it introduces and the
- * #__schemas version it should advance to. `columnsAbsent` asserts a DROP
- * actually happened, which is the only way a removal can be proven.
+ * #__schemas version it should advance to. `columnsAbsent` and `tablesAbsent` assert a
+ * DROP actually happened, which is the only way a removal can be proven.
  *
  * Every entry at or below the version under test is verified, not just the newest.
  * The release being cut has to carry what all of its predecessors introduced, and
@@ -200,6 +200,11 @@ $EXPECTATIONS = [
                 'image_dvd',
                 'studytext2',
             ],
+        ],
+        'tablesAbsent' => [
+            // 73 rows of JBS_BBK_* language keys, duplicating the map the
+            // scripture library holds in ScriptureHelper::BOOK_KEYS (#1687).
+            '#__bsms_books',
         ],
         'schemaMin' => '10.5.8',
     ],
@@ -388,6 +393,13 @@ foreach ($installs as $install) {
                 $ok        = columnExists($mysqli, $db['name'], $real, $col);
                 $results[] = [$ok, "[{$version}] column {$table}.{$col}"];
             }
+        }
+
+        // --- tables that must be gone -------------------------------------
+        foreach ($expected['tablesAbsent'] ?? [] as $table) {
+            $real      = $expand($table);
+            $ok        = !tableExists($mysqli, $db['name'], $real);
+            $results[] = [$ok, "[{$version}] table {$table} removed"];
         }
 
         // --- columns that must be gone ------------------------------------

@@ -113,11 +113,9 @@
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
                 </field>
-                <field name="booknumber" type="SQL" multiple="true" translate="true"
+                <field name="booknumber" type="BookList" multiple="true"
                        class="form-select"
                        label="JBS_CMN_FILTERS_BOOKS" description="JBS_CMN_FILTERS_DESC"
-                       query="SELECT booknumber, bookname FROM #__bsms_books WHERE published = 1 ORDER BY booknumber ASC"
-                       key_field="booknumber" value_field="bookname"
                        default="">
                     <option value="">JGLOBAL_USE_GLOBAL</option>
                     <option value="-1">JBS_CMN_SHOW_ALL</option>
