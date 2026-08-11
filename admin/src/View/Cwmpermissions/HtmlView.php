@@ -72,12 +72,8 @@ class HtmlView extends BaseHtmlView
     {
         $app = Factory::getApplication();
 
-        // Gated here as well as on the controller, because they guard different
-        // requests. A bare `view=cwmpermissions` GET carries no task, so the
-        // dispatcher routes it to DisplayController and never touches
-        // CwmpermissionsController::execute() -- its check covers the save
-        // tasks only. Without this, anyone who can reach the admin could read
-        // every section's current rules.
+        // ⚠️ Gated here as well as on the controller: a task-less GET routes to
+        // DisplayController, so the controller's check never runs.
         if (!$app->getIdentity()->authorise('core.admin', 'com_proclaim')) {
             $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'warning');
             $app->redirect('index.php?option=com_proclaim&view=cwmcpanel');
@@ -123,8 +119,7 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
 
-        // Component-level rules stay where Joomla already puts them, rather
-        // than being mirrored here where the two copies could disagree.
+        // Component-level rules stay in com_config rather than being mirrored here.
         $toolbar->linkButton('options', 'JBS_ADM_PERMISSIONS_COMPONENT_LINK')
             ->url('index.php?option=com_config&view=component&component=com_proclaim')
             ->icon('fa-solid fa-gear')

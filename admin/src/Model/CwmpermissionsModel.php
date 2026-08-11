@@ -29,24 +29,18 @@ use Joomla\CMS\Table\Asset;
 /**
  * Permissions for one `com_proclaim.<section>` asset.
  *
- * Deliberately one section per request. The earlier design put every section's
- * grid on the Administration screen, which posted 1217 fields against PHP's
- * default `max_input_vars` of 1000 -- `$_POST` was truncated at request
- * startup, Joomla's `task` field went with it, and the request fell through to
- * `display` without ever reaching a controller. Nothing saved, and nothing said
- * so. See #1653.
+ * One section per request: all 17 grids on one form exceeds PHP's
+ * `max_input_vars`, and the excess is discarded silently (#1653).
  *
  * @since  __DEPLOY_VERSION__
  */
 class CwmpermissionsModel extends FormModel
 {
     /**
-     * Resolve the section being edited, refusing anything access.xml does not declare.
+     * Resolve the section being edited, falling back to the first declared one.
      *
-     * The value reaches `RulesField` as an xpath fragment
-     * (`/access/section[@name="<section>"]/`), so it is validated here rather
-     * than relying on `Cwmassets::sectionId()` to refuse it later -- the field
-     * renders long before that would matter.
+     * ⚠️ The value reaches `RulesField` as an xpath fragment, so it must be
+     * validated against access.xml before the field renders.
      *
      * @return  string  A declared section name, or an empty string when none exist
      *
@@ -92,10 +86,8 @@ class CwmpermissionsModel extends FormModel
 
         $form->setFieldAttribute('rules', 'section', $section);
 
-        // Bind the asset id explicitly. RulesField resolves it with
-        // $form->getValue($assetField), and an empty value makes it fall back
-        // to the component asset -- the grid would then show, and save,
-        // com_proclaim's own rules under a section label.
+        // ⚠️ An empty asset_field makes RulesField silently fall back to the
+        // component asset, showing and saving com_proclaim's own rules.
         $form->setValue('asset_id', null, Cwmassets::sectionId($section));
 
         return $form;
@@ -119,13 +111,10 @@ class CwmpermissionsModel extends FormModel
     /**
      * Write the posted grid to the section's asset.
      *
-     * Follows com_config's ComponentModel: build a Rules object from the grid,
-     * store it, and refuse outright without `core.admin`. The screen only
-     * renders for users who hold it, so a post that arrives without it is a
-     * stale form or a forged request -- neither should be answered by silently
-     * discarding the values.
+     * Refuses without `core.admin` rather than discarding the values, following
+     * com_config's ComponentModel.
      *
-     * @param   array  $data  Posted form data
+     * @param   array  $data  Form data, already filtered through the form
      *
      * @return  bool  True on success
      *

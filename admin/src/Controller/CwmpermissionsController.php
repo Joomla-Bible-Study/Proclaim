@@ -32,11 +32,8 @@ use Joomla\CMS\Router\Route;
 class CwmpermissionsController extends BaseController
 {
     /**
-     * Gate every task behind core.admin.
-     *
-     * Changing who may do what is an administrator action, not a settings
-     * action, which is how Joomla gates com_config's Permissions tab. Holding
-     * core.options is not enough.
+     * Gate every task behind core.admin, as Joomla gates com_config's
+     * Permissions tab. core.options is not enough.
      *
      * @param   string  $task  The task to execute.
      *
@@ -64,10 +61,8 @@ class CwmpermissionsController extends BaseController
     /**
      * Save the posted grid and return to the same section.
      *
-     * Always a redirect, never an inline re-render: `RulesField` reads through
-     * `Access::getAssetRules()`, which memoises into `Access::$assetRules` for
-     * the request, so a grid rendered after the write would show the values
-     * from before it.
+     * ⚠️ Always redirect: `Access::getAssetRules()` memoises for the request,
+     * so a grid re-rendered inline shows the values from before the write.
      *
      * @return  void
      *
@@ -81,9 +76,31 @@ class CwmpermissionsController extends BaseController
         /** @var CwmpermissionsModel $model */
         $model   = $this->getModel('Cwmpermissions');
         $section = $model->getSection();
-        $data    = $this->input->post->get('jform', [], 'array');
+        $posted  = $this->input->post->get('jform', [], 'array');
 
         $return = 'index.php?option=com_proclaim&view=cwmpermissions&section=' . $section;
+
+        // ⚠️ Must go through the form: "Inherited" posts as an empty string and
+        // only filter="rules" drops it. Raw POST records every inherited cell as
+        // an explicit Denied. FormController does this for ordinary edit screens.
+        $form = $model->getForm($posted, false);
+
+        if (!$form) {
+            $this->setRedirect(Route::_($return, false), Text::_('JBS_ADM_PERMISSIONS_NO_SECTIONS'), 'error');
+
+            return;
+        }
+
+        $data = $model->validate($form, $posted);
+
+        if ($data === false) {
+            $errors  = $model->getErrors();
+            $message = $errors === [] ? Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED') : (string) $errors[0];
+
+            $this->setRedirect(Route::_($return, false), $message, 'error');
+
+            return;
+        }
 
         try {
             $saved = $model->save($data);

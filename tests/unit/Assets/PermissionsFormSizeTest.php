@@ -3,20 +3,13 @@
 /**
  * The permissions UI must stay small enough for PHP to accept the POST.
  *
- * The first design rendered one `type="rules"` grid per section on the
- * Administration screen. Each grid emits `actions x user groups` selects, so on
- * a fourteen-group site the form carried 1,134 rule selects and posted 1,217
- * fields -- against PHP's default `max_input_vars` of 1000. PHP truncates
- * `$_POST` at request startup with only a warning to the error log; Joomla's
- * `task` field was among what fell off the end, so the request dispatched to
- * `display`, no controller ran, no message was queued, and nothing saved. The
- * screen looked like it worked. See #1653.
+ * 17 grids on one form posted 1,217 fields past PHP's default max_input_vars of
+ * 1000; $_POST was truncated at request startup, Joomla's `task` went with it,
+ * and the save silently did nothing (#1653).
  *
- * Field count is `actions x groups`, and a test cannot control how many user
- * groups a site has -- asserting "under 1000" against a three-group test
- * database would prove nothing. So this asserts the structural invariants that
- * keep the count bounded instead: one grid per page, and none on the
- * Administration form.
+ * Field count is actions x a site's user groups, which a test cannot control --
+ * a bound asserted against a three-group database passes vacuously. These
+ * assert the structural invariants that keep the count small instead.
  *
  * @package    Proclaim.Tests
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -62,9 +55,8 @@ class PermissionsFormSizeTest extends TestCase
         $this->assertCount(
             1,
             $rules,
-            "The permissions form must carry one grid per page.\n"
-            . 'One grid per section on a single page posts more fields than PHP accepts by '
-            . 'default, and the excess is discarded silently.'
+            'The permissions form must carry one grid per page: all of them at once posts '
+            . 'more fields than PHP accepts by default, and the excess is discarded silently.'
         );
     }
 
@@ -111,9 +103,8 @@ class PermissionsFormSizeTest extends TestCase
         $this->assertSame(
             [],
             $offences,
-            "The Administration screen must not carry permissions grids.\n"
-            . 'That form already posts ~110 fields; 17 grids took it past PHP\'s max_input_vars '
-            . 'and the whole save began failing silently. Section permissions belong on '
+            'The Administration screen must not carry permissions grids -- they took the whole '
+            . 'form past max_input_vars and its save began failing silently. They belong on '
             . 'admin/forms/permissions.xml, one section at a time.'
         );
     }

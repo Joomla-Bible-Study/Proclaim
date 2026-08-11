@@ -347,11 +347,8 @@ class HtmlView extends BaseHtmlView
 
         $toolbar->preferences('com_proclaim', 'JBS_ADM_PERMISSIONS');
 
-        // Per-section permissions live on their own screen, not on a tab here.
-        // One grid per section would post ~1,100 fields from this form, past
-        // PHP's default max_input_vars of 1000 -- $_POST is truncated at
-        // request startup, the task field goes with it, and the save silently
-        // does nothing. See #1653.
+        // ⚠️ Per-section permissions get their own screen: 17 grids on this form
+        // exceeds PHP's max_input_vars and the whole save fails silently (#1653).
         if (Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_proclaim')) {
             $toolbar->linkButton('sectionpermissions', 'JBS_ADM_PERMISSIONS_TITLE')
                 ->url('index.php?option=com_proclaim&view=cwmpermissions')

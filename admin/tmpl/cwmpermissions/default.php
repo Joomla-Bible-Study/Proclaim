@@ -22,12 +22,12 @@ use Joomla\CMS\Router\Route;
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useStyle('com_proclaim.general');
 
-/**
- * A section's display name, falling back to the raw name.
- *
- * A section declared in access.xml but not yet translated must still be
- * reachable -- an untranslated label is a missing string, not a missing screen.
- */
+// ⚠️ Required by the toolbar, not by this form: submitbutton() calls
+// document.formvalidator.isValid() on any `form.form-validate`, and without
+// this script Save dies with a TypeError before submitting.
+$wa->useScript('form.validate');
+
+/** A section's display name, falling back to the raw name when untranslated. */
 $sectionLabel = static function (string $section): string {
     $key   = 'JBS_ADM_PERMISSIONS_SECTION_' . strtoupper($section);
     $label = Text::_($key);
