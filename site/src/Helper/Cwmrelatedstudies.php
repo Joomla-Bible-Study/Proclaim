@@ -222,8 +222,6 @@ class Cwmrelatedstudies
     /**
      * Score studies by scripture book overlap (1 point per shared book).
      *
-     * Checks both junction table and legacy booknumber field.
-     *
      * @param   object  $db       Database driver
      * @param   int     $studyId  Current study ID
      * @param   array   $groups   Authorised view levels
@@ -234,19 +232,11 @@ class Cwmrelatedstudies
      */
     private function scoreByBooks(object $db, int $studyId, array $groups): void
     {
-        // Collect book numbers from both junction table and legacy column in one query
         $query = $db->createQuery()
             ->select('DISTINCT ' . $db->quoteName('booknumber'))
             ->from($db->quoteName('#__bsms_study_scriptures'))
             ->where($db->quoteName('study_id') . ' = ' . $studyId)
-            ->where($db->quoteName('booknumber') . ' > 0')
-            ->union(
-                $db->createQuery()
-                    ->select($db->quoteName('booknumber'))
-                    ->from($db->quoteName('#__bsms_studies'))
-                    ->where($db->quoteName('id') . ' = ' . $studyId)
-                    ->where($db->quoteName('booknumber') . ' > 0')
-            );
+            ->where($db->quoteName('booknumber') . ' > 0');
 
         $db->setQuery($query);
         $bookNumbers = array_unique(array_filter(array_map('intval', $db->loadColumn() ?: [])));
@@ -257,7 +247,6 @@ class Cwmrelatedstudies
 
         $bookList = implode(',', $bookNumbers);
 
-        // Find matches via junction table
         $query = $db->createQuery()
             ->select($db->quoteName('ss.study_id'))
             ->select('COUNT(DISTINCT ' . $db->quoteName('ss.booknumber') . ') AS ' . $db->quoteName('overlap'))
@@ -277,22 +266,6 @@ class Cwmrelatedstudies
 
         foreach ($rows as $r) {
             $this->addScore((int) $r->study_id, (int) $r->overlap);
-        }
-
-        // Also match via legacy booknumber column
-        $query = $db->createQuery()
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('booknumber') . ' IN (' . $bookList . ')')
-            ->where($db->quoteName('id') . ' != ' . $studyId)
-            ->where($db->quoteName('published') . ' = 1')
-            ->where($db->quoteName('access') . ' IN (' . implode(',', $groups) . ')');
-
-        $db->setQuery($query);
-        $ids = $db->loadColumn();
-
-        foreach ($ids as $id) {
-            $this->addScore((int) $id, 1);
         }
     }
 
