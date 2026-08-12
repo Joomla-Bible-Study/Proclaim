@@ -45,6 +45,17 @@ class CwmscriptureMigration
     private const BATCH_SIZE = 100;
 
     /**
+     * The flat scripture columns #__bsms_studies carried until #1623.
+     *
+     * @var string[]
+     * @since __DEPLOY_VERSION__
+     */
+    private const LEGACY_COLUMNS = [
+        'booknumber', 'chapter_begin', 'verse_begin', 'chapter_end', 'verse_end', 'bible_version',
+        'booknumber2', 'chapter_begin2', 'verse_begin2', 'chapter_end2', 'verse_end2', 'bible_version2',
+    ];
+
+    /**
      * Give every reference that has no display text one.
      *
      * @return  int  Number of references filled in
@@ -120,5 +131,163 @@ class CwmscriptureMigration
     public static function migrateStudy(int $studyId): int
     {
         return 0;
+    }
+
+    /**
+     * Move the legacy flat columns into the junction and drop them.
+     *
+     * ⚠️ Deliberately not in migration SQL. Joomla's ChangeSet builds a check
+     * only for ALTER TABLE, CREATE TABLE and RENAME TABLE; an INSERT has none,
+     * so it is skipped and never replayed while the DROP COLUMNs beside it are
+     * replayed. Database Maintenance → Fix, and the 9.x upgrade wizard through
+     * CwmupgradeHelper::runSchemaMigration(), would then run the drops without
+     * the backfill. Here the two cannot come apart.
+     *
+     * Safe to call whenever: it returns immediately once the columns are gone.
+     *
+     * @return  int  References moved into the junction
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function retireLegacyColumns(): int
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        if (!self::hasLegacyColumns($db)) {
+            return 0;
+        }
+
+        $moved = self::backfillJunction($db);
+
+        // ⚠️ Dropping booknumber does not drop this index, it shrinks it to
+        // (published) -- a duplicate of idx_state.
+        $db->setQuery(
+            'SHOW INDEX FROM ' . $db->quoteName('#__bsms_studies')
+            . ' WHERE ' . $db->quoteName('Key_name') . ' = ' . $db->quote('idx_booknumber_published')
+        );
+
+        if ($db->loadRow()) {
+            $db->setQuery(
+                'ALTER TABLE ' . $db->quoteName('#__bsms_studies')
+                . ' DROP INDEX ' . $db->quoteName('idx_booknumber_published')
+            );
+            $db->execute();
+        }
+
+        foreach (self::LEGACY_COLUMNS as $column) {
+            if (!self::columnExists($db, $column)) {
+                continue;
+            }
+
+            $db->setQuery(
+                'ALTER TABLE ' . $db->quoteName('#__bsms_studies')
+                . ' DROP COLUMN ' . $db->quoteName($column)
+            );
+            $db->execute();
+        }
+
+        // A template could have this saved as `booknumber`, and Cwmserieslist
+        // puts it straight into ORDER BY.
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__bsms_templates')
+            . ' SET ' . $db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+            . $db->quote('"series_detail_sort":"booknumber"') . ', '
+            . $db->quote('"series_detail_sort":"studydate"') . ')'
+            . ' WHERE ' . $db->quoteName('params') . ' LIKE '
+            . $db->quote('%"series_detail_sort":"booknumber"%')
+        );
+        $db->execute();
+
+        Log::add('Legacy scripture columns retired; ' . $moved . ' references moved.', Log::INFO, 'com_proclaim');
+
+        return $moved;
+    }
+
+    /**
+     * Copy the flat pair into the junction, for studies it does not know yet.
+     *
+     * ⚠️ The secondary columns are VARCHAR and really do hold '' and '-1', so
+     * every read of them is REGEXP-guarded: CAST('' AS SIGNED) raises
+     * "Truncated incorrect INTEGER value" under STRICT_TRANS_TABLES.
+     *
+     * ⚠️ The SELECT is wrapped in a derived table so MySQL materialises it
+     * before inserting. Without that, the primary insert satisfies the
+     * secondary's NOT EXISTS and every second reference is lost.
+     *
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return  int  Rows inserted
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function backfillJunction(DatabaseInterface $db): int
+    {
+        if (!self::junctionTableExists($db)) {
+            return 0;
+        }
+
+        $studies = $db->quoteName('#__bsms_studies');
+        $junc    = $db->quoteName('#__bsms_study_scriptures');
+        $unseen  = 'NOT EXISTS (SELECT 1 FROM ' . $junc . ' AS j WHERE j.study_id = s.id)';
+        $numeric = static fn (string $c): string => "CASE WHEN s.`$c` REGEXP '^[0-9]+$' THEN CAST(s.`$c` AS SIGNED) ELSE 0 END";
+
+        $db->setQuery(
+            'INSERT INTO ' . $junc . ' (`study_id`, `ordering`, `booknumber`, `chapter_begin`, `verse_begin`,'
+            . ' `chapter_end`, `verse_end`, `bible_version`, `reference_text`) SELECT * FROM ('
+            . 'SELECT s.`id`, 0, s.`booknumber`, COALESCE(s.`chapter_begin`, 0), COALESCE(s.`verse_begin`, 0),'
+            . ' COALESCE(s.`chapter_end`, 0), COALESCE(s.`verse_end`, 0), COALESCE(s.`bible_version`, \'\'), \'\''
+            . ' FROM ' . $studies . ' AS s WHERE s.`booknumber` > 0 AND ' . $unseen
+            . ' UNION ALL '
+            . 'SELECT s.`id`, 1, CAST(s.`booknumber2` AS SIGNED), ' . $numeric('chapter_begin2') . ', '
+            . $numeric('verse_begin2') . ', ' . $numeric('chapter_end2') . ', ' . $numeric('verse_end2') . ','
+            . ' COALESCE(s.`bible_version2`, \'\'), \'\''
+            . ' FROM ' . $studies . ' AS s WHERE s.`booknumber2` REGEXP \'^[0-9]+$\''
+            . ' AND CAST(s.`booknumber2` AS SIGNED) > 0 AND ' . $unseen
+            . ') AS backfill'
+        );
+        $db->execute();
+
+        return (int) $db->getAffectedRows();
+    }
+
+    /**
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function hasLegacyColumns(DatabaseInterface $db): bool
+    {
+        return self::columnExists($db, 'booknumber');
+    }
+
+    /**
+     * @param   DatabaseInterface  $db      Database driver
+     * @param   string             $column  Column name
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function columnExists(DatabaseInterface $db, string $column): bool
+    {
+        $db->setQuery(
+            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote($column)
+        );
+
+        return $db->loadRow() !== null;
+    }
+
+    /**
+     * @param   DatabaseInterface  $db  Database driver
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function junctionTableExists(DatabaseInterface $db): bool
+    {
+        return \in_array($db->getPrefix() . 'bsms_study_scriptures', $db->getTableList(), true);
     }
 }

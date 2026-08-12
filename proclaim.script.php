@@ -1705,28 +1705,27 @@ class com_proclaimInstallerScript extends InstallerScript
             );
         }
 
-        // ⚠️ Dropping booknumber leaves idx_booknumber_published shrunk to
-        // (published), a duplicate of idx_state (#1623). MySQL has no
-        // DROP INDEX IF EXISTS, so it cannot go in the migration SQL without
-        // aborting the update wherever it is already absent.
+        // ⚠️ Runs on install as well as update, and that is the point. A site
+        // coming from 9.x has the flat columns full and no junction, and takes
+        // the install route, so nothing in sql/updates ever replays for it.
         try {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
+            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-            $db->setQuery(
-                'SHOW INDEX FROM ' . $db->quoteName('#__bsms_studies')
-                . ' WHERE ' . $db->quoteName('Key_name') . ' = ' . $db->quote('idx_booknumber_published')
-            );
+            if (file_exists($migrationPath)) {
+                require_once $migrationPath;
 
-            if ($db->loadRow()) {
-                $db->setQuery(
-                    'ALTER TABLE ' . $db->quoteName('#__bsms_studies')
-                    . ' DROP INDEX ' . $db->quoteName('idx_booknumber_published')
-                );
-                $db->execute();
+                $moved = CwmscriptureMigration::retireLegacyColumns();
+
+                if ($moved > 0) {
+                    Factory::getApplication()->enqueueMessage(
+                        $moved . ' scripture reference(s) moved out of the legacy columns.',
+                        'message'
+                    );
+                }
             }
         } catch (\Exception $e) {
             Factory::getApplication()->enqueueMessage(
-                'Could not drop idx_booknumber_published: ' . $e->getMessage(),
+                'Could not retire the legacy scripture columns: ' . $e->getMessage(),
                 'warning'
             );
         }
