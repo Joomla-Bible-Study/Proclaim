@@ -579,6 +579,17 @@ CREATE TABLE IF NOT EXISTS `#__bsms_study_teachers` (
     KEY `idx_study_ordering` (`study_id`, `ordering`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dump of table #__bsms_study_teachers
+-- ------------------------------------------------------------
+--
+-- The seeded study's teacher. It lived only in #__bsms_studies.teacher_id, and
+-- populateStudyTeachers() runs on update, so a fresh install started life with
+-- this study unmigrated and leaning on the flat-column fallback (#1731).
+
+INSERT IGNORE INTO `#__bsms_study_teachers` (`id`, `study_id`, `teacher_id`, `ordering`)
+VALUES (1, 1, 1, 0);
+
 -- --------------------------------------------------------
 
 --
