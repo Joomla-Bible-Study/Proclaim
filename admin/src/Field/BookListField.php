@@ -67,20 +67,22 @@ class BookListField extends ListField
         $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->createQuery();
 
-        // Driven by the studies rather than by #__bsms_books, whose bookname
-        // column holds the same language keys the scripture library already has
-        // (#1687). The studies keep the alias `s`: applyCrossFilters() below
-        // writes s.booknumber, s.series_id and s.id, so the alias is part of
-        // that helper's contract even though the table it joined has gone.
-        //
-        // booknumber > 0 is what the INNER JOIN used to do implicitly — a study
-        // with no book matched no row, so it never became an option.
-        $query->select('DISTINCT ' . $db->quoteName('s.booknumber', 'value'))
+        // Books come from the junction, so a study with more than two references
+        // offers all of them rather than the two the flat columns could hold
+        // (#1623). The studies keep the alias `s`: applyCrossFilters() below
+        // writes s.series_id and s.id, so the alias is part of that helper's
+        // contract.
+        $query->select('DISTINCT ' . $db->quoteName('sr.booknumber', 'value'))
             ->from($db->quoteName('#__bsms_studies', 's'))
-            ->where($db->quoteName('s.booknumber') . ' > 0')
+            ->join(
+                'INNER',
+                $db->quoteName('#__bsms_study_scriptures', 'sr') . ' ON '
+                . $db->quoteName('sr.study_id') . ' = ' . $db->quoteName('s.id')
+            )
+            ->where($db->quoteName('sr.booknumber') . ' > 0')
             ->whereIn($db->quoteName('s.published'), [1, 2])
             ->whereIn($db->quoteName('s.access'), $groups)
-            ->order($db->quoteName('s.booknumber') . ' ASC');
+            ->order($db->quoteName('sr.booknumber') . ' ASC');
 
         CwmfilterHelper::applyCrossFilters(
             $query,

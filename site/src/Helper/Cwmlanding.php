@@ -584,16 +584,22 @@ class Cwmlanding
                 // scripture library already carries, so the join it needed
                 // earned nothing (#1687).
                 //
-                // booknumber > 0 is what that INNER JOIN did implicitly.
+                // Books come from the junction, so a study with more than two
+                // references contributes all of them (#1623).
                 $query->select(
-                    'DISTINCT ' . $this->db->quoteName('b.booknumber', 'id') . ', '
+                    'DISTINCT ' . $this->db->quoteName('sr.booknumber', 'id') . ', '
                     . $null . ' AS ' . $this->db->quoteName('text') . ', '
                     . '0 AS ' . $this->db->quoteName('landing_show') . ', '
                     . $null . ' AS ' . $this->db->quoteName('params') . ', '
                     . $this->db->quote('books') . ' AS ' . $this->db->quoteName('type')
                 )
                     ->from($this->db->quoteName('#__bsms_studies', 'b'))
-                    ->where($this->db->quoteName('b.booknumber') . ' > 0')
+                    ->join(
+                        'INNER',
+                        $this->db->quoteName('#__bsms_study_scriptures', 'sr') . ' ON '
+                        . $this->db->quoteName('sr.study_id') . ' = ' . $this->db->quoteName('b.id')
+                    )
+                    ->where($this->db->quoteName('sr.booknumber') . ' > 0')
                     ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                     ->where($this->db->quoteName('b.published') . ' = 1');
                 $this->addAccessFilter($query);
@@ -1126,21 +1132,26 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
-            // Asks the studies which books are in use rather than asking
-            // #__bsms_books which of its rows a study points at — same set, and
-            // the name is attached afterwards from the scripture library, which
-            // holds the language keys that table stored (#1687).
+            // Books come from the junction, so a study with more than two
+            // references contributes all of them rather than the two the flat
+            // columns could hold (#1623). The name is attached afterwards from
+            // the scripture library, which holds the language keys
+            // #__bsms_books used to store (#1687).
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
-            // b.access. booknumber > 0 is what the INNER JOIN did implicitly: a
-            // study with no book matched no row, so it never became an entry.
+            // b.access.
             $query = $this->db->createQuery();
-            $query->select('DISTINCT ' . $this->db->quoteName('b.booknumber'))
+            $query->select('DISTINCT ' . $this->db->quoteName('sr.booknumber'))
                 ->from($this->db->quoteName('#__bsms_studies', 'b'))
-                ->where($this->db->quoteName('b.booknumber') . ' > 0')
+                ->join(
+                    'INNER',
+                    $this->db->quoteName('#__bsms_study_scriptures', 'sr') . ' ON '
+                    . $this->db->quoteName('sr.study_id') . ' = ' . $this->db->quoteName('b.id')
+                )
+                ->where($this->db->quoteName('sr.booknumber') . ' > 0')
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('b.published') . ' = 1')
-                ->order($this->db->quoteName('b.booknumber') . ' ' . $order);
+                ->order($this->db->quoteName('sr.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
 
@@ -1715,21 +1726,26 @@ class Cwmlanding
             $order    = $this->getSortOrder($params, 'books_order');
             $language = $this->getLanguageFilter($params);
 
-            // Asks the studies which books are in use rather than asking
-            // #__bsms_books which of its rows a study points at — same set, and
-            // the name is attached afterwards from the scripture library, which
-            // holds the language keys that table stored (#1687).
+            // Books come from the junction, so a study with more than two
+            // references contributes all of them rather than the two the flat
+            // columns could hold (#1623). The name is attached afterwards from
+            // the scripture library, which holds the language keys
+            // #__bsms_books used to store (#1687).
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
-            // b.access. booknumber > 0 is what the INNER JOIN did implicitly: a
-            // study with no book matched no row, so it never became an entry.
+            // b.access.
             $query = $this->db->createQuery();
-            $query->select('DISTINCT ' . $this->db->quoteName('b.booknumber'))
+            $query->select('DISTINCT ' . $this->db->quoteName('sr.booknumber'))
                 ->from($this->db->quoteName('#__bsms_studies', 'b'))
-                ->where($this->db->quoteName('b.booknumber') . ' > 0')
+                ->join(
+                    'INNER',
+                    $this->db->quoteName('#__bsms_study_scriptures', 'sr') . ' ON '
+                    . $this->db->quoteName('sr.study_id') . ' = ' . $this->db->quoteName('b.id')
+                )
+                ->where($this->db->quoteName('sr.booknumber') . ' > 0')
                 ->where($this->db->quoteName('b.language') . ' IN (' . $language . ')')
                 ->where($this->db->quoteName('b.published') . ' = 1')
-                ->order($this->db->quoteName('b.booknumber') . ' ' . $order);
+                ->order($this->db->quoteName('sr.booknumber') . ' ' . $order);
 
             $this->addAccessFilter($query);
 
