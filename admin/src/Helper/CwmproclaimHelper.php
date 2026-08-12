@@ -508,16 +508,18 @@ class CwmproclaimHelper
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $query   = $db->createQuery();
 
-        // Asks the studies which books are in use, rather than asking
-        // #__bsms_books which of its rows a study points at. Same set, and the
-        // name comes from the scripture library, which holds the language keys
-        // that table stored (#1687).
-        //
-        // booknumber > 0 replaces what the INNER JOIN used to do implicitly: a
-        // study with no book selected matched no row, so it never appeared.
-        $query->select('DISTINCT ' . $db->quoteName('booknumber', 'value'))
-            ->from($db->quoteName('#__bsms_studies'))
-            ->where($db->quoteName('booknumber') . ' > 0')
+        // Books come from the junction, so a study with more than two references
+        // offers all of them rather than the two the flat columns could hold
+        // (#1623). The name comes from the scripture library, which holds the
+        // language keys #__bsms_books used to store (#1687).
+        $query->select('DISTINCT ' . $db->quoteName('sr.booknumber', 'value'))
+            ->from($db->quoteName('#__bsms_studies', 's'))
+            ->join(
+                'INNER',
+                $db->quoteName('#__bsms_study_scriptures', 'sr') . ' ON '
+                . $db->quoteName('sr.study_id') . ' = ' . $db->quoteName('s.id')
+            )
+            ->where($db->quoteName('sr.booknumber') . ' > 0')
             ->order($db->quoteName('value') . ' ASC');
 
         // Get the options.
