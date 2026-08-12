@@ -406,6 +406,15 @@ class CwmupgradeHelper
             $steps[]  = ['name' => 'fixTeacherAliases', 'success' => false, 'detail' => $e->getMessage()];
         }
 
+        // 9a. Retire the legacy scripture columns, if this database still has them
+        try {
+            $count   = CwmscriptureMigration::retireLegacyColumns();
+            $steps[] = ['name' => 'retireLegacyScriptureColumns', 'success' => true, 'detail' => $count . ' moved'];
+        } catch (\Exception $e) {
+            $errors[] = 'retireLegacyScriptureColumns: ' . $e->getMessage();
+            $steps[]  = ['name' => 'retireLegacyScriptureColumns', 'success' => false, 'detail' => $e->getMessage()];
+        }
+
         // 9. Scripture junction migration
         try {
             $count   = CwmscriptureMigration::migrate();
