@@ -176,11 +176,21 @@ class CwmscriptureMigrationTest extends IntegrationTestCase
         $done    = $this->legacyStudy(106);
         $pending = $this->legacyStudy(107);
 
+        // Stands in for the rest of the site. A freshly installed database has
+        // one of these for real — the seeded study — so without it this test
+        // passes locally and fails on CI.
+        $this->legacyStudy(110);
+
         // What an insertBatch() failure leaves behind: some studies migrated,
         // the rest still holding only flat values.
         CwmscriptureMigration::migrateStudy($done);
 
-        $this->assertSame(1, CwmscriptureMigration::migrate(), 'Only the unmigrated study should be picked up.');
+        // ⚠️ Assert on the fixtures, never on migrate()'s return count. It works
+        // over the whole table, and a freshly installed database carries the
+        // seeded study from install.mysql.utf8.sql — which is itself unmigrated,
+        // and is the very defect under test.
+        CwmscriptureMigration::migrate();
+
         $this->assertSame(1, $this->junctionRows($pending), 'The stranded study was never resumed.');
         $this->assertSame(1, $this->junctionRows($done), 'The already-migrated study was migrated a second time.');
     }
