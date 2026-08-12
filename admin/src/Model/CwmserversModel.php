@@ -219,6 +219,28 @@ class CwmserversModel extends ListModel
     }
 
     /**
+     * Build a store id that distinguishes one filter combination from another.
+     *
+     * ⚠️ Without this the parent keys the result cache on pagination alone, so
+     * two different filter values in one request return the same rows.
+     *
+     * @param   string  $id  A prefix for the store id.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function getStoreId($id = ''): string
+    {
+        $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.location');
+        $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.type');
+
+        return parent::getStoreId($id);
+    }
+
+    /**
      * Method to get a JDatabaseQuery object for retrieving the data set from a database.
      *
      * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
@@ -289,6 +311,31 @@ class CwmserversModel extends ListModel
             $locationVal = (int) $location;
             $query->where($db->quoteName('server.location_id') . ' = :locationId')
                 ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+        }
+
+        // Search and type are set only by the API (?filter[search]=,
+        // ?filter[type]=); the admin screen has no field for either, so
+        // getState returns null there and both stay inert.
+        $search = $this->getState('filter.search');
+
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where($db->quoteName('server.id') . ' = ' . (int) substr($search, 3));
+            } else {
+                $like = '%' . str_replace(['%', '_'], ['\%', '\_'], $search) . '%';
+                $query->where($db->quoteName('server.server_name') . ' LIKE :search')
+                    ->bind(':search', $like, \Joomla\Database\ParameterType::STRING);
+            }
+        }
+
+        // ⚠️ server.type is CHAR(255), not an id. Bound as a string — casting
+        // it to int, as every other filter in this file does, would match
+        // every row whose type does not begin with a digit against 0.
+        $type = $this->getState('filter.type');
+
+        if (\is_string($type) && $type !== '') {
+            $query->where($db->quoteName('server.type') . ' = :type')
+                ->bind(':type', $type, \Joomla\Database\ParameterType::STRING);
         }
 
         // Add the list ordering clause with whitelist validation
