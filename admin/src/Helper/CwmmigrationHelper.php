@@ -337,10 +337,10 @@ class CwmmigrationHelper
                 . '), ' . $db->quote("'") . ', ' . $db->quote('')
                 . '), ' . $db->quote('"') . ', ' . $db->quote('') . '))'
             )
-            ->where([
-                $db->quoteName('alias') . ' = ' . $db->quote(''),
-                $db->quoteName('alias') . ' IS NULL',
-            ], 'OR');
+            ->where(
+                '(' . $db->quoteName('alias') . ' = ' . $db->quote('')
+                . ' OR ' . $db->quoteName('alias') . ' IS NULL)'
+            );
         $db->setQuery($query);
         $db->execute();
         $fixed += $db->getAffectedRows();
