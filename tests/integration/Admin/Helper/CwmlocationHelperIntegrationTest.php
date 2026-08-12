@@ -82,41 +82,39 @@ class CwmlocationHelperIntegrationTest extends IntegrationTestCase
         $this->assertSame([$locationId], $result);
     }
 
-    #[TestDox('getTeacherLocations() does not throw and finds a location via the legacy studies.teacher_id path')]
-    public function testGetTeacherLocationsLegacyPath(): void
+    #[TestDox('a study linked only by the retired column is not found')]
+    public function testAStudyWithNoJunctionRowIsNotFound(): void
     {
+        // ⚠️ This used to pass through a second UNION branch reading
+        // studies.teacher_id. #1731 retired that column, so a study with no
+        // junction row is simply not this teacher's -- there is nothing left to
+        // read it from.
         $userId     = 90002;
         $locationId = $this->insertLocation('Campus B');
         $teacherId  = $this->insertTeacher($userId);
         $this->insertStudy($locationId, $teacherId);
 
-        $result = CwmlocationHelper::getTeacherLocations($userId);
-
-        $this->assertSame([$locationId], $result);
+        $this->assertSame([], CwmlocationHelper::getTeacherLocations($userId));
     }
 
-    #[TestDox('getTeacherLocations() merges both paths into one deduplicated result')]
-    public function testGetTeacherLocationsCombinesBothPathsWithoutDuplicates(): void
+    #[TestDox('two studies at the same location yield that location once')]
+    public function testDuplicateLocationsAreCollapsed(): void
     {
-        $userId       = 90003;
-        $sharedLoc    = $this->insertLocation('Campus C');
-        $legacyOnlyId = $this->insertLocation('Campus D');
-        $teacherId    = $this->insertTeacher($userId);
+        $userId    = 90003;
+        $sharedLoc = $this->insertLocation('Campus C');
+        $otherLoc  = $this->insertLocation('Campus D');
+        $teacherId = $this->insertTeacher($userId);
 
-        // Many-to-many: same location as the legacy-path study below.
-        $mtmStudy = $this->insertStudy($sharedLoc);
-        $this->insertStudyTeacher($mtmStudy, $teacherId);
-
-        // Legacy path: one shared location, one exclusive to this path.
-        $this->insertStudy($sharedLoc, $teacherId);
-        $this->insertStudy($legacyOnlyId, $teacherId);
+        foreach ([$sharedLoc, $sharedLoc, $otherLoc] as $location) {
+            $this->insertStudyTeacher($this->insertStudy($location), $teacherId);
+        }
 
         $result = CwmlocationHelper::getTeacherLocations($userId);
         sort($result);
 
-        $this->assertCount(2, $result, 'Duplicate location from the shared study must be collapsed by DISTINCT');
+        $this->assertCount(2, $result, 'The repeated location must be collapsed by DISTINCT.');
         $this->assertContains($sharedLoc, $result);
-        $this->assertContains($legacyOnlyId, $result);
+        $this->assertContains($otherLoc, $result);
     }
 
     #[TestDox('getTeacherLocations() returns an empty array for a user with no teacher record')]

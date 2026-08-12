@@ -468,7 +468,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
 (
     `id`                  INT(10) UNSIGNED                                 NOT NULL AUTO_INCREMENT,
     `studydate`           DATETIME                                                  DEFAULT NULL,
-    `teacher_id`          INT(11)                                                   DEFAULT '1',
     `studynumber`         VARCHAR(100)                                              DEFAULT '',
     `secondary_reference` TEXT,
     `comments`            TINYINT(1)                                                DEFAULT '1',
@@ -515,7 +514,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_createdby` (`created_by`),
     KEY `idx_checkout` (`checked_out`),
     KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`),
-    KEY `idx_teacher_published` (`teacher_id`, `published`, `studydate`),
     KEY `idx_location_published` (`location_id`, `published`),
     KEY `idx_location_pub_date` (`location_id`, `published`, `studydate`),
     KEY `idx_location_access` (`location_id`, `access`),
@@ -870,13 +868,13 @@ VALUES (1, 'Legacy MP3', 1, 7478, 1, 'legacy',
 -- Dump of table #__bsms_studies
 -- ------------------------------------------------------------
 
-INSERT IGNORE INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `secondary_reference`,
+INSERT IGNORE INTO `#__bsms_studies` (`id`, `studydate`, `studynumber`, `secondary_reference`,
                                       `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`,
                                       `studytitle`, `alias`, `studyintro`, `messagetype`, `series_id`, `studytext`,
                                       `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `checked_out`, `checked_out_time`,
                                       `published`, `publish_up`, `publish_down`, `modified`, `modified_by`, `asset_id`,
                                       `access`, `ordering`, `language`, `download_id`)
-VALUES (1, '2010-03-13 00:10:00', 1, '2015-01', '',
+VALUES (1, '2010-03-13 00:10:00', '2015-01', '',
         1, 0, 0, '', '0', 1, 'Four Steps to Defeating the Flesh',
         X'666F75722D73746570732D746F2D646566656174696E672D7468652D666C657368',
         'If you’ve lived around Oregon very long you know what Oregon mud is like. The soils in the Willamette Valley contain a fair amount of clay. I remember trying to put in a sprinkler system when we first built our house. Foolishly, I thought I could beat the winter rains and get the system put in. Such was not the case. Towards the end I remember slogging around the yard—with each step I took it got harder and harder to walk as more and more mud clung to my shoes.',

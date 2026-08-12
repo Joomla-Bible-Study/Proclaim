@@ -343,24 +343,9 @@ class CwmlocationHelper
             ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
             ->where($db->quoteName('s.location_id') . ' > 0');
 
-        // Legacy path: teachers → studies.teacher_id
-        $query2 = $db->createQuery()
-            ->select('DISTINCT ' . $db->quoteName('s.location_id'))
-            ->from($db->quoteName('#__bsms_teachers', 't'))
-            ->innerJoin(
-                $db->quoteName('#__bsms_studies', 's')
-                . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
-            )
-            ->where($db->quoteName('t.user_id') . ' = :userId')
-            ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
-            ->where($db->quoteName('s.location_id') . ' > 0');
-
-        // Both branches share the single :userId placeholder, bound once here.
-        // DatabaseQuery::union() only merges SQL text, not bound parameters
-        // (getBounded() returns whichever query object is passed to setQuery()),
-        // so query2 must never carry its own separately-bound placeholder name --
-        // that value would silently be lost. See #1561.
-        $query1->union($query2)->bind(':userId', $userId, ParameterType::INTEGER);
+        // ⚠️ A second UNION branch read studies.teacher_id until #1731 retired
+        // it. The junction path above is the whole answer now.
+        $query1->bind(':userId', $userId, ParameterType::INTEGER);
 
         $db->setQuery($query1);
 
@@ -403,25 +388,8 @@ class CwmlocationHelper
 
         $db->setQuery($query, 0, 1);
 
-        if ($db->loadResult()) {
-            return true;
-        }
-
-        // Check legacy teacher_id path
-        $query2 = $db->createQuery()
-            ->select('1')
-            ->from($db->quoteName('#__bsms_teachers', 't'))
-            ->innerJoin(
-                $db->quoteName('#__bsms_studies', 's')
-                . ' ON ' . $db->quoteName('s.teacher_id') . ' = ' . $db->quoteName('t.id')
-            )
-            ->where($db->quoteName('t.user_id') . ' = :userId2')
-            ->where($db->quoteName('s.id') . ' = :studyId2')
-            ->bind(':userId2', $userId, ParameterType::INTEGER)
-            ->bind(':studyId2', $messageId, ParameterType::INTEGER);
-
-        $db->setQuery($query2, 0, 1);
-
+        // ⚠️ A second check read studies.teacher_id until #1731 retired it. The
+        // junction is the whole answer now.
         return (bool) $db->loadResult();
     }
 

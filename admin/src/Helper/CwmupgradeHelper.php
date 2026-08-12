@@ -406,6 +406,15 @@ class CwmupgradeHelper
             $steps[]  = ['name' => 'fixTeacherAliases', 'success' => false, 'detail' => $e->getMessage()];
         }
 
+        // 9b. Retire the legacy teacher column, if this database still has it
+        try {
+            $count   = CwmmigrationHelper::retireLegacyTeacherColumn();
+            $steps[] = ['name' => 'retireLegacyTeacherColumn', 'success' => true, 'detail' => $count . ' moved'];
+        } catch (\Exception $e) {
+            $errors[] = 'retireLegacyTeacherColumn: ' . $e->getMessage();
+            $steps[]  = ['name' => 'retireLegacyTeacherColumn', 'success' => false, 'detail' => $e->getMessage()];
+        }
+
         // 9a. Retire the legacy scripture columns, if this database still has them
         try {
             $count   = CwmscriptureMigration::retireLegacyColumns();

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -541,7 +542,6 @@ class CwmpIconvert
                 $datastudies->published      = $published;
                 $datastudies->studydate      = $studydate;
                 $datastudies->studytitle     = $studytitle;
-                $datastudies->teacher_id     = $teacher_id;
                 $datastudies->studynumber    = $studynumber;
                 $datastudies->comments       = $comments;
                 $datastudies->hits           = $hits;
@@ -566,6 +566,7 @@ class CwmpIconvert
                     $oldid              = $pi->id;
                     $this->studiesids[] = ['newid' => $newid, 'oldid' => $oldid];
 
+                    $this->saveTeacher((int) $newid, (int) $teacher_id);
                     $this->saveScriptures((int) $newid, [
                         [$booknumber, $chapter_begin, $verse_begin, $chapter_end, $verse_end],
                         [$booknumber2, $chapter_begin2, $verse_begin2, $chapter_end2, $verse_end2],
@@ -1360,5 +1361,24 @@ class CwmpIconvert
         if ($refs !== []) {
             CwmscriptureHelper::saveScriptures($studyId, $refs);
         }
+    }
+
+    /**
+     * Write an imported study's teacher to the junction.
+     *
+     * @param   int  $studyId    New study primary key
+     * @param   int  $teacherId  Teacher, or 0 when the import had none
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function saveTeacher(int $studyId, int $teacherId): void
+    {
+        if ($studyId <= 0 || $teacherId <= 0) {
+            return;
+        }
+
+        CwmstudyteacherHelper::saveTeachers($studyId, [['teacher_id' => $teacherId]]);
     }
 }

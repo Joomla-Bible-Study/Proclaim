@@ -1715,6 +1715,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 require_once $migrationPath;
 
                 $moved = CwmscriptureMigration::retireLegacyColumns();
+                $moved += CwmmigrationHelper::retireLegacyTeacherColumn();
 
                 if ($moved > 0) {
                     Factory::getApplication()->enqueueMessage(

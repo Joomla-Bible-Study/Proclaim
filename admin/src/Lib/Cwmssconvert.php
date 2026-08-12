@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -228,9 +229,11 @@ class Cwmssconvert
         $db   = Factory::getContainer()->get(DatabaseInterface::class);
         $data = new \stdClass();
 
+        $teacherId = 0;
+
         foreach ($seriesspeakers as $speakers) {
             if ($speakers->speaker_id == $sermon->speaker_id) {
-                $data->teacher_id = $speakers->newid;
+                $teacherId = (int) $speakers->newid;
             }
 
             if ($speakers->series_id == $sermon->series_id) {
@@ -259,6 +262,7 @@ class Cwmssconvert
         $db->insertObject('#__bsms_studies', $data, 'id');
 
         $this->saveScripture((int) $data->id, $scripture);
+        $this->saveTeacher((int) $data->id, $teacherId);
 
         $data1              = new \stdClass();
         $data1->study_id    = $data->id;
@@ -771,5 +775,24 @@ class Cwmssconvert
                 )
             ),
         ]);
+    }
+
+    /**
+     * Write an imported study's teacher to the junction.
+     *
+     * @param   int  $studyId    New study primary key
+     * @param   int  $teacherId  Teacher, or 0 when the import had none
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function saveTeacher(int $studyId, int $teacherId): void
+    {
+        if ($studyId <= 0 || $teacherId <= 0) {
+            return;
+        }
+
+        CwmstudyteacherHelper::saveTeachers($studyId, [['teacher_id' => $teacherId]]);
     }
 }

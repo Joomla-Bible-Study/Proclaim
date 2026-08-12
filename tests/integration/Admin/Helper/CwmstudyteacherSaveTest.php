@@ -117,18 +117,6 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         )->loadColumn());
     }
 
-    /**
-     * @return  int  The legacy primary-teacher column.
-     */
-    private function legacyTeacherId(): int
-    {
-        return (int) $this->db->setQuery(
-            $this->db->createQuery()
-                ->select($this->db->quoteName('teacher_id'))
-                ->from($this->db->quoteName('#__bsms_studies'))
-                ->where($this->db->quoteName('id') . ' = ' . $this->studyId)
-        )->loadResult();
-    }
 
     /**
      * @param   int[]  $ids  Teacher ids
@@ -186,27 +174,21 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
         );
     }
 
-    // -------------------------------------------------------------------------
-    // The junction table and the legacy column must not diverge
-    // -------------------------------------------------------------------------
-
-    #[TestDox('Saving with sync updates both the junction rows and the legacy column')]
-    public function testSaveAndSyncWritesBoth(): void
+    #[TestDox('Saving writes the teachers and leaves nothing behind')]
+    public function testSaveWritesTheJunction(): void
     {
-        CwmstudyteacherHelper::saveTeachersAndSync($this->studyId, $this->entries([42, 43]));
+        CwmstudyteacherHelper::saveTeachers($this->studyId, $this->entries([42, 43]));
 
-        $this->assertSame([42, 43], $this->teacherIds());
-        $this->assertSame(42, $this->legacyTeacherId(), 'The first teacher is the primary');
+        $this->assertSame([42, 43], $this->teacherIds(), 'Order matters: the first entry is the primary.');
     }
 
-    #[TestDox('A failed save leaves the junction rows and the legacy column consistent')]
-    public function testFailedSaveAndSyncLeavesNoDivergence(): void
+    #[TestDox('A failed save restores the teachers it replaced')]
+    public function testFailedSaveRestoresThePrevious(): void
     {
-        CwmstudyteacherHelper::saveTeachersAndSync($this->studyId, $this->entries([11]));
-        $this->assertSame(11, $this->legacyTeacherId(), 'Precondition');
+        CwmstudyteacherHelper::saveTeachers($this->studyId, $this->entries([11]));
 
         try {
-            CwmstudyteacherHelper::saveTeachersAndSync(
+            CwmstudyteacherHelper::saveTeachers(
                 $this->studyId,
                 [['teacher_id' => 20], ['teacher_id' => 999999999999999]]
             );
@@ -215,19 +197,14 @@ class CwmstudyteacherSaveTest extends IntegrationTestCase
             // Expected.
         }
 
-        $this->assertSame(
-            11,
-            $this->legacyTeacherId(),
-            'The legacy column must not describe a teacher list that was never written — see #1575'
-        );
-
         // Assert which teacher survived, not merely how many: a count of one is
         // satisfied both by the restored row and by an orphan from the failed
         // write, which are opposite outcomes.
         $this->assertSame(
             [11],
             $this->teacherIds(),
-            'The junction table must still hold the teacher the legacy column names — see #1575'
+            'saveTeachers() deletes then inserts. Without a transaction around the pair, a failing insert '
+            . 'leaves the study with its old teachers gone and only some of the new ones written — see #1575.'
         );
     }
 }

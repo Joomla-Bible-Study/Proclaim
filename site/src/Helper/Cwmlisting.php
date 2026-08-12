@@ -535,7 +535,6 @@ class Cwmlisting
             $db->quoteName('s.studytitle'),
             $db->quoteName('s.studydate'),
             $db->quoteName('s.studyintro'),
-            $db->quoteName('s.teacher_id'),
             $db->quoteName('t.teachername'),
             $db->quoteName('t.id', 'tid'),
             $db->quoteName('s.id', 'sid'),

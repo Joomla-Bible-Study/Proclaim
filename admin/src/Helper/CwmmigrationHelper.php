@@ -362,14 +362,21 @@ class CwmmigrationHelper
         $dupCount = (int) $db->loadResult();
 
         if ($dupCount > 0) {
-            // Reassign sermons
+            // ⚠️ Only while the column exists. #1731 retires it, and this runs
+            // from data fixes on databases either side of that.
             $db->setQuery(
-                'UPDATE ' . $db->quoteName('#__bsms_studies') . ' s '
-                . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON s.'
-                . $db->quoteName('teacher_id') . ' = m.dup_id '
-                . 'SET s.' . $db->quoteName('teacher_id') . ' = m.keeper_id'
+                'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
             );
-            $db->execute();
+
+            if ($db->loadRow() !== null) {
+                $db->setQuery(
+                    'UPDATE ' . $db->quoteName('#__bsms_studies') . ' s '
+                    . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON s.'
+                    . $db->quoteName('teacher_id') . ' = m.dup_id '
+                    . 'SET s.' . $db->quoteName('teacher_id') . ' = m.keeper_id'
+                );
+                $db->execute();
+            }
 
             // Reassign junction table entries
             if (\in_array(str_replace('#__', $db->getPrefix(), '#__bsms_study_teachers'), $db->getTableList(), true)) {
@@ -507,6 +514,15 @@ class CwmmigrationHelper
         $junctionTable = str_replace('#__', $db->getPrefix(), '#__bsms_study_teachers');
 
         if (!\in_array($junctionTable, $db->getTableList(), true)) {
+            return 0;
+        }
+
+        // Nothing to migrate once the column is gone (#1731).
+        $db->setQuery(
+            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
+        );
+
+        if ($db->loadRow() === null) {
             return 0;
         }
 
@@ -1486,5 +1502,72 @@ class CwmmigrationHelper
         );
 
         return $report;
+    }
+
+    /**
+     * Move the legacy teacher column into the junction and drop it.
+     *
+     * ⚠️ Deliberately not in migration SQL. Joomla's ChangeSet builds a check
+     * only for ALTER TABLE, CREATE TABLE and RENAME TABLE, so an INSERT beside a
+     * DROP COLUMN is skipped while the drop is replayed -- Database Maintenance
+     * → Fix, and the 9.x upgrade wizard, would run the drop alone and lose every
+     * teacher attribution. The same reasoning as #1744.
+     *
+     * Safe to call whenever: it returns immediately once the column is gone.
+     *
+     * @return  int  Attributions moved into the junction
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function retireLegacyTeacherColumn(): int
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $db->setQuery(
+            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
+        );
+
+        if ($db->loadRow() === null) {
+            return 0;
+        }
+
+        // populateStudyTeachers() is already INSERT IGNORE over a unique key, so
+        // it is the backfill; running it here keeps the two inseparable.
+        $moved = self::populateStudyTeachers();
+
+        // ⚠️ Dropping the column does not drop an index covering it: MySQL
+        // shrinks idx_teacher_published to (published, studydate) instead.
+        $db->setQuery(
+            'SHOW INDEX FROM ' . $db->quoteName('#__bsms_studies')
+            . ' WHERE ' . $db->quoteName('Key_name') . ' = ' . $db->quote('idx_teacher_published')
+        );
+
+        if ($db->loadRow()) {
+            $db->setQuery(
+                'ALTER TABLE ' . $db->quoteName('#__bsms_studies')
+                . ' DROP INDEX ' . $db->quoteName('idx_teacher_published')
+            );
+            $db->execute();
+        }
+
+        $db->setQuery(
+            'ALTER TABLE ' . $db->quoteName('#__bsms_studies') . ' DROP COLUMN ' . $db->quoteName('teacher_id')
+        );
+        $db->execute();
+
+        // A template could have this saved as its series sort column.
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__bsms_templates')
+            . ' SET ' . $db->quoteName('params') . ' = REPLACE(' . $db->quoteName('params') . ', '
+            . $db->quote('"series_detail_sort":"teacher_id"') . ', '
+            . $db->quote('"series_detail_sort":"studydate"') . ')'
+            . ' WHERE ' . $db->quoteName('params') . ' LIKE '
+            . $db->quote('%"series_detail_sort":"teacher_id"%')
+        );
+        $db->execute();
+
+        Log::add('Legacy teacher column retired; ' . $moved . ' attributions moved.', Log::INFO, 'com_proclaim');
+
+        return $moved;
     }
 }

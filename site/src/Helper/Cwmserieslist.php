@@ -277,7 +277,7 @@ class Cwmserieslist extends Cwmlisting
      * @var string[]
      * @since __DEPLOY_VERSION__
      */
-    private const SORT_COLUMNS = ['studydate', 'studytitle', 'teacher_id', 'ordering', 'hits'];
+    private const SORT_COLUMNS = ['studydate', 'studytitle', 'ordering', 'hits'];
 
     /**
      * ⚠️ series_detail_sort is a saved template param that goes straight into

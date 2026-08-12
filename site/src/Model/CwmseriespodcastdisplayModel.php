@@ -135,7 +135,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
                 implode(', ', $db->quoteName([
                     'study.id', 'study.published', 'study.studydate', 'study.studytitle',
                     'study.hits', 'study.alias',
-                    'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+                    'study.studyintro', 'study.secondary_reference',
                     'study.location_id',
                 ]))
             )
