@@ -25,11 +25,8 @@ use PHPUnit\Framework\Attributes\TestDox;
  * one row at a time with nothing wrapping the two. An insert failing partway
  * through left the old references gone and only some of the new ones written.
  *
- * Callers paired it with syncLegacyColumns(), which copies the first two
- * references into flat columns on #__bsms_studies. That second call never ran
- * when the first threw, so the flat columns kept describing the previous
- * reference set -- a divergence nothing reconciles until a later save happens
- * to succeed.
+ * The flat columns those callers also maintained are no longer written (#1623);
+ * what remains to protect is the delete-then-insert pair itself.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -220,27 +217,33 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     // The junction table and the flat columns must not diverge
     // -------------------------------------------------------------------------
 
-    #[TestDox('Saving with sync updates both the references and the flat columns')]
-    public function testSaveAndSyncWritesBoth(): void
+    #[TestDox('Saving writes the references and leaves the legacy columns alone')]
+    public function testSaveWritesTheJunctionOnly(): void
     {
-        CwmscriptureHelper::saveScripturesAndSync($this->studyId, [$this->ref(42)]);
+        $before = $this->legacyBookNumber();
+
+        CwmscriptureHelper::saveScriptures($this->studyId, [$this->ref(42)]);
 
         $this->assertSame(1, $this->countReferences());
-        $this->assertSame(42, $this->legacyBookNumber(), 'The flat columns must reflect the saved reference');
+        $this->assertSame(
+            $before,
+            $this->legacyBookNumber(),
+            'The flat columns are no longer written (#1623). Every reader prefers the junction, so a stale '
+            . 'value here is invisible -- but writing one would put the retirement back where it started.'
+        );
     }
 
     /**
      * The divergence this issue is really about: references written, flat
      * columns left describing the previous set.
      */
-    #[TestDox('A failed save leaves references and flat columns consistent')]
-    public function testFailedSaveAndSyncLeavesNoDivergence(): void
+    #[TestDox('A failed save restores the references it replaced')]
+    public function testFailedSaveLeavesTheJunctionIntact(): void
     {
-        CwmscriptureHelper::saveScripturesAndSync($this->studyId, [$this->ref(11)]);
-        $this->assertSame(11, $this->legacyBookNumber(), 'Precondition');
+        CwmscriptureHelper::saveScriptures($this->studyId, [$this->ref(11)]);
 
         try {
-            CwmscriptureHelper::saveScripturesAndSync(
+            CwmscriptureHelper::saveScriptures(
                 $this->studyId,
                 [$this->ref(20), $this->ref(21, 'not-a-number')]
             );
@@ -248,12 +251,6 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         } catch (\Throwable) {
             // Expected.
         }
-
-        $this->assertSame(
-            11,
-            $this->legacyBookNumber(),
-            'Flat columns must not describe a reference set that was never written — see #1573'
-        );
 
         // Assert the surviving reference, not just how many there are: a bare
         // count of 1 is satisfied both by the restored reference and by a
@@ -269,7 +266,8 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         $this->assertSame(
             [11],
             $books,
-            'The junction table must still hold the reference the flat columns describe — see #1573'
+            'saveScriptures() deletes then inserts. Without a transaction around the pair, a failing '
+            . 'insert leaves the old references gone and only some of the new ones written — see #1573.'
         );
     }
 }

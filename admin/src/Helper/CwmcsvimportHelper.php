@@ -243,7 +243,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
+                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
             }
         }
 
@@ -339,7 +339,7 @@ class CwmcsvimportHelper
             $scriptures = self::parseScriptures($rowData['scripture']);
 
             if (!empty($scriptures)) {
-                CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
+                CwmscriptureHelper::saveScriptures($studyId, $scriptures);
             }
         }
 
