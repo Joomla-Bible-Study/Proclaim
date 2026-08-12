@@ -1232,7 +1232,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_SCRIPTURE');
                 } else {
-                    (isset($item->booknumber) ? $data = $this->getScripture(
+                    (self::hasScripture($item, 1) ? $data = $this->getScripture(
                         $params,
                         $item,
                         $esv,
@@ -1248,7 +1248,7 @@ class Cwmlisting
                 if ($header === 1) {
                     $data = Text::_('JBS_CMN_SCRIPTURE');
                 } else {
-                    (isset($item->booknumber2) ? $data = $this->getScripture(
+                    (self::hasScripture($item, 2) ? $data = $this->getScripture(
                         $params,
                         $item,
                         $esv,
@@ -1931,6 +1931,38 @@ class Cwmlisting
             return '';
         }
 
+        $ref = self::referenceFor($row, $scripturerow);
+
+        if ($ref !== null) {
+            $bookNum      = $ref->booknumber;
+            $ch_b         = $ref->chapterBegin;
+            $ch_e         = $ref->chapterEnd;
+            $v_b          = $ref->verseBegin;
+            $v_e          = $ref->verseEnd;
+            $book         = CwmscriptureHelper::getBookName($bookNum);
+            $bibleVersion = $ref->bibleVersion;
+
+            if ($book === '' || $bookNum <= 0) {
+                return '';
+            }
+
+            return $this->renderScripture(
+                $params,
+                $elementConfig,
+                $book,
+                $bookNum,
+                $ch_b,
+                $ch_e,
+                $v_b,
+                $v_e,
+                $bibleVersion
+            );
+        }
+
+        if (self::hasJunctionReferences($row)) {
+            return '';
+        }
+
         $booknumber  = (int) ($row->booknumber ?? 0);
         $booknumber2 = (int) ($row->booknumber2 ?? 0);
 
@@ -1963,6 +1995,104 @@ class Cwmlisting
             return '';
         }
 
+        return $this->renderScripture(
+            $params,
+            $elementConfig,
+            $book,
+            $bookNum,
+            $ch_b,
+            $ch_e,
+            $v_b,
+            $v_e,
+            $bibleVersion
+        );
+    }
+
+    /**
+     * The reference a row carries at the given position, from the junction.
+     *
+     * @param   object  $row           Row that may carry `scriptures`
+     * @param   int     $scripturerow  1-based position
+     *
+     * @return  ScriptureReference|null  Null when the row predates the junction
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function referenceFor(object $row, int $scripturerow): ?ScriptureReference
+    {
+        if (empty($row->scriptures) || !\is_array($row->scriptures)) {
+            return null;
+        }
+
+        $ref = array_values($row->scriptures)[$scripturerow - 1] ?? null;
+
+        return $ref instanceof ScriptureReference && $ref->booknumber > 0 ? $ref : null;
+    }
+
+    /**
+     * Whether a row has a reference at the given position.
+     *
+     * Callers used to gate on `booknumber` and `booknumber2`, which cannot see
+     * past a study's second reference (#1623).
+     *
+     * @param   object  $row           Row to test
+     * @param   int     $scripturerow  1-based position
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function hasScripture(object $row, int $scripturerow): bool
+    {
+        if (self::hasJunctionReferences($row)) {
+            return self::referenceFor($row, $scripturerow) !== null;
+        }
+
+        $column = $scripturerow === 2 ? 'booknumber2' : 'booknumber';
+
+        return (int) ($row->{$column} ?? 0) > 0;
+    }
+
+    /**
+     * @param   object  $row  Row to test
+     *
+     * @return  bool  Whether the row carries any junction reference
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function hasJunctionReferences(object $row): bool
+    {
+        return !empty($row->scriptures) && \is_array($row->scriptures);
+    }
+
+    /**
+     * Render one reference. Shared by the junction and legacy paths.
+     *
+     * @param   Registry  $params         Item params
+     * @param   ?object   $elementConfig  Element configuration
+     * @param   string    $book           Translated book name
+     * @param   int       $bookNum        Proclaim book number
+     * @param   int       $ch_b           Chapter begin
+     * @param   int       $ch_e           Chapter end
+     * @param   int       $v_b            Verse begin
+     * @param   int       $v_e            Verse end
+     * @param   string    $bibleVersion   Bible version code
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function renderScripture(
+        Registry $params,
+        ?object $elementConfig,
+        string $book,
+        int $bookNum,
+        int $ch_b,
+        int $ch_e,
+        int $v_b,
+        int $v_e,
+        string $bibleVersion
+    ): string {
         // Check for element-specific show_verses (empty string means use global)
         // Default to 0 (chapters only) if not found in params
         $show_verses = (int) $params->get('show_verses', 0);

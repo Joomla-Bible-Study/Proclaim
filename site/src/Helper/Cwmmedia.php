@@ -1545,7 +1545,7 @@ class Cwmmedia
         // Get scripture reference
         $listing   = new Cwmlisting();
         $scripture = '';
-        if (isset($media->booknumber) && $media->booknumber > 0) {
+        if (Cwmlisting::hasScripture($media, 1)) {
             $savedId   = $media->id ?? null;
             $media->id = $media->study_id ?? $media->id;
             $scripture = $listing->getScripture($params, $media, 0, 1);
