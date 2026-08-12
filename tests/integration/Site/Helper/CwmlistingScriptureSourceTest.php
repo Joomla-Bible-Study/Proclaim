@@ -3,11 +3,9 @@
 /**
  * The scripture1 and scripture2 elements read the junction, not the flat pair.
  *
- * Once the flat columns stop being written they hold stale values rather than
- * empty ones -- the previous reference for an edited study, and `DEFAULT 101`
- * (Genesis) for a new one. A reader still consulting them would render
- * confidently wrong references, which is why every one of them has to prefer
- * the junction before the writes are removed (#1623).
+ * The flat columns are gone (#1623), but a row can still arrive carrying
+ * properties that look like them -- from an older cache, a template override,
+ * or a caller that built the object by hand. The junction is the only source.
  *
  * @package    Proclaim.IntegrationTest
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -111,29 +109,29 @@ class CwmlistingScriptureSourceTest extends IntegrationTestCase
         $this->assertStringNotContainsStringIgnoringCase('EXODUS', $rendered);
     }
 
-    #[TestDox('a row with no junction references still renders its legacy columns')]
-    public function testLegacyRowsStillRender(): void
+    #[TestDox('a row with no junction references renders nothing')]
+    public function testRowsWithoutReferencesRenderNothing(): void
     {
-        $rendered = (new Cwmlisting())->getScripture($this->params(), $this->row(false), 0, 1);
-
-        $this->assertStringContainsStringIgnoringCase(
-            'GENESIS',
-            $rendered,
-            'The fallback is what keeps studies readable until the migration has run on their site.'
+        $this->assertSame(
+            '',
+            (new Cwmlisting())->getScripture($this->params(), $this->row(false), 0, 1),
+            'The legacy columns are gone (#1623). A row carrying only their leftovers has no reference, '
+            . 'and rendering one from stale properties is exactly what must not happen.'
         );
     }
 
-    #[TestDox('hasScripture reports positions from the junction and from the legacy columns')]
-    public function testHasScriptureCoversBothSources(): void
+    #[TestDox('hasScripture reports only what the junction holds')]
+    public function testHasScriptureReadsTheJunctionOnly(): void
     {
         $this->assertTrue(Cwmlisting::hasScripture($this->row(true), 1));
         $this->assertTrue(Cwmlisting::hasScripture($this->row(true), 2));
-        $this->assertTrue(Cwmlisting::hasScripture($this->row(false), 1));
 
-        $bare = (object) ['id' => 1];
-
-        $this->assertFalse(Cwmlisting::hasScripture($bare, 1), 'A row with neither source has no reference.');
-        $this->assertFalse(Cwmlisting::hasScripture($bare, 2));
+        $this->assertFalse(
+            Cwmlisting::hasScripture($this->row(false), 1),
+            'The row carries legacy-looking properties and no junction reference. Trusting them is how a '
+            . 'retired column reaches a page.'
+        );
+        $this->assertFalse(Cwmlisting::hasScripture((object) ['id' => 1], 1));
     }
 
     #[TestDox('a junction row with one reference has no second position')]

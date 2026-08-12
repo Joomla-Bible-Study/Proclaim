@@ -15,6 +15,8 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
@@ -541,16 +543,6 @@ class CwmpIconvert
                 $datastudies->studytitle     = $studytitle;
                 $datastudies->teacher_id     = $teacher_id;
                 $datastudies->studynumber    = $studynumber;
-                $datastudies->booknumber     = $booknumber;
-                $datastudies->booknumber2    = $booknumber2;
-                $datastudies->chapter_begin  = $chapter_begin;
-                $datastudies->chapter_end    = $chapter_end;
-                $datastudies->verse_begin    = $verse_begin;
-                $datastudies->verse_end      = $verse_end;
-                $datastudies->chapter_begin2 = $chapter_begin2;
-                $datastudies->chapter_end2   = $chapter_end2;
-                $datastudies->verse_begin2   = $verse_begin2;
-                $datastudies->verse_end2     = $verse_end2;
                 $datastudies->comments       = $comments;
                 $datastudies->hits           = $hits;
                 $datastudies->user_id        = $user_id;
@@ -574,10 +566,10 @@ class CwmpIconvert
                     $oldid              = $pi->id;
                     $this->studiesids[] = ['newid' => $newid, 'oldid' => $oldid];
 
-                    // The columns written above are the legacy pair. The junction
-                    // is the read path, so populate it here rather than leaving
-                    // the study for a migration that may already have run (#1623).
-                    CwmscriptureMigration::migrateStudy((int) $newid);
+                    $this->saveScriptures((int) $newid, [
+                        [$booknumber, $chapter_begin, $verse_begin, $chapter_end, $verse_end],
+                        [$booknumber2, $chapter_begin2, $verse_begin2, $chapter_end2, $verse_end2],
+                    ]);
                 }
 
                 // Create the mediafiles
@@ -1322,5 +1314,51 @@ class CwmpIconvert
         }
 
         return true;
+    }
+
+    /**
+     * Write an imported study's references to the junction.
+     *
+     * @param   int    $studyId     New study primary key
+     * @param   array  $references  [book, chapterBegin, verseBegin, chapterEnd, verseEnd] per reference
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function saveScriptures(int $studyId, array $references): void
+    {
+        if ($studyId <= 0) {
+            return;
+        }
+
+        $refs = [];
+
+        foreach ($references as [$book, $chapterBegin, $verseBegin, $chapterEnd, $verseEnd]) {
+            $book = (int) $book;
+
+            if ($book <= 0) {
+                continue;
+            }
+
+            $refs[] = new ScriptureReference(
+                booknumber: $book,
+                chapterBegin: (int) $chapterBegin,
+                verseBegin: (int) $verseBegin,
+                chapterEnd: (int) $chapterEnd,
+                verseEnd: (int) $verseEnd,
+                referenceText: CwmscriptureHelper::formatReference(
+                    $book,
+                    (int) $chapterBegin,
+                    (int) $verseBegin,
+                    (int) $chapterEnd,
+                    (int) $verseEnd
+                )
+            );
+        }
+
+        if ($refs !== []) {
+            CwmscriptureHelper::saveScriptures($studyId, $refs);
+        }
     }
 }

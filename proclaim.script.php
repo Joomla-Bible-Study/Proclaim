@@ -1705,6 +1705,32 @@ class com_proclaimInstallerScript extends InstallerScript
             );
         }
 
+        // ⚠️ Dropping booknumber leaves idx_booknumber_published shrunk to
+        // (published), a duplicate of idx_state (#1623). MySQL has no
+        // DROP INDEX IF EXISTS, so it cannot go in the migration SQL without
+        // aborting the update wherever it is already absent.
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $db->setQuery(
+                'SHOW INDEX FROM ' . $db->quoteName('#__bsms_studies')
+                . ' WHERE ' . $db->quoteName('Key_name') . ' = ' . $db->quote('idx_booknumber_published')
+            );
+
+            if ($db->loadRow()) {
+                $db->setQuery(
+                    'ALTER TABLE ' . $db->quoteName('#__bsms_studies')
+                    . ' DROP INDEX ' . $db->quoteName('idx_booknumber_published')
+                );
+                $db->execute();
+            }
+        } catch (\Exception $e) {
+            Factory::getApplication()->enqueueMessage(
+                'Could not drop idx_booknumber_published: ' . $e->getMessage(),
+                'warning'
+            );
+        }
+
         // The remaining legacy data migrations run on UPGRADES only. A fresh
         // install's SQL already creates the current schema, so there is nothing
         // to migrate — running these against freshly seeded default rows only

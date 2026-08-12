@@ -123,7 +123,7 @@
   },
   "scripts": {
     "test": "phpunit",
-    "test:unit": "phpunit --testsuite 'Asset Contract Tests,Query Contract Tests,Admin Field Tests,Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Api View Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests,Plugin Schemaorg Tests'",
+    "test:unit": "phpunit --testsuite 'Asset Contract Tests,Query Contract Tests,Migration SQL Contract Tests,Admin Field Tests,Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Api View Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests,Plugin Schemaorg Tests'",
     "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Table Tests,Integration Admin Model Tests,Integration Admin Addon Tests,Integration Site Model Tests,Integration Site Helper Tests'",
     "test:js": "npm test",
     "test:e2e": "npm run test:e2e",

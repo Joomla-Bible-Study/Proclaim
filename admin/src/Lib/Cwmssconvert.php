@@ -16,6 +16,8 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
+use CWM\Library\Scripture\Helper\ScriptureReference;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
@@ -239,12 +241,7 @@ class Cwmssconvert
         $data->studytitle  = $sermon->sermon_title;
         $data->studynumber = $sermon->sermon_number;
 
-        $scripture           = $this->getVerses($sermon->sermon_scripture);
-        $data->booknumber    = $scripture->booknumber;
-        $data->chapter_begin = $scripture->chapter_begin;
-        $data->chapter_end   = $scripture->chapter_end;
-        $data->verse_begin   = $scripture->verse_begin;
-        $data->verse_end     = $scripture->verse_end;
+        $scripture = $this->getVerses($sermon->sermon_scripture);
 
         $data->studydate = $sermon->sermon_date;
 
@@ -261,10 +258,7 @@ class Cwmssconvert
 
         $db->insertObject('#__bsms_studies', $data, 'id');
 
-        // The columns written above are the legacy pair. The junction is the read
-        // path, so populate it here rather than leaving the study for a migration
-        // that may already have run (#1623).
-        CwmscriptureMigration::migrateStudy((int) $data->id);
+        $this->saveScripture((int) $data->id, $scripture);
 
         $data1              = new \stdClass();
         $data1->study_id    = $data->id;
@@ -741,5 +735,41 @@ class Cwmssconvert
         }
 
         return $sermonscripture;
+    }
+
+    /**
+     * Write an imported reference to the junction.
+     *
+     * @param   int      $studyId    New study primary key
+     * @param   ?object  $scripture  Parsed reference from getVerses()
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function saveScripture(int $studyId, ?object $scripture): void
+    {
+        $book = (int) ($scripture->booknumber ?? 0);
+
+        if ($studyId <= 0 || $book <= 0) {
+            return;
+        }
+
+        CwmscriptureHelper::saveScriptures($studyId, [
+            new ScriptureReference(
+                booknumber: $book,
+                chapterBegin: (int) ($scripture->chapter_begin ?? 0),
+                verseBegin: (int) ($scripture->verse_begin ?? 0),
+                chapterEnd: (int) ($scripture->chapter_end ?? 0),
+                verseEnd: (int) ($scripture->verse_end ?? 0),
+                referenceText: CwmscriptureHelper::formatReference(
+                    $book,
+                    (int) ($scripture->chapter_begin ?? 0),
+                    (int) ($scripture->verse_begin ?? 0),
+                    (int) ($scripture->chapter_end ?? 0),
+                    (int) ($scripture->verse_end ?? 0)
+                )
+            ),
+        ]);
     }
 }

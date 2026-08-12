@@ -32,14 +32,6 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmbookFacetSourceTest extends IntegrationTestCase
 {
     /**
-     * The value of #__bsms_studies.booknumber when nobody sets one.
-     *
-     * @var int
-     * @since __DEPLOY_VERSION__
-     */
-    private const FLAT_COLUMN_DEFAULT = 101;
-
-    /**
      * @var DatabaseDriver|null
      * @since __DEPLOY_VERSION__
      */
@@ -136,11 +128,6 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      * Book numbers no study currently covers, so an assertion cannot be
      * satisfied by real fixture content happening to use them.
      *
-     * ⚠️ Never returns the column default. A well-populated database uses 101
-     * already and would never offer it, but a near-empty one — CI's — hands it
-     * straight back, and a fixture book equal to the default cannot distinguish
-     * the junction from the flat column.
-     *
      * @param   int  $count  How many to return
      *
      * @return  int[]
@@ -150,7 +137,7 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
     private function unusedBooks(int $count): array
     {
         $free = array_values(
-            array_diff(range(101, 166), $this->offeredBooks(), [self::FLAT_COLUMN_DEFAULT])
+            array_diff(range(101, 166), $this->offeredBooks())
         );
 
         $this->assertGreaterThanOrEqual($count, \count($free), 'No spare book numbers left in the fixture data.');
@@ -180,34 +167,6 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
         }
     }
 
-    #[TestDox('the facet follows the junction even when the flat column says otherwise')]
-    public function testTheJunctionWinsOverTheFlatColumn(): void
-    {
-        $book    = $this->unusedBooks(1)[0];
-        $studyId = $this->studyWithReferences([$book]);
-
-        // ⚠️ booknumber is `DEFAULT '101'`, so a study nothing wrote a book to
-        // still reads as Genesis. The flat column can never say "no reference",
-        // which is half of why it is being retired.
-        $flat = (int) $this->db->setQuery(
-            $this->db->createQuery()
-                ->select($this->db->quoteName('booknumber'))
-                ->from($this->db->quoteName('#__bsms_studies'))
-                ->where($this->db->quoteName('id') . ' = ' . $studyId)
-        )->loadResult();
-
-        $this->assertSame(
-            self::FLAT_COLUMN_DEFAULT,
-            $flat,
-            'The column default changed; this fixture no longer sets up the conflict.'
-        );
-
-        $this->assertContains(
-            $book,
-            $this->offeredBooks(),
-            'The facet did not offer the junction\'s book, so it is still reading the flat column.'
-        );
-    }
 
     #[TestDox('a study with no references contributes nothing')]
     public function testStudiesWithoutReferencesAreExcluded(): void

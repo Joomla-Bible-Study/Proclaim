@@ -134,10 +134,9 @@ class CwmseriespodcastdisplayModel extends ItemModel
                 'list.select',
                 implode(', ', $db->quoteName([
                     'study.id', 'study.published', 'study.studydate', 'study.studytitle',
-                    'study.booknumber', 'study.chapter_begin', 'study.verse_begin',
-                    'study.chapter_end', 'study.verse_end', 'study.hits', 'study.alias',
+                    'study.hits', 'study.alias',
                     'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
-                    'study.booknumber2', 'study.location_id',
+                    'study.location_id',
                 ]))
             )
         );
@@ -159,8 +158,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
             'study.publish_down', 'study.series_id', 'study.download_id',
             'study.thumbnailm', 'study.thumbhm', 'study.thumbwm',
             'study.access', 'study.user_name', 'study.user_id', 'study.studynumber',
-            'study.chapter_begin2', 'study.chapter_end2', 'study.verse_end2', 'study.verse_begin2',
-        ])));
+            ])));
         $query->select($query->length($db->quoteName('study.studytext')) . ' AS ' . $db->quoteName('readmore'));
         $query->select(
             'CASE WHEN CHAR_LENGTH(' . $db->quoteName('study.alias') . ') THEN CONCAT_WS('

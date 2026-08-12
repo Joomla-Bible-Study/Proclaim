@@ -200,7 +200,6 @@ class Cwmserieslist extends Cwmlisting
             . $db->quoteName('t.teacher_thumbnail') . ', ' . $db->quoteName('se.series_text') . ', '
             . $db->quoteName('se.description', 'sdescription') . ', '
             . $db->quoteName('se.series_thumbnail') . ', '
-            . $db->quoteName('s.booknumber') . ', '
             . $db->quoteName('#__bsms_message_type.id', 'mid') . ', '
             . $db->quoteName('#__bsms_message_type.message_type', 'message_type') . ', '
             . 'GROUP_CONCAT(' . $db->quoteName('#__bsms_topics.id') . ' SEPARATOR ", ") AS ' . $db->quoteName('tp_id') . ', '
@@ -246,7 +245,8 @@ class Cwmserieslist extends Cwmlisting
             ->where($db->quoteName('s.access') . ' IN (' . $groups . ')')
             ->group($db->quoteName('s.id'))
             ->order(
-                $db->quoteName($params->get('series_detail_sort', 'studydate')) . ' ' . $params->get('series_detail_order', 'DESC')
+                $db->quoteName(self::sortColumn($params->get('series_detail_sort', 'studydate')))
+                . ' ' . ($params->get('series_detail_order', 'DESC') === 'ASC' ? 'ASC' : 'DESC')
             );
 
         // Cascading series date window for non-admin users
@@ -269,5 +269,30 @@ class Cwmserieslist extends Cwmlisting
         CwmscriptureHelper::applyBookNames($items);
 
         return $items;
+    }
+
+    /**
+     * Columns a template may sort a series detail list by.
+     *
+     * @var string[]
+     * @since __DEPLOY_VERSION__
+     */
+    private const SORT_COLUMNS = ['studydate', 'studytitle', 'teacher_id', 'ordering', 'hits'];
+
+    /**
+     * ⚠️ series_detail_sort is a saved template param that goes straight into
+     * ORDER BY. quoteName() makes it safe, not valid: any column that no longer
+     * exists takes the page down with it, which is how a retired column reaches
+     * a live site (#1623).
+     *
+     * @param   mixed  $column  The saved param value
+     *
+     * @return  string  A column that exists
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function sortColumn(mixed $column): string
+    {
+        return \in_array($column, self::SORT_COLUMNS, true) ? (string) $column : 'studydate';
     }
 }

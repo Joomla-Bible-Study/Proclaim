@@ -43,7 +43,6 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 
 // Set up defaults
 if ($input->getInt('id')) {
-    $booknumber   = $this->item->booknumber;
     $teacher_id   = $this->item->teacher_id;
     $location_id  = $this->item->location_id;
     $series_id    = $this->item->series_id;
@@ -52,7 +51,6 @@ if ($input->getInt('id')) {
     // Use the original image path (image column); fall back to thumbnailm for pre-migration records
     $imageDefault = !empty($this->item->image) ? $this->item->image : ($this->item->thumbnailm ?? '');
 } else {
-    $booknumber   = $this->admin_params->get('booknumber');
     $teacher_id   = $this->admin_params->get('teacher_id');
     $location_id  = $this->admin_params->get('location_id');
     $series_id    = $this->admin_params->get('series_id');

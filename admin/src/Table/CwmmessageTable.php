@@ -74,50 +74,10 @@ class CwmmessageTable extends Table
      */
     public ?string $studynumber = null;
 
-    /**
-     * Book Number
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $booknumber = null;
 
-    /**
-     * Chapter Begin
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $chapter_begin = null;
 
-    /**
-     * Verse Begin
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $verse_begin = null;
 
-    /**
-     * Chapter End
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $chapter_end = null;
 
-    /**
-     * Verse End
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $verse_end = null;
 
     /**
      * Secondary Reference
@@ -128,50 +88,10 @@ class CwmmessageTable extends Table
      */
     public ?string $secondary_reference = null;
 
-    /**
-     * Book Number 2
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $booknumber2 = null;
 
-    /**
-     * Chapter Begin2
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $chapter_begin2 = null;
 
-    /**
-     * Verse Begin2
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $verse_begin2 = null;
 
-    /**
-     * Chapter End2
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $chapter_end2 = null;
 
-    /**
-     * Verse End2
-     *
-     * @var string|null
-     *
-     * @since 9.0.0
-     */
-    public ?string $verse_end2 = null;
 
 
 
@@ -592,8 +512,7 @@ class CwmmessageTable extends Table
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
         foreach ([
             'asset_id', 'created_by', 'modified_by', 'checked_out', 'access',
-            'teacher_id', 'booknumber', 'chapter_begin', 'verse_begin',
-            'chapter_end', 'verse_end', 'comments', 'hits', 'user_id',
+            'teacher_id', 'comments', 'hits', 'user_id',
             'location_id', 'series_id', 'thumbhm', 'thumbwm', 'published',
             'download_id',
         ] as $field) {
