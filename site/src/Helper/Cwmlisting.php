@@ -556,7 +556,7 @@ class Cwmlisting
         );
         $query->leftJoin(
             $db->quoteName('#__bsms_teachers', 't') . ' ON ('
-            . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+            . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id') . ')'
         );
 
         $ids = [];
@@ -1616,7 +1616,18 @@ class Cwmlisting
                     $item->teacher_id = $item->id;
                 }
 
-                $link = $this->getLink($row->linktype, $item->id, $item->teacher_id, $params, $item, $template, $type);
+                // ⚠️ getLink() types $tid as int. A series with no teacher has
+                // NULL there, and the TypeError takes down the whole listing
+                // rather than that one row.
+                $link = $this->getLink(
+                    $row->linktype,
+                    $item->id,
+                    (int) ($item->teacher_id ?? 0),
+                    $params,
+                    $item,
+                    $template,
+                    $type
+                );
             }
         }
 

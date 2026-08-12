@@ -244,7 +244,7 @@ class HtmlView extends BaseHtmlView
                             . ' ON ' . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                             . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
                         ->join('LEFT', $db->quoteName('#__bsms_teachers', 't')
-                            . ' ON ' . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                            . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
                         ->where($db->quoteName('s.published') . ' = 1')
                         ->whereIn($db->quoteName('s.access'), $user->getAuthorisedViewLevels())
                         ->order($db->quoteName('s.studydate') . ' DESC')
