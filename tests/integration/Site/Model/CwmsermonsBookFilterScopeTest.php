@@ -91,28 +91,47 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
     }
 
     /**
-     * @param   array<string, mixed>  $overrides  Column values for the fixture
+     * A study, plus the scripture references the filter now matches on.
+     *
+     * ⚠️ The references must be real junction rows. A study with none can never
+     * match, so a fixture without them makes the two exclusion tests below pass
+     * whatever the filter does.
+     *
+     * @param   array<string, mixed>       $overrides   Column values for the study
+     * @param   array<int, array{int,int}> $references  [book, chapter] per reference
      *
      * @return  int  The new study's primary key
      *
      * @since __DEPLOY_VERSION__
      */
-    private function study(array $overrides): int
+    private function study(array $overrides = [], array $references = [[self::BOOK, 100]]): int
     {
         $study = (object) array_merge([
-            'studytitle'    => 'cwm1623 scope fixture',
-            'published'     => 1,
-            'access'        => 1,
-            'language'      => '*',
-            'booknumber'    => 999,
-            'booknumber2'   => 0,
-            'chapter_begin' => 1,
-            'chapter_end'   => 1,
+            'studytitle' => 'cwm1623 scope fixture',
+            'published'  => 1,
+            'access'     => 1,
+            'language'   => '*',
         ], $overrides);
 
         $this->db->insertObject('#__bsms_studies', $study, 'id');
+        $studyId = (int) $this->db->insertid();
 
-        return (int) $this->db->insertid();
+        foreach ($references as $ordering => [$book, $chapter]) {
+            // insertObject() takes its object by reference, so this cannot be inlined.
+            $reference = (object) [
+                'study_id'       => $studyId,
+                'ordering'       => $ordering,
+                'booknumber'     => $book,
+                'chapter_begin'  => $chapter,
+                'chapter_end'    => $chapter,
+                'bible_version'  => 'kjv',
+                'reference_text' => 'cwm1623 fixture reference',
+            ];
+
+            $this->db->insertObject('#__bsms_study_scriptures', $reference);
+        }
+
+        return $studyId;
     }
 
     /**
@@ -145,10 +164,10 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         return array_map('intval', $this->db->setQuery($query)->loadColumn() ?: []);
     }
 
-    #[TestDox('an unpublished study does not escape through its secondary reference')]
+    #[TestDox('an unpublished study does not escape through a matching reference')]
     public function testUnpublishedStudiesStayHidden(): void
     {
-        $hidden = $this->study(['published' => 0, 'booknumber2' => self::BOOK]);
+        $hidden = $this->study(['published' => 0]);
 
         $this->assertNotContains(
             $hidden,
@@ -158,11 +177,11 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         );
     }
 
-    #[TestDox('a study above the visitor\'s view level does not escape through its secondary reference')]
+    #[TestDox('a study above the visitor\'s view level does not escape through a matching reference')]
     public function testRestrictedStudiesStayHidden(): void
     {
         // 6 is Super Users on a stock Joomla install; the query asks for 1 and 5.
-        $restricted = $this->study(['access' => 6, 'booknumber2' => self::BOOK]);
+        $restricted = $this->study(['access' => 6]);
 
         $this->assertNotContains(
             $restricted,
@@ -171,24 +190,48 @@ class CwmsermonsBookFilterScopeTest extends IntegrationTestCase
         );
     }
 
-    #[TestDox('a published, public study still matches on its secondary reference')]
-    public function testSecondaryReferenceStillMatches(): void
+    #[TestDox('a published, public study matches on a reference other than its first')]
+    public function testANonFirstReferenceStillMatches(): void
     {
-        // The clause exists to find these; bracketing must not cost it.
-        $allowed = $this->study(['booknumber2' => self::BOOK]);
+        // The filter must not privilege the first reference. Under the flat
+        // columns this was the booknumber2 case, and anything past it was
+        // unreachable; there is no such distinction now.
+        $allowed = $this->study([], [[101, 100], [102, 100], [self::BOOK, 100]]);
 
         $this->assertContains(
             $allowed,
             $this->visibleToGuest(99),
-            'Bracketing the disjunction stopped the secondary reference matching at all.'
+            'A study matching on its third reference was not returned.'
         );
     }
 
-    #[TestDox('the chapter range still constrains the primary reference')]
+    #[TestDox('a multi-book menu param matches a study referencing any one of them')]
+    public function testMultiBookParamMatchesAnyOfThem(): void
+    {
+        $second = $this->study([], [[161, 1]]);
+        $none   = $this->study([], [[162, 1]]);
+
+        $query = $this->db->createQuery()
+            ->select($this->db->quoteName('study.id'))
+            ->from($this->db->quoteName('#__bsms_studies', 'study'))
+            ->where($this->db->quoteName('study.published') . ' = 1');
+
+        // The menu/template param path: several books, no user filter.
+        $model  = (new \ReflectionClass(CwmsermonsModel::class))->newInstanceWithoutConstructor();
+        $method = new \ReflectionMethod(CwmsermonsModel::class, 'addBookFilter');
+        $method->invoke($model, $query, $this->db, [160, 161], 0);
+
+        $visible = array_map('intval', $this->db->setQuery($query)->loadColumn() ?: []);
+
+        $this->assertContains($second, $visible, 'A study referencing the second of the listed books was dropped.');
+        $this->assertNotContains($none, $visible, 'A study referencing none of the listed books was returned.');
+    }
+
+    #[TestDox('the chapter range constrains whichever reference matched')]
     public function testChapterRangeStillApplies(): void
     {
-        $inRange  = $this->study(['booknumber' => self::BOOK, 'chapter_begin' => 100]);
-        $tooEarly = $this->study(['booknumber' => self::BOOK, 'chapter_begin' => 1]);
+        $inRange  = $this->study([], [[self::BOOK, 100]]);
+        $tooEarly = $this->study([], [[self::BOOK, 1]]);
 
         $visible = $this->visibleToGuest(99);
 
