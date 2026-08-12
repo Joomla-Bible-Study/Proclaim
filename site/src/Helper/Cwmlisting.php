@@ -1159,8 +1159,14 @@ class Cwmlisting
             case $extra . 'teacherphone':
                 if ($header === 1) {
                     $data = Text::_('JBS_TCH_PHONE');
-                } else {
-                    (isset($item->phone) ? $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">' . $item->phone . '</a>' : $data);
+                } elseif (trim((string) ($item->phone ?? '')) !== '') {
+                    // ⚠️ Truthiness, not isset(). An empty phone is stored as ''
+                    // rather than NULL, so isset() rendered `<a href="tel:"></a>`
+                    // -- a link with no discernible text, which is a WCAG 2.2 AA
+                    // failure (link-name) on every teacher without a number.
+                    // Every neighbouring field here already guards this way.
+                    $data = '<a href="tel:' . preg_replace('/[^0-9]/', '', $item->phone) . '" target="_blank">'
+                        . $item->phone . '</a>';
                 }
                 break;
 
