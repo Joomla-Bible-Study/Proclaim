@@ -33,7 +33,16 @@ ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_dates` (`published`, `publi
 ALTER TABLE `#__bsms_studies` ADD KEY `idx_messagetype_published` (`messagetype`, `published`);
 
 -- Studies: Book number filter pattern
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_booknumber_published` (`booknumber`, `published`);
+-- The statement that created idx_booknumber_published is deliberately gone.
+-- 10.5.8 retired the booknumber column (#1623), and postflight drops whatever
+-- MySQL leaves of the index, so on every site that has taken that update it no
+-- longer exists.
+--
+-- Joomla's schema check reads every historical file in this folder and tests it
+-- against the CURRENT schema, with no notion of a change being superseded. Left
+-- in place, this line reports a permanent error in System → Maintenance →
+-- Database for an index the component removed on purpose — the same defect as
+-- #1706.
 
 -- Studies: Language filter for multilingual sites
 ALTER TABLE `#__bsms_studies` ADD KEY `idx_language_published` (`language`, `published`);

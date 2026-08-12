@@ -1,6 +1,10 @@
--- Add bible_version columns to studies table for per-scripture Bible version selection
-ALTER TABLE `#__bsms_studies` ADD COLUMN `bible_version` VARCHAR(20) DEFAULT NULL AFTER `verse_end2`;
-ALTER TABLE `#__bsms_studies` ADD COLUMN `bible_version2` VARCHAR(20) DEFAULT NULL AFTER `bible_version`;
-
--- Bible translation table operations now managed by lib_cwmscripture
-SELECT 1;
+-- The statements that added bible_version and bible_version2 to #__bsms_studies
+-- are deliberately gone. 10.5.8 dropped both columns along with the rest of the
+-- flat scripture set (#1623); the per-reference version lives in
+-- #__bsms_study_scriptures.bible_version now.
+--
+-- Joomla's schema check reads every historical file in this folder and tests it
+-- against the CURRENT schema, with no notion of a change being superseded. Left
+-- in place, these lines report permanent errors in System → Maintenance →
+-- Database for columns the component removed on purpose — the same defect as
+-- #1706.
