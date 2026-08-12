@@ -104,8 +104,16 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
             public function getQuery(bool $new = false): object
             {
-                // Return a minimal object for subquery building in addTeacherFilter
+                // A subquery double for the EXISTS clauses in addTeacherFilter and
+                // addBookFilter. It records what it is given and renders it, so a
+                // test can assert on the conditions rather than on a placeholder.
                 return new class () {
+                    /** @var string */
+                    private string $from = '';
+
+                    /** @var string[] */
+                    private array $conditions = [];
+
                     public function select($columns): static
                     {
                         return $this;
@@ -113,22 +121,31 @@ class CwmsermonsFilterTest extends ProclaimTestCase
 
                     public function from($tables, $subQueryAlias = null): static
                     {
+                        $this->from = \is_array($tables) ? implode(', ', $tables) : (string) $tables;
+
                         return $this;
                     }
 
                     public function where($condition): static
                     {
+                        $this->conditions[] = \is_array($condition)
+                            ? implode(' AND ', $condition)
+                            : (string) $condition;
+
                         return $this;
                     }
 
                     public function whereIn(string $keyName, array $keyValues, $dataType = 'int'): static
                     {
+                        $this->conditions[] = $keyName . ' IN (' . implode(',', $keyValues) . ')';
+
                         return $this;
                     }
 
                     public function __toString(): string
                     {
-                        return 'EXISTS (SELECT 1)';
+                        return 'SELECT 1 FROM ' . $this->from
+                            . ($this->conditions ? ' WHERE ' . implode(' AND ', $this->conditions) : '');
                     }
                 };
             }
@@ -395,17 +412,24 @@ class CwmsermonsFilterTest extends ProclaimTestCase
         $this->assertEmpty($this->whereCalls, '[null] should not filter by book');
     }
 
-    #[TestDox('addBookFilter: multiple values adds IN clause')]
+    #[TestDox('addBookFilter: multiple values adds one EXISTS clause over the junction')]
     public function testAddBookFilterMultipleValues(): void
     {
         $query = $this->createMockQuery();
         $db    = $this->createMockDb();
 
-        // Multi-value params use a plain IN clause and bypass the chapter-range
-        // path (addBookChapterWhere), so no application bootstrap is required.
+        // Multi-value params bypass the chapter-range path
+        // (addBookChapterWhere), so no application bootstrap is required.
         $this->invokeFilter('addBookFilter', [$query, $db, ['5', '10'], 0]);
 
-        $this->assertCount(1, $this->whereCalls, 'Multiple book numbers use a single IN clause');
+        $this->assertCount(1, $this->whereCalls, 'Multiple book numbers use a single clause');
+        $this->assertStringContainsString('EXISTS', $this->whereCalls[0]);
+        $this->assertStringContainsString('#__bsms_study_scriptures', $this->whereCalls[0]);
         $this->assertStringContainsString('IN (5,10)', $this->whereCalls[0]);
+        $this->assertStringNotContainsString(
+            'study.booknumber',
+            $this->whereCalls[0],
+            'The filter is still reading the flat column instead of the junction.'
+        );
     }
 }

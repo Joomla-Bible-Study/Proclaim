@@ -952,8 +952,8 @@ class CwmsermonsModel extends ListModel
     /**
      * Apply book number filter with chapter-range support.
      *
-     * Multi-value params use a simple IN clause. Single-value params and
-     * user-selected filters use chapter-range logic with booknumber2 fallback.
+     * A set of books from a menu or template param matches any of them. A single
+     * book, from either source, also honours the chapter range.
      *
      * @param   QueryInterface  $query        Active query builder
      * @param   object          $db           Database driver
@@ -972,36 +972,72 @@ class CwmsermonsModel extends ListModel
     ): void {
         $first    = $paramValues[0] ?? '-1';
         $hasParam = $paramValues !== null && $first !== '-1' && $first !== '' && $first !== null;
-        $col      = $db->quoteName('study.booknumber');
 
-        if ($hasParam && $filterValue < 1) {
+        // A menu or template may pin the list to a set of books, and the visitor
+        // may narrow it further. Both constraints apply when both are present.
+        if ($hasParam) {
             $intValues = array_map('intval', $paramValues);
 
             if (\count($intValues) > 1) {
-                $query->where($col . ' IN (' . implode(',', $intValues) . ')');
+                $query->where($this->referenceExists($db, $intValues));
             } else {
                 $this->addBookChapterWhere($query, $db, $intValues[0]);
             }
-        } elseif ($hasParam && $filterValue >= 1) {
-            $intValues = array_map('intval', $paramValues);
+        }
 
-            if (\count($intValues) > 1) {
-                $query->where($col . ' IN (' . implode(',', $intValues) . ')');
-            } else {
-                $this->addBookChapterWhere($query, $db, $intValues[0]);
-            }
-
-            $this->addBookChapterWhere($query, $db, $filterValue);
-        } elseif ($filterValue >= 1) {
+        if ($filterValue >= 1) {
             $this->addBookChapterWhere($query, $db, $filterValue);
         }
     }
 
     /**
-     * Add WHERE clause for a single book number with optional chapter range.
+     * A correlated EXISTS over a study's scripture references.
      *
-     * Also checks booknumber2 (secondary scripture reference) as a fallback.
-     * Chapter range bounds come from the request input (minChapt, maxChapt).
+     * Self-contained, so it can be ANDed with anything without the bracketing
+     * hazard a bare disjunction carries (#1735).
+     *
+     * @param   object    $db            Database driver
+     * @param   int[]     $books         Book numbers, any of which may match
+     * @param   ?int      $chapterBegin  Lower chapter bound, or null
+     * @param   ?int      $chapterEnd    Upper chapter bound, or null
+     *
+     * @return  string  An `EXISTS (...)` fragment
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function referenceExists(
+        object $db,
+        array $books,
+        ?int $chapterBegin = null,
+        ?int $chapterEnd = null,
+    ): string {
+        $sub = $db->createQuery()
+            ->select('1')
+            ->from($db->quoteName('#__bsms_study_scriptures', 'bf'))
+            ->where($db->quoteName('bf.study_id') . ' = ' . $db->quoteName('study.id'))
+            ->where(
+                \count($books) > 1
+                    ? $db->quoteName('bf.booknumber') . ' IN (' . implode(',', $books) . ')'
+                    : $db->quoteName('bf.booknumber') . ' = ' . $books[0]
+            );
+
+        if ($chapterBegin) {
+            $sub->where($db->quoteName('bf.chapter_begin') . ' >= ' . $chapterBegin);
+        }
+
+        if ($chapterEnd) {
+            $sub->where($db->quoteName('bf.chapter_end') . ' <= ' . $chapterEnd);
+        }
+
+        return 'EXISTS (' . $sub . ')';
+    }
+
+    /**
+     * Add WHERE clause matching a book, with the optional chapter range.
+     *
+     * A study matches when any of its references is in that book, and the range
+     * constrains whichever reference matched. Chapter bounds come from the
+     * request input (minChapt, maxChapt).
      *
      * @param   QueryInterface  $query  Active query builder
      * @param   object          $db     Database driver
@@ -1014,28 +1050,14 @@ class CwmsermonsModel extends ListModel
     private function addBookChapterWhere(QueryInterface $query, object $db, int $book): void
     {
         $appInput = Factory::getApplication()->getInput();
-        $chb      = $appInput->get('minChapt', 0, 'int');
-        $che      = $appInput->get('maxChapt', 0, 'int');
 
-        $bn  = $db->quoteName('study.booknumber');
-        $bn2 = $db->quoteName('study.booknumber2');
-        $cb  = $db->quoteName('study.chapter_begin');
-        $ce  = $db->quoteName('study.chapter_end');
-
-        $primary = $bn . ' = ' . $book;
-
-        if ($chb) {
-            $primary .= ' AND ' . $cb . ' >= ' . $chb;
-        }
-
-        if ($che) {
-            $primary .= ' AND ' . $ce . ' <= ' . $che;
-        }
-
-        // ⚠️ The whole disjunction must be bracketed. where() appends the string
-        // and glues it with AND, adding no brackets of its own, so an unbracketed
-        // `... OR bn2 = X` binds looser than every condition before it and lets a
-        // secondary-reference match escape published, access and language.
-        $query->where('((' . $primary . ') OR ' . $bn2 . ' = ' . $book . ')');
+        $query->where(
+            $this->referenceExists(
+                $db,
+                [$book],
+                $appInput->get('minChapt', 0, 'int'),
+                $appInput->get('maxChapt', 0, 'int')
+            )
+        );
     }
 }
