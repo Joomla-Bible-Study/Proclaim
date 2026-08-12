@@ -103,13 +103,11 @@ FROM (SELECT `s`.`id`,
 -- compound ALTER registers as its first clause alone and every later column is
 -- invisible to Database Maintenance. Same trap as #1664.
 
--- ⚠️ Before the columns, and explicitly. Dropping a column that an index
--- covers does not fail: MySQL shrinks `idx_booknumber_published` to
--- `(published)`, which duplicates `idx_state` and leaves an updated site with a
--- schema a fresh install would never produce.
-
-ALTER TABLE `#__bsms_studies`
-    DROP INDEX `idx_booknumber_published`;
+-- ⚠️ `idx_booknumber_published` covers booknumber, and dropping the column does
+-- not drop the index: MySQL shrinks it to `(published)`, a duplicate of
+-- idx_state. It cannot be dropped here — MySQL has no DROP INDEX IF EXISTS, so
+-- the statement aborts the whole update on any database where it is already
+-- gone. proclaim.script.php removes it in postflight behind a SHOW INDEX check.
 
 ALTER TABLE `#__bsms_studies`
     DROP COLUMN `booknumber`;
