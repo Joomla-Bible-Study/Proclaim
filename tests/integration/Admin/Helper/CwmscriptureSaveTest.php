@@ -54,15 +54,9 @@ class CwmscriptureSaveTest extends IntegrationTestCase
 
         // A study of our own, so no real content is touched.
         $study = (object) [
-            'published'     => 0,
-            'studytitle'    => 'cwm1573 fixture',
-            'booknumber'    => 1,
-            'chapter_begin' => 1,
-            'verse_begin'   => 1,
-            'chapter_end'   => 1,
-            'verse_end'     => 1,
-            'bible_version' => 'kjv',
-            'language'      => '*',
+            'published'  => 0,
+            'studytitle' => 'cwm1573 fixture',
+            'language'   => '*',
         ];
         $this->db->insertObject('#__bsms_studies', $study, 'id');
         $this->studyId = (int) $this->db->insertid();
@@ -120,18 +114,6 @@ class CwmscriptureSaveTest extends IntegrationTestCase
         )->loadResult();
     }
 
-    /**
-     * @return  int  booknumber currently on the flat columns.
-     */
-    private function legacyBookNumber(): int
-    {
-        return (int) $this->db->setQuery(
-            $this->db->createQuery()
-                ->select($this->db->quoteName('booknumber'))
-                ->from($this->db->quoteName('#__bsms_studies'))
-                ->where($this->db->quoteName('id') . ' = ' . $this->studyId)
-        )->loadResult();
-    }
 
     /**
      * Build a reference object shaped like ScriptureReference.
@@ -217,20 +199,12 @@ class CwmscriptureSaveTest extends IntegrationTestCase
     // The junction table and the flat columns must not diverge
     // -------------------------------------------------------------------------
 
-    #[TestDox('Saving writes the references and leaves the legacy columns alone')]
-    public function testSaveWritesTheJunctionOnly(): void
+    #[TestDox('Saving writes the references')]
+    public function testSaveWritesTheJunction(): void
     {
-        $before = $this->legacyBookNumber();
-
         CwmscriptureHelper::saveScriptures($this->studyId, [$this->ref(42)]);
 
         $this->assertSame(1, $this->countReferences());
-        $this->assertSame(
-            $before,
-            $this->legacyBookNumber(),
-            'The flat columns are no longer written (#1623). Every reader prefers the junction, so a stale '
-            . 'value here is invisible -- but writing one would put the retirement back where it started.'
-        );
     }
 
     /**

@@ -521,7 +521,6 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     KEY `idx_location_access` (`location_id`, `access`),
     KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`),
     KEY `idx_messagetype_published` (`messagetype`, `published`),
-    KEY `idx_booknumber_published` (`booknumber`, `published`),
     KEY `idx_language_published` (`language`, `published`),
     FULLTEXT KEY `idx_transcript` (`transcript`)
 ) ENGINE InnoDB

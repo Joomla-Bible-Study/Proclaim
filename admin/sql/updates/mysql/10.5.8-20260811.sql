@@ -103,6 +103,14 @@ FROM (SELECT `s`.`id`,
 -- compound ALTER registers as its first clause alone and every later column is
 -- invisible to Database Maintenance. Same trap as #1664.
 
+-- ⚠️ Before the columns, and explicitly. Dropping a column that an index
+-- covers does not fail: MySQL shrinks `idx_booknumber_published` to
+-- `(published)`, which duplicates `idx_state` and leaves an updated site with a
+-- schema a fresh install would never produce.
+
+ALTER TABLE `#__bsms_studies`
+    DROP INDEX `idx_booknumber_published`;
+
 ALTER TABLE `#__bsms_studies`
     DROP COLUMN `booknumber`;
 
