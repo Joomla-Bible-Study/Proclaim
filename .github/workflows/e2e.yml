@@ -28,6 +28,15 @@ on:
     paths:
       - 'api/**'
       - 'plugins/webservices/**'
+      # ⚠️ The API has no models or tables of its own, by design. Every list
+      # and item route runs an admin Cwm*Model, and every write goes through
+      # AdminModel::save() into an admin Table. Gating on `api/**` alone left
+      # the suite blind to changes in the code the API actually executes
+      # (#1755) -- #1754 rewrote four list queries the API serves and this job
+      # never ran. Measured cost: 51 of the last 293 pull requests touch these
+      # two paths, so this roughly triples how often the job runs.
+      - 'admin/src/Model/**'
+      - 'admin/src/Table/**'
       - 'tests/e2e/**'
       - 'build/test-install.sh'
       - 'build/build-package.sh'
