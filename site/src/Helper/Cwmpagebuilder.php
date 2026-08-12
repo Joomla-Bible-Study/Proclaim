@@ -12,6 +12,7 @@
 namespace CWM\Component\Proclaim\Site\Helper;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
 use CWM\Library\Scripture\Helper\ScriptureHelper;
@@ -562,7 +563,14 @@ class Cwmpagebuilder
         $db->setQuery($query, 0, $limit);
         $items = $db->loadObjectList();
 
+        // Junction is the real model; the flat columns hold at most two
+        // references. Cwmlisting::getAllScriptures() prefers ->scriptures when it
+        // is populated and falls back to the flat columns otherwise (#1623).
+        $scriptureMap = CwmscriptureHelper::getScripturesForStudies(array_column($items ?: [], 'id'));
+
         foreach ($items ?: [] as $item) {
+            $item->scriptures = $scriptureMap[(int) $item->id] ?? [];
+
             // Was a #__bsms_books JOIN for a language key the scripture library
             // already holds (#1687). Still set on the row: these items reach
             // templates a site can override, and one may read $item->bookname.
