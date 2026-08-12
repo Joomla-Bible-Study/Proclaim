@@ -125,10 +125,15 @@ abstract class CwmfilterHelper
             $book = (int) self::getFilterValue('book', $context);
 
             if ($book > 0) {
-                $query->where(
-                    '(' . $db->quoteName('s.booknumber') . ' = ' . $book
-                    . ' OR ' . $db->quoteName('s.booknumber2') . ' = ' . $book . ')'
-                );
+                // Use junction table for unlimited scripture references. The flat
+                // pair could only answer for a study's first two, so filtering on
+                // a third reference found nothing (#1623).
+                $query->join(
+                    'INNER',
+                    $db->quoteName('#__bsms_study_scriptures', 'xf_ss') . ' ON '
+                    . $db->quoteName('xf_ss.study_id') . ' = ' . $db->quoteName('s.id')
+                )
+                    ->where($db->quoteName('xf_ss.booknumber') . ' = ' . $book);
             }
         }
 
