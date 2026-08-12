@@ -1089,7 +1089,7 @@ class Cwmpodcast
                 'p.id AS pid', 'p.podcastlimit',
                 'mf.id AS mfid', 'mf.study_id', 'mf.server_id', 'mf.podcast_id',
                 'mf.published AS mfpub', 'mf.createdate', 'mf.params', 'mf.podcast_guid',
-                's.id AS sid', 's.alias AS alias', 's.studydate', 's.teacher_id', 's.studytitle', 's.studyintro', 's.published AS spub',
+                's.id AS sid', 's.alias AS alias', 's.studydate', 's.studytitle', 's.studyintro', 's.published AS spub',
                 's.studynumber', 's.location_id', 's.series_id',
                 'se.series_text', 'se.published',
                 'sr.id AS srid', 'sr.params as srparams',

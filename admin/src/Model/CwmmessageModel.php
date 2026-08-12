@@ -568,7 +568,7 @@ class CwmmessageModel extends AdminModel
             return;
         }
 
-        CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teachersData);
+        CwmstudyteacherHelper::saveTeachers($studyId, $teachersData);
 
         // schemaorg's onContentAfterSave fires inside parent::save(), before the
         // junction is written here, so the auto-built schema has no author.

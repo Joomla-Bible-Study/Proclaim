@@ -1741,7 +1741,6 @@
                    description="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_SORT_DESC">
                 <option value="studydate">JBS_CMN_STUDY_DATE</option>
                 <option value="studytitle">JBS_CMN_STUDY_TITLE</option>
-                <option value="teacher_id">JBS_CMN_TEACHER</option>
             </field>
             <field name="series_detail_order" type="list" default="DESC"
                    label="JBS_TPL_SERIESDETAIL_SERIES_DETAIL_ORDER"

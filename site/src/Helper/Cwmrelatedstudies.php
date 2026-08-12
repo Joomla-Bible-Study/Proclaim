@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -79,11 +80,16 @@ class Cwmrelatedstudies
             $this->scoreBySeries($db, $studyId, $seriesId, $groups);
         }
 
-        // Dimension 2: Same teacher (2 points)
-        $teacherId = (int) ($row->teacher_id ?? 0);
+        // Dimension 2: Same teacher (2 points).
+        //
+        // From the junction: a study can have several teachers, and the column
+        // this used to read is gone (#1731).
+        foreach (CwmstudyteacherHelper::getTeachersForStudy($studyId) as $teacher) {
+            $teacherId = (int) ($teacher->teacherId ?? $teacher->teacher_id ?? 0);
 
-        if ($teacherId > 0) {
-            $this->scoreByTeacher($db, $studyId, $teacherId, $groups);
+            if ($teacherId > 0) {
+                $this->scoreByTeacher($db, $studyId, $teacherId, $groups);
+            }
         }
 
         // Dimension 3: Topic overlap (2 points each)

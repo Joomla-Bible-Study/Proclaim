@@ -235,7 +235,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
         }
 
         // Save scriptures
@@ -331,7 +331,7 @@ class CwmcsvimportHelper
                 static fn (int $id) => ['teacher_id' => $id],
                 $teacherIds
             );
-            CwmstudyteacherHelper::saveTeachersAndSync($studyId, $teacherEntries);
+            CwmstudyteacherHelper::saveTeachers($studyId, $teacherEntries);
         }
 
         // Update scriptures if provided

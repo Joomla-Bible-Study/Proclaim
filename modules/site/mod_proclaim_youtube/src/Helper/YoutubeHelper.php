@@ -576,7 +576,7 @@ class YoutubeHelper implements DatabaseAwareInterface
             $model->setState('list.select', implode(', ', $db->quoteName([
                 'study.id', 'study.published', 'study.studydate', 'study.studytitle',
                 'study.hits', 'study.alias',
-                'study.studyintro', 'study.teacher_id', 'study.secondary_reference',
+                'study.studyintro', 'study.secondary_reference',
                 'study.location_id', 'study.params',
                 ])));
 

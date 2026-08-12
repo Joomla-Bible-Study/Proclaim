@@ -56,14 +56,6 @@ class CwmmessageTable extends Table
      */
     public ?string $studydate = null;
 
-    /**
-     * Teacher id
-     *
-     * @var int|null
-     *
-     * @since 9.0.0
-     */
-    public ?int $teacher_id = null;
 
     /**
      * Study Number
@@ -512,7 +504,7 @@ class CwmmessageTable extends Table
         // Cast typed int properties to prevent PHP 8.3 TypeError when form posts strings
         foreach ([
             'asset_id', 'created_by', 'modified_by', 'checked_out', 'access',
-            'teacher_id', 'comments', 'hits', 'user_id',
+            'comments', 'hits', 'user_id',
             'location_id', 'series_id', 'thumbhm', 'thumbwm', 'published',
             'download_id',
         ] as $field) {

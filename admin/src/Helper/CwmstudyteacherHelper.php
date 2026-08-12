@@ -201,43 +201,6 @@ class CwmstudyteacherHelper
         }
     }
 
-    /**
-     * Save the junction rows and the legacy teacher_id column as one unit.
-     *
-     * #__bsms_studies.teacher_id holds the primary teacher, duplicated from the
-     * junction table. Writing the two separately lets them diverge when the
-     * second write never happens, and nothing reconciles that afterwards.
-     *
-     * @param   int      $studyId   Study primary key
-     * @param   array[]  $teachers  Teacher entries to save
-     *
-     * @return  void
-     *
-     * @since   10.5.6
-     */
-    public static function saveTeachersAndSync(int $studyId, array $teachers): void
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        $db->transactionStart(true);
-
-        try {
-            self::resetCache($studyId);
-            self::writeTeachers($db, $studyId, $teachers);
-            self::syncLegacyColumn($studyId, $teachers);
-            $db->transactionCommit(true);
-        } catch (\Throwable $e) {
-            try {
-                $db->transactionRollback(true);
-            } catch (\Throwable) {
-                // Nothing to roll back.
-            }
-
-            self::resetCache($studyId);
-
-            throw $e;
-        }
-    }
 
     /**
      * Replace a study's teacher rows. Caller owns the transaction.
@@ -286,39 +249,6 @@ class CwmstudyteacherHelper
         }
     }
 
-    /**
-     * Sync the primary teacher (ordering=0) back to studies.teacher_id for backwards compatibility.
-     *
-     * @param   int    $studyId   Study primary key
-     * @param   array  $teachers  Array of ['teacher_id' => int] entries
-     *
-     * @return  void
-     *
-     * @since  10.1.0
-     */
-    public static function syncLegacyColumn(int $studyId, array $teachers): void
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        // First teacher in the list is the primary
-        $primaryId = 0;
-
-        foreach ($teachers as $entry) {
-            $tid = (int) ($entry['teacher_id'] ?? 0);
-
-            if ($tid > 0) {
-                $primaryId = $tid;
-                break;
-            }
-        }
-
-        $query = $db->createQuery()
-            ->update($db->quoteName('#__bsms_studies'))
-            ->set($db->quoteName('teacher_id') . ' = ' . $primaryId)
-            ->where($db->quoteName('id') . ' = ' . $studyId);
-        $db->setQuery($query);
-        $db->execute();
-    }
 
     /**
      * Delete all teacher associations for a study.

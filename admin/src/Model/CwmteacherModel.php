@@ -864,12 +864,12 @@ class CwmteacherModel extends AdminModel
             ->from($db->quoteName('#__bsms_studies', 'study'));
 
         $query->where(
-            '(' . $db->quoteName('study.id') . ' IN ('
+            $db->quoteName('study.id') . ' IN ('
             . $db->createQuery()
                 ->select($db->quoteName('st.study_id'))
                 ->from($db->quoteName('#__bsms_study_teachers', 'st'))
                 ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
-            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
+            . ')'
         );
 
         $user = $this->getCurrentUser();
