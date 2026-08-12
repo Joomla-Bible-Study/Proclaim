@@ -1012,7 +1012,7 @@ class CwminstallModel extends ListModel
                 $conditions = CwmmigrationHelper::rmoldurl();
                 $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
-                $query->where($conditions, $glue = 'OR');
+                $query->where('(' . implode(' OR ', $conditions) . ')');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
                 $this->running = 'Remove Old Update URL\'s';
@@ -1033,7 +1033,7 @@ class CwminstallModel extends ListModel
                 ];
                 $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites'));
-                $query->where($conditions, $glue = 'OR');
+                $query->where('(' . implode(' OR ', $conditions) . ')');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
 
@@ -1043,7 +1043,7 @@ class CwminstallModel extends ListModel
                 ];
                 $query      = $this->getDatabase()->createQuery();
                 $query->delete($this->getDatabase()->quoteName('#__update_sites_extensions'));
-                $query->where($conditions, $glue = 'OR');
+                $query->where('(' . implode(' OR ', $conditions) . ')');
                 $this->getDatabase()->setQuery($query);
                 $this->getDatabase()->execute();
 

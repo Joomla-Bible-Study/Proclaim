@@ -25,6 +25,9 @@
 		<testsuite name="Asset Contract Tests">
 			<directory>tests/unit/Assets</directory>
 		</testsuite>
+		<testsuite name="Query Contract Tests">
+			<directory>tests/unit/Query</directory>
+		</testsuite>
 		<testsuite name="Migration SQL Contract Tests">
 			<directory>tests/unit/Sql</directory>
 		</testsuite>
