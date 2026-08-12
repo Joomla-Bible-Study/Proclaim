@@ -2561,7 +2561,6 @@ class com_proclaimInstallerScript extends InstallerScript
             // table_suffix => PK column
             $tables = [
                 'bsms_admin'              => 'id',
-                'bsms_books'              => 'id',
                 'bsms_comments'           => 'id',
                 'bsms_locations'          => 'id',
                 'bsms_mediafiles'         => 'id',
@@ -2586,10 +2585,19 @@ class com_proclaimInstallerScript extends InstallerScript
                 'bsms_timeset'            => 'timeset',
             ];
 
-            $added = 0;
+            $added    = 0;
+            $existing = $db->getTableList();
 
             foreach ($tables as $suffix => $pkColumn) {
                 $fullName = $prefix . $suffix;
+
+                // ⚠️ A table in this list may not exist — #__bsms_books was
+                // retired in #1687. Skipping is not just tidiness: the ALTER
+                // would throw, and the catch is outside this loop, so one
+                // missing table stopped every later table being checked.
+                if (!\in_array($fullName, $existing, true)) {
+                    continue;
+                }
 
                 // Check if a PK already exists
                 $query = $db->getQuery(true)
