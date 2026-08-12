@@ -261,6 +261,11 @@ class Cwmssconvert
 
         $db->insertObject('#__bsms_studies', $data, 'id');
 
+        // The columns written above are the legacy pair. The junction is the read
+        // path, so populate it here rather than leaving the study for a migration
+        // that may already have run (#1623).
+        CwmscriptureMigration::migrateStudy((int) $data->id);
+
         $data1              = new \stdClass();
         $data1->study_id    = $data->id;
         $data1->server_id   = $this->serverid;
