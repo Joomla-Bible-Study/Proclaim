@@ -190,43 +190,19 @@ class CwmscriptureHelper extends ScriptureHelper
     }
 
     /**
-     * Save references and refresh the legacy flat columns as one unit.
-     *
-     * #__bsms_studies carries a flattened copy of the first two references.
-     * Writing the junction table and that copy separately lets them diverge if
-     * the second write never happens, and the divergence is permanent -- the
-     * flat columns keep describing the previous reference set until some later
-     * save happens to succeed. Callers that maintain both should use this.
+     * Save references. The legacy flat columns are no longer written.
      *
      * @param   int                   $studyId     Study primary key
      * @param   ScriptureReference[]  $scriptures  References to save
      *
      * @return  void
      *
-     * @since   10.5.6
+     * @since       10.5.6
+     * @deprecated  __DEPLOY_VERSION__  Use saveScriptures(); the sync half is gone.
      */
     public static function saveScripturesAndSync(int $studyId, array $scriptures): void
     {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        $db->transactionStart(true);
-
-        try {
-            self::resetScriptureCache($studyId);
-            self::writeScriptures($db, $studyId, $scriptures);
-            self::syncLegacyColumns($studyId, $scriptures);
-            $db->transactionCommit(true);
-        } catch (\Throwable $e) {
-            try {
-                $db->transactionRollback(true);
-            } catch (\Throwable) {
-                // Nothing to roll back.
-            }
-
-            self::resetScriptureCache($studyId);
-
-            throw $e;
-        }
+        self::saveScriptures($studyId, $scriptures);
     }
 
     /**
@@ -277,12 +253,17 @@ class CwmscriptureHelper extends ScriptureHelper
     /**
      * Sync the first two scripture references back to the legacy flat columns on #__bsms_studies.
      *
+     * ⚠️ Nothing in Proclaim calls this. It still works, and is kept for one
+     * cycle in case an extension outside this repository does; it goes when the
+     * columns are dropped.
+     *
      * @param   int                    $studyId     Study primary key
      * @param   ScriptureReference[]   $scriptures  All references for the study
      *
      * @return  void
      *
-     * @since  10.1.0
+     * @since       10.1.0
+     * @deprecated  __DEPLOY_VERSION__  The columns it writes are being retired (#1623).
      */
     public static function syncLegacyColumns(int $studyId, array $scriptures): void
     {

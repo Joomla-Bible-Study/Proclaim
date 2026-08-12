@@ -582,7 +582,7 @@ class CwmmessageModel extends AdminModel
             $ordering++;
         }
 
-        CwmscriptureHelper::saveScripturesAndSync($studyId, $scriptures);
+        CwmscriptureHelper::saveScriptures($studyId, $scriptures);
     }
 
     /**
