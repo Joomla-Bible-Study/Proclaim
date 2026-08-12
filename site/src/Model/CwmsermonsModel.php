@@ -1022,30 +1022,20 @@ class CwmsermonsModel extends ListModel
         $cb  = $db->quoteName('study.chapter_begin');
         $ce  = $db->quoteName('study.chapter_end');
 
-        if ($chb && $che) {
-            $query->where(
-                '(' . $bn . ' = ' . $book
-                . ' AND ' . $cb . ' >= ' . $chb
-                . ' AND ' . $ce . ' <= ' . $che
-                . ') OR ' . $bn2 . ' = ' . $book
-            );
-        } elseif ($chb) {
-            $query->where(
-                '(' . $bn . ' = ' . $book
-                . ' AND ' . $cb . ' >= ' . $chb
-                . ') OR ' . $bn2 . ' = ' . $book
-            );
-        } elseif ($che) {
-            $query->where(
-                '(' . $bn . ' = ' . $book
-                . ' AND ' . $ce . ' <= ' . $che
-                . ') OR ' . $bn2 . ' = ' . $book
-            );
-        } else {
-            $query->where(
-                '(' . $bn . ' = ' . $book
-                . ' OR ' . $bn2 . ' = ' . $book . ')'
-            );
+        $primary = $bn . ' = ' . $book;
+
+        if ($chb) {
+            $primary .= ' AND ' . $cb . ' >= ' . $chb;
         }
+
+        if ($che) {
+            $primary .= ' AND ' . $ce . ' <= ' . $che;
+        }
+
+        // ⚠️ The whole disjunction must be bracketed. where() appends the string
+        // and glues it with AND, adding no brackets of its own, so an unbracketed
+        // `... OR bn2 = X` binds looser than every condition before it and lets a
+        // secondary-reference match escape published, access and language.
+        $query->where('((' . $primary . ') OR ' . $bn2 . ' = ' . $book . ')');
     }
 }
