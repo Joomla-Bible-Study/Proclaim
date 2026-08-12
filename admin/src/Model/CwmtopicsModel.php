@@ -118,6 +118,7 @@ class CwmtopicsModel extends ListModel
         // Compile the store id.
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.published');
+        $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
     }
@@ -165,6 +166,13 @@ class CwmtopicsModel extends ListModel
             $query->where($db->quoteName('topic.published') . ' = ' . (int) $published);
         } elseif ($published === '') {
             $query->where('(' . $db->quoteName('topic.published') . ' = 0 OR ' . $db->quoteName('topic.published') . ' = 1)');
+        }
+
+        // Filter on the language. Set only by the API (?filter[language]=);
+        // the admin screen has no field for it, so getState returns null there.
+        if ($language = $this->getState('filter.language')) {
+            $query->where($db->quoteName('topic.language') . ' = :language')
+                ->bind(':language', $language);
         }
 
         // Restrict non-admin users to their authorised view levels

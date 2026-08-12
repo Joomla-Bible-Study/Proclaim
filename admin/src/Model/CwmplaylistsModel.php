@@ -20,6 +20,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 
 /**
  * Playlists model class
@@ -79,6 +80,7 @@ class CwmplaylistsModel extends ListModel
         $id .= ':' . $this->getState('filter.access');
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.server_id');
+        $id .= ':' . $this->getState('filter.series_id');
 
         return parent::getStoreId($id);
     }
@@ -193,6 +195,19 @@ class CwmplaylistsModel extends ListModel
         // Filter by server.
         if ($serverId = $this->getState('filter.server_id')) {
             $query->where($db->quoteName('playlist.server_id') . ' = ' . (int) $serverId);
+        }
+
+        // Filter by series. Set only by the API (?filter[series_id]=); the
+        // admin screen has no field for it, so getState returns null there.
+        //
+        // is_numeric, not truthiness: series_id is nullable, so a truthy test
+        // would make filter[series_id]=0 indistinguishable from "not set".
+        $seriesId = $this->getState('filter.series_id');
+
+        if (is_numeric($seriesId)) {
+            $seriesIdVal = (int) $seriesId;
+            $query->where($db->quoteName('playlist.series_id') . ' = :seriesId')
+                ->bind(':seriesId', $seriesIdVal, ParameterType::INTEGER);
         }
 
         // Filter by search in title.

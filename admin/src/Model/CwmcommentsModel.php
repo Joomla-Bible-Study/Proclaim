@@ -143,6 +143,7 @@ class CwmcommentsModel extends ListModel
         $id .= ':' . $this->getState('filter.published');
         $id .= ':' . $this->getState('filter.language');
         $id .= ':' . $this->getState('filter.location');
+        $id .= ':' . $this->getState('filter.study_id');
 
         return parent::getStoreId($id);
     }
@@ -277,6 +278,16 @@ class CwmcommentsModel extends ListModel
             $locationVal = (int) $location;
             $query->where($db->quoteName('study.location_id') . ' = :locationId')
                 ->bind(':locationId', $locationVal, \Joomla\Database\ParameterType::INTEGER);
+        }
+
+        // Filter by parent study. Set only by the API (?filter[study_id]=);
+        // the admin screen has no field for it, so getState returns null there.
+        $studyId = $this->getState('filter.study_id');
+
+        if (is_numeric($studyId)) {
+            $studyIdVal = (int) $studyId;
+            $query->where($db->quoteName('comment.study_id') . ' = :studyId')
+                ->bind(':studyId', $studyIdVal, \Joomla\Database\ParameterType::INTEGER);
         }
 
         // Join over the users for the checked out user.
