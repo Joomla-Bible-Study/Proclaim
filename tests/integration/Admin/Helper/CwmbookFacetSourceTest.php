@@ -32,6 +32,14 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmbookFacetSourceTest extends IntegrationTestCase
 {
     /**
+     * The value of #__bsms_studies.booknumber when nobody sets one.
+     *
+     * @var int
+     * @since __DEPLOY_VERSION__
+     */
+    private const FLAT_COLUMN_DEFAULT = 101;
+
+    /**
      * @var DatabaseDriver|null
      * @since __DEPLOY_VERSION__
      */
@@ -128,6 +136,11 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      * Book numbers no study currently covers, so an assertion cannot be
      * satisfied by real fixture content happening to use them.
      *
+     * ⚠️ Never returns the column default. A well-populated database uses 101
+     * already and would never offer it, but a near-empty one — CI's — hands it
+     * straight back, and a fixture book equal to the default cannot distinguish
+     * the junction from the flat column.
+     *
      * @param   int  $count  How many to return
      *
      * @return  int[]
@@ -136,7 +149,9 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
      */
     private function unusedBooks(int $count): array
     {
-        $free = array_values(array_diff(range(101, 166), $this->offeredBooks()));
+        $free = array_values(
+            array_diff(range(101, 166), $this->offeredBooks(), [self::FLAT_COLUMN_DEFAULT])
+        );
 
         $this->assertGreaterThanOrEqual($count, \count($free), 'No spare book numbers left in the fixture data.');
 
@@ -181,8 +196,11 @@ class CwmbookFacetSourceTest extends IntegrationTestCase
                 ->where($this->db->quoteName('id') . ' = ' . $studyId)
         )->loadResult();
 
-        $this->assertSame(101, $flat, 'The column default changed; this fixture no longer sets up the conflict.');
-        $this->assertNotSame(101, $book, 'Pick a fixture book other than the column default.');
+        $this->assertSame(
+            self::FLAT_COLUMN_DEFAULT,
+            $flat,
+            'The column default changed; this fixture no longer sets up the conflict.'
+        );
 
         $this->assertContains(
             $book,
