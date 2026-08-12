@@ -264,51 +264,17 @@ class CwmmessageModel extends AdminModel
 
         $this->data = parent::getItem($pk);
 
-        // Load scripture references from junction table for the subform
+        // Load scripture references for the subform.
         if ($this->data && !empty($this->data->id)) {
             $refs = CwmscriptureHelper::getScripturesForStudy((int) $this->data->id);
 
             $subformData = [];
 
-            if (!empty($refs)) {
-                // Junction table has data — use it
-                foreach ($refs as $ref) {
-                    $subformData[] = [
-                        'reference_text' => $ref->referenceText,
-                        'bible_version'  => $ref->bibleVersion,
-                    ];
-                }
-            } else {
-                // Fallback: build from legacy flat columns for pre-migration records
-                $bn1 = (int) ($this->data->booknumber ?? 0);
-
-                if ($bn1 > 0) {
-                    $subformData[] = [
-                        'reference_text' => CwmscriptureHelper::formatReference(
-                            $bn1,
-                            (int) ($this->data->chapter_begin ?? 0),
-                            (int) ($this->data->verse_begin ?? 0),
-                            (int) ($this->data->chapter_end ?? 0),
-                            (int) ($this->data->verse_end ?? 0)
-                        ),
-                        'bible_version' => (string) ($this->data->bible_version ?? ''),
-                    ];
-                }
-
-                $bn2 = (int) ($this->data->booknumber2 ?? 0);
-
-                if ($bn2 > 0) {
-                    $subformData[] = [
-                        'reference_text' => CwmscriptureHelper::formatReference(
-                            $bn2,
-                            (int) ($this->data->chapter_begin2 ?? 0),
-                            (int) ($this->data->verse_begin2 ?? 0),
-                            (int) ($this->data->chapter_end2 ?? 0),
-                            (int) ($this->data->verse_end2 ?? 0)
-                        ),
-                        'bible_version' => (string) ($this->data->bible_version2 ?? ''),
-                    ];
-                }
+            foreach ($refs as $ref) {
+                $subformData[] = [
+                    'reference_text' => $ref->referenceText,
+                    'bible_version'  => $ref->bibleVersion,
+                ];
             }
 
             $this->data->scriptures = $subformData;

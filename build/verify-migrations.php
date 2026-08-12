@@ -199,6 +199,21 @@ $EXPECTATIONS = [
                 'image_cd',
                 'image_dvd',
                 'studytext2',
+                // The flat scripture pair, retired in favour of the junction
+                // (#1623). The rows are backfilled by the same file, above the
+                // drops, because schema updates run before postflight.
+                'booknumber',
+                'chapter_begin',
+                'verse_begin',
+                'chapter_end',
+                'verse_end',
+                'bible_version',
+                'booknumber2',
+                'chapter_begin2',
+                'verse_begin2',
+                'chapter_end2',
+                'verse_end2',
+                'bible_version2',
             ],
         ],
         'tablesAbsent' => [

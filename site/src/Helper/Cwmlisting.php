@@ -536,11 +536,6 @@ class Cwmlisting
             $db->quoteName('s.studydate'),
             $db->quoteName('s.studyintro'),
             $db->quoteName('s.teacher_id'),
-            $db->quoteName('s.booknumber'),
-            $db->quoteName('s.chapter_begin'),
-            $db->quoteName('s.chapter_end'),
-            $db->quoteName('s.verse_begin'),
-            $db->quoteName('s.verse_end'),
             $db->quoteName('t.teachername'),
             $db->quoteName('t.id', 'tid'),
             $db->quoteName('s.id', 'sid'),
@@ -1933,65 +1928,13 @@ class Cwmlisting
 
         $ref = self::referenceFor($row, $scripturerow);
 
-        if ($ref !== null) {
-            $bookNum      = $ref->booknumber;
-            $ch_b         = $ref->chapterBegin;
-            $ch_e         = $ref->chapterEnd;
-            $v_b          = $ref->verseBegin;
-            $v_e          = $ref->verseEnd;
-            $book         = CwmscriptureHelper::getBookName($bookNum);
-            $bibleVersion = $ref->bibleVersion;
-
-            if ($book === '' || $bookNum <= 0) {
-                return '';
-            }
-
-            return $this->renderScripture(
-                $params,
-                $elementConfig,
-                $book,
-                $bookNum,
-                $ch_b,
-                $ch_e,
-                $v_b,
-                $v_e,
-                $bibleVersion
-            );
-        }
-
-        if (self::hasJunctionReferences($row)) {
+        if ($ref === null) {
             return '';
         }
 
-        $booknumber  = (int) ($row->booknumber ?? 0);
-        $booknumber2 = (int) ($row->booknumber2 ?? 0);
+        $book = CwmscriptureHelper::getBookName($ref->booknumber);
 
-        if ($booknumber <= 0 && $booknumber2 !== 0) {
-            return '';
-        }
-
-        // Extract scripture data based on which row we're processing
-        if ($scripturerow === 2 && $booknumber2 > 1) {
-            $bookNum      = $booknumber2;
-            $ch_b         = (int) ($row->chapter_begin2 ?? 0);
-            $ch_e         = (int) ($row->chapter_end2 ?? 0);
-            $v_b          = (int) ($row->verse_begin2 ?? 0);
-            $v_e          = (int) ($row->verse_end2 ?? 0);
-            $book         = Text::_($row->bookname2 ?? '');
-            $bibleVersion = $row->bible_version2 ?? '';
-        } elseif ($scripturerow === 1 && $booknumber > 1) {
-            $bookNum      = $booknumber;
-            $ch_b         = (int) ($row->chapter_begin ?? 0);
-            $ch_e         = (int) ($row->chapter_end ?? 0);
-            $v_b          = (int) ($row->verse_begin ?? 0);
-            $v_e          = (int) ($row->verse_end ?? 0);
-            $book         = isset($row->bookname) ? Text::_($row->bookname) : $this->getBookNameFromDb($booknumber);
-            $bibleVersion = $row->bible_version ?? '';
-        } else {
-            return '';
-        }
-
-        if (empty($book) || $bookNum === 0) {
+        if ($book === '') {
             return '';
         }
 
@@ -1999,12 +1942,12 @@ class Cwmlisting
             $params,
             $elementConfig,
             $book,
-            $bookNum,
-            $ch_b,
-            $ch_e,
-            $v_b,
-            $v_e,
-            $bibleVersion
+            $ref->booknumber,
+            $ref->chapterBegin,
+            $ref->chapterEnd,
+            $ref->verseBegin,
+            $ref->verseEnd,
+            $ref->bibleVersion
         );
     }
 
@@ -2032,9 +1975,6 @@ class Cwmlisting
     /**
      * Whether a row has a reference at the given position.
      *
-     * Callers used to gate on `booknumber` and `booknumber2`, which cannot see
-     * past a study's second reference (#1623).
-     *
      * @param   object  $row           Row to test
      * @param   int     $scripturerow  1-based position
      *
@@ -2044,25 +1984,7 @@ class Cwmlisting
      */
     public static function hasScripture(object $row, int $scripturerow): bool
     {
-        if (self::hasJunctionReferences($row)) {
-            return self::referenceFor($row, $scripturerow) !== null;
-        }
-
-        $column = $scripturerow === 2 ? 'booknumber2' : 'booknumber';
-
-        return (int) ($row->{$column} ?? 0) > 0;
-    }
-
-    /**
-     * @param   object  $row  Row to test
-     *
-     * @return  bool  Whether the row carries any junction reference
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private static function hasJunctionReferences(object $row): bool
-    {
-        return !empty($row->scriptures) && \is_array($row->scriptures);
+        return self::referenceFor($row, $scripturerow) !== null;
     }
 
     /**
@@ -2142,7 +2064,7 @@ class Cwmlisting
     /**
      * Get all scripture references for a message, rendered as a semicolon-separated string.
      *
-     * Uses the junction table scriptures if available, falls back to legacy scripture1/scripture2.
+     * A study with no references renders nothing.
      *
      * @param   Registry  $params         Template parameters
      * @param   object    $row            Message row
@@ -2175,33 +2097,11 @@ class Cwmlisting
                     continue;
                 }
 
-                // Build a virtual row to reuse getScripture()
+                // A one-reference row, so getScripture() renders exactly this one.
                 $virtualRow = (object) [
-                    'id'            => $row->id ?? 0,
-                    'booknumber'    => $ref->booknumber,
-                    'chapter_begin' => $ref->chapterBegin,
-                    'verse_begin'   => $ref->verseBegin,
-                    'chapter_end'   => $ref->chapterEnd,
-                    'verse_end'     => $ref->verseEnd,
-                    'bookname'      => CwmscriptureHelper::getBookName($ref->booknumber)
-                        ? array_search($ref->booknumber, array_column(CwmscriptureHelper::getAllBooks(), 'booknumber'))
-                        : '',
-                    'bible_version' => $ref->bibleVersion,
-                    'booknumber2'   => 0,
+                    'id'         => $row->id ?? 0,
+                    'scriptures' => [$ref],
                 ];
-
-                // Get the translated book name key for the virtual row
-                $bookKey = '';
-
-                foreach (CwmscriptureHelper::getAllBooks() as $book) {
-                    if ($book['booknumber'] === $ref->booknumber) {
-                        $bookKey = $book['key'];
-
-                        break;
-                    }
-                }
-
-                $virtualRow->bookname = $bookKey;
 
                 $rendered = $this->getScripture($params, $virtualRow, 0, 1, $elementConfig);
 
@@ -2215,20 +2115,7 @@ class Cwmlisting
             }
         }
 
-        // Fallback to legacy scripture1/scripture2
-        $parts = [];
-        $s1    = $this->getScripture($params, $row, 0, 1, $elementConfig);
-        $s2    = $this->getScripture($params, $row, 0, 2, $elementConfig);
-
-        if ($s1 !== '') {
-            $parts[] = $s1;
-        }
-
-        if ($s2 !== '') {
-            $parts[] = $s2;
-        }
-
-        return $this->joinScriptureParts($parts, $params, $elementConfig);
+        return '';
     }
 
     /**

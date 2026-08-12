@@ -189,21 +189,6 @@ class CwmscriptureHelper extends ScriptureHelper
         }
     }
 
-    /**
-     * Save references. The legacy flat columns are no longer written.
-     *
-     * @param   int                   $studyId     Study primary key
-     * @param   ScriptureReference[]  $scriptures  References to save
-     *
-     * @return  void
-     *
-     * @since       10.5.6
-     * @deprecated  __DEPLOY_VERSION__  Use saveScriptures(); the sync half is gone.
-     */
-    public static function saveScripturesAndSync(int $studyId, array $scriptures): void
-    {
-        self::saveScriptures($studyId, $scriptures);
-    }
 
     /**
      * Replace a study's reference rows. Caller owns the transaction.
@@ -250,69 +235,6 @@ class CwmscriptureHelper extends ScriptureHelper
         }
     }
 
-    /**
-     * Sync the first two scripture references back to the legacy flat columns on #__bsms_studies.
-     *
-     * ⚠️ Nothing in Proclaim calls this. It still works, and is kept for one
-     * cycle in case an extension outside this repository does; it goes when the
-     * columns are dropped.
-     *
-     * @param   int                    $studyId     Study primary key
-     * @param   ScriptureReference[]   $scriptures  All references for the study
-     *
-     * @return  void
-     *
-     * @since       10.1.0
-     * @deprecated  __DEPLOY_VERSION__  The columns it writes are being retired (#1623).
-     */
-    public static function syncLegacyColumns(int $studyId, array $scriptures): void
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        $ref1 = $scriptures[0] ?? null;
-        $ref2 = $scriptures[1] ?? null;
-
-        $fields = [];
-
-        if ($ref1 !== null) {
-            $fields[] = $db->quoteName('booknumber') . ' = ' . $ref1->booknumber;
-            $fields[] = $db->quoteName('chapter_begin') . ' = ' . $ref1->chapterBegin;
-            $fields[] = $db->quoteName('verse_begin') . ' = ' . $ref1->verseBegin;
-            $fields[] = $db->quoteName('chapter_end') . ' = ' . $ref1->chapterEnd;
-            $fields[] = $db->quoteName('verse_end') . ' = ' . $ref1->verseEnd;
-            $fields[] = $db->quoteName('bible_version') . ' = ' . $db->quote($ref1->bibleVersion);
-        } else {
-            $fields[] = $db->quoteName('booknumber') . ' = 0';
-            $fields[] = $db->quoteName('chapter_begin') . ' = 0';
-            $fields[] = $db->quoteName('verse_begin') . ' = 0';
-            $fields[] = $db->quoteName('chapter_end') . ' = 0';
-            $fields[] = $db->quoteName('verse_end') . ' = 0';
-            $fields[] = $db->quoteName('bible_version') . ' = ' . $db->quote('');
-        }
-
-        if ($ref2 !== null) {
-            $fields[] = $db->quoteName('booknumber2') . ' = ' . $db->quote((string) $ref2->booknumber);
-            $fields[] = $db->quoteName('chapter_begin2') . ' = ' . $db->quote((string) $ref2->chapterBegin);
-            $fields[] = $db->quoteName('verse_begin2') . ' = ' . $db->quote((string) $ref2->verseBegin);
-            $fields[] = $db->quoteName('chapter_end2') . ' = ' . $db->quote((string) $ref2->chapterEnd);
-            $fields[] = $db->quoteName('verse_end2') . ' = ' . $db->quote((string) $ref2->verseEnd);
-            $fields[] = $db->quoteName('bible_version2') . ' = ' . $db->quote($ref2->bibleVersion);
-        } else {
-            $fields[] = $db->quoteName('booknumber2') . ' = NULL';
-            $fields[] = $db->quoteName('chapter_begin2') . ' = NULL';
-            $fields[] = $db->quoteName('verse_begin2') . ' = NULL';
-            $fields[] = $db->quoteName('chapter_end2') . ' = NULL';
-            $fields[] = $db->quoteName('verse_end2') . ' = NULL';
-            $fields[] = $db->quoteName('bible_version2') . ' = NULL';
-        }
-
-        $query = $db->createQuery()
-            ->update($db->quoteName('#__bsms_studies'))
-            ->set($fields)
-            ->where($db->quoteName('id') . ' = ' . $studyId);
-        $db->setQuery($query);
-        $db->execute();
-    }
 
     /**
      * Delete all scripture references for a study.
@@ -344,9 +266,6 @@ class CwmscriptureHelper extends ScriptureHelper
      * the row even though the junction is the source. Rows that already carry
      * `scriptures` cost nothing; the rest are batch-loaded in one query.
      *
-     * ⚠️ A position with no reference is left untouched rather than zeroed, so
-     * a row that predates the junction keeps whatever its columns held.
-     *
      * @param   object[]  $rows      Rows to annotate, modified in place
      * @param   string    $idColumn  Property holding the study's primary key
      *
@@ -374,12 +293,9 @@ class CwmscriptureHelper extends ScriptureHelper
                 $ref = $refs[$index] ?? null;
 
                 if (!$ref instanceof ScriptureReference || $ref->booknumber <= 0) {
-                    // No junction reference here, so the legacy columns are all
-                    // this row has. bookname is still set, because callers gate
-                    // on it and an undefined property is a warning.
-                    $row->{'bookname' . $suffix} = ScriptureHelper::getBookName(
-                        (int) ($row->{'booknumber' . $suffix} ?? 0)
-                    );
+                    // Still defined, because callers gate on it and an undefined
+                    // property is a warning.
+                    $row->{'bookname' . $suffix} = '';
 
                     continue;
                 }

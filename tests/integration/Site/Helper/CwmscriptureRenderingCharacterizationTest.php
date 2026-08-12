@@ -22,15 +22,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 /**
  * Groundwork for #1623 -- retiring the legacy flat columns on #__bsms_studies.
  *
- * Step 1 of that project converts the site read paths from the flat
- * booknumber, chapter, verse and "…2" columns to the #__bsms_study_scriptures
- * junction, and is described as behaviour-neutral. Nothing asserted the
- * rendered output, so "behaviour-neutral" could only be claimed, not shown.
- *
- * These tests pin what the flat path renders today, and -- the part that
- * actually de-risks the refactor -- assert that getAllScriptures()'s junction
- * branch produces the *same string* as the legacy branch for equivalent data.
- * That equivalence is the contract step 1 has to preserve.
+ * Written before the flat columns were retired, to show that converting the
+ * read paths to the #__bsms_study_scriptures junction changed nothing. It did
+ * that job: the columns are gone, and these same cases now pin what the
+ * junction renders.
  *
  * They are deliberately characterization tests: they record current behaviour
  * rather than argue it is correct. If a change here is intended, update them
@@ -106,7 +101,7 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
     {
         // Proclaim numbers books from 101 (Genesis) and keys them JBS_BBK_*;
         // John is 143, Romans 145, Ephesians 149.
-        return (object) array_merge([
+        $values = array_merge([
             'id'             => 1,
             'booknumber'     => 143,
             'chapter_begin'  => 3,
@@ -123,6 +118,30 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
             'bookname2'      => '',
             'bible_version2' => '',
         ], $overrides);
+
+        // The columns are gone (#1623); these cases are expressed through the
+        // junction now. Deriving the references from the same values keeps every
+        // assertion below pinning the output it always pinned.
+        $references = [];
+
+        foreach (['' , '2'] as $suffix) {
+            $book = (int) $values['booknumber' . $suffix];
+
+            if ($book > 0) {
+                $references[] = new ScriptureReference(
+                    booknumber: $book,
+                    chapterBegin: (int) $values['chapter_begin' . $suffix],
+                    verseBegin: (int) $values['verse_begin' . $suffix],
+                    chapterEnd: (int) $values['chapter_end' . $suffix],
+                    verseEnd: (int) $values['verse_end' . $suffix],
+                    bibleVersion: (string) $values['bible_version' . $suffix]
+                );
+            }
+        }
+
+        $values['scriptures'] = $references;
+
+        return (object) $values;
     }
 
     /**
@@ -231,7 +250,7 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
     }
 
     #[TestDox('Both legacy references render individually, ready to be joined')]
-    public function testBothLegacyReferencesRender(): void
+    public function testBothReferencesRender(): void
     {
         $row = $this->legacyRow([
             'booknumber2'    => 145,
@@ -256,41 +275,8 @@ class CwmscriptureRenderingCharacterizationTest extends IntegrationTestCase
      * refactor moves through exists today. If the two branches render the same
      * data differently, converting the read paths silently changes the site.
      */
-    #[TestDox('The junction branch renders identically to the legacy branch for the same reference')]
-    public function testJunctionAndLegacyBranchesAgree(): void
-    {
-        $legacy = $this->legacyRow();
 
-        $viaLegacy = $this->listing->getAllScriptures($this->params(), $legacy);
-
-        // Same reference, expressed the way the junction supplies it.
-        $viaJunction = $this->listing->getAllScriptures(
-            $this->params(),
-            (object) [
-                'id'         => 1,
-                'scriptures' => [
-                    new ScriptureReference(
-                        booknumber: 143,
-                        chapterBegin: 3,
-                        verseBegin: 16,
-                        chapterEnd: 3,
-                        verseEnd: 16
-                    ),
-                ],
-            ]
-        );
-
-        // Guard against the comparison passing because both sides are empty.
-        $this->assertNotSame('', $viaLegacy, 'The legacy branch must render something to compare');
-        $this->assertNotSame('', $viaJunction, 'The junction branch must render something to compare');
-        $this->assertSame(
-            $viaLegacy,
-            $viaJunction,
-            'Converting a read path to the junction must not change what the site shows — see #1623'
-        );
-    }
-
-    #[TestDox('The junction branch joins multiple references the same way the legacy branch joins two')]
+    #[TestDox('Multiple references are joined into one string')]
     public function testJunctionJoinsMultipleReferences(): void
     {
         $this->requireJoinLayout();

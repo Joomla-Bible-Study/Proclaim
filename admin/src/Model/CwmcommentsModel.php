@@ -227,7 +227,6 @@ class CwmcommentsModel extends ListModel
 
         // Join over Studies
         $query->select($db->quoteName('study.studytitle', 'studytitle'));
-        $query->select($db->quoteName('study.chapter_begin'));
         $query->select($db->quoteName('study.studydate'));
         $query->select($db->quoteName('comment.study_id'));
         $query->join(

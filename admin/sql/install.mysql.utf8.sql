@@ -470,19 +470,7 @@ CREATE TABLE IF NOT EXISTS `#__bsms_studies`
     `studydate`           DATETIME                                                  DEFAULT NULL,
     `teacher_id`          INT(11)                                                   DEFAULT '1',
     `studynumber`         VARCHAR(100)                                              DEFAULT '',
-    `booknumber`          INT(3)                                                    DEFAULT '101',
-    `chapter_begin`       INT(3)                                                    DEFAULT '1',
-    `verse_begin`         INT(3)                                                    DEFAULT '1',
-    `chapter_end`         INT(3)                                                    DEFAULT '1',
-    `verse_end`           INT(3)                                                    DEFAULT '1',
     `secondary_reference` TEXT,
-    `booknumber2`         VARCHAR(4)                                                DEFAULT NULL,
-    `chapter_begin2`      VARCHAR(4)                                                DEFAULT NULL,
-    `verse_begin2`        VARCHAR(4)                                                DEFAULT NULL,
-    `chapter_end2`        VARCHAR(4)                                                DEFAULT NULL,
-    `verse_end2`          VARCHAR(4)                                                DEFAULT NULL,
-    `bible_version`       VARCHAR(20)                                               DEFAULT NULL,
-    `bible_version2`      VARCHAR(20)                                               DEFAULT NULL,
     `comments`            TINYINT(1)                                                DEFAULT '1',
     `hits`                INT(10)                                          NOT NULL DEFAULT '0',
     `user_id`             INT(10)                                                   DEFAULT NULL,
@@ -561,6 +549,19 @@ CREATE TABLE IF NOT EXISTS `#__bsms_study_scriptures` (
     KEY `idx_study_ordering` (`study_id`, `ordering`),
     KEY `idx_booknumber` (`booknumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dump of table #__bsms_study_scriptures
+-- ------------------------------------------------------------
+--
+-- The seeded study's reference. It lived in the flat columns until they were
+-- retired (#1623); seeding it here is what keeps a fresh install's sample study
+-- from having no scripture at all.
+
+INSERT IGNORE INTO `#__bsms_study_scriptures` (`id`, `study_id`, `ordering`, `booknumber`, `chapter_begin`,
+                                               `verse_begin`, `chapter_end`, `verse_end`, `bible_version`,
+                                               `reference_text`)
+VALUES (1, 1, 0, 151, 3, 5, 3, 11, '', '');
 
 -- --------------------------------------------------------
 
@@ -859,15 +860,13 @@ VALUES (1, 'Legacy MP3', 1, 7478, 1, 'legacy',
 -- Dump of table #__bsms_studies
 -- ------------------------------------------------------------
 
-INSERT IGNORE INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `booknumber`, `chapter_begin`,
-                                      `verse_begin`, `chapter_end`, `verse_end`, `secondary_reference`, `booknumber2`,
-                                      `chapter_begin2`, `verse_begin2`, `chapter_end2`, `verse_end2`,
+INSERT IGNORE INTO `#__bsms_studies` (`id`, `studydate`, `teacher_id`, `studynumber`, `secondary_reference`,
                                       `comments`, `hits`, `user_id`, `user_name`, `show_level`, `location_id`,
                                       `studytitle`, `alias`, `studyintro`, `messagetype`, `series_id`, `studytext`,
                                       `thumbnailm`, `thumbhm`, `thumbwm`, `params`, `checked_out`, `checked_out_time`,
                                       `published`, `publish_up`, `publish_down`, `modified`, `modified_by`, `asset_id`,
                                       `access`, `ordering`, `language`, `download_id`)
-VALUES (1, '2010-03-13 00:10:00', 1, '2015-01', 151, 3, 5, 3, 11, '', '-1', '', '', '', '',
+VALUES (1, '2010-03-13 00:10:00', 1, '2015-01', '',
         1, 0, 0, '', '0', 1, 'Four Steps to Defeating the Flesh',
         X'666F75722D73746570732D746F2D646566656174696E672D7468652D666C657368',
         'If you’ve lived around Oregon very long you know what Oregon mud is like. The soils in the Willamette Valley contain a fair amount of clay. I remember trying to put in a sprinkler system when we first built our house. Foolishly, I thought I could beat the winter rains and get the system put in. Such was not the case. Towards the end I remember slogging around the yard—with each step I took it got harder and harder to walk as more and more mud clung to my shoes.',

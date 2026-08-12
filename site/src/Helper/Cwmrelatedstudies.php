@@ -365,7 +365,7 @@ class Cwmrelatedstudies
         $query = $db->createQuery()
             ->select($db->quoteName([
                 's.id', 's.studytitle', 's.alias', 's.studydate',
-                's.booknumber', 's.chapter_begin', 's.thumbnailm', 's.image',
+                's.thumbnailm', 's.image',
             ]))
             ->select($db->quoteName('t.teachername'))
             ->from($db->quoteName('#__bsms_studies', 's'))
