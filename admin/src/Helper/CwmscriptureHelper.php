@@ -351,4 +351,39 @@ class CwmscriptureHelper extends ScriptureHelper
         $db->setQuery($query);
         $db->execute();
     }
+
+    /**
+     * Set `bookname` and `bookname2` on rows from their scripture references.
+     *
+     * Template overrides outside this repository read these two properties, so
+     * they stay on the row. Rows that already carry `scriptures` cost nothing;
+     * the rest are batch-loaded in one query.
+     *
+     * @param   object[]  $rows      Rows to annotate, modified in place
+     * @param   string    $idColumn  Property holding the study's primary key
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function applyBookNames(array $rows, string $idColumn = 'id'): void
+    {
+        $missing = [];
+
+        foreach ($rows as $row) {
+            if (!isset($row->scriptures) && !empty($row->{$idColumn})) {
+                $missing[] = (int) $row->{$idColumn};
+            }
+        }
+
+        $loaded = $missing === [] ? [] : self::getScripturesForStudies(array_unique($missing));
+
+        foreach ($rows as $row) {
+            $refs = $row->scriptures ?? ($loaded[(int) ($row->{$idColumn} ?? 0)] ?? []);
+            $refs = \is_array($refs) ? array_values($refs) : [];
+
+            $row->bookname  = ScriptureHelper::getBookName((int) ($refs[0]->booknumber ?? 0));
+            $row->bookname2 = ScriptureHelper::getBookName((int) ($refs[1]->booknumber ?? 0));
+        }
+    }
 }

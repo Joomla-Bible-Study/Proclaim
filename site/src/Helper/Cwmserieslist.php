@@ -16,8 +16,8 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -264,11 +264,9 @@ class Cwmserieslist extends Cwmlisting
             // Concat topic_text and concat topic_params do not fit, so translate individually
             $item->topics_text = Cwmtranslated::getConcatTopicItemTranslated($item);
 
-            // Was a #__bsms_books JOIN for a language key the scripture library
-            // already holds (#1687). Still set on the row: these items reach
-            // templates a site can override, and one may read $item->bookname.
-            $item->bookname = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
         }
+
+        CwmscriptureHelper::applyBookNames($items);
 
         return $items;
     }

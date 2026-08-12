@@ -18,7 +18,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -333,13 +332,9 @@ class CwmseriespodcastdisplayModel extends ItemModel
             $study->totalplays     = (int) ($stats->totalplays ?? 0);
             $study->totaldownloads = (int) ($stats->totaldownloads ?? 0);
             $study->study_id       = (int) $study->id;
-
-            // Was a #__bsms_books JOIN for a language key the scripture library
-            // already holds (#1687). Still set on the row: these studies reach
-            // templates a site can override, and one may read $study->bookname.
-            $study->bookname  = ScriptureHelper::getBookName((int) ($study->booknumber ?? 0));
-            $study->bookname2 = ScriptureHelper::getBookName((int) ($study->booknumber2 ?? 0));
         }
+
+        CwmscriptureHelper::applyBookNames($studies);
 
         return $studies;
     }

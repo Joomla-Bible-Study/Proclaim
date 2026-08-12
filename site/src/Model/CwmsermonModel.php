@@ -19,7 +19,6 @@ namespace CWM\Component\Proclaim\Site\Model;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmtranslated;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -216,11 +215,7 @@ class CwmsermonModel extends FormModel
                     return null;
                 }
 
-                // Was a #__bsms_books JOIN for a language key the scripture library
-                // already holds (#1687). Still set on the row: this item reaches
-                // templates a site can override, and one may read $data->bookname.
-                $data->bookname  = ScriptureHelper::getBookName((int) ($data->booknumber ?? 0));
-                $data->bookname2 = ScriptureHelper::getBookName((int) ($data->booknumber2 ?? 0));
+                CwmscriptureHelper::applyBookNames([$data]);
 
                 // Load media stats in a separate query to avoid Cartesian product with topics
                 $mediaQuery = $db->createQuery()
