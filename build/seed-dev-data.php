@@ -164,6 +164,10 @@ function seedTeacher(mysqli $db, string $p, string $name, string $title, bool $i
 }
 
 /**
+ * ⚠️ `teacher` is deliberately not written. The column is `int NULL DEFAULT
+ * NULL`, so a series seeded here has no teacher -- which is valid, and which the
+ * listing used to fail on.
+ *
  * @param   mysqli  $db     Connection
  * @param   string  $p      Table prefix
  * @param   string  $title  Series title
@@ -344,6 +348,11 @@ function seedScenarios(mysqli $db, string $p): int
     $two   = seedTeacher($db, $p, 'Edge Two', 'Elder');
     $three = seedTeacher($db, $p, 'Edge Three', 'Deacon', false);
 
+    // ⚠️ teacher left NULL deliberately. The series form does not require one,
+    // and a NULL there used to throw a TypeError out of Cwmlisting::getLink()
+    // that took the entire series listing down -- every other series with it.
+    $orphan = seedSeries($db, $p, 'Scenario series with no teacher', 'Nobody was assigned to this one.');
+
     $cases = [
         ['title'         => 'Scenario unpublished', 'teachers' => [$one],
             'scriptures' => [[143, 3, 16]], 'overrides' => ['published' => 0]],
@@ -356,6 +365,9 @@ function seedScenarios(mysqli $db, string $p): int
         ['title'         => 'Scenario no teacher', 'teachers' => [],
             'scriptures' => [[143, 3, 16]]],
         ['title' => 'Scenario no scripture', 'teachers' => [$one], 'scriptures' => []],
+        // Gives the teacherless series something to list, so it reaches the page.
+        ['title'         => 'Scenario in a teacherless series', 'teachers' => [$one],
+            'scriptures' => [[143, 3, 16]], 'overrides' => ['series_id' => $orphan]],
         ['title'         => 'Scenario three teachers', 'teachers' => [$one, $two, $three],
             'scriptures' => [[145, 8, 1, 8, 4]]],
         ['title'         => 'Scenario four references', 'teachers' => [$two],
