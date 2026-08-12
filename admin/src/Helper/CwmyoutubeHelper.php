@@ -139,7 +139,7 @@ class CwmyoutubeHelper
                 . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
             ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
             ->where('LOWER(' . $db->quoteName('s.studytitle') . ') LIKE LOWER(' . $searchTitle . ')')
             ->where($db->quoteName('s.published') . ' = 1');
 
@@ -203,7 +203,7 @@ class CwmyoutubeHelper
                 . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
             ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
             ->where($db->quoteName('m.params') . ' LIKE ' . $searchId)
             ->where($db->quoteName('s.published') . ' = 1')
             ->whereIn($db->quoteName('m.published'), [1, 2])
@@ -333,7 +333,7 @@ class CwmyoutubeHelper
                     . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('s.id')
                     . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
                 ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-                    . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . ')')
+                    . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
                 ->where('LOWER(' . $db->quoteName('s.studytitle') . ') LIKE LOWER(' . $searchTitle . ')')
                 ->where($db->quoteName('s.published') . ' = 1')
                 ->order($db->quoteName('s.studydate') . ' DESC')

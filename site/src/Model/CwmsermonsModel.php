@@ -505,7 +505,7 @@ class CwmsermonsModel extends ListModel
         $query->join(
             'LEFT',
             $db->quoteName('#__bsms_teachers', 'teacher') . ' ON '
-            . $db->quoteName('teacher.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('study.teacher_id') . ')'
+            . $db->quoteName('teacher.id') . ' = ' . $db->quoteName('stj.teacher_id')
         );
 
         // Join over Series

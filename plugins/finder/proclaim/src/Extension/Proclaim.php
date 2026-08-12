@@ -614,7 +614,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
                 . $db->quoteName('stj.study_id') . ' = ' . $db->quoteName('a.id')
                 . ' AND ' . $db->quoteName('stj.ordering') . ' = 0')
             ->join('LEFT', $db->quoteName('#__bsms_teachers', 't') . ' ON '
-                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('stj.teacher_id') . ', ' . $db->quoteName('a.teacher_id') . ')')
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('stj.teacher_id'))
             ->join('LEFT', $db->quoteName('#__bsms_series', 's') . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('a.series_id'))
             ->join('LEFT', $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('a.location_id'));
 

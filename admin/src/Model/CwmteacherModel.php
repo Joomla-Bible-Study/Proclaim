@@ -816,14 +816,13 @@ class CwmteacherModel extends AdminModel
             $db->quoteName('#__bsms_locations', 'loc') . ' ON ' . $db->quoteName('loc.id') . ' = ' . $db->quoteName('study.location_id')
         );
 
-        // Filter by teacher via junction table OR legacy teacher_id
         $query->where(
-            '(' . $db->quoteName('study.id') . ' IN ('
+            $db->quoteName('study.id') . ' IN ('
             . $db->createQuery()
                 ->select($db->quoteName('st.study_id'))
                 ->from($db->quoteName('#__bsms_study_teachers', 'st'))
                 ->where($db->quoteName('st.teacher_id') . ' = ' . (int) $item->id)
-            . ') OR ' . $db->quoteName('study.teacher_id') . ' = ' . (int) $item->id . ')'
+            . ')'
         );
 
         // Restrict non-admin users to their authorised view levels

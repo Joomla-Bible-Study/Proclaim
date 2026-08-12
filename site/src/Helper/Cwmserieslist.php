@@ -220,7 +220,7 @@ class Cwmserieslist extends Cwmlisting
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_teachers', 't') . ' ON ('
-                . $db->quoteName('t.id') . ' = COALESCE(' . $db->quoteName('st.teacher_id') . ', ' . $db->quoteName('s.teacher_id') . '))'
+                . $db->quoteName('t.id') . ' = ' . $db->quoteName('st.teacher_id') . ')'
             )
             ->leftJoin(
                 $db->quoteName('#__bsms_message_type') . ' ON ('
