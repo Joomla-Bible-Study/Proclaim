@@ -30,6 +30,28 @@ use Joomla\CMS\Filter\InputFilter;
  */
 class PodcastsController extends AbstractWritableController
 {
+    /**
+     * Columns the list route selects, overriding the admin screen's narrower set.
+     *
+     * The admin Podcasts screen shows no artwork, so its query does not select
+     * `podcastimage`, and JsonapiView renders only what the row actually carries.
+     *
+     * @var    string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    protected const LIST_SELECT = [
+        'podcast.id',
+        'podcast.published',
+        'podcast.title',
+        'podcast.description',
+        'podcast.podcastimage',
+        'podcast.filename',
+        'podcast.language',
+        'podcast.access',
+        'podcast.checked_out',
+        'podcast.checked_out_time',
+    ];
+
     protected $contentType = 'podcasts';
 
     protected $default_view = 'podcasts';
@@ -50,6 +72,8 @@ class PodcastsController extends AbstractWritableController
     public function displayList()
     {
         $this->modelState->set('filter.published', [1, 2]);
+
+        $this->modelState->set('list.select', implode(', ', self::LIST_SELECT));
 
         $apiFilter = $this->input->get('filter', [], 'array');
         $clean     = InputFilter::getInstance();

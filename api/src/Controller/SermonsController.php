@@ -33,6 +33,33 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 class SermonsController extends AbstractWritableController
 {
     /**
+     * Columns the list route selects, overriding the admin screen's narrower set.
+     *
+     * The admin Messages screen shows no intro text, so its query does not select
+     * `studyintro`, and JsonapiView renders only what the row actually carries.
+     *
+     * @var    string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    protected const LIST_SELECT = [
+        'study.id',
+        'study.published',
+        'study.studydate',
+        'study.studytitle',
+        'study.studyintro',
+        'study.alias',
+        'study.ordering',
+        'study.hits',
+        'study.language',
+        'study.access',
+        'study.publish_up',
+        'study.publish_down',
+        'study.params',
+        'study.checked_out',
+        'study.checked_out_time',
+    ];
+
+    /**
      * The content type for serialization.
      *
      * @var    string
@@ -64,6 +91,8 @@ class SermonsController extends AbstractWritableController
     public function displayList()
     {
         $this->modelState->set('filter.published', [1, 2]);
+
+        $this->modelState->set('list.select', implode(', ', self::LIST_SELECT));
 
         $apiFilter = $this->input->get('filter', [], 'array');
         $clean     = InputFilter::getInstance();

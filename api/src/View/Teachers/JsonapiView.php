@@ -35,13 +35,12 @@ class JsonapiView extends BaseApiView
         'title',
         'image',
         'short',
-        'description',
+        'information',
         'website',
         'email',
         'phone',
         'access',
         'published',
-        'params',
     ];
 
     /**

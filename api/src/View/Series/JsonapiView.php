@@ -34,10 +34,9 @@ class JsonapiView extends BaseApiView
         'alias',
         'description',
         'series_thumbnail',
-        'teacher_id',
+        'teacher',
         'access',
         'published',
-        'params',
     ];
 
     /**
@@ -52,7 +51,7 @@ class JsonapiView extends BaseApiView
         'alias',
         'description',
         'series_thumbnail',
-        'teacher_id',
+        'teacher',
         'access',
         'published',
     ];

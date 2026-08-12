@@ -34,6 +34,33 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  */
 class SeriesController extends AbstractWritableController
 {
+    /**
+     * Columns the list route selects, overriding the admin screen's narrower set.
+     *
+     * The admin Series screen shows no description, thumbnail or teacher, so its
+     * query does not select them, and JsonapiView renders only what the row
+     * actually carries. `list.select` is the seam for asking the same model for
+     * more without widening the admin query.
+     *
+     * @var    string[]
+     * @since  __DEPLOY_VERSION__
+     */
+    protected const LIST_SELECT = [
+        'series.id',
+        'series.series_text',
+        'series.alias',
+        'series.description',
+        'series.series_thumbnail',
+        'series.teacher',
+        'series.published',
+        'series.access',
+        'series.language',
+        'series.ordering',
+        'series.created',
+        'series.checked_out',
+        'series.checked_out_time',
+    ];
+
     protected $contentType = 'series';
 
     protected $default_view = 'series';
@@ -65,6 +92,8 @@ class SeriesController extends AbstractWritableController
     public function displayList()
     {
         $this->modelState->set('filter.published', [1, 2]);
+
+        $this->modelState->set('list.select', implode(', ', self::LIST_SELECT));
 
         $apiFilter = $this->input->get('filter', [], 'array');
         $clean     = InputFilter::getInstance();
