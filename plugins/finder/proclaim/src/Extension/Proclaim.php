@@ -530,43 +530,28 @@ final class Proclaim extends Adapter implements SubscriberInterface
             }
         }
 
-        // Add Scripture/Book
-        if (!empty($item->booknumber)) {
-            // From the scripture library rather than #__bsms_books, which stores
-            // the same language keys against the same numbers and was costing a
-            // query per indexed item to fetch one (#1687). getBookName()
-            // translates on the way out, so no Text::_() call is needed here.
-            $bookname = ScriptureHelper::getBookName((int) $item->booknumber);
+        // Add Scripture/Book: one Scripter taxonomy per reference (#1623).
+        try {
+            foreach (CwmscriptureHelper::getScripturesForStudy((int) $item->id) as $ref) {
+                // Not the stored reference_text, which is frozen in whatever
+                // language was active at save time.
+                $reference = ScriptureHelper::formatReference(
+                    $ref->booknumber,
+                    $ref->chapterBegin,
+                    $ref->verseBegin,
+                    $ref->chapterEnd,
+                    $ref->verseEnd
+                );
 
-            if ($bookname) {
-
-                // Construct reference string
-                $reference = $bookname . ' ' . $item->chapter_begin;
-                if ($item->verse_begin !== '0') {
-                    $reference .= ':' . $item->verse_begin;
-                }
-
-                if ($item->verse_end !== '0') {
-                    $reference .= '-' . $item->verse_end;
+                if ($reference === '') {
+                    continue;
                 }
 
                 if (\in_array('scripter', $taxonomies, true)) {
                     $item->addTaxonomy('Scripter', $reference);
                 }
 
-                // Add to body
                 $item->body .= ' ' . $reference;
-            }
-        }
-
-        // Also index all references from the junction table
-        try {
-            $scriptures = CwmscriptureHelper::getScripturesForStudy((int) $item->id);
-
-            foreach ($scriptures as $ref) {
-                if ($ref->referenceText !== '') {
-                    $item->body .= ' ' . $ref->referenceText;
-                }
             }
         } catch (\Exception $e) {
             // Junction table may not exist yet during migration
@@ -601,7 +586,6 @@ final class Proclaim extends Adapter implements SubscriberInterface
             ->select($db->quoteName('a.language'))
             ->select($db->quoteName('a.access') . ', ' . $db->quoteName('a.ordering') . ', ' . $db->quoteName('a.params'))
             ->select($db->quoteName('a.publish_up', 'publish_start_date') . ', ' . $db->quoteName('a.publish_down', 'publish_end_date'))
-            ->select($db->quoteName(['a.booknumber', 'a.chapter_begin', 'a.verse_begin', 'a.chapter_end', 'a.verse_end']))
             ->select($db->quoteName('s.series_text', 'series') . ', ' . $db->quoteName('s.published', 'series_state') . ', ' . $db->quoteName('s.access', 'series_access'));
 
         // Handle the alias CASE WHEN portion of the query
