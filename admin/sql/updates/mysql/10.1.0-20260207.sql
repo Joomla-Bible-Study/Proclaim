@@ -21,7 +21,16 @@ INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ('com_procla
 ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`);
 
 -- Studies: Teacher filter pattern
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_teacher_published` (`teacher_id`, `published`, `studydate`);
+-- The statement that created idx_teacher_published is deliberately gone. #1731
+-- retired the teacher_id column it covers, and the retirement drops whatever
+-- MySQL leaves of the index, so on every site that has taken that update it no
+-- longer exists.
+--
+-- Joomla's schema check reads every historical file in this folder and tests it
+-- against the CURRENT schema, with no notion of a change being superseded. Left
+-- in place, this line reports a permanent error in System → Maintenance →
+-- Database for an index the component removed on purpose — the same defect as
+-- #1706, and the same fix already applied to idx_booknumber_published.
 
 -- Studies: Location filter pattern
 ALTER TABLE `#__bsms_studies` ADD KEY `idx_location_published` (`location_id`, `published`);

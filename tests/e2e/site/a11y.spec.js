@@ -43,11 +43,23 @@ const LISTINGS = [
  * Detail views, each reached from its listing so the test never has to guess
  * a record id. [label, listing view, selector for the first item link]
  */
+/**
+ * How many records to open per detail view. Each is a full page load and an axe
+ * scan, so this trades runtime for the chance of catching a record whose data
+ * shape differs from the first one's.
+ */
+const DETAIL_SAMPLE = 5;
+
+// ⚠️ .proclaim-grid-card is in every one of these. The selectors here used to
+// name .proclaim-item and .effects, which the sermons and series-podcast
+// listings do not render at all — so those two tests skipped on every run
+// rather than testing anything, and reported themselves as skipped rather than
+// failed.
 const DETAILS = [
-    ['sermon detail', 'cwmsermons', '.proclaim-item a[href]'],
-    ['teacher detail', 'cwmteachers', '.proclaim-item a[href], .teacher-card a[href]'],
-    ['series detail', 'cwmseriesdisplays', '.proclaim-item a[href], .series-card a[href]'],
-    ['series podcast detail', 'cwmseriespodcastlist', '.effects a[href]'],
+    ['sermon detail', 'cwmsermons', '.proclaim-grid-card a[href], .proclaim-item a[href]'],
+    ['teacher detail', 'cwmteachers', '.proclaim-grid-card a[href], .proclaim-item a[href]'],
+    ['series detail', 'cwmseriesdisplays', '.proclaim-grid-card a[href], .proclaim-item a[href]'],
+    ['series podcast detail', 'cwmseriespodcastlist', '.proclaim-grid-card a[href], .effects a[href]'],
 ];
 
 test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
@@ -76,19 +88,46 @@ test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
                 waitUntil: 'networkidle',
             });
 
-            const firstLink = page.locator(itemSelector).first();
+            const links = page.locator(itemSelector);
+            const total = await links.count();
 
             // Nothing to open on an empty database — skip rather than fail,
             // the same way the rest of the site suite handles missing data.
-            if (!(await firstLink.count())) {
+            if (!total) {
                 test.skip(true, `No records on the ${listing} listing to open`);
             }
 
-            await firstLink.click();
-            await page.waitForLoadState('networkidle');
-            await expect(page.locator(PROCLAIM_CONTENT).first()).toBeVisible({ timeout: 15000 });
+            // ⚠️ Sample several records, not just the first. Detail pages differ
+            // by what the record actually has: a teacher with no phone rendered
+            // `<a href="tel:"></a>`, a link with no accessible name, on most of
+            // the teachers on the site — and this suite passed for months
+            // because whichever record happened to sort first had a phone.
+            // Whatever sorts first is data, not a decision.
+            const hrefs = [];
 
-            await expectNoViolations(page, expect, { include: PROCLAIM_CONTENT });
+            for (let i = 0; i < total && hrefs.length < DETAIL_SAMPLE; i++) {
+                const href = await links.nth(i).getAttribute('href');
+
+                // ⚠️ The item selectors match every link inside a card, and a
+                // card carries mailto: and tel: links too. Navigating to one
+                // aborts the request and fails the test for the wrong reason.
+                if (!href || !href.startsWith('/') || hrefs.includes(href)) {
+                    continue;
+                }
+
+                hrefs.push(href);
+            }
+
+            if (!hrefs.length) {
+                test.skip(true, `No navigable ${listing} detail links found`);
+            }
+
+            for (const href of hrefs) {
+                await page.goto(href, { waitUntil: 'networkidle' });
+                await expect(page.locator(PROCLAIM_CONTENT).first()).toBeVisible({ timeout: 15000 });
+
+                await expectNoViolations(page, expect, { include: PROCLAIM_CONTENT });
+            }
         });
     }
 

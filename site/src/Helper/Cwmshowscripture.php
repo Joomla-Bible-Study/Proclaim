@@ -649,7 +649,10 @@ class Cwmshowscripture
         $html .= '<div class="scripture-text">';
         $html .= '<div class="scripture-body">';
         $html .= '<p class="text-muted"><em>' . Text::_('JBS_CMN_SCRIPTURE_UNAVAILABLE') . '</em></p>';
-        $html .= '<button type="button" class="btn btn-sm btn-outline-secondary scripture-retry-btn" '
+        // ⚠️ btn-outline-dark, not btn-outline-secondary. Bootstrap's secondary
+        // renders #6d757e, which against this template's #fafaf8 is 4.46:1 --
+        // just under the 4.5:1 WCAG AA needs at this size.
+        $html .= '<button type="button" class="btn btn-sm btn-outline-dark scripture-retry-btn" '
             . 'id="' . $uid . '">'
             . '<i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i> '
             . Text::_('JBS_CMN_SCRIPTURE_RETRY') . '</button>';
