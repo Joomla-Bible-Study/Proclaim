@@ -93,7 +93,7 @@ class Cwmpagebuilder
         $esv          = 0;
         $scripturerow = 1;
 
-        if ($item->chapter_begin) {
+        if (Cwmlisting::hasScripture($item, 1)) {
             $page->scripture1 = $CWMElements->getScripture($params, $item, $esv, $scripturerow);
         } else {
             $page->scripture1 = '';
@@ -106,7 +106,7 @@ class Cwmpagebuilder
         // Scripture 2
         $scripturerow = 2;
 
-        if ($item->booknumber2 >= 1) {
+        if (Cwmlisting::hasScripture($item, 2)) {
             $page->scripture2 = $CWMElements->getScripture($params, $item, $esv, $scripturerow);
         } else {
             $page->scripture2 = '';

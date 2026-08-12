@@ -353,11 +353,18 @@ class CwmscriptureHelper extends ScriptureHelper
     }
 
     /**
-     * Set `bookname` and `bookname2` on rows from their scripture references.
+     * Project a study's first two scripture references onto the row properties
+     * that templates read: `bookname`, `booknumber`, `chapter_begin`,
+     * `verse_begin`, `chapter_end`, `verse_end`, `bible_version`, and the `2`
+     * suffixed set for the second reference.
      *
-     * Template overrides outside this repository read these two properties, so
-     * they stay on the row. Rows that already carry `scriptures` cost nothing;
-     * the rest are batch-loaded in one query.
+     * These properties are read by template overrides outside this repository
+     * and by helpers such as Cwmshowscripture::formReference(), so they stay on
+     * the row even though the junction is the source. Rows that already carry
+     * `scriptures` cost nothing; the rest are batch-loaded in one query.
+     *
+     * ⚠️ A position with no reference is left untouched rather than zeroed, so
+     * a row that predates the junction keeps whatever its columns held.
      *
      * @param   object[]  $rows      Rows to annotate, modified in place
      * @param   string    $idColumn  Property holding the study's primary key
@@ -382,8 +389,28 @@ class CwmscriptureHelper extends ScriptureHelper
             $refs = $row->scriptures ?? ($loaded[(int) ($row->{$idColumn} ?? 0)] ?? []);
             $refs = \is_array($refs) ? array_values($refs) : [];
 
-            $row->bookname  = ScriptureHelper::getBookName((int) ($refs[0]->booknumber ?? 0));
-            $row->bookname2 = ScriptureHelper::getBookName((int) ($refs[1]->booknumber ?? 0));
+            foreach ([0 => '', 1 => '2'] as $index => $suffix) {
+                $ref = $refs[$index] ?? null;
+
+                if (!$ref instanceof ScriptureReference || $ref->booknumber <= 0) {
+                    // No junction reference here, so the legacy columns are all
+                    // this row has. bookname is still set, because callers gate
+                    // on it and an undefined property is a warning.
+                    $row->{'bookname' . $suffix} = ScriptureHelper::getBookName(
+                        (int) ($row->{'booknumber' . $suffix} ?? 0)
+                    );
+
+                    continue;
+                }
+
+                $row->{'bookname' . $suffix}      = ScriptureHelper::getBookName($ref->booknumber);
+                $row->{'booknumber' . $suffix}    = $ref->booknumber;
+                $row->{'chapter_begin' . $suffix} = $ref->chapterBegin;
+                $row->{'verse_begin' . $suffix}   = $ref->verseBegin;
+                $row->{'chapter_end' . $suffix}   = $ref->chapterEnd;
+                $row->{'verse_end' . $suffix}     = $ref->verseEnd;
+                $row->{'bible_version' . $suffix} = $ref->bibleVersion;
+            }
         }
     }
 }
