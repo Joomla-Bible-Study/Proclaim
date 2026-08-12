@@ -22,8 +22,8 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmmime;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmschemaorgHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeQuota;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Client\ClientHelper;
 use Joomla\CMS\Factory;
@@ -1125,13 +1125,9 @@ class Cwmpodcast
             $e->params   = new Registry($e->params);
             $e->srparams = new Registry($e->srparams);
 
-            // Was a #__bsms_books JOIN, which fetched the same language keys the
-            // scripture library already holds against the same numbers (#1687).
-            // Still set on the row rather than resolved at the point of use: an
-            // episode reaches template overrides outside this repository, and
-            // one of those may read $episode->bookname.
-            $e->bookname = ScriptureHelper::getBookName((int) ($e->booknumber ?? 0));
         }
+
+        CwmscriptureHelper::applyBookNames($episodes, 'study_id');
 
         return $episodes;
     }

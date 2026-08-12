@@ -16,7 +16,6 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmstudyteacherHelper;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
@@ -751,14 +750,6 @@ class CwmsermonsModel extends ListModel
             return [];
         }
 
-        foreach ($items as $item) {
-            // Was a #__bsms_books JOIN for a language key the scripture library
-            // already holds (#1687). Still set on the row: these items reach
-            // templates a site can override, and one may read $item->bookname.
-            $item->bookname  = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
-            $item->bookname2 = ScriptureHelper::getBookName((int) ($item->booknumber2 ?? 0));
-        }
-
         // Collect study IDs for batch loading
         $studyIds = [];
 
@@ -797,6 +788,8 @@ class CwmsermonsModel extends ListModel
             // Teachers
             $item->teachers = $teacherMap[$sid] ?? [];
         }
+
+        CwmscriptureHelper::applyBookNames($items);
 
         return $items;
     }

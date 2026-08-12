@@ -17,7 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Model;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
-use CWM\Library\Scripture\Helper\ScriptureHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
@@ -209,7 +209,19 @@ class CwmcommentsModel extends ListModel
                 $query->where($db->quoteName('comment.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where('(' . $db->quoteName('study.studytitle') . ' LIKE ' . $search . ' OR ' . $db->quoteName('book.bookname') . ' LIKE ' . $search . ')');
+                // ⚠️ Searched `book.bookname` until #1687 dropped the
+                // #__bsms_books join that supplied the alias, which left every
+                // search on this list throwing "Unknown column".
+                $reference = $db->createQuery()
+                    ->select('1')
+                    ->from($db->quoteName('#__bsms_study_scriptures', 'csr'))
+                    ->where($db->quoteName('csr.study_id') . ' = ' . $db->quoteName('comment.study_id'))
+                    ->where($db->quoteName('csr.reference_text') . ' LIKE ' . $search);
+
+                $query->where(
+                    '(' . $db->quoteName('study.studytitle') . ' LIKE ' . $search
+                    . ' OR EXISTS (' . $reference . '))'
+                );
             }
         }
 
@@ -217,7 +229,7 @@ class CwmcommentsModel extends ListModel
         $query->select($db->quoteName('study.studytitle', 'studytitle'));
         $query->select($db->quoteName('study.chapter_begin'));
         $query->select($db->quoteName('study.studydate'));
-        $query->select($db->quoteName('study.booknumber'));
+        $query->select($db->quoteName('comment.study_id'));
         $query->join(
             'LEFT',
             $db->quoteName('#__bsms_studies', 'study') . ' ON ' . $db->quoteName('study.id') . ' = ' . $db->quoteName('comment.study_id')
@@ -302,9 +314,7 @@ class CwmcommentsModel extends ListModel
             return $items;
         }
 
-        foreach ($items as $item) {
-            $item->bookname = ScriptureHelper::getBookName((int) ($item->booknumber ?? 0));
-        }
+        CwmscriptureHelper::applyBookNames($items, 'study_id');
 
         return $items;
     }
