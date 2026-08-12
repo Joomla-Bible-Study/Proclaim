@@ -31,13 +31,11 @@ class JsonapiView extends BaseApiView
     protected $fieldsToRenderItem = [
         'id',
         'title',
-        'alias',
         'description',
-        'podcast_image',
+        'podcastimage',
         'language',
         'access',
         'published',
-        'params',
     ];
 
     /**
@@ -49,9 +47,8 @@ class JsonapiView extends BaseApiView
     protected $fieldsToRenderList = [
         'id',
         'title',
-        'alias',
         'description',
-        'podcast_image',
+        'podcastimage',
         'language',
         'access',
         'published',

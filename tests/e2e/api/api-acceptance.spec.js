@@ -27,6 +27,11 @@ const { test, expect } = require('@playwright/test');
 
 const API_SERMONS = '/api/index.php/v1/proclaim/sermons';
 const API_INFO = '/api/index.php/v1/proclaim/info';
+const API_SERIES = '/api/index.php/v1/proclaim/series';
+
+// Set by the token test, consumed by the later ones. Safe because the describe
+// is serial.
+let apiToken = '';
 
 test.describe.serial('REST API acceptance (package install) @api', () => {
     test('Proclaim and its webservices plugin are installed and enabled', async ({ page }) => {
@@ -124,6 +129,8 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
 
         expect(token, 'The profile never produced a token value').not.toBe('');
 
+        apiToken = token;
+
         const response = await request.get(API_SERMONS, {
             headers: { 'X-Joomla-Token': token },
         });
@@ -149,6 +156,35 @@ test.describe.serial('REST API acceptance (package install) @api', () => {
             infoBody.data?.attributes?.version,
             'Expected a non-empty version string from CwmproclaimHelper::getVersion()',
         ).not.toBe('');
+    });
+
+    test('list responses actually carry the fields their views declare', async ({ request }) => {
+        // #1749: a name in $fieldsToRenderList that the row does not carry is
+        // dropped by array_intersect_key() — no null, no notice. Six such
+        // fields shipped across four views from 10.3.0. The unit contract test
+        // checks the declarations against the schema; this checks the one thing
+        // it cannot, that the bytes come back over HTTP.
+        expect(apiToken, 'The token test did not run, so this proves nothing').not.toBe('');
+
+        const headers = { 'X-Joomla-Token': apiToken };
+
+        for (const [url, fields] of [
+            [API_SERIES, ['series_text', 'description', 'series_thumbnail', 'teacher']],
+            [API_SERMONS, ['studytitle', 'studyintro', 'series_id']],
+        ]) {
+            const body = await (await request.get(url, { headers })).json();
+            const first = body.data?.[0];
+
+            expect(first, `${url} returned no rows, so nothing here was checked`).toBeTruthy();
+
+            for (const field of fields) {
+                expect(
+                    Object.keys(first.attributes ?? {}),
+                    `${url} declares "${field}" but the response has no such attribute — the list query does `
+                    + 'not select it, or it is not a column at all.',
+                ).toContain(field);
+            }
+        }
     });
 
     test('public_reads set through the plugin UI opens and closes anonymous reads', async ({ page, request }) => {
