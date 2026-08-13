@@ -58,6 +58,11 @@ class Cwmshowscripture
         }
 
         $reference = $this->formReference($row);
+
+        // The row already knows its book number; formReference() renders it to a
+        // localised name that the provider then has to match back. Keep both, and
+        // let fetchPassage() prefer the structured one where it can (#1688).
+        $ref = ScriptureReference::fromRow($row);
         CwmDebug::startTimer('buildPassage');
 
         $choice    = (int) $params->get('show_passage_view', 3);
@@ -92,7 +97,7 @@ class Cwmshowscripture
                 $provider->setCacheTtl($cacheDays * 86400);
             }
 
-            $result = $provider->getPassage($reference, $version);
+            $result = $this->fetchPassage($provider, $ref, $reference, $version);
         } catch (\Exception $e) {
             Log::add('Provider error for "' . $reference . '" (' . $version . '): ' . $e->getMessage(), Log::ERROR, 'com_proclaim.bible');
         }
@@ -101,7 +106,7 @@ class Cwmshowscripture
         if (($result === null || !$result->hasText()) && ($provider === null || $provider->getName() !== 'local')) {
             try {
                 $localProvider = BibleProviderFactory::getProvider('local');
-                $localResult   = $localProvider->getPassage($reference, $version);
+                $localResult   = $this->fetchPassage($localProvider, $ref, $reference, $version);
 
                 if ($localResult->hasText()) {
                     Log::add('Fallback to local provider for "' . $reference . '" (' . $version . ')', Log::INFO, 'com_proclaim.bible');
@@ -123,7 +128,7 @@ class Cwmshowscripture
             if ($defaultVersion !== $version) {
                 try {
                     $localProvider = BibleProviderFactory::getProvider('local');
-                    $defaultResult = $localProvider->getPassage($reference, $defaultVersion);
+                    $defaultResult = $this->fetchPassage($localProvider, $ref, $reference, $defaultVersion);
 
                     if ($defaultResult->hasText()) {
                         Log::add(
@@ -147,7 +152,7 @@ class Cwmshowscripture
             if ($coreDefault !== $version) {
                 try {
                     $localProvider = BibleProviderFactory::getProvider('local');
-                    $kjvResult     = $localProvider->getPassage($reference, $coreDefault);
+                    $kjvResult     = $this->fetchPassage($localProvider, $ref, $reference, $coreDefault);
 
                     if ($kjvResult->hasText()) {
                         Log::add(
@@ -599,6 +604,43 @@ class Cwmshowscripture
      *
      * @since    7.1
      */
+    /**
+     * Fetch a passage, preferring the structured entry point where it exists.
+     *
+     * Falls back to the string API on two independent conditions, so this is
+     * safe to ship ahead of a library release and on a site whose library has
+     * not caught up:
+     *
+     * - the installed library predates `getPassageFor()`
+     * - the row carries no book number, so there is nothing structured to send
+     *
+     * Capability is detected rather than version: `LibraryVersion::VERSION` is a
+     * hardcoded constant that has drifted from the manifest before
+     * (lib_cwmscripture#15), whereas the method either exists or it does not.
+     * `setCacheTtl()` above is checked the same way.
+     *
+     * @param   object              $provider   Bible provider
+     * @param   ScriptureReference  $ref        Structured reference built from the row
+     * @param   string              $reference  Rendered reference, the legacy argument
+     * @param   string              $version    Translation abbreviation
+     *
+     * @return  BiblePassageResult
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function fetchPassage(
+        object $provider,
+        ScriptureReference $ref,
+        string $reference,
+        string $version
+    ): BiblePassageResult {
+        if ($ref->booknumber > 0 && method_exists($provider, 'getPassageFor')) {
+            return $provider->getPassageFor($ref, $version);
+        }
+
+        return $provider->getPassage($reference, $version);
+    }
+
     public function formReference($row): string
     {
         $book      = str_replace(' ', '+', Text::_($row->bookname));
