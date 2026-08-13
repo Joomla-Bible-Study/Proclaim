@@ -280,7 +280,20 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
 
         $buffer = @file_get_contents($sqlFile);
 
-        if ($buffer === false || stripos($buffer, 'DROP TABLE') === false) {
+        if ($buffer === false) {
+            return;
+        }
+
+        // Comments stripped before looking for the statement, so the phrase in
+        // prose does not count. The file this replaces documents itself with
+        // "Do not reintroduce DROP TABLE statements here", so matching the raw
+        // buffer made the one-shot repair above fire on every page load of
+        // com_installer, rewriting a file that was already harmless — and on a
+        // symlinked development checkout, rewriting it inside the library's own
+        // git working tree.
+        $statements = preg_replace(['~/\*.*?\*/~s', '~^\s*--.*$~m'], '', $buffer);
+
+        if ($statements === null || stripos($statements, 'DROP TABLE') === false) {
             return;
         }
 
