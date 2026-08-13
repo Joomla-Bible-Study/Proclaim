@@ -12,6 +12,8 @@
 namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafiles;
 
 // No Direct Access
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafilesModel;
 use Joomla\CMS\Component\ComponentHelper;
@@ -25,7 +27,9 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\Toolbar\Button\DropdownButton;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Component\Content\Administrator\Extension\ContentComponent;
+use Joomla\Database\DatabaseInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -143,6 +147,8 @@ class HtmlView extends BaseHtmlView
         $this->canDo         = Cwmassets::sectionActions('mediafile');
         $this->filterForm    = $model->getFilterForm();
         $this->activeFilters = $model->getActiveFilters();
+
+        $this->warnIfProtectedStorageIsNotWorking();
 
         if (ComponentHelper::getParams('com_proclaim')->get('workflow_enabled')) {
             PluginHelper::importPlugin('workflow');
@@ -278,5 +284,70 @@ class HtmlView extends BaseHtmlView
             'mediafile.published'  => Text::_('JSTATUS'),
             'mediafile.id'         => Text::_('JGRID_HEADING_ID'),
         ];
+    }
+
+    /**
+     * Say so, once, when this site restricts media but the protected folder is
+     * not actually being enforced here.
+     *
+     * ⚠️ Deliberately silent unless the site has restricted media. A site whose
+     * library is entirely public has nothing to protect, and telling it that a
+     * folder it does not use is unenforced is noise — the kind that teaches
+     * administrators to dismiss warnings without reading them.
+     *
+     * The verdict itself is cached and only re-taken weekly, so this costs a
+     * param read on an ordinary page load (#1783).
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function warnIfProtectedStorageIsNotWorking(): void
+    {
+        $status = CwmprotectedStorage::status();
+
+        if ($status === CwmmediaProtectionHelper::PROTECTED) {
+            return;
+        }
+
+        $guest  = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+        $levels = $guest->getAuthorisedViewLevels() ?: [0];
+        $levels = array_map('intval', $levels);
+        $list   = implode(',', $levels);
+
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $found = $db->setQuery(
+            $db->createQuery()
+                ->select('1')
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_studies', 'study')
+                    . ' ON (' . $db->quoteName('study.id') . ' = ' . $db->quoteName('m.study_id') . ')'
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_series', 'series')
+                    . ' ON (' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id') . ')'
+                )
+                ->where(
+                    '(' . $db->quoteName('m.access') . ' NOT IN (' . $list . ') OR '
+                    . $db->quoteName('study.access') . ' NOT IN (' . $list . ') OR '
+                    . $db->quoteName('series.access') . ' NOT IN (' . $list . '))'
+                ),
+            0,
+            1
+        )->loadResult();
+
+        if ($found === null) {
+            return;
+        }
+
+        Factory::getApplication()->enqueueMessage(
+            Text::_(
+                $status === CwmmediaProtectionHelper::EXPOSED
+                    ? 'JBS_MED_PROTECTED_FOLDER_EXPOSED'
+                    : 'JBS_MED_PROTECTED_FOLDER_UNVERIFIED'
+            ),
+            'warning'
+        );
     }
 }
