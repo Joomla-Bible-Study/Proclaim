@@ -1,239 +1,177 @@
 {
-    "name": "joomla-bible-study/proclaim",
-    "type": "project",
-    "description": "CWM Proclaim",
-    "keywords": [
-        "bible",
-        "joomla",
-        "comments",
-        "Proclaim"
-    ],
-    "homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Tom Fuller",
-            "email": "info@christianwebministries.org",
-            "homepage": "https://www.christianwebministries.org",
-            "role": "Tech Writer & Developer"
-        },
-        {
-            "name": "Brent Cordis",
-            "email": "info@christianwebministries.org",
-            "homepage": "https://www.christianwebministries.org",
-            "role": "Lead Developer"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools"
-        }
-    ],
-    "config": {
-        "optimize-autoloader": true,
-        "platform": {
-            "php": "8.3.0"
-        },
-        "vendor-dir": "libraries/vendor",
-        "github-protocols": [
-            "https"
-        ],
-        "allow-plugins": {}
+  "name": "joomla-bible-study/proclaim",
+  "type": "project",
+  "description": "CWM Proclaim",
+  "keywords": [
+    "bible",
+    "joomla",
+    "comments",
+    "Proclaim"
+  ],
+  "homepage": "https://github.com/Joomla-Bible-Study/Proclaim",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Tom Fuller",
+      "email": "info@christianwebministries.org",
+      "homepage": "https://www.christianwebministries.org",
+      "role": "Tech Writer & Developer"
     },
-    "support": {
-        "issues": "https://www.christianwebministries.org/issues",
-        "forum": "https://www.christianwebministries.org/forum",
-        "docs": "https://www.christianwebministries.org/docs"
-    },
-    "autoload": {
-        "psr-4": {
-            "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
-            "CWM\\Component\\Proclaim\\Api\\": "api/src/",
-            "CWM\\Component\\Proclaim\\Site\\": "site/src/",
-            "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
-        },
-        "exclude-from-classmap": [
-            "/admin/src/Addons/Servers/Youtube/vendor/"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "CWM\\Component\\Proclaim\\Tests\\": "tests/unit/"
-        }
-    },
-    "require": {
-        "php": "^8.3.0",
-        "ext-mbstring": "*",
-        "ext-json": "*",
-        "ext-simplexml": "*",
-        "ext-gd": "*",
-        "simplepie/simplepie": "^1.8",
-        "google/recaptcha": "^1.3",
-        "psr/log": "^3.0",
-        "composer/ca-bundle": "^1.3",
-        "ext-zip": "*",
-        "ext-libxml": "*",
-        "ext-fileinfo": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^12.5",
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "phan/phan": "^6.0",
-        "roave/security-advisories": "dev-latest",
-        "pdepend/pdepend": "^2.16",
-        "phpmd/phpmd": "^2.15",
-        "cwm/build-tools": "^1.18.0",
-        "joomla/database": "^4.0",
-        "joomla/registry": "^4.0",
-        "joomla/di": "^4.0",
-        "joomla/event": "^4.0",
-        "joomla/input": "^4.0",
-        "joomla/filter": "^4.0",
-        "joomla/filesystem": "^4.0",
-        "joomla/uri": "^4.0",
-        "joomla/application": "^4.0",
-        "joomla/string": "^4.0"
-    },
-    "replace": {
-        "paragonie/random_compat": "9.99.99",
-        "symfony/polyfill-php80": "*",
-        "symfony/polyfill-php81": "*"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.x-dev"
-        },
-        "cwm-build-tools": {
-            "joomlaLinks": [
-                {
-                    "type": "component",
-                    "name": "com_proclaim"
-                },
-                {
-                    "type": "module",
-                    "name": "mod_proclaim",
-                    "client": "site"
-                },
-                {
-                    "type": "module",
-                    "name": "mod_proclaim_podcast",
-                    "client": "site"
-                },
-                {
-                    "type": "module",
-                    "name": "mod_proclaim_youtube",
-                    "client": "site"
-                },
-                {
-                    "type": "module",
-                    "name": "mod_proclaimicon",
-                    "client": "administrator"
-                },
-                {
-                    "type": "plugin",
-                    "group": "finder",
-                    "element": "proclaim"
-                },
-                {
-                    "type": "plugin",
-                    "group": "schemaorg",
-                    "element": "proclaim"
-                },
-                {
-                    "type": "plugin",
-                    "group": "system",
-                    "element": "proclaim"
-                },
-                {
-                    "type": "plugin",
-                    "group": "task",
-                    "element": "proclaim"
-                },
-                {
-                    "type": "plugin",
-                    "group": "webservices",
-                    "element": "proclaim"
-                }
-            ]
-        }
-    },
-    "scripts": {
-        "test": "phpunit",
-        "test:unit": "phpunit --testsuite 'Asset Contract Tests,Query Contract Tests,Migration SQL Contract Tests,Admin Field Tests,Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Api View Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests,Plugin Schemaorg Tests'",
-        "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Table Tests,Integration Admin Model Tests,Integration Admin Addon Tests,Integration Site Model Tests,Integration Site Helper Tests'",
-        "test:js": "npm test",
-        "test:e2e": "npm run test:e2e",
-        "test:a11y": "npx playwright test --grep @a11y --project=admin-j6 --project=site-j6",
-        "test:api": [
-            "@test:install",
-            "npx playwright test --project=api-test"
-        ],
-        "test:all": [
-            "@test",
-            "@test:js"
-        ],
-        "test:reset-testsite": "@php build/reset-testsite.php",
-        "test:migrations": "@php build/verify-migrations.php",
-        "verify:update-stream": "@php build/verify-update-stream.php",
-        "test:install": "bash build/test-install.sh",
-        "test:upgrade": "bash build/test-upgrade.sh",
-        "test:release": [
-            "@test:install",
-            "@test:upgrade",
-            "@test:e2e"
-        ],
-        "lint:syntax": "find admin/src api/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
-        "lint:queries": "sh build/lint-queries.sh",
-        "lint": "php-cs-fixer fix --dry-run --diff",
-        "lint:fix": "php-cs-fixer fix",
-        "check": [
-            "@lint:syntax",
-            "@lint:queries",
-            "@lint",
-            "@test"
-        ],
-        "check:all": [
-            "@lint:syntax",
-            "@lint:queries",
-            "@lint",
-            "@test:all"
-        ],
-        "build:assets": "npm ci && npm run build",
-        "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
-        "build:full": [
-            "@check:all",
-            "@build"
-        ],
-        "setup": "cwm-setup",
-        "joomla-install": "cwm-joomla-install",
-        "joomla-latest": "cwm-joomla-latest",
-        "symlink": "cwm-link",
-        "symlink:check": "cwm-link-check",
-        "verify": "cwm-verify",
-        "clean": "cwm-clean",
-        "build": "cwm-build",
-        "package": "cwm-package",
-        "version": "cwm-bump",
-        "sync-languages": "cwm-sync-languages",
-        "sync-languages-force": "cwm-sync-languages --force",
-        "sync-languages-setup": "cwm-sync-languages setup",
-        "sync-configs": "cwm-sync-configs",
-        "vendor:check": "node libraries/vendor/cwm/build-tools/templates/vendor-check.js",
-        "vendor:update": "node libraries/vendor/cwm/build-tools/templates/vendor-update.js",
-        "post-install-cmd": [
-            "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
-            "@joomla-cms-deps"
-        ],
-        "joomla-cms-deps": "cwm-joomla-cms-deps",
-        "changelog": "cwm-changelog",
-        "ars-publish": "cwm-ars-publish",
-        "ars-list": "cwm-ars-list",
-        "cwm-article": "cwm-article",
-        "release": "cwm-release",
-        "jed-prep": "bash build/jed-prep.sh",
-        "release:wiki": "bash build/sync-wiki-version.sh"
+    {
+      "name": "Brent Cordis",
+      "email": "info@christianwebministries.org",
+      "homepage": "https://www.christianwebministries.org",
+      "role": "Lead Developer"
     }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools"
+    }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "8.3.0"
+    },
+    "vendor-dir": "libraries/vendor",
+    "github-protocols": [
+      "https"
+    ],
+    "allow-plugins": {}
+  },
+  "support": {
+    "issues": "https://www.christianwebministries.org/issues",
+    "forum": "https://www.christianwebministries.org/forum",
+    "docs": "https://www.christianwebministries.org/docs"
+  },
+  "autoload": {
+    "psr-4": {
+      "CWM\\Component\\Proclaim\\Administrator\\": "admin/src/",
+      "CWM\\Component\\Proclaim\\Api\\": "api/src/",
+      "CWM\\Component\\Proclaim\\Site\\": "site/src/",
+      "CWM\\Library\\Scripture\\": "libraries/lib_cwmscripture/src/"
+    },
+    "exclude-from-classmap": [
+      "/admin/src/Addons/Servers/Youtube/vendor/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CWM\\Component\\Proclaim\\Tests\\": "tests/unit/"
+    }
+  },
+  "require": {
+    "php": "^8.3.0",
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-simplexml": "*",
+    "ext-gd": "*",
+    "simplepie/simplepie": "^1.8",
+    "google/recaptcha": "^1.3",
+    "psr/log": "^3.0",
+    "composer/ca-bundle": "^1.3",
+    "ext-zip": "*",
+    "ext-libxml": "*",
+    "ext-fileinfo": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.5",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phan/phan": "^6.0",
+    "roave/security-advisories": "dev-latest",
+    "pdepend/pdepend": "^2.16",
+    "phpmd/phpmd": "^2.15",
+    "cwm/build-tools": "^1.18.1",
+    "joomla/database": "^4.0",
+    "joomla/registry": "^4.0",
+    "joomla/di": "^4.0",
+    "joomla/event": "^4.0",
+    "joomla/input": "^4.0",
+    "joomla/filter": "^4.0",
+    "joomla/filesystem": "^4.0",
+    "joomla/uri": "^4.0",
+    "joomla/application": "^4.0",
+    "joomla/string": "^4.0"
+  },
+  "replace": {
+    "paragonie/random_compat": "9.99.99",
+    "symfony/polyfill-php80": "*",
+    "symfony/polyfill-php81": "*"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x-dev"
+    },
+    "cwm-build-tools": {
+      "joomlaLinks": [
+        { "type": "component", "name": "com_proclaim" },
+        { "type": "module",    "name": "mod_proclaim",         "client": "site" },
+        { "type": "module",    "name": "mod_proclaim_podcast", "client": "site" },
+        { "type": "module",    "name": "mod_proclaim_youtube", "client": "site" },
+        { "type": "module",    "name": "mod_proclaimicon",     "client": "administrator" },
+        { "type": "plugin",    "group": "finder",      "element": "proclaim" },
+        { "type": "plugin",    "group": "schemaorg",   "element": "proclaim" },
+        { "type": "plugin",    "group": "system",      "element": "proclaim" },
+        { "type": "plugin",    "group": "task",        "element": "proclaim" },
+        { "type": "plugin",    "group": "webservices", "element": "proclaim" }
+      ]
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test:unit": "phpunit --testsuite 'Asset Contract Tests,Query Contract Tests,Migration SQL Contract Tests,Admin Field Tests,Admin Helper Tests,Admin Lib Tests,Admin Api Controller Tests,Admin Api View Tests,Admin Bible Tests,Admin Controller Tests,Admin Model Tests,Site Helper Tests,Site Controller Tests,Site Model Tests,Site Bible Tests,Plugin Schemaorg Tests'",
+    "test:integration": "phpunit --testsuite 'Integration Admin Helper Tests,Integration Admin Lib Tests,Integration Admin Table Tests,Integration Admin Model Tests,Integration Admin Addon Tests,Integration Site Model Tests,Integration Site Helper Tests'",
+    "test:js": "npm test",
+    "test:e2e": "npm run test:e2e",
+    "test:a11y": "npx playwright test --grep @a11y --project=admin-j6 --project=site-j6",
+    "test:api": ["@test:install", "npx playwright test --project=api-test"],
+    "test:all": ["@test", "@test:js"],
+    "test:reset-testsite": "@php build/reset-testsite.php",
+    "test:migrations": "@php build/verify-migrations.php",
+    "verify:update-stream": "@php build/verify-update-stream.php",
+    "test:install": "bash build/test-install.sh",
+    "test:upgrade": "bash build/test-upgrade.sh",
+    "test:release": ["@test:install", "@test:upgrade", "@test:e2e"],
+    "lint:syntax": "find admin/src api/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
+    "lint:queries": "sh build/lint-queries.sh",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "lint:fix": "php-cs-fixer fix",
+    "check": ["@lint:syntax", "@lint:queries", "@lint", "@test"],
+    "check:all": ["@lint:syntax", "@lint:queries", "@lint", "@test:all"],
+    "build:assets": "npm ci && npm run build",
+    "build:bridge": "cd build/migration-bridge && zip -r ../packages/proclaim_bridge_v1.0.0.zip proclaim_bridge.xml script.php index.html",
+    "build:full": ["@check:all", "@build"],
+    "setup": "cwm-setup",
+    "joomla-install": "cwm-joomla-install",
+    "joomla-latest": "cwm-joomla-latest",
+    "symlink": "cwm-link",
+    "symlink:check": "cwm-link-check",
+    "verify": "cwm-verify",
+    "clean": "cwm-clean",
+    "build": "cwm-build",
+    "package": "cwm-package",
+    "version": "cwm-bump",
+    "sync-languages": "cwm-sync-languages",
+    "sync-languages-force": "cwm-sync-languages --force",
+    "sync-languages-setup": "cwm-sync-languages setup",
+    "sync-configs": "cwm-sync-configs",
+    "vendor:check": "node libraries/vendor/cwm/build-tools/templates/vendor-check.js",
+    "vendor:update": "node libraries/vendor/cwm/build-tools/templates/vendor-update.js",
+    "post-install-cmd": [
+      "@php -r \"if (!file_exists('build.properties')) { copy('build.dist.properties', 'build.properties'); echo 'Created build.properties from template. Run composer setup to configure.\\n'; }\"",
+      "@joomla-cms-deps"
+    ],
+    "joomla-cms-deps": "cwm-joomla-cms-deps",
+    "changelog": "cwm-changelog",
+    "ars-publish": "cwm-ars-publish",
+    "ars-list": "cwm-ars-list",
+    "cwm-article": "cwm-article",
+    "release": "cwm-release",
+    "jed-prep": "bash build/jed-prep.sh",
+    "release:wiki": "bash build/sync-wiki-version.sh"
+  }
 }
