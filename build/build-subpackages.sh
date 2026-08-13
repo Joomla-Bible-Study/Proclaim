@@ -31,6 +31,34 @@ if [ ! -f "${LIB_DIR}/cwm-build.config.json" ] || [ ! -f "${PLG_DIR}/cwm-build.c
     exit 1
 fi
 
+# Install a sub-project's composer dependencies when the build script the
+# packager will invoke is missing.
+#
+# Guarded on that entry point rather than on the vendor directory: a
+# vendor/cwm/build-tools that exists but predates the script passes a directory
+# test, the install is skipped, and the build then runs against stale tooling
+# (#1760). That is how the nested lib_cwmscripture clone sat on a 2026-05-08
+# install while its composer.lock pinned v1.15.1.
+#
+# Called for every sub-project the packager enters, not only those with npm
+# assets. pkg_proclaim subBuilds into content/scripturelinks, which has no
+# package.json — so while this lived inside build_npm_assets() that submodule's
+# vendor was never installed, and a clean-install build died on
+# "buildScript not found: .../scripts/package.php" (#1758).
+ensure_vendor() {
+    local dir="$1"
+    local needs="$2"
+
+    if [ ! -f "${dir}/composer.json" ]; then
+        return 0
+    fi
+
+    if [ ! -f "${dir}/vendor/cwm/build-tools/${needs}" ]; then
+        echo "   composer install (${dir#"${ROOT}"/})"
+        ( cd "${dir}" && composer install --no-interaction --prefer-dist --quiet )
+    fi
+}
+
 # Build a submodule's npm assets when it has them. The min files are
 # gitignored, so a fresh clone (CI, a new contributor) has none, and each
 # submodule's ensure-minified gate rightly refuses to package without them.
@@ -47,11 +75,6 @@ build_npm_assets() {
         return 0
     fi
 
-    if [ -f "${dir}/composer.json" ] && [ ! -d "${dir}/vendor/cwm/build-tools" ]; then
-        echo "   composer install (${dir#"${ROOT}"/})"
-        ( cd "${dir}" && composer install --no-interaction --prefer-dist --quiet )
-    fi
-
     if [ ! -d "${dir}/node_modules" ]; then
         echo "   npm ci (${dir#"${ROOT}"/})"
         ( cd "${dir}" && npm ci --no-audit --no-fund --silent )
@@ -61,6 +84,7 @@ build_npm_assets() {
 }
 
 echo "-- building lib_cwmscripture (npm + cwm-build)"
+ensure_vendor "${LIB_DIR}" "scripts/build.php"
 build_npm_assets "${LIB_DIR}"
 ( cd "${LIB_DIR}" && "${BIN}/cwm-build" )
 
@@ -69,10 +93,12 @@ build_npm_assets "${LIB_DIR}"
 # clean clone dies with "no zip matched" (or worse, silently bundles a
 # stale zip a local tree happened to retain).
 echo "-- building scripturelinks' nested lib_cwmscripture (npm + cwm-build)"
+ensure_vendor "${NESTED_LIB_DIR}" "scripts/build.php"
 build_npm_assets "${NESTED_LIB_DIR}"
 ( cd "${NESTED_LIB_DIR}" && "${BIN}/cwm-build" )
 
 echo "-- building content/scripturelinks (cwm-package)"
+ensure_vendor "${PLG_DIR}" "scripts/package.php"
 ( cd "${PLG_DIR}" && "${BIN}/cwm-package" )
 
 echo "Sub-packages built."
