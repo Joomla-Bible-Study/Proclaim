@@ -68,15 +68,27 @@ class Cwmdownload
         $registry->loadString($template->params);
         $params = $registry;
 
+        // The study and series levels come along because a media file is only
+        // as reachable as the message it belongs to — see the access check below.
         $query = $db->createQuery();
         $query->select(
             $db->quoteName('#__bsms_mediafiles') . '.*,'
             . $db->quoteName('#__bsms_servers.id', 'ssid') . ', ' . $db->quoteName('#__bsms_servers.params', 'sparams')
+            . ', ' . $db->quoteName('study.access', 'study_access')
+            . ', ' . $db->quoteName('series.access', 'series_access')
         )
             ->from($db->quoteName('#__bsms_mediafiles'))
             ->leftJoin(
                 $db->quoteName('#__bsms_servers') . ' ON ('
                 . $db->quoteName('#__bsms_servers.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.server_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_studies', 'study') . ' ON ('
+                . $db->quoteName('study.id') . ' = ' . $db->quoteName('#__bsms_mediafiles.study_id') . ')'
+            )
+            ->leftJoin(
+                $db->quoteName('#__bsms_series', 'series') . ' ON ('
+                . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id') . ')'
             )
             ->where($db->quoteName('#__bsms_mediafiles.id') . ' = ' . $mid)
             ->where($db->quoteName('#__bsms_mediafiles.published') . ' = 1');
@@ -88,11 +100,24 @@ class Cwmdownload
             $this->sendError($app, 404, 'Media not found');
         }
 
-        // Verify the current user has the required access level
-        $user         = $app->getIdentity();
-        $accessLevels = $user->getAuthorisedViewLevels();
+        // A media file is only as reachable as the message it belongs to, and
+        // the series that message is in. Checking the file's own level alone
+        // let a Public file hang off a Registered message and be downloaded by
+        // anyone — j6-dev had seven of those.
+        //
+        // Every level in the chain must be satisfied, rather than picking the
+        // "most restrictive" one: Joomla view levels are arbitrary sets of user
+        // groups with no ordering between them, so there is no such thing as
+        // the strictest of Registered, Special and Guest. Requiring all of them
+        // is the same rule the listing queries already apply to study + series
+        // (CwmsermonsModel::getListQuery()).
+        //
+        // ⚠️ This gates Proclaim's download route only. A file stored under the
+        // web root is still served directly by the web server, which never
+        // enters PHP — see #1774.
+        $user = $app->getIdentity();
 
-        if (isset($media->access) && !\in_array((int) $media->access, $accessLevels, true)) {
+        if (!self::isAccessible($media, $user->getAuthorisedViewLevels())) {
             $this->sendError($app, 403, 'Access denied');
         }
 
@@ -213,6 +238,51 @@ class Cwmdownload
      *
      * @since   10.0.0
      */
+    /**
+     * Whether a user holding these view levels may reach this media file.
+     *
+     * A media file is only as reachable as the message it belongs to, and the
+     * series that message is in. Checking the file's own level alone let a
+     * Public file hang off a Registered message and be downloaded by anyone.
+     *
+     * Every level in the chain has to be satisfied, rather than reducing them
+     * to whichever is "most restrictive": Joomla view levels are arbitrary sets
+     * of user groups with no ordering between them, so there is no strictest of
+     * Registered, Special and Guest to pick. Requiring all of them is the rule
+     * the listing queries already apply to study + series — see
+     * `CwmsermonsModel::getListQuery()`.
+     *
+     * A null level means that link in the chain is absent (a media file with no
+     * study, or a study in no series) and constrains nothing.
+     *
+     * ⚠️ This governs Proclaim's download route only. A file stored under the
+     * web root is served by the web server without ever entering PHP, so no
+     * check here can protect it — see #1774.
+     *
+     * @param   object        $media   Media row, joined to its study and series levels.
+     * @param   array<int>    $levels  The user's authorised view levels.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isAccessible(object $media, array $levels): bool
+    {
+        $required = [
+            $media->access ?? null,
+            $media->study_access ?? null,
+            $media->series_access ?? null,
+        ];
+
+        foreach ($required as $level) {
+            if ($level !== null && !\in_array((int) $level, $levels, true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected function sendError(CMSApplication $app, int $code, string $message): never
     {
         $statusText = match ($code) {
