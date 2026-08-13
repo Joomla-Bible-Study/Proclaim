@@ -105,12 +105,14 @@
             { "from": "build/language/en-GB/en-GB.pkg_proclaim.sys.ini",
               "to":   "language/en-GB/en-GB.pkg_proclaim.sys.ini" }
         ],
-        "_includes_comment": "The scripture stack ships as pkg_cwmscripture but is deliberately NOT a child of pkg_proclaim — build/pkg_proclaim.xml does not list it. A package removes exactly what its <files> declares, by element+type lookup and without consulting package_id, so listing it would make uninstalling Proclaim remove a stack that ScriptureLinks or Living Word may still be using (#1675). It rides along in packages/ and script.install.php's preflight installs it. `includes` decides what goes INTO the zip; <files> decides what Joomla installs and removes — the two lists are independent, which is what makes this possible. Built fresh by build/build-subpackages.sh (run before cwm-package) and consumed here as a `prebuilt` artifact.",
+        "_includes_comment": "The scripture stack ships as pkg_cwmscripture but is deliberately NOT a child of pkg_proclaim — build/pkg_proclaim.xml does not list it. A package removes exactly what its <files> declares, by element+type lookup and without consulting package_id, so listing it would make uninstalling Proclaim remove a stack that ScriptureLinks or Living Word may still be using (#1675). It rides along in packages/ and script.install.php's preflight installs it. `includes` decides what goes INTO the zip; <files> decides what Joomla installs and removes — the two lists are independent, which is what makes this possible. Built via `subBuild`, which runs the ScriptureLinks package build itself. It used to be a `prebuilt` artifact relying on build/build-subpackages.sh having run first — but cwm-release invokes `build.command` (plain cwm-package), never that script, so releases bundled whatever pkg_cwmscripture zip was newest on disk rather than the pinned submodule (#1757).",
         "includes": [
             {
-                "type":       "prebuilt",
-                "distGlob":   "plugins/content/scripturelinks/build/dist/pkg_cwmscripture-*.zip",
-                "outputName": "pkg_cwmscripture.zip"
+                "type":        "subBuild",
+                "path":        "plugins/content/scripturelinks",
+                "buildScript": "vendor/cwm/build-tools/scripts/package.php",
+                "distGlob":    "build/dist/pkg_cwmscripture-*.zip",
+                "outputName":  "pkg_cwmscripture.zip"
             },
             {
                 "type":       "self",
