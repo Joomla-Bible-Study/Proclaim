@@ -37,6 +37,12 @@ on:
       # two paths, so this roughly triples how often the job runs.
       - 'admin/src/Model/**'
       - 'admin/src/Table/**'
+      # ⚠️ The bundled scripture library and its plugin ship inside the package
+      # this job installs and render the front end it checks. A pin move is a
+      # one-line diff that replaces that shipped code wholesale, so these need
+      # to be here for the job to see it.
+      - 'libraries/**'
+      - 'plugins/content/scripturelinks'
       - 'tests/e2e/**'
       - 'build/test-install.sh'
       - 'build/build-package.sh'
