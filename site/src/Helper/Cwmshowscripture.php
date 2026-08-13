@@ -643,7 +643,22 @@ class Cwmshowscripture
 
     public function formReference($row): string
     {
-        $book      = str_replace(' ', '+', Text::_($row->bookname));
+        // Ask the library for the name rather than translating the key here.
+        // ScriptureHelper::getBookName() loads lib_cwmscripture's own language
+        // file first; a bare Text::_() only resolves if something else happened
+        // to load a file carrying JBS_BBK_*, which used to be com_proclaim's own
+        // duplicate copy of those keys (#1761).
+        $name = !empty($row->booknumber)
+            ? CwmscriptureHelper::getBookName((int) $row->booknumber)
+            : '';
+
+        // Legacy rows predate the book number, and a row can still arrive with
+        // only the key — fall back rather than render an empty book name.
+        if ($name === '') {
+            $name = Text::_($row->bookname);
+        }
+
+        $book      = str_replace(' ', '+', $name);
         $reference = $book . '+' . $row->chapter_begin;
 
         if (!empty($row->verse_begin)) {

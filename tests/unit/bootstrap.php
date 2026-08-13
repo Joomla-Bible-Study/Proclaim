@@ -166,6 +166,25 @@ if ($joomlaCmsPath !== '' && is_dir($joomlaCmsPath)) {
             \define('JPATH_LIBRARIES', $rootDir . '/libraries');
         }
 
+        // lib_cwmscripture loads its own language file from
+        // JPATH_LIBRARIES/cwmscripture — the *installed* name, which differs from
+        // the repo's libraries/lib_cwmscripture because the manifest declares
+        // <libraryname>cwmscripture</libraryname>. A deployed site bridges the two
+        // with a symlink; a bare CMS checkout used only for tests does not, so the
+        // load silently failed and every JBS_BBK_* key came back as itself.
+        //
+        // That went unnoticed while com_proclaim shipped its own duplicate copy of
+        // those keys: the strings resolved from the component, so the tests passed
+        // without the library ever being consulted (#1761).
+        $linkTarget = \dirname(__DIR__, 2) . '/libraries/lib_cwmscripture';
+        $linkPath   = JPATH_LIBRARIES . '/cwmscripture';
+
+        if (!file_exists($linkPath) && is_dir($linkTarget)) {
+            // Best effort: a failure here is not fatal, it just restores the old
+            // behaviour of unresolved keys.
+            @symlink($linkTarget, $linkPath);
+        }
+
         if (!\defined('JPATH_CACHE')) {
             \define('JPATH_CACHE', $rootDir . '/administrator/cache');
         }
