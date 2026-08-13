@@ -115,4 +115,128 @@ class CwmprotectedStorageTest extends ProclaimTestCase
             'A remote object is not ours to relocate — which is not the same as it being unprotectable.'
         );
     }
+
+    // -----------------------------------------------------------------
+    // path containment — the check that must not be decorative
+    // -----------------------------------------------------------------
+
+    /**
+     * The sibling-prefix case. Without the trailing separator, /var/www-evil
+     * passes a prefix test against /var/www and the guard means nothing.
+     */
+    public function testASiblingDirectoryIsNotInside(): void
+    {
+        self::assertFalse(CwmprotectedStorage::isInside('/var/www-evil/x.mp3', '/var/www'));
+        self::assertFalse(CwmprotectedStorage::isInside('/var/wwwsomething', '/var/www'));
+    }
+
+    public function testRealChildrenAreInside(): void
+    {
+        self::assertTrue(CwmprotectedStorage::isInside('/var/www/x.mp3', '/var/www'));
+        self::assertTrue(CwmprotectedStorage::isInside('/var/www/deep/er/x.mp3', '/var/www'));
+        self::assertTrue(
+            CwmprotectedStorage::isInside('/var/www', '/var/www'),
+            'The root itself is inside itself.'
+        );
+    }
+
+    public function testATrailingSlashOnTheRootDoesNotBreakIt(): void
+    {
+        self::assertTrue(CwmprotectedStorage::isInside('/var/www/x.mp3', '/var/www/'));
+    }
+
+    public function testEmptyPathsAreNeverInside(): void
+    {
+        self::assertFalse(CwmprotectedStorage::isInside('', '/var/www'));
+        self::assertFalse(CwmprotectedStorage::isInside('/var/www/x', ''));
+    }
+
+    // -----------------------------------------------------------------
+    // collisions — two services, one sermon.mp3
+    // -----------------------------------------------------------------
+
+    public function testAFreeNameIsUsedAsIs(): void
+    {
+        $dir = $this->tempDir();
+
+        try {
+            self::assertSame('sermon.mp3', CwmprotectedStorage::uniqueName($dir, 'sermon.mp3'));
+        } finally {
+            $this->cleanup($dir);
+        }
+    }
+
+    /** Overwriting would destroy a file this class exists to look after. */
+    public function testATakenNameIsNotOverwritten(): void
+    {
+        $dir = $this->tempDir();
+        file_put_contents($dir . '/sermon.mp3', 'first');
+
+        try {
+            $name = CwmprotectedStorage::uniqueName($dir, 'sermon.mp3');
+
+            self::assertNotSame('sermon.mp3', $name);
+            self::assertStringEndsWith('.mp3', $name, 'The extension has to survive.');
+            self::assertFileDoesNotExist($dir . '/' . $name);
+        } finally {
+            $this->cleanup($dir);
+        }
+    }
+
+    public function testAnExtensionlessNameStillGetsUniquified(): void
+    {
+        $dir = $this->tempDir();
+        file_put_contents($dir . '/README', 'first');
+
+        try {
+            self::assertNotSame('README', CwmprotectedStorage::uniqueName($dir, 'README'));
+        } finally {
+            $this->cleanup($dir);
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // moving in
+    // -----------------------------------------------------------------
+
+    /** The stored filename is administrator-editable, so it is untrusted. */
+    public function testItRefusesPathsThatEscapeTheSiteRoot(): void
+    {
+        foreach (['../../../etc/passwd', '/etc/passwd', ''] as $path) {
+            self::assertNull(
+                CwmprotectedStorage::moveInto($path),
+                \sprintf('%s must not be movable.', $path === '' ? '(empty)' : $path)
+            );
+        }
+    }
+
+    public function testItRefusesAFileThatDoesNotExist(): void
+    {
+        self::assertNull(CwmprotectedStorage::moveInto('images/biblestudy/nope-' . bin2hex(random_bytes(4)) . '.mp3'));
+    }
+
+    /**
+     * @return string
+     */
+    private function tempDir(): string
+    {
+        $dir = sys_get_temp_dir() . '/cwm-ps-' . bin2hex(random_bytes(6));
+        mkdir($dir, 0o777, true);
+
+        return $dir;
+    }
+
+    /**
+     * @param   string  $dir  Directory to remove.
+     *
+     * @return void
+     */
+    private function cleanup(string $dir): void
+    {
+        foreach (glob($dir . '/*') ?: [] as $f) {
+            @unlink($f);
+        }
+
+        @rmdir($dir);
+    }
 }

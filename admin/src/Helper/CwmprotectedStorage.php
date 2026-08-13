@@ -236,4 +236,129 @@ class CwmprotectedStorage
     {
         return CwmmediaProtectionHelper::isServedByWebServer($resolvedUrl);
     }
+
+    /**
+     * Is this absolute path inside this root?
+     *
+     * Pure, and separated because getting it wrong is how a path check becomes
+     * decorative. The trailing separator matters: without it `/var/www-evil`
+     * passes a prefix test against `/var/www`.
+     *
+     * Both sides are expected to be already resolved — symlinks and `..`
+     * removed — because this cannot do that for a path that does not exist.
+     *
+     * @param   string  $absolute  Resolved absolute path to test.
+     * @param   string  $root      Resolved absolute root it must be under.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function isInside(string $absolute, string $root): bool
+    {
+        if ($absolute === '' || $root === '') {
+            return false;
+        }
+
+        $root = rtrim($root, '/\\');
+
+        return $absolute === $root || str_starts_with($absolute, $root . '/');
+    }
+
+    /**
+     * A filename that will not overwrite something already in the directory.
+     *
+     * Collisions are likely rather than exotic: two services in one week both
+     * uploading `sermon.mp3` is the normal case, and silently replacing the
+     * first would destroy a file this class exists to look after.
+     *
+     * @param   string  $dir       Directory the file will land in.
+     * @param   string  $basename  Desired filename.
+     *
+     * @return  string  A name not currently taken in that directory.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function uniqueName(string $dir, string $basename): string
+    {
+        $dir = rtrim($dir, '/\\');
+
+        if (!file_exists($dir . '/' . $basename)) {
+            return $basename;
+        }
+
+        $extension = pathinfo($basename, PATHINFO_EXTENSION);
+        $stem      = pathinfo($basename, PATHINFO_FILENAME);
+        $suffix    = $extension === '' ? '' : '.' . $extension;
+
+        for ($i = 1; $i < 1000; $i++) {
+            $candidate = $stem . '-' . $i . $suffix;
+
+            if (!file_exists($dir . '/' . $candidate)) {
+                return $candidate;
+            }
+        }
+
+        // A thousand collisions on one name is not a case worth an algorithm.
+        return $stem . '-' . bin2hex(random_bytes(6)) . $suffix;
+    }
+
+    /**
+     * Move a self-hosted media file into protected storage.
+     *
+     * ⚠️ Only restricted media belongs here. Everything public should stay
+     * where it is and keep being served by the web server directly — moving it
+     * would put every download through PHP for no benefit, and the proxy cost
+     * should scale with the restricted material rather than the whole library.
+     *
+     * Refuses anything that does not resolve to a real file inside the site
+     * root. The stored filename comes from the database, which an administrator
+     * can edit, so it is treated as untrusted: resolved first, checked second,
+     * moved only if both hold.
+     *
+     * @param   string  $relativePath  Current path of the file, relative to the site root.
+     *
+     * @return  string|null  The new site-relative path, or null if it could not be moved.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function moveInto(string $relativePath): ?string
+    {
+        $relativePath = ltrim(trim($relativePath), '/');
+
+        if ($relativePath === '') {
+            return null;
+        }
+
+        $root   = realpath(JPATH_ROOT);
+        $source = realpath(rtrim(JPATH_ROOT, '/\\') . '/' . $relativePath);
+
+        // Missing, or resolving outside the site — either way, not ours to move.
+        if ($root === false || $source === false || !is_file($source)) {
+            return null;
+        }
+
+        if (!self::isInside($source, $root)) {
+            return null;
+        }
+
+        // Already where it should be. Idempotent so a repeated call — a retried
+        // request, a re-run migration — is harmless rather than a second move.
+        if (self::isInside($source, realpath(self::path()) ?: self::path())) {
+            return $relativePath;
+        }
+
+        if (!self::ensure()) {
+            return null;
+        }
+
+        $name        = self::uniqueName(self::path(), basename($source));
+        $destination = self::path() . '/' . $name;
+
+        if (!@rename($source, $destination)) {
+            return null;
+        }
+
+        return self::RELATIVE_PATH . '/' . $name;
+    }
 }
