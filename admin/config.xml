@@ -165,6 +165,33 @@
                 default="0"
                 filter="int"
         />
+        <!--
+            Protected-media state, written by CwmprotectedStorage rather than
+            by anyone editing this form. Declared only so that saving Options
+            does not drop it: the component save binds the submitted fields
+            over the whole params blob, so an undeclared value disappears the
+            first time an administrator presses Save.
+
+            Losing it is not harmful - the next check re-probes and rewrites
+            both - but it would mean a needless HTTP round trip after every
+            Options save, and a value that appears to reset for no reason.
+
+            Not authoritative. The status is re-taken weekly regardless of what
+            is stored here, so an edited value corrects itself rather than
+            silently suppressing a warning for good.
+        -->
+        <field
+                name="protected_media_status"
+                type="hidden"
+                default=""
+                filter="string"
+        />
+        <field
+                name="protected_media_checked"
+                type="hidden"
+                default="0"
+                filter="int"
+        />
     </fieldset>
     <fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL"
               description="JCONFIG_PERMISSIONS_DESC">
