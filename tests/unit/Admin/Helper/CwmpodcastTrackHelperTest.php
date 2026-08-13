@@ -11,6 +11,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Admin\Helper;
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediaStreamer;
 use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use Joomla\CMS\Factory;
@@ -117,7 +118,7 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
 
     private function invokeIsLocalHost(string $siteHost, string $target): bool
     {
-        $method = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'isLocalHost');
+        $method = new \ReflectionMethod(CwmmediaStreamer::class, 'isLocalHost');
 
         return $method->invoke(null, $siteHost, $target);
     }
@@ -184,7 +185,7 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
      */
     public function testStreamRemoteFileRelaysTheLocationHeader(): void
     {
-        $reflection = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $reflection = new \ReflectionMethod(CwmmediaStreamer::class, 'streamRemoteFile');
         $lines      = file($reflection->getFileName());
         $body       = implode(
             '',
@@ -213,7 +214,7 @@ class CwmpodcastTrackHelperTest extends ProclaimTestCase
      */
     public function testStreamRemoteFileSetsALowSpeedStallGuard(): void
     {
-        $reflection = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $reflection = new \ReflectionMethod(CwmmediaStreamer::class, 'streamRemoteFile');
         $lines      = file($reflection->getFileName());
         $body       = implode(
             '',
