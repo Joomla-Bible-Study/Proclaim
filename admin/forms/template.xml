@@ -223,7 +223,7 @@
                    label="JBS_MED_MEDIA_POPUPMARGIN" description="JBS_TPL_MEDIA_POPUPMARGIN_DESC"/>
             <field name="popupbackground" type="ColorPicker" default="black"
                    label="JBS_TPL_MEDIA_POPUPBACKGROUND" description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
-            <field name="popupimage" type="media" size="75" directory="com_proclaim/images"
+            <field name="popupimage" type="media" size="75" directory="biblestudy"
                    default="media/com_proclaim/images/speaker24.png" label="JBS_TPL_MEDIA_POPUPIMAGE"
                    description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
             <field name="media_popout_yes" type="radio" default="1"
