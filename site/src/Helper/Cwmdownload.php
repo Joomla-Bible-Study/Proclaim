@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Site\Helper;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmDebug;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediaStreamer;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
@@ -142,50 +143,32 @@ class Cwmdownload
             'download'
         );
 
-        // Optimization: Check if a file is local to avoid HTTP loopback and get an accurate size
-        if ($download_file) {
-            $root = Uri::root();
-            if (str_starts_with($download_file, $root)) {
-                $relativePath = substr($download_file, \strlen($root));
-                $localPath    = JPATH_ROOT . '/' . $relativePath;
-                // Clean up path
-                $localPath = str_replace('//', '/', $localPath);
+        // Streaming is CwmmediaStreamer's job — it resolves the target to local
+        // disk or proxies it, and it is the same implementation the podcast
+        // redirect uses, so there is one Range/HEAD/If-Modified-Since handler
+        // rather than two (#1774).
+        //
+        // What this replaces was weaker in two ways: it sent Content-Length and
+        // readfile() with no Range support, so a browser could not seek in
+        // gated audio or video; and its remote branch fopen()ed an
+        // admin-configured URL and relayed the response to the caller with no
+        // SSRF guard — the shape that was patched for the podcast endpoint in
+        // 10.5.5 (#1426) but never here.
+        //
+        // Access was already checked above. The streamer answers how to send a
+        // file, never whether to.
 
-                if (file_exists($localPath)) {
-                    $download_file = $localPath;
-                    $isLocal       = true;
-                }
-            }
-        }
-
-        if ((int) $params->get('size', 0) === 0) {
-            if ($isLocal) {
-                $getSize = filesize($download_file);
-            } else {
-                $getSize = Cwmhelper::getRemoteFileSize($download_file);
-            }
-        } else {
-            $getSize = $params->get('size', 0);
-        }
-
-        // Disable the time limit and close the session to prevent locking
-        @set_time_limit(0);
-        ignore_user_abort(false);
+        // Long downloads should not hold the session lock.
         if (session_id()) {
             session_write_close();
         }
 
-        ini_set('output_buffering', 0);
-        ini_set('zlib.output_compression', 0);
-
-        // Clean the output buffer, Added to fix ZIP file corruption
-        while (ob_get_level()) {
-            @ob_end_clean();
-        }
-
+        // Headers the streamer does not set. It owns Content-Type,
+        // Content-Length, Accept-Ranges, Content-Range and Last-Modified —
+        // Content-Length especially, which has to reflect the range served
+        // rather than the whole file.
+        $safeFilename = preg_replace('/[^\w.\-]/', '_', basename((string) $params->get('filename')));
         header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        $safeFilename = preg_replace('/[^\w.\-]/', '_', basename($params->get('filename')));
         header('Content-Disposition: attachment; filename="' . $safeFilename . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -193,38 +176,18 @@ class Cwmdownload
         header('Pragma: public');
         header('Content-Transfer-Encoding: binary');
 
-        if ($getSize > 0) {
-            header('Content-Length: ' . $getSize);
-        }
-
-        // Flush headers before streaming
-        flush();
-
-        if ($isLocal) {
-            readfile($download_file);
-        } else {
-            // Bytes per chunk (8 KB) - Reduced from 10MB to save memory
-            $chunk = 8 * 1024;
-
-            $fh = @fopen($download_file, 'rb');
-
-            if (!$fh) {
-                CwmDebug::log('download fopen failed path=' . $download_file, 'download');
-
-                // We cannot send a 500 error cleanly if headers are already sent, but we can try
-                exit;
-            }
-
-            // Repeat reading until EOF
-            while (!feof($fh)) {
-                echo fread($fh, $chunk);
-                flush();
-            }
-
-            fclose($fh);
-        }
-
-        $app->close();
+        // Uri::root(), not the incoming Host header: that is client-supplied
+        // and proxy-rewritable, so comparing against it misroutes local media
+        // down the remote path (#1552).
+        CwmmediaStreamer::serve(
+            $download_file,
+            'application/octet-stream',
+            (string) (parse_url(Uri::root(), PHP_URL_HOST) ?: ''),
+            (string) $input->server->getString('HTTP_RANGE', ''),
+            (string) $input->server->getString('HTTP_IF_MODIFIED_SINCE', ''),
+            (string) $input->server->getString('HTTP_IF_NONE_MATCH', ''),
+            strtoupper((string) $input->getMethod()) === 'HEAD'
+        );
     }
 
     /**
