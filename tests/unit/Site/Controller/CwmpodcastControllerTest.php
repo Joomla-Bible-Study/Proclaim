@@ -6,7 +6,7 @@
  *
  * As of #1446, this logic (resolveRange, isLocalHost, streamLocalFile,
  * streamRemoteFile, resolveSafeRemoteIp, terminate) lives in
- * CwmpodcastTrackHelper (admin/src/Helper), not the controller — a pure
+ * CwmmediaStreamer (admin/src/Helper) as of #1774, not the controller — a pure
  * extraction, no behavior change (verified: the SSRF guard, curl options,
  * and range-math method bodies are byte-identical before/after the move,
  * modulo `private function` -> `private static function`). This file stays
@@ -32,7 +32,7 @@
 
 namespace CWM\Component\Proclaim\Tests\Site\Controller;
 
-use CWM\Component\Proclaim\Administrator\Helper\CwmpodcastTrackHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediaStreamer;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -46,7 +46,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      */
     private function resolveRangeMethod(): \ReflectionMethod
     {
-        return new \ReflectionMethod(CwmpodcastTrackHelper::class, 'resolveRange');
+        return new \ReflectionMethod(CwmmediaStreamer::class, 'resolveRange');
     }
 
     /**
@@ -166,7 +166,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      */
     private function isLocalHostMethod(): \ReflectionMethod
     {
-        return new \ReflectionMethod(CwmpodcastTrackHelper::class, 'isLocalHost');
+        return new \ReflectionMethod(CwmmediaStreamer::class, 'isLocalHost');
     }
 
     /**
@@ -245,7 +245,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
     public function testEveryStreamingBranchTerminatesInsteadOfReturning(): void
     {
         foreach (['streamLocalFile', 'streamRemoteFile'] as $methodName) {
-            $method = new \ReflectionMethod(CwmpodcastTrackHelper::class, $methodName);
+            $method = new \ReflectionMethod(CwmmediaStreamer::class, $methodName);
             $source = file($method->getFileName());
             $body   = implode('', \array_slice(
                 $source,
@@ -284,7 +284,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      */
     public function testStreamRemoteFileGuardsCurlAvailability(): void
     {
-        $method = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $method = new \ReflectionMethod(CwmmediaStreamer::class, 'streamRemoteFile');
         $source = file($method->getFileName());
         $body   = implode('', \array_slice(
             $source,
@@ -321,7 +321,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      */
     private function resolveSafeRemoteIpMethod(): \ReflectionMethod
     {
-        return new \ReflectionMethod(CwmpodcastTrackHelper::class, 'resolveSafeRemoteIp');
+        return new \ReflectionMethod(CwmmediaStreamer::class, 'resolveSafeRemoteIp');
     }
 
     /**
@@ -390,7 +390,7 @@ class CwmpodcastControllerTest extends ProclaimTestCase
      */
     public function testStreamRemoteFileGuardsAgainstUnsafeHostsBeforeCurl(): void
     {
-        $method = new \ReflectionMethod(CwmpodcastTrackHelper::class, 'streamRemoteFile');
+        $method = new \ReflectionMethod(CwmmediaStreamer::class, 'streamRemoteFile');
         $source = file($method->getFileName());
         $body   = implode('', \array_slice(
             $source,
