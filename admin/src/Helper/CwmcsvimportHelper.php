@@ -188,16 +188,10 @@ class CwmcsvimportHelper
         $columns = [
             'studytitle', 'alias', 'studydate', 'published', 'access', 'language',
             'hits', 'studyintro', 'studytext', 'studynumber',
-            'series_id', 'location_id', 'messagetype', 'teacher_id',
+            'series_id', 'location_id', 'messagetype',
             'thumbnailm', 'created_by_alias',
             'created_by', 'ordering',
         ];
-
-        $primaryTeacherId = 0;
-
-        if (!empty($teacherIds)) {
-            $primaryTeacherId = $teacherIds[0];
-        }
 
         $values = [
             $db->quote($title),
@@ -213,7 +207,6 @@ class CwmcsvimportHelper
             (int) $seriesId ?: 'NULL',
             (int) $locationId ?: 'NULL',
             (int) $messageTypeId ?: 'NULL',
-            (int) $primaryTeacherId ?: 'NULL',
             $db->quote($rowData['thumbnailm'] ?? ''),
             $db->quote($rowData['created_by_alias'] ?? ''),
             (int) ($user ? $user->id : 0),

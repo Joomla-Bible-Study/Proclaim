@@ -111,6 +111,50 @@ class StudyColumnContractTest extends ProclaimTestCase
         );
     }
 
+    /**
+     * The CSV importer builds its INSERT from two parallel literals, so it has
+     * both failure modes at once: a name no longer in the table is a fatal
+     * "Unknown column", and a count that drifts apart writes every value after
+     * the gap into the wrong column.
+     */
+    #[TestDox('the CSV importer inserts real study columns, one value each')]
+    public function testCsvImportColumnsExist(): void
+    {
+        $source = (string) file_get_contents(JPATH_ROOT . '/admin/src/Helper/CwmcsvimportHelper.php');
+
+        if (!preg_match('/\$columns\s*=\s*\[(.*?)\];/s', $source, $columnBlock)) {
+            self::fail('Could not find the $columns literal in CwmcsvimportHelper.');
+        }
+
+        if (!preg_match('/\$values\s*=\s*\[(.*?)\n\s*\];/s', $source, $valueBlock)) {
+            self::fail('Could not find the $values literal in CwmcsvimportHelper.');
+        }
+
+        preg_match_all("/'([a-z0-9_]+)'/i", $columnBlock[1], $names);
+
+        self::assertNotEmpty($names[1], 'No column names were parsed, so this test checks nothing.');
+
+        foreach ($names[1] as $column) {
+            self::assertContains(
+                $column,
+                self::studyColumns(),
+                'CwmcsvimportHelper inserts into #__bsms_studies.' . $column . ', which the table does not have. '
+                . 'Unlike a stale read this is fatal: the whole import fails with "Unknown column".'
+            );
+        }
+
+        $values = array_filter(
+            array_map('trim', explode("\n", $valueBlock[1])),
+            static fn (string $line): bool => $line !== ''
+        );
+
+        self::assertCount(
+            \count($names[1]),
+            $values,
+            'The $columns and $values literals have drifted apart, so imported rows land in the wrong columns.'
+        );
+    }
+
     #[DataProvider('itemPropertyProvider')]
     #[TestDox('$file reads $property, which the item carries')]
     public function testItemReadsNameSomethingTheItemCarries(string $file, string $property): void
