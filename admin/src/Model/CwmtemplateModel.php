@@ -70,9 +70,6 @@ class CwmtemplateModel extends AdminModel
 
         $image                          = HTMLHelper::cleanImageURL($data['show_page_image_series']);
         $data['show_page_image_series'] = $image->url;
-        $image                          = HTMLHelper::cleanImageURL($data['popupimage']);
-        $data['popupimage']             = $image->url;
-
         return parent::save($data);
     }
 
