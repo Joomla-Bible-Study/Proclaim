@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 // phpcs:enable PSR1.Files.SideEffects
 
 use Joomla\CMS\Uri\Uri;
+use Joomla\Http\HttpFactory;
 
 /**
  * Answers whether a media file is restricted in Proclaim while still being
@@ -113,5 +114,191 @@ class CwmmediaProtectionHelper
     {
         return self::isRestrictedFromGuests($media, $guestLevels)
             && self::isServedByWebServer($resolvedUrl);
+    }
+
+    /**
+     * The directory is genuinely refused by the web server.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const PROTECTED = 'protected';
+
+    /**
+     * The web server handed the file back. Whatever is in here is public.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const EXPOSED = 'exposed';
+
+    /**
+     * We could not find out. ⚠️ Never treat this as protected: an unanswered
+     * probe is exactly what a broken deny rule looks like from here.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public const UNVERIFIED = 'unverified';
+
+    /**
+     * Seconds to wait for the probe. The request is to this same site, so a
+     * slow answer means something is wrong rather than far away.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const PROBE_TIMEOUT = 10;
+
+    /**
+     * Decide what a probe response means.
+     *
+     * Split from the request itself so the reasoning is testable without a web
+     * server. The rule that matters is the last one: anything we cannot
+     * positively read as a refusal is UNVERIFIED, never PROTECTED. A deny rule
+     * that silently does nothing and a network hiccup look identical from
+     * here, and only one of them is safe to assume.
+     *
+     * @param   int|null  $status  HTTP status, or null if the request itself failed.
+     * @param   string    $body    Response body, empty when there was none.
+     * @param   string    $token   The canary's contents.
+     *
+     * @return  string  One of the class constants.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function interpretProbe(?int $status, string $body, string $token): string
+    {
+        if ($status === null) {
+            return self::UNVERIFIED;
+        }
+
+        // A 200 that returns the canary is unambiguous: the file is public.
+        if ($status >= 200 && $status < 300) {
+            return str_contains($body, $token)
+                ? self::EXPOSED
+                // Success, but not our file — a login page, an error document,
+                // a CDN interstitial. Not served, but not a refusal either.
+                : self::UNVERIFIED;
+        }
+
+        // Only a client error is the web server actually declining. 403 is the
+        // usual answer and 404 is what some configurations return instead of
+        // admitting the file exists; both are refusals.
+        if ($status >= 400 && $status < 500) {
+            return self::PROTECTED;
+        }
+
+        // 3xx and 5xx say nothing useful. A redirect might be a login wall or
+        // might be a canonical-host hop that would have served the file; a 500
+        // means something broke, which is not the same as being refused.
+        // Neither is evidence of protection.
+        return self::UNVERIFIED;
+    }
+
+    /**
+     * Ask the web server whether it will serve a file from this directory.
+     *
+     * Writes a file with known contents, requests it over HTTP the way any
+     * visitor would, and removes it again. This tests the *outcome* rather
+     * than the mechanism, so it is equally valid behind Apache, nginx, IIS or
+     * anything else — which matters because `.htaccess` is silently inert on
+     * nginx, and on Apache with AllowOverride off.
+     *
+     * The canary is removed in a finally block: leaving a readable file behind
+     * in a directory that just proved itself readable would be its own small
+     * hole.
+     *
+     * @param   string  $absoluteDir  Directory to test, absolute filesystem path.
+     * @param   string  $dirUrl       The URL that directory is served from, trailing slash optional.
+     *
+     * @return  string  One of the class constants.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function probeDirectory(string $absoluteDir, string $dirUrl): string
+    {
+        if (!is_dir($absoluteDir) || !is_writable($absoluteDir)) {
+            return self::UNVERIFIED;
+        }
+
+        $token = 'proclaim-canary-' . bin2hex(random_bytes(16));
+        $name  = 'proclaim-canary-' . bin2hex(random_bytes(8)) . '.txt';
+        $path  = rtrim($absoluteDir, '/\\') . '/' . $name;
+
+        if (@file_put_contents($path, $token) === false) {
+            return self::UNVERIFIED;
+        }
+
+        try {
+            $url = rtrim($dirUrl, '/') . '/' . $name;
+
+            try {
+                $response = (new HttpFactory())->getHttp()->get($url, [], self::PROBE_TIMEOUT);
+            } catch (\Throwable) {
+                // No answer at all — could not verify, must not assume safe.
+                return self::UNVERIFIED;
+            }
+
+            return self::interpretProbe(
+                $response->getStatusCode(),
+                (string) $response->getBody(),
+                $token
+            );
+        } finally {
+            @unlink($path);
+        }
+    }
+
+    /**
+     * Write deny-all guards into a directory.
+     *
+     * Apache 2.2 and 2.4 both, plus IIS via request filtering — the same pair
+     * Proclaim already ships statically for `media/backup/` and writes at
+     * runtime for the YouTube cache. Shared here so there is one copy rather
+     * than a third.
+     *
+     * ⚠️ Writing these proves nothing. `.htaccess` is inert on nginx and on
+     * Apache with AllowOverride off, and this method cannot tell. Follow it
+     * with probeDirectory() before describing anything as protected.
+     *
+     * @param   string  $dir  Directory to guard, absolute filesystem path.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function writeDenyFiles(string $dir): void
+    {
+        $htaccess = $dir . '/.htaccess';
+
+        if (!file_exists($htaccess)) {
+            @file_put_contents(
+                $htaccess,
+                "<IfModule !mod_authz_core.c>\n"
+                . "Order deny,allow\n"
+                . "Deny from all\n"
+                . "</IfModule>\n"
+                . "<IfModule mod_authz_core.c>\n"
+                . "  <RequireAll>\n"
+                . "    Require all denied\n"
+                . "  </RequireAll>\n"
+                . "</IfModule>\n"
+            );
+        }
+
+        $webConfig = $dir . '/web.config';
+
+        if (!file_exists($webConfig)) {
+            @file_put_contents(
+                $webConfig,
+                "<?xml version=\"1.0\"?>\n"
+                . "<configuration>\n"
+                . "    <system.webServer>\n"
+                . "        <security>\n"
+                . "            <requestFiltering>\n"
+                . "                <fileExtensions allowUnlisted=\"false\" />\n"
+                . "            </requestFiltering>\n"
+                . "        </security>\n"
+                . "    </system.webServer>\n"
+                . "</configuration>\n"
+            );
+        }
     }
 }

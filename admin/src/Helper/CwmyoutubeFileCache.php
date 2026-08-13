@@ -654,6 +654,7 @@ class CwmyoutubeFileCache
         }
     }
 
+
     /**
      * Write deny-all .htaccess/web.config into a newly created cache
      * directory.
@@ -664,48 +665,19 @@ class CwmyoutubeFileCache
      * cached video metadata, scheduled-stream times -- are web-servable with
      * no auth check.
      *
-     * @param   string  $dir  The cache directory that was just created
+     * The writing itself now lives in CwmmediaProtectionHelper, which needed
+     * the same guards for protected media and is where the check that they
+     * actually work also lives (#1774). One copy, two callers.
+     *
+     * @param   string  $dir  Directory to guard
      *
      * @return  void
      *
-     * @since   10.5.6
+     * @since   10.5.0
      */
     private static function writeAccessDenyFiles(string $dir): void
     {
-        $htaccess = $dir . '/.htaccess';
-
-        if (!file_exists($htaccess)) {
-            @file_put_contents(
-                $htaccess,
-                "<IfModule !mod_authz_core.c>\n"
-                . "Order deny,allow\n"
-                . "Deny from all\n"
-                . "</IfModule>\n"
-                . "<IfModule mod_authz_core.c>\n"
-                . "  <RequireAll>\n"
-                . "    Require all denied\n"
-                . "  </RequireAll>\n"
-                . "</IfModule>\n"
-            );
-        }
-
-        $webConfig = $dir . '/web.config';
-
-        if (!file_exists($webConfig)) {
-            @file_put_contents(
-                $webConfig,
-                "<?xml version=\"1.0\"?>\n"
-                . "<configuration>\n"
-                . "    <system.webServer>\n"
-                . "        <security>\n"
-                . "            <requestFiltering>\n"
-                . "                <fileExtensions allowUnlisted=\"false\" />\n"
-                . "            </requestFiltering>\n"
-                . "        </security>\n"
-                . "    </system.webServer>\n"
-                . "</configuration>\n"
-            );
-        }
+        CwmmediaProtectionHelper::writeDenyFiles($dir);
     }
 
     /**

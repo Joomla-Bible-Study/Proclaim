@@ -134,4 +134,121 @@ class CwmmediaProtectionHelperTest extends ProclaimTestCase
             'public and on our web server — working as intended'
         );
     }
+
+    // -----------------------------------------------------------------
+    // the canary: does the web server actually refuse this directory?
+    // -----------------------------------------------------------------
+
+    /** A 200 handing back the canary is the whole point: the file is public. */
+    public function testTheCanaryComingBackMeansExposed(): void
+    {
+        self::assertSame(
+            CwmmediaProtectionHelper::EXPOSED,
+            CwmmediaProtectionHelper::interpretProbe(200, 'tok-123', 'tok-123')
+        );
+    }
+
+    /** A client error is the web server declining. 404 counts as much as 403. */
+    public function testAClientErrorMeansProtected(): void
+    {
+        foreach ([401, 403, 404, 410] as $status) {
+            self::assertSame(
+                CwmmediaProtectionHelper::PROTECTED,
+                CwmmediaProtectionHelper::interpretProbe($status, '', 'tok-123'),
+                "HTTP {$status} is a refusal."
+            );
+        }
+    }
+
+    /**
+     * The rule that matters most. A deny rule that silently does nothing and a
+     * network failure look identical from here, so anything we cannot read as
+     * a refusal must not be reported as protection.
+     */
+    public function testAnythingInconclusiveIsNeverReportedAsProtected(): void
+    {
+        $cases = [
+            'no response at all'            => [null, ''],
+            'a redirect'                    => [302, ''],
+            'a server error'                => [500, ''],
+            'a bad gateway'                 => [502, ''],
+            '200 with someone else\'s body' => [200, '<html>Please log in</html>'],
+        ];
+
+        foreach ($cases as $what => [$status, $body]) {
+            self::assertSame(
+                CwmmediaProtectionHelper::UNVERIFIED,
+                CwmmediaProtectionHelper::interpretProbe($status, $body, 'tok-123'),
+                ucfirst($what) . ' must be UNVERIFIED, never PROTECTED.'
+            );
+        }
+    }
+
+    /**
+     * A 500 is not a refusal. Treating every non-2xx as protection would call
+     * a broken server a secure one, which is the failure this check exists to
+     * prevent.
+     */
+    public function testAServerErrorIsNotMistakenForARefusal(): void
+    {
+        self::assertNotSame(
+            CwmmediaProtectionHelper::PROTECTED,
+            CwmmediaProtectionHelper::interpretProbe(500, '', 'tok-123')
+        );
+    }
+
+    // -----------------------------------------------------------------
+    // the deny files
+    // -----------------------------------------------------------------
+
+    /** Apache 2.2 and 2.4 both, plus IIS — the pair Proclaim already ships. */
+    public function testItWritesGuardsForApacheAndIis(): void
+    {
+        $dir = sys_get_temp_dir() . '/cwm-deny-' . bin2hex(random_bytes(6));
+        mkdir($dir, 0o777, true);
+
+        try {
+            CwmmediaProtectionHelper::writeDenyFiles($dir);
+
+            $htaccess = (string) file_get_contents($dir . '/.htaccess');
+            self::assertStringContainsString('Deny from all', $htaccess, 'Apache 2.2');
+            self::assertStringContainsString('Require all denied', $htaccess, 'Apache 2.4');
+            self::assertStringContainsString(
+                'allowUnlisted="false"',
+                (string) file_get_contents($dir . '/web.config'),
+                'IIS'
+            );
+        } finally {
+            @unlink($dir . '/.htaccess');
+            @unlink($dir . '/web.config');
+            @rmdir($dir);
+        }
+    }
+
+    /** Never clobber a guard an administrator has customised. */
+    public function testItLeavesAnExistingGuardAlone(): void
+    {
+        $dir = sys_get_temp_dir() . '/cwm-deny-' . bin2hex(random_bytes(6));
+        mkdir($dir, 0o777, true);
+        file_put_contents($dir . '/.htaccess', '# hand-written');
+
+        try {
+            CwmmediaProtectionHelper::writeDenyFiles($dir);
+
+            self::assertSame('# hand-written', file_get_contents($dir . '/.htaccess'));
+        } finally {
+            @unlink($dir . '/.htaccess');
+            @unlink($dir . '/web.config');
+            @rmdir($dir);
+        }
+    }
+
+    /** An unwritable or missing directory cannot be verified, so it is not. */
+    public function testAnUnusableDirectoryIsUnverifiedRatherThanProtected(): void
+    {
+        self::assertSame(
+            CwmmediaProtectionHelper::UNVERIFIED,
+            CwmmediaProtectionHelper::probeDirectory('/no/such/directory/here', 'https://example.org/x')
+        );
+    }
 }
