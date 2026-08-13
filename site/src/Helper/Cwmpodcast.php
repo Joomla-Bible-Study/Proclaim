@@ -35,6 +35,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Proclaim Podcast Class
@@ -1116,6 +1117,33 @@ class Cwmpodcast
                 . $db->quoteName('s.series_id') . ' <= 0)'
             )
             ->order($db->quoteName('createdate') . ' DESC');
+
+        // A feed is a published artifact: it hands out the enclosure URL to
+        // whoever reads it, and podcast apps read it with no session. An item
+        // the fetching user cannot see must therefore not appear at all —
+        // listing it would publish the URL of a file they were refused, which
+        // is worse than the restriction simply not applying (#1774).
+        //
+        // Same chain as the download route (Cwmdownload::isAccessible) and the
+        // sermon listings: media file, its message, and its series. The series
+        // clause mirrors the published one above, allowing a study that is in
+        // no series at all.
+        //
+        // Bracketed deliberately — a top-level OR here would escape every
+        // preceding condition, published ones included (see
+        // tests/unit/Query/WhereClauseContractTest.php).
+        $levels = ArrayHelper::toInteger(
+            Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()
+        );
+        $levels = $levels ?: [0];
+
+        $query->whereIn($db->quoteName('mf.access'), $levels)
+            ->whereIn($db->quoteName('s.access'), $levels)
+            ->where(
+                '(' . $db->quoteName('se.access') . ' IN (' . implode(',', $levels) . ') OR '
+                . $db->quoteName('s.series_id') . ' IS NULL OR '
+                . $db->quoteName('s.series_id') . ' <= 0)'
+            );
 
         $db->setQuery($query, 0, $set_limit);
         $episodes = $db->loadObjectList() ?: [];
