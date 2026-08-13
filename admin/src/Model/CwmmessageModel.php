@@ -888,15 +888,13 @@ class CwmmessageModel extends AdminModel
 
         foreach ($pks as $pk) {
             if ($user->authorise('core.edit', $contexts[$pk])) {
+                // Confirm the study exists before writing junction rows for it.
                 $table->reset();
-                $table->load($pk);
-                $table->teacher_id = $teacherId;
 
-                if (!$table->store()) {
+                if (!$table->load($pk)) {
                     throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
 
-                // Update junction table to match
                 $teachers = $teacherId > 0
                     ? [['teacher_id' => $teacherId]]
                     : [];

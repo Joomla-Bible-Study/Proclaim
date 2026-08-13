@@ -43,7 +43,7 @@ $options = base64_encode('study_id=' . $this->item->id . '&createdate=' . $this-
 
 // Set up defaults
 if ($input->getInt('id')) {
-    $teacher_id   = $this->item->teacher_id;
+    $teacher_id   = (int) ($this->item->teachers[0]['teacher_id'] ?? 0);
     $location_id  = $this->item->location_id;
     $series_id    = $this->item->series_id;
     $messagetype  = $this->item->messagetype;
