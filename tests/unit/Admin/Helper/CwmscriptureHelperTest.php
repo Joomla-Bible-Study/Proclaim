@@ -165,8 +165,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
      */
     public function testFormatSingleVerse(): void
     {
-        // In test context, Text::_() returns the language key as-is
-        $this->assertSame('JBS_BBK_GENESIS 1:1', CwmscriptureHelper::formatReference(101, 1, 1, 1, 1));
+        // Resolves to a real name: the bootstrap links lib_cwmscripture into
+        // JPATH_LIBRARIES, so its language file loads (#1761).
+        $this->assertSame('Genesis 1:1', CwmscriptureHelper::formatReference(101, 1, 1, 1, 1));
     }
 
     /**
@@ -178,7 +179,7 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     public function testFormatVerseRange(): void
     {
         // In test context, Text::_() returns the language key as-is
-        $this->assertSame('JBS_BBK_LUKE 7:36-38', CwmscriptureHelper::formatReference(142, 7, 36, 7, 38));
+        $this->assertSame('Luke 7:36-38', CwmscriptureHelper::formatReference(142, 7, 36, 7, 38));
     }
 
     /**
@@ -190,7 +191,7 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     public function testFormatCrossChapterRange(): void
     {
         // In test context, Text::_() returns the language key as-is
-        $this->assertSame('JBS_BBK_LUKE 1:20-2:5', CwmscriptureHelper::formatReference(142, 1, 20, 2, 5));
+        $this->assertSame('Luke 1:20-2:5', CwmscriptureHelper::formatReference(142, 1, 20, 2, 5));
     }
 
     /**
@@ -202,7 +203,7 @@ class CwmscriptureHelperTest extends ProclaimTestCase
     public function testFormatChapterOnly(): void
     {
         // In test context, Text::_() returns the language key as-is
-        $this->assertSame('JBS_BBK_PSALM 23', CwmscriptureHelper::formatReference(119, 23, 0, 23, 0));
+        $this->assertSame('Psalm 23', CwmscriptureHelper::formatReference(119, 23, 0, 23, 0));
     }
 
     /**
@@ -213,9 +214,9 @@ class CwmscriptureHelperTest extends ProclaimTestCase
      */
     public function testRoundTrip(): void
     {
-        // In test context Text::_() returns language keys, so format produces
-        // "JBS_BBK_LUKE 7:36-38" instead of "Luke 7:36-38". We verify structural
-        // round-trip: parse → format → parse again → same booknumber/chapter/verse.
+        // Structural round-trip: parse → format → parse again → same
+        // booknumber/chapter/verse. Names now resolve properly, but the point
+        // of this test is the shape surviving the trip, not the wording.
         $inputs = [
             'Genesis 1:1',
             'Luke 7:36-38',
