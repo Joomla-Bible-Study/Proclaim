@@ -17,6 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
@@ -26,6 +28,8 @@ use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -113,6 +117,8 @@ class HtmlView extends BaseHtmlView
 
         // Get server params for default values
         $s_params = $this->state->get('s_params', []);
+
+        $this->warnIfRestrictedButReachable($s_params);
 
         if ($media_form !== null) {
             // For new items, bind server defaults to the media form before rendering
@@ -268,5 +274,76 @@ class HtmlView extends BaseHtmlView
 
         ToolbarHelper::divider();
         ToolbarHelper::help('mediafile', true);
+    }
+
+    /**
+     * Warn when this media file is restricted in Proclaim but still fetchable
+     * straight off the web server.
+     *
+     * Setting a non-Public access level here — or on the message or series it
+     * belongs to — stops Proclaim serving the file and nothing else: anything
+     * under the web root is handed out by the web server, which never enters
+     * PHP. An administrator setting up a subscriber-only series would
+     * reasonably read that field as protection, so say otherwise at the point
+     * they set it rather than leaving it to be discovered (#1774).
+     *
+     * Silent for a new item, which has no id, no stored filename and nothing
+     * to be wrong about yet.
+     *
+     * @param   array  $sParams  Server params for the item's server.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function warnIfRestrictedButReachable(array $sParams): void
+    {
+        if (empty($this->item->id)) {
+            return;
+        }
+
+        $db  = Factory::getContainer()->get(DatabaseInterface::class);
+        $row = $db->setQuery(
+            $db->createQuery()
+                ->select(
+                    $db->quoteName('m.access') . ', '
+                    . $db->quoteName('study.access', 'study_access') . ', '
+                    . $db->quoteName('series.access', 'series_access')
+                )
+                ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+                ->leftJoin(
+                    $db->quoteName('#__bsms_studies', 'study')
+                    . ' ON (' . $db->quoteName('study.id') . ' = ' . $db->quoteName('m.study_id') . ')'
+                )
+                ->leftJoin(
+                    $db->quoteName('#__bsms_series', 'series')
+                    . ' ON (' . $db->quoteName('series.id') . ' = ' . $db->quoteName('study.series_id') . ')'
+                )
+                ->where($db->quoteName('m.id') . ' = ' . (int) $this->item->id)
+        )->loadObject();
+
+        if ($row === null) {
+            return;
+        }
+
+        $params   = new Registry($this->item->params ?? '');
+        $filename = (string) $params->get('filename', '');
+
+        if ($filename === '') {
+            return;
+        }
+
+        $url = Cwmhelper::mediaBuildUrl((string) ($sParams['path'] ?? ''), $filename, $params, true);
+
+        $guest = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+
+        if (!CwmmediaProtectionHelper::isRestrictedButReachable($row, $url, $guest->getAuthorisedViewLevels())) {
+            return;
+        }
+
+        Factory::getApplication()->enqueueMessage(
+            Text::_('JBS_MED_RESTRICTED_BUT_PUBLIC_WARNING'),
+            'warning'
+        );
     }
 }
