@@ -11,6 +11,7 @@
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmproclaimHelper;
+use Joomla\CMS\Application\CMSWebApplicationInterface;
 use Joomla\CMS\Factory;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -81,26 +82,41 @@ if (is_dir($modProclaimPath)) {
 
 // Register web asset registries so assets are available when views/modules request them.
 // Actual useStyle/useScript calls are made by individual views and module dispatchers.
-$wa = $app->getDocument()->getWebAssetManager();
-$wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+//
+// Guarded because this file does NOT only run in web applications, despite what
+// the comment below used to claim. plg_task_proclaim requires it from its
+// constructor, and com_scheduler imports every task plugin just to list the
+// routines they offer — so `php cli/joomla.php scheduler:run` reached this line
+// with a ConsoleApplication, which has no getDocument(), and died before any
+// task ran. Every scheduled task on the site was affected, including other
+// extensions' and Joomla's own (#1787).
+//
+// Asset registries mean nothing without a document, so skipping them off the
+// web costs nothing. CMSWebApplicationInterface is what declares getDocument();
+// ConsoleApplication implements CMSApplicationInterface but not that.
+if ($app instanceof CMSWebApplicationInterface) {
+    $wa = $app->getDocument()->getWebAssetManager();
+    $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
 
-// Admin pages load core assets globally; front-end views load them on demand
-// to avoid render-blocking CSS/JS on pages that don't need them.
-if ($app->isClient('administrator')) {
-    $wa->useStyle('com_proclaim.cwmcore')
-        ->useScript('com_proclaim.cwmcorejs')
-        ->useScript('com_proclaim.cwmcorejs-admin');
+    // Admin pages load core assets globally; front-end views load them on demand
+    // to avoid render-blocking CSS/JS on pages that don't need them.
+    if ($app->isClient('administrator')) {
+        $wa->useStyle('com_proclaim.cwmcore')
+            ->useScript('com_proclaim.cwmcorejs')
+            ->useScript('com_proclaim.cwmcorejs-admin');
+    }
+
+    // Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
+    $wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 }
-
-// Register lib_cwmscripture web assets (libraries aren't auto-discovered by Joomla)
-$wa->getRegistry()->addExtensionRegistryFile('lib_cwmscripture');
 
 // Log categories are registered by CwmlogHelper, not here.
 //
-// This file only runs in the administrator and site applications — it needs a
-// document for the web asset manager, which the API application does not have.
-// Registering loggers here therefore left API code with no logger at all, and
-// silently discarded everything it logged.
+// This file was written on the assumption that it only runs in the
+// administrator and site applications, because it needs a document for the web
+// asset manager. That assumption was wrong twice over: registering loggers here
+// left API code with no logger at all and silently discarded everything it
+// logged, and the console reaches this file too, via plg_task_proclaim (#1787).
 //
 // Registration now lives in CwmlogHelper (called from ProclaimComponent::boot(),
 // so every application is covered). The call below is for the paths that reach
