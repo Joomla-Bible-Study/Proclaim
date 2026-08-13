@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmmediafile;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmediaProtectionHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmprotectedStorage;
 use CWM\Component\Proclaim\Administrator\Model\CwmmediafileModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
@@ -341,9 +342,15 @@ class HtmlView extends BaseHtmlView
             return;
         }
 
-        Factory::getApplication()->enqueueMessage(
-            Text::_('JBS_MED_RESTRICTED_BUT_PUBLIC_WARNING'),
-            'warning'
-        );
+        // What to advise depends on what this server actually does with the
+        // protected directory, so say that rather than offering a remedy that
+        // may not work here (#1774).
+        $message = match (CwmprotectedStorage::status()) {
+            CwmmediaProtectionHelper::PROTECTED => 'JBS_MED_RESTRICTED_BUT_PUBLIC_CAN_MOVE',
+            CwmmediaProtectionHelper::EXPOSED   => 'JBS_MED_RESTRICTED_BUT_PUBLIC_NO_HELP',
+            default                             => 'JBS_MED_RESTRICTED_BUT_PUBLIC_UNVERIFIED',
+        };
+
+        Factory::getApplication()->enqueueMessage(Text::_($message), 'warning');
     }
 }
