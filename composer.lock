@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9979a910f58d54c9ea26a17b026ec8a9",
+    "content-hash": "5147e759bff05490635d1fe1e2309da5",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.18.1",
+            "version": "v1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "257d0e8404db938699fe76e6a5b887f3d6c11a94"
+                "reference": "7f5f3c8a5566125ed06053df95587738a4bcca73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/257d0e8404db938699fe76e6a5b887f3d6c11a94",
-                "reference": "257d0e8404db938699fe76e6a5b887f3d6c11a94",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/7f5f3c8a5566125ed06053df95587738a4bcca73",
+                "reference": "7f5f3c8a5566125ed06053df95587738a4bcca73",
                 "shasum": ""
             },
             "require": {
@@ -658,10 +658,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.18.1",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.19.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-08-13T17:48:56+00:00"
+            "time": "2026-08-13T18:11:03+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
