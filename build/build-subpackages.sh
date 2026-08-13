@@ -47,7 +47,13 @@ build_npm_assets() {
         return 0
     fi
 
-    if [ -f "${dir}/composer.json" ] && [ ! -d "${dir}/vendor/cwm/build-tools" ]; then
+    # Guard on the entry point the build actually needs, not on the directory
+    # containing it. A vendor/cwm/build-tools that exists but predates
+    # scripts/build.php passes a directory test and the install is skipped, so
+    # the build then runs against stale tooling (#1760). That is how the nested
+    # lib_cwmscripture clone sat on a 2026-05-08 install while its composer.lock
+    # pinned v1.15.1.
+    if [ -f "${dir}/composer.json" ] && [ ! -f "${dir}/vendor/cwm/build-tools/scripts/build.php" ]; then
         echo "   composer install (${dir#"${ROOT}"/})"
         ( cd "${dir}" && composer install --no-interaction --prefer-dist --quiet )
     fi
