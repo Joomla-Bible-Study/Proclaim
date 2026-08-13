@@ -4,11 +4,21 @@ export default [
     ...baseConfig,
     {
         // Skip minified files (lint sources, not build output) and vendored
-        // submodules (lib_cwmscripture is maintained in its own repo).
+        // submodules — lib_cwmscripture and CWMScriptureLinks are maintained in
+        // their own repositories and linted by their own CI.
+        //
+        // The whole scripturelinks submodule, not just its libraries/: it
+        // carries an eslint.config.mjs of its own, and ESLint 10 looks up the
+        // nearest config per file rather than using only the root one. That
+        // config extends a base out of the submodule's own vendor/, which
+        // Composer would have to install separately — so CI, which checks the
+        // submodule out but never installs it, died with ERR_MODULE_NOT_FOUND.
+        // Paired with --no-config-lookup in the lint:js script, which is what
+        // makes these ignores authoritative rather than advisory.
         ignores: [
             '**/*.min.js',
             '**/lib_cwmscripture/**',
-            'plugins/content/scripturelinks/libraries/**',
+            'plugins/content/scripturelinks/**',
         ],
     },
     {

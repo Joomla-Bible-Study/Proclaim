@@ -63,7 +63,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report build/reports/e2e",
-    "lint:js": "eslint --max-warnings=0 ."
+    "lint:js": "eslint --no-config-lookup -c eslint.config.mjs --max-warnings=0 ."
   },
   "dependencies": {
     "@fancyapps/ui": "^6.1.11",
