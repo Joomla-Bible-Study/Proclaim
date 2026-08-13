@@ -248,11 +248,6 @@
                        default="black"
                        label="JBS_TPL_MEDIA_POPUPBACKGROUND"
                        description="JBS_TPL_MEDIA_POPUPBACKGROUND_DESC"/>
-                <field name="popupimage" type="media"
-                       default="media/com_proclaim/images/speaker24.png"
-                       directory="com_proclaim/images"
-                       label="JBS_TPL_MEDIA_POPUPIMAGE"
-                       description="JBS_TPL_MEDIA_POPUPIMAGE_DESC"/>
                 <field name="media_popout_yes" type="list"
                        default="1"
                        class="form-select"
