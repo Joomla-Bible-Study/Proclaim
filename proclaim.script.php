@@ -1564,6 +1564,57 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Warn when the installed scripture library is older than this release expects.
+     *
+     * The component degrades rather than breaks — Cwmshowscripture checks for
+     * `getPassageFor()` before using it — so this reports rather than blocks.
+     * Blocking would strand a site on the old version with no path forward, and
+     * the usual cause is transient: pkg_proclaim installs the library in the
+     * same package, so by postflight it is normally already current.
+     *
+     * Everything here is guarded by class_exists()/method_exists() because the
+     * whole point is that the library on disk may be older than the one this
+     * code was written against — including too old to have LibraryVersion.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function checkScriptureLibraryVersion(): void
+    {
+        $minimum = '1.1.13';
+        $class   = 'CWM\\Library\\Scripture\\LibraryVersion';
+
+        // Too old to report its own version. The presence check in preflight has
+        // already run, so the library exists; it simply predates LibraryVersion.
+        $satisfied = class_exists($class)
+            && method_exists($class, 'satisfies')
+            && $class::satisfies($minimum);
+
+        if ($satisfied) {
+            return;
+        }
+
+        $installed = class_exists($class) && \defined($class . '::VERSION')
+            ? $class::VERSION
+            : 'unknown';
+
+        $msg = sprintf(
+            'Proclaim: the installed scripture library is %s, older than the %s this release expects. '
+            . 'Scripture still displays, using the previous lookup path. Update pkg_cwmscripture '
+            . 'to get the faster and more reliable one.',
+            $installed,
+            $minimum
+        );
+
+        try {
+            Factory::getApplication()->enqueueMessage($msg, 'warning');
+        } catch (\Throwable) {
+            // CLI install: no application to enqueue against.
+        }
+    }
+
+    /**
      * Post Flight
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -1598,6 +1649,8 @@ class com_proclaimInstallerScript extends InstallerScript
 
             return;
         }
+
+        $this->checkScriptureLibraryVersion();
 
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
