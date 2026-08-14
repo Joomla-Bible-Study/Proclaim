@@ -127,6 +127,21 @@ fi
 OTHER_CONSUMERS="$(php build/verify-scripture-uninstall.php other-consumer-ids | grep -E '^[0-9]+$' || true)"
 
 if [ -n "$OTHER_CONSUMERS" ]; then
+    # Before removing anything: hand the shared scripture stack back to
+    # pkg_cwmscripture. The library and plg_content_scripturelinks are package
+    # children, and package_id points at whichever package installed them last
+    # -- on a site carrying LivingWord that can be pkg_livingword, so removing
+    # it below took the library and the content plugin with it. Every phase
+    # after this then failed on a missing library, and because these removals
+    # persist, so did the next run (#1820).
+    echo "   protecting the scripture stack from the removals below:"
+
+    if ! php build/verify-scripture-uninstall.php protect-scripture-ownership; then
+        echo "ERROR: could not protect the scripture stack; refusing to remove consumers." >&2
+        echo "       Removing them now could take lib_cwmscripture with them." >&2
+        exit 1
+    fi
+
     echo "   clearing other scripture consumers before the uninstall phases:"
 
     for CID in $OTHER_CONSUMERS; do
