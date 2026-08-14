@@ -338,10 +338,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
 
             // One rule for every tile: show a destination only to someone who
             // could do something once they arrive. access.xml defines a section
-            // per entity, so each tile asks about its own -- previously a few
-            // were gated on core.admin (Super User only, hiding them from
-            // legitimate managers) and the rest on nothing at all, which sent
-            // users to a 403 the component dispatcher raises.
+            // per entity, so each tile asks about its own.
             $canSee = static fn (string $section): bool =>
                 $cpanelUser->authorise('core.edit', 'com_proclaim.' . $section)
                 || $cpanelUser->authorise('core.create', 'com_proclaim.' . $section)

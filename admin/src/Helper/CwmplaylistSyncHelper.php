@@ -1173,8 +1173,8 @@ final class CwmplaylistSyncHelper
             try {
                 $decoded = json_decode($params, true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException $e) {
-                // Previously decoded to null and left $videoId null, so the
-                // requested playlist additions were dropped without a word.
+                // A response that will not decode means the requested additions
+                // are not happening — say so rather than dropping them silently.
                 CwmlogHelper::warning(
                     'Media file ' . $mediafileId . ' has an unreadable params column; its manual '
                     . 'playlist assignments were not applied: ' . $e->getMessage()

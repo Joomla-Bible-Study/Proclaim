@@ -184,10 +184,10 @@ class Cwmthumbnail
     /**
      * Collapse '.' and '..' segments without requiring the path to exist.
      *
-     * Path::clean() normalises separators but leaves '..' in place, which is
-     * what allowed the old prefix checks to be walked out of. realpath() would
-     * collapse them but returns false for paths that do not exist yet, and
-     * callers legitimately pass those.
+     * Path::clean() normalises separators but leaves '..' in place, so a prefix
+     * check alone can be walked out of. realpath() would collapse them but
+     * returns false for paths that do not exist yet, and callers legitimately
+     * pass those.
      *
      * Relative-vs-absolute is preserved rather than assumed: JPATH_ROOT is not
      * always absolute (phpunit.xml defines it as '.'), so forcing a leading

@@ -949,7 +949,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // Clean up the action log registration
         $this->cleanupActionLogConfig();
 
-        // We no longer depend on lib_cwmscripture — stop blocking its removal
+        // Proclaim is going away — stop blocking the library's removal.
         $this->scriptureConsumer('unregister');
 
         // Show the post-uninstalling page
@@ -962,8 +962,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Remove Proclaim's rows from Joomla's action-log tables.
      *
      * `install.mysql.utf8.sql` seeds `#__action_log_config` with one row per
-     * loggable entity, and `10.1.0-20260207.sql` adds to it, but nothing has
-     * ever taken them out again — five rows survived every uninstall.
+     * loggable entity, and `10.1.0-20260207.sql` adds to it.
      *
      * Deliberately not part of `dropTablesIfRequested()`. That is gated on the
      * administrator's `drop_tables` setting because it destroys sermons; these
@@ -1787,8 +1786,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // install's SQL already creates the current schema, so there is nothing
         // to migrate — running these against freshly seeded default rows only
         // produces spurious warnings (e.g. the podcast-link "could not be
-        // matched" notice) and, historically, fatals when a moved helper no
-        // longer exists.
+        // matched" notice).
         if ($type === 'update') {
             // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
             try {

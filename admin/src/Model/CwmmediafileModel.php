@@ -297,12 +297,11 @@ class CwmmediafileModel extends AdminModel
                 $filenameChanged = ($oldFilename !== $newFilename) || ($oldServerId !== $newServerId);
             }
 
-            // Clearing a detected field is how an administrator asks for it to be
-            // worked out again — the obvious gesture, which the gate above used to
-            // swallow because the filename had not changed. Detecting the clear
-            // itself (rather than "is anything missing?") keeps this to the one
-            // save that cleared it, so platforms that can never supply a value do
-            // not re-hit their API on every subsequent save.
+            // Clearing a detected field is how an administrator asks for it to
+            // be worked out again. Detecting the clear itself (rather than "is
+            // anything missing?") keeps this to the one save that cleared it, so
+            // platforms that can never supply a value do not re-hit their API on
+            // every subsequent save.
             $clearedForRedetect = $oldParams !== null
                 && $this->metadataWasCleared($oldParams, $params);
 

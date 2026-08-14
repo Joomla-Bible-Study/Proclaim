@@ -180,12 +180,12 @@ class CwmmediafileController extends FormController
         // Load the addon
         $addon = CWMAddon::getInstance($addonType);
 
-        // Dispatch only to handlers the addon explicitly opted in. The old
-        // method_exists() check made every public method on every addon
-        // callable by request-supplied name -- including createLiveEvent()
-        // and cancelLiveEvent(), which act on the connected platform account.
-        // Those are invoked server-side (CwmmediafileModel/CwmmediafileTable)
-        // and deliberately stay off the allow-list.
+        // Dispatch only to handlers the addon explicitly opted in. A bare
+        // method_exists() check would make every public method on every addon
+        // callable by request-supplied name -- including createLiveEvent() and
+        // cancelLiveEvent(), which act on the connected platform account. Those
+        // are invoked server-side (CwmmediafileModel/CwmmediafileTable) and
+        // deliberately stay off the allow-list.
         if (!\in_array($handler, $addon->getXhrHandlers(), true) || !method_exists($addon, $handler)) {
             throw new \RuntimeException(
                 Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')),

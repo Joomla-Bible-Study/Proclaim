@@ -84,9 +84,6 @@ class Cwmalias
                     $db->setQuery($query);
 
                     // One unwritable row must not abandon the rest of the backfill.
-                    // Before this, a single failure (e.g. the unique-index collision
-                    // above) surfaced as an uncaught exception and left the operation
-                    // half-applied with no indication of how far it got.
                     try {
                         $db->execute();
                         $done++;

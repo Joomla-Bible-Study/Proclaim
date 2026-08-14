@@ -97,8 +97,7 @@ class BookListField extends ListField
         foreach ($books as $book) {
             $name = ScriptureHelper::getBookName((int) $book->value);
 
-            // A number the library cannot name would render as a blank entry,
-            // which the old query could not produce: the row existed or it did not.
+            // A number the library cannot name would render as a blank entry.
             if ($name !== '') {
                 $options[] = HTMLHelper::_('select.option', $book->value, $name);
             }

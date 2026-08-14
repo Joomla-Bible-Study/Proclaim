@@ -84,9 +84,9 @@ final class CwmlogHelper
      * Category => log file. Separate files keep an API security review from
      * having to wade through template migrations.
      *
-     * The first two filenames are inherited from admin/api.php, which used to own
-     * this registration — existing sites already have those files and may have log
-     * rotation pointed at them, so the names are kept.
+     * The first two filenames are inherited from admin/api.php's registration:
+     * existing sites already have those files and may have log rotation pointed
+     * at them, so the names are kept.
      *
      * @var    array<string, string>
      * @since  10.3.4

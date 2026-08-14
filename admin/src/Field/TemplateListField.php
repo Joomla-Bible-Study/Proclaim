@@ -81,10 +81,9 @@ class TemplateListField extends ListField
 
         // parent::getOptions() reads THIS field instance's own XML <option>
         // children, which differ per form — only the DB-derived list above is
-        // safe to cache across instances. Caching the merged result (as this
-        // used to) meant a second TemplateList field with different XML
-        // options in the same request silently got the first instance's
-        // stale merged list.
+        // safe to cache across instances. ⚠️ Caching the merged result would
+        // give a second TemplateList field with different XML options in the
+        // same request the first instance's stale merged list.
         return array_merge(parent::getOptions(), self::$templates);
     }
 
