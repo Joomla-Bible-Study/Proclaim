@@ -139,9 +139,8 @@ class CwmscriptureMigration
      * ⚠️ Deliberately not in migration SQL. Joomla's ChangeSet builds a check
      * only for ALTER TABLE, CREATE TABLE and RENAME TABLE; an INSERT has none,
      * so it is skipped and never replayed while the DROP COLUMNs beside it are
-     * replayed. Database Maintenance → Fix, and the 9.x upgrade wizard through
-     * CwmupgradeHelper::runSchemaMigration(), would then run the drops without
-     * the backfill. Here the two cannot come apart.
+     * replayed. Database Maintenance → Fix would then run the drops without the
+     * backfill. Here the two cannot come apart.
      *
      * Safe to call whenever: it returns immediately once the columns are gone.
      *

@@ -41,10 +41,6 @@ CwmlangHelper::registerAllForJs();
 // Register Joomla core string(s) also needed in JS
 Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 
-if ($this->has9xSchema) {
-    $wa->useScript('com_proclaim.upgrade-wizard');
-}
-
 $app   = Factory::getApplication();
 $input = $app->getInput();
 
@@ -520,14 +516,6 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
-
-        <?php if ($this->has9xSchema) : ?>
-        <?php
-        echo HTMLHelper::_('uitab.addTab', 'myTab', 'upgrade', Text::_('JBS_UPG_TAB_TITLE')); ?>
-        <?php echo $this->loadTemplate('upgrade'); ?>
-        <?php
-        echo HTMLHelper::_('uitab.endTab'); ?>
-        <?php endif; ?>
 
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'imagetools', Text::_('JBS_ADM_IMAGE_TOOLS')); ?>

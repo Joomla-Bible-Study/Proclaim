@@ -791,18 +791,6 @@
             "uri": "com_proclaim/related-studies.css"
         },
         {
-            "name": "com_proclaim.upgrade-wizard",
-            "type": "script",
-            "uri": "com_proclaim/upgrade-wizard.min.js",
-            "dependencies": [
-                "core",
-                "lib_cwmscripture.cwm-fetch"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
             "name": "com_proclaim.delete-confirm",
             "type": "script",
             "uri": "com_proclaim/delete-confirm.min.js",

@@ -11,9 +11,8 @@
  * ⚠️ Why it cannot live in migration SQL. Joomla's ChangeSet builds a
  * verification check only for ALTER TABLE, CREATE TABLE and RENAME TABLE. An
  * INSERT has none, so it is skipped and never replayed, while every DROP COLUMN
- * beside it is checked and is replayed. Database Maintenance -> Fix, and
- * CwmupgradeHelper::runSchemaMigration(), would run the drops without the
- * backfill and destroy every reference (#1623).
+ * beside it is checked and is replayed. Database Maintenance -> Fix would run
+ * the drops without the backfill and destroy every reference.
  *
  * @package    Proclaim.IntegrationTest
  * @copyright  (C) 2026 CWM Team All rights reserved

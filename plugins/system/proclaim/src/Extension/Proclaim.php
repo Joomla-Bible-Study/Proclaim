@@ -227,16 +227,12 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // 9.x schema upgrade warning — shown on all admin pages until the upgrade wizard is run
+        // A 9.x database cannot be migrated by this version, so say so rather
+        // than leaving the site to fail later in a way nobody can act on.
         if ($this->has9xLegacySchema()) {
             $app->getLanguage()->load('com_proclaim', JPATH_ADMINISTRATOR);
 
-            $upgradeUrl = Route::_('index.php?option=com_proclaim&view=cwmadmin', false);
-
-            $app->enqueueMessage(
-                Text::sprintf('COM_PROCLAIM_UPGRADE_9X_DETECTED', $upgradeUrl),
-                'warning'
-            );
+            $app->enqueueMessage(Text::_('COM_PROCLAIM_UPGRADE_9X_UNSUPPORTED'), 'warning');
         }
 
         // Rate limiting for POST requests to com_proclaim
