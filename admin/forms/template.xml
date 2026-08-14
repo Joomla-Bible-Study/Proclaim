@@ -2443,6 +2443,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="teachers_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Series Section Settings -->
@@ -2473,6 +2477,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="series_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Books Section Settings -->
@@ -2492,6 +2500,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="books_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Topics Section Settings -->
@@ -2511,6 +2523,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="topics_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Locations Section Settings -->
@@ -2537,6 +2553,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="locations_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Message Types Section Settings -->
@@ -2564,6 +2584,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="messagetypes_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
         <!-- Landing Page: Years Section Settings -->
@@ -2583,6 +2607,10 @@
                 <option value="1">JBS_CMN_DESCENDING</option>
                 <option value="2">JBS_CMN_ASCENDING</option>
             </field>
+            <field name="years_custom_css" type="textarea"
+                   label="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS"
+                   description="JBS_TPL_LANDINGPAGE_SECTION_CUSTOM_CSS_DESC"
+                   rows="6" cols="60" filter="raw"/>
         </fieldset>
 
     </fields>

@@ -62,7 +62,8 @@ $itemIcon = match ($section['sectionType']) {
     default        => 'fa-solid fa-circle',
 };
 ?>
-<div class="accordion-item proclaim-landing-accordion__item">
+<div class="accordion-item proclaim-landing-accordion__item"
+     data-section="<?php echo htmlspecialchars($section['sectionType'], ENT_QUOTES, 'UTF-8'); ?>">
     <h2 class="accordion-header">
         <button class="accordion-button <?php echo $expanded ? '' : 'collapsed'; ?>"
                 type="button"

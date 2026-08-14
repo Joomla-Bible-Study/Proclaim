@@ -37,7 +37,8 @@ if (empty($items)) {
 
 $bandClass = $bandStyle === 'dark' ? 'proclaim-landing-band--dark' : 'proclaim-landing-band--light';
 ?>
-<div class="proclaim-landing-band <?php echo $bandClass; ?>">
+<div class="proclaim-landing-band <?php echo $bandClass; ?>"
+     data-section="<?php echo htmlspecialchars($section['sectionType'], ENT_QUOTES, 'UTF-8'); ?>">
     <div class="container">
         <?php if ($sectionLabel) : ?>
             <h2 class="proclaim-landing-band__title"><?php echo htmlspecialchars($sectionLabel, ENT_QUOTES, 'UTF-8'); ?></h2>

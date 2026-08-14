@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Site\View\Cwmlandingpage;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Site\Helper\CwmcustomcssHelper;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Component\ComponentHelper;
@@ -126,6 +127,10 @@ class HtmlView extends BaseHtmlView
 
         // Fetch all landing data in a single query
         $this->landingData = $this->landing->getLandingData($this->params);
+
+        // Per-section sheets, after the component and template ones the
+        // dispatcher already emitted, so a section can override them (#1807).
+        CwmcustomcssHelper::applySections($this->params, $this->landing->getSectionOrder($this->params));
 
         // Load landing page assets
         $wa = $document->getWebAssetManager();

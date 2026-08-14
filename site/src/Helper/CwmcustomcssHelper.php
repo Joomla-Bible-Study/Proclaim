@@ -92,6 +92,94 @@ class CwmcustomcssHelper
     }
 
     /**
+     * The per-section param suffix on the landing page.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    public const SECTION_PARAM_SUFFIX = '_custom_css';
+
+    /**
+     * Add each landing section's own sheet, scoped so it cannot reach the rest
+     * of the page.
+     *
+     * The two sheets apply() emits are page-wide by nature. A landing page is a
+     * stack of independently configured sections, and until now styling one of
+     * them meant writing a selector against the markup by hand and hoping it
+     * did not change (#1807).
+     *
+     * Each section's CSS is wrapped in `[data-section="<id>"] { … }` and relies
+     * on native CSS nesting, so an author writes plain rules as though the
+     * section were the document root and they cannot leak sideways. Browsers
+     * without nesting (pre-2023) drop the block entirely — the styling is
+     * absent rather than misapplied, which is the safe way to fail.
+     *
+     * @param   Registry               $params    The template params holding the sections' settings.
+     * @param   list<object>           $sections  Section descriptors, as getSectionOrder() returns them.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function applySections(Registry $params, array $sections): void
+    {
+        $css = self::buildSectionCss($params, $sections);
+
+        if ($css === '') {
+            return;
+        }
+
+        Factory::getApplication()->getDocument()->getWebAssetManager()->addInlineStyle(
+            $css,
+            ['name' => 'com_proclaim.landing-section-css']
+        );
+    }
+
+    /**
+     * Build the scoped sheet for a set of sections.
+     *
+     * Separate from applySections() so the scoping and the guards can be tested
+     * without a document to emit into — the part worth testing is which CSS
+     * ends up inside which selector, not that addInlineStyle was called.
+     *
+     * @param   Registry      $params    The template params holding the sections' settings.
+     * @param   list<object>  $sections  Section descriptors, as getSectionOrder() returns them.
+     *
+     * @return  string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function buildSectionCss(Registry $params, array $sections): string
+    {
+        $css = '';
+
+        foreach ($sections as $section) {
+            $id = (string) ($section->id ?? '');
+
+            // The id reaches an attribute selector, and landing_layout is JSON
+            // a user could hand-edit. Anything outside this set is not a
+            // section this component ships, so there is nothing to style.
+            if ($id === '' || preg_match('/^[a-z0-9_-]+$/', $id) !== 1) {
+                continue;
+            }
+
+            if (($section->enabled ?? true) === false) {
+                continue;
+            }
+
+            $sheet = self::sanitise((string) $params->get($id . self::SECTION_PARAM_SUFFIX, ''));
+
+            if ($sheet === '') {
+                continue;
+            }
+
+            $css .= '[data-section="' . $id . '"] {' . "\n" . $sheet . "\n" . '}' . "\n";
+        }
+
+        return $css;
+    }
+
+    /**
      * Forget that this request already emitted. For tests.
      *
      * @return  void
