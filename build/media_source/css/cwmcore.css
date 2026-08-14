@@ -1142,3 +1142,34 @@ p.expand {
 .alert .btn.btn-dark {
   color: #ffffff;
 }
+
+/*
+ * The same clash, on the front end, from the site template rather than Atum.
+ *
+ * Templates routinely colour every anchor inside their content wrapper:
+ *
+ *     .box2 > .g-content a, .box2.moduletable a { color: #8b5717 }   (0,2,1)
+ *
+ * Proclaim's buttons are anchors, so they are caught by it, and Bootstrap's own
+ * `.btn-primary { color: #fff }` is only (0,1,0) and loses. On nfsda.org that
+ * painted the teacher page's navigation buttons #8b5717 on a #8b5717 background
+ * — the text was still there, at a contrast ratio of 1:1.
+ *
+ * Scoped to .com-proclaim so this only claims Proclaim's own buttons, at (0,3,0)
+ * to clear a wrapper rule's (0,2,1). --bs-btn-color is preferred where the
+ * template defines it (Bootstrap 5.3 does), so a deliberate choice still wins
+ * and the fallback only applies to templates that set none.
+ */
+.com-proclaim .btn.btn-warning,
+.com-proclaim .btn.btn-light {
+  color: var(--bs-btn-color, #000000);
+}
+
+.com-proclaim .btn.btn-primary,
+.com-proclaim .btn.btn-secondary,
+.com-proclaim .btn.btn-success,
+.com-proclaim .btn.btn-danger,
+.com-proclaim .btn.btn-info,
+.com-proclaim .btn.btn-dark {
+  color: var(--bs-btn-color, #ffffff);
+}
