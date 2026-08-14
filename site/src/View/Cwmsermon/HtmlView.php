@@ -219,8 +219,13 @@ class HtmlView extends BaseHtmlView
         if (!$item) {
             // Render within the site template so the user sees navigation,
             // footer, and suggested messages instead of a bare error page.
-            // Set 404 for SEO after rendering starts so Gantry/Joomla can't intercept.
-            http_response_code(404);
+            //
+            // ⚠️ Set through the application, not http_response_code(). Joomla
+            // builds the response from its own object and sends those headers
+            // at the end of the request, so a raw status set here is discarded:
+            // measured, this page answered 200 while asking for 404, which is
+            // the opposite of the SEO outcome the comment intended.
+            $app->setHeader('status', 404, true);
             $this->document->setTitle(Text::_('JBS_CMN_STUDY_NOT_FOUND'));
 
             // Load recent messages from cache (15 min TTL) to reduce server load
