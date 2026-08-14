@@ -1126,7 +1126,18 @@ class Cwmmedia
     {
 
         $downloadImage = null;
-        $button        = $download->get('download_button_type', 'btn-outline-primary');
+        // btn-primary, not btn-outline-primary. Three things disagreed with that
+        // outline default: the settings form offers only solid variants, so it
+        // could not be chosen or restored; the setup wizard already writes
+        // btn-primary for new sites; and download_button_color emits an inline
+        // background-color, which fills in the very thing an outline button is.
+        //
+        // The combination was also unreadable. Registry::get() treats a stored
+        // empty string as unset, so every site that never picked a variant got
+        // the outline default -- and with the form's default colour saved, that
+        // rendered #0a58ca on black, 3.26:1. As a solid button the label is
+        // white on black instead (#1815).
+        $button        = $download->get('download_button_type', 'btn-primary');
         $buttonText    = $download->get('download_button_text', 'Audio');
         $textSize      = $download->get('download_icon_text_size', '24');
 
