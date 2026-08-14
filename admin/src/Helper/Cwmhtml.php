@@ -217,6 +217,21 @@ class Cwmhtml
             '<option value="">' . Text::_('JBS_BAT_TEACHER_NOCHANGE') . '</option>',
             HTMLHelper::_('select.options', self::teacherList(), 'value', 'text'),
             '</select>',
+            '<fieldset id="batch-teacher-mode" class="mt-2">',
+            '<legend class="visually-hidden">' . Text::_('JBS_BAT_TEACHER_MODE_QUESTION') . '</legend>',
+            HTMLHelper::_(
+                'select.radiolist',
+                [
+                    HTMLHelper::_('select.option', 'a', Text::_('JBS_BAT_TEACHER_MODE_ADD')),
+                    HTMLHelper::_('select.option', 'r', Text::_('JBS_BAT_TEACHER_MODE_REPLACE')),
+                ],
+                'batch[teacher_mode]',
+                '',
+                'value',
+                'text',
+                'a'
+            ),
+            '</fieldset>',
         ];
 
         return implode("\n", $lines);
