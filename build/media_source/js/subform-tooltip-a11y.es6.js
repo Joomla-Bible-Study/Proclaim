@@ -25,7 +25,7 @@
  * Confirmed present in Joomla 5.4.7, 6.1.2, 6.2.0 and 7.0.0, and only in the
  * repeatable-table layout. Reported upstream as joomla/joomla-cms#48151
  * (https://github.com/joomla/joomla-cms/issues/48151); this runs until that
- * lands and the oldest supported Joomla carries it. Tracked in #1341.
+ * lands and the oldest supported Joomla carries it.
  *
  * Chosen over overriding the layout in admin/layouts/. The override would mean
  * carrying a 125-line copy of a core file across four Joomla versions, going

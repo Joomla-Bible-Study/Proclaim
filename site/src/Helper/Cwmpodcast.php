@@ -407,7 +407,7 @@ class Cwmpodcast
      *
      * The line was hardcoded as "© (2026) All rights reserved." — stray
      * parentheses, and naming nobody, which is the one thing a copyright notice
-     * exists to say (#1412). The holder now comes from the podcast, falling back
+     * exists to say. The holder now comes from the podcast, falling back
      * to the site name so existing feeds gain a real one without anyone having
      * to edit a record.
      *
@@ -869,13 +869,13 @@ class Cwmpodcast
             $type         = $this->resolveEnclosureType($path, $mimeType);
             $enclosureUrl = $url;
 
-            // Opt-in: route the enclosure through the tracking redirect (#1281).
+            // Opt-in: route the enclosure through the tracking redirect.
             // The <guid> above is deliberately left as the direct URL so toggling
             // this on/off never changes item identity.
             if ($trackDownloads && $website !== '') {
                 $tracked = $this->buildTrackedEnclosureUrl($website, $protocol, $episode, $path);
 
-                // #1424: a bare "?...&task=cwmpodcast.track&media_id=N" URL has
+                // A bare "?...&task=cwmpodcast.track&media_id=N" URL has
                 // no file extension anywhere in it, and Apple's own RSS guide
                 // says that determines whether an episode is even ingested —
                 // this isn't validator pickiness. buildTrackedEnclosureUrl()
@@ -897,8 +897,8 @@ class Cwmpodcast
         );
 
         // isPermaLink defaults to true in RSS 2.0, which would invite readers to
-        // fetch the guid as the episode's web page. Since #1299 froze guids and
-        // decoupled them from the enclosure URL, it is an identity token only.
+        // fetch the guid as the episode's web page. Guids are frozen and
+        // decoupled from the enclosure URL, so it is an identity token only.
         return '
 		<enclosure url="' . $enclosureUrl . '" length="' . $size . '" type="' . $this->escapeHTML($type) . '" />
 		<guid isPermaLink="false">' . $guid . '</guid>';
@@ -906,7 +906,7 @@ class Cwmpodcast
 
     /**
      * Build the download-tracking enclosure URL as a real, extension-bearing
-     * path instead of a bare task query string (#1424).
+     * path instead of a bare task query string.
      *
      * Apple's Podcaster's Guide to RSS is explicit that the enclosure's file
      * extension "determines whether or not content appears in the podcast
@@ -947,7 +947,7 @@ class Cwmpodcast
         // only strips a query or fragment when the value really is a URL --
         // parse_url() alone would turn "Sermon #12.mp4" into "Sermon " and lose
         // the extension, and an enclosure URL without one is what Apple refuses
-        // to ingest (#1424).
+        // to ingest.
         $extension = Cwmmime::extensionOf($path);
 
         if ($extension === '') {
@@ -965,8 +965,8 @@ class Cwmpodcast
      * Resolve the MIME type to declare for a media enclosure.
      *
      * Derived from the file extension first: the stored mime_type is admin-entered
-     * and free to contradict the file it describes (the audit behind #1391 found
-     * .m4a files declared as audio/mp3, itself not a registered type). The stored
+     * and free to contradict the file it describes (.m4a files declared as
+     * audio/mp3, itself not a registered type). The stored
      * value is honoured only where the extension yields nothing.
      *
      * @param   string   $path       Media path or URL the enclosure points at.
@@ -1040,7 +1040,7 @@ class Cwmpodcast
                 continue;
             }
 
-            // Same derive-from-extension rule as the primary enclosure (#1391).
+            // Same derive-from-extension rule as the primary enclosure.
             $mimeType = $this->resolveEnclosureType($filename, $altParams->get('mime_type'));
 
             $url = $protocol . Cwmhelper::mediaBuildUrl(
@@ -1122,7 +1122,7 @@ class Cwmpodcast
         // whoever reads it, and podcast apps read it with no session. An item
         // the fetching user cannot see must therefore not appear at all —
         // listing it would publish the URL of a file they were refused, which
-        // is worse than the restriction simply not applying (#1774).
+        // is worse than the restriction simply not applying.
         //
         // Same chain as the download route (Cwmdownload::isAccessible) and the
         // sermon listings: media file, its message, and its series. The series
@@ -1569,10 +1569,10 @@ class Cwmpodcast
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
             } elseif (!$isYouTube && !empty($filename)) {
                 // A stored type that contradicts the file. The feed no longer trusts
-                // it — the enclosure type is derived from the extension (#1391) — but
+                // it — the enclosure type is derived from the extension — but
                 // the stored value is still wrong, and is a sign the record was
                 // created or imported incorrectly. YouTube URLs have no meaningful
-                // extension, so they are skipped rather than warned about (#1396).
+                // extension, so they are skipped rather than warned about.
                 $derived = Cwmmime::fromExtension($filename);
 
                 if ($derived !== null && $derived !== $mimeType) {
@@ -1587,7 +1587,7 @@ class Cwmpodcast
 
             // Check for missing duration. Compare numerically: a value stored as
             // '0' rather than '00' is still no duration, but slips past a strict
-            // string comparison and goes unreported (#1391).
+            // string comparison and goes unreported.
             $hours   = (int) $params->get('media_hours', '00');
             $minutes = (int) $params->get('media_minutes', '00');
             $seconds = (int) $params->get('media_seconds', '00');
@@ -1802,7 +1802,7 @@ class Cwmpodcast
             // Check if duration is already set. Numeric comparison: a record
             // holding '0' rather than '00' has no duration, and a string
             // comparison here made the repair tool skip the very records it
-            // exists to fix (#1391).
+            // exists to fix.
             $hours   = (int) $params->get('media_hours', '00');
             $minutes = (int) $params->get('media_minutes', '00');
             $seconds = (int) $params->get('media_seconds', '00');
@@ -2377,7 +2377,7 @@ class Cwmpodcast
             }
 
             // Check for missing MIME type, or one that contradicts the file — both
-            // are fixed by re-detection, so both belong in the queue (#1396).
+            // are fixed by re-detection, so both belong in the queue.
             $mimeType = $params->get('mime_type');
             if (empty($mimeType) || $this->mimeTypeContradictsFile($params)) {
                 $missing[] = 'mime_type';
@@ -2385,7 +2385,7 @@ class Cwmpodcast
 
             // Check for missing duration. Compare numerically: a value stored as
             // '0' rather than '00' is still no duration, but slips past a strict
-            // string comparison and goes unreported (#1391).
+            // string comparison and goes unreported.
             $hours   = (int) $params->get('media_hours', '00');
             $minutes = (int) $params->get('media_minutes', '00');
             $seconds = (int) $params->get('media_seconds', '00');
@@ -2412,7 +2412,7 @@ class Cwmpodcast
      * Whether a stored mime_type disagrees with what the filename implies.
      *
      * Detection is the authority — the feed derives the enclosure type from the
-     * extension since #1391 — so a disagreement means the stored value is wrong
+     * extension — so a disagreement means the stored value is wrong
      * and worth replacing. YouTube URLs carry no meaningful extension and are
      * never a mismatch.
      *

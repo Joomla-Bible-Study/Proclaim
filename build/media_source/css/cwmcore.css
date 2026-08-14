@@ -55,13 +55,9 @@
 }
 
 /*
- * The skip link is an anchor, so a template colouring every anchor in its
- * content wrapper repaints it — and it is the first control a keyboard user
- * reaches. Measured on nfsda.org, focused, it rendered the template's #8b5717
- * on this rule's dark background at 1.3:1.
- *
- * The single-class rules above are (0,1,0) and lose to a wrapper's (0,2,1).
- * Restated at (0,3,0), scoped to .com-proclaim, matching #1799.
+ * ⚠️ Restated at (0,3,0). The single-class rules above are (0,1,0) and lose to a
+ * template colouring anchors inside its content wrapper, which leaves the first
+ * control a keyboard user reaches unreadable.
  */
 .com-proclaim .proclaim-skip-link,
 .com-proclaim .proclaim-skip-link:focus {
@@ -1132,7 +1128,7 @@ p.expand {
  * explicit colour on several button variants, so the button ends up wearing the
  * alert's text colour over its own background. Inside .alert-warning that gives
  * #996901 on #ffb514 — 2.71:1 — which is how the control panel's schema-fix
- * button failed WCAG AA (#1375), and #996901 on the secondary blue is worse
+ * button failed WCAG AA, and #996901 on the secondary blue is worse
  * still at 1.32:1.
  *
  * The colours below are the ones each variant already computes when rendered
@@ -1191,7 +1187,7 @@ p.expand {
 
 /*
  * The outline variants, which the block above did not cover and which fail
- * worse (#1806). A solid button keeps its background, so a template repainting
+ * worse. A solid button keeps its background, so a template repainting
  * the label only lowers contrast. An outline button has no background and takes
  * the same colour on its border, so it disappears entirely: on nfsda.org the
  * landing "Show All Speakers" control measured white on white, 1.0:1, border

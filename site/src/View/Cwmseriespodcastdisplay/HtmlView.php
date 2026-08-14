@@ -120,7 +120,7 @@ class HtmlView extends BaseHtmlView
             // ran, so the response was an empty 200 inside the site chrome —
             // indexable, and with nothing for the visitor to act on. The
             // router usually redirects to the list before this is reached,
-            // which is why it went unnoticed (#1813).
+            // which is why it went unnoticed.
             //
             // Same shape as Cwmsermon: 404 for crawlers, a real page for
             // people.

@@ -7,7 +7,7 @@
  * CSP-hardened site unable to play anything, and an anchor whose href goes
  * nowhere cannot be middle-clicked, copied, or opened in a new tab, and is
  * announced to assistive technology as a link to a destination that does not
- * exist (#1814).
+ * exist.
  *
  * They now carry the real URL in href and the window size in data attributes.
  * Without this script the link still works — it opens in the same tab — so the
@@ -32,10 +32,8 @@
     /**
      * Only ever hand http(s) to window.open.
      *
-     * The value is read out of the DOM, and window.open('javascript:…') runs in
-     * the opener's context — so this script would otherwise reintroduce, at the
-     * point of use, exactly the execute-a-URL problem #1814 removed from the
-     * markup. Relative values are resolved against the page first, so an
+     * ⚠️ The value comes from the DOM, and window.open('javascript:…') runs in the
+     * opener's context. Relative values resolve against the page first, so an
      * ordinary index.php?… link still passes.
      *
      * @param   {string}  value  The href as written in the document.

@@ -115,7 +115,7 @@ class Cwmdownload
         //
         // ⚠️ This gates Proclaim's download route only. A file stored under the
         // web root is still served directly by the web server, which never
-        // enters PHP — see #1774.
+        // enters PHP.
         $user = $app->getIdentity();
 
         if (!self::isAccessible($media, $user->getAuthorisedViewLevels())) {
@@ -146,14 +146,14 @@ class Cwmdownload
         // Streaming is CwmmediaStreamer's job — it resolves the target to local
         // disk or proxies it, and it is the same implementation the podcast
         // redirect uses, so there is one Range/HEAD/If-Modified-Since handler
-        // rather than two (#1774).
+        // rather than two.
         //
         // What this replaces was weaker in two ways: it sent Content-Length and
         // readfile() with no Range support, so a browser could not seek in
         // gated audio or video; and its remote branch fopen()ed an
         // admin-configured URL and relayed the response to the caller with no
         // SSRF guard — the shape that was patched for the podcast endpoint in
-        // 10.5.5 (#1426) but never here.
+        // 10.5.5 but never here.
         //
         // Access was already checked above. The streamer answers how to send a
         // file, never whether to.
@@ -178,7 +178,7 @@ class Cwmdownload
 
         // Uri::root(), not the incoming Host header: that is client-supplied
         // and proxy-rewritable, so comparing against it misroutes local media
-        // down the remote path (#1552).
+        // down the remote path.
         CwmmediaStreamer::serve(
             $download_file,
             'application/octet-stream',
@@ -220,7 +220,7 @@ class Cwmdownload
      *
      * ⚠️ This governs Proclaim's download route only. A file stored under the
      * web root is served by the web server without ever entering PHP, so no
-     * check here can protect it — see #1774.
+     * check here can protect it.
      *
      * @param   object        $media   Media row, joined to its study and series levels.
      * @param   array<int>    $levels  The user's authorised view levels.

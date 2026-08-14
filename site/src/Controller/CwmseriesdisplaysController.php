@@ -38,8 +38,7 @@ class CwmseriesdisplaysController extends BaseController
      * ListModel — ignore_request => true here would set __state_set in
      * BaseModel::__construct(), permanently skipping populateState() and
      * leaving list/filter/template state empty for any caller (like
-     * paginateAjax()) that fetches the model with fewer than 3 args. See
-     * #1502.
+     * paginateAjax()) that fetches the model with fewer than 3 args.
      *
      * @param   string  $name    The name of the model
      * @param   string  $prefix  The prefix for the PHP class name
@@ -109,7 +108,7 @@ class CwmseriesdisplaysController extends BaseController
         } catch (\Throwable $e) {
             // \Throwable (not \Exception): a graceful {success:false} beats an
             // unhandled fatal HTML page for an endpoint whose only consumer is
-            // fetch()-based JS expecting JSON. See #1502.
+            // fetch()-based JS expecting JSON.
             echo json_encode([
                 'success' => false,
                 'message' => 'Failed to load results',

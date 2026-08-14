@@ -93,7 +93,7 @@ class CwmpodcastController extends BaseController
     }
 
     /**
-     * Download tracking endpoint (#1281, byte-range support #1424).
+     * Download tracking endpoint, with byte-range support.
      *
      * The podcast feed points <enclosure> URLs here (when the podcast has
      * track_downloads enabled) instead of at the live media. This counts the
@@ -186,7 +186,7 @@ class CwmpodcastController extends BaseController
         // involved. Comparing against it made isLocalHost() misroute local
         // media to the remote-proxy path on any such mismatch. Uri::root()
         // reflects Joomla's own site configuration (the "Live Site URL"
-        // when set) instead. See #1552.
+        // when set) instead.
         $host            = (string) (parse_url(Uri::root(), PHP_URL_HOST) ?: '');
         $range           = (string) $this->input->server->getString('HTTP_RANGE', '');
         $ifModifiedSince = (string) $this->input->server->getString('HTTP_IF_MODIFIED_SINCE', '');

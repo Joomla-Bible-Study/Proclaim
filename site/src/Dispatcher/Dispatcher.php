@@ -70,7 +70,7 @@ class Dispatcher extends ComponentDispatcher
         // views that do not call that helper rendered without it. That was not
         // only a missing focus ring: cwmseriespodcastlist styles its thumbnail
         // grid from this sheet, and without it the grid collapsed into a stack
-        // five times taller than intended (#1808).
+        // five times taller than intended.
         $this->app->getDocument()->getWebAssetManager()->useStyle('com_proclaim.cwmcore');
 
         // Once per component request, ahead of the views, so a rule can reach

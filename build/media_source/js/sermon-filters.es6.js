@@ -738,7 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * every select.  It is there for the simple/expert/custom sermon templates,
      * which never load this script and still need an immediate submit.  Here it
      * would fire alongside the change listeners below, costing a second AJAX
-     * request that the first one immediately aborts.  See #1389.
+     * request that the first one immediately aborts.
      */
     form.querySelectorAll('select[name^="filter_"], select[name^="filter["], select[name^="list_"], select[name^="list["]').forEach((select) => {
         select.removeAttribute('onchange');

@@ -29,7 +29,7 @@ use Joomla\Registry\Registry;
  * rather than replacing it. Both live in params (`#__bsms_admin` and
  * `#__bsms_templates`) so they are covered by Proclaim's backup and survive an
  * update untouched — a file under `media/com_proclaim/` would be neither, since
- * the installer prunes that directory. See discussion #1719.
+ * the installer prunes that directory.
  *
  * @since  10.5.8
  */
@@ -106,7 +106,7 @@ class CwmcustomcssHelper
      * The two sheets apply() emits are page-wide by nature. A landing page is a
      * stack of independently configured sections, and until now styling one of
      * them meant writing a selector against the markup by hand and hoping it
-     * did not change (#1807).
+     * did not change.
      *
      * Each section's CSS is wrapped in `[data-section="<id>"] { … }` and relies
      * on native CSS nesting, so an author writes plain rules as though the

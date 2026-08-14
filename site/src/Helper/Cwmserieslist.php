@@ -283,7 +283,7 @@ class Cwmserieslist extends Cwmlisting
      * ⚠️ series_detail_sort is a saved template param that goes straight into
      * ORDER BY. quoteName() makes it safe, not valid: any column that no longer
      * exists takes the page down with it, which is how a retired column reaches
-     * a live site (#1623).
+     * a live site.
      *
      * @param   mixed  $column  The saved param value
      *

@@ -138,7 +138,7 @@ class Router extends RouterView
     }
 
     /**
-     * Recognizes the cosmetic podcast download-tracking path (#1424) and maps
+     * Recognizes the cosmetic podcast download-tracking path and maps
      * it back to the track task from the media id alone. The trailing
      * filename segment is decorative only — it exists so the enclosure URL
      * carries a real file extension for Apple's ingestion crawler — and is

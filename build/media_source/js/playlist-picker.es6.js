@@ -1,5 +1,5 @@
 /**
- * Playlist picker (#1273 phase 4)
+ * Playlist picker (phase 4)
  *
  * Opens a modal listing the selected server's live channel playlists and, on
  * pick, writes the remote playlist ID into the read-only remote_playlist_id

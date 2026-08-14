@@ -59,29 +59,10 @@
 }
 
 /*
- * The accent band already gives this control its own colours further down. The
- * other two bands relied on .btn-outline-primary, and a template that flattens
- * .btn erases it: on nfsda.org the button rendered white text and a white
- * border on a white band — the whole control invisible, at 1.0:1. Bootstrap's
- * variant and the template's rule are both (0,1,0), so it came down to source
- * order (#1806).
- *
- * Claimed for every landing style, not just the hero bands: the cards and
- * dashboard styles render the same control with no band around it, so a
- * band-scoped rule would have left two of the three layouts exposed. The accent
- * band keeps its own colours and is scoped one class higher so it still wins.
- *
- * Stated here rather than in cwmcore.css with #1799's button rules, because
- * this is Proclaim's own landing chrome — the bands, cards and tags around it
- * are all ours — so claiming it does not override a template's styling of the
- * buttons that genuinely belong to it. Cassiopeia's navy and Helium's grey are
- * left alone everywhere else. There is no palette variable to defer to:
- * --bs-btn-color and --bs-primary are unset on Cassiopeia, stock Helium and
- * nfsda alike, so a literal is the only option.
- *
- * #0a58ca rather than the #0d6efd the tags hover to: that lighter blue measures
- * exactly 4.5:1 on white, the bare minimum with no headroom, and the count below
- * dims whatever it is given. This one measures 6.44:1.
+ * ⚠️ Stated rather than inherited. A template that flattens .btn erases
+ * .btn-outline-primary and this control disappears — Bootstrap's variant and a
+ * template's own .btn rule are both (0,1,0), so source order decides it. The
+ * accent band overrides these below at one class higher.
  */
 .com-proclaim .proclaim-landing__show-more {
     color: #0a58ca;
@@ -302,22 +283,10 @@
 }
 
 /*
- * The card is an anchor, so its text takes whatever colour a site template
- * paints links inside its content wrapper:
- *
- *     .box2 > .g-content a, .box2.moduletable a { color: #8b5717 }   (0,2,1)
- *
- * The card's own `color: #fff` is (0,1,0) and loses, and the text is inherited
- * from the anchor rather than declared on the title, so nothing stops it. On
- * nfsda.org that rendered every speaker's name in the template's orange over
- * the dark overlay — the same clash #1799 fixed for Proclaim's buttons.
- *
- * White here is not a preference: the overlay gradient exists to make white
- * text legible, and the text-shadows above are sized for it. Declaring the
- * colour on the title and subtitle rather than inheriting it settles this on
- * its own, since a declaration always beats an inherited value; the
- * .com-proclaim scope and (0,3,0) specificity match #1799 so the two do not
- * drift, and hold up if a template ever targets these elements directly.
+ * ⚠️ Declared here, not inherited from the card. A template colouring anchors
+ * inside its content wrapper (0,2,1) beats the card's own colour (0,1,0), and
+ * an inherited value loses to any declaration. White is required: the overlay
+ * gradient and the text-shadows above exist to make white legible.
  */
 .com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__title,
 .com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__sub {
