@@ -361,17 +361,6 @@
             }
         },
         {
-            "name": "com_proclaim.cwmadmin-types-modal",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-types-modal.min.js",
-            "dependencies": [
-                "core"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
             "name": "com_proclaim.cwmadmin-series-modal",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-series-modal.min.js",
