@@ -544,6 +544,7 @@
             "type": "style",
             "uri": "com_proclaim/cwm-landing.min.css",
             "dependencies": [
+                "com_proclaim.cwmcore",
                 "com_proclaim.general",
                 "fontawesome"
             ]
