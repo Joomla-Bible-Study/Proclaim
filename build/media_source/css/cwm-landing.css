@@ -342,6 +342,29 @@
     text-decoration: none;
 }
 
+/*
+ * Tags are anchors too, so they lose their colour to a site template's link
+ * rule the same way the hero card does — see the note above it. Measured on
+ * nfsda.org, every tag on the accent band rendered #8b5717 on a chip over that
+ * band's dark gradient: 2.0:1, against the 4.5:1 the text needs.
+ *
+ * The light variant survived on that site at 4.88:1, but only by luck of which
+ * accent the template happens to use, and it was still not the colour intended.
+ * Both are restated so neither depends on the template's palette.
+ */
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--light {
+    color: #495057;
+}
+
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--dark {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--light:hover,
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--dark:hover {
+    color: #fff;
+}
+
 /* =========================================================================
    Dashboard Style (.proclaim-landing--dashboard)
    ========================================================================= */
