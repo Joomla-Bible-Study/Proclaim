@@ -54,6 +54,21 @@
   outline-offset: 2px;
 }
 
+/*
+ * The skip link is an anchor, so a template colouring every anchor in its
+ * content wrapper repaints it — and it is the first control a keyboard user
+ * reaches. Measured on nfsda.org, focused, it rendered the template's #8b5717
+ * on this rule's dark background at 1.3:1.
+ *
+ * The single-class rules above are (0,1,0) and lose to a wrapper's (0,2,1).
+ * Restated at (0,3,0), scoped to .com-proclaim, matching #1799.
+ */
+.com-proclaim .proclaim-skip-link,
+.com-proclaim .proclaim-skip-link:focus {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
 /* Main content landmark */
 .proclaim-main-content {
   scroll-margin-top: 1rem;
