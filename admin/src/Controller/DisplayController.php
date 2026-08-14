@@ -75,7 +75,7 @@ class DisplayController extends BaseController
      * `Cwmassets::sectionForView()`.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private const EDIT_VIEW_LISTS = [
         'cwmcomment'      => 'cwmcomments',

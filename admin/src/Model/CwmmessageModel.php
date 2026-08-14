@@ -85,7 +85,7 @@ class CwmmessageModel extends AdminModel
      *
      * @var string
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected string $batchTeacherMode = 'a';
 
@@ -102,7 +102,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  bool  True on success
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function batch($commands, $pks, $contexts): bool
     {
@@ -122,7 +122,7 @@ class CwmmessageModel extends AdminModel
      *
      * @return  string  'r' to replace, 'a' to add
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected static function resolveTeacherMode(array $commands): string
     {

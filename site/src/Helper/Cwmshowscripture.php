@@ -626,7 +626,7 @@ class Cwmshowscripture
      *
      * @return  BiblePassageResult
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private function fetchPassage(
         object $provider,

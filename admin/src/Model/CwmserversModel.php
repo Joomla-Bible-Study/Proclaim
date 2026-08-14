@@ -228,7 +228,7 @@ class CwmserversModel extends ListModel
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function getStoreId($id = ''): string
     {

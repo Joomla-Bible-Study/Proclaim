@@ -227,7 +227,7 @@ class Cwmdownload
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isAccessible(object $media, array $levels): bool
     {

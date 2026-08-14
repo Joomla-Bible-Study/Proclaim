@@ -46,7 +46,7 @@ class CwmmessagetypeController extends FormController
      * The access.xml section these records belong to.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     protected string $aclSection = 'messagetype';
 

@@ -1975,7 +1975,7 @@ class Cwmlisting
      *
      * @return  ScriptureReference|null  Null when the row predates the junction
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function referenceFor(object $row, int $scripturerow): ?ScriptureReference
     {
@@ -1996,7 +1996,7 @@ class Cwmlisting
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function hasScripture(object $row, int $scripturerow): bool
     {
@@ -2018,7 +2018,7 @@ class Cwmlisting
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function renderScripture(
         Registry $params,

@@ -31,7 +31,7 @@ use Joomla\Registry\Registry;
  * update untouched — a file under `media/com_proclaim/` would be neither, since
  * the installer prunes that directory. See discussion #1719.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmcustomcssHelper
 {
@@ -39,7 +39,7 @@ class CwmcustomcssHelper
      * The param both levels store their CSS under.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const PARAM = 'custom_css';
 
@@ -47,7 +47,7 @@ class CwmcustomcssHelper
      * Guards against emitting twice within one request.
      *
      * @var    bool
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private static bool $applied = false;
 
@@ -61,7 +61,7 @@ class CwmcustomcssHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function apply(): void
     {
@@ -95,7 +95,7 @@ class CwmcustomcssHelper
      * The per-section param suffix on the landing page.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const SECTION_PARAM_SUFFIX = '_custom_css';
 
@@ -119,7 +119,7 @@ class CwmcustomcssHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function applySections(Registry $params, array $sections): void
     {
@@ -147,7 +147,7 @@ class CwmcustomcssHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function buildSectionCss(Registry $params, array $sections): string
     {
@@ -184,7 +184,7 @@ class CwmcustomcssHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function reset(): void
     {
@@ -203,7 +203,7 @@ class CwmcustomcssHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function sanitise(string $css): string
     {
@@ -223,7 +223,7 @@ class CwmcustomcssHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function componentCss(): string
     {
@@ -243,7 +243,7 @@ class CwmcustomcssHelper
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function templateCss(): string
     {

@@ -295,7 +295,7 @@ class CwmsermonController extends FormController
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function notifyQuietly(callable $send): void
     {

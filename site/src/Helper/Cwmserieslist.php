@@ -275,7 +275,7 @@ class Cwmserieslist extends Cwmlisting
      * Columns a template may sort a series detail list by.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const SORT_COLUMNS = ['studydate', 'studytitle', 'ordering', 'hits'];
 
@@ -289,7 +289,7 @@ class Cwmserieslist extends Cwmlisting
      *
      * @return  string  A column that exists
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function sortColumn(mixed $column): string
     {

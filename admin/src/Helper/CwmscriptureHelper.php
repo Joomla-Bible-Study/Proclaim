@@ -271,7 +271,7 @@ class CwmscriptureHelper extends ScriptureHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function applyBookNames(array $rows, string $idColumn = 'id'): void
     {
