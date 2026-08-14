@@ -49,6 +49,15 @@ $finder = PhpCsFixer\Finder::create()
     ->notPath('/layouts/')
     // Ignore third-party vendor directories
     ->notPath('#vendor/#')
+    // Some npm packages ship PHP alongside their JS (flatted does), and it is no
+    // more ours to reformat than anything under vendor/.
+    ->notPath('#node_modules/#')
+    // The bundled scripture library and its plugin are separate repositories
+    // with their own lint in their own CI. Linting them here cannot fix them --
+    // an edit either dirties the submodule or is lost at the next pin move --
+    // and it lets this project's rules dictate another project's style.
+    // (relative to each in() root, so this is 'plugins/content/scripturelinks')
+    ->notPath('#^content/scripturelinks/#')
     // Ignore generated build output. build/dist is gitignored, but Finder does
     // not read .gitignore, so packaged copies of our own sources (and the
     // install_* temp dirs cwm-package leaves behind) would be linted as if

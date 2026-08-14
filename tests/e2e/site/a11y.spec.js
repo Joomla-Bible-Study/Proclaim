@@ -131,24 +131,60 @@ test.describe('Site accessibility (WCAG 2.2 AA) @a11y', () => {
         });
     }
 
-    // The media popup needs a mediaid and renders as a bare window the player
-    // opens. There is no listing to click through — reach it directly and
-    // skip when the id does not resolve to real media on this database.
+    // The media popup renders as a bare window the player opens, so there is no
+    // link to click — the id has to come from somewhere.
+    //
+    // ⚠️ This used to request mediaid=1 and skip when it did not resolve. Media
+    // ids on a site of any age do not start at 1 (on the reference database the
+    // lowest is 838), so the request 404'd and the test skipped itself on every
+    // run, reporting as skipped rather than failed. Same shape as the selector
+    // bug noted above DETAILS: green by never running.
+    //
+    // The id now comes from the listing's own player links: Cwmmedia renders
+    // each as `a.fancybox_player` carrying the media file's id in data-id. That
+    // is real data on whatever database the suite runs against, and needs no
+    // navigation, so there is no stale-locator problem either.
     test('media popup meets WCAG AA', async ({ page }) => {
-        const response = await page.goto('/?option=com_proclaim&view=cwmpopup&mediaid=1&tmpl=component', {
-            waitUntil: 'networkidle',
+        await page.goto('/?option=com_proclaim&view=cwmsermons', { waitUntil: 'networkidle' });
+
+        const mediaId = await page
+            .locator('a.fancybox_player[data-id]')
+            .first()
+            .getAttribute('data-id')
+            .catch(() => null);
+
+        // An empty database, or a template whose player renders no media link.
+        if (!mediaId || !/^\d+$/.test(mediaId)) {
+            test.skip(true, 'No media player link on the sermon listing to take an id from');
+        }
+
+        const response = await page.goto(
+            `/?option=com_proclaim&view=cwmpopup&mediaid=${mediaId}&tmpl=component`,
+            { waitUntil: 'networkidle' }
+        );
+
+        expect(response.status()).toBeLessThan(400);
+        await expect(page.locator(PROCLAIM_CONTENT).first()).toBeAttached({ timeout: 15000 });
+
+        // The accessible name is the one part of a third-party embed we control,
+        // so assert it here rather than leaving it to the scan. Every addon sets
+        // it via CWMAddon::frameTitle(); axe cannot check it once the frame is
+        // excluded below.
+        const frame = page.locator('iframe').first();
+
+        if (await frame.count()) {
+            await expect(frame).toHaveAttribute('title', /\S/);
+        }
+
+        // ⚠️ The player frame is excluded because the document inside it is the
+        // provider's. YouTube's player reports aria-allowed-attr and
+        // aria-prohibited-attr against its own markup, and nothing we change
+        // fixes it — but everything Proclaim renders around it is still scanned.
+        // Narrower would be better; axe's frame-chain exclude does not reach
+        // into a cross-origin player, so this is the honest boundary.
+        await expectNoViolations(page, expect, {
+            include: PROCLAIM_CONTENT,
+            exclude: ['iframe'],
         });
-
-        if (response.status() >= 400) {
-            test.skip(true, 'No media id 1 on this database');
-        }
-
-        const container = page.locator(PROCLAIM_CONTENT);
-
-        if (!(await container.count())) {
-            test.skip(true, 'Popup did not render a Proclaim container for media id 1');
-        }
-
-        await expectNoViolations(page, expect, { include: PROCLAIM_CONTENT });
     });
 });

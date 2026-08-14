@@ -209,7 +209,7 @@ class CWMAddonSoundcloud extends CWMAddon
         }
 
         return '<div class="proclaim-audio-wrap" style="max-width:100%;">'
-            . '<iframe class="playhit" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
+            . '<iframe ' . $this->frameTitle() . ' class="playhit" data-id="' . $mediaId . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8') . '"'
             . ' width="100%" height="' . (int) $height . '" scrolling="no" frameborder="no"'
             . ' allow="autoplay" loading="lazy"></iframe>'
             . '</div>';
@@ -234,7 +234,7 @@ class CWMAddonSoundcloud extends CWMAddon
         // SoundCloud uses fixed height, not responsive video ratio
         $scHeight = !empty($height) ? $height : '166';
 
-        return '<iframe width="' . $width . '" height="' . $scHeight
+        return '<iframe ' . $this->frameTitle() . ' width="' . $width . '" height="' . $scHeight
             . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
             . '" scrolling="no" frameborder="no" allow="autoplay"></iframe>';
     }
