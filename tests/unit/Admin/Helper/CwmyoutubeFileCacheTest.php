@@ -78,6 +78,13 @@ class CwmyoutubeFileCacheTest extends ProclaimTestCase
         }
 
         @rmdir($this->cacheDir);
+
+        // Also drop the now-empty parents. A leftover media/com_proclaim/ makes
+        // cwm-verify read this flat-layout component as namespaced, so every dev
+        // site's media symlink is reported as a conflict. @rmdir is a no-op on a
+        // directory that still has contents.
+        @rmdir(\dirname($this->cacheDir));
+        @rmdir(\dirname($this->cacheDir, 2));
     }
 
     public function testStoreAndRetrieveLastKnownVideo(): void
