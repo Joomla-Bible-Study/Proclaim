@@ -29,6 +29,37 @@
         || event.button !== 0
         || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
 
+    /**
+     * Only ever hand http(s) to window.open.
+     *
+     * The value is read out of the DOM, and window.open('javascript:…') runs in
+     * the opener's context — so this script would otherwise reintroduce, at the
+     * point of use, exactly the execute-a-URL problem #1814 removed from the
+     * markup. Relative values are resolved against the page first, so an
+     * ordinary index.php?… link still passes.
+     *
+     * @param   {string}  value  The href as written in the document.
+     * @returns {string|null}    A safe absolute URL, or null to leave the click alone.
+     */
+    const safeUrl = (value) => {
+        // Empty or a bare fragment names no destination. Both resolve to the
+        // current page, so without this the control would pop open a copy of
+        // the page it is already on.
+        if (value === '' || value.charAt(0) === '#') {
+            return null;
+        }
+
+        try {
+            const resolved = new URL(value, window.location.href);
+
+            return (resolved.protocol === 'http:' || resolved.protocol === 'https:')
+                ? resolved.href
+                : null;
+        } catch {
+            return null;
+        }
+    };
+
     document.addEventListener('click', (event) => {
         const trigger = event.target.closest('[data-proclaim-popup]');
 
@@ -36,10 +67,12 @@
             return;
         }
 
-        const url = trigger.getAttribute('href');
+        const url = safeUrl(trigger.getAttribute('href') || '');
 
-        // Nothing to open, so let the browser do whatever it would have done.
-        if (!url || url === '#') {
+        // Nothing safe to open, so let the browser do whatever it would have
+        // done — which for a scheme we refuse is the browser's own handling,
+        // not ours.
+        if (!url) {
             return;
         }
 

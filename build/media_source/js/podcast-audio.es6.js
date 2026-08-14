@@ -79,7 +79,23 @@ document.addEventListener('click', (event) => {
         return;
     }
 
-    const path = trigger.getAttribute('data-proclaim-audio');
+    // The value is read out of the DOM and ends up on audio.src, so only ever
+    // pass a media URL through. Without this the listener would accept any
+    // scheme written into the attribute — reintroducing at the point of use
+    // exactly what #1814 removed from the markup. Relative paths resolve
+    // against the page first, so ordinary media URLs still pass.
+    const raw = trigger.getAttribute('data-proclaim-audio') || '';
+    let path = null;
+
+    try {
+        const resolved = new URL(raw, window.location.href);
+
+        if (resolved.protocol === 'http:' || resolved.protocol === 'https:') {
+            path = resolved.href;
+        }
+    } catch {
+        path = null;
+    }
 
     if (path) {
         window.loadVideo(path);
