@@ -11,7 +11,6 @@ const SELECT_ARGS = ['1', 'Test Title', '2', null, '/test/link', 'en-GB'];
 const SERVER_ARGS = ['1', 'Test Title', '/test/link', 'en-GB'];
 
 const MODAL_FILES = [
-    { name: 'locations', file: 'build/media_source/js/cwmadmin-locations-modal.es6.js', selectFn: 'jSelectLocations', args: SELECT_ARGS },
     { name: 'messages', file: 'build/media_source/js/cwmadmin-messages-modal.es6.js', selectFn: 'jSelectMessages', args: SELECT_ARGS },
     { name: 'series', file: 'build/media_source/js/cwmadmin-series-modal.es6.js', selectFn: 'jSelectSeries', args: SELECT_ARGS },
     { name: 'servers', file: 'build/media_source/js/cwmadmin-servers-modal.es6.js', selectFn: 'jSelectServer', args: SERVER_ARGS, parentTask: 'cwmmediafile.setServer' },
