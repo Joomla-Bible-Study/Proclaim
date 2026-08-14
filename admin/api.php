@@ -27,11 +27,10 @@ try {
 // On admin pages the debug check runs immediately; on the site side we
 // default to off and let Cwmdownload (the only front-end consumer) check
 // on demand, avoiding a DB query on every module/page load.
-// A URL parameter is not authorisation. `?jbsmdbg=1` previously switched
-// JBSMDEBUG on for *any* client, so an anonymous site visitor could enable the
-// component's debug buffer -- and CwmsermonsController::filterAjax() ships that
-// buffer to the browser as `_debug`, handing out raw SQL for the sermon listing
-// query. Honour the parameter only for a user who actually holds core.admin.
+//
+// ⚠️ A URL parameter is not authorisation. CwmsermonsController::filterAjax()
+// ships the debug buffer to the browser as `_debug`, raw SQL included, so
+// honour `?jbsmdbg=1` only for a user who actually holds core.admin.
 //
 // Checked on both clients rather than restricted to the administrator client:
 // Cwmdownload logs through CwmDebug on the front end, so an admin debugging a
@@ -83,13 +82,11 @@ if (is_dir($modProclaimPath)) {
 // Register web asset registries so assets are available when views/modules request them.
 // Actual useStyle/useScript calls are made by individual views and module dispatchers.
 //
-// Guarded because this file does NOT only run in web applications, despite what
-// the comment below used to claim. plg_task_proclaim requires it from its
-// constructor, and com_scheduler imports every task plugin just to list the
-// routines they offer — so `php cli/joomla.php scheduler:run` reached this line
-// with a ConsoleApplication, which has no getDocument(), and died before any
-// task ran. Every scheduled task on the site was affected, including other
-// extensions' and Joomla's own.
+// ⚠️ Guarded because this file does NOT only run in web applications.
+// plg_task_proclaim requires it from its constructor, and com_scheduler imports
+// every task plugin just to list the routines they offer, so
+// `php cli/joomla.php scheduler:run` reaches this line with a
+// ConsoleApplication, which has no getDocument().
 //
 // Asset registries mean nothing without a document, so skipping them off the
 // web costs nothing. CMSWebApplicationInterface is what declares getDocument();

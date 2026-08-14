@@ -1065,13 +1065,10 @@ class CwmmigrationHelper
         // Write through Cwmparams, which merges into the stored params Registry
         // and clears the _system cache.
         //
-        // This previously ran its own UPDATE that set #__extensions.params to
-        // json_encode($existing) -- the mapping array alone, as the whole params
-        // column. Every other Proclaim setting on the site was replaced by it,
-        // and because the write bypassed ComponentHelper's cache the damage was
-        // invisible until the next request. Scenario 2A of
-        // migrateAccessToLocations() is the only caller, so a multi-campus
-        // migration wiped the component's configuration as a side effect.
+        // ⚠️ Through Cwmparams::setCompParams(), never a raw UPDATE of
+        // #__extensions.params — a direct write replaces every other Proclaim
+        // setting with this mapping alone, and bypasses ComponentHelper's cache
+        // so the damage stays invisible until the next request.
         Cwmparams::setCompParams(
             ['location_group_mapping' => json_encode($existing, JSON_THROW_ON_ERROR)]
         );

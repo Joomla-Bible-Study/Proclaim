@@ -725,9 +725,8 @@ class Cwmassets
     /**
      * The asset a section's item rows should hang from.
      *
-     * Item assets used to be parented to `com_proclaim`, which meant a rule on
-     * `com_proclaim.<section>` never reached them — a record with per-record
-     * permissions escaped its section entirely.
+     * ⚠️ An item asset parented to `com_proclaim` escapes its section entirely:
+     * a rule on `com_proclaim.<section>` never reaches it.
      *
      * Falls back to the component for a section access.xml does not declare, so
      * `message_type`, `cwmadmin` and `studytopics` keep their old parent until
@@ -835,17 +834,14 @@ class Cwmassets
      * Clean ALL Proclaim assets: clean orphans, delete empty-rules rows,
      * fix parent_id on surviving rows, rebuild the nested-set tree.
      *
-     * **Inverted from the pre-10.3.0 behavior**: this method no longer
-     * creates an asset row for every Proclaim record with default rules.
-     * On mature sites that produced thousands of `com_proclaim.*` rows
-     * whose `rules` column was the empty template — Joomla still had to
-     * load them all during `Access::preload()`, accounting for ~72% of
-     * the admin page-load time on some installs.
+     * Does not create an asset row for every Proclaim record with default
+     * rules. Joomla loads every `com_proclaim.*` row during `Access::preload()`,
+     * so empty-template rows cost admin page-load time for nothing.
      *
-     * Net effect: Proclaim's asset tree now contains only the com_proclaim
-     * parent plus any records where an admin has genuinely customised the
-     * rules. Permission checks still work for everything else because
-     * Joomla walks the ancestor chain up to the parent.
+     * Net effect: Proclaim's asset tree contains only the com_proclaim parent
+     * plus any records where an admin has genuinely customised the rules.
+     * Permission checks still work for everything else because Joomla walks the
+     * ancestor chain up to the parent.
      *
      * @return void
      *
@@ -1203,15 +1199,14 @@ class Cwmassets
     /**
      * Repair a single record's asset link.
      *
-     * **Behavior changed in 10.3.0**: this no longer creates a new asset
-     * row for records that lack one. If a record has no `asset_id` (or
-     * points at a missing row) and the only thing we could create would
-     * be an empty-rules placeholder, we leave it alone — permission
-     * checks fall through to the `com_proclaim` parent asset, which is
-     * what we want. Creating them instead accumulates thousands of empty rows
-     * that slow `Access::preload('com_proclaim')` down for no benefit.
+     * Does not create a new asset row for records that lack one. If a record
+     * has no `asset_id` (or points at a missing row) and the only thing we
+     * could create would be an empty-rules placeholder, we leave it alone —
+     * permission checks fall through to the `com_proclaim` parent asset, which
+     * is what we want. Creating them instead accumulates thousands of empty
+     * rows that slow `Access::preload('com_proclaim')` down for no benefit.
      *
-     * What it still does:
+     * What it does:
      *   - Relink a record to an existing, real-rules asset row by name.
      *   - Delete the record's asset row if the rules turned out to be
      *     empty/default, and null `asset_id` on the record.

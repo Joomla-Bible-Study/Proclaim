@@ -338,11 +338,10 @@ class CwmassetsModel extends ListModel
     /**
      * Collect per-table asset status counts.
      *
-     * **Behavior changed in 10.3.0**: Proclaim no longer registers a
-     * per-record #__assets row for every item. Records with `asset_id = 0`
-     * inherit permission checks from the com_proclaim parent, and that is
-     * now the normal, desired state. The returned shape reflects the new
-     * model — see `Cwmassets::getAssetStatus()` for key meanings.
+     * Proclaim does not register a per-record #__assets row for every item.
+     * Records with `asset_id = 0` inherit permission checks from the
+     * com_proclaim parent, and that is the normal, desired state — see
+     * `Cwmassets::getAssetStatus()` for key meanings.
      *
      * @return  array
      *

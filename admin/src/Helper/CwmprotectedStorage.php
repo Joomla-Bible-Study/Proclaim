@@ -41,8 +41,8 @@ use Joomla\Filesystem\Folder;
  * must never hand out a URL that works without permission.** Proclaim already
  * proxies media rather than redirecting to it — the exception being embedded
  * platforms like YouTube, which are players rather than files and were never
- * protectable by anyone. The feed no longer lists restricted items either
- * , so the origin URL of a private remote file is never published.
+ * protectable by anyone. The feed does not list restricted items either, so
+ * the origin URL of a private remote file is never published.
  *
  * What this directory adds is the remaining case: a file that has nowhere
  * private to live, because the site hosts it itself.

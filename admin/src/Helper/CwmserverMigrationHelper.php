@@ -343,11 +343,10 @@ class CwmserverMigrationHelper
         // match the live renderer's precedence in Cwmmedia.php, which sets
         // $player->player from docMan_id, then unconditionally overrides it
         // from article_id, then unconditionally overrides it again from
-        // virtueMart_id -- i.e. last-match-wins, so virtuemart beats
-        // article beats docman. Checking in [docman, article, virtuemart]
-        // order and returning on first match (as this loop used to) is the
-        // exact inverse and can migrate content to a different addon than
-        // what the site was actually rendering.
+        // virtueMart_id -- i.e. last-match-wins, so virtuemart beats article
+        // beats docman. ⚠️ Checking in [docman, article, virtuemart] order and
+        // returning on first match is the exact inverse, and migrates content
+        // to a different addon than the site is rendering.
         $legacyIdFields = [
             ['4', 'docMan_id',     'docman'],
             ['5', 'article_id',    'article'],

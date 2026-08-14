@@ -267,9 +267,7 @@ class Cwmhtml
         }
 
         // Never null. HTMLHelper::_('select.options', ...) foreach()es this
-        // straight away and core has no null guard, so a failed query used to
-        // emit a TypeError warning into the middle of the batch dialog's markup.
-        // locationList() already did this correctly.
+        // straight away and core has no null guard.
         return [];
     }
 
@@ -327,9 +325,7 @@ class Cwmhtml
         }
 
         // Never null. HTMLHelper::_('select.options', ...) foreach()es this
-        // straight away and core has no null guard, so a failed query used to
-        // emit a TypeError warning into the middle of the batch dialog's markup.
-        // locationList() already did this correctly.
+        // straight away and core has no null guard.
         return [];
     }
 
@@ -387,9 +383,7 @@ class Cwmhtml
         }
 
         // Never null. HTMLHelper::_('select.options', ...) foreach()es this
-        // straight away and core has no null guard, so a failed query used to
-        // emit a TypeError warning into the middle of the batch dialog's markup.
-        // locationList() already did this correctly.
+        // straight away and core has no null guard.
         return [];
     }
 

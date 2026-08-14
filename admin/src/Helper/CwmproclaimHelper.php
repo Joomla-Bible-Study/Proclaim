@@ -63,11 +63,7 @@ class CwmproclaimHelper
      * Get the installed Proclaim version.
      *
      * Reads `#__extensions.manifest_cache`, which every Joomla application
-     * (site, admin, API, CLI) can query. This replaces the old
-     * BIBLESTUDY_VERSION constant, which admin/api.php only populated by
-     * parsing proclaim.xml off the filesystem, and only when the current
-     * client was 'administrator' — everywhere else, including the API
-     * application, it was an empty string.
+     * (site, admin, API, CLI) can query.
      *
      * @return  string  Semver version string, or '0.0.0' if unavailable
      *
@@ -99,7 +95,7 @@ class CwmproclaimHelper
         } catch (\Throwable $e) {
             self::$version = '0.0.0';
 
-            // Still '0.0.0' — callers rely on that fallback — but no longer silent.
+            // Still '0.0.0' — callers rely on that fallback — but logged.
             CwmlogHelper::error(
                 'Could not read the installed Proclaim version from #__extensions.manifest_cache; '
                 . 'reporting 0.0.0. ' . $e->getMessage()
@@ -514,9 +510,7 @@ class CwmproclaimHelper
         $query   = $db->createQuery();
 
         // Books come from the junction, so a study with more than two references
-        // offers all of them rather than the two the flat columns could hold
-        // . The name comes from the scripture library, which holds the
-        // language keys #__bsms_books used to store.
+        // offers all of them. The name comes from the scripture library.
         $query->select('DISTINCT ' . $db->quoteName('sr.booknumber', 'value'))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->join(

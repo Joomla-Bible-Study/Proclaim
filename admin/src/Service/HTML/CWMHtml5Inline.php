@@ -47,7 +47,7 @@ class CWMHtml5Inline
     ): string {
         $popupMarg = 0;
 
-        // Used to set for MP3 and audio player look
+        // MP3 and audio player look.
         if (isset($player->mp3) && $player->mp3 === true) {
             $media->playerheight = 30;
         } else {

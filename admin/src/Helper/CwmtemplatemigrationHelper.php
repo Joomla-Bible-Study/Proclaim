@@ -590,11 +590,8 @@ class CwmtemplatemigrationHelper
                     // Only copy the stale old-name value over the new name if
                     // the new name isn't already populated -- otherwise this
                     // clobbers a value an admin already saved under the new
-                    // name (e.g. picked a different teacher via lteacher_id
-                    // after this template's teacher_id migration hadn't run
-                    // yet) with the older, no-longer-current value. Matches
-                    // the guard applyParamsToTemplates() uses for the same
-                    // reason.
+                    // name. Matches the guard applyParamsToTemplates() uses for
+                    // the same reason.
                     if ($registry->get($newName) === null) {
                         $registry->set($newName, $oldValue);
                     }
