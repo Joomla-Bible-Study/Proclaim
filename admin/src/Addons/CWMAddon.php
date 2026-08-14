@@ -1516,11 +1516,17 @@ abstract class CWMAddon
     ): string {
         $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
 
+        $safeEmbedUrl = htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8');
+
+        // href is the embed URL, not a javascript: placeholder. Fancybox reads
+        // data-src and intercepts the click, so behaviour is unchanged, but a
+        // Content-Security-Policy no longer blocks the control and the visitor
+        // can middle-click or copy it like any other link (#1814).
         return '<a class="fancybox_player playhit" data-id="' . $mediaId
-            . '" aria-hidden="false" data-src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
+            . '" aria-hidden="false" data-src="' . $safeEmbedUrl
             . '" data-header="' . $headerText . '" data-footer="' . $footerText
             . '" data-options=\'{"autoplay":"' . (int) $mediaParams->get('autostart', false)
-            . '","controls":"' . (int) $mediaParams->get('controls') . '"}\' href="javascript:;">'
+            . '","controls":"' . (int) $mediaParams->get('controls') . '"}\' href="' . $safeEmbedUrl . '">'
             . $image . '</a>';
     }
 

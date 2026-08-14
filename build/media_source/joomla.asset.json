@@ -757,6 +757,17 @@
             }
         },
         {
+            "name": "com_proclaim.media-popup",
+            "type": "script",
+            "uri": "com_proclaim/proclaim-media-popup.min.js",
+            "dependencies": [
+                "core"
+            ],
+            "attributes": {
+                "defer": true
+            }
+        },
+        {
             "name": "com_proclaim.cwm-landing-toggle",
             "type": "script",
             "uri": "com_proclaim/cwm-landing-toggle.min.js",
