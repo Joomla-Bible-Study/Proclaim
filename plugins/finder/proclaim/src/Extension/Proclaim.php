@@ -231,7 +231,6 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // We only want to handle messages here
         if ($context === 'com_proclaim.cwmmessage' || $context === 'com_proclaim.message' || $context === 'com_proclaim.form') {
-            // Query the database for the old access level if the item isn't new
             if (!$isNew) {
                 $this->checkItemAccess($row);
             }
@@ -239,7 +238,6 @@ final class Proclaim extends Adapter implements SubscriberInterface
 
         // Check for access levels from the Series.
         if ($context === 'com_proclaim.cwmserie' || $context === 'com_proclaim.series') {
-            // Query the database for the old access level if the item isn't new.
             if (!$isNew) {
                 $this->checkSeriesAccess($row);
             }
