@@ -58,8 +58,51 @@
     margin-top: 1rem;
 }
 
+/*
+ * The accent band already gives this control its own colours further down. The
+ * other two bands relied on .btn-outline-primary, and a template that flattens
+ * .btn erases it: on nfsda.org the button rendered white text and a white
+ * border on a white band — the whole control invisible, at 1.0:1. Bootstrap's
+ * variant and the template's rule are both (0,1,0), so it came down to source
+ * order (#1806).
+ *
+ * Claimed for every landing style, not just the hero bands: the cards and
+ * dashboard styles render the same control with no band around it, so a
+ * band-scoped rule would have left two of the three layouts exposed. The accent
+ * band keeps its own colours and is scoped one class higher so it still wins.
+ *
+ * Stated here rather than in cwmcore.css with #1799's button rules, because
+ * this is Proclaim's own landing chrome — the bands, cards and tags around it
+ * are all ours — so claiming it does not override a template's styling of the
+ * buttons that genuinely belong to it. Cassiopeia's navy and Helium's grey are
+ * left alone everywhere else. There is no palette variable to defer to:
+ * --bs-btn-color and --bs-primary are unset on Cassiopeia, stock Helium and
+ * nfsda alike, so a literal is the only option.
+ *
+ * #0a58ca rather than the #0d6efd the tags hover to: that lighter blue measures
+ * exactly 4.5:1 on white, the bare minimum with no headroom, and the count below
+ * dims whatever it is given. This one measures 6.44:1.
+ */
+.com-proclaim .proclaim-landing__show-more {
+    color: #0a58ca;
+    border-color: #0a58ca;
+}
+
+.com-proclaim .proclaim-landing__show-more:hover {
+    background-color: #0a58ca;
+    border-color: #0a58ca;
+    color: #fff;
+}
+
 .proclaim-landing__toggle-count {
-    opacity: 0.6;
+    /*
+     * 0.6 dimmed this below the contrast floor on every template, not just a
+     * hostile one: opacity multiplies whatever colour it inherits, and
+     * getComputedStyle does not report it, so the count measured as passing
+     * while rendering at 2.4:1 on a light band and 4.86:1 on the accent one.
+     * 0.85 keeps it visibly secondary at 4.76:1 and 8.43:1.
+     */
+    opacity: 0.85;
     margin-left: 0.25rem;
 }
 
@@ -79,10 +122,31 @@
     overflow: visible;
     display: inline-block;
     padding: 0.5rem 1rem;
-    background: #0d6efd;
+    /*
+     * Dark rather than the #0d6efd this used to be: white on that blue measures
+     * exactly 4.5:1, the bare minimum, and it disagreed with the same control in
+     * cwmcore.css for no reason. This matches cwmcore's treatment, which measures
+     * 20.9:1 — the literal is repeated because --color-black is defined there and
+     * that file does not reach this page.
+     */
+    background: #212529;
     color: #fff;
     text-decoration: none;
     z-index: 1000;
+}
+
+/*
+ * Same clash as the hero card, on the one control a keyboard user meets first.
+ * Focused on nfsda.org this measured 1.3:1 — the template's link colour on the
+ * blue above — because the rule setting that white is (0,1,0) and a wrapper's
+ * anchor rule is (0,2,1).
+ *
+ * ⚠️ This duplicates .proclaim-skip-link in cwmcore.css, which the landing view
+ * does not load — it uses only cwm-landing, so the core accessibility rules
+ * never reach this page. Both copies need the fix until that is resolved.
+ */
+.com-proclaim .proclaim-skip-link:focus {
+    color: #fff;
 }
 
 /* =========================================================================
@@ -204,12 +268,12 @@
     letter-spacing: -0.02em;
 }
 
-.proclaim-landing-band--accent .proclaim-landing__show-more {
+.com-proclaim .proclaim-landing-band--accent .proclaim-landing__show-more {
     color: rgba(255, 255, 255, 0.8);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-.proclaim-landing-band--accent .proclaim-landing__show-more:hover {
+.com-proclaim .proclaim-landing-band--accent .proclaim-landing__show-more:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
@@ -280,6 +344,29 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/*
+ * The card is an anchor, so its text takes whatever colour a site template
+ * paints links inside its content wrapper:
+ *
+ *     .box2 > .g-content a, .box2.moduletable a { color: #8b5717 }   (0,2,1)
+ *
+ * The card's own `color: #fff` is (0,1,0) and loses, and the text is inherited
+ * from the anchor rather than declared on the title, so nothing stops it. On
+ * nfsda.org that rendered every speaker's name in the template's orange over
+ * the dark overlay — the same clash #1799 fixed for Proclaim's buttons.
+ *
+ * White here is not a preference: the overlay gradient exists to make white
+ * text legible, and the text-shadows above are sized for it. Declaring the
+ * colour on the title and subtitle rather than inheriting it settles this on
+ * its own, since a declaration always beats an inherited value; the
+ * .com-proclaim scope and (0,3,0) specificity match #1799 so the two do not
+ * drift, and hold up if a template ever targets these elements directly.
+ */
+.com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__title,
+.com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__sub {
+    color: #ffffff;
+}
+
 /* Hero tags */
 .proclaim-landing-tags {
     display: flex;
@@ -317,6 +404,29 @@
     background: rgba(255, 255, 255, 0.25);
     color: #fff;
     text-decoration: none;
+}
+
+/*
+ * Tags are anchors too, so they lose their colour to a site template's link
+ * rule the same way the hero card does — see the note above it. Measured on
+ * nfsda.org, every tag on the accent band rendered #8b5717 on a chip over that
+ * band's dark gradient: 2.0:1, against the 4.5:1 the text needs.
+ *
+ * The light variant survived on that site at 4.88:1, but only by luck of which
+ * accent the template happens to use, and it was still not the colour intended.
+ * Both are restated so neither depends on the template's palette.
+ */
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--light {
+    color: #495057;
+}
+
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--dark {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--light:hover,
+.com-proclaim .proclaim-landing-tag.proclaim-landing-tag--dark:hover {
+    color: #fff;
 }
 
 /* =========================================================================
