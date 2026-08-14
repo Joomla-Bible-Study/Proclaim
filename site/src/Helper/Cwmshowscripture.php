@@ -646,8 +646,7 @@ class Cwmshowscripture
         // Ask the library for the name rather than translating the key here.
         // ScriptureHelper::getBookName() loads lib_cwmscripture's own language
         // file first; a bare Text::_() only resolves if something else happened
-        // to load a file carrying JBS_BBK_*, which used to be com_proclaim's own
-        // duplicate copy of those keys.
+        // to load a file carrying JBS_BBK_*.
         $name = !empty($row->booknumber)
             ? CwmscriptureHelper::getBookName((int) $row->booknumber)
             : '';

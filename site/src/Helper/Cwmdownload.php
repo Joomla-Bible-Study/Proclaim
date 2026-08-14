@@ -148,13 +148,6 @@ class Cwmdownload
         // redirect uses, so there is one Range/HEAD/If-Modified-Since handler
         // rather than two.
         //
-        // What this replaces was weaker in two ways: it sent Content-Length and
-        // readfile() with no Range support, so a browser could not seek in
-        // gated audio or video; and its remote branch fopen()ed an
-        // admin-configured URL and relayed the response to the caller with no
-        // SSRF guard — the shape that was patched for the podcast endpoint in
-        // 10.5.5 but never here.
-        //
         // Access was already checked above. The streamer answers how to send a
         // file, never whether to.
 

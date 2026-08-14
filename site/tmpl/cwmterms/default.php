@@ -26,9 +26,7 @@ use Joomla\CMS\Language\Text;
         <?php if (!empty($this->media)) : ?>
         <div class="termslink">
             <?php
-                // Without a media id there is nothing to continue to — reaching
-                // the view directly used to warn "Attempt to read property on
-                // null" straight into the page output.
+                // Without a media id there is nothing to continue to.
                 echo '<a href="index.php?option=com_proclaim&task=cwmsermons.download&id=' . (int) $this->media->study_id
                 . '&mid=' . (int) $this->media->id . '">'
                 . Text::_('JBS_CMN_CONTINUE_TO_DOWNLOAD') . '</a>';
