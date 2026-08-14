@@ -96,7 +96,7 @@
                type="list"
                useglobal="true"
                validate="options"
-               default=""
+               default="btn-primary"
                label="JBS_ADDON_BUTTON_TYPE"
                description="JBS_ADDON_BUTTON_TYPE_DESC">
             <option value="btn-link">JBS_MED_NO_COLOR</option>
