@@ -111,6 +111,18 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
+    /**
+     * The version this update is coming from, read before Joomla overwrites it.
+     *
+     * Empty on a fresh install, and on any update where the row cannot be read —
+     * both of which mean "assume the oldest case and run everything", because a
+     * migration skipped in error loses data while one run in error costs time.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    private string $fromVersion = '';
+
     protected $minimumPhp = '8.3.0';
 
     /**
@@ -354,6 +366,68 @@ class com_proclaimInstallerScript extends InstallerScript
     ];
 
     /**
+     * The version currently recorded for com_proclaim.
+     *
+     * Reads `#__extensions.manifest_cache` rather than `#__schemas`, which lags
+     * behind the release version — see CwmproclaimHelper::getVersion().
+     *
+     * @return  string  Semver, or '' when it cannot be determined
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function readInstalledVersion(): string
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName('manifest_cache'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+            $db->setQuery($query);
+
+            $cache = (string) $db->loadResult();
+
+            if ($cache === '') {
+                return '';
+            }
+
+            $decoded = json_decode($cache, true, 512, JSON_THROW_ON_ERROR);
+
+            return (string) ($decoded['version'] ?? '');
+        } catch (\Throwable) {
+            return '';
+        }
+    }
+
+    /**
+     * Whether a migration first shipped in `$version` still has work to do here.
+     *
+     * ⚠️ A migration that ran on the update that introduced it does not need to
+     * run again, but nothing recorded that it had. With no gate, a 10.5.7 site
+     * re-ran every migration written since 10.0 — nine of them, each walking
+     * whole tables to discover there was nothing to do. That is what made
+     * updates take minutes on a site with real content.
+     *
+     * ⚠️ An unknown source version returns true. Skipping a migration that was
+     * needed loses data; running one that was not costs time.
+     *
+     * @param   string  $version  The release the migration shipped in
+     *
+     * @return  bool  True when the site is older than that release
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function upgradingFromBefore(string $version): bool
+    {
+        if ($this->fromVersion === '') {
+            return true;
+        }
+
+        return version_compare($this->fromVersion, $version, '<');
+    }
+
+    /**
      * Function called before the extension installation/update/removal procedure commences
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -366,6 +440,13 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function preflight($type, $parent): bool
     {
+        // Read before Joomla rewrites manifest_cache with the incoming version.
+        // postflight() cannot ask this question — by then the row says the new
+        // version and every migration looks unnecessary.
+        if ($type === 'update') {
+            $this->fromVersion = $this->readInstalledVersion();
+        }
+
         // com_proclaim depends on lib_cwmscripture. The standalone
         // component zip does not bundle the library, and even when
         // installed via pkg_proclaim the library lands one step before
@@ -1787,48 +1868,71 @@ class com_proclaimInstallerScript extends InstallerScript
         // to migrate — running these against freshly seeded default rows only
         // produces spurious warnings (e.g. the podcast-link "could not be
         // matched" notice).
+        // ⚠️ Each of these is gated on the version being upgraded FROM. A
+        // migration that shipped in 10.1.0 has nothing to do on a site already
+        // past 10.1.0, but none of them could tell — they loaded whole tables to
+        // find out, on every update, forever. Nine of them made a routine update
+        // take minutes on a site with real content.
         if ($type === 'update') {
             // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
-            try {
-                CwmmigrationHelper::fixMediafileLegacyPaths();
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage(
-                    'Mediafile path migration notice: ' . $e->getMessage(),
-                    'warning'
-                );
+            if ($this->upgradingFromBefore('10.1.0')) {
+                try {
+                    CwmmigrationHelper::fixMediafileLegacyPaths();
+                } catch (\Exception $e) {
+                    Factory::getApplication()->enqueueMessage(
+                        'Mediafile path migration notice: ' . $e->getMessage(),
+                        'warning'
+                    );
+                }
             }
 
             // Migrate studyimage param values to thumbnailm column
-            try {
-                $this->migrateStudyImageParams();
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage(
-                    'StudyImage migration notice: ' . $e->getMessage(),
-                    'warning'
-                );
+            if ($this->upgradingFromBefore('10.1.0')) {
+                try {
+                    $this->migrateStudyImageParams();
+                } catch (\Exception $e) {
+                    Factory::getApplication()->enqueueMessage(
+                        'StudyImage migration notice: ' . $e->getMessage(),
+                        'warning'
+                    );
+                }
             }
 
             // Drop vestigial text/pdf columns from templates table.
             // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
-            $this->dropLegacyTemplateColumns();
+            if ($this->upgradingFromBefore('10.3.2')) {
+                $this->dropLegacyTemplateColumns();
+            }
 
             // Drop pre-10.1 / pre-10.0 orphaned tables that linger on sites
             // upgraded across multiple major versions (Joomla skips already-
             // applied migrations on jump-upgrades, so the per-version DROPs
             // never run).
-            $this->dropLegacyTables();
+            if ($this->upgradingFromBefore('10.1.0')) {
+                $this->dropLegacyTables();
+            }
 
             // Migrate existing alternate link data to platform_links JSON
-            $this->migratePodcastAlternateLinks();
+            if ($this->upgradingFromBefore('10.1.0')) {
+                $this->migratePodcastAlternateLinks();
+            }
 
             // Copy legacy image field to podcastimage where podcastimage is empty
-            $this->migratePodcastImageField();
+            if ($this->upgradingFromBefore('10.1.0')) {
+                $this->migratePodcastImageField();
+            }
 
-            // Match legacy podcastlink URLs to Joomla menu item IDs
-            $this->migratePodcastLinkToMenuItem();
+            // Match legacy podcastlink URLs to Joomla menu item IDs. This is the
+            // one that reported "N podcast link(s) could not be matched" on every
+            // update, about rows it had already declined to match before.
+            if ($this->upgradingFromBefore('10.3.0')) {
+                $this->migratePodcastLinkToMenuItem();
+            }
 
             // Migrate scripture settings from component params to plugin params
-            $this->migrateScriptureParamsToPlugin();
+            if ($this->upgradingFromBefore('10.5.8')) {
+                $this->migrateScriptureParamsToPlugin();
+            }
         }
 
         if ($type === 'install' || $type === 'update') {
