@@ -286,7 +286,7 @@ class HtmlView extends BaseHtmlView
      * under the web root is handed out by the web server, which never enters
      * PHP. An administrator setting up a subscriber-only series would
      * reasonably read that field as protection, so say otherwise at the point
-     * they set it rather than leaving it to be discovered (#1774).
+     * they set it rather than leaving it to be discovered.
      *
      * Silent for a new item, which has no id, no stored filename and nothing
      * to be wrong about yet.
@@ -344,7 +344,7 @@ class HtmlView extends BaseHtmlView
 
         // What to advise depends on what this server actually does with the
         // protected directory, so say that rather than offering a remedy that
-        // may not work here (#1774).
+        // may not work here.
         $message = match (CwmprotectedStorage::status()) {
             CwmmediaProtectionHelper::PROTECTED => 'JBS_MED_RESTRICTED_BUT_PUBLIC_CAN_MOVE',
             CwmmediaProtectionHelper::EXPOSED   => 'JBS_MED_RESTRICTED_BUT_PUBLIC_NO_HELP',

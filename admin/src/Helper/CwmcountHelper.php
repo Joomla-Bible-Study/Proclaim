@@ -236,7 +236,7 @@ class CwmcountHelper
                     } else {
                         // core.admin already excluded above, so an empty $accessible here
                         // means a real zero-access user, not a super admin -- restrict to
-                        // unassigned records instead of adding no predicate. See #1561.
+                        // unassigned records instead of adding no predicate.
                         $query->where($db->quoteName('t.location_id') . ' IS NULL');
                     }
                 }
@@ -264,7 +264,7 @@ class CwmcountHelper
                     } else {
                         // core.admin already excluded above, so an empty $accessible here
                         // means a real zero-access user, not a super admin -- restrict to
-                        // unassigned records instead of adding no predicate. See #1561.
+                        // unassigned records instead of adding no predicate.
                         $query->where($db->quoteName('s.location_id') . ' IS NULL');
                     }
                 }

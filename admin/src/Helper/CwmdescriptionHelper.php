@@ -421,7 +421,7 @@ class CwmdescriptionHelper
         foreach ($rows as $row) {
             // The book name comes from the scripture library rather than a
             // #__bsms_books JOIN: the table stored the same language keys this
-            // resolves, against the same numbers (#1687). getBookName()
+            // resolves, against the same numbers. getBookName()
             // translates, so no Text::_() call is needed here.
             $ref = ScriptureHelper::getBookName((int) ($row->booknumber ?? 0))
                 . ' ' . ($row->chapter_begin ?? '');

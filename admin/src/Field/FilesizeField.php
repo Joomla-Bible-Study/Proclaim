@@ -24,7 +24,7 @@ use Joomla\CMS\Language\Text;
  *
  * Renders a plain text input, never a <select> — extends FormField rather
  * than ListField, which it never actually used (getOptions() was never
- * called; getInput() is fully overridden). See #1464.
+ * called; getInput() is fully overridden).
  *
  * @package  Proclaim.Admin
  * @since    7.0.0

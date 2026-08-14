@@ -303,7 +303,7 @@ class Proclaim extends CMSPlugin implements SubscriberInterface
      * Not a RESOURCES entry: info is a singleton (component metadata, not a
      * database entity — see CwminfoModel), so it gets one GET route straight to
      * displayItem rather than the list + list/:id pair createReadOnlyRoutes()
-     * registers for real resources. See #1429.
+     * registers for real resources.
      *
      * @param   ApiRouter  $router    The API router
      * @param   bool       $isPublic  Whether the route is publicly accessible

@@ -24,7 +24,7 @@ use Joomla\Database\ParameterType;
 use Joomla\Input\Input;
 
 /**
- * Playlist sync engine (#1273).
+ * Playlist sync engine.
  *
  * Bulk-imports a YouTube channel's playlists as first-class Proclaim Playlist
  * entities, then reconciles each playlist's videos against existing
@@ -33,7 +33,7 @@ use Joomla\Input\Input;
  * each media file's stored URL (params.filename).
  *
  * This engine is deliberately UI-agnostic: the Playlists toolbar action and the
- * scheduled task (#1273 phase 3) both call the same code path.
+ * scheduled task (phase 3) both call the same code path.
  *
  * @package  Proclaim.Admin
  * @since    10.3.3

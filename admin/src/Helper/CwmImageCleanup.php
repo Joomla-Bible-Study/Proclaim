@@ -486,8 +486,7 @@ class CwmImageCleanup
         // already an approximate LIKE-scan of the params JSON blob (a
         // substring match, so it over-counts and fails safe rather than
         // under-counts) -- so a real fix would need a proper
-        // reference-counted asset table. Accepted as a residual risk; see
-        // #1563.
+        // reference-counted asset table. Accepted as a residual risk.
         if (self::countOtherReferences($db, $oldFilename, $serverId, $recordId) > 0) {
             Log::add(
                 'Image cleanup: skipping ' . $oldFilename . ' — still referenced by another record',

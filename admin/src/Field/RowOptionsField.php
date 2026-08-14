@@ -36,7 +36,7 @@ class RowOptionsField extends PredefinedlistField
     protected $type = 'RowOptions';
 
     /**
-     * A fixed set of options, not DB-backed. See #1464.
+     * A fixed set of options, not DB-backed.
      *
      * @var  array
      *

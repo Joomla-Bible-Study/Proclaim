@@ -908,8 +908,8 @@ class CwmschemaorgHelper
      *
      * Deliberately not wrapped in a transaction. Each item's schema row is
      * independently valid, so a run cut short by a timeout leaves consistent
-     * data that the returned cursor can resume from — which is what finding 6 of
-     * issue #1562 wanted "no rollback" to buy. A transaction spanning thousands
+     * data that the returned cursor can resume from, which is what "no rollback"
+     * buys here. A transaction spanning thousands
      * of upserts would instead hold row locks for the length of the whole sync.
      *
      * @param   string  $mode    Sync mode (new, smart, force)

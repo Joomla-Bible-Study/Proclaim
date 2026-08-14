@@ -63,7 +63,7 @@ class CwmplaylistController extends FormController
      * Without this, a non-admin editor in a multi-campus install could edit
      * any playlist regardless of its access level — every other ACL-scoped
      * singular controller (Location, Serie, Topic) already uses this trait.
-     * See #1438.
+     *
      *
      * @param   array   $data  An array of input data.
      * @param   string  $key   The name of the key for the primary key.

@@ -407,7 +407,7 @@ class CwmmessageTable extends Table
         // Reject a newly-introduced duplicate episode number within a series.
         // Only re-validates when series_id or studynumber actually changed on
         // this save — pre-existing duplicates stay editable for unrelated
-        // field changes (title, date, etc.); see #1505.
+        // field changes (title, date, etc.);
         if ((int) $this->series_id > 0 && trim((string) $this->studynumber) !== '') {
             $db      = $this->getDatabase();
             $changed = empty($this->id);
@@ -646,7 +646,7 @@ class CwmmessageTable extends Table
 
         // Unconditional: Table::store() runs its asset block even when the
         // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
-        // behind for a record that was never created (#1723).
+        // behind for a record that was never created.
         Cwmassets::stripEmptyAssetRow($this);
 
         return $result;

@@ -272,7 +272,7 @@ class CwmanalyticsHelper
      * *referring* site and routinely carries things that are not ours to hold:
      * search terms, session tokens, addresses in newsletter links, password
      * reset and invite tokens. Expiring the column later does not help --
-     * what is never stored cannot leak. See #1612.
+     * what is never stored cannot leak.
      *
      * UTM tags are unaffected: they are captured separately into utm_source,
      * utm_medium and utm_campaign from the request, not parsed back out here.
@@ -459,7 +459,7 @@ class CwmanalyticsHelper
      *
      * Governs the personal-data tier only. Proclaim stores nothing on the
      * visitor's device, so this is not answering the ePrivacy cookie-consent
-     * question. See #1613.
+     * question.
      *
      * @return  bool  True if opted out (skip personal-data columns).
      *

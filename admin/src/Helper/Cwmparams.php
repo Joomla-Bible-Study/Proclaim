@@ -98,7 +98,7 @@ class Cwmparams
             // breaking all 12+ Cwmparams::getAdmin()->params callers. Fall
             // back to a usable shape instead, mirroring what
             // getTemplateparams() already does for a deleted template.
-            // See #1567.
+            //
             if (!$admin) {
                 $admin         = new \stdClass();
                 $admin->id     = 1;

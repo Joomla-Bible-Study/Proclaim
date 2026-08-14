@@ -87,7 +87,7 @@ class CwmstudytopicsTable extends Table
         // A link row between a study and a topic is not something anyone
         // permissions. Table enables asset tracking for any table carrying an
         // asset_id column, which minted an asset per link for a section
-        // access.xml never declared (#1653).
+        // access.xml never declared.
         $this->_trackAssets = false;
     }
 
@@ -112,7 +112,7 @@ class CwmstudytopicsTable extends Table
 
         // Unconditional: Table::store() runs its asset block even when the
         // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
-        // behind for a record that was never created (#1723).
+        // behind for a record that was never created.
         Cwmassets::stripEmptyAssetRow($this);
 
         return $result;

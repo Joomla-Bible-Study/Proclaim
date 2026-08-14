@@ -22,7 +22,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Database\DatabaseInterface;
 
 /**
- * Media Playlists field (#1273 phase 6.2b).
+ * Media Playlists field.
  *
  * A searchable, tag-style multi-select of the Proclaim Playlists a media file is
  * assigned to — modelled on {@see PodcastsField}. Options are scoped to the

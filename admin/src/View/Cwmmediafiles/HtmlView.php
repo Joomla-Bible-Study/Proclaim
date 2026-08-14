@@ -296,7 +296,7 @@ class HtmlView extends BaseHtmlView
      * administrators to dismiss warnings without reading them.
      *
      * The verdict itself is cached and only re-taken weekly, so this costs a
-     * param read on an ordinary page load (#1783).
+     * param read on an ordinary page load.
      *
      * @return  void
      *

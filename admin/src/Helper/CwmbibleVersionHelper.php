@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
 /**
  * Business logic for listing available Bible translations, extracted from
  * Field/BibleVersionField.php so the field stays a thin Joomla-form
- * adapter over this helper. See #1484.
+ * adapter over this helper.
  *
  * @since  10.5.6
  */

@@ -178,7 +178,7 @@ class CWMAddonYoutube extends CWMAddon
             $html .= $field->renderField();
         }
 
-        // Live broadcast panel (#1298): only on NEW media, and only when
+        // Live broadcast panel: only on NEW media, and only when
         // this server streams Direct — an External/restreamer setup never
         // sees it, because the restreamer owns the broadcast there. The
         // scheduled start is the record's Media Date; say so where the
@@ -2016,7 +2016,7 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * Cancel an upcoming YouTube broadcast (#1298 phase 3).
+     * Cancel an upcoming YouTube broadcast (phase 3).
      *
      * Status is checked FIRST, and only 'created' or 'ready' broadcasts are
      * deleted. Anything else — testing, live, complete — is someone's
@@ -2095,7 +2095,7 @@ class CWMAddonYoutube extends CWMAddon
 
     /**
      * The server's persistent ingestion stream — created once, reused for
-     * every broadcast (#1298 phase 2).
+     * every broadcast (phase 2).
      *
      * One stream per server means one RTMP URL + stream key the church
      * configures into their encoder once and never touches again — the way
@@ -2431,7 +2431,7 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
-     * YouTube can create live broadcasts (#1298). Capability only — the
+     * YouTube can create live broadcasts. Capability only — the
      * server's Direct stream mode and the per-record opt-in are separate
      * gates enforced by the caller and re-checked in createLiveEvent().
      *
@@ -2447,7 +2447,7 @@ class CWMAddonYoutube extends CWMAddon
 
     /**
      * Create a scheduled YouTube live broadcast via liveBroadcasts.insert
-     * (#1298 phase 1 — broadcast only; the ingestion stream and bind are
+     * (Phase 1 — broadcast only; the ingestion stream and bind are
      * phase 2).
      *
      * Requires OAuth — youtube.force-ssl already covers liveBroadcasts.*,
@@ -2514,7 +2514,7 @@ class CWMAddonYoutube extends CWMAddon
             $status->setSelfDeclaredMadeForKids(false);
 
             $contentDetails = new LiveBroadcastContentDetails();
-            // Auto-start is a per-server opt-in (#1298 phase 3): with it on,
+            // Auto-start is a per-server opt-in (phase 3): with it on,
             // the broadcast goes live the moment the encoder starts sending —
             // no Studio visit, which is the whole point for a volunteer AV
             // team. Off by default, because an encoder started early for a

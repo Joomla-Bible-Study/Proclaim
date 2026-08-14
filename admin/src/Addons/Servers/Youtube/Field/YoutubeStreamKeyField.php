@@ -23,7 +23,7 @@ use Joomla\Registry\Registry;
 
 /**
  * YouTube Stream Key Field — read-only display of the server's persistent
- * ingestion details (#1298 phase 2): the RTMP URL and the stream key the
+ * ingestion details (phase 2): the RTMP URL and the stream key the
  * encoder points at.
  *
  * The key is a secret — anyone holding it can stream to the channel — so

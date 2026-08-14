@@ -127,7 +127,7 @@ abstract class CwmfilterHelper
             if ($book > 0) {
                 // Use junction table for unlimited scripture references. The flat
                 // pair could only answer for a study's first two, so filtering on
-                // a third reference found nothing (#1623).
+                // a third reference found nothing.
                 $query->join(
                     'INNER',
                     $db->quoteName('#__bsms_study_scriptures', 'xf_ss') . ' ON '

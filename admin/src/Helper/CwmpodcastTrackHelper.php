@@ -19,7 +19,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
 /**
- * Counting/dedupe logic for the podcast download tracking redirect (#1281).
+ * Counting/dedupe logic for the podcast download tracking redirect.
  *
  * The redirect endpoint (cwmpodcast.track) calls record() to count a download,
  * then 302-redirects to the live media. Counting is IAB-style: a given client
@@ -248,7 +248,7 @@ class CwmpodcastTrackHelper
      * Serve the tracked media, honouring Range/HEAD/If-Modified-Since.
      *
      * The streaming itself moved to CwmmediaStreamer so the front-end download
-     * route can share one implementation instead of growing a second (#1774).
+     * route can share one implementation instead of growing a second.
      * This wrapper stays because the podcast redirect is its own entry point
      * and reads better named for what it does here.
      *

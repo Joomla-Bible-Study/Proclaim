@@ -20,9 +20,9 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
  * Model backing the `/v1/proclaim/info` API resource.
  *
  * Not a database entity — a singleton item exposing metadata a caller cannot
- * otherwise reliably obtain over the API. See #1429: external tooling reading
- * the DB schema version to guess the installed release got stale answers,
- * because the schema version only advances on releases that ship DB changes.
+ * otherwise reliably obtain over the API. ⚠️ The DB schema version is not a
+ * substitute: it only advances on releases that ship DB changes, so external
+ * tooling using it to guess the installed release gets stale answers.
  *
  * @since  10.5.6
  */

@@ -339,7 +339,7 @@ class CwmplaylistTable extends Table
 
         // Unconditional: Table::store() runs its asset block even when the
         // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
-        // behind for a record that was never created (#1723).
+        // behind for a record that was never created.
         Cwmassets::stripEmptyAssetRow($this);
 
         return $result;

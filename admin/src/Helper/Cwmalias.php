@@ -69,7 +69,7 @@ class Cwmalias
                     // whichever row the database returned first, silently rendering
                     // one record's page as another's. On #__bsms_teachers, which
                     // does carry UNIQUE KEY `idx_alias`, the duplicate INSERT threw
-                    // instead and aborted the whole backfill mid-run. See #1565.
+                    // instead and aborted the whole backfill mid-run.
                     $alias = self::makeUniqueAlias(
                         $db,
                         $r['table'],

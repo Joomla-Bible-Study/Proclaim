@@ -57,7 +57,7 @@ class CWMAddonLocal extends CWMAddon
     /**
      * {@inheritdoc}
      *
-     * Called through cwmmediafile.xhr by the media-file upload path (see #1564, which made this reachable again).
+     * Called through cwmmediafile.xhr by the media-file upload path (, which made this reachable again).
      *
      * @since   10.5.6
      */

@@ -42,7 +42,7 @@ use Joomla\Filesystem\Folder;
  * proxies media rather than redirecting to it — the exception being embedded
  * platforms like YouTube, which are players rather than files and were never
  * protectable by anyone. The feed no longer lists restricted items either
- * (#1781), so the origin URL of a private remote file is never published.
+ * , so the origin URL of a private remote file is never published.
  *
  * What this directory adds is the remaining case: a file that has nowhere
  * private to live, because the site hosts it itself.
@@ -52,7 +52,7 @@ use Joomla\Filesystem\Folder;
  * carries the same Apache/IIS guards Proclaim already ships elsewhere, and the
  * canary probe says whether they are doing anything. On a server that refuses
  * the probe this is a real boundary; on one that does not, Proclaim reports
- * that rather than implying protection it does not have (#1774).
+ * that rather than implying protection it does not have.
  *
  * @package  Proclaim.Admin
  * @since    10.5.8
