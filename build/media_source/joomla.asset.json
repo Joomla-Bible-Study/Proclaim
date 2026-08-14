@@ -383,17 +383,6 @@
             }
         },
         {
-            "name": "com_proclaim.cwmadmin-locations-modal",
-            "type": "script",
-            "uri": "com_proclaim/cwmadmin-locations-modal.min.js",
-            "dependencies": [
-                "core"
-            ],
-            "attributes": {
-                "type": "module"
-            }
-        },
-        {
             "name": "com_proclaim.cwmadmin-servers-modal",
             "type": "script",
             "uri": "com_proclaim/cwmadmin-servers-modal.min.js",
