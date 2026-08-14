@@ -378,7 +378,7 @@ class CwmaiHelper
         // URL-embedded key leaks into transport-failure exception messages
         // (Joomla's Stream transport builds those from the failing URL) and
         // gets echoed straight back to the browser by both AJAX callers on
-        // error, plus into the debug log whenever JBSMDEBUG is on. See #1550.
+        // error, plus into the debug log whenever JBSMDEBUG is on.
         $response = $http->get(
             'https://generativelanguage.googleapis.com/v1beta/models',
             ['x-goog-api-key' => $apiKey],
@@ -770,8 +770,8 @@ class CwmaiHelper
         // abnormal finishReason (which assertNormalFinish() below already
         // handles). Without this check, $content and $finishReason both
         // silently default to '' and parseJsonResponse('') throws the raw,
-        // unhelpful "Invalid JSON —" error this class was already fixed once
-        // to eliminate (#1495/#1443/#1444) -- for a different trigger. See #1550.
+        // unhelpful "Invalid JSON —" error, for a different trigger than the
+        // one this class already guards against.
         if (!isset($data['candidates']) || !\is_array($data['candidates']) || empty($data['candidates'])) {
             $blockReason = $data['promptFeedback']['blockReason'] ?? 'unknown';
 

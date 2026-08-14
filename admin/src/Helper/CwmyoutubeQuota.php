@@ -112,7 +112,7 @@ class CwmyoutubeQuota
      * @deprecated 10.5.6 No longer consulted by currentQuotaDate()
      *             -- the quota-day boundary is now computed directly from the
      *             America/Los_Angeles timezone (DST-aware), since no single
-     *             static UTC hour is correct year-round. See #1549. Will be
+     *             static UTC hour is correct year-round. Will be
      *             removed in a future major version.
      *
      * @param   int  $serverId  YouTube server record ID
@@ -205,7 +205,7 @@ class CwmyoutubeQuota
     {
         // A write failure this request means we can no longer trust the
         // local counter to reflect real usage -- fail closed rather than
-        // silently letting unlimited calls through. See #1549.
+        // silently letting unlimited calls through.
         if (!empty(self::$persistenceBroken[$serverId])) {
             return false;
         }
@@ -296,7 +296,7 @@ class CwmyoutubeQuota
      * hour around that boundary, combined with a genuine quota-exceeded
      * response landing in the mismatched window, could self-amplify into
      * up to ~23 hours of falsely reporting "exhausted" after Google's real
-     * quota had already reset. See #1549.
+     * quota had already reset.
      *
      * @return  string  Date string like "2026-02-28"
      *
@@ -374,7 +374,7 @@ class CwmyoutubeQuota
         } catch (\JsonException $e) {
             // File exists but isn't valid JSON -- distinct from "no file
             // yet" and worth surfacing, since it silently drops today's
-            // accumulated usage count. See #1549.
+            // accumulated usage count.
             CwmyoutubeLogHelper::log(
                 CwmyoutubeLogHelper::LEVEL_WARNING,
                 'Quota file contained invalid JSON, resetting to zero',
@@ -392,7 +392,7 @@ class CwmyoutubeQuota
      * under a single exclusive lock held for the whole read-modify-write
      * sequence -- prevents the lost-update race where two concurrent
      * recordUsage()/markExhausted() calls both read the same starting
-     * value and one silently overwrites the other's increment. See #1549.
+     * value and one silently overwrites the other's increment.
      *
      * @param   int       $serverId  Server ID
      * @param   callable  $mutator   array $data -> array $newData

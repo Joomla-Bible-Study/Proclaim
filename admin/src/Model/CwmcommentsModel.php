@@ -210,9 +210,9 @@ class CwmcommentsModel extends ListModel
                 $query->where($db->quoteName('comment.id') . ' = ' . (int) substr($search, 3));
             } else {
                 $search = $db->quote('%' . $db->escape($search, true) . '%');
-                // ⚠️ Searched `book.bookname` until #1687 dropped the
-                // #__bsms_books join that supplied the alias, which left every
-                // search on this list throwing "Unknown column".
+                // ⚠️ Must not search `book.bookname`: there is no #__bsms_books
+                // join here to supply the alias, and referencing it throws
+                // "Unknown column" for every search on this list.
                 $reference = $db->createQuery()
                     ->select('1')
                     ->from($db->quoteName('#__bsms_study_scriptures', 'csr'))
@@ -307,7 +307,7 @@ class CwmcommentsModel extends ListModel
      *
      * Was a #__bsms_books JOIN in the list query. That table stores language
      * keys, not names, so the join fetched a key the scripture library already
-     * holds against the same number (#1687).
+     * holds against the same number.
      *
      * Set on the item rather than resolved in the layout because this list has
      * a template a site can override, and an override may read $item->bookname.

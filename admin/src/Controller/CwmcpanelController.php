@@ -24,7 +24,7 @@ use Joomla\CMS\MVC\Controller\BaseController;
  * Pure display controller -- CwmcpanelModel extends BaseModel, not
  * FormModel, and no task=cwmcpanel.* routing exists (only view=cwmcpanel
  * display links). Matches DisplayController's pattern for display-only
- * controllers. See #1449.
+ * controllers.
  *
  * @package  Proclaim.Admin
  * @since    7.0.0

@@ -70,7 +70,7 @@ class Cwmrestore
      * compromised admin account or a supply-chain-tainted backup file shared
      * between sites has far more reach than this feature needs. Restricting to
      * the statement shapes and tables Cwmbackup actually produces is defense in
-     * depth, not a hard sandbox -- see #1522 for the full threat discussion.
+     * depth, not a hard sandbox -- for the full threat discussion.
      *
      * @param   string  $statement  A single SQL statement (already trimmed, non-empty, non-comment)
      *

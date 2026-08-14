@@ -754,7 +754,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * 10.1.0 widened this key to include series_id, as one ALTER that added the
      * column, dropped the old key and added the new one. That statement could not
-     * stay in SQL (#1664):
+     * stay in SQL:
      *
      *   - MySQL has no DROP INDEX IF EXISTS, so a database missing the key stops
      *     it with error 1091 and takes the whole update down with it.
@@ -964,7 +964,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * `install.mysql.utf8.sql` seeds `#__action_log_config` with one row per
      * loggable entity, and `10.1.0-20260207.sql` adds to it, but nothing has
-     * ever taken them out again — five rows survived every uninstall (#1676).
+     * ever taken them out again — five rows survived every uninstall.
      *
      * Deliberately not part of `dropTablesIfRequested()`. That is gated on the
      * administrator's `drop_tables` setting because it destroys sermons; these
@@ -1004,7 +1004,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * the clearing — and reports it with
      * `Log::add(..., Log::WARNING, 'jerror')`, which Joomla routes into the
      * message queue. The administrator sees a red
-     * "Could not delete folder" beside a successful update (#1407).
+     * "Could not delete folder" beside a successful update.
      *
      * It cannot be caught: FileStorage::_deleteFolder() logs and returns false
      * rather than throwing, so the try/catch around clean() never sees it.
@@ -1153,7 +1153,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Deduplicate: the query filters on element but not folder, and a
             // suite like JCH Optimize registers several plugins under the same
-            // element — which printed "JCH Optimize, JCH Optimize" (#1407). Any
+            // element — which printed "JCH Optimize, JCH Optimize". Any
             // one of them being enabled is reason enough to warn, so collapsing
             // to distinct names is the right answer rather than filtering by
             // folder, whose names vary between releases.
@@ -1388,7 +1388,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 // module; this IS the teardown, so say so. Without it every call
                 // here returned false with
                 // JLIB_INSTALLER_ERROR_CANNOT_UNINSTALL_CHILD_OF_PACKAGE and the
-                // rows leaked (#1676).
+                // rows leaked.
                 $installer->setPackageUninstall(true);
 
                 $result = $installer->uninstall('module', $id);
@@ -1420,7 +1420,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 $installer = new Installer();
                 $installer->setDatabase($this->dbo);
 
-                // See uninstallModules() — same guard, same reason (#1676).
+                // See uninstallModules() — same guard, same reason.
                 $installer->setPackageUninstall(true);
 
                 $result = $installer->uninstall('plugin', $id);
@@ -1636,7 +1636,7 @@ class com_proclaimInstallerScript extends InstallerScript
         //     uninstallSubExtensions() had just removed
         //   - renderPostInstallation() showing the "installation complete" page
         //   - scriptureConsumer('register') putting the consumer row straight
-        //     back after uninstall() had removed it (#1679)
+        //     back after uninstall() had removed it
         //
         // Most of it failed quietly because removeExtensionFiles() has already
         // taken the source away by then, which is why only the row — a plain DB
@@ -1723,7 +1723,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // ⚠️ The scripture migration is the one that also runs on a fresh install.
         // install.mysql.utf8.sql seeds the sample study with legacy flat columns
         // and no junction row, so an install that skipped this shipped a study
-        // whose reference the junction never knew about (#1623).
+        // whose reference the junction never knew about.
         try {
             $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 

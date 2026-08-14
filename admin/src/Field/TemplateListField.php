@@ -84,7 +84,7 @@ class TemplateListField extends ListField
         // safe to cache across instances. Caching the merged result (as this
         // used to) meant a second TemplateList field with different XML
         // options in the same request silently got the first instance's
-        // stale merged list. See #1460.
+        // stale merged list.
         return array_merge(parent::getOptions(), self::$templates);
     }
 

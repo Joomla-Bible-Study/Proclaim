@@ -283,7 +283,7 @@ class Cwmassets
      * rule set inherits from `com_proclaim`, so every effective permission is
      * the same answer the fallback already produced. Verified on a development
      * database across 14 groups x 17 sections x 5 actions — 1190 cells, none
-     * changed (#1653).
+     * changed.
      *
      * Written through `Table\Asset::setLocation()`/`store()` rather than a raw
      * INSERT, so the nested set stays correct without a `rebuild()` pass. A
@@ -727,7 +727,7 @@ class Cwmassets
      *
      * Item assets used to be parented to `com_proclaim`, which meant a rule on
      * `com_proclaim.<section>` never reached them — a record with per-record
-     * permissions escaped its section entirely (#1653).
+     * permissions escaped its section entirely.
      *
      * Falls back to the component for a section access.xml does not declare, so
      * `message_type`, `cwmadmin` and `studytopics` keep their old parent until
@@ -1155,7 +1155,7 @@ class Cwmassets
             // Through Table\Asset, not a raw DELETE: #__assets is a nested set,
             // and removing a row without closing its lft/rgt gap leaves numbers
             // only a full rebuild() reclaims — which fixAllAssets() skips on its
-            // fast path precisely because it is expensive (#1724).
+            // fast path precisely because it is expensive.
             $asset = new \Joomla\CMS\Table\Asset($db);
 
             if (!$asset->load($assetId)) {

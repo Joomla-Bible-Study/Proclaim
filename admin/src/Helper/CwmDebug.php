@@ -82,7 +82,7 @@ class CwmDebug
         // throw. Swallow it, matching CwmlogHelper::write(): logging must never
         // be the reason a request fails. The buffer append stays outside the
         // try so a logger failure doesn't also lose the on-screen entry.
-        // See #1569.
+        //
         try {
             Log::add($entry, Log::DEBUG, 'com_proclaim.debug');
         } catch (\Throwable) {
@@ -122,7 +122,7 @@ class CwmDebug
         // directory made Log::add() throw RuntimeException('Cannot write to
         // log file.') from inside those catch blocks, replacing the real error
         // with an unrelated one and destroying the diagnostic. Swallow it, as
-        // CwmlogHelper::write() already does. See #1569.
+        // CwmlogHelper::write() already does.
         try {
             Log::add($entry, Log::ERROR, 'com_proclaim');
         } catch (\Throwable) {
@@ -207,7 +207,7 @@ class CwmDebug
         // than "fixed" to write complete SQL to disk: com_proclaim.debug.php
         // is web-reachable under some Joomla layouts, and writing more raw SQL
         // there is the wrong direction for a report about SQL exposure.
-        // See #1569.
+        //
         $truncated = \strlen($sql) > 500 ? substr($sql, 0, 500) . '...' : $sql;
 
         self::log($label . ': ' . $truncated, 'query');

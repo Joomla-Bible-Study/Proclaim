@@ -362,8 +362,8 @@ class CwmmigrationHelper
         $dupCount = (int) $db->loadResult();
 
         if ($dupCount > 0) {
-            // ⚠️ Only while the column exists. #1731 retires it, and this runs
-            // from data fixes on databases either side of that.
+            // ⚠️ Only while the column exists. It is retired, and this runs from
+            // data fixes on databases either side of that.
             $db->setQuery(
                 'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
             );
@@ -517,7 +517,7 @@ class CwmmigrationHelper
             return 0;
         }
 
-        // Nothing to migrate once the column is gone (#1731).
+        // Nothing to migrate once the column is gone.
         $db->setQuery(
             'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
         );
@@ -1511,7 +1511,7 @@ class CwmmigrationHelper
      * only for ALTER TABLE, CREATE TABLE and RENAME TABLE, so an INSERT beside a
      * DROP COLUMN is skipped while the drop is replayed -- Database Maintenance
      * → Fix, and the 9.x upgrade wizard, would run the drop alone and lose every
-     * teacher attribution. The same reasoning as #1744.
+     * teacher attribution.
      *
      * Safe to call whenever: it returns immediately once the column is gone.
      *

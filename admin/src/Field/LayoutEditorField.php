@@ -256,7 +256,7 @@ class LayoutEditorField extends FormField
      *
      * Derived from the field's own form state instead of a hardcoded
      * "jform[params]", which broke silently outside the one hardcoded
-     * form/group. See #1461.
+     * form/group.
      *
      * @return  string
      *

@@ -299,7 +299,7 @@ class CwmmediafileTable extends Table
 
         // Unconditional: Table::store() runs its asset block even when the
         // INSERT threw, so a failed save leaves a com_proclaim.<section>.0 row
-        // behind for a record that was never created (#1723).
+        // behind for a record that was never created.
         Cwmassets::stripEmptyAssetRow($this);
 
         if ($result) {
@@ -336,7 +336,7 @@ class CwmmediafileTable extends Table
         $this->deletePhysicalFile();
 
         // Cancel an upcoming platform live broadcast this record owns
-        // (#1298 phase 3) — same best-effort rule as the physical file
+        // (phase 3) — same best-effort rule as the physical file
         $this->cancelLiveBroadcast();
 
         // Clean up locally stored caption/subtitle VTT files
@@ -350,7 +350,7 @@ class CwmmediafileTable extends Table
 
     /**
      * Cancel this record's upcoming platform live broadcast, best-effort
-     * (#1298 phase 3).
+     * (phase 3).
      *
      * Deleting a Proclaim record that owns a scheduled broadcast would
      * otherwise leave an orphan on the platform — the exact mess the live

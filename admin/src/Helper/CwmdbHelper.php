@@ -316,7 +316,7 @@ class CwmdbHelper
             // stripped a fixed prefix-length from the front regardless,
             // yielding the mangled '#__s_bsms_studies'. That bogus name was
             // handed to every consumer of this list: the backup/restore and
-            // migration loops, and Cwmbackup's export allow-list. See #1566.
+            // migration loops, and Cwmbackup's export allow-list.
             if (str_starts_with($table, $prefix . $bsms)) {
                 $table = substr_replace($table, '#__', 0, $prelength);
 

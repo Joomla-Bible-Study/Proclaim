@@ -168,7 +168,7 @@ class CwmmediafileModel extends AdminModel
             // writer already stores. The edit form's fields are plain text with no
             // filter, so a hand-typed "7" persisted as "7" — reaching the feed as
             // an invalid 00:27:7, and reading as "already set" to the repair and
-            // detection routines, which compare against '00' (#1391).
+            // detection routines, which compare against '00'.
             // A blank field is left blank: clearing it is how an administrator
             // marks a duration as unknown, and the detection routines read blank
             // and '00' alike as "not set".
@@ -193,7 +193,7 @@ class CwmmediafileModel extends AdminModel
             }
 
             // Create a platform live broadcast when all three gates pass
-            // (#1298 phase 1): the addon is capable, the server streams
+            // (phase 1): the addon is capable, the server streams
             // Direct, and the administrator opted this record in. Platform-
             // agnostic here — the addon owns the API. The opt-in is a
             // transient trigger, not a setting: it is consumed on success
@@ -402,7 +402,7 @@ class CwmmediafileModel extends AdminModel
     /**
      * Auto-detect missing metadata for a media file.
      * The study's title, for naming a live broadcast after its sermon
-     * (#1298). Empty string when the study cannot be found — the addon
+     * . Empty string when the study cannot be found — the addon
      * treats a missing title as invalid input rather than creating an
      * unnamed broadcast.
      *

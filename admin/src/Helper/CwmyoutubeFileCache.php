@@ -75,7 +75,7 @@ class CwmyoutubeFileCache
             // This is the last-resort fallback the class docblock promises
             // "ensures module can always show a video instead of 'no video
             // available'" -- a silent write failure here means that
-            // guarantee silently stops holding with no trace. See #1551.
+            // guarantee silently stops holding with no trace.
             CwmyoutubeLogHelper::log(
                 CwmyoutubeLogHelper::LEVEL_ERROR,
                 'Failed to write last-known-video fallback cache',
@@ -667,7 +667,7 @@ class CwmyoutubeFileCache
      *
      * The writing itself now lives in CwmmediaProtectionHelper, which needed
      * the same guards for protected media and is where the check that they
-     * actually work also lives (#1774). One copy, two callers.
+     * actually work also lives. One copy, two callers.
      *
      * @param   string  $dir  Directory to guard
      *

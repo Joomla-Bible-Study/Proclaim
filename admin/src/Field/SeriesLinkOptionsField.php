@@ -36,7 +36,7 @@ class SeriesLinkOptionsField extends PredefinedlistField
     protected $type = 'SeriesLinkOptions';
 
     /**
-     * A fixed set of options, not DB-backed. See #1464.
+     * A fixed set of options, not DB-backed.
      *
      * @var  array
      *

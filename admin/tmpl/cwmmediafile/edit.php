@@ -136,7 +136,7 @@ echo 'index.php?option=com_proclaim&view=cwmmediafile&layout=edit&id=' . (int)$t
                 // (YouTube, Vimeo) — elsewhere the picker can only ever come up empty.
                 // Rendered hidden rather than omitted so an existing assignment still
                 // posts back instead of being silently cleared, and so the server-change
-                // handler can reveal it without a page reload. See #1392.
+                // handler can reveal it without a page reload.
                 $supportsPlaylists = $this->addon !== null && $this->addon->supportsPlaylists();
                 ?>
                 <div id="playlist-field-container"<?php echo $supportsPlaylists ? '' : ' class="d-none"'; ?>>

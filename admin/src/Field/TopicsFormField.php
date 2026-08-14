@@ -171,7 +171,7 @@ class TopicsFormField extends FormField
         // $this->name (the field's own computed name) rather than a
         // hardcoded "jform[topic_ids]" — the visible <select> below has no
         // name at all, so this hidden input is what a subform or any other
-        // non-top-level form context would actually submit. See #1461.
+        // non-top-level form context would actually submit.
         $html = '<input type="hidden" id="' . $this->id . '_input" name="' . $this->name . '" value="'
             . implode(',', $selectedIds) . '">';
 

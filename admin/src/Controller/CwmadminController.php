@@ -2161,12 +2161,12 @@ class CwmadminController extends FormController
 
         // Not validated against Cwmmedia::getMimetypes()'s current value list --
         // that list dropped the legacy 'audio/mp3' string in favor of the
-        // IANA-registered 'audio/mpeg' (#1397), but existing rows can still
+        // IANA-registered 'audio/mpeg', but existing rows can still
         // have 'audio/mp3' stored, and MimeTypeField deliberately keeps a
         // stored-but-no-longer-offered value selectable in the mtFrom dropdown
         // (see MimeTypeField::getOptions()). Rejecting it here would silently
-        // break matching for exactly the records #1397 was written to keep
-        // working. An unrecognized value just matches zero rows below.
+        // break matching for exactly the records that dropdown keeps
+        // selectable. An unrecognized value just matches zero rows below.
         if ($mediaType === 'x' || $mediaType === '' || $player === 'x') {
             echo json_encode([
                 'success' => false,

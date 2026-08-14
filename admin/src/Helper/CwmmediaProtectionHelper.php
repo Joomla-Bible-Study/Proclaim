@@ -28,7 +28,7 @@ use Joomla\Http\HttpFactory;
  * under the web root are handed out by the web server, which never enters PHP
  * and so never sees a view level. The `access` field therefore reads like a
  * lock while the door is open, and that is exactly the combination an
- * administrator building a subscriber-only series would set and trust (#1774).
+ * administrator building a subscriber-only series would set and trust.
  *
  * This exists so the admin can be told, at the moment of setting it, rather
  * than discovering it later. It is a diagnosis, not a fix: real protection
@@ -45,7 +45,7 @@ class CwmmediaProtectionHelper
      * Compared against `Uri::root()` rather than the request's Host header:
      * the Host header is client-supplied and rewritable by any proxy in front
      * of the site, so it can differ from the site's configured hostname with
-     * no attacker involved (#1552).
+     * no attacker involved.
      *
      * A URL pointing at another host is somebody else's to protect, and a
      * relative or empty one tells us nothing — both answer false, because

@@ -60,7 +60,7 @@ class MimeTypeField extends ListField
 
         // A stored value the catalogue no longer offers must still be selectable,
         // or the field silently renders blank and the next save wipes it. Records
-        // written before the audio/mp3 correction (#1397) are exactly that case,
+        // written before the audio/mp3 correction are exactly that case,
         // as is any type filled in by metadata detection, which draws on the wider
         // Cwmmime map.
         $value = (string) $this->value;

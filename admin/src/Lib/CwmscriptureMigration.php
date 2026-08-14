@@ -23,7 +23,7 @@ use Joomla\Database\DatabaseInterface;
 /**
  * Finishes what the schema update started.
  *
- * The flat columns this used to read are gone as of #1623. Moving the rows is
+ * The flat columns this once read are gone. Moving the rows is
  * now done by the SQL update file, which has to run before the DROP in the same
  * file -- Joomla executes schema updates before postflight, so PHP is too late.
  * What SQL could not do is translate a book name, so the rows it writes carry an
@@ -45,7 +45,7 @@ class CwmscriptureMigration
     private const BATCH_SIZE = 100;
 
     /**
-     * The flat scripture columns #__bsms_studies carried until #1623.
+     * The flat scripture columns #__bsms_studies once carried.
      *
      * @var string[]
      * @since 10.5.8

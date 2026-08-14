@@ -36,7 +36,7 @@ try {
 // Checked on both clients rather than restricted to the administrator client:
 // Cwmdownload logs through CwmDebug on the front end, so an admin debugging a
 // site-side download still needs ?jbsmdbg=1 to work there. Anything that fails
-// to resolve an identity falls through to "not allowed". See #1569.
+// to resolve an identity falls through to "not allowed".
 $jbsmDebugRequested = $app->getInput()->getInt('jbsmdbg', 0) === 1;
 $jbsmDebugAllowed   = false;
 
@@ -89,7 +89,7 @@ if (is_dir($modProclaimPath)) {
 // routines they offer — so `php cli/joomla.php scheduler:run` reached this line
 // with a ConsoleApplication, which has no getDocument(), and died before any
 // task ran. Every scheduled task on the site was affected, including other
-// extensions' and Joomla's own (#1787).
+// extensions' and Joomla's own.
 //
 // Asset registries mean nothing without a document, so skipping them off the
 // web costs nothing. CMSWebApplicationInterface is what declares getDocument();
@@ -116,7 +116,7 @@ if ($app instanceof CMSWebApplicationInterface) {
 // administrator and site applications, because it needs a document for the web
 // asset manager. That assumption was wrong twice over: registering loggers here
 // left API code with no logger at all and silently discarded everything it
-// logged, and the console reaches this file too, via plg_task_proclaim (#1787).
+// logged, and the console reaches this file too, via plg_task_proclaim.
 //
 // Registration now lives in CwmlogHelper (called from ProclaimComponent::boot(),
 // so every application is covered). The call below is for the paths that reach

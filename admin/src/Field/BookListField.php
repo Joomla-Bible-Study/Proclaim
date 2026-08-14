@@ -69,7 +69,7 @@ class BookListField extends ListField
 
         // Books come from the junction, so a study with more than two references
         // offers all of them rather than the two the flat columns could hold
-        // (#1623). The studies keep the alias `s`: applyCrossFilters() below
+        // . The studies keep the alias `s`: applyCrossFilters() below
         // writes s.series_id and s.id, so the alias is part of that helper's
         // contract.
         $query->select('DISTINCT ' . $db->quoteName('sr.booknumber', 'value'))

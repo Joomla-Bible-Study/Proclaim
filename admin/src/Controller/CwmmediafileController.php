@@ -185,7 +185,7 @@ class CwmmediafileController extends FormController
         // callable by request-supplied name -- including createLiveEvent()
         // and cancelLiveEvent(), which act on the connected platform account.
         // Those are invoked server-side (CwmmediafileModel/CwmmediafileTable)
-        // and deliberately stay off the allow-list. See #1599.
+        // and deliberately stay off the allow-list.
         if (!\in_array($handler, $addon->getXhrHandlers(), true) || !method_exists($addon, $handler)) {
             throw new \RuntimeException(
                 Text::sprintf('Handler: "%s" does not exist!', htmlspecialchars($handler, ENT_QUOTES, 'UTF-8')),
@@ -413,7 +413,7 @@ class CwmmediafileController extends FormController
                 'serverType'  => $serverType,
                 // The playlist picker lives outside the swapped containers, so the
                 // capability has to travel with the response for the client to
-                // show or hide it on a server change. See #1392.
+                // show or hide it on a server change.
                 'supportsPlaylists' => $addon->supportsPlaylists(),
             ]);
         } catch (\Exception $e) {

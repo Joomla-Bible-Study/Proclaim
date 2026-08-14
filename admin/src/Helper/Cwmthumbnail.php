@@ -134,7 +134,7 @@ class Cwmthumbnail
      * '..', so 'images/biblestudy/studies/../../../administrator' satisfied the
      * prefix test and still resolved outside the allowed tree once the
      * filesystem walked it -- the same defect fixed in CwmImageMigration
-     * (#1537) and CwmImageCleanup (#1563).
+     *  and CwmImageCleanup.
      *
      * Resolution is lexical rather than realpath()-based: callers legitimately
      * pass paths that do not exist yet (deleteFolder() reports success for an
@@ -285,7 +285,7 @@ class Cwmthumbnail
      * smart quotes, commas and other characters that break filesystem paths and
      * URLs are stripped — the previous behaviour passed the raw original filename
      * through unchanged, producing names such as
-     * "Anticipating the Return of Christ … 1105 am by.jpg" (#1272). The result is
+     * "Anticipating the Return of Christ … 1105 am by.jpg". The result is
      * truncated to MAX_BASENAME_LENGTH characters and falls back to "image" when
      * slugification yields an empty string.
      *
@@ -331,7 +331,7 @@ class Cwmthumbnail
         $extension = strtolower(pathinfo($originalPath, PATHINFO_EXTENSION));
 
         // Generate a filesystem- and URL-safe filename from the title (falling
-        // back to the original basename), slugified and length-capped. See #1272.
+        // back to the original basename), slugified and length-capped.
         $baseFilename = self::buildSafeBaseFilename($title, $originalPath);
 
         // Add a short version hash based on file content to bust browser cache

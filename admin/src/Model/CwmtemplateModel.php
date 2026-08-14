@@ -264,7 +264,7 @@ class CwmtemplateModel extends AdminModel
             // core.admin already excluded above, so an empty $accessible here
             // means a real zero-access user, not a super admin -- in_array()
             // against an empty array is always false, so this denies rather
-            // than silently skipping the check. See #1561.
+            // than silently skipping the check.
             if (!\in_array($locationId, $accessible, true)) {
                 throw new \RuntimeException(Text::_('JBS_BAT_LOCATION_ACCESS_DENIED'));
             }

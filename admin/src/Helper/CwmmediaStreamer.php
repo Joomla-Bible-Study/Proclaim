@@ -23,11 +23,11 @@ use Joomla\CMS\Factory;
  * If-Modified-Since, from local disk or by proxying an external host.
  *
  * Extracted verbatim from CwmpodcastTrackHelper, where it was written for the
- * podcast download-tracking redirect (#1424) and hardened against SSRF in
- * 10.5.5 (#1426). None of it was ever podcast-specific: the podcast parts —
+ * podcast download-tracking redirect and hardened against SSRF in
+ * 10.5.5. None of it was ever podcast-specific: the podcast parts —
  * bot detection, GUID resolution, hit recording — stayed behind. It lives here
  * so the front-end download route can use the same implementation rather than
- * growing a second one (#1774).
+ * growing a second one.
  *
  * ⚠️ This class answers *how* to send a file, never *whether* to. It performs
  * no access check, because its original caller is a deliberately public
@@ -48,7 +48,7 @@ class CwmmediaStreamer
      * Serve the tracked media directly (local disk or a proxied fetch from an
      * external host), honoring Range/HEAD/If-Modified-Since so the URL Apple's
      * crawler sees answers correctly without needing to follow a redirect
-     * first (#1424).
+     * first.
      *
      * @param   string  $target           Absolute URL of the live media
      * @param   string  $mimeType         Content-Type to declare
@@ -208,7 +208,7 @@ class CwmmediaStreamer
      *
      * Falls back to a plain redirect if curl isn't available, or if the
      * upstream fetch fails before any response reached the client — matches
-     * this endpoint's pre-#1424 behavior in both cases rather than hanging.
+     * this endpoint's earlier behaviour in both cases rather than hanging.
      *
      * @param   string  $url              Absolute URL of the external media
      * @param   string  $rangeHeader      Raw incoming Range header, if any
@@ -232,7 +232,7 @@ class CwmmediaStreamer
             Factory::getApplication()->redirect($url, 302);
         }
 
-        // SSRF guard (#1426): this method makes the request itself and relays
+        // SSRF guard: this method makes the request itself and relays
         // the response to an unauthenticated caller — unlike the redirect it
         // replaces, which only ever sent the *client's* browser/app to fetch
         // $url. $url is admin-configured (server.params.path), not
@@ -292,7 +292,7 @@ class CwmmediaStreamer
             // bounds how long a worker stays pinned. A LOW_SPEED guard
             // (not a hard total-time cap) aborts only a genuinely stalled
             // transfer, so legitimately large episode files can still
-            // stream for as long as they need to. See #1552.
+            // stream for as long as they need to.
             CURLOPT_LOW_SPEED_LIMIT => 1,
             CURLOPT_LOW_SPEED_TIME  => 60,
             CURLOPT_HEADERFUNCTION  => static function ($curlHandle, string $headerLine): int {
@@ -314,9 +314,9 @@ class CwmmediaStreamer
                 // the common case, given the "external host" storage model
                 // this method exists for) reached the client as a bare 3xx
                 // status with no Location and no body. This restores the
-                // pre-#1424 trust model for that case: the *client* follows
+                // earlier trust model for that case: the *client* follows
                 // the redirect itself, same as it always did, not curl -- no
-                // new SSRF surface. See #1552.
+                // new SSRF surface.
                 if (preg_match('/^(Content-Type|Content-Length|Content-Range|Accept-Ranges|Last-Modified|ETag|Cache-Control|Expires|Location):/i', $trimmed)) {
                     header($trimmed);
                 }
@@ -383,7 +383,7 @@ class CwmmediaStreamer
         return $hostOnly !== '' && $targetHost !== '' && $hostOnly === $targetHost;
     }
     /**
-     * SSRF guard for streamRemoteFile() (#1426): resolve a hostname to an IP
+     * SSRF guard for streamRemoteFile(): resolve a hostname to an IP
      * that is safe to fetch on this server's behalf, or null if it isn't.
      *
      * "Safe" means a public, routable address — not loopback (127.0.0.1,

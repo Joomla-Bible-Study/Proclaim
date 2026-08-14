@@ -30,7 +30,7 @@ use Joomla\CMS\Table\Asset;
  * Permissions for one `com_proclaim.<section>` asset.
  *
  * One section per request: all 17 grids on one form exceeds PHP's
- * `max_input_vars`, and the excess is discarded silently (#1653).
+ * `max_input_vars`, and the excess is discarded silently.
  *
  * @since  10.5.8
  */

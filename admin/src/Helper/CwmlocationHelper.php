@@ -223,7 +223,7 @@ class CwmlocationHelper
      * A non-admin user with zero accessible locations (a real, valid config --
      * not the same thing as a super admin, see isSuperAdmin()) is restricted to
      * records with no location assigned at all, rather than seeing every
-     * location. See #1561.
+     * location.
      *
      * @param   QueryInterface  $query   The query to filter.
      * @param   string          $alias   Table alias owning the location_id column.
@@ -260,7 +260,7 @@ class CwmlocationHelper
      * the two let every consumer fail open (treat "zero access" as "no
      * restriction"). Callers that need to distinguish the two cases must
      * check this method directly rather than inferring admin status from an
-     * empty location array. See #1561.
+     * empty location array.
      *
      * @param   int  $userId  Joomla user ID (0 = current user).
      *
@@ -343,8 +343,8 @@ class CwmlocationHelper
             ->where($db->quoteName('s.location_id') . ' IS NOT NULL')
             ->where($db->quoteName('s.location_id') . ' > 0');
 
-        // ⚠️ A second UNION branch read studies.teacher_id until #1731 retired
-        // it. The junction path above is the whole answer now.
+        // ⚠️ The junction path above is the whole answer; studies.teacher_id is
+        // retired.
         $query1->bind(':userId', $userId, ParameterType::INTEGER);
 
         $db->setQuery($query1);
@@ -388,7 +388,7 @@ class CwmlocationHelper
 
         $db->setQuery($query, 0, 1);
 
-        // ⚠️ A second check read studies.teacher_id until #1731 retired it. The
+        // ⚠️ studies.teacher_id is retired. The
         // junction is the whole answer now.
         return (bool) $db->loadResult();
     }

@@ -898,7 +898,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Whether this addon can create live broadcasts on its platform (#1298).
+     * Whether this addon can create live broadcasts on its platform.
      *
      * A capable platform is only the first of three gates — a broadcast is
      * created solely when the server is in Direct stream mode AND the
@@ -915,7 +915,7 @@ abstract class CWMAddon
     }
 
     /**
-     * Create a scheduled live broadcast on the platform (#1298 phase 1).
+     * Create a scheduled live broadcast on the platform (phase 1).
      *
      * Called from the media-file save path when all three gates pass
      * (capability, server Direct mode, per-record opt-in). Override in a
@@ -945,7 +945,7 @@ abstract class CWMAddon
 
     /**
      * Cancel a platform live broadcast that has not yet gone live
-     * (#1298 phase 3).
+     * (phase 3).
      *
      * Called from the media-file delete path when the record carries a
      * broadcast the platform still lists as upcoming. Override in a capable
@@ -1101,7 +1101,7 @@ abstract class CWMAddon
     {
         // Numeric comparison: a duration stored as '0' rather than '00' is still
         // no duration, but a string comparison read it as set and skipped
-        // detection for exactly those records (#1391).
+        // detection for exactly those records.
         $hours   = (int) $params->get('media_hours', '00');
         $minutes = (int) $params->get('media_minutes', '00');
         $seconds = (int) $params->get('media_seconds', '00');
@@ -1521,7 +1521,7 @@ abstract class CWMAddon
         // href is the embed URL, not a javascript: placeholder. Fancybox reads
         // data-src and intercepts the click, so behaviour is unchanged, but a
         // Content-Security-Policy no longer blocks the control and the visitor
-        // can middle-click or copy it like any other link (#1814).
+        // can middle-click or copy it like any other link.
         return '<a class="fancybox_player playhit" data-id="' . $mediaId
             . '" aria-hidden="false" data-src="' . $safeEmbedUrl
             . '" data-header="' . $headerText . '" data-footer="' . $footerText

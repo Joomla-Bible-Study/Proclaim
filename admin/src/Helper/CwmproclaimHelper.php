@@ -67,7 +67,7 @@ class CwmproclaimHelper
      * BIBLESTUDY_VERSION constant, which admin/api.php only populated by
      * parsing proclaim.xml off the filesystem, and only when the current
      * client was 'administrator' — everywhere else, including the API
-     * application, it was an empty string. See #1429.
+     * application, it was an empty string.
      *
      * @return  string  Semver version string, or '0.0.0' if unavailable
      *
@@ -515,8 +515,8 @@ class CwmproclaimHelper
 
         // Books come from the junction, so a study with more than two references
         // offers all of them rather than the two the flat columns could hold
-        // (#1623). The name comes from the scripture library, which holds the
-        // language keys #__bsms_books used to store (#1687).
+        // . The name comes from the scripture library, which holds the
+        // language keys #__bsms_books used to store.
         $query->select('DISTINCT ' . $db->quoteName('sr.booknumber', 'value'))
             ->from($db->quoteName('#__bsms_studies', 's'))
             ->join(

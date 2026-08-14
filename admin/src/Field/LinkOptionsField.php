@@ -36,7 +36,7 @@ class LinkOptionsField extends PredefinedlistField
     protected $type = 'LinkOptions';
 
     /**
-     * A fixed set of options, not DB-backed. See #1464.
+     * A fixed set of options, not DB-backed.
      *
      * @var  array
      *
