@@ -158,13 +158,18 @@ class CwmproclaimHelper
     /**
      * Update View and Controller to work with Namespace Case-Sensitive
      *
-     * @param   string  $defaultController  Default Controller
+     * @param   string   $defaultController  Default controller name
+     * @param   ?string  $defaultView        Default view, when it is not the
+     *                                       controller's own name. The site's
+     *                                       landing page is served by the
+     *                                       generic display controller, so the
+     *                                       two differ there.
      *
      * @return void
      * @throws \Exception
      * @since    10.0.0
      */
-    public static function applyViewAndController(string $defaultController): void
+    public static function applyViewAndController(string $defaultController, ?string $defaultView = null): void
     {
         $input      = Factory::getApplication()->getInput();
         $controller = $input->getCmd('controller');
@@ -178,7 +183,7 @@ class CwmproclaimHelper
 
         if (empty($controller) && empty($view)) {
             $controller = $defaultController;
-            $view       = $defaultController;
+            $view       = $defaultView ?? $defaultController;
         } elseif (!empty($controller) && empty($view)) {
             $view = $controller;
         }

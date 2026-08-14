@@ -36,7 +36,18 @@ class Dispatcher extends ComponentDispatcher
      * @var string
      * @since 10.0.0
      */
-    protected string $defaultController = 'DisplayController';
+    protected string $defaultController = 'display';
+
+    /**
+     * The view shown when a request names neither a view nor a controller.
+     *
+     * Separate from the controller because no CwmlandingpageController exists —
+     * the generic display controller renders it.
+     *
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $defaultView = 'cwmlandingpage';
 
     /**
      * Dispatch a controller task. Redirecting the user if appropriate.
@@ -49,7 +60,7 @@ class Dispatcher extends ComponentDispatcher
     #[\Override]
     public function dispatch(): void
     {
-        CwmproclaimHelper::applyViewAndController($this->defaultController);
+        CwmproclaimHelper::applyViewAndController($this->defaultController, $this->defaultView);
 
         // Once per component request, ahead of the views, so a rule can reach
         // anything Proclaim renders.
