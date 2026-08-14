@@ -87,7 +87,7 @@ module.exports = defineConfig({
         {
             name: 'site-j5',
             testMatch: '**/site/**/*.spec.js',
-            testIgnore: '**/a11y.spec.js',
+            testIgnore: ['**/a11y.spec.js', '**/template-gantry.spec.js'],
             use: {
                 ...devices['Desktop Chrome'],
                 baseURL: j5Url,
@@ -105,6 +105,28 @@ module.exports = defineConfig({
         {
             name: 'site-j6',
             testMatch: '**/site/**/*.spec.js',
+            testIgnore: '**/template-gantry.spec.js',
+            use: {
+                ...devices['Desktop Chrome'],
+                baseURL: j6Url,
+            },
+        },
+
+        // Proclaim rendered by a Gantry template rather than Cassiopeia.
+        //
+        // Every other site project runs Cassiopeia, so nothing exercised the
+        // markup under a template that styles it differently — which is how
+        // buttons whose label matched their own background reached production
+        // (#1799). Its own project rather than a second run of the whole site
+        // suite: this is about the template, and the a11y scan is expensive.
+        //
+        // The spec pins a template style by id, configurable because Helium
+        // installs with a different one per site. It asserts Gantry markup is
+        // actually present, so a stale id fails rather than quietly re-testing
+        // Cassiopeia.
+        {
+            name: 'site-helium',
+            testMatch: '**/site/template-gantry.spec.js',
             use: {
                 ...devices['Desktop Chrome'],
                 baseURL: j6Url,
