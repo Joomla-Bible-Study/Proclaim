@@ -206,6 +206,11 @@ jobs:
       - name: Check query builder usage
         run: composer lint:queries
 
+      # Like the coding standards below, checked once rather than in both PHP
+      # jobs: what a comment says does not vary by PHP version.
+      - name: Check comments for issue references
+        run: composer lint:comments
+
       # CLAUDE.md requires PSR-12 and says all code must pass PHP CS Fixer before
       # committing, but nothing enforced it, so the standard held only as far as
       # each contributor remembered to run it. Checked once here rather than in

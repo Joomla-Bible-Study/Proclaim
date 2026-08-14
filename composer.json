@@ -138,6 +138,7 @@
     "test:release": ["@test:install", "@test:upgrade", "@test:e2e"],
     "lint:syntax": "find admin/src api/src site/src modules plugins -type f -name '*.php' -print0 | xargs -0 -n 1 -P 8 php -l > /dev/null",
     "lint:queries": "sh build/lint-queries.sh",
+    "lint:comments": "@php build/lint-comments.php",
     "lint": "php-cs-fixer fix --dry-run --diff",
     "lint:fix": "php-cs-fixer fix",
     "check": ["@lint:syntax", "@lint:queries", "@lint", "@test"],
