@@ -19,6 +19,112 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.8                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.8</version>
+        <date>2026-08-14</date>
+        <note>
+            <item>chore: open the 10.5.8 development cycle by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1702</item>
+            <item>docs: stop the 10.5.7 notes claiming the update row now reads Package (#1700) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1703</item>
+            <item>chore: put the scripturelinks pin back on the v1.2.2 tag by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1704</item>
+            <item>feat: give the test site a front end, and check that it renders (#1701) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1705</item>
+            <item>fix: stop Database Maintenance reporting an index we removed on purpose (#1706) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1707</item>
+            <item>chore(deps): intl-tel-input 29.1.2 → 29.2.2 (#1696) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1710</item>
+            <item>chore: pin cwm/build-tools v1.15.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1711</item>
+            <item>chore(deps): eslint 10.8.1, terser 5.49.2 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1713</item>
+            <item>chore(deps): retire @babel/cli and @rollup/plugin-babel, which nothing calls by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1715</item>
+            <item>ci: bump github/codeql-action from 4.37.4 to 4.37.6 in the actions-minor-and-patch group by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1709</item>
+            <item>chore(deps): bump core-js from 3.49.0 to 3.50.0 in the npm-minor-and-patch group across 1 directory by @dependabot[bot] in https://github.com/Joomla-Bible-Study/Proclaim/pull/1714</item>
+            <item>fix: correct two ACL asset names, and bind the rest to access.xml (#1653 phase 0) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1669</item>
+            <item>feat: create com_proclaim section assets, provably inert (#1653 phase 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1670</item>
+            <item>feat: ask section-level permission questions in admin lists (#1653 phase 1.5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1671</item>
+            <item>feat: make the admin toolbars ask the section, not the component (#1653 phase 1.5b) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1716</item>
+            <item>feat: give section permissions their own screen, so they can be saved (#1653 phase 2) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1717</item>
+            <item>feat: gate create and edit on the section, not the component (#1653 phase 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1718</item>
+            <item>fix: drop share, cssedit and style — three sections that govern nothing (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1720</item>
+            <item>feat: parent item assets to their section, so section rules reach them (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1721</item>
+            <item>fix: correct the three asset names that disagreed with access.xml (#1653) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1722</item>
+            <item>feat: custom CSS for Proclaim, site-wide and per template (#1719) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1725</item>
+            <item>fix: strip a failed save&#x27;s asset, and close the gap when removing one (#1723, #1724) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1726</item>
+            <item>fix: drop seven columns on #__bsms_studies that nothing reads or writes (#1690) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1727</item>
+            <item>chore: bump the scripture submodule pins for the shared book-code table (#1688) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1728</item>
+            <item>fix: retire #__bsms_books, whose rows are language keys the library already holds (#1687) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1729</item>
+            <item>fix: make the scripture migration repeatable so stranded studies can be repaired (#1623) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1732</item>
+            <item>feat: drive the book facets from the junction (#1623 step 2, tier 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1733</item>
+            <item>feat: match the Book cross-filter against the junction (#1623 step 2, tier 2a) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1734</item>
+            <item>fix: bracket the Book filter&#x27;s disjunction so it cannot escape the query&#x27;s scope by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1735</item>
+            <item>fix: stop relying on where()&#x27;s glue argument, and pin both where() traps in a test by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1736</item>
+            <item>feat: match the sermons book filter against the junction (#1623 step 2, tier 2b) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1737</item>
+            <item>feat: score and index every scripture reference, not just the first (#1623 step 2, tier 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1738</item>
+            <item>feat: read scriptures from the junction in the last three views (#1623 step 1) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1730</item>
+            <item>chore(deps): allow install scripts for three packages, and dedupe fsevents by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1739</item>
+            <item>feat: derive bookname from the junction, and fix comment search (#1623 step 2, tier 4) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1740</item>
+            <item>feat: prefer the junction in the last flat-column readers (#1623 step 2, tier 4b) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1741</item>
+            <item>feat: stop writing the legacy scripture columns (#1623 step 2, commit 5) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1742</item>
+            <item>feat: drop the flat scripture columns (#1623 step 3) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1743</item>
+            <item>fix: retire the legacy columns in PHP, where the backfill cannot be skipped (#1623) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1744</item>
+            <item>fix: seed the study_teachers junction so no install starts out unmigrated (#1731 commit 0) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1746</item>
+            <item>feat: read teachers from the junction only (#1731 reader conversions) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1747</item>
+            <item>fix: one missing table no longer stops the primary-key check by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1748</item>
+            <item>feat: stop writing teacher_id and retire the column (#1731) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1750</item>
+            <item>fix: empty phone links, and a11y detail tests that were not running by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1751</item>
+            <item>fix(api): stop views declaring fields the responses never contain (#1749) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1752</item>
+            <item>fix(api): apply the five list filters that were accepted and discarded (#1753) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1754</item>
+            <item>ci: run the API acceptance job when the API&#x27;s models and tables change (#1755) by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1756</item>
+            <item>fix: build the bundled scripture package from the pinned submodule, not the newest zip by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1758</item>
+            <item>chore: pin the scripture stack to lib 1.1.11 / pkg 1.2.3 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1759</item>
+            <item>chore: pin the scripture stack to lib 1.1.12 / pkg 1.2.4 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1762</item>
+            <item>feat: look scripture up from the book number, with a fallback by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1764</item>
+            <item>fix: guard the composer install on the entry point, not its directory by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1765</item>
+            <item>fix: ask the library for the book name instead of translating the key by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1766</item>
+            <item>chore: pin the scripture stack to lib 1.1.13 / pkg 1.2.5 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1767</item>
+            <item>ci: make the JS Lint job actually lint by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1768</item>
+            <item>fix(plugin): stop the DROP TABLE guard matching the phrase in a comment by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1769</item>
+            <item>chore: refresh cwm/build-tools to 1.18.0 for the artifact token gate by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1770</item>
+            <item>chore: restore composer.json formatting, and move to build-tools 1.18.1 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1771</item>
+            <item>chore: refresh cwm/build-tools to 1.19.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1772</item>
+            <item>chore: pin the scripture stack to lib 1.1.14 / pkg 1.2.6 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1773</item>
+            <item>fix(forms): point the popup-image picker at a directory that exists by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1775</item>
+            <item>feat(media): a media file inherits the access of its message and series by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1777</item>
+            <item>refactor(media): extract the streaming layer into CwmmediaStreamer by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1778</item>
+            <item>feat(media): serve downloads through the shared streamer by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1779</item>
+            <item>feat(media): warn when a restricted media file is still public on disk by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1780</item>
+            <item>feat(podcast): the feed no longer lists items the reader cannot see by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1781</item>
+            <item>feat(media): verify a directory is actually refused, rather than assuming by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1782</item>
+            <item>feat(media): the protected media directory, and its verdict by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1783</item>
+            <item>feat(media): move a self-hosted file into protected storage by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1784</item>
+            <item>feat(media): tell the administrator what this server actually does by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1785</item>
+            <item>chore(config): declare the protected-media state so Options does not drop it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1786</item>
+            <item>fix(api): do not touch the document when there is no document by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1788</item>
+            <item>fix: remove the popup image field, which nothing has ever rendered by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1789</item>
+            <item>chore: pin the scripture stack to lib 1.1.16 / pkg 1.2.8 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1790</item>
+            <item>chore: pin the scripture stack to lib 1.1.17 / pkg 1.2.9 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1792</item>
+            <item>fix: stop reading and writing the retired teacher_id column by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1791</item>
+            <item>fix: let Batch → Teacher add rather than replace by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1794</item>
+            <item>fix: repair the media popup, and name every embedded player frame by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1795</item>
+            <item>fix: derive comment moderation state server-side by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1797</item>
+            <item>fix: serve the landing page for a request with no view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1798</item>
+            <item>fix: keep Proclaim&#x27;s buttons readable under a site template&#x27;s link colour by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1799</item>
+            <item>test: run the site views under a Gantry template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1800</item>
+            <item>test: remove the media dirs the YouTube cache tests create by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1801</item>
+            <item>chore(deps): bump cwm/build-tools to 1.20.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1802</item>
+            <item>fix: keep Proclaim&#x27;s landing page legible under a site template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1805</item>
+            <item>fix: load cwmcore on the landing page and drop its duplicate skip link by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1809</item>
+            <item>fix: load Proclaim&#x27;s core stylesheet on every site view by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1810</item>
+            <item>chore(deps): bump cwm/build-tools to 1.21.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1811</item>
+            <item>fix: keep outline buttons legible under a site template by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1812</item>
+            <item>fix: give the series podcast view a not-found page, and deliver the 404 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1816</item>
+            <item>feat: allow custom CSS per landing section by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1817</item>
+            <item>chore(deps): bump cwm/build-tools to 1.22.0 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1818</item>
+            <item>fix: stop rendering media controls as javascript: URLs by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1819</item>
+            <item>release: merge development into main for 10.5.8 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1821</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.7                                                   -->
     <!-- ============================================================ -->
     <changelog>
