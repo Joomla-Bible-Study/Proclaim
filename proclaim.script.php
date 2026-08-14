@@ -123,6 +123,16 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private string $fromVersion = '';
 
+    /**
+     * What each migration step did, for the report echoed at the end.
+     *
+     * Each entry: name, state (ran|skipped|failed), a short note, seconds.
+     *
+     * @var    array<int, array{name: string, state: string, note: string, secs: float}>
+     * @since  __DEPLOY_VERSION__
+     */
+    private array $stepLog = [];
+
     protected $minimumPhp = '8.3.0';
 
     /**
@@ -397,6 +407,134 @@ class com_proclaimInstallerScript extends InstallerScript
             return (string) ($decoded['version'] ?? '');
         } catch (\Throwable) {
             return '';
+        }
+    }
+
+    /**
+     * Report what the migrations did, on the page the administrator lands on.
+     *
+     * ⚠️ Delivered with enqueueMessage(), not echo. Joomla does capture printed
+     * output into the extension message, but postflight ends by setting a
+     * redirect to Proclaim's own view, and a queued message survives that where
+     * printed output is not guaranteed to.
+     *
+     * ⚠️ The markup is constrained by Joomla's own sanitiser. `Joomla.sanitizeHtml`
+     * renders queued messages client-side against an allowlist that has no
+     * `table`, `tr` or `td`, and no `style` attribute anywhere — a table with
+     * inline styles arrives as stripped text. Hence a list, and classes only.
+     *
+     * Says nothing when there is nothing worth saying: a fresh install, or an
+     * update where every step was skipped and none of them took any time.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function reportMigrations(): void
+    {
+        if ($this->stepLog === []) {
+            return;
+        }
+
+        $ran     = array_filter($this->stepLog, static fn ($s) => $s['state'] === 'ran');
+        $failed  = array_filter($this->stepLog, static fn ($s) => $s['state'] === 'failed');
+        $skipped = \count($this->stepLog) - \count($ran) - \count($failed);
+        $total   = array_sum(array_column($this->stepLog, 'secs'));
+
+        if ($ran === [] && $failed === [] && $total < 0.05) {
+            return;
+        }
+
+        $esc  = static fn (string $t) => htmlspecialchars($t, ENT_QUOTES, 'UTF-8');
+        $from = $this->fromVersion !== '' ? $this->fromVersion : 'an unrecorded version';
+
+        $items = '';
+
+        foreach ($this->stepLog as $entry) {
+            $mark = match ($entry['state']) {
+                'ran'    => '&#10003;',
+                'failed' => '&#10007;',
+                default  => '&#8722;',
+            };
+
+            $items .= '<li>' . $mark . ' <strong>' . $esc($entry['name']) . '</strong>'
+                . ($entry['note'] !== '' ? ' <small>' . $esc($entry['note']) . '</small>' : '')
+                . ($entry['state'] === 'skipped'
+                    ? ''
+                    : ' <small>' . number_format($entry['secs'], 2) . 's</small>')
+                . '</li>';
+        }
+
+        $summary = sprintf(
+            '%d ran, %d skipped%s in %ss, upgrading from %s.',
+            \count($ran),
+            $skipped,
+            $failed === [] ? '' : ', ' . \count($failed) . ' failed,',
+            number_format($total, 1),
+            $esc($from)
+        );
+
+        try {
+            Factory::getApplication()->enqueueMessage(
+                '<strong>Proclaim migrations</strong><br>' . $summary
+                . '<ul class="list-unstyled mb-0">' . $items . '</ul>',
+                $failed === [] ? 'info' : 'warning'
+            );
+        } catch (\Throwable) {
+            // A report is not worth failing an otherwise successful update over.
+        }
+    }
+
+    /**
+     * Run a legacy migration, or record why it was skipped.
+     *
+     * Wraps the version gate and the timing in one place so the report can say
+     * what happened. Before this, an update that did nothing looked exactly like
+     * an update that did everything: a spinner, then silence.
+     *
+     * A step that throws is recorded and the update carries on. None of these is
+     * load-bearing enough to abandon an otherwise successful update over, and a
+     * failure that is reported is far better than one that aborts the install.
+     *
+     * @param   string    $name   Step name, as it appears in the report
+     * @param   string    $since  Release the migration shipped in
+     * @param   callable  $work   The migration; may return a short note
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function step(string $name, string $since, callable $work): void
+    {
+        if (!$this->upgradingFromBefore($since)) {
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'skipped',
+                'note'  => 'not needed past ' . $since,
+                'secs'  => 0.0,
+            ];
+
+            return;
+        }
+
+        $started = microtime(true);
+
+        try {
+            $note = $work();
+
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'ran',
+                'note'  => \is_string($note) ? $note : '',
+                'secs'  => microtime(true) - $started,
+            ];
+        } catch (\Throwable $e) {
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'failed',
+                'note'  => $e->getMessage(),
+                'secs'  => microtime(true) - $started,
+            ];
         }
     }
 
@@ -1874,65 +2012,50 @@ class com_proclaimInstallerScript extends InstallerScript
         // find out, on every update, forever. Nine of them made a routine update
         // take minutes on a site with real content.
         if ($type === 'update') {
-            // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
-            if ($this->upgradingFromBefore('10.1.0')) {
-                try {
-                    CwmmigrationHelper::fixMediafileLegacyPaths();
-                } catch (\Exception $e) {
-                    Factory::getApplication()->enqueueMessage(
-                        'Mediafile path migration notice: ' . $e->getMessage(),
-                        'warning'
-                    );
-                }
-            }
+            // Legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
+            $this->step('Media file paths', '10.1.0', static function () {
+                CwmmigrationHelper::fixMediafileLegacyPaths();
+            });
 
-            // Migrate studyimage param values to thumbnailm column
-            if ($this->upgradingFromBefore('10.1.0')) {
-                try {
-                    $this->migrateStudyImageParams();
-                } catch (\Exception $e) {
-                    Factory::getApplication()->enqueueMessage(
-                        'StudyImage migration notice: ' . $e->getMessage(),
-                        'warning'
-                    );
-                }
-            }
+            // studyimage param values to the thumbnailm column
+            $this->step('Study images', '10.1.0', function () {
+                $this->migrateStudyImageParams();
+            });
 
-            // Drop vestigial text/pdf columns from templates table.
-            // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
-            if ($this->upgradingFromBefore('10.3.2')) {
+            // Vestigial text/pdf columns on the templates table. Done in PHP
+            // because ALTER TABLE DROP COLUMN is not idempotent.
+            $this->step('Template columns', '10.3.2', function () {
                 $this->dropLegacyTemplateColumns();
-            }
+            });
 
-            // Drop pre-10.1 / pre-10.0 orphaned tables that linger on sites
-            // upgraded across multiple major versions (Joomla skips already-
-            // applied migrations on jump-upgrades, so the per-version DROPs
-            // never run).
-            if ($this->upgradingFromBefore('10.1.0')) {
+            // pre-10.1 / pre-10.0 orphaned tables, which linger on sites upgraded
+            // across several major versions — Joomla skips already-applied
+            // migrations on a jump upgrade, so the per-version DROPs never ran.
+            $this->step('Orphaned tables', '10.1.0', function () {
                 $this->dropLegacyTables();
-            }
+            });
 
-            // Migrate existing alternate link data to platform_links JSON
-            if ($this->upgradingFromBefore('10.1.0')) {
+            // Alternate link data into platform_links JSON
+            $this->step('Podcast alternate links', '10.1.0', function () {
                 $this->migratePodcastAlternateLinks();
-            }
+            });
 
-            // Copy legacy image field to podcastimage where podcastimage is empty
-            if ($this->upgradingFromBefore('10.1.0')) {
+            // Legacy image field into podcastimage, where podcastimage is empty
+            $this->step('Podcast images', '10.1.0', function () {
                 $this->migratePodcastImageField();
-            }
+            });
 
-            // Match legacy podcastlink URLs to Joomla menu item IDs. This is the
+            // Legacy podcastlink URLs matched to Joomla menu item IDs. This is the
             // one that reported "N podcast link(s) could not be matched" on every
             // update, about rows it had already declined to match before.
-            if ($this->upgradingFromBefore('10.3.0')) {
+            $this->step('Podcast menu links', '10.3.0', function () {
                 $this->migratePodcastLinkToMenuItem();
-            }
+            });
 
-            // Migrate scripture settings from component params to plugin params
-            if ($this->upgradingFromBefore('10.5.8')) {
+            // Scripture settings from component params to plugin params
+            $this->step('Scripture settings', '10.5.8', function () {
                 $this->migrateScriptureParamsToPlugin();
-            }
+            });
         }
 
         if ($type === 'install' || $type === 'update') {
@@ -1988,6 +2111,8 @@ class com_proclaimInstallerScript extends InstallerScript
                 // Silently ignore detection failures during install
             }
         }
+
+        $this->reportMigrations();
 
         // For updates, we use the migration process
         $parent->getParent()->setRedirectURL(
