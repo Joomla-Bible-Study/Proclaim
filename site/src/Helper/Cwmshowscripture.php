@@ -61,7 +61,7 @@ class Cwmshowscripture
 
         // The row already knows its book number; formReference() renders it to a
         // localised name that the provider then has to match back. Keep both, and
-        // let fetchPassage() prefer the structured one where it can (#1688).
+        // let fetchPassage() prefer the structured one where it can.
         $ref = ScriptureReference::fromRow($row);
         CwmDebug::startTimer('buildPassage');
 
@@ -647,7 +647,7 @@ class Cwmshowscripture
         // ScriptureHelper::getBookName() loads lib_cwmscripture's own language
         // file first; a bare Text::_() only resolves if something else happened
         // to load a file carrying JBS_BBK_*, which used to be com_proclaim's own
-        // duplicate copy of those keys (#1761).
+        // duplicate copy of those keys.
         $name = !empty($row->booknumber)
             ? CwmscriptureHelper::getBookName((int) $row->booknumber)
             : '';

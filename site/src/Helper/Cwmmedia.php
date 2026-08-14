@@ -893,7 +893,7 @@ class Cwmmedia
 
         // href is the media itself, not a javascript: placeholder: Fancybox reads
         // data-src and intercepts the click, and without JS the file is still
-        // reachable rather than the control being inert (#1814).
+        // reachable rather than the control being inert.
         return '<a href="' . $path . '" data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
             '" class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
@@ -1136,7 +1136,7 @@ class Cwmmedia
         // empty string as unset, so every site that never picked a variant got
         // the outline default -- and with the form's default colour saved, that
         // rendered #0a58ca on black, 3.26:1. As a solid button the label is
-        // white on black instead (#1815).
+        // white on black instead.
         $button        = $download->get('download_button_type', 'btn-primary');
         $buttonText    = $download->get('download_button_text', 'Audio');
         $textSize      = $download->get('download_icon_text_size', '24');
@@ -1415,7 +1415,7 @@ class Cwmmedia
             // Audio formats
             // Registered types, matching Cwmmime::MAP. 'audio/mp3' was offered here
             // for years and is not IANA-registered — it is how feeds came to declare
-            // it on every episode. M4A is MPEG-4 audio, not MPEG audio (#1397).
+            // it on every episode. M4A is MPEG-4 audio, not MPEG audio.
             'm4a|m4b'  => 'audio/mp4',
             'mp3'      => 'audio/mpeg',
             'ra|ram'   => 'audio/x-realaudio',

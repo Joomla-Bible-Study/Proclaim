@@ -582,10 +582,10 @@ class Cwmlanding
                 // the same five columns, and a book's name is no longer
                 // available to SQL: #__bsms_books held language keys the
                 // scripture library already carries, so the join it needed
-                // earned nothing (#1687).
+                // earned nothing.
                 //
                 // Books come from the junction, so a study with more than two
-                // references contributes all of them (#1623).
+                // references contributes all of them.
                 $query->select(
                     'DISTINCT ' . $this->db->quoteName('sr.booknumber', 'id') . ', '
                     . $null . ' AS ' . $this->db->quoteName('text') . ', '
@@ -1134,9 +1134,9 @@ class Cwmlanding
 
             // Books come from the junction, so a study with more than two
             // references contributes all of them rather than the two the flat
-            // columns could hold (#1623). The name is attached afterwards from
+            // columns could hold. The name is attached afterwards from
             // the scripture library, which holds the language keys
-            // #__bsms_books used to store (#1687).
+            // #__bsms_books used to store.
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
             // b.access.
@@ -1193,7 +1193,7 @@ class Cwmlanding
      * Those queries used to join #__bsms_books for a `bookname` column holding a
      * JBS_BBK_* language key, which the callers then passed to Text::_(). The
      * scripture library holds the same keys against the same numbers, so the
-     * join earned nothing (#1687).
+     * join earned nothing.
      *
      * Rows whose number the library cannot name are dropped. The join could not
      * produce one — the row existed or it did not — and an entry with no label
@@ -1728,9 +1728,9 @@ class Cwmlanding
 
             // Books come from the junction, so a study with more than two
             // references contributes all of them rather than the two the flat
-            // columns could hold (#1623). The name is attached afterwards from
+            // columns could hold. The name is attached afterwards from
             // the scripture library, which holds the language keys
-            // #__bsms_books used to store (#1687).
+            // #__bsms_books used to store.
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
             // b.access.

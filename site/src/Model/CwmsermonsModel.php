@@ -984,7 +984,7 @@ class CwmsermonsModel extends ListModel
      * A correlated EXISTS over a study's scripture references.
      *
      * Self-contained, so it can be ANDed with anything without the bracketing
-     * hazard a bare disjunction carries (#1735).
+     * hazard a bare disjunction carries.
      *
      * @param   object    $db            Database driver
      * @param   int[]     $books         Book numbers, any of which may match

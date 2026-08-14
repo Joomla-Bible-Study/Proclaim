@@ -128,7 +128,7 @@ class HtmlView extends BaseHtmlView
         $this->landingData = $this->landing->getLandingData($this->params);
 
         // Per-section sheets, after the component and template ones the
-        // dispatcher already emitted, so a section can override them (#1807).
+        // dispatcher already emitted, so a section can override them.
         CwmcustomcssHelper::applySections($this->params, $this->landing->getSectionOrder($this->params));
 
         // Load landing page assets

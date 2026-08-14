@@ -262,7 +262,7 @@
                         }
 
                         // The playlist picker sits outside both swapped containers, so
-                        // follow the new server's capability explicitly (#1392).
+                        // follow the new server's capability explicitly.
                         const playlistContainer = document.getElementById('playlist-field-container');
                         if (playlistContainer) {
                             playlistContainer.classList.toggle('d-none', !data.supportsPlaylists);

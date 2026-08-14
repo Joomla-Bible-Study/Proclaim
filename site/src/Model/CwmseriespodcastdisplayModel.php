@@ -320,7 +320,7 @@ class CwmseriespodcastdisplayModel extends ItemModel
 
         // Junction is the real model; the flat columns hold at most two
         // references. Cwmlisting::getAllScriptures() prefers ->scriptures when it
-        // is populated and falls back to the flat columns otherwise (#1623).
+        // is populated and falls back to the flat columns otherwise.
         $scriptureMap = CwmscriptureHelper::getScripturesForStudies(array_column($studies, 'id'));
 
         foreach ($studies as $study) {

@@ -101,7 +101,7 @@ $CWMedia = new Cwmmedia();
                                     // no href that would mean anything. It used to be
                                     // href="javascript:loadVideo(…)", which no Content-Security-Policy
                                     // allows and which assistive technology announces as a link to a
-                                    // destination that does not exist (#1814).
+                                    // destination that does not exist.
                                     //
                                     // The thumbnail used to be passed as a second argument;
                                     // window.loadVideo() takes only the path and always ignored it.

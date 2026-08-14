@@ -83,7 +83,7 @@ class Cwmrelatedstudies
         // Dimension 2: Same teacher (2 points).
         //
         // From the junction: a study can have several teachers, and the column
-        // this used to read is gone (#1731).
+        // this used to read is gone.
         foreach (CwmstudyteacherHelper::getTeachersForStudy($studyId) as $teacher) {
             $teacherId = (int) ($teacher->teacherId ?? $teacher->teacher_id ?? 0);
 

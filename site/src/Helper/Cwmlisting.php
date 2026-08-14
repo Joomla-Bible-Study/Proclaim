@@ -2182,7 +2182,7 @@ class Cwmlisting
      * queried the database to fetch a key it then handed to Text::_() — and the
      * library holds the same 73 keys against the same 101-173 numbers, in code.
      * Verified identical: same count, same numbers, no key differing either way
-     * (#1687).
+     * .
      *
      * The method name and the local cache stay: getBookName() resolves through
      * array_search over BOOK_KEYS, so caching still earns its place on a listing

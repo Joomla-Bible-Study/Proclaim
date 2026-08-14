@@ -315,7 +315,7 @@ class CwmsermonController extends FormController
      *
      * Private: only meant to be called internally from comment(). Public
      * visibility made `task=cwmsermon.commentsEmail` a directly dispatchable
-     * Joomla task with no CSRF token check of its own — see #1441.
+     * Joomla task with no CSRF token check of its own.
      *
      * @param   Registry  $params  Params to parse
      *

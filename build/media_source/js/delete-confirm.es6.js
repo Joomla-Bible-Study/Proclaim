@@ -87,7 +87,7 @@
         // addScriptOptions('com_proclaim.deleteConfirm', ...)) rather than
         // guessed by scanning the DOM. Joomla renders more than one hidden
         // input with value="1" on this form (e.g. delete_physical_files),
-        // so a `value="1"` selector can't reliably tell them apart — see #1501.
+        // so a `value="1"` selector can't reliably tell them apart.
         const { csrfToken } = Joomla.getOptions('com_proclaim.deleteConfirm') || {};
         const tokenParam = csrfToken ? `&${encodeURIComponent(csrfToken)}=1` : '';
 

@@ -293,7 +293,7 @@ class HtmlView extends BaseHtmlView
             // Joomla's searchtools stays loaded on purpose: it owns the Filter Options
             // toggle, the Clear button and the sortable column headers, all of which
             // sermon-filters hooks into. Its submit paths run through form.submit(),
-            // which sermon-filters overrides to fetch over AJAX instead. See #1389.
+            // which sermon-filters overrides to fetch over AJAX instead.
             $wa->useScript('com_proclaim.sermon-filters');
             $wa->useStyle('com_proclaim.sermon-filters-css');
         }
