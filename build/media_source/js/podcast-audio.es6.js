@@ -70,7 +70,7 @@ window.loadVideo = function loadVideo(path) {
  *
  * Delegated, so it does not care whether the rows were present at parse time.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 document.addEventListener('click', (event) => {
     const trigger = event.target.closest('[data-proclaim-audio]');

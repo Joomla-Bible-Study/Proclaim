@@ -13,7 +13,7 @@
  * Without this script the link still works — it opens in the same tab — so the
  * popup is an enhancement rather than the only way through.
  *
- * @since __DEPLOY_VERSION__
+ * @since 10.5.8
  */
 ((document, window) => {
     'use strict';
