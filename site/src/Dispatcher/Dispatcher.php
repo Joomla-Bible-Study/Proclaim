@@ -62,6 +62,17 @@ class Dispatcher extends ComponentDispatcher
     {
         CwmproclaimHelper::applyViewAndController($this->defaultController, $this->defaultView);
 
+        // Proclaim's core stylesheet, for the same reason and in the same place:
+        // every front-end view needs it, and registering here puts it ahead of
+        // any sheet a view adds, so a view can still override it.
+        //
+        // It used to arrive only through Cwmlisting::getFluidListing(), so the
+        // views that do not call that helper rendered without it. That was not
+        // only a missing focus ring: cwmseriespodcastlist styles its thumbnail
+        // grid from this sheet, and without it the grid collapsed into a stack
+        // five times taller than intended (#1808).
+        $this->app->getDocument()->getWebAssetManager()->useStyle('com_proclaim.cwmcore');
+
         // Once per component request, ahead of the views, so a rule can reach
         // anything Proclaim renders.
         CwmcustomcssHelper::apply();
