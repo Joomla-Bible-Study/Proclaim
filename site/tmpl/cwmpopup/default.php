@@ -23,6 +23,12 @@ use Joomla\CMS\Layout\LayoutHelper;
 $app = Factory::getApplication();
 $wa  = $app->getDocument()->getWebAssetManager();
 
+// The component stylesheet reaches the other site views through
+// Cwmlisting::getFluidListing(), which the popup never calls. Without it
+// .popuptitle and .popupfooter resolve `var(--color-white)` against nothing and
+// inherit the site template's near-black body colour — onto a black background.
+$wa->useStyle('com_proclaim.cwmcore');
+
 $backgroundColor = htmlspecialchars((string) $this->params->get('popupbackground', 'black'), ENT_QUOTES, 'UTF-8');
 $wa->addInlineStyle(
     "body { background-color: {$backgroundColor} !important; padding: 0 !important; }"

@@ -17,7 +17,6 @@ namespace CWM\Component\Proclaim\Site\View\Cwmpopup;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
-use CWM\Component\Proclaim\Administrator\Table\CwmtemplateTable;
 use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlisting;
 use CWM\Component\Proclaim\Site\Helper\Cwmmedia;
@@ -126,11 +125,11 @@ class HtmlView extends BaseHtmlView
     protected Registry $state;
 
 
-    /** @var  CwmtemplateTable Template
+    /** @var  ?object Template, as Cwmparams::getTemplateparams() returns it
      *
      * @since 7.0
      */
-    protected CwmtemplateTable $template;
+    protected ?object $template = null;
 
     /**
      * Execute and display a template script.

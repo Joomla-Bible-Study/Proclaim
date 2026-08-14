@@ -20,7 +20,11 @@ test.describe('Site navigation', () => {
     test('a listing row links through to its sermon detail page', async ({ page }) => {
         await page.goto(LISTING, { waitUntil: 'networkidle' });
 
-        const firstLink = page.locator('.proclaim-item a[href]').first();
+        // ⚠️ .proclaim-item is not rendered by the sermons listing — the cards
+        // are .proclaim-grid-card. Naming only the former made both tests in
+        // this file skip on every run, reporting as skipped rather than failed.
+        // Same defect the a11y suite already fixed in its DETAILS selectors.
+        const firstLink = page.locator('.proclaim-grid-card a[href], .proclaim-item a[href]').first();
 
         if (!(await firstLink.count())) {
             test.skip(true, 'No sermon records in this database');
@@ -38,7 +42,11 @@ test.describe('Site navigation', () => {
     test('fancybox media player opens and closes', async ({ page }) => {
         await page.goto(LISTING, { waitUntil: 'networkidle' });
 
-        const firstLink = page.locator('.proclaim-item a[href]').first();
+        // ⚠️ .proclaim-item is not rendered by the sermons listing — the cards
+        // are .proclaim-grid-card. Naming only the former made both tests in
+        // this file skip on every run, reporting as skipped rather than failed.
+        // Same defect the a11y suite already fixed in its DETAILS selectors.
+        const firstLink = page.locator('.proclaim-grid-card a[href], .proclaim-item a[href]').first();
 
         if (!(await firstLink.count())) {
             test.skip(true, 'No sermon records in this database');

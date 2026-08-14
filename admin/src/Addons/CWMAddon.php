@@ -1541,9 +1541,35 @@ abstract class CWMAddon
     {
         $embedUrl = $this->buildEmbedUrl($url, $mediaParams);
 
-        return '<iframe width="' . $width . '" height="' . $height
+        return '<iframe ' . $this->frameTitle() . ' width="' . $width . '" height="' . $height
             . '" src="' . htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8')
             . '" style="border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    }
+
+    /**
+     * The `title` attribute naming an embedded player frame.
+     *
+     * A frame needs an accessible name (WCAG 4.1.2): a screen reader moving
+     * through the page announces "frame" and nothing else without one. It is
+     * also the only part of a third-party embed we control — the provider owns
+     * everything inside the frame document.
+     *
+     * @return  string  A ready-to-concatenate `title="…"`, already escaped
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected function frameTitle(): string
+    {
+        // $name comes from the addon's XML and is empty for a direct URL with no
+        // addon behind it, so fall back to the unqualified name rather than
+        // announcing a stray space.
+        $service = trim((string) $this->name);
+
+        $title = $service === ''
+            ? Text::_('JBS_CMN_MEDIA_PLAYER_FRAME_GENERIC')
+            : Text::sprintf('JBS_CMN_MEDIA_PLAYER_FRAME', $service);
+
+        return 'title="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '"';
     }
 
     /**
