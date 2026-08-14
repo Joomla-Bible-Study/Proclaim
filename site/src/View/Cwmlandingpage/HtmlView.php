@@ -21,7 +21,6 @@ use CWM\Component\Proclaim\Site\Helper\Cwmimages;
 use CWM\Component\Proclaim\Site\Helper\Cwmlanding;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -139,39 +138,5 @@ class HtmlView extends BaseHtmlView
         $wa->useScript('bootstrap.collapse');
 
         parent::display($tpl);
-    }
-
-    /**
-     * Parse through the Show hid buttons/links
-     *
-     * @param   string  $showIt         Name of Show
-     * @param   string  $showIt_phrase  Name of the
-     * @param   int     $i              Number of Show
-     *
-     * @return string
-     *
-     * @throws \Exception
-     * @since 9.2.4
-     */
-    public function getShowHide($showIt, $showIt_phrase, $i): string
-    {
-        if (!$this->params->get('landing' . $showIt . 'limit')) {
-            return '';
-        }
-
-        $data = [
-            'showIt'        => $showIt,
-            'showIt_phrase' => $showIt_phrase,
-            'i'             => $i,
-            'params'        => $this->params,
-            'image'         => Cwmimages::getShowHide(),
-        ];
-
-        // Example: Referencing a layout located in the Administrator component folder
-        return LayoutHelper::render(
-            'landing.showhide',
-            $data,
-            JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'
-        );
     }
 }
