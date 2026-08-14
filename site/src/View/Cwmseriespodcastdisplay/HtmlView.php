@@ -116,20 +116,12 @@ class HtmlView extends BaseHtmlView
         $this->template = $this->state->get('template');
 
         if (!$item) {
-            // A bare return here rendered nothing at all: the template never
-            // ran, so the response was an empty 200 inside the site chrome —
-            // indexable, and with nothing for the visitor to act on. The
-            // router usually redirects to the list before this is reached,
-            // which is why it went unnoticed.
-            //
             // Same shape as Cwmsermon: 404 for crawlers, a real page for
-            // people.
+            // people. Returning without rendering would answer an empty 200.
             //
             // ⚠️ Set through the application, not http_response_code(). Joomla
-            // builds the response from its own object and sends those headers
-            // at the end of the request, so a raw status set here is discarded
-            // — measured, Cwmsermon's not-found page still answers 200 despite
-            // asking for 404 that way.
+            // sends headers from its own response object at the end of the
+            // request, so a raw status set here is discarded.
             $app->setHeader('status', 404, true);
             $this->getDocument()->setTitle(Text::_('JBS_CMN_SERIES_NOT_FOUND'));
             $this->setLayout('notfound');

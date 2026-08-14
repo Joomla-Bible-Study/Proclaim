@@ -79,21 +79,16 @@ class Cwmmedia
      * FA6 equivalents ("fa-solid fa-play", "fa-brands fa-youtube"). Safe to call
      * on values that are already FA6 — returns them unchanged.
      *
-     * Two things this has to get right, both of which it originally did not:
+     * Two rules the mapping has to honour:
      *
-     * 1. Brands need the brand family. Rewriting the FA4 prefix `fa fa-` to
-     *    `fa-solid fa-` produced `fa-solid fa-youtube`, which is tofu — the Free
-     *    font has no glyph at the YouTube codepoint. Worse, the FA4 form was
-     *    *working* before the rewrite, because Joomla's v4 shim
-     *    (`.fa.fa-youtube { font-family: "Font Awesome 6 Brands" }`) keys on the
-     *    bare `.fa` class that the rewrite strips.
-     * 2. Some FA4 names only exist as shims. `fa-video-camera` has no plain rule
-     *    in joomla-fontawesome.css, only `.fa.fa-video-camera`, so it must be
-     *    renamed to the FA6 name `fa-video` rather than merely re-prefixed.
+     * 1. ⚠️ Brands need the brand family, not `fa-solid`. `fa-solid fa-youtube`
+     *    is tofu — the Free font has no glyph at that codepoint.
+     * 2. Some FA4 names exist only as shims. `fa-video-camera` has no plain rule
+     *    in joomla-fontawesome.css, only `.fa.fa-video-camera`, so it is renamed
+     *    to the FA6 name `fa-video` rather than merely re-prefixed.
      *
-     * Because the brand fix-up runs on the final token list, it also repairs
-     * values already damaged in the database by the 10.3.0 migration: a stored
-     * `fa-solid fa-youtube` comes back out as `fa-brands fa-youtube`.
+     * The brand fix-up runs on the final token list, so it also repairs values
+     * already stored as `fa-solid fa-youtube`.
      *
      * @param   string  $class  Icon CSS class string
      *
@@ -325,7 +320,7 @@ class Cwmmedia
             $link_type = 3;
         }
 
-        // Used to override everything if used for the use of the Podcast playlist system.
+        // Podcast playlist mode forces a direct link.
         if ($params->get('pcplaylist')) {
             $link_type = 0;
         }
@@ -375,7 +370,7 @@ class Cwmmedia
     }
 
     /**
-     * Used to get the button and/or icon for the image
+     * Get the button and/or icon for the media.
      *
      * @param   Registry  $imageparams  ?
      * @param   Registry  $params       ?
@@ -529,13 +524,12 @@ class Cwmmedia
          * internal_popup = whether direct or HTML5 player should be a popup/new window or inline
          * From media file:
          * player 0 = direct link (browser handles), 1 = HTML5 player, 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code, 100 = use global
-         * internal_popup 0 = inline, 1 = popup, 2 = global settings
+         * internal_popup 1 = popup/new window, 2 = inline, 3 = squeezebox
          *
          * Deprecated players (migrated to 1 on install): 3 = AV plugin, 7 = legacy
-         * Get the $player->player: 0 = direct link, 1 = HTML5 player, 2 = AVR (no longer supported),
+         * Get the $player->player: 0 = direct link, 1 = HTML5 player, 2 = AVR (unsupported),
          * 4 = Docman, 5 = article, 6 = Virtuemart, 8 = embed code
-         * $player->type 0 = inline, 1 = popup/new window 3 = Use Global Settings (from params)
-         * In 6.2.3 we changed inline = 2
+         * $player->type 1 = popup/new window, 2 = inline, 3 = use global settings (from params)
          */
         $player->player   = 0;
         $item_mediaplayer = (int)$media->params->get('player');
@@ -1114,7 +1108,7 @@ class Cwmmedia
     }
 
     /**
-     * Used to get the button and/or icon for the image
+     * Get the download button and/or icon.
      *
      * @param   Registry  $download  ?
      *

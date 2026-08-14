@@ -398,8 +398,8 @@ class Cwmlanding
             $grouped[$row->type][] = $row;
         }
 
-        // The books branch could not name its own rows in SQL; do it here, where
-        // the union's shared column shape no longer constrains anything. Keyed
+        // The books branch cannot name its own rows in SQL; do it here, where
+        // the union's shared column shape does not constrain the result. Keyed
         // on `id`, which for that branch is the book number.
         if (!empty($grouped['books'])) {
             foreach ($grouped['books'] as $row) {
@@ -579,10 +579,8 @@ class Cwmlanding
             case 'books':
                 // `text` is a placeholder here, filled by nameBooks() once the
                 // union has loaded. Every branch of this union has to produce
-                // the same five columns, and a book's name is no longer
-                // available to SQL: #__bsms_books held language keys the
-                // scripture library already carries, so the join it needed
-                // earned nothing.
+                // the same five columns, and a book's name is not available to
+                // SQL — the scripture library holds it.
                 //
                 // Books come from the junction, so a study with more than two
                 // references contributes all of them.
@@ -1133,10 +1131,8 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             // Books come from the junction, so a study with more than two
-            // references contributes all of them rather than the two the flat
-            // columns could hold. The name is attached afterwards from
-            // the scripture library, which holds the language keys
-            // #__bsms_books used to store.
+            // references contributes all of them. The name is attached
+            // afterwards from the scripture library.
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
             // b.access.
@@ -1190,14 +1186,11 @@ class Cwmlanding
     /**
      * Attach a book name to each row returned by the books queries.
      *
-     * Those queries used to join #__bsms_books for a `bookname` column holding a
-     * JBS_BBK_* language key, which the callers then passed to Text::_(). The
-     * scripture library holds the same keys against the same numbers, so the
-     * join earned nothing.
+     * The scripture library holds the JBS_BBK_* keys against the same book
+     * numbers, so the name is resolved here rather than joined in SQL.
      *
-     * Rows whose number the library cannot name are dropped. The join could not
-     * produce one — the row existed or it did not — and an entry with no label
-     * links somewhere the reader cannot identify.
+     * Rows whose number the library cannot name are dropped: an entry with no
+     * label links somewhere the reader cannot identify.
      *
      * @param   array  $rows  Rows carrying a booknumber.
      *
@@ -1727,10 +1720,8 @@ class Cwmlanding
             $language = $this->getLanguageFilter($params);
 
             // Books come from the junction, so a study with more than two
-            // references contributes all of them rather than the two the flat
-            // columns could hold. The name is attached afterwards from
-            // the scripture library, which holds the language keys
-            // #__bsms_books used to store.
+            // references contributes all of them. The name is attached
+            // afterwards from the scripture library.
             //
             // The studies keep the alias `b`, which addAccessFilter() writes as
             // b.access.

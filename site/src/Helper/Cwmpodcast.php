@@ -908,11 +908,10 @@ class Cwmpodcast
      * Build the download-tracking enclosure URL as a real, extension-bearing
      * path instead of a bare task query string.
      *
-     * Apple's Podcaster's Guide to RSS is explicit that the enclosure's file
+     * ⚠️ Apple's Podcaster's Guide to RSS is explicit that the enclosure's file
      * extension "determines whether or not content appears in the podcast
-     * directory" — a production feed audited against this exact fix reported
-     * 0% of tracked episodes with a valid extension, and Apple had stopped
-     * ingesting new episodes and delisted previously-published ones.
+     * directory". A feed whose enclosures are bare task query strings stops
+     * being ingested, and already-published episodes are delisted.
      *
      * When the site has SEF routing on, Router::parse() (site/src/Service/
      * Router.php) understands the resulting `/component/proclaim/
@@ -1568,11 +1567,10 @@ class Cwmpodcast
             if (empty($mimeType)) {
                 $warnings[] = Text::sprintf('JBS_PDC_VALIDATE_MEDIA_NO_MIME', $media->studytitle ?: 'ID: ' . $media->id);
             } elseif (!$isYouTube && !empty($filename)) {
-                // A stored type that contradicts the file. The feed no longer trusts
-                // it — the enclosure type is derived from the extension — but
-                // the stored value is still wrong, and is a sign the record was
-                // created or imported incorrectly. YouTube URLs have no meaningful
-                // extension, so they are skipped rather than warned about.
+                // A stored type that contradicts the file. The enclosure type is
+                // derived from the extension, so the feed is right either way, but
+                // the stored value still signals a bad import. YouTube URLs have no
+                // meaningful extension, so they are skipped rather than warned about.
                 $derived = Cwmmime::fromExtension($filename);
 
                 if ($derived !== null && $derived !== $mimeType) {

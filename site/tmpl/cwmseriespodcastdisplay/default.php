@@ -98,13 +98,7 @@ $CWMedia = new Cwmmedia();
                                     <?php
                                     // A button, not a link: this swaps the source of the player
                                     // already on the page rather than going anywhere, so there is
-                                    // no href that would mean anything. It used to be
-                                    // href="javascript:loadVideo(…)", which no Content-Security-Policy
-                                    // allows and which assistive technology announces as a link to a
-                                    // destination that does not exist.
-                                    //
-                                    // The thumbnail used to be passed as a second argument;
-                                    // window.loadVideo() takes only the path and always ignored it.
+                                    // no href that would mean anything.
                                     ?>
                                     <button type="button" class="btn btn-link p-0 align-baseline"
                                             data-proclaim-audio="<?php echo htmlspecialchars($path1, ENT_QUOTES, 'UTF-8'); ?>">
