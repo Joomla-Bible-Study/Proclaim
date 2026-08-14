@@ -24,7 +24,7 @@ on:
     # Nightly, 05:17 UTC — off the busy top-of-hour cron load.
     - cron: '17 5 * * *'
   pull_request:
-    branches: [ "development", "10.x" ]
+    branches: [ "development", "10.x", "11.0.0-dev" ]
     paths:
       - 'api/**'
       - 'plugins/webservices/**'
