@@ -489,6 +489,13 @@ class HtmlView extends BaseHtmlView
         $wa = $this->getDocument()->getWebAssetManager();
         $wa->useStyle('com_proclaim.print');
 
+        // The comments block renders inside a Bootstrap collapse whose toggle is
+        // the Show/Hide Comments button. Without this the button does nothing and
+        // the comments cannot be opened at all, since the section starts hidden.
+        if (empty($this->print)) {
+            $wa->useScript('bootstrap.collapse');
+        }
+
         // Load player chapters script for chapter lists and timestamp seeking
         if (empty($this->print)) {
             $wa->useScript('com_proclaim.cwm-player-chapters');

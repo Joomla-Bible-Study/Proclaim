@@ -339,6 +339,47 @@ class CwmsermonModel extends FormModel
     }
 
     /**
+     * The state a newly submitted comment is stored with.
+     *
+     * Read from the template's comment_publish setting, never from the request.
+     * Defaults to 0 — hold for approval — matching the field's own default in
+     * template.xml, so an unset or unreadable setting holds the comment rather
+     * than publishing it.
+     *
+     * @return  int  1 to publish immediately, 0 to hold for approval
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getCommentPublishState(): int
+    {
+        return (int) $this->getCommentParams()->get('comment_publish', 0) === 1 ? 1 : 0;
+    }
+
+    /**
+     * The template parameters governing comment submission.
+     *
+     * @return  Registry
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getCommentParams(): Registry
+    {
+        $template = Cwmparams::getTemplateparams();
+
+        if (!empty($template->params) && $template->params instanceof Registry) {
+            return $template->params;
+        }
+
+        $params = new Registry();
+
+        if (!empty($template->params)) {
+            $params->loadString((string) $template->params);
+        }
+
+        return $params;
+    }
+
+    /**
      * Method to store a record
      *
      * @return    bool    True on success
@@ -351,14 +392,19 @@ class CwmsermonModel extends FormModel
         $row   = $this->getTable('Cwmcomment');
         $input = Factory::getApplication()->getInput();
 
-        // Build data array from input (not raw $_POST)
+        // Build data array from input (not raw $_POST).
+        //
+        // ⚠️ published and comment_date are NOT read from the request. The form
+        // posts both, but a visitor decides what a visitor posts: `published`
+        // set the moderation state directly, so anyone could approve their own
+        // comment on a site configured to hold them.
         $data = [
             'study_id'     => $input->getInt('study_id', 0),
             'full_name'    => $input->getString('full_name', ''),
             'user_email'   => $input->getString('user_email', ''),
             'comment_text' => $input->get('comment_text', '', 'raw'),
-            'comment_date' => $input->getString('comment_date', (new Date())->toSql()),
-            'published'    => $input->getInt('published', 1),
+            'comment_date' => (new Date())->toSql(),
+            'published'    => $this->getCommentPublishState(),
             'language'     => $input->getString('language', '*'),
         ];
 
