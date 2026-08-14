@@ -641,9 +641,10 @@ class Cwmmedia
                 switch ($player->type) {
                     case 2: // New window - popup code added here because new window code does not work (Tom 10-12-2022)
                         $return     = base64_encode($path);
-                        $playercode = '<a href="javascript:;" onclick="window.open(\'index.php?option=com_proclaim&amp;' .
+                        self::useMediaPopupScript();
+                        $playercode = '<a href="index.php?option=com_proclaim&amp;' .
                             'task=Cwmsermons.playHit&amp;return=' . $return . '&amp;' . Session::getFormToken(
-                            ) . '=1\')" title="' .
+                            ) . '=1" data-proclaim-popup="1" title="' .
                             $media->params->get("media_button_text") . ' - ' . $media->comment . ' '
                             . $filesize . '">' . $image . '</a>';
                         break;
@@ -653,11 +654,11 @@ class Cwmmedia
 
                     case 1: // Popup window
                         CWMFancyBox::framework();
-                        $playercode = "<a $colorStyle href=\"javascript:;\"" .
-                            " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+                        self::useMediaPopupScript();
+                        $playercode = "<a $colorStyle href=\"index.php?option=com_proclaim&amp;player="
                             . $params->toObject()->player .
-                            "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" .
-                            $player->playerwidth . ",height=" . $player->playerheight . "'); return false\"" .
+                            "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component\"" .
+                            " data-proclaim-popup=\"1\" data-popup-width=\"" . $player->playerwidth . "\" data-popup-height=\"" . $player->playerheight . "\"" .
                             "  class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">"
                             . $image . "</a>";
                         break;
@@ -705,12 +706,13 @@ class Cwmmedia
                         $diff                 = $params->get('player_width') - $params->get('playerwidth');
                         $player->playerwidth += abs($diff) + 10;
                         $player->playerheight += $params->get('popupmargin', '50');
-                        $playercode           = "<a $colorStyle href=\"javascript:;\"" .
-                            " onclick=\"window.open('index.php?option=com_proclaim&amp;player="
+                        self::useMediaPopupScript();
+                        $playercode           = "<a $colorStyle href=\"index.php?option=com_proclaim&amp;player="
                             . $player->player
-                            . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow', 'width="
-                            . $player->playerwidth . ", height=" .
-                            $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
+                            . "&amp;view=cwmpopup&amp;t=" . $template . "&amp;mediaid=" . $media->id . "&amp;tmpl=component\""
+                            . " data-proclaim-popup=\"1\" data-popup-width=\"" . $player->playerwidth
+                            . "\" data-popup-height=\"" . $player->playerheight . "\""
+                            . " class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
                 }
 
@@ -725,10 +727,13 @@ class Cwmmedia
                 switch ($player->type) {
                     case 1: // This goes to the popup view
                         CWMFancyBox::framework();
-                        $playercode = "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                        self::useMediaPopupScript();
+                        $playercode = "<a $colorStyle href=\"index.php?option=com_proclaim"
                             . "&amp;view=cwmpopup&amp;player=3&amp;t=" . $template .
-                            "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                            . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
+                            "&amp;mediaid=" . $media->id . "&amp;tmpl=component\""
+                            . " data-proclaim-popup=\"1\" data-popup-width=\"" . $player->playerwidth
+                            . "\" data-popup-height=\"" . $player->playerheight . "\""
+                            . " class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
                         break;
 
                     case 2: // This plays the video inline
@@ -753,10 +758,14 @@ class Cwmmedia
             case 8: // Embed code
                 CWMFancyBox::framework();
 
-                return "<a $colorStyle href=\"javascript:;\" onclick=\"window.open('index.php?option=com_proclaim"
+                self::useMediaPopupScript();
+
+                return "<a $colorStyle href=\"index.php?option=com_proclaim"
                     . "&amp;view=cwmpopup&amp;player=8&amp;t=" . $template .
-                    "&amp;mediaid=" . $media->id . "&amp;tmpl=component', 'newwindow','width=" . $player->playerwidth . ",height="
-                    . $player->playerheight . "'); return false\" class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
+                    "&amp;mediaid=" . $media->id . "&amp;tmpl=component\""
+                    . " data-proclaim-popup=\"1\" data-popup-width=\"" . $player->playerwidth
+                    . "\" data-popup-height=\"" . $player->playerheight . "\""
+                    . " class=\"jbsmplayerlink playhit\" data-id=\"" . $media->id . "\">" . $image . "</a>";
         }
 
         return false;
@@ -882,7 +891,10 @@ class Cwmmedia
         $logoImage   = $params->get('jwplayer_logo', $params->get('player_logo', ''));
         $logoLink    = $params->get('jwplayer_logolink', $params->get('player_logolink', Uri::base()));
 
-        return '<a href="javascript:;" data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
+        // href is the media itself, not a javascript: placeholder: Fancybox reads
+        // data-src and intercepts the click, and without JS the file is still
+        // reachable rather than the control being inert (#1814).
+        return '<a href="' . $path . '" data-src="' . $path . '" data-id="' . $media->id . '" id="' . $media->id .
             '" class="fancybox_player hitplay" potext="' . $popout . '" ptype="' . $player->player .
             '" pwidth="' . $player->playerwidth . '" pheight="' .
             $player->playerheight . '" autostart="' . $params->get('autostart', false) . '" controls="' .
@@ -1599,4 +1611,29 @@ class Cwmmedia
         $template = $params->get('popupfooter', '');
         return $this->processPopupText($template, $media, $params);
     }
+
+    /**
+     * Register the script that upgrades a popup link into a sized window.
+     *
+     * The links work without it — they carry the real URL and simply open in
+     * the same tab — so this is an enhancement, not a requirement. Registered
+     * per emitting site rather than globally because most pages have no media
+     * controls on them at all.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function useMediaPopupScript(): void
+    {
+        try {
+            $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+            $wa->getRegistry()->addExtensionRegistryFile('com_proclaim');
+            $wa->useScript('com_proclaim.media-popup');
+        } catch (\Exception) {
+            // No document to attach to (CLI, or a raw response). The links
+            // still resolve; only the sized window is lost.
+        }
+    }
+
 }

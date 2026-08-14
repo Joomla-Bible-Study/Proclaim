@@ -95,12 +95,22 @@ $CWMedia = new Cwmmedia();
                                     echo HTMLHelper::Date($item->createdate); ?>
                                 </td>
                                 <td>
-                                    <a href="javascript:loadVideo(<?php
-                                    echo htmlspecialchars(json_encode($path1), ENT_QUOTES, 'UTF-8'); ?>, <?php
-                                    echo htmlspecialchars(json_encode($item->series_thumbnail), ENT_QUOTES, 'UTF-8'); ?>)">
+                                    <?php
+                                    // A button, not a link: this swaps the source of the player
+                                    // already on the page rather than going anywhere, so there is
+                                    // no href that would mean anything. It used to be
+                                    // href="javascript:loadVideo(…)", which no Content-Security-Policy
+                                    // allows and which assistive technology announces as a link to a
+                                    // destination that does not exist (#1814).
+                                    //
+                                    // The thumbnail used to be passed as a second argument;
+                                    // window.loadVideo() takes only the path and always ignored it.
+                                    ?>
+                                    <button type="button" class="btn btn-link p-0 align-baseline"
+                                            data-proclaim-audio="<?php echo htmlspecialchars($path1, ENT_QUOTES, 'UTF-8'); ?>">
                                         <?php
                                         echo Text::_('JBS_CMN_LISTEN'); ?>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             <?php

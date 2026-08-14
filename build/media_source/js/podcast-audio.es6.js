@@ -58,3 +58,46 @@ window.loadVideo = function loadVideo(path) {
         }
     }
 };
+
+/**
+ * Bind the episode "Listen" controls.
+ *
+ * They used to be `<a href="javascript:loadVideo(…)">`, which no
+ * Content-Security-Policy allows and which is announced as a link to a
+ * destination that does not exist. They are now buttons carrying the path in a
+ * data attribute, bound here — in the file that already owns loadVideo and is
+ * already loaded on this view (#1814).
+ *
+ * Delegated, so it does not care whether the rows were present at parse time.
+ *
+ * @since __DEPLOY_VERSION__
+ */
+document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-proclaim-audio]');
+
+    if (!trigger) {
+        return;
+    }
+
+    // The value is read out of the DOM and ends up on audio.src, so only ever
+    // pass a media URL through. Without this the listener would accept any
+    // scheme written into the attribute — reintroducing at the point of use
+    // exactly what #1814 removed from the markup. Relative paths resolve
+    // against the page first, so ordinary media URLs still pass.
+    const raw = trigger.getAttribute('data-proclaim-audio') || '';
+    let path = null;
+
+    try {
+        const resolved = new URL(raw, window.location.href);
+
+        if (resolved.protocol === 'http:' || resolved.protocol === 'https:') {
+            path = resolved.href;
+        }
+    } catch {
+        path = null;
+    }
+
+    if (path) {
+        window.loadVideo(path);
+    }
+});
