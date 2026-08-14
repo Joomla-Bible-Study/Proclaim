@@ -171,8 +171,7 @@ if (!$this->item->id) {
                         <input type="hidden" name="study_id" value="<?php echo $this->item->id; ?>">
                         <input type="hidden" name="study_detail_id" value="<?php echo $this->item->id; ?>">
                         <input type="hidden" name="t" value="<?php echo $input->getInt('t', 0); ?>">
-                        <input type="hidden" name="published" value="<?php echo (int) $this->item->params->get('comment_publish', 1); ?>">
-                        <input type="hidden" name="comment_date" value="<?php echo (new Date())->toSql(); ?>">
+                        <?php // published and comment_date are set server-side; posting them here only invited them to be forged. ?>
                         <?php echo HTMLHelper::_('form.token'); ?>
                     </form>
                 </div>

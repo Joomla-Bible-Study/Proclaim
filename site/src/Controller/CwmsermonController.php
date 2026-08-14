@@ -17,6 +17,7 @@ use CWM\Component\Proclaim\Site\Model\CwmsermonModel;
 use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Router\Route;
@@ -174,12 +175,11 @@ class CwmsermonController extends FormController
         $model = $this->getModel();
         $t     = $input->getInt('t', 1);
 
-        // Get template params
-        $params = new Registry();
-
-        if (!empty($model->_template[0]->params)) {
-            $params->loadString($model->_template[0]->params);
-        }
+        // ⚠️ This read $model->_template[0]->params, a property nothing ever
+        // sets. Behind !empty() that is silent, so $params was always empty and
+        // every setting below took its default: the captcha was never checked
+        // however the template was configured, and no notification was sent.
+        $params = $model->getCommentParams();
 
         // Check captcha if enabled (Joomla 5/6 compatible Captcha API)
         if ($params->get('use_captcha') > 0) {
@@ -207,7 +207,9 @@ class CwmsermonController extends FormController
 
         // Store the comment
         if ($model->storecomment()) {
-            $published = $input->getInt('published', 1);
+            // The state the comment was actually stored with, not the one the
+            // request asked for.
+            $published = $model->getCommentPublishState();
 
             // Show appropriate message based on whether the comment is auto-approved or held
             if ($published === 0) {
@@ -216,12 +218,14 @@ class CwmsermonController extends FormController
                 // Send moderation notification email if configured
                 $notifyEmail = $params->get('comment_notify_email', '');
                 if (!empty($notifyEmail) || $app->get('mailfrom')) {
-                    CwmnotificationHelper::notifyCommentPending(
-                        $input->getInt('study_id', 0),
-                        $input->getString('full_name', 'Anonymous'),
-                        $input->get('comment_text', '', 'raw'),
-                        $params
-                    );
+                    $this->notifyQuietly(static function () use ($input, $params) {
+                        CwmnotificationHelper::notifyCommentPending(
+                            $input->getInt('study_id', 0),
+                            $input->getString('full_name', 'Anonymous'),
+                            $input->get('comment_text', '', 'raw'),
+                            $params
+                        );
+                    });
                 }
             } else {
                 $app->enqueueMessage(Text::_('JBS_STY_COMMENT_SUBMITTED'), 'success');
@@ -229,7 +233,7 @@ class CwmsermonController extends FormController
 
             // Send general email notification if enabled
             if ($params->get('email_comments') > 0) {
-                $this->commentsEmail($params);
+                $this->notifyQuietly(fn () => $this->commentsEmail($params));
             }
         } else {
             $app->enqueueMessage(Text::_('JBS_STY_ERROR_SUBMITTING_COMMENT'), 'error');
@@ -280,6 +284,33 @@ class CwmsermonController extends FormController
     }
 
     /**
+     * Run a notification, letting it fail without taking the submission with it.
+     *
+     * The comment is already stored by the time these run. A mail transport that
+     * is misconfigured, or simply absent on the machine, threw straight out of
+     * the controller — so the visitor saw a 500 for a comment that had in fact
+     * been saved, and resubmitted it.
+     *
+     * @param   callable  $send  The notification to attempt
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function notifyQuietly(callable $send): void
+    {
+        try {
+            $send();
+        } catch (\Throwable $e) {
+            Log::add(
+                'Comment notification failed: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+        }
+    }
+
+    /**
      * Email comment out.
      *
      * Private: only meant to be called internally from comment(). Public
@@ -299,7 +330,9 @@ class CwmsermonController extends FormController
 
         $comment_author    = $input->get('full_name', 'Anonymous', 'string');
         $comment_study_id  = $input->get('study_detail_id', 0, 'int');
-        $comment_published = $input->get('published', 0, 'int');
+        /** @var CwmsermonModel $model */
+        $model             = $this->getModel();
+        $comment_published = $model->getCommentPublishState();
         $comment_date      = date('Y-m-d H:i:s');
         $config            = Factory::getApplication();
         $comment_mailfrom  = $config->get('mailfrom');
