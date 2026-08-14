@@ -145,27 +145,40 @@ class MigrationVersionGateTest extends ProclaimTestCase
 
         self::assertNotFalse($start, 'The update-only migration block could not be found.');
 
-        // The block runs to the next top-level `if ($type === 'install'`.
         $end = strpos($source, "if (\$type === 'install' || \$type === 'update')", $start);
 
         self::assertNotFalse($end, 'The end of the migration block could not be found.');
 
         $block = substr($source, $start, $end - $start);
 
+        // A migration called directly, rather than through step(), is neither
+        // gated nor recorded — which is how every update came to re-run all of
+        // them.
         preg_match_all('~^\s{12}(?:\$this->|CwmmigrationHelper::)(\w+)\(\);~m', $block, $ungated);
+
+        $bare = array_values(array_diff($ungated[1], ['step']));
 
         self::assertSame(
             [],
-            $ungated[1],
-            'These migrations run without a version gate, so every update re-runs them: '
-            . implode(', ', $ungated[1])
-            . '. Wrap each in if ($this->upgradingFromBefore(\'X.Y.Z\')) naming the release it shipped in.'
+            $bare,
+            'These migrations are called directly instead of through step(), so they are neither version-gated '
+            . 'nor timed: ' . implode(', ', $bare)
+            . '. Wrap each in $this->step(\'Name\', \'X.Y.Z\', fn () => ...).'
+        );
+
+        // Every step() call must name the release it shipped in.
+        preg_match_all('~\$this->step\(\s*\'[^\']+\',\s*\'(\d+\.\d+\.\d+)\'~', $block, $versions);
+
+        self::assertSame(
+            preg_match_all('~\$this->step\(~', $block),
+            \count($versions[1]),
+            'A step() call is missing its version argument, so it would run on every update.'
         );
 
         self::assertGreaterThanOrEqual(
             8,
-            preg_match_all('~upgradingFromBefore\(\'~', $block),
-            'Fewer gates than expected — a migration may have lost one.'
+            \count($versions[1]),
+            'Fewer gated steps than expected — a migration may have lost its gate.'
         );
     }
 
