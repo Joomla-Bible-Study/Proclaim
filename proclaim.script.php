@@ -621,36 +621,11 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Drop the pre-10.5.6 (study_id, topic_id) index once its unique replacement exists.
-     *
-     * 10.5.6-20260807.sql replaces the non-unique idx_study_topic with a unique
-     * uq_study_topic over the same pair. Removing the old one is cleanup rather
-     * than correctness — the unique key already serves every lookup it served.
-     *
-     * It runs here instead of in the migration SQL because MySQL has no
-     * DROP INDEX IF EXISTS. A database whose table lacks that index while
-     * #__schemas still names an earlier version replays the file raw through
-     * Installer::parseSchemaUpdates(), which stops on error 1091 and aborts the
-     * entire update.
-     *
-     * Deliberately not written as guarded SQL. Joomla's MysqlChangeItem parses
-     * plain ALTER TABLE statements to decide whether a change has already been
-     * applied, and that is what makes the restore path idempotent — Cwmrestore
-     * clears #__schemas and calls DatabaseModel::fix(), which replays every
-     * migration through ChangeSet. Wrapping DDL in SET/PREPARE would make it
-     * unparseable, so ChangeItem would score it -1 and never run it at all.
-     *
-     * @return  void
-     *
-     * @since   10.5.6
-     */
-    /**
      * Create the `com_proclaim.<section>` assets access.xml declares.
      *
-     * Phase 1 of #1653. Every section is created with empty rules, which
-     * inherit from `com_proclaim` — so effective permissions are unchanged for
-     * every group, section and action. Measured on a development database:
-     * 1190 cells compared, none changed.
+     * Every section is created with empty rules, which inherit from
+     * `com_proclaim`, so effective permissions are unchanged for every group,
+     * section and action.
      *
      * Seeding on update as well as install matters because access.xml can gain
      * a section in any release, and a section with no asset is a permission
@@ -717,6 +692,30 @@ class com_proclaimInstallerScript extends InstallerScript
         }
     }
 
+    /**
+     * Drop the pre-10.5.6 (study_id, topic_id) index once its unique replacement exists.
+     *
+     * 10.5.6-20260807.sql replaces the non-unique idx_study_topic with a unique
+     * uq_study_topic over the same pair. Removing the old one is cleanup rather
+     * than correctness — the unique key already serves every lookup it served.
+     *
+     * It runs here instead of in the migration SQL because MySQL has no
+     * DROP INDEX IF EXISTS. A database whose table lacks that index while
+     * #__schemas still names an earlier version replays the file raw through
+     * Installer::parseSchemaUpdates(), which stops on error 1091 and aborts the
+     * entire update.
+     *
+     * Deliberately not written as guarded SQL. Joomla's MysqlChangeItem parses
+     * plain ALTER TABLE statements to decide whether a change has already been
+     * applied, and that is what makes the restore path idempotent — Cwmrestore
+     * clears #__schemas and calls DatabaseModel::fix(), which replays every
+     * migration through ChangeSet. Wrapping DDL in SET/PREPARE would make it
+     * unparseable, so ChangeItem would score it -1 and never run it at all.
+     *
+     * @return  void
+     *
+     * @since   10.5.6
+     */
     private function dropRedundantStudyTopicIndex(): void
     {
         if (!$this->tableExists('#__bsms_studytopics')) {
@@ -2645,10 +2644,9 @@ class com_proclaimInstallerScript extends InstallerScript
             foreach ($tables as $suffix => $pkColumn) {
                 $fullName = $prefix . $suffix;
 
-                // ⚠️ A table in this list may not exist — #__bsms_books was
-                // retired in #1687. Skipping is not just tidiness: the ALTER
-                // would throw, and the catch is outside this loop, so one
-                // missing table stopped every later table being checked.
+                // A table in this list may not exist — #__bsms_books is retired.
+                // The catch sits outside this loop, so without the skip one
+                // missing table would stop every later table being checked.
                 if (!\in_array($fullName, $existing, true)) {
                     continue;
                 }

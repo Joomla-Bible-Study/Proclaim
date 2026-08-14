@@ -175,8 +175,7 @@ if ($rawPodcastLink !== '' && !ctype_digit((string) $rawPodcastLink)) {
         </div>
         <?php echo HTMLHelper::_('uitab.endTab'); ?>
 
-        <?php // Every field that identifies who is behind the show lives here — see #1417.
-              // Was scattered across General, Feed Owner, and Podcasting 2.0.?>
+        <?php // Every field that identifies who is behind the show lives here.?>
         <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'author', Text::_('JBS_PDC_FEED_OWNER')); ?>
         <div class="row">
             <div class="col-lg-9">
