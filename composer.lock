@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.21.0",
+            "version": "v1.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "fab4ebda22d0b88572f45c19216f34b2e9ab7fcb"
+                "reference": "35c0c3138fb86bc3ef374407a785ebe5b6c79d44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/fab4ebda22d0b88572f45c19216f34b2e9ab7fcb",
-                "reference": "fab4ebda22d0b88572f45c19216f34b2e9ab7fcb",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/35c0c3138fb86bc3ef374407a785ebe5b6c79d44",
+                "reference": "35c0c3138fb86bc3ef374407a785ebe5b6c79d44",
                 "shasum": ""
             },
             "require": {
@@ -658,10 +658,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.21.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.22.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-08-14T14:28:03+00:00"
+            "time": "2026-08-14T15:36:50+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
