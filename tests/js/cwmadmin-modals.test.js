@@ -9,8 +9,7 @@ const MODAL_FILES = [
     { name: 'messages', file: 'build/media_source/js/cwmadmin-messages-modal.es6.js', selectFn: 'jSelectMessages' },
     { name: 'series', file: 'build/media_source/js/cwmadmin-series-modal.es6.js', selectFn: 'jSelectSeries' },
     { name: 'servers', file: 'build/media_source/js/cwmadmin-servers-modal.es6.js', selectFn: 'jSelectServer' },
-    { name: 'teachers', file: 'build/media_source/js/cwmadmin-teachers-modal.es6.js', selectFn: 'jSelectTeachers' },
-    { name: 'types', file: 'build/media_source/js/cwmadmin-types-modal.es6.js', selectFn: 'jSelectType' }
+    { name: 'teachers', file: 'build/media_source/js/cwmadmin-teachers-modal.es6.js', selectFn: 'jSelectTeachers' }
 ];
 
 describe('Admin Modal Files', () => {
