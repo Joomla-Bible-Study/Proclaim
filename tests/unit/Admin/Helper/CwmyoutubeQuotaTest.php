@@ -65,6 +65,15 @@ class CwmyoutubeQuotaTest extends ProclaimTestCase
 
         CwmyoutubeQuota::resetQuota(self::TEST_SERVER_ID);
 
+        // Drop the directories setUp() created. A leftover media/com_proclaim/
+        // makes cwm-verify read this flat-layout component as namespaced, so
+        // every dev site's media symlink is reported as a conflict. @rmdir is a
+        // no-op on a directory that still has contents.
+        $dir = \dirname($this->quotaFile);
+        @rmdir($dir);
+        @rmdir(\dirname($dir));
+        @rmdir(\dirname($dir, 2));
+
         parent::tearDown();
     }
 
