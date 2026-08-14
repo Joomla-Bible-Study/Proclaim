@@ -121,6 +121,13 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  __DEPLOY_VERSION__
      */
+    /**
+     * Log category for the install record.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private const INSTALL_LOG = 'com_proclaim.install';
+
     private string $fromVersion = '';
 
     /**
@@ -132,6 +139,20 @@ class com_proclaimInstallerScript extends InstallerScript
      * @since  __DEPLOY_VERSION__
      */
     private array $stepLog = [];
+
+    /**
+     * When preflight ran, as a float second.
+     *
+     * ⚠️ The gap between this and the start of postflight is the only view
+     * anyone gets of what Joomla itself spent — unpacking the archive, copying
+     * the files, replaying the schema. Measured on j6-dev the whole database
+     * side of postflight is under a tenth of a second, while a real update took
+     * about a minute, so that gap is where the answer lives.
+     *
+     * @var    float
+     * @since  __DEPLOY_VERSION__
+     */
+    private float $startedAt = 0.0;
 
     protected $minimumPhp = '8.3.0';
 
@@ -486,6 +507,58 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Register a logger for the install log.
+     *
+     * ⚠️ Self-contained on purpose. This runs in preflight, where the component's
+     * own classes are not reliably autoloadable — that is why preflight has to
+     * register the scripture namespace by hand a few lines further down. Calling
+     * CwmlogHelper here would be a bet on load order.
+     *
+     * ⚠️ Joomla discards entries for a category no logger is registered for, and
+     * nothing registers one during an install. The existing
+     * `Log::add(..., 'com_proclaim')` calls in this file have been writing to
+     * nowhere.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function openInstallLog(): void
+    {
+        try {
+            Log::addLogger(
+                ['text_file' => 'com_proclaim.install.php'],
+                Log::ALL,
+                [self::INSTALL_LOG]
+            );
+        } catch (\Throwable) {
+            // Diagnostics must never be the reason an install fails.
+        }
+    }
+
+    /**
+     * Write one line to the install log.
+     *
+     * Always on. This is the record an administrator retrieves *after* an update
+     * they have already sat through — the on-screen report cannot be scrolled
+     * back to, and cannot say anything about the time before postflight ran.
+     *
+     * @param   string  $line  What happened
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function logInstall(string $line): void
+    {
+        try {
+            Log::add($line, Log::INFO, self::INSTALL_LOG);
+        } catch (\Throwable) {
+            // As above.
+        }
+    }
+
+    /**
      * Run a legacy migration, or record why it was skipped.
      *
      * Wraps the version gate and the timing in one place so the report can say
@@ -514,6 +587,8 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => 0.0,
             ];
 
+            $this->logInstall(sprintf('  skip  %-26s not needed past %s', $name, $since));
+
             return;
         }
 
@@ -522,12 +597,16 @@ class com_proclaimInstallerScript extends InstallerScript
         try {
             $note = $work();
 
+            $secs = microtime(true) - $started;
+
             $this->stepLog[] = [
                 'name'  => $name,
                 'state' => 'ran',
                 'note'  => \is_string($note) ? $note : '',
-                'secs'  => microtime(true) - $started,
+                'secs'  => $secs,
             ];
+
+            $this->logInstall(sprintf('  ran   %-26s %6.3fs', $name, $secs));
         } catch (\Throwable $e) {
             $this->stepLog[] = [
                 'name'  => $name,
@@ -535,6 +614,8 @@ class com_proclaimInstallerScript extends InstallerScript
                 'note'  => $e->getMessage(),
                 'secs'  => microtime(true) - $started,
             ];
+
+            $this->logInstall(sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
         }
     }
 
@@ -578,12 +659,23 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function preflight($type, $parent): bool
     {
+        $this->startedAt = microtime(true);
+        $this->openInstallLog();
+
         // Read before Joomla rewrites manifest_cache with the incoming version.
         // postflight() cannot ask this question — by then the row says the new
         // version and every migration looks unnecessary.
         if ($type === 'update') {
             $this->fromVersion = $this->readInstalledVersion();
         }
+
+        $this->logInstall(sprintf(
+            'preflight: %s, from %s, PHP %s, Joomla %s',
+            $type,
+            $this->fromVersion !== '' ? $this->fromVersion : 'n/a',
+            PHP_VERSION,
+            JVERSION
+        ));
 
         // com_proclaim depends on lib_cwmscripture. The standalone
         // component zip does not bundle the library, and even when
@@ -1844,6 +1936,24 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function postflight(string $type, ComponentAdapter $parent): void
     {
+        // ⚠️ Everything between preflight and here is Joomla's, not ours:
+        // unpacking the archive, copying the files, replaying the schema. The
+        // database side of postflight measures under a tenth of a second on a
+        // site of a few thousand rows, so when an update takes a minute, this
+        // gap is the first place to look.
+        //
+        // ⚠️ It does NOT include downloading the package. Joomla fetches that
+        // from the update server before any of this code exists, so a slow
+        // download shows up in neither number and has to be timed separately.
+        $beforeUs = microtime(true) - $this->startedAt;
+
+        $this->logInstall(sprintf(
+            'postflight: %.2fs elapsed since preflight (unpack, file copy, schema) — download NOT included',
+            $beforeUs
+        ));
+
+        $postflightStarted = microtime(true);
+
         // Joomla calls postflight on UNINSTALL too — InstallerAdapter::uninstall()
         // runs triggerManifestScript('postflight') after removing the extension
         // (InstallerAdapter.php:1249). Everything below this guard is install-time
@@ -2111,6 +2221,14 @@ class com_proclaimInstallerScript extends InstallerScript
                 // Silently ignore detection failures during install
             }
         }
+
+        $this->logInstall(sprintf(
+            'postflight: %d step(s) in %.3fs; postflight total %.2fs; whole install %.2fs',
+            \count($this->stepLog),
+            array_sum(array_column($this->stepLog, 'secs')),
+            microtime(true) - $postflightStarted,
+            microtime(true) - $this->startedAt
+        ));
 
         $this->reportMigrations();
 
