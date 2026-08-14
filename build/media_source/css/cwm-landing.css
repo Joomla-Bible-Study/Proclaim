@@ -106,49 +106,6 @@
     margin-left: 0.25rem;
 }
 
-.proclaim-skip-link {
-    position: absolute;
-    left: -9999px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
-
-.proclaim-skip-link:focus {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    /*
-     * Dark rather than the #0d6efd this used to be: white on that blue measures
-     * exactly 4.5:1, the bare minimum, and it disagreed with the same control in
-     * cwmcore.css for no reason. This matches cwmcore's treatment, which measures
-     * 20.9:1 — the literal is repeated because --color-black is defined there and
-     * that file does not reach this page.
-     */
-    background: #212529;
-    color: #fff;
-    text-decoration: none;
-    z-index: 1000;
-}
-
-/*
- * Same clash as the hero card, on the one control a keyboard user meets first.
- * Focused on nfsda.org this measured 1.3:1 — the template's link colour on the
- * blue above — because the rule setting that white is (0,1,0) and a wrapper's
- * anchor rule is (0,2,1).
- *
- * ⚠️ This duplicates .proclaim-skip-link in cwmcore.css, which the landing view
- * does not load — it uses only cwm-landing, so the core accessibility rules
- * never reach this page. Both copies need the fix until that is resolved.
- */
-.com-proclaim .proclaim-skip-link:focus {
-    color: #fff;
-}
-
 /* =========================================================================
    Card Grid Style (.proclaim-landing--cards)
    ========================================================================= */
