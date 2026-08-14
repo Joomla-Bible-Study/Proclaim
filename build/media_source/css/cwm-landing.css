@@ -280,6 +280,29 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/*
+ * The card is an anchor, so its text takes whatever colour a site template
+ * paints links inside its content wrapper:
+ *
+ *     .box2 > .g-content a, .box2.moduletable a { color: #8b5717 }   (0,2,1)
+ *
+ * The card's own `color: #fff` is (0,1,0) and loses, and the text is inherited
+ * from the anchor rather than declared on the title, so nothing stops it. On
+ * nfsda.org that rendered every speaker's name in the template's orange over
+ * the dark overlay — the same clash #1799 fixed for Proclaim's buttons.
+ *
+ * White here is not a preference: the overlay gradient exists to make white
+ * text legible, and the text-shadows above are sized for it. Declaring the
+ * colour on the title and subtitle rather than inheriting it settles this on
+ * its own, since a declaration always beats an inherited value; the
+ * .com-proclaim scope and (0,3,0) specificity match #1799 so the two do not
+ * drift, and hold up if a template ever targets these elements directly.
+ */
+.com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__title,
+.com-proclaim .proclaim-landing-hero-card .proclaim-landing-hero-card__sub {
+    color: #ffffff;
+}
+
 /* Hero tags */
 .proclaim-landing-tags {
     display: flex;

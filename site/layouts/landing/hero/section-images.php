@@ -78,6 +78,9 @@ $bandClass = $bandStyle === 'dark' ? 'proclaim-landing-band--dark' : 'proclaim-l
                         <div class="proclaim-landing-hero-card__overlay"></div>
                         <div class="proclaim-landing-hero-card__content">
                             <div class="proclaim-landing-hero-card__title"><?php echo htmlspecialchars($item['text'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <?php if (!empty($item['meta'])) : ?>
+                                <div class="proclaim-landing-hero-card__sub"><?php echo htmlspecialchars($item['meta'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <?php endif; ?>
                         </div>
                     </a>
                 </div>
