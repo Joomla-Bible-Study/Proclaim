@@ -80,6 +80,56 @@ class CwmmessageModel extends AdminModel
     ];
 
     /**
+     * Whether a batched teacher is added to the message's existing teachers
+     * ('a') or replaces all of them ('r').
+     *
+     * @var string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    protected string $batchTeacherMode = 'a';
+
+    /**
+     * Runs a batch operation, capturing the teacher mode on the way through.
+     *
+     * A message can credit several teachers, so the teacher command needs to say
+     * whether it adds or replaces. Batch methods are handed only their own value,
+     * so the mode is read here, the way core reads tag_addremove for batchTag.
+     *
+     * @param   array  $commands  The batch commands to perform
+     * @param   array  $pks       The rows to perform them on
+     * @param   array  $contexts  ACL contexts, keyed by row id
+     *
+     * @return  bool  True on success
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function batch($commands, $pks, $contexts): bool
+    {
+        $this->batchTeacherMode = self::resolveTeacherMode($commands);
+
+        return parent::batch($commands, $pks, $contexts);
+    }
+
+    /**
+     * Reads the teacher mode out of a set of batch commands.
+     *
+     * Anything other than an explicit 'r' means add, so a request that omits the
+     * command — an older form post, a script — cannot reach the branch that
+     * discards teachers.
+     *
+     * @param   array  $commands  The batch commands
+     *
+     * @return  string  'r' to replace, 'a' to add
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function resolveTeacherMode(array $commands): string
+    {
+        return ($commands['teacher_mode'] ?? 'a') === 'r' ? 'r' : 'a';
+    }
+
+    /**
      * Duplicate Check
      *
      * @param   int  $study_id  Study ID
@@ -885,6 +935,9 @@ class CwmmessageModel extends AdminModel
         /** @var CwmmessageTable $table */
         $table     = $this->getTable();
         $teacherId = (int) $value;
+        $replacing = $this->batchTeacherMode === 'r';
+        $existing  = CwmstudyteacherHelper::getTeachersForStudies($pks);
+        $displaced = 0;
 
         foreach ($pks as $pk) {
             if ($user->authorise('core.edit', $contexts[$pk])) {
@@ -895,13 +948,41 @@ class CwmmessageModel extends AdminModel
                     throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED'));
                 }
 
-                $teachers = $teacherId > 0
-                    ? [['teacher_id' => $teacherId]]
-                    : [];
-                CwmstudyteacherHelper::saveTeachers((int) $pk, $teachers);
+                $current = array_map(
+                    static fn (object $t): int => (int) $t->teacher_id,
+                    $existing[(int) $pk] ?? []
+                );
+
+                if ($replacing) {
+                    // saveTeachers() rewrites the whole set, so anyone already
+                    // credited and not re-listed here loses the credit.
+                    $wanted = $teacherId > 0 ? [$teacherId] : [];
+
+                    if (array_diff($current, $wanted) !== []) {
+                        $displaced++;
+                    }
+                } else {
+                    $wanted = $current;
+
+                    if ($teacherId > 0 && !\in_array($teacherId, $wanted, true)) {
+                        $wanted[] = $teacherId;
+                    }
+                }
+
+                CwmstudyteacherHelper::saveTeachers(
+                    (int) $pk,
+                    array_map(static fn (int $id): array => ['teacher_id' => $id], $wanted)
+                );
             } else {
                 throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT'));
             }
+        }
+
+        if ($displaced > 0) {
+            Factory::getApplication()->enqueueMessage(
+                Text::plural('JBS_BAT_TEACHER_REPLACED_N', $displaced),
+                'warning'
+            );
         }
 
         // Clean the cache
