@@ -171,6 +171,13 @@ class CwmlogHelperTest extends ProclaimTestCase
     {
         $root  = \dirname(__DIR__, 4);
         $hits  = [];
+        $seen  = [];
+
+        // The manifest script lives at the repository root. `admin/proclaim.script.php`
+        // is a gitignored symlink to it for local development, so a walk of admin/
+        // finds it on a developer's machine and not in CI. Deduplicating by real
+        // path makes both see the same set.
+        $candidates = [$root . '/proclaim.script.php'];
 
         foreach (['admin', 'site', 'api', 'modules'] as $dir) {
             $path = $root . '/' . $dir;
@@ -186,16 +193,28 @@ class CwmlogHelperTest extends ProclaimTestCase
                     continue;
                 }
 
-                if (str_contains((string) file_get_contents($file->getPathname()), 'Log::addLogger')) {
-                    $hits[] = str_replace($root . '/', '', $file->getPathname());
-                }
+                $candidates[] = $file->getPathname();
+            }
+        }
+
+        foreach ($candidates as $path) {
+            $real = realpath($path);
+
+            if ($real === false || isset($seen[$real])) {
+                continue;
+            }
+
+            $seen[$real] = true;
+
+            if (str_contains((string) file_get_contents($real), 'Log::addLogger')) {
+                $hits[] = str_replace($root . '/', '', $real);
             }
         }
 
         sort($hits);
 
         $this->assertSame(
-            ['admin/proclaim.script.php', 'admin/src/Helper/CwmlogHelper.php'],
+            ['admin/src/Helper/CwmlogHelper.php', 'proclaim.script.php'],
             $hits,
             'Logger registration belongs in CwmlogHelper. The manifest script is the one exception, because it '
             . 'runs before the component is autoloadable; anything else here should move into the helper.'
