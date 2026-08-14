@@ -1188,3 +1188,70 @@ p.expand {
 .com-proclaim .btn.btn-dark {
   color: var(--bs-btn-color, #ffffff);
 }
+
+/*
+ * The outline variants, which the block above did not cover and which fail
+ * worse (#1806). A solid button keeps its background, so a template repainting
+ * the label only lowers contrast. An outline button has no background and takes
+ * the same colour on its border, so it disappears entirely: on nfsda.org the
+ * landing "Show All Speakers" control measured white on white, 1.0:1, border
+ * included.
+ *
+ * ⚠️ This unavoidably claims the colour from templates that style the variants
+ * themselves. Bootstrap declares `.btn-outline-primary` at (0,1,0) and a
+ * hostile template declares `.btn` at (0,1,0), so the two differ only in source
+ * order — any selector strong enough to beat the second beats the first as
+ * well. There is no signal to tell them apart: --bs-btn-color, --bs-primary and
+ * --bs-link-color are unset on Cassiopeia, stock Helium and nfsda alike.
+ * Cassiopeia's outline buttons render rgb(1,1,86) and stock Helium's
+ * rgb(66,71,83); under this rule Proclaim's render the values below instead.
+ * Sites that mind can set the custom properties from Proclaim's own custom CSS,
+ * which reaches every front-end view.
+ *
+ * The values are darker than Bootstrap's defaults on purpose. Bootstrap's
+ * primary #0d6efd measures 4.50:1 on white and 4.31:1 on the near-white a
+ * template is as likely to use, and its secondary #6c757d measures 4.49:1
+ * there -- the same shortfall already documented at Cwmshowscripture.php:709,
+ * which picked btn-outline-dark over btn-outline-secondary for exactly this
+ * reason. These clear 6:1 on both.
+ */
+.com-proclaim .btn.btn-outline-primary {
+  color: var(--proclaim-btn-outline-primary, #0a58ca);
+  border-color: var(--proclaim-btn-outline-primary, #0a58ca);
+}
+
+.com-proclaim .btn.btn-outline-secondary {
+  color: var(--proclaim-btn-outline-secondary, #565e64);
+  border-color: var(--proclaim-btn-outline-secondary, #565e64);
+}
+
+.com-proclaim .btn.btn-outline-dark {
+  color: var(--proclaim-btn-outline-dark, #212529);
+  border-color: var(--proclaim-btn-outline-dark, #212529);
+}
+
+/*
+ * Bootstrap's outline hover fills the button and flips the label to white. A
+ * template that repaints `.btn:hover` breaks that the same way, and a filled
+ * button with an invisible label is no better than an empty one.
+ */
+.com-proclaim .btn.btn-outline-primary:hover,
+.com-proclaim .btn.btn-outline-primary:focus-visible {
+  background-color: var(--proclaim-btn-outline-primary, #0a58ca);
+  border-color: var(--proclaim-btn-outline-primary, #0a58ca);
+  color: #ffffff;
+}
+
+.com-proclaim .btn.btn-outline-secondary:hover,
+.com-proclaim .btn.btn-outline-secondary:focus-visible {
+  background-color: var(--proclaim-btn-outline-secondary, #565e64);
+  border-color: var(--proclaim-btn-outline-secondary, #565e64);
+  color: #ffffff;
+}
+
+.com-proclaim .btn.btn-outline-dark:hover,
+.com-proclaim .btn.btn-outline-dark:focus-visible {
+  background-color: var(--proclaim-btn-outline-dark, #212529);
+  border-color: var(--proclaim-btn-outline-dark, #212529);
+  color: #ffffff;
+}
