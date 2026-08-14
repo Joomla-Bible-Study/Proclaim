@@ -530,7 +530,7 @@ final class Proclaim extends Adapter implements SubscriberInterface
             }
         }
 
-        // Add Scripture/Book: one Scripter taxonomy per reference (#1623).
+        // Add Scripture/Book: one Scripter taxonomy per reference.
         try {
             foreach (CwmscriptureHelper::getScripturesForStudy((int) $item->id) as $ref) {
                 // Not the stored reference_text, which is frozen in whatever
