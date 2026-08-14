@@ -158,6 +158,14 @@ class CwmlogHelperTest extends ProclaimTestCase
 
     /**
      * Only the helper registers loggers for the component.
+     *
+     * ⚠️ One exception, and it has to stay one. `proclaim.script.php` registers
+     * its own install logger because it runs in preflight, where the component's
+     * classes are not reliably autoloadable — the same reason that method
+     * registers the scripture namespace by hand a few lines earlier. Reaching
+     * for CwmlogHelper there would be a bet on load order.
+     *
+     * Anything else that appears in this list is centralisation leaking away.
      */
     public function testHelperIsTheOnlyRegistrar(): void
     {
@@ -184,10 +192,13 @@ class CwmlogHelperTest extends ProclaimTestCase
             }
         }
 
+        sort($hits);
+
         $this->assertSame(
-            ['admin/src/Helper/CwmlogHelper.php'],
+            ['admin/proclaim.script.php', 'admin/src/Helper/CwmlogHelper.php'],
             $hits,
-            'Logger registration should happen only in CwmlogHelper'
+            'Logger registration belongs in CwmlogHelper. The manifest script is the one exception, because it '
+            . 'runs before the component is autoloadable; anything else here should move into the helper.'
         );
     }
 
