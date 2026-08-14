@@ -40,7 +40,7 @@ use Joomla\CMS\Factory;
  * branch ends in a bare return.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.8
  */
 class CwmmediaStreamer
 {

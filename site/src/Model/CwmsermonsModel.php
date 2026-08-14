@@ -993,7 +993,7 @@ class CwmsermonsModel extends ListModel
      *
      * @return  string  An `EXISTS (...)` fragment
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function referenceExists(
         object $db,

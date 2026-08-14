@@ -1517,7 +1517,7 @@ class CwmmigrationHelper
      *
      * @return  int  Attributions moved into the junction
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function retireLegacyTeacherColumn(): int
     {

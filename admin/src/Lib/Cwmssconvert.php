@@ -749,7 +749,7 @@ class Cwmssconvert
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function saveScripture(int $studyId, ?object $scripture): void
     {
@@ -785,7 +785,7 @@ class Cwmssconvert
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function saveTeacher(int $studyId, int $teacherId): void
     {

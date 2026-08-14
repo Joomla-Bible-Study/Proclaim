@@ -45,7 +45,7 @@ class Dispatcher extends ComponentDispatcher
      * the generic display controller renders it.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     protected string $defaultView = 'cwmlandingpage';
 

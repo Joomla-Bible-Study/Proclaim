@@ -29,7 +29,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 /**
  * One section's permissions grid, with a list of the others alongside.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class HtmlView extends BaseHtmlView
 {
@@ -37,7 +37,7 @@ class HtmlView extends BaseHtmlView
      * The form carrying this section's grid.
      *
      * @var    Form|null
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public ?Form $form = null;
 
@@ -45,7 +45,7 @@ class HtmlView extends BaseHtmlView
      * Section currently being edited.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public string $section = '';
 
@@ -53,7 +53,7 @@ class HtmlView extends BaseHtmlView
      * Every section access.xml declares.
      *
      * @var    list<string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public array $sections = [];
 
@@ -65,7 +65,7 @@ class HtmlView extends BaseHtmlView
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     #[\Override]
     public function display($tpl = null): void
@@ -99,7 +99,7 @@ class HtmlView extends BaseHtmlView
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function addToolbar(): void
     {

@@ -29,7 +29,7 @@ use Joomla\Database\ParameterType;
  * Usage: `use SectionAccessTrait;` in a FormController subclass and set
  * `protected string $aclSection = 'teacher';`
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 trait SectionAccessTrait
 {
@@ -38,7 +38,7 @@ trait SectionAccessTrait
      * Must be set by the using class.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     // protected string $aclSection = 'teacher';
 
@@ -59,7 +59,7 @@ trait SectionAccessTrait
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function sectionAsset(int $recordId = 0): string
     {
@@ -82,7 +82,7 @@ trait SectionAccessTrait
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function recordHasAsset(int $recordId): bool
     {
@@ -108,7 +108,7 @@ trait SectionAccessTrait
      * @return  bool
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function allowAdd($data = []): bool
     {
@@ -124,7 +124,7 @@ trait SectionAccessTrait
      * @return  bool
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function allowSectionEdit(int $recordId = 0): bool
     {

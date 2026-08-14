@@ -55,7 +55,7 @@ use Joomla\Filesystem\Folder;
  * that rather than implying protection it does not have (#1774).
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.8
  */
 class CwmprotectedStorage
 {
@@ -67,21 +67,21 @@ class CwmprotectedStorage
      * backup, and a site that has to move hosts should not have to discover a
      * second location.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const RELATIVE_PATH = 'images/biblestudy/protected';
 
     /**
      * Component param holding the last probe verdict.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const STATUS_PARAM = 'protected_media_status';
 
     /**
      * Component param holding when that verdict was taken, as a Unix time.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const CHECKED_PARAM = 'protected_media_checked';
 
@@ -94,7 +94,7 @@ class CwmprotectedStorage
      * never re-probing is how a stale green light outlives the thing it
      * described.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const RECHECK_SECONDS = 604800;
 
@@ -103,7 +103,7 @@ class CwmprotectedStorage
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function path(): string
     {
@@ -115,7 +115,7 @@ class CwmprotectedStorage
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function url(): string
     {
@@ -130,7 +130,7 @@ class CwmprotectedStorage
      *
      * @return  bool  False when the directory could not be created.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function ensure(): bool
     {
@@ -156,7 +156,7 @@ class CwmprotectedStorage
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isRecheckDue(?int $checkedAt, int $now): bool
     {
@@ -188,7 +188,7 @@ class CwmprotectedStorage
      *
      * @return  string  One of the CwmmediaProtectionHelper constants.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function status(bool $force = false): string
     {
@@ -230,7 +230,7 @@ class CwmprotectedStorage
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function canHold(string $resolvedUrl): bool
     {
@@ -252,7 +252,7 @@ class CwmprotectedStorage
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isInside(string $absolute, string $root): bool
     {
@@ -277,7 +277,7 @@ class CwmprotectedStorage
      *
      * @return  string  A name not currently taken in that directory.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function uniqueName(string $dir, string $basename): string
     {
@@ -320,7 +320,7 @@ class CwmprotectedStorage
      *
      * @return  string|null  The new site-relative path, or null if it could not be moved.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function moveInto(string $relativePath): ?string
     {

@@ -27,7 +27,7 @@ use Joomla\CMS\Router\Route;
 /**
  * Section permissions controller.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmpermissionsController extends BaseController
 {
@@ -40,7 +40,7 @@ class CwmpermissionsController extends BaseController
      * @return  mixed
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     #[\Override]
     public function execute($task): mixed
@@ -67,7 +67,7 @@ class CwmpermissionsController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function save(): void
     {
@@ -134,7 +134,7 @@ class CwmpermissionsController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function apply(): void
     {
@@ -147,7 +147,7 @@ class CwmpermissionsController extends BaseController
      * @return  void
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function cancel(): void
     {

@@ -48,7 +48,7 @@ class CwmscriptureMigration
      * The flat scripture columns #__bsms_studies carried until #1623.
      *
      * @var string[]
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private const LEGACY_COLUMNS = [
         'booknumber', 'chapter_begin', 'verse_begin', 'chapter_end', 'verse_end', 'bible_version',
@@ -125,8 +125,8 @@ class CwmscriptureMigration
      *
      * @return  int  Always 0; there are no legacy columns left to migrate
      *
-     * @since       __DEPLOY_VERSION__
-     * @deprecated  __DEPLOY_VERSION__  Write the junction directly with CwmscriptureHelper::saveScriptures().
+     * @since       10.5.8
+     * @deprecated  10.5.8  Write the junction directly with CwmscriptureHelper::saveScriptures().
      */
     public static function migrateStudy(int $studyId): int
     {
@@ -147,7 +147,7 @@ class CwmscriptureMigration
      *
      * @return  int  References moved into the junction
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function retireLegacyColumns(): int
     {
@@ -218,7 +218,7 @@ class CwmscriptureMigration
      *
      * @return  int  Rows inserted
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function backfillJunction(DatabaseInterface $db): int
     {
@@ -255,7 +255,7 @@ class CwmscriptureMigration
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function hasLegacyColumns(DatabaseInterface $db): bool
     {
@@ -268,7 +268,7 @@ class CwmscriptureMigration
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function columnExists(DatabaseInterface $db, string $column): bool
     {
@@ -284,7 +284,7 @@ class CwmscriptureMigration
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function junctionTableExists(DatabaseInterface $db): bool
     {

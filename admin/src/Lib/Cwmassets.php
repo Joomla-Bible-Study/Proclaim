@@ -49,7 +49,7 @@ class Cwmassets
      * Cached `com_proclaim.<section>` asset IDs, keyed by section name.
      *
      * @var array<string, int>
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static array $sectionIds = [];
 
@@ -57,7 +57,7 @@ class Cwmassets
      * Cached section names declared in admin/access.xml.
      *
      * @var list<string>|null
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.8
      */
     private static ?array $declaredSections = null;
 
@@ -74,7 +74,7 @@ class Cwmassets
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function clearSectionCache(): void
     {
@@ -93,7 +93,7 @@ class Cwmassets
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function accessFile(): string
     {
@@ -115,7 +115,7 @@ class Cwmassets
      * controllers ask rather than carry their own copy.
      *
      * @var    array<string, string>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private const SECTION_BY_VIEW = [
         'cwmcomment'      => 'comment',
@@ -140,7 +140,7 @@ class Cwmassets
      *
      * @return  string
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function sectionForView(string $view): string
     {
@@ -162,7 +162,7 @@ class Cwmassets
      *
      * @return  CanDo
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function sectionActions(string $section): CanDo
     {
@@ -189,7 +189,7 @@ class Cwmassets
      *
      * @return  CanDo
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function componentActions(): CanDo
     {
@@ -205,7 +205,7 @@ class Cwmassets
      *
      * @return  CanDo|null  Null when access.xml cannot be read
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function actionsFor(string $section, string $assetName): ?CanDo
     {
@@ -239,7 +239,7 @@ class Cwmassets
      *
      * @return  list<string>
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function declaredSections(): array
     {
@@ -302,7 +302,7 @@ class Cwmassets
      *
      * @return  int  Asset id, or 0 when the section is undeclared or creation failed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function sectionId(string $section): int
     {
@@ -370,7 +370,7 @@ class Cwmassets
      *
      * @return  int  Number of sections resolved (created or already present)
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function seedSections(): int
     {
@@ -397,7 +397,7 @@ class Cwmassets
      *
      * @return  list<string>  Names removed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function pruneUndeclaredSections(): array
     {
@@ -550,7 +550,7 @@ class Cwmassets
      * A null target means the rows are removed rather than renamed.
      *
      * @var    array<string, string|null>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private const LEGACY_ASSET_PREFIXES = [
         'message_type' => 'messagetype',
@@ -567,7 +567,7 @@ class Cwmassets
      *
      * @return  array{renamed: int, removed: int, collided: list<string>}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function renameLegacyAssetNames(): array
     {
@@ -662,7 +662,7 @@ class Cwmassets
      *
      * @return  array{moved: int, skipped: list<string>}
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function reparentItemAssets(): array
     {
@@ -737,7 +737,7 @@ class Cwmassets
      *
      * @return  int  Section asset id, or the component asset id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function sectionParentId(string $section): int
     {

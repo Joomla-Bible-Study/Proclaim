@@ -128,7 +128,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  bool  False only when the stack is genuinely required and could not be installed
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function installScriptureStack(InstallerAdapter $adapter): bool
     {
@@ -214,7 +214,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function scriptureLibraryPresent(): bool
     {
@@ -229,7 +229,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  string|null
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function installedVersion(string $element, string $type): ?string
     {
@@ -264,7 +264,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  string|null
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function manifestVersionInZip(string $zip): ?string
     {
@@ -345,7 +345,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function removeComponentUpdateSites(): void
     {
@@ -476,7 +476,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function reportRetainedScriptureStack(): void
     {
@@ -536,7 +536,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private function disarmLegacyScriptureUninstallSql(): void
     {

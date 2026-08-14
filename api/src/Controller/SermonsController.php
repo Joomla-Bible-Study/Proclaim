@@ -39,7 +39,7 @@ class SermonsController extends AbstractWritableController
      * `studyintro`, and JsonapiView renders only what the row actually carries.
      *
      * @var    string[]
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     protected const LIST_SELECT = [
         'study.id',

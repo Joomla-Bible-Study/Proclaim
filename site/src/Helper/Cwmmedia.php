@@ -1622,7 +1622,7 @@ class Cwmmedia
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private static function useMediaPopupScript(): void
     {

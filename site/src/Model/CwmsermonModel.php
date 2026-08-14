@@ -348,7 +348,7 @@ class CwmsermonModel extends FormModel
      *
      * @return  int  1 to publish immediately, 0 to hold for approval
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function getCommentPublishState(): int
     {
@@ -360,7 +360,7 @@ class CwmsermonModel extends FormModel
      *
      * @return  Registry
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function getCommentParams(): Registry
     {

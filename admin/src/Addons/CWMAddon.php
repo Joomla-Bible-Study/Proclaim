@@ -1562,7 +1562,7 @@ abstract class CWMAddon
      *
      * @return  string  A ready-to-concatenate `title="…"`, already escaped
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function frameTitle(): string
     {

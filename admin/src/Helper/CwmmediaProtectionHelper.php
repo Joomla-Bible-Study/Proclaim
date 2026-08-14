@@ -35,7 +35,7 @@ use Joomla\Http\HttpFactory;
  * needs the file stored outside the web root.
  *
  * @package  Proclaim.Admin
- * @since    __DEPLOY_VERSION__
+ * @since    10.5.8
  */
 class CwmmediaProtectionHelper
 {
@@ -55,7 +55,7 @@ class CwmmediaProtectionHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isServedByWebServer(string $url): bool
     {
@@ -82,7 +82,7 @@ class CwmmediaProtectionHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isRestrictedFromGuests(object $media, array $guestLevels): bool
     {
@@ -108,7 +108,7 @@ class CwmmediaProtectionHelper
      *
      * @return  bool
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function isRestrictedButReachable(object $media, string $resolvedUrl, array $guestLevels): bool
     {
@@ -119,14 +119,14 @@ class CwmmediaProtectionHelper
     /**
      * The directory is genuinely refused by the web server.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const PROTECTED = 'protected';
 
     /**
      * The web server handed the file back. Whatever is in here is public.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const EXPOSED = 'exposed';
 
@@ -134,7 +134,7 @@ class CwmmediaProtectionHelper
      * We could not find out. ⚠️ Never treat this as protected: an unanswered
      * probe is exactly what a broken deny rule looks like from here.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     public const UNVERIFIED = 'unverified';
 
@@ -142,7 +142,7 @@ class CwmmediaProtectionHelper
      * Seconds to wait for the probe. The request is to this same site, so a
      * slow answer means something is wrong rather than far away.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private const PROBE_TIMEOUT = 10;
 
@@ -161,7 +161,7 @@ class CwmmediaProtectionHelper
      *
      * @return  string  One of the class constants.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function interpretProbe(?int $status, string $body, string $token): string
     {
@@ -210,7 +210,7 @@ class CwmmediaProtectionHelper
      *
      * @return  string  One of the class constants.
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function probeDirectory(string $absoluteDir, string $dirUrl): string
     {
@@ -262,7 +262,7 @@ class CwmmediaProtectionHelper
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public static function writeDenyFiles(string $dir): void
     {

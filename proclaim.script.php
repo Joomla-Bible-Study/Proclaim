@@ -658,7 +658,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function seedSectionAssets(): void
     {
@@ -1578,7 +1578,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.8
      */
     private function checkScriptureLibraryVersion(): void
     {

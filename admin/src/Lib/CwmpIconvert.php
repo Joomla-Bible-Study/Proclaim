@@ -1325,7 +1325,7 @@ class CwmpIconvert
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function saveScriptures(int $studyId, array $references): void
     {
@@ -1371,7 +1371,7 @@ class CwmpIconvert
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     private function saveTeacher(int $studyId, int $teacherId): void
     {

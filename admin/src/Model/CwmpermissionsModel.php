@@ -32,7 +32,7 @@ use Joomla\CMS\Table\Asset;
  * One section per request: all 17 grids on one form exceeds PHP's
  * `max_input_vars`, and the excess is discarded silently (#1653).
  *
- * @since  __DEPLOY_VERSION__
+ * @since  10.5.8
  */
 class CwmpermissionsModel extends FormModel
 {
@@ -44,7 +44,7 @@ class CwmpermissionsModel extends FormModel
      *
      * @return  string  A declared section name, or an empty string when none exist
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function getSection(): string
     {
@@ -68,7 +68,7 @@ class CwmpermissionsModel extends FormModel
      * @return  Form|false  A Form object on success, false on failure
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function getForm($data = [], $loadData = true): Form|false
     {
@@ -99,7 +99,7 @@ class CwmpermissionsModel extends FormModel
      * @return  array
      *
      * @throws  \Exception
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     protected function loadFormData(): array
     {
@@ -119,7 +119,7 @@ class CwmpermissionsModel extends FormModel
      * @return  bool  True on success
      *
      * @throws  \RuntimeException  When rules are posted without core.admin
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.8
      */
     public function save($data): bool
     {
