@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "development", "10.x" ]
+    branches: [ "development", "10.x", "11.0.0-dev" ]
     paths-ignore:
       - '**.md'
       - 'admin/language/**'
@@ -10,7 +10,7 @@ on:
       - 'build/mockups/**'
       - '.claude/**'
   pull_request:
-    branches: [ "development", "10.x" ]
+    branches: [ "development", "10.x", "11.0.0-dev" ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
