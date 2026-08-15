@@ -149,9 +149,9 @@ class com_proclaimInstallerScript extends InstallerScript
      * came to 0.002s of a 6.89s postflight, so everything here is what an
      * update actually costs.
      *
-     * Each entry: name, seconds.
+     * Each entry: name, seconds, and the failure message if it did not finish.
      *
-     * @var    array<int, array{name: string, secs: float}>
+     * @var    array<int, array{name: string, secs: float, error: string}>
      * @since  __DEPLOY_VERSION__
      */
     private array $taskLog = [];
@@ -644,11 +644,19 @@ class com_proclaimInstallerScript extends InstallerScript
      * first and turned out to be free, which left the larger part of an update
      * unaccounted for.
      *
-     * ⚠️ Unlike step(), a throw is re-raised rather than recorded. These are
-     * not optional migrations: several are load-bearing, several already sit
-     * inside their own try/catch with error handling chosen per call, and
-     * swallowing here would quietly change what an installer failure does. The
-     * timing is taken in a finally, so work that throws is still measured.
+     * ⚠️ A throw is recorded and the update carries on. Joomla treats a
+     * RuntimeException out of postflight as grounds to abort and roll the
+     * install back — after the files have been copied and the schema replayed
+     * — so letting one escape destroys a working update to punish
+     * housekeeping. None of the work wrapped here was ever written as a gate
+     * on a good install, and most of it already caught for itself; this
+     * applies that uniformly.
+     *
+     * ⚠️ Non-fatal must not mean unnoticed. Every failure is enqueued for the
+     * administrator, written to the log, and asserted against by
+     * build/verify-install-log.php in the release gate.
+     *
+     * The timing is taken in a finally, so work that throws is still measured.
      *
      * @param   string    $name  Task name, as it appears in the log
      * @param   callable  $work  The work to time
@@ -660,15 +668,38 @@ class com_proclaimInstallerScript extends InstallerScript
     private function task(string $name, callable $work): mixed
     {
         $started = microtime(true);
+        $error   = '';
 
         try {
             return $work();
+        } catch (\Throwable $e) {
+            $error = $e->getMessage() !== '' ? $e->getMessage() : $e::class;
+
+            Factory::getApplication()->enqueueMessage(
+                sprintf(
+                    'Proclaim: the "%s" step of this update did not complete (%s). '
+                    . 'The update itself is installed; the com_proclaim.install log has the detail.',
+                    $name,
+                    $error
+                ),
+                'warning'
+            );
+
+            return null;
         } finally {
             $secs = microtime(true) - $started;
 
-            $this->taskLog[] = ['name' => $name, 'secs' => $secs];
+            $this->taskLog[] = ['name' => $name, 'secs' => $secs, 'error' => $error];
 
-            $this->logInstall(sprintf('  task  %-26s %6.3fs', $name, $secs));
+            // ⚠️ Failures keep the "task" prefix rather than step()'s "FAIL".
+            // build/verify-install-log.php reads that one as a failed migration,
+            // and a failure reported against the wrong thing is worse than the
+            // line it replaces. The gate matches this shape instead.
+            $this->logInstall(
+                $error === ''
+                    ? sprintf('  task  %-26s %6.3fs', $name, $secs)
+                    : sprintf('  task  %-26s %6.3fs FAILED: %s', $name, $secs, $error)
+            );
         }
     }
 
