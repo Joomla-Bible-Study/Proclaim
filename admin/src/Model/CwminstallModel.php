@@ -39,6 +39,22 @@ use Joomla\Filesystem\Folder;
  */
 class CwminstallModel extends ListModel
 {
+    /**
+     * The update stream Proclaim releases are announced on.
+     *
+     * ARS serves several streams; id=1 is the one carrying the 10.x history,
+     * and id=2 ends at 9.2.8 because 9.x → 10.x is a migration rather than an
+     * in-place update. Written unescaped: this goes into a database column and
+     * is fetched verbatim, so an `&amp;` here would arrive as a parameter
+     * named `amp;view` and the stream would never render.
+     *
+     * Kept identical to the `<server>` in build/pkg_proclaim.xml.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private const PACKAGE_UPDATE_STREAM = 'https://www.christianwebministries.org/index.php'
+        . '?option=com_ars&view=update&task=stream&format=xml&id=1&dummy=extension.xml';
+
     /** @var int Total number of Versions
      *
      * @since 7.1
@@ -1018,47 +1034,7 @@ class CwminstallModel extends ListModel
                 $this->running = 'Remove Old Update URL\'s';
                 break;
             case 'setupdateurl':
-                // Find Extension ID of component
-                $query = $this->getDatabase()->createQuery();
-                $query
-                    ->select($this->getDatabase()->quoteName('extension_id'))
-                    ->from($this->getDatabase()->quoteName('#__extensions'))
-                    ->where($this->getDatabase()->quoteName('name') . ' = ' . $this->getDatabase()->q('com_proclaim'));
-                $this->getDatabase()->setQuery($query);
-                $eid = $this->getDatabase()->loadResult();
-
-                $conditions = [
-                    $this->getDatabase()->quoteName('name') . ' = ' .
-                    $this->getDatabase()->q('Proclaim Package'),
-                ];
-                $query      = $this->getDatabase()->createQuery();
-                $query->delete($this->getDatabase()->quoteName('#__update_sites'));
-                $query->where('(' . implode(' OR ', $conditions) . ')');
-                $this->getDatabase()->setQuery($query);
-                $this->getDatabase()->execute();
-
-                $conditions = [
-                    $this->getDatabase()->quoteName('extension_id') . ' = ' .
-                    $this->getDatabase()->q($eid),
-                ];
-                $query      = $this->getDatabase()->createQuery();
-                $query->delete($this->getDatabase()->quoteName('#__update_sites_extensions'));
-                $query->where('(' . implode(' OR ', $conditions) . ')');
-                $this->getDatabase()->setQuery($query);
-                $this->getDatabase()->execute();
-
-                $updateurl           = new \stdClass();
-                $updateurl->name     = 'Proclaim Package';
-                $updateurl->type     = 'extension';
-                $updateurl->location = 'https://www.christianwebministries.org/index.php?option=com_ars&amp;view=update&amp;task=stream&amp;id=2&amp;format=xml';
-                $updateurl->enabled  = '1';
-                $this->getDatabase()->insertObject('#__update_sites', $updateurl);
-                $lastid                     = $this->getDatabase()->insertid();
-                $updateurl1                 = new \stdClass();
-                $updateurl1->update_site_id = $lastid;
-                $updateurl1->extension_id   = $eid;
-                $this->getDatabase()->insertObject('#__update_sites_extensions', $updateurl1);
-                $this->running = 'Set New Update URL';
+                $this->running = $this->setComponentUpdateSite();
                 break;
             case 'podcastlinkmissing':
                 // Define the table and column names
@@ -1093,6 +1069,127 @@ class CwminstallModel extends ListModel
                 );
                 break;
         }
+    }
+
+    /**
+     * Give the component an update site only when nothing else provides one.
+     *
+     * Updates belong to pkg_proclaim: its manifest declares the stream and
+     * Joomla registers it during install, so on a package site a second,
+     * component-owned entry only makes the site poll twice and report Proclaim
+     * as a component update. The package's postflight retires those entries;
+     * this step used to recreate one immediately afterwards, which is why they
+     * kept coming back.
+     *
+     * ⚠️ A site with no package still needs a channel — component-only
+     * installs predate the package and are reached solely through their own
+     * entry — so one is created there, pointing at the stream that carries
+     * current releases.
+     *
+     * Existing entries are cleared by their binding rather than by name.
+     * Matching the name alone missed rows registered under a different one and
+     * still deleted their bindings, leaving them orphaned in #__update_sites
+     * and invisible to every later pass.
+     *
+     * @return  string  Progress label for the installer UI
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function setComponentUpdateSite(): string
+    {
+        $db  = $this->getDatabase();
+        $eid = (int) $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+        )->loadResult();
+
+        if ($eid === 0) {
+            return 'Set Update URL (component not registered)';
+        }
+
+        foreach ($this->updateSitesFor($eid) as $siteId) {
+            // ⚠️ An update site can serve more than one extension. Where it
+            // does, only Proclaim's claim on it is released — removing the row
+            // would take the other extension's update channel with it.
+            $shared = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__update_sites_extensions'))
+                    ->where($db->quoteName('update_site_id') . ' = ' . $siteId)
+                    ->where($db->quoteName('extension_id') . ' <> ' . $eid)
+            )->loadResult();
+
+            if ($shared > 0) {
+                $db->setQuery(
+                    $db->createQuery()
+                        ->delete($db->quoteName('#__update_sites_extensions'))
+                        ->where($db->quoteName('update_site_id') . ' = ' . $siteId)
+                        ->where($db->quoteName('extension_id') . ' = ' . $eid)
+                )->execute();
+
+                continue;
+            }
+
+            // #__updates rows are keyed to the site and would otherwise be
+            // orphaned, leaving phantom entries on Extensions > Update.
+            foreach (['#__updates', '#__update_sites_extensions', '#__update_sites'] as $table) {
+                $db->setQuery(
+                    $db->createQuery()
+                        ->delete($db->quoteName($table))
+                        ->where($db->quoteName('update_site_id') . ' = ' . $siteId)
+                )->execute();
+            }
+        }
+
+        $packageEid = (int) $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('extension_id'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('pkg_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('package'))
+        )->loadResult();
+
+        if ($packageEid > 0 && $this->updateSitesFor($packageEid) !== []) {
+            return 'Set Update URL (package owns updates)';
+        }
+
+        $site           = new \stdClass();
+        $site->name     = 'CWM Proclaim Package';
+        $site->type     = 'extension';
+        $site->location = self::PACKAGE_UPDATE_STREAM;
+        $site->enabled  = 1;
+        $db->insertObject('#__update_sites', $site);
+
+        $binding                 = new \stdClass();
+        $binding->update_site_id = (int) $db->insertid();
+        $binding->extension_id   = $eid;
+        $db->insertObject('#__update_sites_extensions', $binding);
+
+        return 'Set New Update URL';
+    }
+
+    /**
+     * The update sites registered against an extension.
+     *
+     * @param   int  $extensionId  Extension to look up
+     *
+     * @return  int[]  Update site ids
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function updateSitesFor(int $extensionId): array
+    {
+        $db = $this->getDatabase();
+
+        return array_map('intval', $db->setQuery(
+            $db->createQuery()
+                ->select($db->quoteName('update_site_id'))
+                ->from($db->quoteName('#__update_sites_extensions'))
+                ->where($db->quoteName('extension_id') . ' = ' . $extensionId)
+        )->loadColumn() ?: []);
     }
 
     /**
