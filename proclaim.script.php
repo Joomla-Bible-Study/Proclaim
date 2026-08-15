@@ -141,6 +141,22 @@ class com_proclaimInstallerScript extends InstallerScript
     private array $stepLog = [];
 
     /**
+     * How long each unconditional piece of postflight took.
+     *
+     * Separate from the migration log because the two answer different
+     * questions: that one is "did this site need the migration", this one is
+     * "where did the time go". Measured on a production update, the migrations
+     * came to 0.002s of a 6.89s postflight, so everything here is what an
+     * update actually costs.
+     *
+     * Each entry: name, seconds.
+     *
+     * @var    array<int, array{name: string, secs: float}>
+     * @since  __DEPLOY_VERSION__
+     */
+    private array $taskLog = [];
+
+    /**
      * When preflight ran, as a float second.
      *
      * ⚠️ The gap between this and the start of postflight is the only view
@@ -616,6 +632,43 @@ class com_proclaimInstallerScript extends InstallerScript
             ];
 
             $this->logInstall(sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
+        }
+    }
+
+    /**
+     * Time a piece of postflight, and record where the time went.
+     *
+     * Postflight's unconditional work — installing the sub-extensions, copying
+     * language files, clearing caches — was never measured, so an update that
+     * felt slow could only be guessed at. The migrations were instrumented
+     * first and turned out to be free, which left the larger part of an update
+     * unaccounted for.
+     *
+     * ⚠️ Unlike step(), a throw is re-raised rather than recorded. These are
+     * not optional migrations: several are load-bearing, several already sit
+     * inside their own try/catch with error handling chosen per call, and
+     * swallowing here would quietly change what an installer failure does. The
+     * timing is taken in a finally, so work that throws is still measured.
+     *
+     * @param   string    $name  Task name, as it appears in the log
+     * @param   callable  $work  The work to time
+     *
+     * @return  mixed  Whatever $work returned
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function task(string $name, callable $work): mixed
+    {
+        $started = microtime(true);
+
+        try {
+            return $work();
+        } finally {
+            $secs = microtime(true) - $started;
+
+            $this->taskLog[] = ['name' => $name, 'secs' => $secs];
+
+            $this->logInstall(sprintf('  task  %-26s %6.3fs', $name, $secs));
         }
     }
 
@@ -1977,139 +2030,145 @@ class com_proclaimInstallerScript extends InstallerScript
             return;
         }
 
-        $this->checkScriptureLibraryVersion();
+        $this->task('Scripture library check', fn () => $this->checkScriptureLibraryVersion());
 
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
-            $this->renameLegacyFolders();
+            $this->task('Rename legacy folders', fn () => $this->renameLegacyFolders());
         }
 
         // After the migration SQL has added uq_study_topic, retire the index it
         // replaces. No-op on a fresh install, where install.sql never creates it.
-        $this->dropRedundantStudyTopicIndex();
+        $this->task('Study topic index', fn () => $this->dropRedundantStudyTopicIndex());
 
         // The analytics aggregate key cannot be reworked in SQL at all; this is
         // where it is brought to its intended columns. No-op when already correct.
-        $this->reconcileAnalyticsAggregateIndex();
+        $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
         // offer but nothing can store.
-        $this->seedSectionAssets();
+        $this->task('Section assets', fn () => $this->seedSectionAssets());
 
         // Install subExtensions
-        $this->installSubExtensions($parent);
+        $this->task('Sub-extensions', fn () => $this->installSubExtensions($parent));
 
         // Copy language files to the system folder
-        $this->copyLanguageFiles();
+        $this->task('Language files', fn () => $this->copyLanguageFiles());
 
         // Show the post-installation page
-        $this->renderPostInstallation($this->status, $parent);
+        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status, $parent));
 
         //Remove old com_biblestudy menu items on the admin side
-        $this->removeBibleStudyVersion($parent);
+        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion($parent));
 
         // Declare our dependency on lib_cwmscripture so its uninstall guard and
         // shared-table cleanup can see us
-        $this->scriptureConsumer('register');
+        $this->task('Scripture consumer', fn () => $this->scriptureConsumer('register'));
 
         // Stale caches survive an update and can serve markup that references
         // assets this update replaced — see the method for what happened on a
         // live site.
-        $this->clearCaches();
+        $this->task('Clear caches', fn () => $this->clearCaches());
 
         if ($type === 'install' || $type === 'update') {
-            // This is a fresh install. Register for the guided tour directly.
-            try {
-                $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
+            $this->task('Guided tours', static function () {
+                // This is a fresh install. Register for the guided tour directly.
+                try {
+                    $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
 
-                if (file_exists($helperPath)) {
-                    require_once $helperPath;
-                    $tourHelper = new CwmguidedtourHelper();
+                    if (file_exists($helperPath)) {
+                        require_once $helperPath;
+                        $tourHelper = new CwmguidedtourHelper();
 
-                    $tours      = $tourHelper->registerGuidedTours();
-                    $messages   = $tourHelper->registerPostInstallMessages();
+                        $tours      = $tourHelper->registerGuidedTours();
+                        $messages   = $tourHelper->registerPostInstallMessages();
 
-                    if ($tours > 0) {
-                        Factory::getApplication()->enqueueMessage($tours . ' guided tour(s) have been installed.', 'message');
+                        if ($tours > 0) {
+                            Factory::getApplication()->enqueueMessage($tours . ' guided tour(s) have been installed.', 'message');
+                        } else {
+                            Factory::getApplication()->enqueueMessage('No new guided tours were installed.', 'notice');
+                        }
+
+                        if ($messages > 0) {
+                            Factory::getApplication()->enqueueMessage($messages . ' post-installation message(s) have been installed.', 'message');
+                        }
                     } else {
-                        Factory::getApplication()->enqueueMessage('No new guided tours were installed.', 'notice');
+                        Factory::getApplication()->enqueueMessage('Guided tour helper file not found.', 'warning');
                     }
-
-                    if ($messages > 0) {
-                        Factory::getApplication()->enqueueMessage($messages . ' post-installation message(s) have been installed.', 'message');
-                    }
-                } else {
-                    Factory::getApplication()->enqueueMessage('Guided tour helper file not found.', 'warning');
+                } catch (\Exception $e) {
+                    Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
                 }
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
-            }
+            });
         }
 
         // ⚠️ The scripture migration is the one that also runs on a fresh install.
         // install.mysql.utf8.sql seeds the sample study with legacy flat columns
         // and no junction row, so an install that skipped this shipped a study
         // whose reference the junction never knew about.
-        try {
-            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+        $this->task('Scripture references', static function () use ($type) {
+            try {
+                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-            if (file_exists($migrationPath)) {
-                require_once $migrationPath;
-                // These helpers moved to lib_cwmscripture in 10.3.0 and the
-                // migration autoloads the library class via the namespace
-                // registered in preflight(). Only require a legacy in-component
-                // copy if one is still present — a bare require_once of the
-                // (now missing) file is a fatal that the catch below can't trap.
-                $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
+                if (file_exists($migrationPath)) {
+                    require_once $migrationPath;
+                    // These helpers moved to lib_cwmscripture in 10.3.0 and the
+                    // migration autoloads the library class via the namespace
+                    // registered in preflight(). Only require a legacy in-component
+                    // copy if one is still present — a bare require_once of the
+                    // (now missing) file is a fatal that the catch below can't trap.
+                    $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
 
-                foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
-                    if (is_file($helperDir . $legacyHelper)) {
-                        require_once $helperDir . $legacyHelper;
+                    foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
+                        if (is_file($helperDir . $legacyHelper)) {
+                            require_once $helperDir . $legacyHelper;
+                        }
+                    }
+
+                    $migrated = CwmscriptureMigration::migrate();
+
+                    if ($migrated > 0 && $type === 'update') {
+                        Factory::getApplication()->enqueueMessage(
+                            $migrated . ' study scripture reference(s) migrated to new format.',
+                            'message'
+                        );
                     }
                 }
-
-                $migrated = CwmscriptureMigration::migrate();
-
-                if ($migrated > 0 && $type === 'update') {
-                    Factory::getApplication()->enqueueMessage(
-                        $migrated . ' study scripture reference(s) migrated to new format.',
-                        'message'
-                    );
-                }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Scripture migration notice: ' . $e->getMessage(),
+                    'warning'
+                );
             }
-        } catch (\Exception $e) {
-            Factory::getApplication()->enqueueMessage(
-                'Scripture migration notice: ' . $e->getMessage(),
-                'warning'
-            );
-        }
+        });
 
         // ⚠️ Runs on install as well as update, and that is the point. A site
         // coming from 9.x has the flat columns full and no junction, and takes
         // the install route, so nothing in sql/updates ever replays for it.
-        try {
-            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+        $this->task('Retire legacy columns', static function () {
+            try {
+                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-            if (file_exists($migrationPath)) {
-                require_once $migrationPath;
+                if (file_exists($migrationPath)) {
+                    require_once $migrationPath;
 
-                $moved = CwmscriptureMigration::retireLegacyColumns();
-                $moved += CwmmigrationHelper::retireLegacyTeacherColumn();
+                    $moved = CwmscriptureMigration::retireLegacyColumns();
+                    $moved += CwmmigrationHelper::retireLegacyTeacherColumn();
 
-                if ($moved > 0) {
-                    Factory::getApplication()->enqueueMessage(
-                        $moved . ' scripture reference(s) moved out of the legacy columns.',
-                        'message'
-                    );
+                    if ($moved > 0) {
+                        Factory::getApplication()->enqueueMessage(
+                            $moved . ' scripture reference(s) moved out of the legacy columns.',
+                            'message'
+                        );
+                    }
                 }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Could not retire the legacy scripture columns: ' . $e->getMessage(),
+                    'warning'
+                );
             }
-        } catch (\Exception $e) {
-            Factory::getApplication()->enqueueMessage(
-                'Could not retire the legacy scripture columns: ' . $e->getMessage(),
-                'warning'
-            );
-        }
+        });
 
         // The remaining legacy data migrations run on UPGRADES only. A fresh
         // install's SQL already creates the current schema, so there is nothing
@@ -2222,10 +2281,14 @@ class com_proclaimInstallerScript extends InstallerScript
             }
         }
 
+        // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
+        // which cross-checks it against the per-step lines. Keep it at the front.
         $this->logInstall(sprintf(
-            'postflight: %d step(s) in %.3fs; postflight total %.2fs; whole install %.2fs',
+            'postflight: %d step(s) in %.3fs, %d task(s) in %.2fs; postflight total %.2fs; whole install %.2fs',
             \count($this->stepLog),
             array_sum(array_column($this->stepLog, 'secs')),
+            \count($this->taskLog),
+            array_sum(array_column($this->taskLog, 'secs')),
             microtime(true) - $postflightStarted,
             microtime(true) - $this->startedAt
         ));
