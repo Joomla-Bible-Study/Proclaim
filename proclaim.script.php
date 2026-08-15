@@ -119,12 +119,12 @@ class com_proclaimInstallerScript extends InstallerScript
      * migration skipped in error loses data while one run in error costs time.
      *
      * @var    string
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     /**
      * Log category for the install record.
      *
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private const INSTALL_LOG = 'com_proclaim.install';
 
@@ -136,7 +136,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Each entry: name, state (ran|skipped|failed), a short note, seconds.
      *
      * @var    array<int, array{name: string, state: string, note: string, secs: float}>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private array $stepLog = [];
 
@@ -150,7 +150,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * about a minute, so that gap is where the answer lives.
      *
      * @var    float
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.9
      */
     private float $startedAt = 0.0;
 
@@ -404,7 +404,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  string  Semver, or '' when it cannot be determined
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function readInstalledVersion(): string
     {
@@ -449,7 +449,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function reportMigrations(): void
     {
@@ -521,7 +521,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function openInstallLog(): void
     {
@@ -547,7 +547,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function logInstall(string $line): void
     {
@@ -575,7 +575,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function step(string $name, string $since, callable $work): void
     {
@@ -635,7 +635,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  bool  True when the site is older than that release
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.9
      */
     private function upgradingFromBefore(string $version): bool
     {
