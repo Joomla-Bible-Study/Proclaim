@@ -50,6 +50,14 @@ return new class () implements InstallerScriptInterface {
     private string $minimumJoomla = '5.1.0';
 
     /**
+     * The ARS stream id Proclaim releases are announced on.
+     *
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    private const CURRENT_STREAM = '1';
+
+    /**
      * Runs before install/update to check requirements.
      *
      * @param   string            $type     Install type (install, update, discover_install)
@@ -371,12 +379,10 @@ return new class () implements InstallerScriptInterface {
 
             $packageSites = $sitesFor('pkg_proclaim', 'package');
 
-            // Never leave a site with no way to hear about updates. If the
-            // package has not registered its own update site — a partial
-            // install, or a component-only site that has not taken the package
-            // yet — the component's row is the only channel there is, so it
-            // stays. The next successful package install runs this again.
-            if ($packageSites === []) {
+            // The component's rows go only once the package holds one on the
+            // stream carrying current releases. Anything less would leave the
+            // site with no channel that can deliver an update.
+            if ($this->currentStreamSites($packageSites) === []) {
                 return;
             }
 
@@ -413,6 +419,50 @@ return new class () implements InstallerScriptInterface {
                 'com_proclaim'
             );
         }
+    }
+
+    /**
+     * Which of these update sites point at the stream carrying current releases.
+     *
+     * ARS serves several streams; id=2 stops at 9.2.8, because 9.x to 10.x is a
+     * migration rather than an in-place update.
+     *
+     * @param   int[]  $siteIds  Update site ids to test
+     *
+     * @return  int[]  Those on the current stream
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function currentStreamSites(array $siteIds): array
+    {
+        if ($siteIds === []) {
+            return [];
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $rows = $db->setQuery(
+            $db->createQuery()
+                ->select([$db->quoteName('update_site_id'), $db->quoteName('location')])
+                ->from($db->quoteName('#__update_sites'))
+                ->where(
+                    $db->quoteName('update_site_id') . ' IN ('
+                    . implode(',', array_map('intval', $siteIds)) . ')'
+                )
+        )->loadAssocList() ?: [];
+
+        $current = [];
+
+        foreach ($rows as $row) {
+            // Stored locations occur both plain and HTML-escaped.
+            $location = str_replace('&amp;', '&', (string) $row['location']);
+
+            if (preg_match('/[?&]id=' . self::CURRENT_STREAM . '(?:&|$)/', $location) === 1) {
+                $current[] = (int) $row['update_site_id'];
+            }
+        }
+
+        return $current;
     }
 
     /**
