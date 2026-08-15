@@ -36,8 +36,12 @@
  *   - every migration step was skipped, none ran, none failed
  *   - as many steps were considered as there are migrations in the script, so
  *     "nothing ran" cannot pass by nothing having been attempted
- *   - postflight reported both its timing lines, and its own step count agrees
- *     with the steps logged individually
+ *   - no postflight task failed. A task that throws is recorded and the update
+ *     carries on rather than rolling back an install that already happened, so
+ *     this is the only thing between a step that never works and nobody
+ *     noticing
+ *   - postflight reported both its timing lines, and its own step and task
+ *     counts agree with the lines logged individually
  *
  * Usage: php build/verify-install-log.php <type> [from-version]
  *          <type>          install | update, as preflight recorded it
@@ -310,9 +314,43 @@ foreach ($installs as $install) {
         echo "  OK   all {$skipped} legacy migration(s) gated out, none ran\n";
     }
 
+    // --- the rest of postflight ---------------------------------------------
+    //
+    // A task that throws is recorded and the update carries on, because
+    // aborting would roll back an install that has already happened. That makes
+    // a failure quiet, and quiet is only acceptable because this reads it back.
+    $tasks       = 0;
+    $failedTasks = [];
+
+    foreach ($block as $message) {
+        if (preg_match('/^ {2}task\s+(.*?)\s+[\d.]+s(?: FAILED: (.*))?$/', $message, $m) !== 1) {
+            continue;
+        }
+
+        $tasks++;
+
+        if (($m[2] ?? '') !== '') {
+            $failedTasks[] = trim($m[1]) . ' — ' . $m[2];
+        }
+    }
+
+    if ($failedTasks !== []) {
+        fwrite(STDERR, "  FAIL " . \count($failedTasks) . " postflight task(s) did not complete:\n");
+
+        foreach ($failedTasks as $line) {
+            fwrite(STDERR, "         {$line}\n");
+        }
+
+        fwrite(STDERR, "       These no longer abort the install, by design — so this is the\n");
+        fwrite(STDERR, "       only thing standing between a step that never works and nobody\n");
+        fwrite(STDERR, "       noticing.\n");
+        $failures++;
+    }
+
     // --- postflight reported on itself --------------------------------------
-    $elapsed = false;
-    $summary = -1;
+    $elapsed     = false;
+    $summary     = -1;
+    $taskSummary = -1;
 
     foreach ($block as $message) {
         if (str_contains($message, 'elapsed since preflight')) {
@@ -322,6 +360,28 @@ foreach ($installs as $install) {
         if (preg_match('/^postflight: (\d+) step\(s\) in /', $message, $m) === 1) {
             $summary = (int) $m[1];
         }
+
+        if (preg_match('/, (\d+) task\(s\) in /', $message, $m) === 1) {
+            $taskSummary = (int) $m[1];
+        }
+    }
+
+    if ($taskSummary < 0) {
+        fwrite(STDERR, "  FAIL postflight reported no task count —\n");
+        fwrite(STDERR, "       the build under test does not time its own postflight, so the\n");
+        fwrite(STDERR, "       'no task failed' result above was reached by there being nothing\n");
+        fwrite(STDERR, "       to check.\n");
+        $failures++;
+    } elseif ($taskSummary !== $tasks) {
+        fwrite(STDERR, "  FAIL postflight counted {$taskSummary} task(s); {$tasks} reached the log —\n");
+        fwrite(STDERR, "       the per-task lines and the summary disagree about what ran.\n");
+        $failures++;
+    } elseif ($failedTasks === []) {
+        echo "  OK   all {$tasks} postflight task(s) completed\n";
+    } else {
+        // The counts agree; what they agree on is already reported as a failure
+        // above. Claiming completion here as well would contradict it.
+        echo "  OK   all {$tasks} postflight task(s) reached the log\n";
     }
 
     if (!$elapsed) {
