@@ -111,6 +111,65 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  3.6
      */
+    /**
+     * The version this update is coming from, read before Joomla overwrites it.
+     *
+     * Empty on a fresh install, and on any update where the row cannot be read —
+     * both of which mean "assume the oldest case and run everything", because a
+     * migration skipped in error loses data while one run in error costs time.
+     *
+     * @var    string
+     * @since  10.5.9
+     */
+    /**
+     * Log category for the install record.
+     *
+     * @since  10.5.9
+     */
+    private const INSTALL_LOG = 'com_proclaim.install';
+
+    private string $fromVersion = '';
+
+    /**
+     * What each migration step did, for the report echoed at the end.
+     *
+     * Each entry: name, state (ran|skipped|failed), a short note, seconds.
+     *
+     * @var    array<int, array{name: string, state: string, note: string, secs: float}>
+     * @since  10.5.9
+     */
+    private array $stepLog = [];
+
+    /**
+     * How long each unconditional piece of postflight took.
+     *
+     * Separate from the migration log because the two answer different
+     * questions: that one is "did this site need the migration", this one is
+     * "where did the time go". Measured on a production update, the migrations
+     * came to 0.002s of a 6.89s postflight, so everything here is what an
+     * update actually costs.
+     *
+     * Each entry: name, seconds.
+     *
+     * @var    array<int, array{name: string, secs: float}>
+     * @since  __DEPLOY_VERSION__
+     */
+    private array $taskLog = [];
+
+    /**
+     * When preflight ran, as a float second.
+     *
+     * ⚠️ The gap between this and the start of postflight is the only view
+     * anyone gets of what Joomla itself spent — unpacking the archive, copying
+     * the files, replaying the schema. Measured on j6-dev the whole database
+     * side of postflight is under a tenth of a second, while a real update took
+     * about a minute, so that gap is where the answer lives.
+     *
+     * @var    float
+     * @since  10.5.9
+     */
+    private float $startedAt = 0.0;
+
     protected $minimumPhp = '8.3.0';
 
     /**
@@ -354,6 +413,293 @@ class com_proclaimInstallerScript extends InstallerScript
     ];
 
     /**
+     * The version currently recorded for com_proclaim.
+     *
+     * Reads `#__extensions.manifest_cache` rather than `#__schemas`, which lags
+     * behind the release version — see CwmproclaimHelper::getVersion().
+     *
+     * @return  string  Semver, or '' when it cannot be determined
+     *
+     * @since   10.5.9
+     */
+    private function readInstalledVersion(): string
+    {
+        try {
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
+            $query = $db->createQuery()
+                ->select($db->quoteName('manifest_cache'))
+                ->from($db->quoteName('#__extensions'))
+                ->where($db->quoteName('element') . ' = ' . $db->quote('com_proclaim'))
+                ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
+            $db->setQuery($query);
+
+            $cache = (string) $db->loadResult();
+
+            if ($cache === '') {
+                return '';
+            }
+
+            $decoded = json_decode($cache, true, 512, JSON_THROW_ON_ERROR);
+
+            return (string) ($decoded['version'] ?? '');
+        } catch (\Throwable) {
+            return '';
+        }
+    }
+
+    /**
+     * Report what the migrations did, on the page the administrator lands on.
+     *
+     * ⚠️ Delivered with enqueueMessage(), not echo. Joomla does capture printed
+     * output into the extension message, but postflight ends by setting a
+     * redirect to Proclaim's own view, and a queued message survives that where
+     * printed output is not guaranteed to.
+     *
+     * ⚠️ The markup is constrained by Joomla's own sanitiser. `Joomla.sanitizeHtml`
+     * renders queued messages client-side against an allowlist that has no
+     * `table`, `tr` or `td`, and no `style` attribute anywhere — a table with
+     * inline styles arrives as stripped text. Hence a list, and classes only.
+     *
+     * Says nothing when there is nothing worth saying: a fresh install, or an
+     * update where every step was skipped and none of them took any time.
+     *
+     * @return  void
+     *
+     * @since   10.5.9
+     */
+    private function reportMigrations(): void
+    {
+        if ($this->stepLog === []) {
+            return;
+        }
+
+        $ran     = array_filter($this->stepLog, static fn ($s) => $s['state'] === 'ran');
+        $failed  = array_filter($this->stepLog, static fn ($s) => $s['state'] === 'failed');
+        $skipped = \count($this->stepLog) - \count($ran) - \count($failed);
+        $total   = array_sum(array_column($this->stepLog, 'secs'));
+
+        if ($ran === [] && $failed === [] && $total < 0.05) {
+            return;
+        }
+
+        $esc  = static fn (string $t) => htmlspecialchars($t, ENT_QUOTES, 'UTF-8');
+        $from = $this->fromVersion !== '' ? $this->fromVersion : 'an unrecorded version';
+
+        $items = '';
+
+        foreach ($this->stepLog as $entry) {
+            $mark = match ($entry['state']) {
+                'ran'    => '&#10003;',
+                'failed' => '&#10007;',
+                default  => '&#8722;',
+            };
+
+            $items .= '<li>' . $mark . ' <strong>' . $esc($entry['name']) . '</strong>'
+                . ($entry['note'] !== '' ? ' <small>' . $esc($entry['note']) . '</small>' : '')
+                . ($entry['state'] === 'skipped'
+                    ? ''
+                    : ' <small>' . number_format($entry['secs'], 2) . 's</small>')
+                . '</li>';
+        }
+
+        $summary = sprintf(
+            '%d ran, %d skipped%s in %ss, upgrading from %s.',
+            \count($ran),
+            $skipped,
+            $failed === [] ? '' : ', ' . \count($failed) . ' failed,',
+            number_format($total, 1),
+            $esc($from)
+        );
+
+        try {
+            Factory::getApplication()->enqueueMessage(
+                '<strong>Proclaim migrations</strong><br>' . $summary
+                . '<ul class="list-unstyled mb-0">' . $items . '</ul>',
+                $failed === [] ? 'info' : 'warning'
+            );
+        } catch (\Throwable) {
+            // A report is not worth failing an otherwise successful update over.
+        }
+    }
+
+    /**
+     * Register a logger for the install log.
+     *
+     * ⚠️ Self-contained on purpose. This runs in preflight, where the component's
+     * own classes are not reliably autoloadable — that is why preflight has to
+     * register the scripture namespace by hand a few lines further down. Calling
+     * CwmlogHelper here would be a bet on load order.
+     *
+     * ⚠️ Joomla discards entries for a category no logger is registered for, and
+     * nothing registers one during an install. The existing
+     * `Log::add(..., 'com_proclaim')` calls in this file have been writing to
+     * nowhere.
+     *
+     * @return  void
+     *
+     * @since   10.5.9
+     */
+    private function openInstallLog(): void
+    {
+        try {
+            Log::addLogger(
+                ['text_file' => 'com_proclaim.install.php'],
+                Log::ALL,
+                [self::INSTALL_LOG]
+            );
+        } catch (\Throwable) {
+            // Diagnostics must never be the reason an install fails.
+        }
+    }
+
+    /**
+     * Write one line to the install log.
+     *
+     * Always on. This is the record an administrator retrieves *after* an update
+     * they have already sat through — the on-screen report cannot be scrolled
+     * back to, and cannot say anything about the time before postflight ran.
+     *
+     * @param   string  $line  What happened
+     *
+     * @return  void
+     *
+     * @since   10.5.9
+     */
+    private function logInstall(string $line): void
+    {
+        try {
+            Log::add($line, Log::INFO, self::INSTALL_LOG);
+        } catch (\Throwable) {
+            // As above.
+        }
+    }
+
+    /**
+     * Run a legacy migration, or record why it was skipped.
+     *
+     * Wraps the version gate and the timing in one place so the report can say
+     * what happened. Before this, an update that did nothing looked exactly like
+     * an update that did everything: a spinner, then silence.
+     *
+     * A step that throws is recorded and the update carries on. None of these is
+     * load-bearing enough to abandon an otherwise successful update over, and a
+     * failure that is reported is far better than one that aborts the install.
+     *
+     * @param   string    $name   Step name, as it appears in the report
+     * @param   string    $since  Release the migration shipped in
+     * @param   callable  $work   The migration; may return a short note
+     *
+     * @return  void
+     *
+     * @since   10.5.9
+     */
+    private function step(string $name, string $since, callable $work): void
+    {
+        if (!$this->upgradingFromBefore($since)) {
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'skipped',
+                'note'  => 'not needed past ' . $since,
+                'secs'  => 0.0,
+            ];
+
+            $this->logInstall(sprintf('  skip  %-26s not needed past %s', $name, $since));
+
+            return;
+        }
+
+        $started = microtime(true);
+
+        try {
+            $note = $work();
+
+            $secs = microtime(true) - $started;
+
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'ran',
+                'note'  => \is_string($note) ? $note : '',
+                'secs'  => $secs,
+            ];
+
+            $this->logInstall(sprintf('  ran   %-26s %6.3fs', $name, $secs));
+        } catch (\Throwable $e) {
+            $this->stepLog[] = [
+                'name'  => $name,
+                'state' => 'failed',
+                'note'  => $e->getMessage(),
+                'secs'  => microtime(true) - $started,
+            ];
+
+            $this->logInstall(sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
+        }
+    }
+
+    /**
+     * Time a piece of postflight, and record where the time went.
+     *
+     * Postflight's unconditional work — installing the sub-extensions, copying
+     * language files, clearing caches — was never measured, so an update that
+     * felt slow could only be guessed at. The migrations were instrumented
+     * first and turned out to be free, which left the larger part of an update
+     * unaccounted for.
+     *
+     * ⚠️ Unlike step(), a throw is re-raised rather than recorded. These are
+     * not optional migrations: several are load-bearing, several already sit
+     * inside their own try/catch with error handling chosen per call, and
+     * swallowing here would quietly change what an installer failure does. The
+     * timing is taken in a finally, so work that throws is still measured.
+     *
+     * @param   string    $name  Task name, as it appears in the log
+     * @param   callable  $work  The work to time
+     *
+     * @return  mixed  Whatever $work returned
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function task(string $name, callable $work): mixed
+    {
+        $started = microtime(true);
+
+        try {
+            return $work();
+        } finally {
+            $secs = microtime(true) - $started;
+
+            $this->taskLog[] = ['name' => $name, 'secs' => $secs];
+
+            $this->logInstall(sprintf('  task  %-26s %6.3fs', $name, $secs));
+        }
+    }
+
+    /**
+     * Whether a migration first shipped in `$version` still has work to do here.
+     *
+     * ⚠️ A migration that ran on the update that introduced it does not need to
+     * run again, but nothing recorded that it had. With no gate, a 10.5.7 site
+     * re-ran every migration written since 10.0 — nine of them, each walking
+     * whole tables to discover there was nothing to do. That is what made
+     * updates take minutes on a site with real content.
+     *
+     * ⚠️ An unknown source version returns true. Skipping a migration that was
+     * needed loses data; running one that was not costs time.
+     *
+     * @param   string  $version  The release the migration shipped in
+     *
+     * @return  bool  True when the site is older than that release
+     *
+     * @since   10.5.9
+     */
+    private function upgradingFromBefore(string $version): bool
+    {
+        if ($this->fromVersion === '') {
+            return true;
+        }
+
+        return version_compare($this->fromVersion, $version, '<');
+    }
+
+    /**
      * Function called before the extension installation/update/removal procedure commences
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -366,6 +712,24 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function preflight($type, $parent): bool
     {
+        $this->startedAt = microtime(true);
+        $this->openInstallLog();
+
+        // Read before Joomla rewrites manifest_cache with the incoming version.
+        // postflight() cannot ask this question — by then the row says the new
+        // version and every migration looks unnecessary.
+        if ($type === 'update') {
+            $this->fromVersion = $this->readInstalledVersion();
+        }
+
+        $this->logInstall(sprintf(
+            'preflight: %s, from %s, PHP %s, Joomla %s',
+            $type,
+            $this->fromVersion !== '' ? $this->fromVersion : 'n/a',
+            PHP_VERSION,
+            JVERSION
+        ));
+
         // com_proclaim depends on lib_cwmscripture. The standalone
         // component zip does not bundle the library, and even when
         // installed via pkg_proclaim the library lands one step before
@@ -1625,6 +1989,24 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     public function postflight(string $type, ComponentAdapter $parent): void
     {
+        // ⚠️ Everything between preflight and here is Joomla's, not ours:
+        // unpacking the archive, copying the files, replaying the schema. The
+        // database side of postflight measures under a tenth of a second on a
+        // site of a few thousand rows, so when an update takes a minute, this
+        // gap is the first place to look.
+        //
+        // ⚠️ It does NOT include downloading the package. Joomla fetches that
+        // from the update server before any of this code exists, so a slow
+        // download shows up in neither number and has to be timed separately.
+        $beforeUs = microtime(true) - $this->startedAt;
+
+        $this->logInstall(sprintf(
+            'postflight: %.2fs elapsed since preflight (unpack, file copy, schema) — download NOT included',
+            $beforeUs
+        ));
+
+        $postflightStarted = microtime(true);
+
         // Joomla calls postflight on UNINSTALL too — InstallerAdapter::uninstall()
         // runs triggerManifestScript('postflight') after removing the extension
         // (InstallerAdapter.php:1249). Everything below this guard is install-time
@@ -1648,187 +2030,201 @@ class com_proclaimInstallerScript extends InstallerScript
             return;
         }
 
-        $this->checkScriptureLibraryVersion();
+        $this->task('Scripture library check', fn () => $this->checkScriptureLibraryVersion());
 
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
-            $this->renameLegacyFolders();
+            $this->task('Rename legacy folders', fn () => $this->renameLegacyFolders());
         }
 
         // After the migration SQL has added uq_study_topic, retire the index it
         // replaces. No-op on a fresh install, where install.sql never creates it.
-        $this->dropRedundantStudyTopicIndex();
+        $this->task('Study topic index', fn () => $this->dropRedundantStudyTopicIndex());
 
         // The analytics aggregate key cannot be reworked in SQL at all; this is
         // where it is brought to its intended columns. No-op when already correct.
-        $this->reconcileAnalyticsAggregateIndex();
+        $this->task('Analytics index', fn () => $this->reconcileAnalyticsAggregateIndex());
 
         // Seeded on update as well as install: access.xml can gain a section in
         // any release, and a section with no asset is a permission the UI can
         // offer but nothing can store.
-        $this->seedSectionAssets();
+        $this->task('Section assets', fn () => $this->seedSectionAssets());
 
         // Install subExtensions
-        $this->installSubExtensions($parent);
+        $this->task('Sub-extensions', fn () => $this->installSubExtensions($parent));
 
         // Copy language files to the system folder
-        $this->copyLanguageFiles();
+        $this->task('Language files', fn () => $this->copyLanguageFiles());
 
         // Show the post-installation page
-        $this->renderPostInstallation($this->status, $parent);
+        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status, $parent));
 
         //Remove old com_biblestudy menu items on the admin side
-        $this->removeBibleStudyVersion($parent);
+        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion($parent));
 
         // Declare our dependency on lib_cwmscripture so its uninstall guard and
         // shared-table cleanup can see us
-        $this->scriptureConsumer('register');
+        $this->task('Scripture consumer', fn () => $this->scriptureConsumer('register'));
 
         // Stale caches survive an update and can serve markup that references
         // assets this update replaced — see the method for what happened on a
         // live site.
-        $this->clearCaches();
+        $this->task('Clear caches', fn () => $this->clearCaches());
 
         if ($type === 'install' || $type === 'update') {
-            // This is a fresh install. Register for the guided tour directly.
-            try {
-                $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
+            $this->task('Guided tours', static function () {
+                // This is a fresh install. Register for the guided tour directly.
+                try {
+                    $helperPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/CwmguidedtourHelper.php';
 
-                if (file_exists($helperPath)) {
-                    require_once $helperPath;
-                    $tourHelper = new CwmguidedtourHelper();
+                    if (file_exists($helperPath)) {
+                        require_once $helperPath;
+                        $tourHelper = new CwmguidedtourHelper();
 
-                    $tours      = $tourHelper->registerGuidedTours();
-                    $messages   = $tourHelper->registerPostInstallMessages();
+                        $tours      = $tourHelper->registerGuidedTours();
+                        $messages   = $tourHelper->registerPostInstallMessages();
 
-                    if ($tours > 0) {
-                        Factory::getApplication()->enqueueMessage($tours . ' guided tour(s) have been installed.', 'message');
+                        if ($tours > 0) {
+                            Factory::getApplication()->enqueueMessage($tours . ' guided tour(s) have been installed.', 'message');
+                        } else {
+                            Factory::getApplication()->enqueueMessage('No new guided tours were installed.', 'notice');
+                        }
+
+                        if ($messages > 0) {
+                            Factory::getApplication()->enqueueMessage($messages . ' post-installation message(s) have been installed.', 'message');
+                        }
                     } else {
-                        Factory::getApplication()->enqueueMessage('No new guided tours were installed.', 'notice');
+                        Factory::getApplication()->enqueueMessage('Guided tour helper file not found.', 'warning');
                     }
-
-                    if ($messages > 0) {
-                        Factory::getApplication()->enqueueMessage($messages . ' post-installation message(s) have been installed.', 'message');
-                    }
-                } else {
-                    Factory::getApplication()->enqueueMessage('Guided tour helper file not found.', 'warning');
+                } catch (\Exception $e) {
+                    Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
                 }
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage('Failed to register guided tour: ' . $e->getMessage(), 'error');
-            }
+            });
         }
 
         // ⚠️ The scripture migration is the one that also runs on a fresh install.
         // install.mysql.utf8.sql seeds the sample study with legacy flat columns
         // and no junction row, so an install that skipped this shipped a study
         // whose reference the junction never knew about.
-        try {
-            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+        $this->task('Scripture references', static function () use ($type) {
+            try {
+                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-            if (file_exists($migrationPath)) {
-                require_once $migrationPath;
-                // These helpers moved to lib_cwmscripture in 10.3.0 and the
-                // migration autoloads the library class via the namespace
-                // registered in preflight(). Only require a legacy in-component
-                // copy if one is still present — a bare require_once of the
-                // (now missing) file is a fatal that the catch below can't trap.
-                $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
+                if (file_exists($migrationPath)) {
+                    require_once $migrationPath;
+                    // These helpers moved to lib_cwmscripture in 10.3.0 and the
+                    // migration autoloads the library class via the namespace
+                    // registered in preflight(). Only require a legacy in-component
+                    // copy if one is still present — a bare require_once of the
+                    // (now missing) file is a fatal that the catch below can't trap.
+                    $helperDir = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Helper/';
 
-                foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
-                    if (is_file($helperDir . $legacyHelper)) {
-                        require_once $helperDir . $legacyHelper;
+                    foreach (['ScriptureReference.php', 'CwmscriptureHelper.php'] as $legacyHelper) {
+                        if (is_file($helperDir . $legacyHelper)) {
+                            require_once $helperDir . $legacyHelper;
+                        }
+                    }
+
+                    $migrated = CwmscriptureMigration::migrate();
+
+                    if ($migrated > 0 && $type === 'update') {
+                        Factory::getApplication()->enqueueMessage(
+                            $migrated . ' study scripture reference(s) migrated to new format.',
+                            'message'
+                        );
                     }
                 }
-
-                $migrated = CwmscriptureMigration::migrate();
-
-                if ($migrated > 0 && $type === 'update') {
-                    Factory::getApplication()->enqueueMessage(
-                        $migrated . ' study scripture reference(s) migrated to new format.',
-                        'message'
-                    );
-                }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Scripture migration notice: ' . $e->getMessage(),
+                    'warning'
+                );
             }
-        } catch (\Exception $e) {
-            Factory::getApplication()->enqueueMessage(
-                'Scripture migration notice: ' . $e->getMessage(),
-                'warning'
-            );
-        }
+        });
 
         // ⚠️ Runs on install as well as update, and that is the point. A site
         // coming from 9.x has the flat columns full and no junction, and takes
         // the install route, so nothing in sql/updates ever replays for it.
-        try {
-            $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
+        $this->task('Retire legacy columns', static function () {
+            try {
+                $migrationPath = JPATH_ADMINISTRATOR . '/components/com_proclaim/src/Lib/CwmscriptureMigration.php';
 
-            if (file_exists($migrationPath)) {
-                require_once $migrationPath;
+                if (file_exists($migrationPath)) {
+                    require_once $migrationPath;
 
-                $moved = CwmscriptureMigration::retireLegacyColumns();
-                $moved += CwmmigrationHelper::retireLegacyTeacherColumn();
+                    $moved = CwmscriptureMigration::retireLegacyColumns();
+                    $moved += CwmmigrationHelper::retireLegacyTeacherColumn();
 
-                if ($moved > 0) {
-                    Factory::getApplication()->enqueueMessage(
-                        $moved . ' scripture reference(s) moved out of the legacy columns.',
-                        'message'
-                    );
+                    if ($moved > 0) {
+                        Factory::getApplication()->enqueueMessage(
+                            $moved . ' scripture reference(s) moved out of the legacy columns.',
+                            'message'
+                        );
+                    }
                 }
+            } catch (\Exception $e) {
+                Factory::getApplication()->enqueueMessage(
+                    'Could not retire the legacy scripture columns: ' . $e->getMessage(),
+                    'warning'
+                );
             }
-        } catch (\Exception $e) {
-            Factory::getApplication()->enqueueMessage(
-                'Could not retire the legacy scripture columns: ' . $e->getMessage(),
-                'warning'
-            );
-        }
+        });
 
         // The remaining legacy data migrations run on UPGRADES only. A fresh
         // install's SQL already creates the current schema, so there is nothing
         // to migrate — running these against freshly seeded default rows only
         // produces spurious warnings (e.g. the podcast-link "could not be
         // matched" notice).
+        // ⚠️ Each of these is gated on the version being upgraded FROM. A
+        // migration that shipped in 10.1.0 has nothing to do on a site already
+        // past 10.1.0, but none of them could tell — they loaded whole tables to
+        // find out, on every update, forever. Nine of them made a routine update
+        // take minutes on a site with real content.
         if ($type === 'update') {
-            // Fix legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
-            try {
+            // Legacy image paths in mediafile params (images/biblestudy/ -> media/com_proclaim/images/)
+            $this->step('Media file paths', '10.1.0', static function () {
                 CwmmigrationHelper::fixMediafileLegacyPaths();
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage(
-                    'Mediafile path migration notice: ' . $e->getMessage(),
-                    'warning'
-                );
-            }
+            });
 
-            // Migrate studyimage param values to thumbnailm column
-            try {
+            // studyimage param values to the thumbnailm column
+            $this->step('Study images', '10.1.0', function () {
                 $this->migrateStudyImageParams();
-            } catch (\Exception $e) {
-                Factory::getApplication()->enqueueMessage(
-                    'StudyImage migration notice: ' . $e->getMessage(),
-                    'warning'
-                );
-            }
+            });
 
-            // Drop vestigial text/pdf columns from templates table.
-            // Done in PHP because ALTER TABLE DROP COLUMN is not idempotent.
-            $this->dropLegacyTemplateColumns();
+            // Vestigial text/pdf columns on the templates table. Done in PHP
+            // because ALTER TABLE DROP COLUMN is not idempotent.
+            $this->step('Template columns', '10.3.2', function () {
+                $this->dropLegacyTemplateColumns();
+            });
 
-            // Drop pre-10.1 / pre-10.0 orphaned tables that linger on sites
-            // upgraded across multiple major versions (Joomla skips already-
-            // applied migrations on jump-upgrades, so the per-version DROPs
-            // never run).
-            $this->dropLegacyTables();
+            // pre-10.1 / pre-10.0 orphaned tables, which linger on sites upgraded
+            // across several major versions — Joomla skips already-applied
+            // migrations on a jump upgrade, so the per-version DROPs never ran.
+            $this->step('Orphaned tables', '10.1.0', function () {
+                $this->dropLegacyTables();
+            });
 
-            // Migrate existing alternate link data to platform_links JSON
-            $this->migratePodcastAlternateLinks();
+            // Alternate link data into platform_links JSON
+            $this->step('Podcast alternate links', '10.1.0', function () {
+                $this->migratePodcastAlternateLinks();
+            });
 
-            // Copy legacy image field to podcastimage where podcastimage is empty
-            $this->migratePodcastImageField();
+            // Legacy image field into podcastimage, where podcastimage is empty
+            $this->step('Podcast images', '10.1.0', function () {
+                $this->migratePodcastImageField();
+            });
 
-            // Match legacy podcastlink URLs to Joomla menu item IDs
-            $this->migratePodcastLinkToMenuItem();
+            // Legacy podcastlink URLs matched to Joomla menu item IDs. This is the
+            // one that reported "N podcast link(s) could not be matched" on every
+            // update, about rows it had already declined to match before.
+            $this->step('Podcast menu links', '10.3.0', function () {
+                $this->migratePodcastLinkToMenuItem();
+            });
 
-            // Migrate scripture settings from component params to plugin params
-            $this->migrateScriptureParamsToPlugin();
+            // Scripture settings from component params to plugin params
+            $this->step('Scripture settings', '10.5.8', function () {
+                $this->migrateScriptureParamsToPlugin();
+            });
         }
 
         if ($type === 'install' || $type === 'update') {
@@ -1884,6 +2280,20 @@ class com_proclaimInstallerScript extends InstallerScript
                 // Silently ignore detection failures during install
             }
         }
+
+        // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
+        // which cross-checks it against the per-step lines. Keep it at the front.
+        $this->logInstall(sprintf(
+            'postflight: %d step(s) in %.3fs, %d task(s) in %.2fs; postflight total %.2fs; whole install %.2fs',
+            \count($this->stepLog),
+            array_sum(array_column($this->stepLog, 'secs')),
+            \count($this->taskLog),
+            array_sum(array_column($this->taskLog, 'secs')),
+            microtime(true) - $postflightStarted,
+            microtime(true) - $this->startedAt
+        ));
+
+        $this->reportMigrations();
 
         // For updates, we use the migration process
         $parent->getParent()->setRedirectURL(

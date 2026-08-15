@@ -19,6 +19,41 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.5.9                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.5.9</version>
+        <date>2026-08-15</date>
+        <note>
+            <item>Comment moderation buttons in the admin no longer depend on inline scripts, so they keep working on sites that enforce a Content Security Policy.</item>
+            <item>Removed a superseded layout and two dialogs that nothing could open.</item>
+            <item>fix: default the download button to a variant the form can express by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1822</item>
+            <item>fix: stop the upgrade harness removing the scripture stack it depends on by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1823</item>
+            <item>fix: delete the superseded showhide layout and the method that reached it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1825</item>
+            <item>chore: remove issue citations from comments in site and media_source by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1827</item>
+            <item>chore: remove issue citations from comments in admin and plugins by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1828</item>
+            <item>chore: reject issue references in comments from CI by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1829</item>
+            <item>chore: drop narrative comments from the site views by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1830</item>
+            <item>chore: drop narrative comments from the admin tree by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1831</item>
+            <item>chore: drop two comments that restate their condition by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1832</item>
+            <item>fix: remove the dead message type modal, and make the modal tests assert by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1833</item>
+            <item>fix: remove the locations select modal, which nothing opens by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1835</item>
+            <item>fix: bind the comment moderation toggles without inline handlers by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1836</item>
+            <item>ci: run the workflows on 11.0.0-dev by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1838</item>
+            <item>test: assert the scripture library still provides what Proclaim calls by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1839</item>
+            <item>chore: pin the scripture stack to lib 1.1.18 / pkg 1.2.10 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1840</item>
+            <item>fix: run a legacy migration only for the versions that need it by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1842</item>
+            <item>feat: time each legacy migration, and report what the update did by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1843</item>
+            <item>feat: log the install, so an update can be diagnosed after the fact by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1844</item>
+            <item>test: assert the update reported what it did, and gated the migrations by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1845</item>
+            <item>docs(release): user-facing notes for 10.5.9 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1846</item>
+            <item>release: merge development into main for 10.5.9 by @bcordis in https://github.com/Joomla-Bible-Study/Proclaim/pull/1847</item>
+        </note>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.8                                                   -->
     <!-- ============================================================ -->
     <changelog>
