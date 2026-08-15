@@ -54,19 +54,19 @@ echo "========================================================================"
 echo " UPGRADE TEST — ${BASEVER}  ->  ${NEWVER}"
 echo "========================================================================"
 
-echo "-- [1/16] reset test site(s) to a clean slate"
+echo "-- [1/17] reset test site(s) to a clean slate"
 php build/reset-testsite.php
 
-echo "-- [2/16] fetch released baseline ${BASEVER}"
+echo "-- [2/17] fetch released baseline ${BASEVER}"
 bash build/build-baseline.sh "$BASEVER"
 
-echo "-- [3/16] install baseline ${BASEVER} (the 'before' state)"
+echo "-- [3/17] install baseline ${BASEVER} (the 'before' state)"
 "$BIN/cwm-install-zip" --zip "$BASEZIP"
 
-echo "-- [4/16] seed a downloaded translation + provider cache (upgrade must not eat them)"
+echo "-- [4/17] seed a downloaded translation + provider cache (upgrade must not eat them)"
 php build/verify-scripture-upgrade.php seed
 
-echo "-- [5/16] build new full package ${NEWVER}"
+echo "-- [5/17] build new full package ${NEWVER}"
 bash build/build-package.sh "$NEWVER"
 
 if [ ! -f "$NEWZIP" ]; then
@@ -74,10 +74,18 @@ if [ ! -f "$NEWZIP" ]; then
     exit 1
 fi
 
-echo "-- [6/16] install ${NEWVER} over ${BASEVER} (triggers update() + migrations)"
+echo "-- [6/17] install ${NEWVER} over ${BASEVER} (triggers update() + migrations)"
 "$BIN/cwm-install-zip" --zip "$NEWZIP"
 
-echo "-- [7/16] verify registration + migrations"
+# Immediately after the upgrade, before anything else installs over it: the log
+# describes one install, and phase 17 reinstalls on top. What the update decided
+# about the legacy migrations is recorded nowhere else — the CLI installer drops
+# the on-screen report, and both a gated and an ungated update leave the same
+# schema behind for every other assertion here to agree on.
+echo "-- [7/17] verify the update reported what it did (and gated the migrations)"
+php build/verify-install-log.php update "$BASEVER"
+
+echo "-- [8/17] verify registration + migrations"
 "$BIN/cwm-verify" --target test
 php build/verify-migrations.php "$NEWVER"
 # The upgraded state is what a real site is in, and it is the state that
@@ -85,21 +93,21 @@ php build/verify-migrations.php "$NEWVER"
 # every other assertion here passed.
 php build/verify-schema-check.php
 
-echo "-- [8/16] verify the downloaded translation and cached passages survived"
+echo "-- [9/17] verify the downloaded translation and cached passages survived"
 php build/verify-scripture-upgrade.php verify
 
-echo "-- [9/16] verify the consumer registry schema landed and the shipped extensions registered"
+echo "-- [10/17] verify the consumer registry schema landed and the shipped extensions registered"
 php build/verify-scripture-uninstall.php schema
 php build/verify-scripture-uninstall.php assert-first-party-registered
 
 # The remaining phases uninstall things, so they run last — the site is expendable
-# from here on and reset-testsite.php rebuilds it on the next run. Phase 16 puts
+# from here on and reset-testsite.php rebuilds it on the next run. Phase 17 puts
 # ${NEWVER} back at the end, because test:e2e runs against this install straight
 # after and must not be handed the baseline.
 # tail -n1: these modes print one value, but any PHP notice would land on stdout
 # ahead of it. Taking the last line keeps a stray warning from corrupting the
 # path or id — which would otherwise make the CLI fail for the wrong reason and
-# turn phase 10 into a false pass.
+# turn phase 11 into a false pass.
 SITE="$(php build/verify-scripture-uninstall.php site-path | tail -n1)"
 JCLI="${SITE}/cli/joomla.php"
 
@@ -109,12 +117,12 @@ if [ ! -f "$JCLI" ]; then
     exit 1
 fi
 
-# Phase 11 asserts that removing pkg_proclaim drops the shared scripture tables,
+# Phase 12 asserts that removing pkg_proclaim drops the shared scripture tables,
 # which is only true when nothing else uses them. Any other consumer -- Living
 # Word is the one that actually bit us (lib_cwmscripture#37) -- makes keeping
 # them correct, so the assertion would be testing for a bug.
 #
-# Clear them here rather than in phase 11 itself: phases 12 and 13 install their
+# Clear them here rather than in phase 12 itself: phases 13 and 14 install their
 # own consumers to prove the opposite case, and an unrelated one already present
 # would let those pass without their fixtures doing anything.
 #
@@ -149,13 +157,13 @@ if [ -n "$OTHER_CONSUMERS" ]; then
             echo "     removed extension id ${CID}"
         else
             echo "ERROR: could not remove scripture consumer id ${CID}." >&2
-            echo "       Phase 11 would then fail for the wrong reason." >&2
+            echo "       Phase 12 would then fail for the wrong reason." >&2
             exit 1
         fi
     done
 fi
 
-echo "-- [10/16] STILL NEEDED: removing the library alone must be refused"
+echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
 
 if php "$JCLI" extension:remove -n "$LIBID" >/dev/null 2>&1; then
@@ -167,7 +175,7 @@ fi
 echo "   extension:remove exited non-zero, as expected"
 php build/verify-scripture-uninstall.php assert-library-present
 
-echo "-- [11/16] A package removal must leave the whole scripture stack alone"
+echo "-- [12/17] A package removal must leave the whole scripture stack alone"
 # Inverted deliberately at 10.5.7 (#1675). This used to assert that removing
 # pkg_proclaim DROPPED the shared tables when nothing else used them. Proclaim no
 # longer owns any of it: pkg_cwmscripture is not a child of pkg_proclaim, so the
@@ -201,7 +209,7 @@ php build/verify-scripture-uninstall.php assert-tables-present
 # dropped table (#1662).
 php build/verify-scripture-uninstall.php assert-registry-pruned
 
-echo "-- [12/16] STILL NEEDED: a registered consumer blocks a STANDALONE library uninstall"
+echo "-- [13/17] STILL NEEDED: a registered consumer blocks a STANDALONE library uninstall"
 # Repointed at the standalone path (#1675). The consumer guard used to be
 # exercised by a package removal; now that Proclaim never removes the library,
 # lib_cwmscripture's own dropTablesIfOrphaned() is the only code that can drop
@@ -220,7 +228,7 @@ echo "   extension:remove exited non-zero, as expected"
 php build/verify-scripture-uninstall.php assert-tables-present
 php build/verify-scripture-uninstall.php assert-library-present
 
-echo "-- [13/16] SKIPPED: unregistered-consumer detection is no longer isolatable here"
+echo "-- [14/17] SKIPPED: unregistered-consumer detection is no longer isolatable here"
 # Retired at 10.5.7 (#1675), not silently dropped.
 #
 # This asserted that a consumer found only by ConsumerScanner — never registered
@@ -269,7 +277,7 @@ cp "$LIBSRC" "$LIBZIP"
 # The baseline no longer supplies the hazard: lib_cwmscripture has shipped a
 # disarmed uninstall SQL since 1.1.5, so these two phases plant the pre-1.1.5
 # file themselves and then assert it really is armed before relying on it.
-echo "-- [14/16] NEGATIVE CONTROL: library-only update with no disarm must destroy data"
+echo "-- [15/17] NEGATIVE CONTROL: library-only update with no disarm must destroy data"
 "$BIN/cwm-install-zip" --zip "$BASEZIP" >/dev/null
 php build/verify-scripture-uninstall.php arm
 php build/verify-scripture-uninstall.php assert-sql-armed
@@ -277,7 +285,7 @@ php build/verify-scripture-uninstall.php seed-translation
 php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1 || true
 php build/verify-scripture-uninstall.php assert-translation-destroyed
 
-echo "-- [15/16] library-only update AFTER the disarm must preserve data"
+echo "-- [16/17] library-only update AFTER the disarm must preserve data"
 "$BIN/cwm-install-zip" --zip "$BASEZIP" >/dev/null
 php build/verify-scripture-uninstall.php arm
 php build/verify-scripture-uninstall.php assert-sql-armed
@@ -294,14 +302,14 @@ php build/verify-scripture-uninstall.php assert-translation-survived
 # ${NEWVER} feature as a product failure. Leave the site on what was tested.
 #
 # Reset first rather than installing ${NEWVER} straight over ${BASEVER}. The
-# uninstall phases retain the Proclaim data tables by design, so phase 11's
+# uninstall phases retain the Proclaim data tables by design, so phase 12's
 # removal leaves ${NEWVER}-shaped tables behind, and the baseline reinstalls in
 # 14/15 then rewrite #__schemas back to ${BASEVER} over them. An update from
 # there re-runs migrations whose work is already present, and
 # 10.5.6-20260807.sql's unguarded `ALTER TABLE ... DROP INDEX idx_study_topic`
 # fails with MySQL 1091. A clean install is also what the API acceptance spec
 # ("REST API acceptance (package install)") is written against.
-echo "-- [16/16] reset and clean-install ${NEWVER} for anything that runs after this"
+echo "-- [17/17] reset and clean-install ${NEWVER} for anything that runs after this"
 php build/reset-testsite.php
 "$BIN/cwm-install-zip" --zip "$NEWZIP" >/dev/null
 "$BIN/cwm-verify" --target test
