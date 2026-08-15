@@ -8,12 +8,16 @@
  * update actually spends its time in completely unmeasured, so "make updates
  * faster" had nothing to aim at.
  *
- * ⚠️ Two contracts are asserted here that nothing else can see. The timer must
- * re-raise, because the work it wraps is load-bearing and several call sites
- * already choose their own error handling; a swallowing timer would silently
- * turn an installer failure into a success. And the summary line is parsed by
- * build/verify-install-log.php in the release gate, so its leading field is a
- * cross-file contract rather than cosmetic text.
+ * ⚠️ Two contracts are asserted here that nothing else can see.
+ *
+ * A failing task must not abort: Joomla rolls the install back on a
+ * RuntimeException out of postflight, after the files are copied and the schema
+ * replayed, so escaping destroys a working update over housekeeping. The price
+ * is that failures go quiet, which is why the same tests require them to be
+ * enqueued, logged, and caught by the release gate.
+ *
+ * And the summary line is parsed by build/verify-install-log.php, so its
+ * leading field is a cross-file contract rather than cosmetic text.
  *
  * @package    Proclaim.UnitTest
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -64,22 +68,71 @@ class PostflightTaskTest extends ProclaimTestCase
         return substr($source, $start, $end - $start);
     }
 
-    #[TestDox('The timer re-raises, so wrapping work cannot turn a failed install into a quiet one')]
-    public function testTaskDoesNotSwallowFailures(): void
+    #[TestDox('A failing task does not roll back an install that already happened')]
+    public function testTaskDoesNotAbortTheInstall(): void
     {
         $body = self::methodBody('private function task(string $name, callable $work): mixed');
 
-        $this->assertStringNotContainsString(
-            'catch',
+        $this->assertStringContainsString(
+            'catch (\Throwable',
             $body,
-            'task() must not catch: step() swallows because a migration is optional, '
-            . 'but postflight work is not, and several call sites handle their own errors.'
+            'Joomla aborts and rolls back the install on a RuntimeException out of '
+            . 'postflight — after the files are copied and the schema replayed. Letting '
+            . 'one escape destroys a working update to punish housekeeping.'
         );
         $this->assertStringContainsString(
             'finally',
             $body,
             'The timing must be taken in a finally, or work that throws goes unmeasured — '
             . 'which is exactly the work worth measuring.'
+        );
+    }
+
+    #[TestDox('A failing task is reported, logged and left visible to the release gate')]
+    public function testTaskFailureIsNotSilent(): void
+    {
+        $body = self::methodBody('private function task(string $name, callable $work): mixed');
+
+        $this->assertStringContainsString(
+            'enqueueMessage',
+            $body,
+            'Non-fatal must not mean unnoticed: the administrator has to be told the step '
+            . 'did not finish.'
+        );
+        $this->assertStringContainsString(
+            'FAILED:',
+            $body,
+            'The failure has to reach the install log, which is the only durable record '
+            . 'and what build/verify-install-log.php reads.'
+        );
+
+        // ⚠️ step() logs failures as "  FAIL  ". The release gate parses that as a
+        // failed *migration*, so a task borrowing it would be reported against the
+        // wrong thing.
+        $this->assertStringNotContainsString(
+            "'  FAIL ",
+            $body,
+            'A failed task must keep the task prefix, or the gate misattributes it '
+            . 'as a failed migration.'
+        );
+    }
+
+    #[TestDox('The release gate fails the build when a postflight task did not complete')]
+    public function testGateChecksForFailedTasks(): void
+    {
+        $gate = (string) file_get_contents(\dirname(__DIR__, 4) . '/build/verify-install-log.php');
+
+        $this->assertStringContainsString(
+            'task(s) did not complete',
+            $gate,
+            'Making failures non-fatal without detecting them trades a loud wrong '
+            . 'behaviour for a quiet one.'
+        );
+        $this->assertStringContainsString(
+            'postflight reported no task count',
+            $gate,
+            'A build that logs no tasks at all would otherwise pass the "no task failed" '
+            . 'check by having nothing to check.'
         );
     }
 
