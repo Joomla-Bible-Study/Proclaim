@@ -135,21 +135,20 @@ fi
 OTHER_CONSUMERS="$(php build/verify-scripture-uninstall.php other-consumer-ids | grep -E '^[0-9]+$' || true)"
 
 if [ -n "$OTHER_CONSUMERS" ]; then
-    # Before removing anything: hand the shared scripture stack back to
-    # pkg_cwmscripture. The library and plg_content_scripturelinks are package
-    # children, and package_id points at whichever package installed them last
-    # -- on a site carrying LivingWord that can be pkg_livingword, so removing
-    # it below took the library and the content plugin with it. Every phase
-    # after this then failed on a missing library, and because these removals
-    # persist, so did the next run (#1820).
-    echo "   protecting the scripture stack from the removals below:"
-
-    if ! php build/verify-scripture-uninstall.php protect-scripture-ownership; then
-        echo "ERROR: could not protect the scripture stack; refusing to remove consumers." >&2
-        echo "       Removing them now could take lib_cwmscripture with them." >&2
-        exit 1
-    fi
-
+    # ⚠️ Removing a consumer package takes the shared scripture stack with it,
+    # and correcting package_id cannot prevent that. PackageAdapter::
+    # removeExtensionFiles() reads the consumer's *installed* manifest from
+    # administrator/manifests/packages and resolves every <file> it declares
+    # through _getExtensionId($type, $element, $client, $group) -- by element.
+    # package_id is never consulted on that path.
+    #
+    # pkg_livingword declares lib_cwmscripture, plg_content_scripturelinks and
+    # plg_task_cwmscripture as its own children, so all three go with it.
+    # plg_system_cwmscripture, which it does not declare, survives -- the
+    # correlation is exact (#1860, and the same damage as #1820).
+    #
+    # So the stack is restored afterwards rather than defended beforehand. That
+    # holds for any consumer whose manifest overlaps ours, not just LivingWord.
     echo "   clearing other scripture consumers before the uninstall phases:"
 
     for CID in $OTHER_CONSUMERS; do
@@ -161,6 +160,36 @@ if [ -n "$OTHER_CONSUMERS" ]; then
             exit 1
         fi
     done
+
+    # Read the version rather than globbing for the newest zip on disk: several
+    # pkg_cwmscripture builds accumulate in build/dist, and picking the newest
+    # file is how a package once shipped a zip that was not the pinned one.
+    SCRIPTUREVER="$(php -r '
+        $m = @simplexml_load_file("plugins/content/scripturelinks/build/pkg_cwmscripture.xml");
+        echo $m === false ? "" : (string) $m->version;
+    ')"
+    SCRIPTUREZIP="plugins/content/scripturelinks/build/dist/pkg_cwmscripture-${SCRIPTUREVER}.zip"
+
+    if [ -z "$SCRIPTUREVER" ] || [ ! -f "$SCRIPTUREZIP" ]; then
+        echo "ERROR: pkg_cwmscripture build artifact not found: '${SCRIPTUREZIP}'." >&2
+        echo "       Phase 5 builds it; without it the stack cannot be restored." >&2
+        exit 1
+    fi
+
+    echo "   restoring the scripture stack those removals may have taken:"
+
+    if ! php "$JCLI" extension:install --path="$SCRIPTUREZIP" >/dev/null 2>&1; then
+        echo "ERROR: could not reinstall ${SCRIPTUREZIP}." >&2
+        exit 1
+    fi
+
+    echo "     reinstalled pkg_cwmscripture ${SCRIPTUREVER}"
+
+    # ⚠️ Assert here, not at the next phase's first use. Every phase from 11 on
+    # needs a library to test against, so without this the damage surfaces as
+    # "No library 'cwmscripture' registered" against whichever assertion ran
+    # first -- reporting a missing fixture as a failure of the code under test.
+    php build/verify-scripture-uninstall.php assert-library-present
 fi
 
 echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
