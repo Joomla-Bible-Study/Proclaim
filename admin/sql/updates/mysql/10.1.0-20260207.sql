@@ -18,7 +18,7 @@ INSERT IGNORE INTO `#__action_logs_extensions` (`extension`) VALUES ('com_procla
 --
 
 -- Studies: Core list filtering (published + access + series + sort by date)
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`);
+ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_access_series` (`published`, `access`, `series_id`, `studydate`) /** CAN FAIL **/;
 
 -- Studies: Teacher filter pattern
 -- The statement that created idx_teacher_published is deliberately gone. #1731
@@ -33,13 +33,13 @@ ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_access_series` (`published`
 -- #1706, and the same fix already applied to idx_booknumber_published.
 
 -- Studies: Location filter pattern
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_location_published` (`location_id`, `published`);
+ALTER TABLE `#__bsms_studies` ADD KEY `idx_location_published` (`location_id`, `published`) /** CAN FAIL **/;
 
 -- Studies: Temporal publish_up/down date range filtering
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`);
+ALTER TABLE `#__bsms_studies` ADD KEY `idx_published_dates` (`published`, `publish_up`, `publish_down`) /** CAN FAIL **/;
 
 -- Studies: Message type filter pattern
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_messagetype_published` (`messagetype`, `published`);
+ALTER TABLE `#__bsms_studies` ADD KEY `idx_messagetype_published` (`messagetype`, `published`) /** CAN FAIL **/;
 
 -- Studies: Book number filter pattern
 -- The statement that created idx_booknumber_published is deliberately gone.
@@ -54,35 +54,35 @@ ALTER TABLE `#__bsms_studies` ADD KEY `idx_messagetype_published` (`messagetype`
 -- #1706.
 
 -- Studies: Language filter for multilingual sites
-ALTER TABLE `#__bsms_studies` ADD KEY `idx_language_published` (`language`, `published`);
+ALTER TABLE `#__bsms_studies` ADD KEY `idx_language_published` (`language`, `published`) /** CAN FAIL **/;
 
 -- Comments: Study + published composite (study_id was NOT indexed)
-ALTER TABLE `#__bsms_comments` ADD KEY `idx_study_published` (`study_id`, `published`, `comment_date`);
+ALTER TABLE `#__bsms_comments` ADD KEY `idx_study_published` (`study_id`, `published`, `comment_date`) /** CAN FAIL **/;
 
 -- Media files: Study + published aggregation covering index
-ALTER TABLE `#__bsms_mediafiles` ADD KEY `idx_study_published` (`study_id`, `published`, `createdate`);
+ALTER TABLE `#__bsms_mediafiles` ADD KEY `idx_study_published` (`study_id`, `published`, `createdate`) /** CAN FAIL **/;
 
 -- Media files: Podcast filter pattern
-ALTER TABLE `#__bsms_mediafiles` ADD KEY `idx_podcast_published` (`podcast_id`, `published`);
+ALTER TABLE `#__bsms_mediafiles` ADD KEY `idx_podcast_published` (`podcast_id`, `published`) /** CAN FAIL **/;
 
 --
 -- Priority 2: Published + access composites for entity tables
 --
 
 -- Series: Published + access composite for access control queries
-ALTER TABLE `#__bsms_series` ADD KEY `idx_published_access` (`published`, `access`);
+ALTER TABLE `#__bsms_series` ADD KEY `idx_published_access` (`published`, `access`) /** CAN FAIL **/;
 
 -- Series: Teacher + published composite for teacher detail pages
-ALTER TABLE `#__bsms_series` ADD KEY `idx_teacher_published` (`teacher`, `published`);
+ALTER TABLE `#__bsms_series` ADD KEY `idx_teacher_published` (`teacher`, `published`) /** CAN FAIL **/;
 
 -- Teachers: Published + access composite
-ALTER TABLE `#__bsms_teachers` ADD KEY `idx_published_access` (`published`, `access`);
+ALTER TABLE `#__bsms_teachers` ADD KEY `idx_published_access` (`published`, `access`) /** CAN FAIL **/;
 
 -- Topics: Published + access composite
-ALTER TABLE `#__bsms_topics` ADD KEY `idx_published_access` (`published`, `access`);
+ALTER TABLE `#__bsms_topics` ADD KEY `idx_published_access` (`published`, `access`) /** CAN FAIL **/;
 
 -- Locations: Published + access composite
-ALTER TABLE `#__bsms_locations` ADD KEY `idx_published_access` (`published`, `access`);
+ALTER TABLE `#__bsms_locations` ADD KEY `idx_published_access` (`published`, `access`) /** CAN FAIL **/;
 
 -- Study-Topics junction: covering composite for dual-direction lookups.
 --

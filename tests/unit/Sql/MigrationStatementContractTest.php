@@ -48,6 +48,13 @@ class MigrationStatementContractTest extends ProclaimTestCase
     private const UPDATES_DIR = JPATH_ROOT . '/admin/sql/updates/mysql';
 
     /**
+     * Installer::CAN_FAIL_MARKER — the opt-out that lets one statement fail
+     * without aborting the update. Duplicated rather than imported because the
+     * unit suite does not load the CMS installer.
+     */
+    private const CAN_FAIL_MARKER = '/** CAN FAIL **/';
+
+    /**
      * Every ALTER TABLE in the migration set, one case per statement.
      *
      * @return  array<string, array{0: string, 1: string}>
@@ -120,6 +127,144 @@ class MigrationStatementContractTest extends ProclaimTestCase
             . "database where the index is already absent, and cannot be made conditional in MySQL. "
             . "Do it in proclaim.script.php behind a SHOW INDEX check instead.\n\n  " . $statement
         );
+    }
+
+    /**
+     * Every additive ALTER in the migration set, paired with its RAW text.
+     *
+     * Raw, not normalised: the contract is about a byte offset. Collapsing
+     * whitespace would make `/** CAN FAIL **\/ ;` — which Joomla does not
+     * accept — indistinguishable from the form it does.
+     *
+     * @return  array<string, array{0: string, 1: string}>
+     */
+    public static function addStatementProvider(): array
+    {
+        $cases = [];
+
+        foreach (glob(self::UPDATES_DIR . '/*.sql') ?: [] as $file) {
+            $name  = basename($file);
+            $index = 0;
+            $sql   = preg_replace('/^\s*--.*$/m', '', (string) file_get_contents($file)) ?? '';
+
+            foreach (self::rawStatementsIn($sql) as $statement) {
+                if (stripos(ltrim($statement), 'ALTER TABLE') !== 0) {
+                    continue;
+                }
+
+                if (!preg_match('/\bADD\s+/i', $statement)) {
+                    continue;
+                }
+
+                $cases[$name . ' #' . ++$index] = [$name, $statement];
+            }
+        }
+
+        // An empty provider would make this check pass by doing nothing.
+        self::assertNotSame([], $cases, 'No additive ALTER statements found — is the updates directory still there?');
+
+        return $cases;
+    }
+
+    /**
+     * Every additive ALTER must carry the CAN FAIL marker.
+     *
+     * On the install/update path Installer::parseSchemaUpdates() executes each
+     * statement raw, and an unmarked failure is not a skipped statement: it
+     * returns false, InstallerAdapter::parseQueries() throws, and the entire
+     * update rolls back. A column that install.mysql.utf8.sql also creates will
+     * collide with error 1060 on any site whose recorded schema version is
+     * behind its real schema — which is every site when #__schemas is missing,
+     * because parseSchemaUpdates() then falls back to 0.0.0 and replays the
+     * whole history. 10.5.3 hit exactly this and was confirmed against a real
+     * 10.5.2 -> 10.5.3 upgrade before the marker was added.
+     *
+     * ADD KEY is included, not just ADD COLUMN. Marking only the columns moves
+     * the abort rather than removing it: a replay then clears the column and
+     * dies on the index that follows it with error 1061 instead.
+     *
+     * The marker costs nothing on the other path: DatabaseDriver::splitSql(),
+     * which is what ChangeSet reads with, strips comments, so MysqlChangeItem
+     * never sees it and the check query is unchanged.
+     *
+     * ⚠️ The marker must abut the semicolon. Installer::splitSql() looks back
+     * exactly CAN_FAIL_MARKER_LENGTH bytes from the `;`, so one space between
+     * the two silently defeats it.
+     *
+     * @param   string  $file       Migration file the statement came from.
+     * @param   string  $statement  The raw statement, up to but excluding its `;`.
+     *
+     * @return  void
+     */
+    #[DataProvider('addStatementProvider')]
+    public function testAdditiveAltersAreMarkedCanFail(string $file, string $statement): void
+    {
+        $this->assertStringEndsWith(
+            self::CAN_FAIL_MARKER,
+            $statement,
+            "{$file} has an additive ALTER with no " . self::CAN_FAIL_MARKER . " marker immediately "
+            . "before its semicolon. Without it, replaying this file against a database that already "
+            . "has the column or index aborts and rolls back the whole update instead of skipping "
+            . "the statement.\n\n  "
+            . trim(preg_replace('/\s+/', ' ', $statement) ?? '')
+        );
+    }
+
+    /**
+     * Split a file into raw statements, preserving every byte up to each `;`.
+     *
+     * Quote-aware, because this check reads the end of a statement and several
+     * COMMENT literals contain a semicolon — 'imported/confirmed on platform;
+     * manual = assigned via …'. Splitting on a bare explode() cuts inside the
+     * literal and truncates the statement short of its marker, which reads as a
+     * missing marker on SQL that is in fact correct.
+     *
+     * ⚠️ statementsIn() below has this same flaw. It has not bitten there
+     * because the fragments it produces still carry one top-level clause each.
+     *
+     * @param   string  $sql  File contents, line comments already removed.
+     *
+     * @return  list<string>
+     */
+    private static function rawStatementsIn(string $sql): array
+    {
+        $statements = [];
+        $buffer     = '';
+        $quote      = null;
+
+        for ($i = 0, $n = \strlen($sql); $i < $n; $i++) {
+            $char = $sql[$i];
+
+            if ($quote !== null) {
+                $buffer .= $char;
+
+                if ($char === '\\' && $quote !== '`') {
+                    $buffer .= $sql[++$i] ?? '';
+                } elseif ($char === $quote) {
+                    $quote = null;
+                }
+
+                continue;
+            }
+
+            if ($char === "'" || $char === '"' || $char === '`') {
+                $quote   = $char;
+                $buffer .= $char;
+
+                continue;
+            }
+
+            if ($char === ';') {
+                $statements[] = $buffer;
+                $buffer       = '';
+
+                continue;
+            }
+
+            $buffer .= $char;
+        }
+
+        return $statements;
     }
 
     /**

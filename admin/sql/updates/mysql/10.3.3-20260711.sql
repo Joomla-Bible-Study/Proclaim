@@ -7,7 +7,7 @@
 -- Per-episode counter, incremented by the tracking-redirect endpoint.
 ALTER TABLE `#__bsms_mediafiles`
     ADD COLUMN `podcast_downloads` INT(10) UNSIGNED NOT NULL DEFAULT 0
-    COMMENT 'Podcast-app downloads counted via the tracking redirect (IAB-style 24h dedupe)' AFTER `downloads`;
+    COMMENT 'Podcast-app downloads counted via the tracking redirect (IAB-style 24h dedupe)' AFTER `downloads` /** CAN FAIL **/;
 
 -- Frozen, URL-independent RSS <guid> for podcast items. Stamped once on the first
 -- feed build with the item's then-current value (identical to what shipped before,
@@ -15,7 +15,7 @@ ALTER TABLE `#__bsms_mediafiles`
 -- URL or enclosure change can no longer move an episode's identity.
 ALTER TABLE `#__bsms_mediafiles`
     ADD COLUMN `podcast_guid` VARCHAR(400) DEFAULT NULL
-    COMMENT 'Frozen RSS <guid> for podcast items; stamped on first feed build' AFTER `podcast_downloads`;
+    COMMENT 'Frozen RSS <guid> for podcast items; stamped on first feed build' AFTER `podcast_downloads` /** CAN FAIL **/;
 
 -- Per-podcast switch: when 1, the feed rewrites <enclosure> URLs through the redirect.
 -- Default 1 (on) — download tracking is valuable to every ministry and safe now that
@@ -24,7 +24,7 @@ ALTER TABLE `#__bsms_mediafiles`
 -- opt out per podcast (e.g. if they already run a prefix like Podtrac).
 ALTER TABLE `#__bsms_podcast`
     ADD COLUMN `track_downloads` TINYINT(1) NOT NULL DEFAULT 1
-    COMMENT '1 = rewrite feed enclosures through the download-tracking redirect' AFTER `published`;
+    COMMENT '1 = rewrite feed enclosures through the download-tracking redirect' AFTER `published` /** CAN FAIL **/;
 
 -- 24h dedupe log: one row per (media, client-hash). A client is counted again
 -- only after 24h (IAB rolling window). Stale rows are pruned per-media on write.

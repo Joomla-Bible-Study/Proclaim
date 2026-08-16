@@ -7,4 +7,4 @@ alter table `#__bsms_podcast`
 alter table `#__bsms_series`
     modify series_thumbnail VARCHAR(255) DEFAULT NULL;
 alter table `#__bsms_podcast`
-    add column `podcastlink` VARCHAR(100) DEFAULT NULL AFTER `website`;
+    add column `podcastlink` VARCHAR(100) DEFAULT NULL AFTER `website` /** CAN FAIL **/;
