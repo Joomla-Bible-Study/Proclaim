@@ -190,6 +190,16 @@ if [ -n "$OTHER_CONSUMERS" ]; then
     # "No library 'cwmscripture' registered" against whichever assertion ran
     # first -- reporting a missing fixture as a failure of the code under test.
     php build/verify-scripture-uninstall.php assert-library-present
+
+    # ⚠️ The reinstall above is a *library* install, and LibraryAdapter::install()
+    # calls checkExtensionInFilesystem() -> uninstall() before it installs, which
+    # is the exact path that used to run lib_cwmscripture's uninstall SQL and wipe
+    # every locally downloaded translation. It ships disarmed, but a library
+    # version that shipped it armed again would destroy the downloaded bibles here
+    # and the run would still report PASSED: phase 9 verified this seed *before*
+    # the reinstall, and phase 12 seeds its own data *after* it, so the window in
+    # between is checked by nothing else.
+    php build/verify-scripture-upgrade.php verify
 fi
 
 echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
