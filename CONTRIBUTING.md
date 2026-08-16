@@ -150,7 +150,8 @@ Include:
 
 ### Issue Hygiene
 
-- **Triage on read**: if you open an issue that's missing a label (`priority:*`, `area:*`, `status:*`), a milestone, or template fields (repro steps, version info), fill in what you can before moving on — don't leave it for someone else to re-derive later.
+- **Triage on read**: if you open an issue that's missing a label (`type: *`, `priority: *`, `area: *`, `status: *`), a milestone, or template fields (repro steps, version info), fill in what you can before moving on — don't leave it for someone else to re-derive later.
+- **Labels are namespaced.** There is no bare `bug` or `enhancement` label — use `type: bug`, `type: feature`, `type: enhancement`, `type: docs`, `type: refactor`, `type: chore`, `type: security` or `type: test`. `gh` fails the whole command and creates nothing when given a label that does not exist, so run `gh label list` rather than guessing.
 - **Set the issue Type**: `Task`, `Bug`, or `Feature`. This is a separate field from the labels, not a duplicate of them — `gh issue edit <n> --type Feature`. Types apply to issues only; a PR can't carry one.
 - **Put it on the board**: issues belong to the **Proclaim Development** project, with `Status` set to where the work actually is — `Triage` → `Backlog` → `In Progress` → `In Review` → `Done`.
 - **Fill in the sidebar fields** where you know them: `Priority`, `Effort`, and the `Start date` / `Target date` pair. `Priority` mirrors the `priority: *` label rather than replacing it — set both.
@@ -163,7 +164,7 @@ Include:
 
 PRs need the same metadata as issues — a linked branch alone isn't enough:
 
-- **Mirror the linked issue's labels** (`priority:*`, `area:*`, `bug`/`enhancement`) onto the PR. Docs-only or other PRs with no linked issue just skip labels.
+- **Mirror the linked issue's labels** (`type: *`, `priority: *`, `area: *`) onto the PR. Docs-only or other PRs with no linked issue just skip labels. The issue **Type** field is not mirrored — a PR cannot carry one.
 - **Assign the PR** (and its linked issue, if not already) to whoever is doing the work.
 - **Milestone**: use the milestone matching `active_development` in `build/versions.json` (e.g. `10.5.10`) for patch/bugfix work; create it if it doesn't exist yet. Larger breaking work goes in the next major milestone (e.g. `v11.0.0`) instead.
 - **A milestone is the release the work ships in — nothing else.** Accepted work with no target release is `Status: Backlog` on the project board, *not* a `Backlog` milestone. The old `Backlog` milestone is closed; don't reopen the habit by copying the milestone off whatever PR merged last.
