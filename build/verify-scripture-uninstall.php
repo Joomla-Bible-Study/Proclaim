@@ -62,7 +62,6 @@ $modes = [
     'assert-tables-gone',
     'assert-no-other-consumer',
     'other-consumer-ids',
-    'protect-scripture-ownership',
     'assert-sql-armed',
     'assert-sql-disarmed',
     'arm',
@@ -161,91 +160,11 @@ $connect = static function (object $install): array {
 };
 
 // --- value-printing modes: first test install only, for the shell to consume --
-if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scripture-ownership'], true)) {
+if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids'], true)) {
     $install = $installs[0];
 
     if ($mode === 'site-path') {
         echo $install->path . "\n";
-
-        exit(0);
-    }
-
-    if ($mode === 'protect-scripture-ownership') {
-        // Hand the shared scripture stack back to the package that ships it,
-        // before any consumer is removed.
-        //
-        // The library and plg_content_scripturelinks are Joomla package
-        // children, and package_id points at whichever package installed them
-        // LAST. On a site carrying LivingWord that can be pkg_livingword — so
-        // `extension:remove` on it takes the library and the content plugin
-        // down as its children, and every phase after step 9 then fails for a
-        // reason unrelated to the code under test. Worse, the removals persist:
-        // the site is left with com_proclaim installed against a library that
-        // no longer exists, and the next run starts from that wreckage (#1820).
-        //
-        // Reassigning is not a workaround for the test's benefit. pkg_cwmscripture
-        // is the package that ships these, so this restores the ownership that
-        // install order happened to overwrite.
-        [$db, $prefix] = $connect($install);
-
-        if ($db === null) {
-            fwrite(STDERR, "Could not connect to the test database.\n");
-
-            exit(1);
-        }
-
-        $owner = mysqli_fetch_row(mysqli_query(
-            $db,
-            "SELECT `extension_id` FROM `{$prefix}extensions`
-             WHERE `type` = 'package' AND `element` = 'pkg_cwmscripture' LIMIT 1"
-        ) ?: null);
-
-        if ($owner === null || $owner === false) {
-            // Nothing to hand ownership to. Say so rather than silently leaving
-            // the stack adoptable by whatever gets removed next.
-            fwrite(STDERR, "pkg_cwmscripture is not installed; cannot protect the scripture stack.\n");
-
-            exit(1);
-        }
-
-        $ownerId = (int) $owner[0];
-
-        // The shared pieces a consumer package can end up owning. The task and
-        // system plugins ship in pkg_cwmscripture too, so they are listed for
-        // completeness -- reassigning an already-correct row is a no-op.
-        $parts = [
-            ['library', 'cwmscripture', null],
-            ['plugin', 'scripturelinks', 'content'],
-            ['plugin', 'cwmscripture', 'task'],
-            ['plugin', 'cwmscripture', 'system'],
-        ];
-
-        $moved = 0;
-
-        foreach ($parts as [$type, $element, $folder]) {
-            $folderSql = $folder === null
-                ? "AND (`folder` = '' OR `folder` IS NULL)"
-                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
-
-            $sql = "UPDATE `{$prefix}extensions`
-                    SET `package_id` = {$ownerId}
-                    WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
-                      AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
-                      {$folderSql}
-                      AND `package_id` <> {$ownerId}";
-
-            if (mysqli_query($db, $sql) && mysqli_affected_rows($db) > 0) {
-                $label = $folder === null ? "{$type} {$element}" : "{$type} {$element} ({$folder})";
-                echo "  reassigned {$label} to pkg_cwmscripture\n";
-                $moved++;
-            }
-        }
-
-        echo $moved === 0
-            ? "  scripture stack already owned by pkg_cwmscripture\n"
-            : "  {$moved} extension(s) reassigned — removing a consumer can no longer take them\n";
-
-        mysqli_close($db);
 
         exit(0);
     }
