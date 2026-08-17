@@ -182,7 +182,18 @@ fi
 # reinstalled by hand if a later run needs it.
 # grep to digits only: this mode prints bare ids with no header, so a stray PHP
 # notice on stdout would otherwise be passed to extension:remove as an id.
-OTHER_CONSUMERS="$(php build/verify-scripture-uninstall.php other-consumer-ids | grep -E '^[0-9]+$' || true)"
+# Two separate failures, kept separate. `grep` exiting 1 means "no consumer
+# installed", which is a legitimate state; the probe exiting non-zero means the
+# question could not be answered at all. Piping them together hid the second
+# behind the first, so a broken probe read as "no consumers" and skipped the
+# phase — the shape this whole sweep is about.
+if ! CONSUMER_IDS="$(php build/verify-scripture-uninstall.php other-consumer-ids)"; then
+    echo "ERROR: could not enumerate other scripture consumers." >&2
+    echo "       Treating that as 'none installed' would skip phase 10 silently." >&2
+    exit 1
+fi
+
+OTHER_CONSUMERS="$(printf '%s\n' "$CONSUMER_IDS" | grep -E '^[0-9]+$' || true)"
 
 if [ -n "$OTHER_CONSUMERS" ]; then
     # ⚠️ Removing a consumer package takes the shared scripture stack with it,
@@ -292,8 +303,25 @@ fi
 # which quietly made that mode single-use -- see the note in the probe.
 php build/verify-scripture-upgrade.php cleanup
 
+# ⚠️ Both phases below prove a refusal by asserting extension:remove exits
+# non-zero -- so an id it cannot use produces the same result as a working
+# guard. An empty LIBID (ext-id printing nothing when the lookup fails) makes
+# the CLI exit 2, which reads as "refused, as expected" and passes the phase
+# while testing nothing. Validate the id before trusting the exit code.
+require_ext_id() {
+    case "${1:-}" in
+        ''|*[!0-9]*)
+            echo "ERROR: could not resolve a numeric extension id (got '${1:-}')." >&2
+            echo "       Without one, extension:remove fails for the wrong reason and the" >&2
+            echo "       refusal these phases assert cannot be distinguished from it." >&2
+            exit 1
+            ;;
+    esac
+}
+
 echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
+require_ext_id "$LIBID"
 
 if php "$JCLI" extension:remove -n "$LIBID" >/dev/null 2>&1; then
     echo "ERROR: extension:remove reported success for lib_cwmscripture." >&2
@@ -347,6 +375,7 @@ echo "-- [13/17] STILL NEEDED: a registered consumer blocks a STANDALONE library
 php build/verify-scripture-uninstall.php seed-consumer
 php build/verify-scripture-uninstall.php seed-translation
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
+require_ext_id "$LIBID"
 
 if php "$JCLI" extension:remove -n "$LIBID" >/dev/null 2>&1; then
     echo "ERROR: the library was removed while a registered consumer was present." >&2
@@ -412,7 +441,14 @@ echo "-- [15/17] NEGATIVE CONTROL: library-only update with no disarm must destr
 php build/verify-scripture-uninstall.php arm
 php build/verify-scripture-uninstall.php assert-sql-armed
 php build/verify-scripture-uninstall.php seed-translation
-php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1 || true
+# The update under test. Verified to exit 0 on a working site, so a failure here
+# is real and must stop the phase: phase 16's assertion is "the data survived",
+# which an install that never ran satisfies for free.
+if ! php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1; then
+    echo "ERROR: the library-only update failed, so this phase proves nothing." >&2
+    exit 1
+fi
+
 php build/verify-scripture-uninstall.php assert-translation-destroyed
 
 echo "-- [16/17] library-only update AFTER the disarm must preserve data"
@@ -422,7 +458,11 @@ php build/verify-scripture-uninstall.php assert-sql-armed
 php build/verify-scripture-uninstall.php seed-translation
 php build/verify-scripture-uninstall.php disarm
 php build/verify-scripture-uninstall.php assert-sql-disarmed
-php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1 || true
+if ! php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1; then
+    echo "ERROR: the library-only update failed, so 'the data survived' is vacuous." >&2
+    exit 1
+fi
+
 php build/verify-scripture-uninstall.php assert-translation-survived
 
 # Phases 14 and 15 use the released baseline as their fixture, so the site is
