@@ -50,6 +50,40 @@ fi
 BASEZIP="build/dist/pkg_proclaim-${BASEVER}.zip"
 NEWZIP="build/dist/pkg_proclaim-${NEWVER}.zip"
 
+# ⚠️ Coverage this run did not exercise, so a skip can never read as a pass.
+#
+# Phase 10's checks are conditional on a scripture consumer being installed, and
+# when none was they simply did not run -- no output, exit 0, "UPGRADE TEST
+# PASSED" all the same. The same code produced a clean 17/17 and a 3-assertion
+# failure depending only on what the site happened to carry, and the difference
+# was invisible in the log (#1866). Every conditional block records here instead,
+# and the closing banner refuses to claim an unqualified pass while this is set.
+#
+# ⚠️ Two kinds, kept apart on purpose. A phase retired by decision is not news and
+# must not raise an alarm every run — do that and the alarm stops being read,
+# which is how the silent skip survived in the first place. Only coverage lost to
+# ambient state is a warning, because that is the kind that varies between runs
+# and can quietly stop testing what you think it tests.
+#
+# Newline-delimited strings rather than arrays: bash 3.2 is what ships on macOS,
+# and expanding an empty array under `set -u` is an error there.
+SKIPPED=""
+RETIRED=""
+
+# skip_phase <phase label> <reason> — coverage lost to this run's site state.
+skip_phase() {
+    SKIPPED="${SKIPPED}  - ${1}: ${2}
+"
+    echo "   !! SKIPPED ${1} — ${2}"
+}
+
+# retired_phase <phase label> <reason> — coverage dropped by decision, every run.
+retired_phase() {
+    RETIRED="${RETIRED}  - ${1}: ${2}
+"
+    echo "   -- retired ${1} — ${2}"
+}
+
 # Phases 15/16 plant a pre-1.1.5 armed uninstall SQL *and* the <uninstall><sql>
 # manifest declaration that makes Joomla run it. `disarm` deliberately reverts
 # only the file -- phase 16 has to prove the disarmed file is what saves the
@@ -245,6 +279,12 @@ if [ -n "$OTHER_CONSUMERS" ]; then
     # CLI. The EXIT trap above is what keeps that fixture from reaching this line
     # on the next run; this assertion is what catches it if the trap ever fails.
     php build/verify-scripture-upgrade.php verify
+else
+    # Everything above is conditional on a consumer being here to remove: the
+    # removal itself, the stack-survival check, assert-library-present, and the
+    # verify that the shared scripture data outlived the window. None of it ran.
+    skip_phase "[10/17]" \
+        "no other scripture consumer installed — the consumer-removal checks did not run"
 fi
 
 # Teardown once, after the last assertion that needs the probe rows, and outside
@@ -317,7 +357,8 @@ echo "   extension:remove exited non-zero, as expected"
 php build/verify-scripture-uninstall.php assert-tables-present
 php build/verify-scripture-uninstall.php assert-library-present
 
-echo "-- [14/17] SKIPPED: unregistered-consumer detection is no longer isolatable here"
+echo "-- [14/17] unregistered-consumer detection is no longer isolatable here"
+retired_phase "[14/17]" "retired at 10.5.7 (#1675) — detection is covered by unit tests instead"
 # Retired at 10.5.7 (#1675), not silently dropped.
 #
 # This asserted that a consumer found only by ConsumerScanner — never registered
@@ -405,4 +446,20 @@ php build/reset-testsite.php
 php build/verify-migrations.php "$NEWVER"
 php build/verify-schema-check.php
 
-echo "UPGRADE TEST PASSED ${BASEVER} -> ${NEWVER}."
+if [ -n "$RETIRED" ]; then
+    echo
+    echo "-- retired coverage (by decision, every run):"
+    printf '%s' "$RETIRED"
+fi
+
+if [ -n "$SKIPPED" ]; then
+    echo
+    echo "!! COVERAGE NOT EXERCISED THIS RUN — this varies with the test site's state:"
+    printf '%s' "$SKIPPED"
+    echo
+    echo "UPGRADE TEST PASSED ${BASEVER} -> ${NEWVER} — WITH THE SKIPS ABOVE."
+    echo "   A skipped phase asserted nothing. Do not read this as coverage of it."
+else
+    echo
+    echo "UPGRADE TEST PASSED ${BASEVER} -> ${NEWVER} (every conditional phase ran)."
+fi
