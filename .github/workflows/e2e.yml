@@ -47,6 +47,13 @@ on:
       # to be here for the job to see it.
       - 'libraries/**'
       - 'plugins/content/scripturelinks'
+      # ⚠️ This job performs a clean install, and admin/sql is what a clean
+      # install creates. Without this the one file defining the installed
+      # schema and its seed data never reached the job that installs it: the
+      # hex-literal aliases in #1879 changed install.mysql.utf8.sql and this
+      # job did not run. Same shape as #1755 and #1754 above — the job was
+      # blind to the code it actually executes.
+      - 'admin/sql/**'
       - 'tests/e2e/**'
       - 'build/test-install.sh'
       - 'build/build-package.sh'
