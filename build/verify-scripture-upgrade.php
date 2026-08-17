@@ -10,14 +10,19 @@
  * dropped, the library's ensureTables() recreated them empty, and the Local
  * Translations panel came back with nothing downloaded.
  *
- * Runs in two passes from build/test-upgrade.sh, around the upgrade step:
+ * Runs in three passes from build/test-upgrade.sh, around the upgrade step:
  *
  *   php build/verify-scripture-upgrade.php seed     # after the baseline install
  *   php build/verify-scripture-upgrade.php verify   # after the new build lands
+ *   php build/verify-scripture-upgrade.php cleanup  # once, after the last verify
  *
  * The seed writes one sentinel translation marked installed plus a handful of
  * verses; the verify pass asserts both are still there, byte for byte. Mirrors
  * build/verify-scripture-install.php.
+ *
+ * ⚠️ verify is read-only and may be called as often as needed. Teardown is a
+ * separate mode on purpose: while it was the tail of verify, a second verify
+ * always failed against rows the first had deleted.
  *
  * @package    Proclaim.Build
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -36,8 +41,8 @@ require $root . '/libraries/vendor/autoload.php';
 
 $mode = $argv[1] ?? '';
 
-if (!\in_array($mode, ['seed', 'verify'], true)) {
-    fwrite(STDERR, "Usage: php build/verify-scripture-upgrade.php seed|verify\n");
+if (!\in_array($mode, ['seed', 'verify', 'cleanup'], true)) {
+    fwrite(STDERR, "Usage: php build/verify-scripture-upgrade.php seed|verify|cleanup\n");
 
     exit(2);
 }
@@ -172,6 +177,27 @@ foreach ($installs as $install) {
         continue;
     }
 
+    // --- cleanup ------------------------------------------------------------
+    // ⚠️ Teardown is its own mode, never the tail of `verify`. It used to run at
+    // the end of the verify pass ("leave the site clean for whatever runs next"),
+    // which made verify single-use: the second call always failed, because the
+    // first had deleted the rows it asserts on. That is not a hypothetical --
+    // phase 10's assertion was added against a fixture phase 9 had already torn
+    // down, and it reported destroyed bible data on a site where nothing was
+    // wrong. Keep verify read-only so it can be called at every point that needs
+    // proof the data is still there.
+    if ($mode === 'cleanup') {
+        mysqli_query($db, "DELETE FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
+        mysqli_query($db, "DELETE FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
+        mysqli_query($db, "DELETE FROM `{$translations}` WHERE `abbreviation` = '" . PROBE_ABBR . "'");
+
+        echo "  OK   removed the probe rows\n";
+
+        mysqli_close($db);
+
+        continue;
+    }
+
     // --- verify -------------------------------------------------------------
     $row = mysqli_fetch_assoc(mysqli_query(
         $db,
@@ -221,11 +247,6 @@ foreach ($installs as $install) {
         fwrite(STDERR, "       another provider round trip (and API.Bible FUMS calls) to rebuild.\n");
         $failures++;
     }
-
-    // Leave the site clean for whatever runs next.
-    mysqli_query($db, "DELETE FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
-    mysqli_query($db, "DELETE FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
-    mysqli_query($db, "DELETE FROM `{$translations}` WHERE `abbreviation` = '" . PROBE_ABBR . "'");
 
     mysqli_close($db);
 }

@@ -62,10 +62,12 @@ $modes = [
     'assert-tables-gone',
     'assert-no-other-consumer',
     'other-consumer-ids',
+    'missing-scripture-stack',
     'assert-sql-armed',
     'assert-sql-disarmed',
     'arm',
     'disarm',
+    'restore-manifest',
     'assert-translation-survived',
     'assert-translation-destroyed',
 ];
@@ -121,6 +123,16 @@ DROP TABLE IF EXISTS `#__bsms_bible_translations`;
 
 SQL;
 
+/**
+ * What the disarm writes back — exactly what plg_system_cwmscripture writes on
+ * an admin com_installer page load. Shared by the 'disarm' step and by the
+ * 'restore-manifest' cleanup so the two cannot drift into disagreeing about
+ * what "disarmed" looks like; sqlIsArmed() must read this as inert.
+ */
+const DISARMED_UNINSTALL_SQL = "--\n"
+    . "-- Neutralised by the upgrade harness, mirroring plg_system_cwmscripture.\n"
+    . "-- Do not reintroduce DROP TABLE statements here.\n--\n";
+
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
 
@@ -159,12 +171,145 @@ $connect = static function (object $install): array {
     return [$db === false ? null : $db, $prefix];
 };
 
+// --- cleanup mode: undo the planted hazard, on every test install -----------
+// Runs from a shell trap, so it touches the filesystem only and never fails: a
+// trap that can exit non-zero would mask the real failure that triggered it.
+//
+// 'arm' plants two things — the armed SQL file and an <uninstall><sql> block in
+// the installed manifest. 'disarm' deliberately reverts only the file, because
+// phase 16 has to prove that disarming the *file* is what saves the data while
+// the manifest still declares it. That leaves the declaration behind, and
+// reset-testsite.php does not clear the library (#1860), so without this the
+// fixture outlives the run and the next run's first library install inherits it.
+if ($mode === 'restore-manifest') {
+    foreach ($installs as $install) {
+        $manifest = $install->path . '/administrator/manifests/libraries/cwmscripture.xml';
+        $sqlFile  = $install->path . '/libraries/cwmscripture/sql/uninstall.mysql.utf8.sql';
+
+        // Disarm first. If the manifest write fails the file is already inert,
+        // which is the half that actually destroys data.
+        if (is_file($sqlFile)) {
+            $buffer = @file_get_contents($sqlFile);
+
+            if ($buffer !== false && sqlIsArmed($buffer)) {
+                if (@file_put_contents($sqlFile, DISARMED_UNINSTALL_SQL) === false) {
+                    echo "  WARN could not disarm {$sqlFile}.\n";
+                } else {
+                    echo "  OK   disarmed the planted uninstall SQL\n";
+                }
+            }
+        }
+
+        if (!is_file($manifest)) {
+            continue;
+        }
+
+        $doc                     = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput       = true;
+
+        if (!@$doc->load($manifest)) {
+            echo "  WARN {$manifest} is not parseable XML — leaving it alone.\n";
+
+            continue;
+        }
+
+        $xpath   = new DOMXPath($doc);
+        $removed = 0;
+
+        // Removes any <uninstall> carrying an <sql> child, not only one this run
+        // planted: a previous run that died before its own trap fired is exactly
+        // the state this exists to clean up.
+        foreach (iterator_to_array($xpath->query('/extension/uninstall[sql]')) as $node) {
+            $node->parentNode->removeChild($node);
+            $removed++;
+        }
+
+        foreach (iterator_to_array($xpath->query('/extension/comment()')) as $node) {
+            if (str_contains($node->nodeValue ?? '', 'Planted by the upgrade harness')) {
+                $node->parentNode->removeChild($node);
+            }
+        }
+
+        if ($removed === 0) {
+            continue;
+        }
+
+        if (@$doc->save($manifest) === false) {
+            echo "  WARN could not rewrite {$manifest}.\n";
+
+            continue;
+        }
+
+        echo "  OK   removed the planted <uninstall><sql> declaration from the library manifest\n";
+    }
+
+    exit(0);
+}
+
 // --- value-printing modes: first test install only, for the shell to consume --
-if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids'], true)) {
+if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'missing-scripture-stack'], true)) {
     $install = $installs[0];
 
     if ($mode === 'site-path') {
         echo $install->path . "\n";
+
+        exit(0);
+    }
+
+    if ($mode === 'missing-scripture-stack') {
+        // Which members of the shared scripture stack the consumer removals
+        // actually took, one "type/folder/element" per line, nothing when all
+        // four survive. Phase 10 reinstalls only when this prints something.
+        //
+        // A consumer that declares our extensions as its own children takes them
+        // with it (PackageAdapter::removeExtensionFiles() resolves by element),
+        // but a consumer packaged correctly takes none — so the reinstall has to
+        // be driven by what is missing, not by whether a consumer was present.
+        // The reinstall is a library install, which routes through
+        // LibraryAdapter::install() -> checkExtensionInFilesystem() -> uninstall()
+        // and so runs whatever uninstall SQL is on disk; doing that when nothing
+        // needs restoring is risk with no upside.
+        [$db, $prefix] = $connect($install);
+
+        if ($db === null) {
+            fwrite(STDERR, "Could not connect to the test database.\n");
+
+            exit(1);
+        }
+
+        // folder is '' for a library and distinguishes the two plugins that
+        // share the element 'cwmscripture' (task and system).
+        $stack = [
+            ['library', '', 'cwmscripture'],
+            ['plugin', 'content', 'scripturelinks'],
+            ['plugin', 'task', 'cwmscripture'],
+            ['plugin', 'system', 'cwmscripture'],
+        ];
+
+        $missing = [];
+
+        foreach ($stack as [$type, $folder, $element]) {
+            $folderSql = $folder === ''
+                ? "AND (`folder` = '' OR `folder` IS NULL)"
+                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
+
+            $row = mysqli_fetch_row(mysqli_query(
+                $db,
+                "SELECT `extension_id` FROM `{$prefix}extensions`
+                 WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
+                   AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
+                 {$folderSql} LIMIT 1"
+            ) ?: null);
+
+            if ($row === null || $row === false) {
+                $missing[] = $type . '/' . $folder . '/' . $element;
+            }
+        }
+
+        mysqli_close($db);
+
+        echo implode("\n", $missing) . (empty($missing) ? '' : "\n");
 
         exit(0);
     }
@@ -733,11 +878,13 @@ foreach ($installs as $install) {
 
                 // disarm — exactly what plg_system_cwmscripture does on an admin
                 // com_installer page load.
-                file_put_contents(
-                    $sqlFile,
-                    "--\n-- Neutralised by the upgrade harness, mirroring plg_system_cwmscripture.\n"
-                    . "-- Do not reintroduce DROP TABLE statements here.\n--\n"
-                );
+                //
+                // Reverts the file only, deliberately: phase 16 has to prove the
+                // disarmed *file* is what saves the data while the manifest still
+                // declares <uninstall><sql>. Removing the declaration here would
+                // make that phase pass because nothing was declared. The
+                // declaration is cleaned up by 'restore-manifest' instead.
+                file_put_contents($sqlFile, DISARMED_UNINSTALL_SQL);
                 echo "  OK   disarmed the installed library's uninstall SQL\n";
 
                 break;

@@ -50,6 +50,22 @@ fi
 BASEZIP="build/dist/pkg_proclaim-${BASEVER}.zip"
 NEWZIP="build/dist/pkg_proclaim-${NEWVER}.zip"
 
+# Phases 15/16 plant a pre-1.1.5 armed uninstall SQL *and* the <uninstall><sql>
+# manifest declaration that makes Joomla run it. `disarm` deliberately reverts
+# only the file -- phase 16 has to prove the disarmed file is what saves the
+# data while the declaration still stands -- so the declaration is cleaned up
+# here instead.
+#
+# ⚠️ A trap, not a final phase. reset-testsite.php clears only the Proclaim
+# family, so anything left behind survives into the next run (#1860); a run that
+# died between phase 15's `arm` and phase 16's `disarm` handed the next run an
+# armed library, and phase 10's restore was the first thing to trip it. Cleanup
+# that only runs on success cannot fix a leak whose cause is not finishing.
+#
+# restore-manifest touches the filesystem only and always exits 0, so it cannot
+# mask the failure that triggered it.
+trap 'php build/verify-scripture-uninstall.php restore-manifest || true' EXIT
+
 echo "========================================================================"
 echo " UPGRADE TEST — ${BASEVER}  ->  ${NEWVER}"
 echo "========================================================================"
@@ -142,13 +158,14 @@ if [ -n "$OTHER_CONSUMERS" ]; then
     # through _getExtensionId($type, $element, $client, $group) -- by element.
     # package_id is never consulted on that path.
     #
-    # pkg_livingword declares lib_cwmscripture, plg_content_scripturelinks and
-    # plg_task_cwmscripture as its own children, so all three go with it.
-    # plg_system_cwmscripture, which it does not declare, survives -- the
-    # correlation is exact (#1860, and the same damage as #1820).
+    # pkg_livingword <= 5.7.0 declared lib_cwmscripture, plg_content_scripturelinks
+    # and plg_task_cwmscripture as its own children, so all three went with it.
+    # plg_system_cwmscripture, which it did not declare, survived -- the
+    # correlation was exact (#1860, and the same damage as #1820).
     #
-    # So the stack is restored afterwards rather than defended beforehand. That
-    # holds for any consumer whose manifest overlaps ours, not just LivingWord.
+    # So the stack is restored afterwards rather than defended beforehand, and
+    # only when something is actually gone. That holds for any consumer whose
+    # manifest overlaps ours, not just LivingWord.
     echo "   clearing other scripture consumers before the uninstall phases:"
 
     for CID in $OTHER_CONSUMERS; do
@@ -161,36 +178,79 @@ if [ -n "$OTHER_CONSUMERS" ]; then
         fi
     done
 
-    # Read the version rather than globbing for the newest zip on disk: several
-    # pkg_cwmscripture builds accumulate in build/dist, and picking the newest
-    # file is how a package once shipped a zip that was not the pinned one.
-    SCRIPTUREVER="$(php -r '
-        $m = @simplexml_load_file("plugins/content/scripturelinks/build/pkg_cwmscripture.xml");
-        echo $m === false ? "" : (string) $m->version;
-    ')"
-    SCRIPTUREZIP="plugins/content/scripturelinks/build/dist/pkg_cwmscripture-${SCRIPTUREVER}.zip"
-
-    if [ -z "$SCRIPTUREVER" ] || [ ! -f "$SCRIPTUREZIP" ]; then
-        echo "ERROR: pkg_cwmscripture build artifact not found: '${SCRIPTUREZIP}'." >&2
-        echo "       Phase 5 builds it; without it the stack cannot be restored." >&2
+    # Only restore what was actually taken. A consumer that declares our
+    # extensions as its own children takes them with it; one packaged correctly
+    # (LivingWord >= 5.7.1 ships pkg_cwmscripture whole, undeclared) takes none.
+    #
+    # ⚠️ The restore is a *library* install, so it routes through
+    # LibraryAdapter::install() -> checkExtensionInFilesystem() -> uninstall(),
+    # and InstallerAdapter::uninstall() runs parseQueries() regardless of
+    # isPackageUninstall() -- i.e. whatever uninstall SQL is on disk executes.
+    # Running that when nothing needs restoring is a destructive operation with
+    # no upside, which is what made an unconditional reinstall the wrong shape.
+    # Not `|| true`: an empty result has to mean "nothing was taken", never "the
+    # probe could not tell". Swallowing a failed probe here would skip a restore
+    # the run needs and report it as a healthy stack.
+    if ! MISSING_STACK="$(php build/verify-scripture-uninstall.php missing-scripture-stack)"; then
+        echo "ERROR: could not determine which scripture extensions survived." >&2
         exit 1
     fi
 
-    echo "   restoring the scripture stack those removals may have taken:"
+    if [ -z "$MISSING_STACK" ]; then
+        echo "   the scripture stack survived the removals — nothing to restore"
+    else
+        echo "   the removals took part of the scripture stack:"
+        echo "$MISSING_STACK" | sed 's/^/     missing: /'
 
-    if ! php "$JCLI" extension:install --path="$SCRIPTUREZIP" >/dev/null 2>&1; then
-        echo "ERROR: could not reinstall ${SCRIPTUREZIP}." >&2
-        exit 1
+        # Read the version rather than globbing for the newest zip on disk:
+        # several pkg_cwmscripture builds accumulate in build/dist, and picking
+        # the newest file is how a package once shipped a zip that was not the
+        # pinned one.
+        SCRIPTUREVER="$(php -r '
+            $m = @simplexml_load_file("plugins/content/scripturelinks/build/pkg_cwmscripture.xml");
+            echo $m === false ? "" : (string) $m->version;
+        ')"
+        SCRIPTUREZIP="plugins/content/scripturelinks/build/dist/pkg_cwmscripture-${SCRIPTUREVER}.zip"
+
+        if [ -z "$SCRIPTUREVER" ] || [ ! -f "$SCRIPTUREZIP" ]; then
+            echo "ERROR: pkg_cwmscripture build artifact not found: '${SCRIPTUREZIP}'." >&2
+            echo "       Phase 5 builds it; without it the stack cannot be restored." >&2
+            exit 1
+        fi
+
+        if ! php "$JCLI" extension:install --path="$SCRIPTUREZIP" >/dev/null 2>&1; then
+            echo "ERROR: could not reinstall ${SCRIPTUREZIP}." >&2
+            exit 1
+        fi
+
+        echo "     reinstalled pkg_cwmscripture ${SCRIPTUREVER}"
     fi
-
-    echo "     reinstalled pkg_cwmscripture ${SCRIPTUREVER}"
 
     # ⚠️ Assert here, not at the next phase's first use. Every phase from 11 on
     # needs a library to test against, so without this the damage surfaces as
     # "No library 'cwmscripture' registered" against whichever assertion ran
     # first -- reporting a missing fixture as a failure of the code under test.
     php build/verify-scripture-uninstall.php assert-library-present
+
+    # ⚠️ Nothing else checks this window: phase 9 verifies the seed *before* a
+    # restore can run and phase 12 seeds its own data *after* it, so data
+    # destroyed in between left the run reporting PASSED.
+    #
+    # The library ships with no <uninstall><sql> since 1.1.5, so a restore is
+    # inert on a clean site. What makes the window real is that the SQL Joomla
+    # runs is the *file on disk*, not the file the release shipped: phases 15/16
+    # plant a pre-1.1.5 armed file on purpose, reset-testsite.php does not clear
+    # the library (#1860), and no system plugin can sweep it here because both
+    # disarm sweeps require an admin com_installer page load and this harness is
+    # CLI. The EXIT trap above is what keeps that fixture from reaching this line
+    # on the next run; this assertion is what catches it if the trap ever fails.
+    php build/verify-scripture-upgrade.php verify
 fi
+
+# Teardown once, after the last assertion that needs the probe rows, and outside
+# the consumer block so it runs either way. It used to be the tail of `verify`,
+# which quietly made that mode single-use -- see the note in the probe.
+php build/verify-scripture-upgrade.php cleanup
 
 echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
