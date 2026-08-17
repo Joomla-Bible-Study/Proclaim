@@ -115,7 +115,7 @@ retired_phase() {
 # data while the declaration still stands -- so the declaration is cleaned up
 # here instead.
 #
-# ⚠️ A trap, not a final phase. reset-testsite.php clears only the Proclaim
+# ⚠️ A trap, not a final phase. cwm-reset-testsite clears only the Proclaim
 # family, so anything left behind survives into the next run (#1860); a run that
 # died between phase 15's `arm` and phase 16's `disarm` handed the next run an
 # armed library, and phase 10's restore was the first thing to trip it. Cleanup
@@ -141,7 +141,7 @@ fi
 echo "========================================================================"
 
 echo "-- [1/17] reset test site(s) to a clean slate"
-php build/reset-testsite.php
+"$BIN/cwm-reset-testsite"
 
 echo "-- [2/17] fetch released baseline ${BASEVER}"
 bash build/build-baseline.sh "$BASEVER"
@@ -187,7 +187,7 @@ php build/verify-scripture-uninstall.php schema
 php build/verify-scripture-uninstall.php assert-first-party-registered
 
 # The remaining phases uninstall things, so they run last — the site is expendable
-# from here on and reset-testsite.php rebuilds it on the next run. Phase 17 puts
+# from here on and cwm-reset-testsite rebuilds it on the next run. Phase 17 puts
 # ${NEWVER} back at the end, because test:e2e runs against this install straight
 # after and must not be handed the baseline.
 # tail -n1: these modes print one value, but any PHP notice would land on stdout
@@ -212,7 +212,7 @@ fi
 # own consumers to prove the opposite case, and an unrelated one already present
 # would let those pass without their fixtures doing anything.
 #
-# NOTE: reset-testsite.php only removes the Proclaim family, so anything taken
+# NOTE: cwm-reset-testsite only removes the Proclaim family, so anything taken
 # out here stays out. That is fine for a role=test site -- everything from this
 # point is destructive by design -- but it does mean a consumer must be
 # reinstalled by hand if a later run needs it.
@@ -320,7 +320,7 @@ if [ -n "$OTHER_CONSUMERS" ]; then
     # The library ships with no <uninstall><sql> since 1.1.5, so a restore is
     # inert on a clean site. What makes the window real is that the SQL Joomla
     # runs is the *file on disk*, not the file the release shipped: phases 15/16
-    # plant a pre-1.1.5 armed file on purpose, reset-testsite.php does not clear
+    # plant a pre-1.1.5 armed file on purpose, cwm-reset-testsite does not clear
     # the library (#1860), and no system plugin can sweep it here because both
     # disarm sweeps require an admin com_installer page load and this harness is
     # CLI. The EXIT trap above is what keeps that fixture from reaching this line
@@ -516,7 +516,7 @@ php build/verify-scripture-uninstall.php assert-translation-survived
 # fails with MySQL 1091. A clean install is also what the API acceptance spec
 # ("REST API acceptance (package install)") is written against.
 echo "-- [17/17] reset and clean-install ${NEWVER} for anything that runs after this"
-php build/reset-testsite.php
+"$BIN/cwm-reset-testsite"
 "$BIN/cwm-install-zip" --zip "$NEWZIP" >/dev/null
 "$BIN/cwm-verify" --target test
 php build/verify-migrations.php "$NEWVER"

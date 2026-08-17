@@ -143,6 +143,55 @@
         { "npm": "intl-tel-input", "label": "intl-tel-input", "notes": "https://github.com/jackocnr/intl-tel-input/releases" },
         { "npm": "sortablejs",     "label": "sortablejs",     "notes": "https://github.com/SortableJS/Sortable/releases" }
     ],
+    "_testSite_comment": "Consumed by cwm-reset-testsite, which replaced build/reset-testsite.php. Every clause below is carried across verbatim from that script — the family, the bsms_ prefix, module instances, update sites, action logs, the twenty install directories and the twelve globs. lib_cwmscripture is INSIDE the family: the shared tool can retain it, and the upstream issue claimed this script did, but it never did, and retaining it would turn the clean-install phase into an upgrade.",
+    "testSite": {
+        "reset": {
+            "elements":        ["com_proclaim", "lib_cwmscripture"],
+            "elementPatterns": ["%proclaim%", "%scripturelink%", "%cwmscripture%"],
+            "tablePrefixes":   ["bsms_"],
+            "components":      ["com_proclaim"],
+            "menuLinkPatterns":       ["%option=com_proclaim%"],
+            "modulePatterns":         ["%proclaim%"],
+            "updateSiteNamePatterns": ["%roclaim%", "%cripture%"],
+            "actionLogPatterns":      ["%proclaim%"],
+            "directories": [
+                "administrator/components/com_proclaim",
+                "components/com_proclaim",
+                "api/components/com_proclaim",
+                "media/com_proclaim",
+                "libraries/cwmscripture",
+                "media/lib_cwmscripture",
+                "administrator/modules/mod_proclaimicon",
+                "modules/mod_proclaim",
+                "modules/mod_proclaim_podcast",
+                "modules/mod_proclaim_youtube",
+                "plugins/finder/proclaim",
+                "plugins/schemaorg/proclaim",
+                "plugins/system/proclaim",
+                "plugins/task/proclaim",
+                "plugins/webservices/proclaim",
+                "plugins/content/scripturelinks",
+                "plugins/task/cwmscripture",
+                "administrator/manifests/packages/proclaim",
+                "administrator/manifests/packages/cwmscripture"
+            ],
+            "_fileGlobs_comment": "Install manifests first: their presence makes a fresh install register as an UPDATE and run ALTER SQL against tables that do not exist yet. Language files are globbed rather than listed so no locale is missed.",
+            "fileGlobs": [
+                "administrator/manifests/libraries/cwmscripture.xml",
+                "administrator/manifests/packages/pkg_proclaim.xml",
+                "administrator/manifests/packages/pkg_cwmscripture.xml",
+                "administrator/logs/*proclaim*",
+                "administrator/language/*/*proclaim*",
+                "administrator/language/*/*cwmscripture*",
+                "administrator/language/*/*scripturelinks*",
+                "language/*/*proclaim*",
+                "language/*/*cwmscripture*",
+                "api/language/*/*proclaim*",
+                "administrator/cache/language/*proclaim*",
+                "administrator/cache/language/*cwmscripture*"
+            ]
+        }
+    },
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
