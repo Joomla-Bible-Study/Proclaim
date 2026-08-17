@@ -203,4 +203,109 @@ class CwmrestoreTest extends ProclaimTestCase
             'expected both DatabaseModel creation sites to go through MVCFactory -- see #1523'
         );
     }
+
+    /**
+     * The shared scripture tables belong to lib_cwmscripture, not to this
+     * component. They are swept into the prefix-driven table list only because
+     * the library inherited Proclaim's `bsms_` naming.
+     */
+    public static function preservedTableProvider(): array
+    {
+        return [
+            'downloaded verses'  => ['#__bsms_bible_verses'],
+            'download catalogue' => ['#__bsms_bible_translations'],
+            'provider cache'     => ['#__bsms_scripture_cache'],
+            'consumer registry'  => ['#__bsms_scripture_consumers'],
+        ];
+    }
+
+    #[DataProvider('preservedTableProvider')]
+    public function testSharedScriptureTablesAreExcludedFromTheDropPhase(string $table): void
+    {
+        $preserved = new \ReflectionProperty(Cwmrestore::class, 'preserveTables');
+
+        $this->assertContains(
+            $table,
+            $preserved->getValue(),
+            "{$table} belongs to lib_cwmscripture and must survive a restore"
+        );
+    }
+
+    /**
+     * The catalogue travels with the verses.
+     *
+     * Up to 10.5.9 only #__bsms_bible_verses was preserved, so the table
+     * recording which of those verses are downloaded (`installed`) was dropped
+     * and replaced from the backup. That made the Local Translations panel wrong
+     * in both directions -- orphaned verses reported as not installed, or
+     * translations reported installed with no verses behind them.
+     */
+    public function testTheVerseTableAndItsCatalogueArePreservedTogether(): void
+    {
+        $preserved = (new \ReflectionProperty(Cwmrestore::class, 'preserveTables'))->getValue();
+
+        $this->assertSame(
+            \in_array('#__bsms_bible_verses', $preserved, true),
+            \in_array('#__bsms_bible_translations', $preserved, true),
+            'preserving one of the verse/catalogue pair without the other is incoherent'
+        );
+    }
+
+    /**
+     * ⚠️ Excluding a table from the DROP phase does not stop the backup's own
+     * INSERT statements for it. isSafeRestoreStatement() is a security
+     * allow-list -- it asks whether the target is a Proclaim table, not whether
+     * it is preserved -- so those rows landed in the "preserved" table anyway.
+     */
+    public function testStatementsTargetingAPreservedTableAreSkipped(): void
+    {
+        $targets = new \ReflectionMethod(Cwmrestore::class, 'targetsPreservedTable');
+
+        $this->assertTrue($targets->invoke(null, "INSERT INTO `#__bsms_bible_verses` SET `id`='1';"));
+        $this->assertTrue($targets->invoke(null, "INSERT INTO `#__bsms_scripture_consumers` SET `element`='com_other';"));
+        $this->assertTrue($targets->invoke(null, 'DROP TABLE IF EXISTS `#__bsms_bible_translations`;'));
+
+        $this->assertFalse(
+            $targets->invoke(null, "INSERT INTO `#__bsms_studies` SET `id`='1';"),
+            "the component's own content tables must still be restored"
+        );
+    }
+
+    /**
+     * Both execution loops must skip preserved tables. Guarding only one leaves
+     * the other restore path overwriting the rows.
+     */
+    public function testBothRestorePathsSkipPreservedTables(): void
+    {
+        // The two statement-execution loops live in restoreDB() and installdb() —
+        // the same pair the isSafeRestoreStatement() guards above are asserted on.
+        foreach (['restoreDB', 'installdb'] as $method) {
+            $this->assertMatchesRegularExpression(
+                '/targetsPreservedTable\(/',
+                self::methodBody($method),
+                "{$method}() must skip statements targeting a preserved table"
+            );
+        }
+    }
+
+    /**
+     * CwmdbHelper::getObjects() was corrected to an anchored prefix match after
+     * an unanchored substr_count() matched a sibling install's table on shared
+     * hosting and yielded a mangled `#__s_bsms_studies`. This copy kept the bug.
+     */
+    public function testTableDiscoveryIsAnchoredToThePrefix(): void
+    {
+        $body = self::methodBody('getObjects');
+
+        $this->assertMatchesRegularExpression(
+            '/str_starts_with\(\$table,\s*\$prefix\s*\.\s*\$bsms\)/',
+            $body,
+            'table discovery must anchor to the prefix, not substring-match it'
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/substr_count\(\$table,\s*\$bsms\)/',
+            $body,
+            'the unanchored match matches sibling installs on shared hosting'
+        );
+    }
 }
