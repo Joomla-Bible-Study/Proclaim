@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.22.0",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "35c0c3138fb86bc3ef374407a785ebe5b6c79d44"
+                "reference": "8040210504b6a5fe6986e09c44ea7a7b5776e8b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/35c0c3138fb86bc3ef374407a785ebe5b6c79d44",
-                "reference": "35c0c3138fb86bc3ef374407a785ebe5b6c79d44",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/8040210504b6a5fe6986e09c44ea7a7b5776e8b7",
+                "reference": "8040210504b6a5fe6986e09c44ea7a7b5776e8b7",
                 "shasum": ""
             },
             "require": {
@@ -593,7 +593,12 @@
                 "bin/cwm-install-zip",
                 "bin/cwm-joomla-install",
                 "bin/cwm-joomla-latest",
-                "bin/cwm-joomla-cms-deps"
+                "bin/cwm-joomla-cms-deps",
+                "bin/cwm-baseline",
+                "bin/cwm-lint-queries",
+                "bin/cwm-lint-comments",
+                "bin/cwm-reset-testsite",
+                "bin/cwm-verify-update-stream"
             ],
             "type": "library",
             "autoload": {
@@ -658,10 +663,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.22.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.23.1",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-08-14T15:36:50+00:00"
+            "time": "2026-08-17T18:47:43+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",

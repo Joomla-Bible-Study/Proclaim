@@ -31,7 +31,7 @@ echo " CLEAN-INSTALL TEST — pkg_proclaim ${VERSION}"
 echo "========================================================================"
 
 echo "-- [1/10] reset test site(s) to a clean slate"
-php build/reset-testsite.php
+"$BIN/cwm-reset-testsite"
 
 echo "-- [2/10] build full package ${VERSION}"
 bash build/build-package.sh "$VERSION"

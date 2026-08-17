@@ -131,7 +131,7 @@
     "test:a11y": "npx playwright test --grep @a11y --project=admin-j6 --project=site-j6",
     "test:api": ["@test:install", "npx playwright test --project=api-test"],
     "test:all": ["@test", "@test:js"],
-    "test:reset-testsite": "@php build/reset-testsite.php",
+    "test:reset-testsite": "cwm-reset-testsite",
     "test:migrations": "@php build/verify-migrations.php",
     "verify:update-stream": "@php build/verify-update-stream.php",
     "test:install": "bash build/test-install.sh",
