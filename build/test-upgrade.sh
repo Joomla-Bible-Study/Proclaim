@@ -247,6 +247,11 @@ if [ -n "$OTHER_CONSUMERS" ]; then
     php build/verify-scripture-upgrade.php verify
 fi
 
+# Teardown once, after the last assertion that needs the probe rows, and outside
+# the consumer block so it runs either way. It used to be the tail of `verify`,
+# which quietly made that mode single-use -- see the note in the probe.
+php build/verify-scripture-upgrade.php cleanup
+
 echo "-- [11/17] STILL NEEDED: removing the library alone must be refused"
 LIBID="$(php build/verify-scripture-uninstall.php ext-id library cwmscripture | tail -n1)"
 
