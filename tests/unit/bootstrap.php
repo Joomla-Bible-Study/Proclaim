@@ -5,7 +5,7 @@
  *
  * Loads the real Joomla CMS framework from a local joomla-cms clone.
  * Resolution order: tests.joomla_cms_path in build.properties → JOOMLA_CMS_PATH
- * env var → ../joomla-cms sibling (auto-cloned by build/joomla-cms-deps.php)
+ * env var → ../joomla-cms sibling (auto-cloned by cwm-joomla-cms-deps)
  * → first entry in builder.joomla_paths. This ensures tests validate against
  * actual Joomla class signatures.
  *
@@ -65,7 +65,7 @@ if (file_exists($propsFile)) {
     // Resolution order for the Joomla CMS source path:
     //   1. tests.joomla_cms_path     — explicit override for unusual setups
     //   2. JOOMLA_CMS_PATH env var   — handled below (CI / one-off)
-    //   3. ../joomla-cms             — sibling default (auto-cloned by joomla-cms-deps.php)
+    //   3. ../joomla-cms             — sibling default (auto-cloned by cwm-joomla-cms-deps)
     //   4. builder.joomla_paths[0]   — last resort: first dev site (j5-dev is a full Joomla tree)
     //
     // Note: builder.joomla_dir is intentionally NOT consulted here. cwm-build-tools
