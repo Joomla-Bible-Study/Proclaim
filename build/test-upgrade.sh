@@ -41,9 +41,34 @@ if [ -z "$NEWVER" ] || [ -z "$BASEVER" ]; then
     exit 1
 fi
 
-if [ "$NEWVER" = "$BASEVER" ]; then
-    echo "ERROR: active-development version ($NEWVER) equals the last release ($BASEVER)." >&2
-    echo "       The upgrade path only fires when the new build is newer — bump before testing." >&2
+# The version this run is validating an upgrade *to*, which is not always the
+# version the artifact is labelled with.
+#
+# cwm-release exports CWM_RELEASE_VERSION for the test:release gate, because the
+# gate runs before the bump and nothing on disk names the release yet
+# (Joomla-Bible-Study/cwm-build-tools#101). Without it the guard below compares
+# the last release against the development pointer, which answers a different
+# question than the one it is asked during a release.
+#
+# It deliberately does not become NEWVER. `cwm-build --version` only substitutes
+# the output *filename*; the manifest inside the zip is whatever is on disk, so
+# the label has to keep tracking the manifests or the package claims a version
+# it does not carry. Nothing downstream — build-package.sh, verify-migrations.php
+# — sees anything different from before.
+#
+# Unset outside a release — a nightly, a PR, or a hand run — and then
+# active_development is genuinely the build under test.
+TARGETVER="${CWM_RELEASE_VERSION:-$NEWVER}"
+
+if [ "$TARGETVER" = "$BASEVER" ]; then
+    if [ -n "${CWM_RELEASE_VERSION:-}" ]; then
+        echo "ERROR: the version being released ($TARGETVER) is already the last release." >&2
+        echo "       There is nothing to upgrade from. Release a newer version." >&2
+    else
+        echo "ERROR: active-development version ($NEWVER) equals the last release ($BASEVER)." >&2
+        echo "       The upgrade path only fires when the new build is newer — bump before testing." >&2
+    fi
+
     exit 1
 fi
 
@@ -102,6 +127,17 @@ trap 'php build/verify-scripture-uninstall.php restore-manifest || true' EXIT
 
 echo "========================================================================"
 echo " UPGRADE TEST — ${BASEVER}  ->  ${NEWVER}"
+
+# Say so when the artifact is not labelled with the version being released. The
+# tree under test is the one that ships; only the stamp differs, because the
+# gate runs before the bump. Unstated, that gap reads as though the release
+# version itself was exercised — and a phase that appears to have tested
+# something it did not is the failure mode #1866, #1869 and #1870 all closed.
+if [ "$TARGETVER" != "$NEWVER" ]; then
+    echo " Releasing ${TARGETVER} — the build is labelled ${NEWVER} until the bump."
+    echo " The tree under test is what ships; the version stamped on it is not."
+fi
+
 echo "========================================================================"
 
 echo "-- [1/17] reset test site(s) to a clean slate"
