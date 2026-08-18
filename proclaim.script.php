@@ -129,6 +129,24 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private const INSTALL_LOG = 'com_proclaim.install';
 
+    /**
+     * The oldest release this one can update a site from.
+     *
+     * 10.5.8 is where CwmscriptureMigration::retireLegacyColumns() shipped --
+     * the routine that moved the flat scripture columns on `#__bsms_studies`
+     * into the junction table before dropping them. 11.0 removed that routine
+     * along with the 9.x upgrade path, so a site that has not been through it
+     * would lose those references.
+     *
+     * Declared rather than waited for: without a stated minimum the removal is
+     * blocked until every site in the field happens to have updated, which is
+     * never. A two-step upgrade is an ordinary thing to ask for.
+     *
+     * @var    string
+     * @since  __DEPLOY_VERSION__
+     */
+    private const MINIMUM_UPGRADE_SOURCE = '10.5.8';
+
     private string $fromVersion = '';
 
     /**
@@ -732,6 +750,83 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Refuse an upgrade from a release this one cannot safely migrate.
+     *
+     * 11.0 dropped the 9.x upgrade path and, with it,
+     * CwmscriptureMigration::retireLegacyColumns(). That routine moved the flat
+     * scripture columns on `#__bsms_studies` into the junction table before
+     * dropping them. Nothing in 11.0 does that any more, so a site arriving with
+     * those columns still populated would have them silently left behind -- the
+     * data loss the retirement was written to prevent.
+     *
+     * The retirement shipped in 10.5.8, so that is the minimum supported source.
+     * A site older than this updates to a current 10.5.x first and then to 11.0,
+     * which is an ordinary two-step upgrade and the only one where the
+     * retirement is guaranteed to have run.
+     *
+     * Two checks, because they fail differently:
+     *
+     * - the version, which is what an administrator can act on and what the
+     *   message names;
+     * - the columns themselves, which is the actual precondition. This catches
+     *   a site whose manifest_cache is unreadable or wrong, where the version
+     *   says nothing. `upgradingFromBefore()` treats an unknown version as
+     *   "old", which is right for deciding to run a migration and wrong for
+     *   deciding to refuse an install -- so this asks the database instead of
+     *   guessing.
+     *
+     * @return  bool  False to abort the update.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function upgradeSourceIsSupported(): bool
+    {
+        // The precondition itself, asked first because it is the authoritative
+        // one: if the columns are gone the data was moved, whatever the version
+        // says. Cheap -- one information_schema lookup, only on the update route.
+        if (!CwmdbHelper::columnExists('#__bsms_studies', 'booknumber')) {
+            return true;
+        }
+
+        $from = $this->fromVersion !== '' ? $this->fromVersion : 'an unrecorded version';
+
+        $this->abortUnsupportedSource(sprintf(
+            'This release of Proclaim cannot update a site running %s: #__bsms_studies still '
+            . 'carries the legacy scripture columns, so the references they hold have not been '
+            . 'moved into #__bsms_study_scriptures yet. It requires %s or newer. Update to the '
+            . 'latest 10.5.x first -- that is what performs the move -- then update to this '
+            . 'release.',
+            $from,
+            self::MINIMUM_UPGRADE_SOURCE
+        ));
+
+        return false;
+    }
+
+    /**
+     * Report a refused upgrade to the administrator and to the install log.
+     *
+     * Both, deliberately. preflight() returning false leaves Joomla to say only
+     * that the install failed, and a headless update has no screen to say it on.
+     *
+     * @param   string  $message  What is wrong and what to do about it.
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    private function abortUnsupportedSource(string $message): void
+    {
+        $this->logInstall('preflight: REFUSED — ' . $message);
+
+        try {
+            Factory::getApplication()->enqueueMessage($message, 'error');
+        } catch (\Throwable $e) {
+            // No application, e.g. a CLI update. The log line above is the record.
+        }
+    }
+
+    /**
      * Function called before the extension installation/update/removal procedure commences
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -752,6 +847,10 @@ class com_proclaimInstallerScript extends InstallerScript
         // version and every migration looks unnecessary.
         if ($type === 'update') {
             $this->fromVersion = $this->readInstalledVersion();
+
+            if (!$this->upgradeSourceIsSupported()) {
+                return false;
+            }
         }
 
         $this->logInstall(sprintf(
