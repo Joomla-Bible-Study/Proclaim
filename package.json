@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@babel/core": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -33,16 +33,7 @@
   },
   "babel": {
     "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "useBuiltIns": "entry",
-          "corejs": {
-            "version": "3.48",
-            "proposals": true
-          }
-        }
-      ]
+      "@babel/preset-env"
     ],
     "comments": false,
     "ignore": []
@@ -67,8 +58,7 @@
   },
   "dependencies": {
     "@fancyapps/ui": "^6.1.11",
-    "chart.js": "^4.5.1",
-    "core-js": "^3.50.0"
+    "chart.js": "^4.5.1"
   },
   "overrides": {
     "serialize-javascript": "^7.0.3",
