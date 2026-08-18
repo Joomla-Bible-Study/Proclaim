@@ -31,8 +31,8 @@
 declare(strict_types=1);
 
 use CWM\BuildTools\Dev\ExtensionQuery;
-use CWM\BuildTools\Dev\TestSite;
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
