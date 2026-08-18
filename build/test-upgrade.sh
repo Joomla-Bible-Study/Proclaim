@@ -72,6 +72,64 @@ if [ "$TARGETVER" = "$BASEVER" ]; then
     exit 1
 fi
 
+# ⚠️ The version in versions.json is a label; the version the package *declares*
+# is what Joomla upgrades against. They are maintained in different places and
+# were silently different for the whole of every development cycle (#1862):
+# versions.json said 10.5.10-dev while every manifest still read 10.5.9, because
+# manifests were only bumped at release. `cwm-build --version` names the
+# artifact and does not touch them.
+#
+# So this harness printed "10.5.9 -> 10.5.10-dev" while installing a package
+# that declared 10.5.9 at both ends — a from == to upgrade. Migrations gated on
+# the version being upgraded *from* (#1842, #1858) were therefore exercised in
+# the one state where a gate that never fires and a gate that works look
+# identical.
+#
+# Checked here rather than after the 17 phases: the run takes minutes, and every
+# assertion in it would pass regardless.
+# Read the path from cwm-build.config.json rather than hardcoding one.
+# admin/proclaim.xml is a symlink cwm-link creates and is not tracked, so a
+# fresh CI clone does not have it — a guard that reads it would fail there for
+# a reason that has nothing to do with what it checks.
+PKGMANIFEST="$(php -r '
+    $c = json_decode(file_get_contents("cwm-build.config.json"), true);
+    echo $c["manifests"]["package"] ?? "";
+')"
+
+if [ -z "$PKGMANIFEST" ] || [ ! -f "$PKGMANIFEST" ]; then
+    echo "ERROR: could not locate the package manifest via cwm-build.config.json." >&2
+    exit 1
+fi
+
+MANIFESTVER="$(php -r '
+    $x = @simplexml_load_file($argv[1]);
+    echo $x === false ? "" : (string) $x->version;
+' "$PKGMANIFEST")"
+
+if [ -z "$MANIFESTVER" ]; then
+    echo "ERROR: could not read <version> from ${PKGMANIFEST}." >&2
+    exit 1
+fi
+
+if [ "$MANIFESTVER" != "$TARGETVER" ]; then
+    echo "ERROR: ${PKGMANIFEST} declares ${MANIFESTVER}, but this run claims to test" >&2
+    echo "       an upgrade to ${TARGETVER}." >&2
+    echo "" >&2
+
+    if [ "$MANIFESTVER" = "$BASEVER" ]; then
+        echo "       The manifests still carry the last released version, so the" >&2
+        echo "       'upgrade' would install ${BASEVER} over ${BASEVER} and prove nothing." >&2
+        echo "" >&2
+        echo "       Open the cycle properly:" >&2
+        echo "         composer version -- -v ${TARGETVER}" >&2
+    else
+        echo "       versions.json and the manifests disagree. Reconcile them before" >&2
+        echo "       trusting this harness." >&2
+    fi
+
+    exit 1
+fi
+
 BASEZIP="build/dist/pkg_proclaim-${BASEVER}.zip"
 NEWZIP="build/dist/pkg_proclaim-${NEWVER}.zip"
 
@@ -170,6 +228,11 @@ echo "-- [6/17] install ${NEWVER} over ${BASEVER} (triggers update() + migration
 # schema behind for every other assertion here to agree on.
 echo "-- [7/17] verify the update reported what it did (and gated the migrations)"
 php build/verify-install-log.php update "$BASEVER"
+# The line above asserts where the update came FROM. This asserts where it
+# ended up: an install that silently did not apply leaves the manifests correct
+# and the site behind, and the pre-flight guard cannot tell those apart because
+# it only ever reads files (#1862).
+php build/verify-installed-version.php "$NEWVER"
 
 echo "-- [8/17] verify registration + migrations"
 "$BIN/cwm-verify" --target test
