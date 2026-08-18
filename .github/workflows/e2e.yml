@@ -229,10 +229,6 @@ jobs:
           builder.ci.role=test
           builder.ci.path=${SITE_DIR}
           builder.ci.url=${SITE_URL}
-          builder.ci.db_host=127.0.0.1
-          builder.ci.db_user=root
-          builder.ci.db_pass=joomla_ci
-          builder.ci.db_name=joomla_ci
           builder.ci.username=admin
           builder.ci.password=admin1234567
           builder.ci.email=admin@example.com
