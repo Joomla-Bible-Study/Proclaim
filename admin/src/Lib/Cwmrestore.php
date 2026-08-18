@@ -91,7 +91,7 @@ class Cwmrestore
         if (self::$bsmsTables === null) {
             // getOwnObjects(): a statement targeting the shared scripture stack is
             // rejected, which also protects against restoring a backup taken
-            // before this change that still carries those tables (#1867).
+            // before this change that still carries those tables.
             self::$bsmsTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
         }
 
@@ -850,7 +850,7 @@ class Cwmrestore
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         // Own tables only: the restore no longer writes the shared scripture
         // stack, so correcting its AUTO_INCREMENT would be this component
-        // reaching into the library's tables for no reason (#1867).
+        // reaching into the library's tables for no reason.
         $tables  = CwmdbHelper::getOwnObjects();
         $prefix  = $db->getPrefix();
         $fixed   = 0;

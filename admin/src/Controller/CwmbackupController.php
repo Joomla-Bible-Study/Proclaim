@@ -529,12 +529,11 @@ class CwmbackupController extends BaseController
         // The export wrote a `DROP TABLE IF EXISTS` for every table it dumped,
         // including that one, so skipping the drop here only deferred it by a
         // few statements — the backup's own SQL dropped and recreated the table
-        // from the snapshot. The intent was right and the mechanism was not
-        // (#1867).
+        // from the snapshot. The intent was right and the mechanism was not.
         //
         // getOwnObjects() excludes the whole shared scripture stack, which is
-        // the library's to manage (#1675 settled the same question for
-        // uninstall). Nothing here drops them, and Cwmrestore rejects any
+        // the library's to manage -- as it already is on uninstall. Nothing
+        // here drops them, and Cwmrestore rejects any
         // statement that targets them, so an older backup still carrying those
         // tables cannot reach them either.
         if ($batch === 0) {

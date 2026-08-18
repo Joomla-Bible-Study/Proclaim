@@ -86,7 +86,7 @@ class Cwmbackup
     {
         if (self::$knownTables === null) {
             // getOwnObjects(), not getObjects(): the shared scripture stack is
-            // the library's, so it is neither exported nor restored here (#1867).
+            // the library's, so it is neither exported nor restored here.
             self::$knownTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
         }
 

@@ -296,8 +296,8 @@ class CwmdbHelper
      *
      * They are shared. Any consumer of the library -- Proclaim, CWMLivingWord,
      * a third party -- reads and writes them, and the library alone decides
-     * when they are created or dropped. #1675 settled the same ownership
-     * question for uninstall: Proclaim leaves the stack alone.
+     * when they are created or dropped. The same ownership question was
+     * settled for uninstall: Proclaim leaves the stack alone there too.
      *
      * `#__bsms_scripture_consumers` is the sharpest case. It is derived state
      * describing which extensions are installed on *this* site right now, and
