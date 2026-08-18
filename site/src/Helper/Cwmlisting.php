@@ -2950,7 +2950,7 @@ class Cwmlisting
             'com_proclaim.addtoany',
             'https://static.addtoany.com/menu/page.js',
             ['version' => false],
-            ['defer'   => true, 'async' => true]
+            ['defer' => true, 'async' => true]
         );
 
         return $html;
