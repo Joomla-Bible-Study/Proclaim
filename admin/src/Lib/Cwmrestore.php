@@ -102,21 +102,63 @@ class Cwmrestore
     }
 
     /**
-     * Tables to preserve during restore.
+     * Tables a restore must leave exactly as it found them.
      *
-     * These tables contain downloaded/cached data that is expensive to
-     * regenerate and is NOT part of the user's content backup.  They are
-     * excluded from the DROP phase so locally downloaded Bibles survive
-     * a restore cycle.  If the backup SQL file happens to contain its own
-     * version of these tables, `CREATE TABLE IF NOT EXISTS` is a no-op and
-     * the existing data wins.
+     * These belong to lib_cwmscripture, not to this component. They only carry
+     * the `bsms_` prefix because the library inherited Proclaim's historical
+     * naming, which is why the prefix-driven table list sweeps them up at all.
+     * None of them is part of the user's *content*, and all of them describe
+     * the target site rather than the backed-up one.
+     *
+     * ⚠️ The catalogue travels with the verses. #__bsms_bible_verses was
+     * preserved alone up to 10.5.9, and #__bsms_bible_translations — which
+     * records which of those verses are downloaded, via `installed` — was
+     * dropped and replaced from the backup. Splitting the pair makes the Local
+     * Translations panel wrong in both directions: restoring a backup taken
+     * before a download leaves ~93,000 orphaned verses with the catalogue
+     * claiming nothing is installed, and restoring one taken after a download
+     * into a site without it claims translations that have no verses.
+     *
+     * The provider cache expires and rebuilds itself, so carrying another
+     * site's rows in only risks serving stale passages. The consumer registry
+     * is derived state guarding a destructive operation — it must describe the
+     * extensions installed *here*, so it is never taken from a backup.
      *
      * @var string[]
      * @since 10.1.0
      */
     private static array $preserveTables = [
         '#__bsms_bible_verses',
+        '#__bsms_bible_translations',
+        '#__bsms_scripture_cache',
+        '#__bsms_scripture_consumers',
     ];
+
+    /**
+     * Does this statement target a table the restore must not touch?
+     *
+     * ⚠️ Excluding a table from the DROP phase is not enough on its own. The
+     * backup file still carries that table's own `INSERT INTO` statements, and
+     * isSafeRestoreStatement() is a security allow-list — it asks whether the
+     * target is a Proclaim table, not whether it is preserved — so those
+     * inserts ran against the "preserved" table anyway. The docblock above used
+     * to argue that `CREATE TABLE IF NOT EXISTS` made the backup's copy a
+     * no-op, which is true of the DDL and says nothing about the rows.
+     *
+     * @param   string  $statement  A single SQL statement
+     *
+     * @return  bool  True when the statement should be skipped entirely
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private static function targetsPreservedTable(string $statement): bool
+    {
+        if (!preg_match('/`?(?<table>#__bsms_[a-z0-9_]+)`?/i', $statement, $matches)) {
+            return false;
+        }
+
+        return \in_array(strtolower($matches['table']), self::$preserveTables, true);
+    }
 
     /**
      * Get Objects for tables
@@ -135,7 +177,13 @@ class Cwmrestore
         $objects   = [];
 
         foreach ($tables as $table) {
-            if (substr_count($table, $bsms)) {
+            // Anchored, not a substring test. getTableList() returns every table
+            // in the schema, so on shared-database hosting a sibling install's
+            // `myjos_bsms_studies` matched here while substr_replace() stripped a
+            // fixed prefix length regardless, yielding a mangled
+            // `#__s_bsms_studies`. CwmdbHelper::getObjects() was corrected for
+            // exactly this; that fix never reached this copy.
+            if (str_starts_with($table, $prefix . $bsms)) {
                 $table     = substr_replace($table, '#__', 0, $prelength);
 
                 // Skip tables that should survive a restore
@@ -310,6 +358,12 @@ class Cwmrestore
                 $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'error');
 
                 return false;
+            }
+
+            // Preserved tables are excluded from the DROP phase; skipping their
+            // statements here is what actually leaves the rows alone.
+            if (self::targetsPreservedTable($query)) {
+                continue;
             }
 
             $db->setQuery($query);
@@ -556,6 +610,12 @@ class Cwmrestore
                 $app->enqueueMessage(Text::_('JBS_IBM_NOT_DB'), 'error');
 
                 return false;
+            }
+
+            // Preserved tables are excluded from the DROP phase; skipping their
+            // statements here is what actually leaves the rows alone.
+            if (self::targetsPreservedTable($query)) {
+                continue;
             }
 
             $db->setQuery($query);

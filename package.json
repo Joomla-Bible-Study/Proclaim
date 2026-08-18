@@ -12,7 +12,7 @@
     "npm": ">=10.1.0"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.12.1",
+    "@axe-core/playwright": "^4.13.0",
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@eslint/js": "^10.0.1",
@@ -22,14 +22,14 @@
     "@types/jest": "^30.0.0",
     "csso": "^5.0.5",
     "eslint": "^10.8.1",
-    "globals": "^17.8.0",
-    "intl-tel-input": "^29.2.2",
+    "globals": "^17.11.0",
+    "intl-tel-input": "^29.2.3",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "rollup": "^4.62.3",
     "rollup-plugin-gzip": "^4.1.1",
     "sortablejs": "^1.15.7",
-    "terser": "^5.49.2"
+    "terser": "^5.50.0"
   },
   "babel": {
     "presets": [

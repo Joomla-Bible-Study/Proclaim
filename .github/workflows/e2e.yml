@@ -47,14 +47,31 @@ on:
       # to be here for the job to see it.
       - 'libraries/**'
       - 'plugins/content/scripturelinks'
+      # ⚠️ This job performs a clean install, and admin/sql is what a clean
+      # install creates. Without this the one file defining the installed
+      # schema and its seed data never reached the job that installs it: the
+      # hex-literal aliases in #1879 changed install.mysql.utf8.sql and this
+      # job did not run. Same shape as #1755 and #1754 above — the job was
+      # blind to the code it actually executes.
+      - 'admin/sql/**'
       - 'tests/e2e/**'
       - 'build/test-install.sh'
       - 'build/build-package.sh'
       - 'build/build-subpackages.sh'
-      - 'build/reset-testsite.php'
       - 'build/verify-api-install.php'
       - 'build/verify-migrations.php'
       - 'playwright.config.js'
+      # The harness resets the site through cwm-reset-testsite and resolves its
+      # upgrade baseline through cwm-baseline, both of which live in
+      # cwm/build-tools. A version bump replaces that code wholesale, so the
+      # lock belongs here or the job never sees the tooling it runs on: the
+      # v1.23.2 bump merged without this job running.
+      #
+      # 'build/reset-testsite.php' was listed above until that file was deleted
+      # in favour of the shared command, and the entry outlived it — a pattern
+      # matching nothing never triggers and is indistinguishable in review from
+      # one that works (#129 upstream).
+      - 'composer.lock'
       - '.github/workflows/e2e.yml'
 
 concurrency:
