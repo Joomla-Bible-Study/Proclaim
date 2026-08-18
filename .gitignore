@@ -109,6 +109,7 @@ build.properties
 /build/dist/
 /media/js/
 /media/css/
+/media/joomla.asset.json
 # === cwm-build-tools: end extension paths ===
 
 # Claude Code personal/local settings (not shared)
