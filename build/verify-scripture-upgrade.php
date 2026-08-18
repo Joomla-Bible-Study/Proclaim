@@ -34,6 +34,7 @@
 declare(strict_types=1);
 
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -94,58 +95,72 @@ foreach ($installs as $install) {
         continue;
     }
 
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
-
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $port] = explode(':', $host, 2);
-        $port          = (int) $port;
-    }
-
-    $db = mysqli_connect($host, $user, $pass, $name, $port);
-
-    if ($db === false) {
-        fwrite(STDERR, "  FAIL could not connect to database {$name}.\n");
+    try {
+        $site = TestSite::fromPath($install->path);
+        $db   = $site->db();
+    } catch (\RuntimeException $e) {
+        fwrite(STDERR, '  FAIL ' . $e->getMessage() . "\n");
         $failures++;
 
         continue;
     }
 
-    $translations = $prefix . 'bsms_bible_translations';
-    $verses       = $prefix . 'bsms_bible_verses';
-    $cache        = $prefix . 'bsms_scripture_cache';
+    $translations = $site->table('#__bsms_bible_translations');
+    $verses       = $site->table('#__bsms_bible_verses');
+    $cache        = $site->table('#__bsms_scripture_cache');
+
+    // ⚠️ Every assertion below asks whether the table is there before querying
+    // it, because a dropped table is the thing this probe exists to detect and
+    // it must be reported, not thrown. The original relied on
+    // `mysqli_query(...) ?: null` for that, which has not worked since PHP 8.1
+    // made mysqli throw: the branch printing "the library's uninstall SQL
+    // dropped the table" could not be reached on any supported PHP, and the
+    // one scenario this file was written for produced a stack trace instead.
+    $absent = static fn (string $table): bool => !$site->hasTable($table);
 
     if ($mode === 'seed') {
-        $text = mysqli_real_escape_string($db, PROBE_VERSE);
+        // A warning, not a failure: the count assertions below decide the
+        // outcome. These stayed warnings by design, so the catch is what keeps
+        // them warnings now that a failed statement raises instead of
+        // returning false.
+        $warn = static function (string $what, \PDOException $e): void {
+            fwrite(STDERR, "  WARN seeding {$what}: " . $e->getMessage() . "\n");
+        };
 
-        mysqli_query(
-            $db,
-            "INSERT INTO `{$translations}`
+        try {
+            $insert = $db->prepare(
+                "INSERT INTO `{$translations}`
                 (`abbreviation`, `name`, `language`, `source`, `installed`, `bundled`, `verse_count`)
-             VALUES ('" . PROBE_ABBR . "', '" . PROBE_NAME . "', 'en', 'getbible', 1, 0, " . PROBE_ROWS . ")
+             VALUES (?, ?, 'en', 'getbible', 1, 0, ?)
              ON DUPLICATE KEY UPDATE `installed` = 1"
-        ) or fwrite(STDERR, '  WARN seeding translation: ' . mysqli_error($db) . "\n");
-
-        for ($verse = 1; $verse <= PROBE_ROWS; $verse++) {
-            mysqli_query(
-                $db,
-                "INSERT IGNORE INTO `{$verses}` (`translation`, `book`, `chapter`, `verse`, `text`)
-                 VALUES ('" . PROBE_ABBR . "', " . PROBE_BOOK . ", 1, {$verse}, '{$text}')"
-            ) or fwrite(STDERR, '  WARN seeding verse: ' . mysqli_error($db) . "\n");
+            );
+            $insert->execute([PROBE_ABBR, PROBE_NAME, PROBE_ROWS]);
+        } catch (\PDOException $e) {
+            $warn('translation', $e);
         }
 
-        $seeded = mysqli_fetch_row(mysqli_query(
-            $db,
-            "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'"
-        ) ?: null);
+        try {
+            $insert = $db->prepare(
+                "INSERT IGNORE INTO `{$verses}` (`translation`, `book`, `chapter`, `verse`, `text`)
+                 VALUES (?, ?, 1, ?, ?)"
+            );
 
-        if ($seeded === null || $seeded === false || (int) $seeded[0] !== PROBE_ROWS) {
+            for ($verse = 1; $verse <= PROBE_ROWS; $verse++) {
+                $insert->execute([PROBE_ABBR, PROBE_BOOK, $verse, PROBE_VERSE]);
+            }
+        } catch (\PDOException $e) {
+            $warn('verse', $e);
+        }
+
+        $seeded = null;
+
+        if (!$absent($verses)) {
+            $count = $db->prepare("SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = ?");
+            $count->execute([PROBE_ABBR]);
+            $seeded = [$count->fetchColumn()];
+        }
+
+        if ($seeded === null || (int) $seeded[0] !== PROBE_ROWS) {
             fwrite(STDERR, "  FAIL could not seed the probe translation — the baseline install\n");
             fwrite(STDERR, "       is missing the bible tables.\n");
             $failures++;
@@ -154,29 +169,35 @@ foreach ($installs as $install) {
         }
 
         // Provider cache — the third table the old uninstall SQL dropped.
-        for ($i = 1; $i <= PROBE_CACHE_ROWS; $i++) {
-            mysqli_query(
-                $db,
+        try {
+            $insert = $db->prepare(
                 "INSERT IGNORE INTO `{$cache}`
                     (`provider`, `translation`, `reference`, `text`, `expires_at`)
-                 VALUES ('getbible', '" . PROBE_ABBR . "', 'Probe {$i}:1', '{$text}',
+                 VALUES ('getbible', ?, ?, ?,
                          DATE_ADD(NOW(), INTERVAL 30 DAY))"
-            ) or fwrite(STDERR, '  WARN seeding cache row: ' . mysqli_error($db) . "\n");
+            );
+
+            for ($i = 1; $i <= PROBE_CACHE_ROWS; $i++) {
+                $insert->execute([PROBE_ABBR, "Probe {$i}:1", PROBE_VERSE]);
+            }
+        } catch (\PDOException $e) {
+            $warn('cache row', $e);
         }
 
-        $cached = mysqli_fetch_row(mysqli_query(
-            $db,
-            "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
-        ) ?: null);
+        $cached = null;
 
-        if ($cached === null || $cached === false || (int) $cached[0] !== PROBE_CACHE_ROWS) {
+        if (!$absent($cache)) {
+            $count = $db->prepare("SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = ?");
+            $count->execute([PROBE_ABBR]);
+            $cached = [$count->fetchColumn()];
+        }
+
+        if ($cached === null || (int) $cached[0] !== PROBE_CACHE_ROWS) {
             fwrite(STDERR, "  FAIL could not seed the provider cache — {$cache} is missing.\n");
             $failures++;
         } else {
             echo '  OK   seeded ' . PROBE_CACHE_ROWS . " live provider cache rows\n";
         }
-
-        mysqli_close($db);
 
         continue;
     }
@@ -191,24 +212,33 @@ foreach ($installs as $install) {
     // wrong. Keep verify read-only so it can be called at every point that needs
     // proof the data is still there.
     if ($mode === 'cleanup') {
-        mysqli_query($db, "DELETE FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
-        mysqli_query($db, "DELETE FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
-        mysqli_query($db, "DELETE FROM `{$translations}` WHERE `abbreviation` = '" . PROBE_ABBR . "'");
+        // Teardown ignored query failures before and still does: a table that
+        // is not there has no probe rows to remove, which is the outcome this
+        // mode wants either way.
+        foreach ([[$cache, 'translation'], [$verses, 'translation'], [$translations, 'abbreviation']] as [$table, $column]) {
+            if ($absent($table)) {
+                continue;
+            }
+
+            $delete = $db->prepare("DELETE FROM `{$table}` WHERE `{$column}` = ?");
+            $delete->execute([PROBE_ABBR]);
+        }
 
         echo "  OK   removed the probe rows\n";
-
-        mysqli_close($db);
 
         continue;
     }
 
     // --- verify -------------------------------------------------------------
-    $row = mysqli_fetch_assoc(mysqli_query(
-        $db,
-        "SELECT `installed` FROM `{$translations}` WHERE `abbreviation` = '" . PROBE_ABBR . "'"
-    ) ?: null);
+    $row = null;
 
-    if ($row === null || $row === false) {
+    if (!$absent($translations)) {
+        $select = $db->prepare("SELECT `installed` FROM `{$translations}` WHERE `abbreviation` = ?");
+        $select->execute([PROBE_ABBR]);
+        $row = $select->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    if ($row === null) {
         fwrite(STDERR, "  FAIL the probe translation is gone from {$translations}.\n");
         fwrite(STDERR, "       The library's uninstall SQL dropped the table during the upgrade —\n");
         fwrite(STDERR, "       see build/script.install.php::disarmLegacyScriptureUninstallSql().\n");
@@ -221,12 +251,13 @@ foreach ($installs as $install) {
         echo "  OK   probe translation still registered as locally installed\n";
     }
 
-    $count = mysqli_fetch_row(mysqli_query(
-        $db,
-        "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'"
-    ) ?: null);
+    $found = 0;
 
-    $found = ($count === null || $count === false) ? 0 : (int) $count[0];
+    if (!$absent($verses)) {
+        $count = $db->prepare("SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = ?");
+        $count->execute([PROBE_ABBR]);
+        $found = (int) $count->fetchColumn();
+    }
 
     if ($found === PROBE_ROWS) {
         echo '  OK   all ' . PROBE_ROWS . " downloaded verses survived the upgrade\n";
@@ -236,12 +267,13 @@ foreach ($installs as $install) {
         $failures++;
     }
 
-    $cachedLeft = mysqli_fetch_row(mysqli_query(
-        $db,
-        "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
-    ) ?: null);
+    $cachedFound = 0;
 
-    $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
+    if (!$absent($cache)) {
+        $cachedLeft = $db->prepare("SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = ?");
+        $cachedLeft->execute([PROBE_ABBR]);
+        $cachedFound = (int) $cachedLeft->fetchColumn();
+    }
 
     if ($cachedFound === PROBE_CACHE_ROWS) {
         echo '  OK   all ' . PROBE_CACHE_ROWS . " provider cache rows survived the upgrade\n";
@@ -251,8 +283,6 @@ foreach ($installs as $install) {
         fwrite(STDERR, "       another provider round trip (and API.Bible FUMS calls) to rebuild.\n");
         $failures++;
     }
-
-    mysqli_close($db);
 }
 
 if ($failures > 0) {
