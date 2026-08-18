@@ -48,6 +48,7 @@
 declare(strict_types=1);
 
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -92,36 +93,21 @@ foreach ($installs as $install) {
         continue;
     }
 
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
-
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $portString] = explode(':', $host, 2);
-        $port                = (int) $portString;
-    }
-
-    $db = @mysqli_connect($host, $user, $pass, $name, $port);
-
-    if (!$db) {
-        fwrite(STDERR, '  cannot connect: ' . mysqli_connect_error() . "\n");
+    try {
+        $site = TestSite::fromPath($install->path);
+        $site->db();
+    } catch (\RuntimeException $e) {
+        fwrite(STDERR, '  cannot connect: ' . $e->getMessage() . "\n");
         $failures++;
 
         continue;
     }
 
     try {
-        seedInstall($db, $prefix);
-    } catch (\RuntimeException $e) {
+        seedInstall($site);
+    } catch (\RuntimeException | \PDOException $e) {
         fwrite(STDERR, '  ' . $e->getMessage() . "\n");
         $failures++;
-    } finally {
-        mysqli_close($db);
     }
 
     echo "\n";
@@ -138,8 +124,7 @@ echo "Site menus seeded.\n";
 /**
  * Seed one install: enable the landing sections, then write the menu items.
  *
- * @param   \mysqli  $db      Open connection to the install's database
- * @param   string   $prefix  That install's table prefix
+ * @param   TestSite  $site  The install being seeded
  *
  * @return  void
  *
@@ -147,32 +132,34 @@ echo "Site menus seeded.\n";
  *
  * @since __DEPLOY_VERSION__
  */
-function seedInstall(\mysqli $db, string $prefix): void
+function seedInstall(TestSite $site): void
 {
-    $componentId = scalar($db, "SELECT extension_id FROM {$prefix}extensions "
-        . "WHERE element = 'com_proclaim' AND type = 'component'");
+    $db = $site->db();
+
+    $componentId = scalar($db, 'SELECT extension_id FROM ' . $site->table('#__extensions')
+        . " WHERE element = 'com_proclaim' AND type = 'component'");
 
     if ($componentId === null) {
         throw new \RuntimeException('com_proclaim is not installed here — run test:install first.');
     }
 
-    $templateId = scalar($db, "SELECT id FROM {$prefix}bsms_templates WHERE published = 1 ORDER BY id LIMIT 1");
-    $studyId    = scalar($db, "SELECT id FROM {$prefix}bsms_studies WHERE published = 1 ORDER BY id LIMIT 1");
+    $templateId = scalar($db, 'SELECT id FROM ' . $site->table('#__bsms_templates') . ' WHERE published = 1 ORDER BY id LIMIT 1');
+    $studyId    = scalar($db, 'SELECT id FROM ' . $site->table('#__bsms_studies') . ' WHERE published = 1 ORDER BY id LIMIT 1');
 
     if ($templateId === null || $studyId === null) {
         throw new \RuntimeException('no published template or study to link to — the install seed did not land.');
     }
 
-    $menutype = scalar($db, "SELECT menutype FROM {$prefix}menu "
-        . "WHERE client_id = 0 AND home = 1 AND published = 1 LIMIT 1")
-        ?? scalar($db, "SELECT menutype FROM {$prefix}menu_types ORDER BY id LIMIT 1");
+    $menutype = scalar($db, 'SELECT menutype FROM ' . $site->table('#__menu')
+        . ' WHERE client_id = 0 AND home = 1 AND published = 1 LIMIT 1')
+        ?? scalar($db, 'SELECT menutype FROM ' . $site->table('#__menu_types') . ' ORDER BY id LIMIT 1');
 
     if ($menutype === null) {
         throw new \RuntimeException('this site has no site menu to add items to.');
     }
 
-    enableLandingSections($db, $prefix, (int) $templateId);
-    ensureCitedBook($db, $prefix, (int) $studyId);
+    enableLandingSections($site, (int) $templateId);
+    ensureCitedBook($site, (int) $studyId);
 
     $items = [
         [
@@ -197,29 +184,34 @@ function seedInstall(\mysqli $db, string $prefix): void
         ],
     ];
 
-    run($db, "DELETE FROM {$prefix}menu WHERE client_id = 0 AND note = '" . SEED_NOTE . "'");
+    $delete = $db->prepare('DELETE FROM ' . $site->table('#__menu') . ' WHERE client_id = 0 AND note = ?');
+    $delete->execute([SEED_NOTE]);
+
+    // Prepared once, executed four times. The table name still has to be
+    // interpolated -- identifiers do not bind -- but every value now does,
+    // which is what retires esc().
+    $insert = $db->prepare(
+        'INSERT INTO ' . $site->table('#__menu')
+        . ' (menutype, title, alias, note, path, link, type, published, parent_id, level, component_id, '
+        . 'browserNav, access, img, template_style_id, params, lft, rgt, home, language, client_id) '
+        . "VALUES (?, ?, ?, ?, ?, ?, 'component', 1, 1, 1, ?, 0, 1, '', 0, '{}', 0, 0, 0, '*', 0)"
+    );
 
     foreach ($items as $item) {
-        $sql = \sprintf(
-            "INSERT INTO {$prefix}menu "
-            . '(menutype, title, alias, note, path, link, type, published, parent_id, level, component_id, '
-            . 'browserNav, access, img, template_style_id, params, lft, rgt, home, language, client_id) '
-            . "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', 'component', 1, 1, 1, %d, 0, 1, '', 0, '{}', 0, 0, 0, '*', 0)",
-            esc($db, $menutype),
-            esc($db, $item['title']),
-            esc($db, $item['alias']),
+        $insert->execute([
+            $menutype,
+            $item['title'],
+            $item['alias'],
             SEED_NOTE,
-            esc($db, $item['alias']),
-            esc($db, $item['link']),
-            (int) $componentId
-        );
+            $item['alias'],
+            $item['link'],
+            (int) $componentId,
+        ]);
 
-        run($db, $sql);
-
-        printf("  + %-24s Itemid=%d\n", $item['alias'], mysqli_insert_id($db));
+        printf("  + %-24s Itemid=%d\n", $item['alias'], $db->lastInsertId());
     }
 
-    rebuildTree($db, $prefix);
+    rebuildTree($site);
 
     echo "  menu tree rebuilt (menutype '{$menutype}', template {$templateId}, study {$studyId})\n";
 }
@@ -240,18 +232,19 @@ function seedInstall(\mysqli $db, string $prefix): void
  * Only ever adds. A study that already cites something is left exactly as it is,
  * because the point is to guarantee a floor, not to impose a fixture.
  *
- * @param   \mysqli  $db       Open connection
- * @param   string   $prefix   Table prefix
+ * @param   TestSite  $site     The install being seeded
  * @param   int      $studyId  Study to attach the reference to
  *
  * @return  void
  *
  * @since __DEPLOY_VERSION__
  */
-function ensureCitedBook(\mysqli $db, string $prefix, int $studyId): void
+function ensureCitedBook(TestSite $site, int $studyId): void
 {
-    $existing = scalar($db, "SELECT COUNT(*) FROM {$prefix}bsms_study_scriptures AS s "
-        . "INNER JOIN {$prefix}bsms_studies AS st ON st.id = s.study_id "
+    $db = $site->db();
+
+    $existing = scalar($db, 'SELECT COUNT(*) FROM ' . $site->table('#__bsms_study_scriptures') . ' AS s '
+        . 'INNER JOIN ' . $site->table('#__bsms_studies') . ' AS st ON st.id = s.study_id '
         . "WHERE st.published = 1 AND s.reference_text <> ''");
 
     if ((int) $existing > 0) {
@@ -260,10 +253,13 @@ function ensureCitedBook(\mysqli $db, string $prefix, int $studyId): void
         return;
     }
 
-    run($db, "INSERT INTO {$prefix}bsms_study_scriptures "
-        . '(study_id, ordering, booknumber, chapter_begin, verse_begin, chapter_end, verse_end, '
+    $insert = $db->prepare(
+        'INSERT INTO ' . $site->table('#__bsms_study_scriptures')
+        . ' (study_id, ordering, booknumber, chapter_begin, verse_begin, chapter_end, verse_end, '
         . 'bible_version, reference_text) '
-        . "VALUES ({$studyId}, 0, 151, 3, 5, 3, 11, '', 'Colossians 3:5-11')");
+        . "VALUES (?, 0, 151, 3, 5, 3, 11, '', 'Colossians 3:5-11')"
+    );
+    $insert->execute([$studyId]);
 
     echo "  cited book added to study {$studyId}: Colossians 3:5-11\n";
 }
@@ -276,8 +272,7 @@ function ensureCitedBook(\mysqli $db, string $prefix, int $studyId): void
  * and seeding the shape nobody uses any more would exercise a fallback path
  * instead of the real one.
  *
- * @param   \mysqli  $db          Open connection
- * @param   string   $prefix      Table prefix
+ * @param   TestSite  $site        The install being seeded
  * @param   int      $templateId  Template whose params to edit
  *
  * @return  void
@@ -286,9 +281,14 @@ function ensureCitedBook(\mysqli $db, string $prefix, int $studyId): void
  *
  * @since __DEPLOY_VERSION__
  */
-function enableLandingSections(\mysqli $db, string $prefix, int $templateId): void
+function enableLandingSections(TestSite $site, int $templateId): void
 {
-    $stored = scalar($db, "SELECT params FROM {$prefix}bsms_templates WHERE id = {$templateId}");
+    $db = $site->db();
+
+    $read = $db->prepare('SELECT params FROM ' . $site->table('#__bsms_templates') . ' WHERE id = ?');
+    $read->execute([$templateId]);
+    $stored = $read->fetchColumn();
+    $stored = $stored === false ? null : (string) $stored;
 
     try {
         $params = json_decode((string) ($stored ?: '{}'), true, 512, JSON_THROW_ON_ERROR) ?: [];
@@ -311,7 +311,8 @@ function enableLandingSections(\mysqli $db, string $prefix, int $templateId): vo
 
     $encoded = json_encode($params, JSON_THROW_ON_ERROR);
 
-    run($db, "UPDATE {$prefix}bsms_templates SET params = '" . esc($db, $encoded) . "' WHERE id = {$templateId}");
+    $update = $db->prepare('UPDATE ' . $site->table('#__bsms_templates') . ' SET params = ? WHERE id = ?');
+    $update->execute([$encoded, $templateId]);
 
     echo '  landing sections enabled: ' . implode(', ', LANDING_SECTIONS) . "\n";
 }
@@ -328,19 +329,20 @@ function enableLandingSections(\mysqli $db, string $prefix, int $templateId): vo
  * The walk starts at the root (id 1) and covers every row, admin items
  * included — they share this table and this tree.
  *
- * @param   \mysqli  $db      Open connection
- * @param   string   $prefix  Table prefix
+ * @param   TestSite  $site  The install being seeded
  *
  * @return  void
  *
  * @since __DEPLOY_VERSION__
  */
-function rebuildTree(\mysqli $db, string $prefix): void
+function rebuildTree(TestSite $site): void
 {
+    $db       = $site->db();
     $children = [];
-    $result   = mysqli_query($db, "SELECT id, parent_id FROM {$prefix}menu ORDER BY parent_id, lft, id");
 
-    while ($row = mysqli_fetch_assoc($result)) {
+    $rows = $db->query('SELECT id, parent_id FROM ' . $site->table('#__menu') . ' ORDER BY parent_id, lft, id');
+
+    foreach ($rows as $row) {
         $children[(int) $row['parent_id']][] = (int) $row['id'];
     }
 
@@ -360,34 +362,22 @@ function rebuildTree(\mysqli $db, string $prefix): void
 
     $walk(1, 0, 0);
 
+    // One prepared statement reused across every row in the tree, which is the
+    // whole table -- admin items included, per the note above.
+    $update = $db->prepare(
+        'UPDATE ' . $site->table('#__menu') . ' SET lft = ?, rgt = ?, level = ? WHERE id = ?'
+    );
+
     foreach ($updates as [$id, $left, $right, $level]) {
-        run($db, "UPDATE {$prefix}menu SET lft = {$left}, rgt = {$right}, level = {$level} WHERE id = {$id}");
+        $update->execute([$left, $right, $level, $id]);
     }
 }
 
-/**
- * Run a statement, turning a failure into an exception.
- *
- * @param   \mysqli  $db   Open connection
- * @param   string   $sql  Statement to run
- *
- * @return  void
- *
- * @throws  \RuntimeException  when the statement fails
- *
- * @since __DEPLOY_VERSION__
- */
-function run(\mysqli $db, string $sql): void
-{
-    if (mysqli_query($db, $sql) === false) {
-        throw new \RuntimeException('query failed: ' . mysqli_error($db));
-    }
-}
 
 /**
  * Fetch the first column of the first row, or null when there is no row.
  *
- * @param   \mysqli  $db   Open connection
+ * @param   PDO  $db   Open connection
  * @param   string   $sql  Statement to run
  *
  * @return  string|null
@@ -396,30 +386,9 @@ function run(\mysqli $db, string $sql): void
  *
  * @since __DEPLOY_VERSION__
  */
-function scalar(\mysqli $db, string $sql): ?string
+function scalar(PDO $db, string $sql): ?string
 {
-    $result = mysqli_query($db, $sql);
+    $value = $db->query($sql)->fetchColumn();
 
-    if ($result === false) {
-        throw new \RuntimeException('query failed: ' . mysqli_error($db));
-    }
-
-    $row = mysqli_fetch_row($result);
-
-    return $row === null ? null : (string) $row[0];
-}
-
-/**
- * Escape a value for interpolation.
- *
- * @param   \mysqli  $db     Open connection
- * @param   string   $value  Value to escape
- *
- * @return  string
- *
- * @since __DEPLOY_VERSION__
- */
-function esc(\mysqli $db, string $value): string
-{
-    return mysqli_real_escape_string($db, $value);
+    return $value === false ? null : (string) $value;
 }
