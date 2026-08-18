@@ -40,6 +40,7 @@
 declare(strict_types=1);
 
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -62,11 +63,12 @@ $modes = [
     'assert-tables-gone',
     'assert-no-other-consumer',
     'other-consumer-ids',
-    'protect-scripture-ownership',
+    'missing-scripture-stack',
     'assert-sql-armed',
     'assert-sql-disarmed',
     'arm',
     'disarm',
+    'restore-manifest',
     'assert-translation-survived',
     'assert-translation-destroyed',
 ];
@@ -122,46 +124,205 @@ DROP TABLE IF EXISTS `#__bsms_bible_translations`;
 
 SQL;
 
+/**
+ * What the disarm writes back — exactly what plg_system_cwmscripture writes on
+ * an admin com_installer page load. Shared by the 'disarm' step and by the
+ * 'restore-manifest' cleanup so the two cannot drift into disagreeing about
+ * what "disarmed" looks like; sqlIsArmed() must read this as inert.
+ */
+const DISARMED_UNINSTALL_SQL = "--\n"
+    . "-- Neutralised by the upgrade harness, mirroring plg_system_cwmscripture.\n"
+    . "-- Do not reintroduce DROP TABLE statements here.\n--\n";
+
 $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
 
 if ($installs === []) {
     fwrite(STDERR, "No role=test install in build.properties — nothing to check.\n");
+    fwrite(STDERR, "Declare one (builder.<id>.role = test) so this check has a target.\n");
+
+    // ⚠️ Not exit(0). A verification with no target verified nothing, and a
+    // green exit here would let the whole release gate pass while testing
+    // an empty set -- the same silence that made #1866 expensive.
+    exit(1);
+}
+
+/**
+ * Resolve an install to [TestSite|null, prefix].
+ *
+ * The shape is unchanged so every caller still destructures two values; the
+ * first is now a TestSite rather than a mysqli handle. $site->prefix() makes
+ * the second redundant, but this file has enough call sites that changing them
+ * all would bury the part of this diff that matters.
+ */
+$connect = static function (object $install): array {
+    try {
+        $site = TestSite::fromPath($install->path);
+        $site->db();
+    } catch (\RuntimeException $e) {
+        return [null, ''];
+    }
+
+    return [$site, $site->prefix()];
+};
+
+/**
+ * A row, or null when there is nothing to read.
+ *
+ * ⚠️ The reason this exists. Every read below used to be written as
+ * `$rowOrNull($db, $sql)`, which assumed a failed
+ * query returns false. Since PHP 8.1 mysqli throws instead, so `?: null` has
+ * been unreachable and a dropped table produced a stack trace rather than the
+ * diagnostic written for it -- in a probe whose whole job is detecting dropped
+ * tables. See Joomla-Bible-Study/Proclaim#1894 for the same defect next door.
+ *
+ * Only "table is not there" (SQLSTATE 42S02) is treated as an answer, because
+ * that is the condition being probed for. Every other error is re-thrown: a
+ * blanket catch would turn a typo in a column name into a confident report that
+ * the data is gone, which is the failure this file already suffers from and not
+ * one worth reproducing.
+ */
+$rowOrNull = static function (?PDO $db, string $sql, array $params = []): ?array {
+    if ($db === null) {
+        return null;
+    }
+
+    try {
+        $statement = $db->prepare($sql);
+        $statement->execute($params);
+        $row = $statement->fetch(PDO::FETCH_NUM);
+
+        return $row === false ? null : $row;
+    } catch (\PDOException $e) {
+        if (($e->errorInfo[0] ?? '') !== '42S02') {
+            throw $e;
+        }
+
+        return null;
+    }
+};
+
+/**
+ * Every row of a result, or none when the table is not there.
+ */
+$rowsOrNone = static function (?PDO $db, string $sql, array $params = []): array {
+    if ($db === null) {
+        return [];
+    }
+
+    try {
+        $statement = $db->prepare($sql);
+        $statement->execute($params);
+
+        return $statement->fetchAll(PDO::FETCH_NUM);
+    } catch (\PDOException $e) {
+        if (($e->errorInfo[0] ?? '') !== '42S02') {
+            throw $e;
+        }
+
+        return [];
+    }
+};
+
+/**
+ * Run a write whose failure is a warning, not a failure.
+ *
+ * The seeding statements reported failures with
+ * `mysqli_query(...) or fwrite(STDERR, 'WARN ...')` -- dead for the same reason
+ * as above. The assertions that follow each seed decide the outcome; this keeps
+ * the warning informative in the meantime.
+ */
+$execOrWarn = static function (?PDO $db, string $sql, array $params, string $what): void {
+    if ($db === null) {
+        return;
+    }
+
+    try {
+        $statement = $db->prepare($sql);
+        $statement->execute($params);
+    } catch (\PDOException $e) {
+        fwrite(STDERR, "  WARN {$what}: " . $e->getMessage() . "\n");
+    }
+};
+
+// --- cleanup mode: undo the planted hazard, on every test install -----------
+// Runs from a shell trap, so it touches the filesystem only and never fails: a
+// trap that can exit non-zero would mask the real failure that triggered it.
+//
+// 'arm' plants two things — the armed SQL file and an <uninstall><sql> block in
+// the installed manifest. 'disarm' deliberately reverts only the file, because
+// phase 16 has to prove that disarming the *file* is what saves the data while
+// the manifest still declares it. That leaves the declaration behind, and
+// reset-testsite.php does not clear the library (#1860), so without this the
+// fixture outlives the run and the next run's first library install inherits it.
+if ($mode === 'restore-manifest') {
+    foreach ($installs as $install) {
+        $manifest = $install->path . '/administrator/manifests/libraries/cwmscripture.xml';
+        $sqlFile  = $install->path . '/libraries/cwmscripture/sql/uninstall.mysql.utf8.sql';
+
+        // Disarm first. If the manifest write fails the file is already inert,
+        // which is the half that actually destroys data.
+        if (is_file($sqlFile)) {
+            $buffer = @file_get_contents($sqlFile);
+
+            if ($buffer !== false && sqlIsArmed($buffer)) {
+                if (@file_put_contents($sqlFile, DISARMED_UNINSTALL_SQL) === false) {
+                    echo "  WARN could not disarm {$sqlFile}.\n";
+                } else {
+                    echo "  OK   disarmed the planted uninstall SQL\n";
+                }
+            }
+        }
+
+        if (!is_file($manifest)) {
+            continue;
+        }
+
+        $doc                     = new DOMDocument();
+        $doc->preserveWhiteSpace = false;
+        $doc->formatOutput       = true;
+
+        if (!@$doc->load($manifest)) {
+            echo "  WARN {$manifest} is not parseable XML — leaving it alone.\n";
+
+            continue;
+        }
+
+        $xpath   = new DOMXPath($doc);
+        $removed = 0;
+
+        // Removes any <uninstall> carrying an <sql> child, not only one this run
+        // planted: a previous run that died before its own trap fired is exactly
+        // the state this exists to clean up.
+        foreach (iterator_to_array($xpath->query('/extension/uninstall[sql]')) as $node) {
+            $node->parentNode->removeChild($node);
+            $removed++;
+        }
+
+        foreach (iterator_to_array($xpath->query('/extension/comment()')) as $node) {
+            if (str_contains($node->nodeValue ?? '', 'Planted by the upgrade harness')) {
+                $node->parentNode->removeChild($node);
+            }
+        }
+
+        if ($removed === 0) {
+            continue;
+        }
+
+        if (@$doc->save($manifest) === false) {
+            echo "  WARN could not rewrite {$manifest}.\n";
+
+            continue;
+        }
+
+        echo "  OK   removed the planted <uninstall><sql> declaration from the library manifest\n";
+    }
 
     exit(0);
 }
 
-/**
- * Open a mysqli connection for an install, returning [db, prefix].
- */
-$connect = static function (object $install): array {
-    $configFile = $install->path . '/configuration.php';
-
-    if (!is_file($configFile)) {
-        return [null, ''];
-    }
-
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
-
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $port] = explode(':', $host, 2);
-        $port          = (int) $port;
-    }
-
-    $db = mysqli_connect($host, $user, $pass, $name, $port);
-
-    return [$db === false ? null : $db, $prefix];
-};
-
 // --- value-printing modes: first test install only, for the shell to consume --
-if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scripture-ownership'], true)) {
+if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'missing-scripture-stack'], true)) {
     $install = $installs[0];
 
     if ($mode === 'site-path') {
@@ -170,23 +331,21 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
         exit(0);
     }
 
-    if ($mode === 'protect-scripture-ownership') {
-        // Hand the shared scripture stack back to the package that ships it,
-        // before any consumer is removed.
+    if ($mode === 'missing-scripture-stack') {
+        // Which members of the shared scripture stack the consumer removals
+        // actually took, one "type/folder/element" per line, nothing when all
+        // four survive. Phase 10 reinstalls only when this prints something.
         //
-        // The library and plg_content_scripturelinks are Joomla package
-        // children, and package_id points at whichever package installed them
-        // LAST. On a site carrying LivingWord that can be pkg_livingword — so
-        // `extension:remove` on it takes the library and the content plugin
-        // down as its children, and every phase after step 9 then fails for a
-        // reason unrelated to the code under test. Worse, the removals persist:
-        // the site is left with com_proclaim installed against a library that
-        // no longer exists, and the next run starts from that wreckage (#1820).
-        //
-        // Reassigning is not a workaround for the test's benefit. pkg_cwmscripture
-        // is the package that ships these, so this restores the ownership that
-        // install order happened to overwrite.
-        [$db, $prefix] = $connect($install);
+        // A consumer that declares our extensions as its own children takes them
+        // with it (PackageAdapter::removeExtensionFiles() resolves by element),
+        // but a consumer packaged correctly takes none — so the reinstall has to
+        // be driven by what is missing, not by whether a consumer was present.
+        // The reinstall is a library install, which routes through
+        // LibraryAdapter::install() -> checkExtensionInFilesystem() -> uninstall()
+        // and so runs whatever uninstall SQL is on disk; doing that when nothing
+        // needs restoring is risk with no upside.
+        [$site, $prefix] = $connect($install);
+        $db              = $site?->db();
 
         if ($db === null) {
             fwrite(STDERR, "Could not connect to the test database.\n");
@@ -194,58 +353,34 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
             exit(1);
         }
 
-        $owner = mysqli_fetch_row(mysqli_query(
-            $db,
-            "SELECT `extension_id` FROM `{$prefix}extensions`
-             WHERE `type` = 'package' AND `element` = 'pkg_cwmscripture' LIMIT 1"
-        ) ?: null);
-
-        if ($owner === null || $owner === false) {
-            // Nothing to hand ownership to. Say so rather than silently leaving
-            // the stack adoptable by whatever gets removed next.
-            fwrite(STDERR, "pkg_cwmscripture is not installed; cannot protect the scripture stack.\n");
-
-            exit(1);
-        }
-
-        $ownerId = (int) $owner[0];
-
-        // The shared pieces a consumer package can end up owning. The task and
-        // system plugins ship in pkg_cwmscripture too, so they are listed for
-        // completeness -- reassigning an already-correct row is a no-op.
-        $parts = [
-            ['library', 'cwmscripture', null],
-            ['plugin', 'scripturelinks', 'content'],
-            ['plugin', 'cwmscripture', 'task'],
-            ['plugin', 'cwmscripture', 'system'],
+        // folder is '' for a library and distinguishes the two plugins that
+        // share the element 'cwmscripture' (task and system).
+        $stack = [
+            ['library', '', 'cwmscripture'],
+            ['plugin', 'content', 'scripturelinks'],
+            ['plugin', 'task', 'cwmscripture'],
+            ['plugin', 'system', 'cwmscripture'],
         ];
 
-        $moved = 0;
+        $missing = [];
 
-        foreach ($parts as [$type, $element, $folder]) {
-            $folderSql = $folder === null
+        foreach ($stack as [$type, $folder, $element]) {
+            $folderSql = $folder === ''
                 ? "AND (`folder` = '' OR `folder` IS NULL)"
-                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
+                : 'AND `folder` = ?';
+            $params    = $folder === '' ? [$type, $element] : [$type, $element, $folder];
 
-            $sql = "UPDATE `{$prefix}extensions`
-                    SET `package_id` = {$ownerId}
-                    WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
-                      AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
-                      {$folderSql}
-                      AND `package_id` <> {$ownerId}";
+            $row = $rowOrNull($db, "SELECT `extension_id` FROM `{$prefix}extensions`
+                 WHERE `type` = ?
+                   AND `element` = ?
+                 {$folderSql} LIMIT 1", $params);
 
-            if (mysqli_query($db, $sql) && mysqli_affected_rows($db) > 0) {
-                $label = $folder === null ? "{$type} {$element}" : "{$type} {$element} ({$folder})";
-                echo "  reassigned {$label} to pkg_cwmscripture\n";
-                $moved++;
+            if ($row === null || $row === false) {
+                $missing[] = $type . '/' . $folder . '/' . $element;
             }
         }
 
-        echo $moved === 0
-            ? "  scripture stack already owned by pkg_cwmscripture\n"
-            : "  {$moved} extension(s) reassigned — removing a consumer can no longer take them\n";
-
-        mysqli_close($db);
+        echo implode("\n", $missing) . (empty($missing) ? '' : "\n");
 
         exit(0);
     }
@@ -261,7 +396,8 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
         //
         // Prefers the parent package where one exists — removing com_livingword
         // while pkg_livingword still owns it leaves a broken package behind.
-        [$db, $prefix] = $connect($install);
+        [$site, $prefix] = $connect($install);
+        $db              = $site?->db();
 
         if ($db === null) {
             fwrite(STDERR, "Could not connect to the test database.\n");
@@ -285,15 +421,13 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
         foreach ($wanted as [$element, $type, $folder]) {
             $folderSql = $folder === ''
                 ? "AND (`folder` = '' OR `folder` IS NULL)"
-                : "AND `folder` = '" . mysqli_real_escape_string($db, $folder) . "'";
+                : 'AND `folder` = ?';
+            $params    = $folder === '' ? [$type, $element] : [$type, $element, $folder];
 
-            $row = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT `extension_id` FROM `{$prefix}extensions`
-                 WHERE `type` = '" . mysqli_real_escape_string($db, $type) . "'
-                   AND `element` = '" . mysqli_real_escape_string($db, $element) . "'
-                 {$folderSql} LIMIT 1"
-            ) ?: null);
+            $row = $rowOrNull($db, "SELECT `extension_id` FROM `{$prefix}extensions`
+                 WHERE `type` = ?
+                   AND `element` = ?
+                 {$folderSql} LIMIT 1", $params);
 
             if ($row === null || $row === false) {
                 continue;
@@ -313,25 +447,17 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
 
         // Registered third parties the hardcoded list cannot know about.
         $consumersTable = $prefix . 'bsms_scripture_consumers';
-        $exists         = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $consumersTable) . "'");
 
-        if ($exists !== false && mysqli_num_rows($exists) > 0) {
-            $extra = mysqli_query(
-                $db,
-                "SELECT e.`extension_id` FROM `{$consumersTable}` c
+        if ($site !== null && $site->hasTable($consumersTable)) {
+            foreach ($rowsOrNone($db, "SELECT e.`extension_id` FROM `{$consumersTable}` c
                  JOIN `{$prefix}extensions` e
                    ON e.`element` = c.`element` AND e.`type` = c.`type`
-                 WHERE c.`element` NOT IN ('com_proclaim', 'scripturelinks', 'cwmscripture')"
-            );
-
-            while ($row = mysqli_fetch_row($extra ?: null)) {
+                 WHERE c.`element` NOT IN ('com_proclaim', 'scripturelinks', 'cwmscripture')") as $row) {
                 if (!\in_array($row[0], $ids, true)) {
                     $ids[] = $row[0];
                 }
             }
         }
-
-        mysqli_close($db);
 
         echo implode("\n", $ids) . (empty($ids) ? '' : "\n");
 
@@ -347,7 +473,8 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
         exit(2);
     }
 
-    [$db, $prefix] = $connect($install);
+    [$site, $prefix] = $connect($install);
+    $db              = $site?->db();
 
     if ($db === null) {
         fwrite(STDERR, "Could not connect to the test database.\n");
@@ -355,16 +482,8 @@ if (\in_array($mode, ['site-path', 'ext-id', 'other-consumer-ids', 'protect-scri
         exit(1);
     }
 
-    $type    = mysqli_real_escape_string($db, $type);
-    $element = mysqli_real_escape_string($db, $element);
-
-    $row = mysqli_fetch_row(mysqli_query(
-        $db,
-        "SELECT `extension_id` FROM `{$prefix}extensions`
-         WHERE `type` = '{$type}' AND `element` = '{$element}' LIMIT 1"
-    ) ?: null);
-
-    mysqli_close($db);
+    $row = $rowOrNull($db, "SELECT `extension_id` FROM `{$prefix}extensions`
+         WHERE `type` = ? AND `element` = ? LIMIT 1", [$type, $element]);
 
     if ($row === null || $row === false) {
         fwrite(STDERR, "No {$type} '{$element}' registered in #__extensions.\n");
@@ -408,7 +527,8 @@ $failures = 0;
 foreach ($installs as $install) {
     echo "=== scripture uninstall probe ({$mode}) on {$install->id} ===\n";
 
-    [$db, $prefix] = $connect($install);
+    [$site, $prefix] = $connect($install);
+    $db              = $site?->db();
 
     if ($db === null) {
         fwrite(STDERR, "  FAIL could not connect to the database for {$install->id}.\n");
@@ -423,11 +543,10 @@ foreach ($installs as $install) {
     $cache        = $prefix . 'bsms_scripture_cache';
     $extensions   = $prefix . 'extensions';
 
-    $tableExists = static function (mysqli $db, string $table): bool {
-        $res = mysqli_query($db, "SHOW TABLES LIKE '" . mysqli_real_escape_string($db, $table) . "'");
-
-        return $res !== false && mysqli_num_rows($res) > 0;
-    };
+    // SHOW TABLES LIKE treated `_` as a wildcard, and every Joomla prefix ends
+    // in one -- so `j6test_bsms_x` also matched `j6testXbsmsXx`. hasTable() asks
+    // information_schema with an equality match.
+    $tableExists = static fn (string $table): bool => $site !== null && $site->hasTable($table);
 
     /**
      * Consumers of the scripture tables other than the ones pkg_proclaim ships.
@@ -444,29 +563,19 @@ foreach ($installs as $install) {
      * the probe was asserting an outcome its own preconditions ruled out, and
      * had no way to say so.
      */
-    $otherConsumers = static function (mysqli $db, string $consumers, string $extensions) use ($tableExists): array {
+    $otherConsumers = static function (?PDO $db, string $consumers, string $extensions) use ($tableExists, $rowsOrNone): array {
         $ownChildren = "'com_proclaim', 'scripturelinks', 'cwmscripture'";
         $blockers    = [];
 
-        if ($tableExists($db, $consumers)) {
-            $registered = mysqli_query(
-                $db,
-                "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})"
-            );
-
-            while ($row = mysqli_fetch_row($registered ?: null)) {
+        if ($tableExists($consumers)) {
+            foreach ($rowsOrNone($db, "SELECT `element` FROM `{$consumers}` WHERE `element` NOT IN ({$ownChildren})") as $row) {
                 $blockers[] = $row[0] . ' (registered)';
             }
         }
 
-        $firstParty = mysqli_query(
-            $db,
-            "SELECT `element` FROM `{$extensions}`
+        foreach ($rowsOrNone($db, "SELECT `element` FROM `{$extensions}`
              WHERE (`type` = 'component' AND `element` = 'com_livingword')
-                OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')"
-        );
-
-        while ($row = mysqli_fetch_row($firstParty ?: null)) {
+                OR (`type` = 'plugin' AND `folder` = 'task' AND `element` = 'cwmscripture')") as $row) {
             $blockers[] = $row[0] . ' (first-party, installed)';
         }
 
@@ -475,7 +584,7 @@ foreach ($installs as $install) {
 
     switch ($mode) {
         case 'schema':
-            if ($tableExists($db, $consumers)) {
+            if ($tableExists($consumers)) {
                 echo "  OK   {$consumers} exists — the 1.1.6 schema update ran\n";
             } else {
                 fwrite(STDERR, "  FAIL {$consumers} is missing after the upgrade.\n");
@@ -487,34 +596,25 @@ foreach ($installs as $install) {
             break;
 
         case 'seed-consumer':
-            if (!$tableExists($db, $consumers)) {
+            if (!$tableExists($consumers)) {
                 fwrite(STDERR, "  FAIL cannot register a probe consumer — {$consumers} does not exist.\n");
                 $failures++;
 
                 break;
             }
 
-            mysqli_query(
-                $db,
-                "INSERT INTO `{$consumers}` (`element`, `type`, `folder`, `name`, `registered`)
+            $execOrWarn($db, "INSERT INTO `{$consumers}` (`element`, `type`, `folder`, `name`, `registered`)
                  VALUES ('" . FAKE_ELEMENT . "', 'component', '', '" . FAKE_NAME . "', NOW())
-                 ON DUPLICATE KEY UPDATE `registered` = NOW()"
-            ) or fwrite(STDERR, '  WARN registering probe consumer: ' . mysqli_error($db) . "\n");
+                 ON DUPLICATE KEY UPDATE `registered` = NOW()", [], 'registering probe consumer');
 
             // The registry prunes entries whose extension is gone, so the probe
             // needs a matching #__extensions row to look genuinely installed.
-            mysqli_query(
-                $db,
-                "INSERT INTO `{$extensions}`
+            $execOrWarn($db, "INSERT INTO `{$extensions}`
                     (`name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`, `protected`,
                      `manifest_cache`, `params`, `custom_data`)
-                 VALUES ('" . FAKE_NAME . "', 'component', '" . FAKE_ELEMENT . "', '', 1, 1, 1, 0, '{}', '{}', '')"
-            ) or fwrite(STDERR, '  WARN registering probe extension: ' . mysqli_error($db) . "\n");
+                 VALUES ('" . FAKE_NAME . "', 'component', '" . FAKE_ELEMENT . "', '', 1, 1, 1, 0, '{}', '{}', '')", [], 'registering probe extension');
 
-            $ok = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = '" . FAKE_ELEMENT . "'"
-            ) ?: null);
+            $ok = $rowOrNull($db, "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = '" . FAKE_ELEMENT . "'");
 
             if ($ok === null || $ok === false || (int) $ok[0] !== 1) {
                 fwrite(STDERR, "  FAIL could not register the probe consumer.\n");
@@ -526,11 +626,8 @@ foreach ($installs as $install) {
             break;
 
         case 'assert-library-present':
-            $row = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$extensions}`
-                 WHERE `type` = 'library' AND `element` = 'cwmscripture'"
-            ) ?: null);
+            $row = $rowOrNull($db, "SELECT COUNT(*) FROM `{$extensions}`
+                 WHERE `type` = 'library' AND `element` = 'cwmscripture'");
 
             if ($row !== null && $row !== false && (int) $row[0] > 0) {
                 echo "  OK   lib_cwmscripture is still installed — the uninstall was refused\n";
@@ -543,37 +640,28 @@ foreach ($installs as $install) {
             break;
 
         case 'seed-translation':
-            if (!$tableExists($db, $translations) || !$tableExists($db, $verses)) {
+            if (!$tableExists($translations) || !$tableExists($verses)) {
                 fwrite(STDERR, "  FAIL cannot seed — the bible tables do not exist.\n");
                 $failures++;
 
                 break;
             }
 
-            mysqli_query(
-                $db,
-                "INSERT INTO `{$translations}`
+            $execOrWarn($db, "INSERT INTO `{$translations}`
                     (`abbreviation`, `name`, `language`, `source`, `installed`, `bundled`, `verse_count`)
                  VALUES ('" . PROBE_ABBR . "', 'Uninstall Probe', 'en', 'getbible', 1, 0, " . PROBE_ROWS . ")
-                 ON DUPLICATE KEY UPDATE `installed` = 1"
-            ) or fwrite(STDERR, '  WARN seeding translation: ' . mysqli_error($db) . "\n");
+                 ON DUPLICATE KEY UPDATE `installed` = 1", [], 'seeding translation');
 
             for ($verse = 1; $verse <= PROBE_ROWS; $verse++) {
-                mysqli_query(
-                    $db,
-                    "INSERT IGNORE INTO `{$verses}` (`translation`, `book`, `chapter`, `verse`, `text`)
-                     VALUES ('" . PROBE_ABBR . "', 1, 1, {$verse}, 'probe verse {$verse}')"
-                ) or fwrite(STDERR, '  WARN seeding verse: ' . mysqli_error($db) . "\n");
+                $execOrWarn($db, "INSERT IGNORE INTO `{$verses}` (`translation`, `book`, `chapter`, `verse`, `text`)
+                     VALUES ('" . PROBE_ABBR . "', 1, 1, {$verse}, 'probe verse {$verse}')", [], 'seeding verse');
             }
 
             for ($i = 1; $i <= PROBE_CACHE_ROWS; $i++) {
-                mysqli_query(
-                    $db,
-                    "INSERT IGNORE INTO `{$cache}`
+                $execOrWarn($db, "INSERT IGNORE INTO `{$cache}`
                         (`provider`, `translation`, `reference`, `text`, `expires_at`)
                      VALUES ('getbible', '" . PROBE_ABBR . "', 'Probe {$i}:1', 'probe cached text',
-                             DATE_ADD(NOW(), INTERVAL 30 DAY))"
-                ) or fwrite(STDERR, '  WARN seeding cache row: ' . mysqli_error($db) . "\n");
+                             DATE_ADD(NOW(), INTERVAL 30 DAY))", [], 'seeding cache row');
             }
 
             echo '  OK   seeded ' . PROBE_ROWS . ' probe verses and '
@@ -596,7 +684,7 @@ foreach ($installs as $install) {
             // runs afterwards. Hence the explicit unregister this asserts.
             $consumers = $prefix . 'bsms_scripture_consumers';
 
-            if (!$tableExists($db, $consumers)) {
+            if (!$tableExists($consumers)) {
                 fwrite(STDERR, "  FAIL {$consumers} is missing — this phase expects the tables to have been KEPT.\n");
                 $failures++;
 
@@ -606,12 +694,11 @@ foreach ($installs as $install) {
             // com_proclaim only. scripturelinks is no longer removed with
             // Proclaim (#1675), so its registry row is correct and must stay.
             foreach ([['com_proclaim', 'component']] as [$element, $type]) {
-                $row = mysqli_fetch_row(mysqli_query(
+                $row = $rowOrNull(
                     $db,
-                    "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = '"
-                    . mysqli_real_escape_string($db, $element) . "' AND `type` = '"
-                    . mysqli_real_escape_string($db, $type) . "'"
-                ) ?: null);
+                    "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = ? AND `type` = ?",
+                    [$element, $type]
+                );
 
                 $left = ($row === null || $row === false) ? 0 : (int) $row[0];
 
@@ -631,7 +718,7 @@ foreach ($installs as $install) {
             $allPresent = true;
 
             foreach ([$translations, $verses, $cache] as $table) {
-                if ($tableExists($db, $table)) {
+                if ($tableExists($table)) {
                     echo "  OK   {$table} survived — a registered consumer kept it\n";
                 } else {
                     fwrite(STDERR, "  FAIL {$table} was dropped despite " . FAKE_ELEMENT . " being registered.\n");
@@ -647,10 +734,7 @@ foreach ($installs as $install) {
             }
 
             // The tables existing is not enough — the rows have to still be in them.
-            $left = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'"
-            ) ?: null);
+            $left = $rowOrNull($db, "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
 
             $found = ($left === null || $left === false) ? 0 : (int) $left[0];
 
@@ -662,10 +746,7 @@ foreach ($installs as $install) {
                 $failures++;
             }
 
-            $cachedLeft = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
-            ) ?: null);
+            $cachedLeft = $rowOrNull($db, "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
 
             $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
 
@@ -814,28 +895,24 @@ foreach ($installs as $install) {
 
                 // disarm — exactly what plg_system_cwmscripture does on an admin
                 // com_installer page load.
-                file_put_contents(
-                    $sqlFile,
-                    "--\n-- Neutralised by the upgrade harness, mirroring plg_system_cwmscripture.\n"
-                    . "-- Do not reintroduce DROP TABLE statements here.\n--\n"
-                );
+                //
+                // Reverts the file only, deliberately: phase 16 has to prove the
+                // disarmed *file* is what saves the data while the manifest still
+                // declares <uninstall><sql>. Removing the declaration here would
+                // make that phase pass because nothing was declared. The
+                // declaration is cleaned up by 'restore-manifest' instead.
+                file_put_contents($sqlFile, DISARMED_UNINSTALL_SQL);
                 echo "  OK   disarmed the installed library's uninstall SQL\n";
 
                 break;
             }
 
             // translation survival checks
-            $left = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'"
-            ) ?: null);
+            $left = $rowOrNull($db, "SELECT COUNT(*) FROM `{$verses}` WHERE `translation` = '" . PROBE_ABBR . "'");
 
             $found = ($left === null || $left === false) ? 0 : (int) $left[0];
 
-            $cachedLeft = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'"
-            ) ?: null);
+            $cachedLeft = $rowOrNull($db, "SELECT COUNT(*) FROM `{$cache}` WHERE `translation` = '" . PROBE_ABBR . "'");
 
             $cachedFound = ($cachedLeft === null || $cachedLeft === false) ? 0 : (int) $cachedLeft[0];
 
@@ -881,7 +958,7 @@ foreach ($installs as $install) {
             // the library's hardcoded FIRST_PARTY fallback. Only assert for the
             // ones actually installed here — pkg_proclaim does not ship the task
             // plugin, so its absence is normal, not a failure.
-            if (!$tableExists($db, $consumers)) {
+            if (!$tableExists($consumers)) {
                 fwrite(STDERR, "  FAIL {$consumers} does not exist — the 1.1.6 schema update never ran.\n");
                 $failures++;
 
@@ -901,7 +978,7 @@ foreach ($installs as $install) {
                     . " WHERE `type` = '{$consumer['type']}' AND `element` = '{$consumer['element']}'"
                     . ($consumer['folder'] !== '' ? " AND `folder` = '{$consumer['folder']}'" : '');
 
-                $isInstalled = mysqli_fetch_row(mysqli_query($db, $installedQuery) ?: null);
+                $isInstalled = $rowOrNull($db, $installedQuery);
 
                 if ($isInstalled === null || $isInstalled === false || (int) $isInstalled[0] === 0) {
                     echo "  --   {$label} is not installed here, nothing to register\n";
@@ -913,7 +990,7 @@ foreach ($installs as $install) {
                     . " WHERE `type` = '{$consumer['type']}' AND `element` = '{$consumer['element']}'"
                     . " AND `folder` = '{$consumer['folder']}'";
 
-                $row = mysqli_fetch_row(mysqli_query($db, $registeredQuery) ?: null);
+                $row = $rowOrNull($db, $registeredQuery);
 
                 if ($row !== null && $row !== false && (int) $row[0] > 0) {
                     echo "  OK   {$label} registered itself as a consumer\n";
@@ -939,8 +1016,8 @@ foreach ($installs as $install) {
             // phase pass with the scanner stubbed out: com_thirdpartyprobe was still
             // registered and installed, so the tables were kept for it rather than for
             // the extension under test. A vacuous pass is worse than no test.
-            mysqli_query($db, "DELETE FROM `{$consumers}` WHERE `element` = '" . FAKE_ELEMENT . "'");
-            mysqli_query($db, "DELETE FROM `{$extensions}` WHERE `element` = '" . FAKE_ELEMENT . "'");
+            $execOrWarn($db, "DELETE FROM `{$consumers}` WHERE `element` = ?", [FAKE_ELEMENT], 'removing probe rows');
+            $execOrWarn($db, "DELETE FROM `{$extensions}` WHERE `element` = ?", [FAKE_ELEMENT], 'removing probe rows');
 
             // Precondition: nothing OTHER than this package's own children may be able
             // to account for the tables surviving. com_proclaim and scripturelinks are
@@ -974,18 +1051,17 @@ foreach ($installs as $install) {
                 . "use CWM\\Library\\Scripture\\Helper\\ScriptureHelper;\n"
             );
 
-            mysqli_query(
+            $execOrWarn(
                 $db,
                 "INSERT IGNORE INTO `{$extensions}`
                     (`name`, `type`, `element`, `folder`, `client_id`, `enabled`, `access`,
                      `protected`, `locked`, `manifest_cache`, `params`)
-                 VALUES ('Detected Probe', 'component', 'com_detectedprobe', '', 1, 1, 1, 0, 0, '{}', '{}')"
-            ) or fwrite(STDERR, '  WARN seeding extension row: ' . mysqli_error($db) . "\n");
+                 VALUES ('Detected Probe', 'component', 'com_detectedprobe', '', 1, 1, 1, 0, 0, '{}', '{}')",
+                [],
+                'seeding extension row'
+            );
 
-            $registered = mysqli_fetch_row(mysqli_query(
-                $db,
-                "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = 'com_detectedprobe'"
-            ) ?: null);
+            $registered = $rowOrNull($db, "SELECT COUNT(*) FROM `{$consumers}` WHERE `element` = 'com_detectedprobe'");
 
             if ($registered !== null && $registered !== false && (int) $registered[0] > 0) {
                 fwrite(STDERR, "  FAIL com_detectedprobe is in the registry — this phase must prove\n");
@@ -1003,7 +1079,7 @@ foreach ($installs as $install) {
             // Cleanup runs whatever the outcome: a leftover fixture would silently
             // pin the tables for every later phase.
             $dir      = $install->path . '/administrator/components/com_detectedprobe';
-            $survived = $tableExists($db, $translations) && $tableExists($db, $verses);
+            $survived = $tableExists($translations) && $tableExists($verses);
 
             if ($survived) {
                 echo "  OK   tables kept for an unregistered consumer — ConsumerScanner saw it\n";
@@ -1022,7 +1098,7 @@ foreach ($installs as $install) {
                 @rmdir($dir);
             }
 
-            mysqli_query($db, "DELETE FROM `{$extensions}` WHERE `element` = 'com_detectedprobe'");
+            $execOrWarn($db, "DELETE FROM `{$extensions}` WHERE `element` = ?", ['com_detectedprobe'], 'removing probe rows');
 
             break;
 
@@ -1050,7 +1126,7 @@ foreach ($installs as $install) {
             $survivors = [];
 
             foreach ([$translations, $verses, $cache, $consumers] as $table) {
-                if ($tableExists($db, $table)) {
+                if ($tableExists($table)) {
                     fwrite(STDERR, "  FAIL {$table} still exists after the last consumer was removed.\n");
                     $survivors[] = $table;
                     $failures++;
@@ -1080,8 +1156,6 @@ foreach ($installs as $install) {
 
             break;
     }
-
-    mysqli_close($db);
 }
 
 if ($failures > 0) {

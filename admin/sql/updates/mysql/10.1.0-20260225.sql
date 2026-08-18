@@ -10,13 +10,13 @@
 --
 
 ALTER TABLE `#__bsms_analytics_events`
-    ADD COLUMN `series_id` INT UNSIGNED NULL DEFAULT NULL COMMENT 'FK #__bsms_series' AFTER `study_id`;
+    ADD COLUMN `series_id` INT UNSIGNED NULL DEFAULT NULL COMMENT 'FK #__bsms_series' AFTER `study_id` /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_analytics_events`
-    ADD KEY `idx_series_created` (`series_id`, `created`);
+    ADD KEY `idx_series_created` (`series_id`, `created`) /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_analytics_monthly`
-    ADD COLUMN `series_id` INT UNSIGNED NULL DEFAULT NULL AFTER `study_id`;
+    ADD COLUMN `series_id` INT UNSIGNED NULL DEFAULT NULL AFTER `study_id` /** CAN FAIL **/;
 
 -- The uq_aggregate rework that used to sit here — DROP INDEX followed by a wider
 -- ADD UNIQUE KEY over the same name — is now done by proclaim.script.php's

@@ -3,8 +3,8 @@
 
 -- Index for filtering messages by location + publish status + date (most common list query pattern)
 ALTER TABLE `#__bsms_studies`
-    ADD INDEX `idx_location_pub_date` (`location_id`, `published`, `studydate`);
+    ADD INDEX `idx_location_pub_date` (`location_id`, `published`, `studydate`) /** CAN FAIL **/;
 
 -- Index for the hybrid security filter (location + Joomla access level)
 ALTER TABLE `#__bsms_studies`
-    ADD INDEX `idx_location_access` (`location_id`, `access`);
+    ADD INDEX `idx_location_access` (`location_id`, `access`) /** CAN FAIL **/;

@@ -364,11 +364,7 @@ class CwmmigrationHelper
         if ($dupCount > 0) {
             // ⚠️ Only while the column exists. It is retired, and this runs from
             // data fixes on databases either side of that.
-            $db->setQuery(
-                'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
-            );
-
-            if ($db->loadRow() !== null) {
+            if (CwmdbHelper::columnExists('#__bsms_studies', 'teacher_id')) {
                 $db->setQuery(
                     'UPDATE ' . $db->quoteName('#__bsms_studies') . ' s '
                     . 'INNER JOIN ' . $db->quoteName('#__bsms_teachers_merge') . ' m ON s.'
@@ -518,11 +514,7 @@ class CwmmigrationHelper
         }
 
         // Nothing to migrate once the column is gone.
-        $db->setQuery(
-            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
-        );
-
-        if ($db->loadRow() === null) {
+        if (!CwmdbHelper::columnExists('#__bsms_studies', 'teacher_id')) {
             return 0;
         }
 
@@ -1520,11 +1512,7 @@ class CwmmigrationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        $db->setQuery(
-            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote('teacher_id')
-        );
-
-        if ($db->loadRow() === null) {
+        if (!CwmdbHelper::columnExists('#__bsms_studies', 'teacher_id')) {
             return 0;
         }
 

@@ -186,9 +186,13 @@ $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
 
 if ($installs === []) {
-    fwrite(STDERR, "No role=test install in build.properties — nothing to verify.\n");
+    fwrite(STDERR, "No role=test install in build.properties — nothing to check.\n");
+    fwrite(STDERR, "Declare one (builder.<id>.role = test) so this check has a target.\n");
 
-    exit(0);
+    // ⚠️ Not exit(0). A verification with no target verified nothing, and a
+    // green exit here would let the whole release gate pass while testing
+    // an empty set -- the same silence that made #1866 expensive.
+    exit(1);
 }
 
 $registered = countRegisteredSteps($root . '/proclaim.script.php');

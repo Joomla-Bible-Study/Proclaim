@@ -5,13 +5,13 @@
 -- verified and the other three were invisible — a database missing them would be
 -- reported as up to date, and the schema fix would never add them (#1664).
 ALTER TABLE `#__bsms_podcast`
-    ADD COLUMN `itunes_category` VARCHAR(100) NOT NULL DEFAULT 'Religion & Spirituality' AFTER `linktype`;
+    ADD COLUMN `itunes_category` VARCHAR(100) NOT NULL DEFAULT 'Religion & Spirituality' AFTER `linktype` /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_podcast`
-    ADD COLUMN `itunes_subcategory` VARCHAR(100) NOT NULL DEFAULT 'Christianity' AFTER `itunes_category`;
+    ADD COLUMN `itunes_subcategory` VARCHAR(100) NOT NULL DEFAULT 'Christianity' AFTER `itunes_category` /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_podcast`
-    ADD COLUMN `itunes_explicit` VARCHAR(5) NOT NULL DEFAULT 'false' AFTER `itunes_subcategory`;
+    ADD COLUMN `itunes_explicit` VARCHAR(5) NOT NULL DEFAULT 'false' AFTER `itunes_subcategory` /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_podcast`
-    ADD COLUMN `itunes_type` VARCHAR(10) NOT NULL DEFAULT 'episodic' AFTER `itunes_explicit`;
+    ADD COLUMN `itunes_type` VARCHAR(10) NOT NULL DEFAULT 'episodic' AFTER `itunes_explicit` /** CAN FAIL **/;

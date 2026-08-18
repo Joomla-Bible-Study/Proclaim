@@ -6,8 +6,6 @@ on:
     paths-ignore:
       - '**.md'
       - 'admin/language/**'
-      - 'site/language/**'
-      - 'build/mockups/**'
       - '.claude/**'
   pull_request:
     branches: [ "development", "10.x", "11.0.0-dev" ]

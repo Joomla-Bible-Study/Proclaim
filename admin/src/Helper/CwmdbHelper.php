@@ -291,6 +291,136 @@ class CwmdbHelper
     }
 
     /**
+     * Whether a table exists in this site's database.
+     *
+     * ⚠️ Not `SHOW TABLES LIKE`. In a LIKE pattern `_` matches any single
+     * character, and every Joomla prefix ends in one -- so
+     * `SHOW TABLES LIKE 'jos_bsms_admin'` also matches a table literally named
+     * `josXbsmsYadmin`. The query reads as an equality test and is not one.
+     *
+     * A collision needs a table of identical length differing only at the
+     * underscore positions, which is why nothing has gone wrong in practice:
+     * measured across a real 104-table schema, zero pairs collide. It is still
+     * the wrong question to ask, and asking the right one costs nothing.
+     *
+     * information_schema keeps the property the old query was chosen for --
+     * it does not enumerate every table the way getTableList() does.
+     *
+     * @param   string  $table  Table name, with either the `#__` placeholder or
+     *                          the real prefix.
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function tableExists(string $table): bool
+    {
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $real = str_replace('#__', $db->getPrefix(), $table);
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('information_schema.TABLES'))
+            ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
+            ->where($db->quoteName('TABLE_NAME') . ' = :name')
+            ->bind(':name', $real);
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult() > 0;
+    }
+
+    /**
+     * Whether a column exists on a table.
+     *
+     * The same wildcard problem as {@see tableExists()}: `SHOW COLUMNS FROM x
+     * LIKE 'teacher_id'` also matches a column named `teacherXid`, because `_`
+     * is a single-character wildcard. Less likely to collide than a table name
+     * carrying a prefix underscore, and the same wrong question.
+     *
+     * @param   string  $table   Table name, `#__` placeholder or real prefix.
+     * @param   string  $column  Column name, matched exactly.
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function columnExists(string $table, string $column): bool
+    {
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $real = str_replace('#__', $db->getPrefix(), $table);
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('information_schema.COLUMNS'))
+            ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
+            ->where($db->quoteName('TABLE_NAME') . ' = :table')
+            ->where($db->quoteName('COLUMN_NAME') . ' = :column')
+            ->bind(':table', $real)
+            ->bind(':column', $column);
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult() > 0;
+    }
+
+    /**
+     * The scripture stack: tables that carry the `bsms_` prefix but belong to
+     * lib_cwmscripture, not to Proclaim.
+     *
+     * They are shared. Any consumer of the library -- Proclaim, CWMLivingWord,
+     * a third party -- reads and writes them, and the library alone decides
+     * when they are created or dropped. The same ownership question was
+     * settled for uninstall: Proclaim leaves the stack alone there too.
+     *
+     * `#__bsms_scripture_consumers` is the sharpest case. It is derived state
+     * describing which extensions are installed on *this* site right now, and
+     * every uninstall guard consults it before dropping anything. A copy of it
+     * taken at another moment is not a backup, it is a wrong answer waiting to
+     * be believed.
+     *
+     * @return  string[]  Table names with the `#__` prefix.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getScriptureTables(): array
+    {
+        return [
+            '#__bsms_bible_translations',
+            '#__bsms_bible_verses',
+            '#__bsms_scripture_cache',
+            '#__bsms_scripture_consumers',
+        ];
+    }
+
+    /**
+     * getObjects() minus the shared scripture stack.
+     *
+     * What Proclaim may back up, restore and drop as its own. getObjects() is
+     * prefix-driven, so it cannot tell the difference by itself: all four
+     * scripture tables are named `bsms_*` despite belonging to the library.
+     *
+     * Kept separate from getObjects() rather than filtered at source. The
+     * migration and upgrade helpers also call getObjects(), and narrowing what
+     * they see is a different decision from narrowing what a backup carries.
+     *
+     * @return  array<int, array{name: string}>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getOwnObjects(): array
+    {
+        $shared = self::getScriptureTables();
+
+        return array_values(
+            array_filter(
+                self::getObjects(),
+                static fn (array $object): bool => !\in_array($object['name'], $shared, true)
+            )
+        );
+    }
+
+    /**
      * Get Objects for tables
      *
      * @return array
@@ -342,13 +472,10 @@ class CwmdbHelper
     public static function getInstallState(): bool
     {
         if (!\is_bool(self::$install_state)) {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            // Check if JBSM can be found from the database
-            $table = $db->getPrefix() . 'bsms_admin';
-            $db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
-
-            if ($db->loadResult() !== $table) {
+            // Comparing the returned name (rather than testing truthiness)
+            // made this immune to the LIKE wildcard by accident. tableExists()
+            // makes that deliberate, and says so.
+            if (!self::tableExists('#__bsms_admin')) {
                 self::$install_state = true;
             }
         }

@@ -30,7 +30,9 @@
 
 declare(strict_types=1);
 
+use CWM\BuildTools\Dev\ExtensionQuery;
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -40,9 +42,13 @@ $reader   = new PropertiesReader($root . '/build.properties');
 $installs = $reader->installsFor('test');
 
 if ($installs === []) {
-    fwrite(STDERR, "No role=test install in build.properties — nothing to verify.\n");
+    fwrite(STDERR, "No role=test install in build.properties — nothing to check.\n");
+    fwrite(STDERR, "Declare one (builder.<id>.role = test) so this check has a target.\n");
 
-    exit(0);
+    // ⚠️ Not exit(0). A verification with no target verified nothing, and a
+    // green exit here would let the whole release gate pass while testing
+    // an empty set -- the same silence that made #1866 expensive.
+    exit(1);
 }
 
 $failures = 0;
@@ -62,45 +68,31 @@ foreach ($installs as $install) {
     }
 
     // --- #1309 + #1331: plugin row, enabled, with seeded params -------------
-    $configFile = $install->path . '/configuration.php';
-
-    if (!is_file($configFile)) {
-        fwrite(STDERR, "  FAIL configuration.php not found — is this a Joomla install?\n");
+    //
+    // Connection, credentials and prefix come from cwm/build-tools' TestSite,
+    // which is the single implementation of "read configuration.php, connect,
+    // know the prefix". It parses the file as text rather than requiring it, so
+    // this no longer executes arbitrary PHP from the site and defines JConfig
+    // in this process; and it connects through PDO with ERRMODE_EXCEPTION, so a
+    // broken query raises instead of returning false and reading as "not
+    // installed".
+    try {
+        $site = TestSite::fromPath($install->path);
+        $db   = $site->db();
+    } catch (\RuntimeException $e) {
+        fwrite(STDERR, '  FAIL ' . $e->getMessage() . "\n");
         $failures++;
 
         continue;
     }
 
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
+    // folder is matched as well as element: `element = 'proclaim'` alone also
+    // names the finder, schemaorg, system and task plugins, and the row that
+    // came back first would decide the verdict.
+    $query = new ExtensionQuery($site);
+    $row   = $query->find('plugin', 'proclaim', 'webservices');
 
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $port] = explode(':', $host, 2);
-        $port          = (int) $port;
-    }
-
-    $db = mysqli_connect($host, $user, $pass, $name, $port);
-
-    if ($db === false) {
-        fwrite(STDERR, "  FAIL could not connect to database {$name}.\n");
-        $failures++;
-
-        continue;
-    }
-
-    $row = mysqli_fetch_assoc(mysqli_query(
-        $db,
-        "SELECT enabled, params FROM {$prefix}extensions
-         WHERE type = 'plugin' AND folder = 'webservices' AND element = 'proclaim'"
-    ) ?: null);
-
-    if ($row === null || $row === false) {
+    if ($row === null) {
         fwrite(STDERR, "  FAIL plg_webservices_proclaim has no #__extensions row —\n");
         fwrite(STDERR, "       the package never installed it (the #1309 signature).\n");
         $failures++;
@@ -122,7 +114,6 @@ foreach ($installs as $install) {
         }
     }
 
-    mysqli_close($db);
 }
 
 if ($failures > 0) {

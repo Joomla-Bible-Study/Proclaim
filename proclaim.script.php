@@ -10,6 +10,7 @@
  * @link           https://www.christianwebministries.org
  * */
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmguidedtourHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmlogHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
@@ -1623,10 +1624,7 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         try {
             // Check if the admin table exists
-            $table = $this->dbo->getPrefix() . 'bsms_admin';
-            $this->dbo->setQuery("SHOW TABLES LIKE " . $this->dbo->quote($table));
-
-            if (!$this->dbo->loadResult()) {
+            if (!CwmdbHelper::tableExists('#__bsms_admin')) {
                 return;
             }
 
@@ -2997,9 +2995,8 @@ class com_proclaimInstallerScript extends InstallerScript
 
             foreach ($tables as $name) {
                 $full = $prefix . $name;
-                $db->setQuery('SHOW TABLES LIKE ' . $db->quote($full));
 
-                if (!$db->loadResult()) {
+                if (!CwmdbHelper::tableExists($full)) {
                     continue;
                 }
 

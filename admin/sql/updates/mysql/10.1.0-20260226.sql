@@ -25,4 +25,4 @@ CREATE TABLE IF NOT EXISTS `#__bsms_platform_stats` (
 
 -- Add stats_synced_at to servers (safe if already present)
 ALTER TABLE `#__bsms_servers`
-    ADD COLUMN `stats_synced_at` DATETIME NULL DEFAULT NULL;
+    ADD COLUMN `stats_synced_at` DATETIME NULL DEFAULT NULL /** CAN FAIL **/;

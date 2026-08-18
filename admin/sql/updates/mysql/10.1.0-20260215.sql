@@ -5,7 +5,7 @@
 --
 
 ALTER TABLE `#__bsms_studies`
-    ADD COLUMN `image` TEXT DEFAULT NULL AFTER `thumbnailm`;
+    ADD COLUMN `image` TEXT DEFAULT NULL AFTER `thumbnailm` /** CAN FAIL **/;
 
 -- Back-fill image from thumbnailm for existing records that have thumb_ prefix
 UPDATE `#__bsms_studies`

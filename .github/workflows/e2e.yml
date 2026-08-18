@@ -25,37 +25,27 @@ on:
     - cron: '17 5 * * *'
   pull_request:
     branches: [ "development", "10.x", "11.0.0-dev" ]
-    paths:
-      - 'api/**'
-      - 'plugins/webservices/**'
-      # ⚠️ The API has no models or tables of its own, by design. Every list
-      # and item route runs an admin Cwm*Model, and every write goes through
-      # AdminModel::save() into an admin Table. Gating on `api/**` alone left
-      # the suite blind to changes in the code the API actually executes
-      # (#1755) -- #1754 rewrote four list queries the API serves and this job
-      # never ran. Measured cost: 51 of the last 293 pull requests touch these
-      # two paths, so this roughly triples how often the job runs.
-      - 'admin/src/Model/**'
-      - 'admin/src/Table/**'
-      # The front-end check in this job renders the site views, so the site code
-      # it renders belongs here too. Without it a change to the public
-      # controllers, models and templates never reached the job that loads them.
-      - 'site/**'
-      # ⚠️ The bundled scripture library and its plugin ship inside the package
-      # this job installs and render the front end it checks. A pin move is a
-      # one-line diff that replaces that shipped code wholesale, so these need
-      # to be here for the job to see it.
-      - 'libraries/**'
-      - 'plugins/content/scripturelinks'
-      - 'tests/e2e/**'
-      - 'build/test-install.sh'
-      - 'build/build-package.sh'
-      - 'build/build-subpackages.sh'
-      - 'build/reset-testsite.php'
-      - 'build/verify-api-install.php'
-      - 'build/verify-migrations.php'
-      - 'playwright.config.js'
-      - '.github/workflows/e2e.yml'
+    # ⚠️ No paths: filter, deliberately.
+    #
+    # This job was gated on an allow-list that grew by one entry each time it
+    # silently failed to run: api/** missed the admin models the API executes
+    # (#1754, #1755), then admin/sql/** (#1879), then composer.lock, then eight
+    # build/ scripts the job invokes through test-install.sh (#1892). Five
+    # incidents across two repositories, four of them found by someone noticing
+    # an absent job in a checks list rather than by anything reporting it.
+    #
+    # An allow-list fails closed: anything nobody thought of skips, and a
+    # skipped job is indistinguishable from a passing one. Measured over the
+    # last 120 merges, the filter avoided 30 runs of a job that takes about
+    # three minutes -- roughly 90 CI minutes saved in exchange for that.
+    #
+    # The nightly schedule above already ran everything the filter skipped, so
+    # this does not make the job see more; it moves the failure from a
+    # post-merge nightly on development to the pull request that caused it.
+    # Four of the last 22 scheduled runs failed, which is what that costs
+    # today.
+    #
+    # Joomla-Bible-Study/cwm-build-tools#129.
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -194,10 +184,6 @@ jobs:
           builder.ci.role=test
           builder.ci.path=${SITE_DIR}
           builder.ci.url=${SITE_URL}
-          builder.ci.db_host=127.0.0.1
-          builder.ci.db_user=root
-          builder.ci.db_pass=joomla_ci
-          builder.ci.db_name=joomla_ci
           builder.ci.username=admin
           builder.ci.password=admin1234567
           builder.ci.email=admin@example.com

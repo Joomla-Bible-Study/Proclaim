@@ -15,4 +15,4 @@
 ALTER TABLE `#__bsms_podcast`
     ADD COLUMN `copyright` VARCHAR(255) DEFAULT NULL
         COMMENT 'Rights holder for the feed copyright tag; falls back to the site name'
-        AFTER `editor_email`;
+        AFTER `editor_email` /** CAN FAIL **/;

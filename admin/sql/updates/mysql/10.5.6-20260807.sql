@@ -22,7 +22,7 @@ DELETE t1 FROM `#__bsms_studytopics` t1
 -- A study may hold a topic once. Enforced by the database rather than by the
 -- application remembering to check.
 ALTER TABLE `#__bsms_studytopics`
-    ADD UNIQUE KEY `uq_study_topic` (`study_id`, `topic_id`);
+    ADD UNIQUE KEY `uq_study_topic` (`study_id`, `topic_id`) /** CAN FAIL **/;
 
 -- Remove associations whose study no longer exists. Nothing deleted these when
 -- the study was deleted, and topic counts and filter dropdowns join against
@@ -85,10 +85,10 @@ SET s.`studynumber` = '';
 -- unconstrained, because NULLs are distinct from each other in a unique index.
 ALTER TABLE `#__bsms_studies`
     ADD COLUMN `studynumber_uk` VARCHAR(100)
-    GENERATED ALWAYS AS (IF(`series_id` > 0 AND `studynumber` <> '', `studynumber`, NULL)) STORED;
+    GENERATED ALWAYS AS (IF(`series_id` > 0 AND `studynumber` <> '', `studynumber`, NULL)) STORED /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_studies`
-    ADD UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`);
+    ADD UNIQUE KEY `uq_series_studynumber` (`series_id`, `studynumber_uk`) /** CAN FAIL **/;
 
 -- #1560: nothing stopped two overlapping playlist imports from both creating a
 -- row for the same remote playlist. CwmplaylistSyncHelper::importChannelPlaylists()
@@ -187,16 +187,16 @@ WHERE lp.`remote_playlist_id` <> '';
 -- treatment uq_series_studynumber gives an absent episode number above.
 ALTER TABLE `#__bsms_playlists`
     ADD COLUMN `remote_playlist_uk` VARCHAR(64)
-    GENERATED ALWAYS AS (IF(`remote_playlist_id` <> '', `remote_playlist_id`, NULL)) STORED;
+    GENERATED ALWAYS AS (IF(`remote_playlist_id` <> '', `remote_playlist_id`, NULL)) STORED /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_playlists`
-    ADD UNIQUE KEY `uq_server_remote_playlist` (`server_id`, `remote_playlist_uk`);
+    ADD UNIQUE KEY `uq_server_remote_playlist` (`server_id`, `remote_playlist_uk`) /** CAN FAIL **/;
 
 -- The unique index covers the generated column, which no query names. Lookups by
 -- (remote_playlist_id, server_id) -- every sync run does one per remote playlist
 -- -- would otherwise still fall back to idx_server alone.
 ALTER TABLE `#__bsms_playlists`
-    ADD KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`);
+    ADD KEY `idx_remote_playlist` (`remote_playlist_id`, `server_id`) /** CAN FAIL **/;
 
 -- #1622: CwmteacherModel::canDelete() enqueued a "cannot delete" message and
 -- then returned a plain permission check, so the teacher was deleted anyway --

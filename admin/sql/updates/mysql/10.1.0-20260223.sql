@@ -2,7 +2,7 @@
 -- NULL = shared server visible to all campuses
 -- Specific ID = campus-restricted server
 ALTER TABLE `#__bsms_servers`
-    ADD COLUMN `location_id` INT(3) DEFAULT NULL AFTER `type`;
+    ADD COLUMN `location_id` INT(3) DEFAULT NULL AFTER `type` /** CAN FAIL **/;
 
 ALTER TABLE `#__bsms_servers`
-    ADD KEY `idx_location_published` (`location_id`, `published`);
+    ADD KEY `idx_location_published` (`location_id`, `published`) /** CAN FAIL **/;
