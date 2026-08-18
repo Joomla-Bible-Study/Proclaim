@@ -89,7 +89,10 @@ class Cwmrestore
         }
 
         if (self::$bsmsTables === null) {
-            self::$bsmsTables = array_column(CwmdbHelper::getObjects(), 'name');
+            // getOwnObjects(): a statement targeting the shared scripture stack is
+            // rejected, which also protects against restoring a backup taken
+            // before this change that still carries those tables.
+            self::$bsmsTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
         }
 
         if (\in_array($matches['table'], self::$bsmsTables, true) || \in_array($matches['table'], self::ALLOWED_RESTORE_TABLES, true)) {
@@ -845,7 +848,10 @@ class Cwmrestore
     public static function correctAutoIncrements(): int
     {
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $tables  = CwmdbHelper::getObjects();
+        // Own tables only: the restore no longer writes the shared scripture
+        // stack, so correcting its AUTO_INCREMENT would be this component
+        // reaching into the library's tables for no reason.
+        $tables  = CwmdbHelper::getOwnObjects();
         $prefix  = $db->getPrefix();
         $fixed   = 0;
 
@@ -969,7 +975,9 @@ class Cwmrestore
         }
 
         // Check Proclaim tables count
-        $proclaimTables = CwmdbHelper::getObjects();
+        // Count what a restore actually covers, not every bsms_ table in the
+        // schema -- the shared scripture stack is not part of the round trip.
+        $proclaimTables = CwmdbHelper::getOwnObjects();
 
         return [
             'config' => $configSize > 10, // Params should be substantial JSON

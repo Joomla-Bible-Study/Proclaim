@@ -291,6 +291,62 @@ class CwmdbHelper
     }
 
     /**
+     * The scripture stack: tables that carry the `bsms_` prefix but belong to
+     * lib_cwmscripture, not to Proclaim.
+     *
+     * They are shared. Any consumer of the library -- Proclaim, CWMLivingWord,
+     * a third party -- reads and writes them, and the library alone decides
+     * when they are created or dropped. The same ownership question was
+     * settled for uninstall: Proclaim leaves the stack alone there too.
+     *
+     * `#__bsms_scripture_consumers` is the sharpest case. It is derived state
+     * describing which extensions are installed on *this* site right now, and
+     * every uninstall guard consults it before dropping anything. A copy of it
+     * taken at another moment is not a backup, it is a wrong answer waiting to
+     * be believed.
+     *
+     * @return  string[]  Table names with the `#__` prefix.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getScriptureTables(): array
+    {
+        return [
+            '#__bsms_bible_translations',
+            '#__bsms_bible_verses',
+            '#__bsms_scripture_cache',
+            '#__bsms_scripture_consumers',
+        ];
+    }
+
+    /**
+     * getObjects() minus the shared scripture stack.
+     *
+     * What Proclaim may back up, restore and drop as its own. getObjects() is
+     * prefix-driven, so it cannot tell the difference by itself: all four
+     * scripture tables are named `bsms_*` despite belonging to the library.
+     *
+     * Kept separate from getObjects() rather than filtered at source. The
+     * migration and upgrade helpers also call getObjects(), and narrowing what
+     * they see is a different decision from narrowing what a backup carries.
+     *
+     * @return  array<int, array{name: string}>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function getOwnObjects(): array
+    {
+        $shared = self::getScriptureTables();
+
+        return array_values(
+            array_filter(
+                self::getObjects(),
+                static fn (array $object): bool => !\in_array($object['name'], $shared, true)
+            )
+        );
+    }
+
+    /**
      * Get Objects for tables
      *
      * @return array
