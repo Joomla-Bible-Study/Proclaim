@@ -30,7 +30,9 @@
 
 declare(strict_types=1);
 
+use CWM\BuildTools\Dev\ExtensionQuery;
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -63,37 +65,29 @@ foreach ($installs as $install) {
         continue;
     }
 
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
-
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $port] = explode(':', $host, 2);
-        $port          = (int) $port;
-    }
-
-    $db = mysqli_connect($host, $user, $pass, $name, $port);
-
-    if ($db === false) {
-        fwrite(STDERR, "  FAIL could not connect to database {$name}.\n");
+    // Connection, credentials and prefix from TestSite: configuration.php is
+    // parsed as text rather than required, so this no longer executes the
+    // site's PHP and defines JConfig here, and PDO raises on a broken query
+    // instead of returning false and reading as "not installed".
+    try {
+        $site   = TestSite::fromPath($install->path);
+        $db     = $site->db();
+        $prefix = $site->prefix();
+    } catch (\RuntimeException $e) {
+        fwrite(STDERR, '  FAIL ' . $e->getMessage() . "\n");
         $failures++;
 
         continue;
     }
 
-    // --- the library itself registered and enabled --------------------------
-    $row = mysqli_fetch_assoc(mysqli_query(
-        $db,
-        "SELECT enabled FROM {$prefix}extensions
-         WHERE type = 'library' AND element = 'cwmscripture'"
-    ) ?: null);
+    $query = new ExtensionQuery($site);
 
-    if ($row === null || $row === false) {
+    // --- the library itself registered and enabled --------------------------
+    // The library registers under its <libraryname>, so element is
+    // 'cwmscripture' -- shared with two plugins, which is why type matters.
+    $row = $query->find('library', 'cwmscripture');
+
+    if ($row === null) {
         fwrite(STDERR, "  FAIL lib_cwmscripture has no #__extensions row — the package never installed it.\n");
         $failures++;
     } elseif ((int) $row['enabled'] !== 1) {
@@ -105,12 +99,11 @@ foreach ($installs as $install) {
 
     // --- its three tables actually exist (the skipped-install-SQL signature) -
     foreach (['bsms_bible_translations', 'bsms_bible_verses', 'bsms_scripture_cache'] as $table) {
-        $exists = mysqli_num_rows(mysqli_query(
-            $db,
-            "SHOW TABLES LIKE '{$prefix}{$table}'"
-        ) ?: null);
-
-        if ($exists === 1) {
+        // hasTable() matches the name exactly through information_schema.
+        // `SHOW TABLES LIKE '{$prefix}{$table}'` treated every underscore in
+        // these names as a single-character wildcard, so it would also have
+        // matched bsmsXbibleYtranslations had one existed.
+        if ($site->hasTable('#__' . $table)) {
             echo "  OK   {$prefix}{$table} exists\n";
         } else {
             fwrite(STDERR, "  FAIL {$prefix}{$table} missing — the library's install SQL never ran\n");
@@ -121,13 +114,11 @@ foreach ($installs as $install) {
     }
 
     // --- the translation catalog is seeded, not just structured -------------
-    $count = mysqli_fetch_row(mysqli_query(
-        $db,
-        "SELECT COUNT(*) FROM {$prefix}bsms_bible_translations"
-    ) ?: null);
+    $count = (int) $db->query('SELECT COUNT(*) FROM ' . $site->table('#__bsms_bible_translations'))
+        ->fetchColumn();
 
-    if ($count !== null && $count !== false && (int) $count[0] > 0) {
-        echo "  OK   translation catalog seeded ({$count[0]} translations)\n";
+    if ($count > 0) {
+        echo "  OK   translation catalog seeded ({$count} translations)\n";
     } else {
         fwrite(STDERR, "  FAIL bsms_bible_translations is empty — tables without the catalog seed\n");
         fwrite(STDERR, "       (the nfsda.org manual-fix scenario). The library install SQL seeds it.\n");
@@ -135,13 +126,9 @@ foreach ($installs as $install) {
     }
 
     // --- scripturelinks installed AND enabled -------------------------------
-    $row = mysqli_fetch_assoc(mysqli_query(
-        $db,
-        "SELECT enabled FROM {$prefix}extensions
-         WHERE type = 'plugin' AND folder = 'content' AND element = 'scripturelinks'"
-    ) ?: null);
+    $row = $query->find('plugin', 'scripturelinks', 'content');
 
-    if ($row === null || $row === false) {
+    if ($row === null) {
         fwrite(STDERR, "  FAIL plg_content_scripturelinks has no #__extensions row —\n");
         fwrite(STDERR, "       the package never installed it.\n");
         $failures++;
@@ -153,7 +140,6 @@ foreach ($installs as $install) {
         echo "  OK   plg_content_scripturelinks installed and enabled\n";
     }
 
-    mysqli_close($db);
 }
 
 if ($failures > 0) {
