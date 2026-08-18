@@ -15,6 +15,7 @@ namespace CWM\Component\Proclaim\Administrator\Lib;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Library\Scripture\Helper\ScriptureHelper as CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
@@ -272,11 +273,7 @@ class CwmscriptureMigration
      */
     private static function columnExists(DatabaseInterface $db, string $column): bool
     {
-        $db->setQuery(
-            'SHOW COLUMNS FROM ' . $db->quoteName('#__bsms_studies') . ' LIKE ' . $db->quote($column)
-        );
-
-        return $db->loadRow() !== null;
+        return CwmdbHelper::columnExists('#__bsms_studies', $column);
     }
 
     /**

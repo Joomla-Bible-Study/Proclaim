@@ -291,6 +291,80 @@ class CwmdbHelper
     }
 
     /**
+     * Whether a table exists in this site's database.
+     *
+     * ⚠️ Not `SHOW TABLES LIKE`. In a LIKE pattern `_` matches any single
+     * character, and every Joomla prefix ends in one -- so
+     * `SHOW TABLES LIKE 'jos_bsms_admin'` also matches a table literally named
+     * `josXbsmsYadmin`. The query reads as an equality test and is not one.
+     *
+     * A collision needs a table of identical length differing only at the
+     * underscore positions, which is why nothing has gone wrong in practice:
+     * measured across a real 104-table schema, zero pairs collide. It is still
+     * the wrong question to ask, and asking the right one costs nothing.
+     *
+     * information_schema keeps the property the old query was chosen for --
+     * it does not enumerate every table the way getTableList() does.
+     *
+     * @param   string  $table  Table name, with either the `#__` placeholder or
+     *                          the real prefix.
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function tableExists(string $table): bool
+    {
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $real = str_replace('#__', $db->getPrefix(), $table);
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('information_schema.TABLES'))
+            ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
+            ->where($db->quoteName('TABLE_NAME') . ' = :name')
+            ->bind(':name', $real);
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult() > 0;
+    }
+
+    /**
+     * Whether a column exists on a table.
+     *
+     * The same wildcard problem as {@see tableExists()}: `SHOW COLUMNS FROM x
+     * LIKE 'teacher_id'` also matches a column named `teacherXid`, because `_`
+     * is a single-character wildcard. Less likely to collide than a table name
+     * carrying a prefix underscore, and the same wrong question.
+     *
+     * @param   string  $table   Table name, `#__` placeholder or real prefix.
+     * @param   string  $column  Column name, matched exactly.
+     *
+     * @return  bool
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function columnExists(string $table, string $column): bool
+    {
+        $db   = Factory::getContainer()->get(DatabaseInterface::class);
+        $real = str_replace('#__', $db->getPrefix(), $table);
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('information_schema.COLUMNS'))
+            ->where($db->quoteName('TABLE_SCHEMA') . ' = DATABASE()')
+            ->where($db->quoteName('TABLE_NAME') . ' = :table')
+            ->where($db->quoteName('COLUMN_NAME') . ' = :column')
+            ->bind(':table', $real)
+            ->bind(':column', $column);
+
+        $db->setQuery($query);
+
+        return (int) $db->loadResult() > 0;
+    }
+
+    /**
      * The scripture stack: tables that carry the `bsms_` prefix but belong to
      * lib_cwmscripture, not to Proclaim.
      *
@@ -398,13 +472,10 @@ class CwmdbHelper
     public static function getInstallState(): bool
     {
         if (!\is_bool(self::$install_state)) {
-            $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-            // Check if JBSM can be found from the database
-            $table = $db->getPrefix() . 'bsms_admin';
-            $db->setQuery("SHOW TABLES LIKE {$db->quote($table)}");
-
-            if ($db->loadResult() !== $table) {
+            // Comparing the returned name (rather than testing truthiness)
+            // made this immune to the LIKE wildcard by accident. tableExists()
+            // makes that deliberate, and says so.
+            if (!self::tableExists('#__bsms_admin')) {
                 self::$install_state = true;
             }
         }
