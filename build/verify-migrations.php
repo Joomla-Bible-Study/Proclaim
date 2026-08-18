@@ -43,7 +43,9 @@
 
 declare(strict_types=1);
 
+use CWM\BuildTools\Dev\ExtensionQuery;
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -337,39 +339,17 @@ foreach ($installs as $install) {
         continue;
     }
 
-    // Load the install's config in an isolated scope to read DB connection details.
-    $db = (static function (string $configFile): array {
-        require $configFile;
-        $c = new \JConfig();
-
-        return [
-            'host'   => $c->host,
-            'user'   => $c->user,
-            'pass'   => $c->password,
-            'name'   => $c->db,
-            'prefix' => $c->dbprefix,
-        ];
-    })($config);
-
-    // configuration.php may store host as "host:port".
-    $host = $db['host'];
-    $port = null;
-
-    if (str_contains($host, ':')) {
-        [$host, $portStr] = explode(':', $host, 2);
-        $port             = (int) $portStr;
-    }
-
-    $mysqli = @new mysqli($host, $db['user'], $db['pass'], $db['name'], $port ?? 3306);
-
-    if ($mysqli->connect_errno !== 0) {
-        echo "{$red}FAIL{$reset} DB connection: {$mysqli->connect_error}\n";
+    try {
+        $site = TestSite::fromPath($install->path);
+        $site->db();
+    } catch (\RuntimeException $e) {
+        echo "{$red}FAIL{$reset} DB connection: " . $e->getMessage() . "\n";
         $overall = false;
 
         continue;
     }
 
-    $expand = static fn (string $t): string => str_replace('#__', $db['prefix'], $t);
+    $query = new ExtensionQuery($site);
 
     /*
      * Proclaim's tables outlive Proclaim: an uninstall keeps them unless the
@@ -378,13 +358,11 @@ foreach ($installs as $install) {
      * would be the #__schemas check failing for a reason that reads like schema
      * drift. Say what actually happened instead.
      */
-    if (!proclaimInstalled($mysqli, $db['prefix'])) {
+    if (!$query->exists('component', 'com_proclaim')) {
         echo "{$red}FAIL{$reset} com_proclaim is not installed on this site — nothing to verify a schema against.\n";
         echo "       Its bsms_ tables may still be present; an uninstall keeps them by default.\n";
         echo "       Install Proclaim here (composer test:install) and run this again.\n";
         $overall = false;
-        $mysqli->close();
-
         continue;
     }
 
@@ -395,25 +373,21 @@ foreach ($installs as $install) {
 
         // --- tables -------------------------------------------------------
         foreach ($expected['tables'] ?? [] as $table) {
-            $real      = $expand($table);
-            $ok        = tableExists($mysqli, $db['name'], $real);
+            $ok        = $site->hasTable($table);
             $results[] = [$ok, "[{$version}] table {$table}"];
         }
 
         // --- columns ------------------------------------------------------
         foreach ($expected['columns'] ?? [] as $table => $cols) {
-            $real = $expand($table);
-
             foreach ($cols as $col) {
-                $ok        = columnExists($mysqli, $db['name'], $real, $col);
+                $ok        = $site->hasColumn($table, $col);
                 $results[] = [$ok, "[{$version}] column {$table}.{$col}"];
             }
         }
 
         // --- tables that must be gone -------------------------------------
         foreach ($expected['tablesAbsent'] ?? [] as $table) {
-            $real      = $expand($table);
-            $ok        = !tableExists($mysqli, $db['name'], $real);
+            $ok        = !$site->hasTable($table);
             $results[] = [$ok, "[{$version}] table {$table} removed"];
         }
 
@@ -423,20 +397,16 @@ foreach ($installs as $install) {
         // column but registers only the first — asserting each one is what
         // catches that.
         foreach ($expected['columnsAbsent'] ?? [] as $table => $cols) {
-            $real = $expand($table);
-
             foreach ($cols as $col) {
-                $ok        = !columnExists($mysqli, $db['name'], $real, $col);
+                $ok        = !$site->hasColumn($table, $col);
                 $results[] = [$ok, "[{$version}] column {$table}.{$col} removed"];
             }
         }
 
         // --- indexes ------------------------------------------------------
         foreach ($expected['indexes'] ?? [] as $table => $idxs) {
-            $real = $expand($table);
-
             foreach ($idxs as $idx) {
-                $ok        = indexExists($mysqli, $db['name'], $real, $idx);
+                $ok        = $site->hasIndex($table, $idx);
                 $results[] = [$ok, "[{$version}] index {$table}.{$idx}"];
             }
         }
@@ -446,7 +416,7 @@ foreach ($installs as $install) {
     // Only the newest applicable minimum is asserted; it implies every earlier one.
     if (!empty($EXPECTATIONS[$key]['schemaMin'])) {
         $schemaMin     = $EXPECTATIONS[$key]['schemaMin'];
-        $schemaVersion = schemaVersion($mysqli, $db['prefix']);
+        $schemaVersion = $query->schemaVersion('component', 'com_proclaim');
         $ok            = $schemaVersion !== null
             && version_compare($schemaVersion, $schemaMin, '>=');
         $label         = "#__schemas >= {$schemaMin} (found " . ($schemaVersion ?? 'none') . ')';
@@ -461,8 +431,6 @@ foreach ($installs as $install) {
             $overall = false;
         }
     }
-
-    $mysqli->close();
 }
 
 echo "\n";
@@ -505,104 +473,7 @@ function migrationFilesFor(string $root, string $version): array
     );
 }
 
-/**
- * @since __DEPLOY_VERSION__
- */
-function tableExists(mysqli $db, string $schema, string $table): bool
-{
-    $stmt = $db->prepare(
-        'SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? LIMIT 1'
-    );
-    $stmt->bind_param('ss', $schema, $table);
-    $stmt->execute();
-    $exists = (bool) $stmt->get_result()->fetch_row();
-    $stmt->close();
 
-    return $exists;
-}
 
-/**
- * @since __DEPLOY_VERSION__
- */
-function columnExists(mysqli $db, string $schema, string $table, string $column): bool
-{
-    $stmt = $db->prepare(
-        'SELECT 1 FROM information_schema.COLUMNS
-         WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? LIMIT 1'
-    );
-    $stmt->bind_param('sss', $schema, $table, $column);
-    $stmt->execute();
-    $exists = (bool) $stmt->get_result()->fetch_row();
-    $stmt->close();
 
-    return $exists;
-}
 
-/**
- * @since __DEPLOY_VERSION__
- */
-function indexExists(mysqli $db, string $schema, string $table, string $index): bool
-{
-    $stmt = $db->prepare(
-        'SELECT 1 FROM information_schema.STATISTICS
-         WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND INDEX_NAME = ? LIMIT 1'
-    );
-    $stmt->bind_param('sss', $schema, $table, $index);
-    $stmt->execute();
-    $exists = (bool) $stmt->get_result()->fetch_row();
-    $stmt->close();
-
-    return $exists;
-}
-
-/**
- * Whether com_proclaim is registered on this install.
- *
- * @param   mysqli  $db      Connection to the install's database.
- * @param   string  $prefix  That install's table prefix.
- *
- * @return  bool
- *
- * @since __DEPLOY_VERSION__
- */
-function proclaimInstalled(mysqli $db, string $prefix): bool
-{
-    $res = $db->query(
-        'SELECT extension_id FROM ' . $prefix . "extensions"
-        . " WHERE element = 'com_proclaim' AND type = 'component' LIMIT 1"
-    );
-
-    return $res !== false && $res->num_rows > 0;
-}
-
-/**
- * The recorded schema version for com_proclaim, or null when there is none.
- *
- * @param   mysqli  $db      Connection to the install's database.
- * @param   string  $prefix  That install's table prefix.
- *
- * @return  string|null
- *
- * @since __DEPLOY_VERSION__
- */
-function schemaVersion(mysqli $db, string $prefix): ?string
-{
-    $ext    = $prefix . 'extensions';
-    $schema = $prefix . 'schemas';
-
-    $sql = "SELECT s.version_id
-            FROM {$schema} s
-            INNER JOIN {$ext} e ON e.extension_id = s.extension_id
-            WHERE e.element = 'com_proclaim' AND e.type = 'component'
-            LIMIT 1";
-
-    $res = $db->query($sql);
-
-    if ($res === false) {
-        return null;
-    }
-
-    $row = $res->fetch_row();
-
-    return $row ? (string) $row[0] : null;
-}
