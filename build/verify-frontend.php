@@ -37,6 +37,7 @@
 declare(strict_types=1);
 
 use CWM\BuildTools\Dev\PropertiesReader;
+use CWM\BuildTools\Dev\TestSite;
 
 $root = \dirname(__DIR__);
 
@@ -103,56 +104,37 @@ foreach ($installs as $install) {
         continue;
     }
 
-    [$host, $user, $pass, $name, $prefix] = (static function (string $file): array {
-        require $file;
-        $c = new \JConfig();
-
-        return [$c->host, $c->user, $c->password, $c->db, $c->dbprefix];
-    })($configFile);
-
-    $port = 3306;
-
-    if (str_contains($host, ':')) {
-        [$host, $portString] = explode(':', $host, 2);
-        $port                = (int) $portString;
-    }
-
-    $db = @mysqli_connect($host, $user, $pass, $name, $port);
-
-    if (!$db) {
-        fwrite(STDERR, '  cannot connect: ' . mysqli_connect_error() . "\n");
+    try {
+        $site = TestSite::fromPath($install->path);
+        $db   = $site->db();
+    } catch (\RuntimeException $e) {
+        fwrite(STDERR, '  cannot connect: ' . $e->getMessage() . "\n");
         $failures++;
 
         continue;
     }
 
-    $items  = [];
-    $result = mysqli_query(
-        $db,
-        "SELECT id, alias, link FROM {$prefix}menu WHERE client_id = 0 AND note = '" . SEED_NOTE . "' ORDER BY id"
+    $statement = $db->prepare(
+        'SELECT id, alias, link FROM ' . $site->table('#__menu')
+        . ' WHERE client_id = 0 AND note = ? ORDER BY id'
     );
-
-    while ($result && $row = mysqli_fetch_assoc($result)) {
-        $items[] = $row;
-    }
+    $statement->execute([SEED_NOTE]);
+    $items = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // The book the seeded study cites, read from the stored reference rather
     // than resolved through the library: this script asserts what the page
     // says, so it must not get its expectation from the same code that
     // produces the page.
     $expectedBook = null;
-    $reference    = mysqli_fetch_row(mysqli_query(
-        $db,
-        "SELECT s.reference_text FROM {$prefix}bsms_study_scriptures AS s "
-        . "INNER JOIN {$prefix}bsms_studies AS st ON st.id = s.study_id "
-        . 'WHERE st.published = 1 AND s.reference_text <> \'\' ORDER BY s.id LIMIT 1'
-    ) ?: null);
+    $reference    = $db->query(
+        'SELECT s.reference_text FROM ' . $site->table('#__bsms_study_scriptures') . ' AS s '
+        . 'INNER JOIN ' . $site->table('#__bsms_studies') . ' AS st ON st.id = s.study_id '
+        . "WHERE st.published = 1 AND s.reference_text <> '' ORDER BY s.id LIMIT 1"
+    )->fetchColumn();
 
-    if ($reference !== null) {
-        $expectedBook = trim(preg_replace('/\s+\d.*$/', '', (string) $reference[0]));
+    if ($reference !== false) {
+        $expectedBook = trim(preg_replace('/\s+\d.*$/', '', (string) $reference));
     }
-
-    mysqli_close($db);
 
     if ($items === []) {
         fwrite(STDERR, "  no seeded menu items — run build/seed-testsite-menus.php first.\n");

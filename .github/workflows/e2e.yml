@@ -60,6 +60,24 @@ on:
       - 'build/build-subpackages.sh'
       - 'build/verify-api-install.php'
       - 'build/verify-migrations.php'
+      # ⚠️ test-install.sh and test-upgrade.sh invoke twelve build/ scripts
+      # between them, and only four were listed here. The other eight were
+      # executed by this job on every run while never triggering it, so a
+      # change to one reached CI only when it happened to ride along with a
+      # gated file. verify-frontend.php was migrated off mysqli in #1892 and
+      # this job -- the only thing that runs it -- did not start. Same shape as
+      # #1755, #1754 and #1879 above.
+      #
+      # These are build-harness scripts that change rarely, so unlike the
+      # admin/src entries above this costs almost nothing in extra runs.
+      - 'build/build-baseline.sh'
+      - 'build/seed-testsite-menus.php'
+      - 'build/verify-frontend.php'
+      - 'build/verify-install-log.php'
+      - 'build/verify-schema-check.php'
+      - 'build/verify-scripture-install.php'
+      - 'build/verify-scripture-uninstall.php'
+      - 'build/verify-scripture-upgrade.php'
       - 'playwright.config.js'
       # The harness resets the site through cwm-reset-testsite and resolves its
       # upgrade baseline through cwm-baseline, both of which live in
