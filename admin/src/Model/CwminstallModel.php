@@ -1240,11 +1240,9 @@ class CwminstallModel extends ListModel
     public function uninstall(): bool
     {
         // Check if CWM can be found in the database
-        $table = $this->getDatabase()->getPrefix() . 'bsms_admin';
-        $this->getDatabase()->setQuery("SHOW TABLES LIKE {$this->getDatabase()->quote($table)}");
         $drop_result = '';
 
-        if ($this->getDatabase()->loadResult()) {
+        if (CwmdbHelper::tableExists('#__bsms_admin')) {
             $query = $this->getDatabase()->createQuery();
             $query->select('*')
                 ->from($this->getDatabase()->quoteName('#__bsms_admin'))

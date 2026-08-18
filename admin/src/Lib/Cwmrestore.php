@@ -860,11 +860,13 @@ class Cwmrestore
             $realName     = str_replace('#__', $prefix, $abstractName);
 
             try {
-                // Check whether the table has an `id` column
-                $db->setQuery('SHOW COLUMNS FROM ' . $db->quoteName($abstractName) . ' LIKE ' . $db->quote('id'));
-                $column = $db->loadObject();
-
-                if (!$column) {
+                // Check whether the table has an `id` column.
+                //
+                // 'id' carries no underscore, so this one was never exposed to
+                // the LIKE wildcard the way a prefixed table name is. Converted
+                // anyway: leaving the last example of the pattern in the tree is
+                // how it gets copied into somewhere that does have one.
+                if (!CwmdbHelper::columnExists($abstractName, 'id')) {
                     continue;
                 }
 

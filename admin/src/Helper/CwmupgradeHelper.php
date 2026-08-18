@@ -114,9 +114,10 @@ class CwmupgradeHelper
     }
 
     /**
-     * Check whether a specific table exists using SHOW TABLES LIKE.
+     * Check whether a specific table exists.
      *
-     * Much cheaper than getTableList() which loads ALL table names.
+     * Still much cheaper than getTableList(), which loads ALL table names --
+     * CwmdbHelper::tableExists() asks information_schema for the one name.
      *
      * @param   object  $db         Database driver instance.
      * @param   string  $tableName  Full table name (with prefix).
@@ -128,9 +129,7 @@ class CwmupgradeHelper
     private static function tableExists(object $db, string $tableName): bool
     {
         try {
-            $db->setQuery('SHOW TABLES LIKE ' . $db->quote($tableName));
-
-            return $db->loadResult() !== null;
+            return CwmdbHelper::tableExists($tableName);
         } catch (\Exception $e) {
             return false;
         }
