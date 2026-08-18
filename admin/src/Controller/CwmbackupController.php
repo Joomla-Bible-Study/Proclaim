@@ -77,7 +77,7 @@ class CwmbackupController extends BaseController
         // Initialize an empty file
         file_put_contents($tmpPath, '');
 
-        $tables     = CwmdbHelper::getObjects();
+        $tables     = CwmdbHelper::getOwnObjects();
         $tableNames = array_column($tables, 'name');
 
         // Add virtual "tables" for component config, scheduled tasks, and
@@ -522,16 +522,25 @@ class CwmbackupController extends BaseController
 
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
-        // For the first batch, drop existing tables (preserving downloaded Bible verse data)
+        // For the first batch, drop Proclaim's own tables.
+        //
+        // ⚠️ This used to carry `$preserve = ['#__bsms_bible_verses']`, meaning
+        // to keep downloaded bible data across a restore. It could not work.
+        // The export wrote a `DROP TABLE IF EXISTS` for every table it dumped,
+        // including that one, so skipping the drop here only deferred it by a
+        // few statements — the backup's own SQL dropped and recreated the table
+        // from the snapshot. The intent was right and the mechanism was not
+        // (#1867).
+        //
+        // getOwnObjects() excludes the whole shared scripture stack, which is
+        // the library's to manage (#1675 settled the same question for
+        // uninstall). Nothing here drops them, and Cwmrestore rejects any
+        // statement that targets them, so an older backup still carrying those
+        // tables cannot reach them either.
         if ($batch === 0) {
-            $preserve = ['#__bsms_bible_verses'];
-            $objects  = CwmdbHelper::getObjects();
+            $objects = CwmdbHelper::getOwnObjects();
 
             foreach ($objects as $object) {
-                if (\in_array($object['name'], $preserve, true)) {
-                    continue;
-                }
-
                 $dropper = 'DROP TABLE IF EXISTS ' . $db->quoteName($object['name']);
                 $db->setQuery($dropper);
                 $db->execute();

@@ -56,7 +56,8 @@ class Cwmbackup
 
     /**
      * Cached list of this component's own table names (with `#__` prefix), as
-     * returned by CwmdbHelper::getObjects(). Populated on first use.
+     * returned by CwmdbHelper::getOwnObjects() -- Proclaim's own tables, which
+     * excludes the shared scripture stack. Populated on first use.
      *
      * @var string[]|null
      *
@@ -84,7 +85,9 @@ class Cwmbackup
     private static function isKnownProclaimTable(string $table): bool
     {
         if (self::$knownTables === null) {
-            self::$knownTables = array_column(CwmdbHelper::getObjects(), 'name');
+            // getOwnObjects(), not getObjects(): the shared scripture stack is
+            // the library's, so it is neither exported nor restored here (#1867).
+            self::$knownTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
         }
 
         if (\in_array($table, self::$knownTables, true)) {
@@ -509,7 +512,7 @@ class Cwmbackup
     public function exportdb(int $run): bool
     {
         $this->saveAsName = self::generateBackupFilename();
-        $objects          = CwmdbHelper::getObjects();
+        $objects          = CwmdbHelper::getOwnObjects();
         $config           = Factory::getApplication()->getConfig();
         $path             = $config->get('tmp_path') . '/' . $this->saveAsName;
 
