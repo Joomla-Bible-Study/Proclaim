@@ -472,8 +472,3 @@ function migrationFilesFor(string $root, string $version): array
         })
     );
 }
-
-
-
-
-
