@@ -192,6 +192,21 @@
             ]
         }
     },
+    "_schemaReplay_comment": "`root` is the extension root the manifest's relative paths resolve against, as Joomla's extension_root does \u2014 proclaim.xml sits at the repo root while the sql/ it names is under admin/, so without it every path resolves one level too high. The baseline is a SITE's schema, not this extension's install SQL alone \u2014 four migrations write to core tables no Proclaim manifest creates. Order matters: core first. Raising the supported floor means replacing com_proclaim-10.0.0.sql and moving `from` to match, not editing it.",
+    "schemaReplay": {
+        "targets": [
+            {
+                "name": "com_proclaim",
+                "manifest": "proclaim.xml",
+                "root": "admin",
+                "baseline": [
+                    "build/sql-baselines/joomla-core.sql",
+                    "build/sql-baselines/com_proclaim-10.0.0.sql"
+                ],
+                "from": "10.0.0"
+            }
+        ]
+    },
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,

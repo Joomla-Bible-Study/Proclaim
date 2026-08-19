@@ -226,6 +226,29 @@ jobs:
           JTEST_DB_PASSWORD: proclaim_test
           JTEST_DB_PREFIX: proclaim_
 
+      # The only thing that EXECUTES the 37 files in admin/sql/updates/mysql.
+      #
+      # Everything else in this job proves the destination schema is right: the
+      # steps above import install.sql, and Joomla stamps #__schemas at the
+      # newest version without running a single update file. So a migration
+      # could ship with a syntax error, or referencing a table a later version
+      # dropped, and this job would stay green -- the only machine that ever ran
+      # it would be a user's, mid-upgrade.
+      #
+      # Replays from build/sql-baselines/ (a Joomla core skeleton plus
+      # com_proclaim at 10.0.0, the oldest supported upgrade source) under its
+      # own cwmreplay_ prefix, so it shares this service container with the
+      # PHPUnit database without touching proclaim_ tables.
+      #
+      # Runs once, in the 8.3 job only: what is being checked is SQL the server
+      # accepts, which does not vary by PHP version.
+      - name: Replay every migration against a scratch schema
+        run: composer schema-replay
+        env:
+          CWM_TEST_MYSQL_DSN: 'mysql:host=127.0.0.1;port=3306;dbname=proclaim_test'
+          CWM_TEST_MYSQL_USER: proclaim_test
+          CWM_TEST_MYSQL_PASSWORD: proclaim_test
+
   # Forward-compatibility coverage for the next PHP release. Blocking since
   # 2026-08-05: the suite is verified clean on 8.5, so a failure here means a
   # real forward-compat regression (e.g. a newly-deprecated API) and must be
