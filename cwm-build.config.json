@@ -218,6 +218,11 @@
         "itemDescription": "pkg_proclaim download"
     },
     "versionTracking": {
+        "_activeDevelopment_comment": "devSuffix is deliberately empty. A cycle runs on the plain next version (10.5.11 while 10.5.11 is in development), which is what @since __DEPLOY_VERSION__ should resolve to anyway -- `@since 10.5.11` is already correct during that cycle. A -dev suffix would add a rename step before every release and buys nothing: build/test-upgrade.sh gates on the manifest matching active_development and differing from current, which the plain version satisfies. It is also unsafe on the publish path -- cwm_maturity_for_version() only recognises -alpha/-beta/-rc and classifies anything else as stable, so a published -dev build would be offered to every site (cwm-build-tools#155). Use -alpha1 for an edge release.",
+        "activeDevelopment": {
+            "advanceOnRelease": true,
+            "devSuffix": ""
+        },
         "substituteTokens": {
             "paths": [
                 "admin/",
