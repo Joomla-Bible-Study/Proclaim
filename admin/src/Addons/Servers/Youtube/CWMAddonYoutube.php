@@ -2335,9 +2335,17 @@ class CWMAddonYoutube extends CWMAddon
      * YouTube needs an OAuth connection and remaining quota before it can
      * update a video.
      *
-     * Both preconditions are the ones syncDescription() enforces, so the offer
-     * and the operation agree. An API key alone is not enough: reading the
-     * channel is a key operation, writing to a video is an OAuth one.
+     * ⚠️ Deliberately inspects the stored credentials rather than calling
+     * `createOAuthClient()`, which is not a read: it refreshes an expired
+     * token over the network and writes the new one back to the server
+     * record. This runs once per server while rendering an analytics page, so
+     * it must not perform a token refresh, spend an API round trip, or write
+     * anything.
+     *
+     * An expired-but-refreshable token still counts as ready. The refresh
+     * belongs at the point of use, in `syncDescription()`, which does it
+     * anyway — the question here is only whether this server has what a push
+     * would need.
      *
      * @param   int  $serverId  The server record ID.
      *
@@ -2348,9 +2356,15 @@ class CWMAddonYoutube extends CWMAddon
     #[\Override]
     public function isDescriptionSyncReady(int $serverId): bool
     {
-        $client = $this->createOAuthClient($serverId);
+        $config = $this->getServerConfig($serverId);
 
-        if (!$client || !$client->getAccessToken()) {
+        // The same three things createOAuthClient() needs before it can
+        // produce a usable client, checked without building one.
+        if (empty($config['client_id']) || empty($config['client_secret'])) {
+            return false;
+        }
+
+        if (empty($config['oauth_token'])) {
             return false;
         }
 
