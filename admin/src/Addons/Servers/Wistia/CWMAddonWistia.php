@@ -395,6 +395,24 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * Wistia needs the server's API token before it can update a media item.
+     *
+     * Mirrors the precondition in syncDescription() exactly, so the offer and
+     * the operation cannot disagree.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return $this->getServerApiToken($serverId) !== '';
+    }
+
+    /**
      * Push a description to a Wistia video via PUT API.
      *
      * @param   int     $mediaId      The media file ID

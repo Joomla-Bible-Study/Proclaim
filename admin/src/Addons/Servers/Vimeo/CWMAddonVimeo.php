@@ -395,6 +395,24 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
+     * Vimeo needs the server's access token before it can PATCH a video.
+     *
+     * Mirrors the precondition in syncDescription() exactly, so the offer and
+     * the operation cannot disagree.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return $this->getServerAccessToken($serverId) !== '';
+    }
+
+    /**
      * Push a description to a Vimeo video via PATCH API.
      *
      * @param   int     $mediaId      The media file ID

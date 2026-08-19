@@ -2332,6 +2332,34 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * YouTube needs an OAuth connection and remaining quota before it can
+     * update a video.
+     *
+     * Both preconditions are the ones syncDescription() enforces, so the offer
+     * and the operation agree. An API key alone is not enough: reading the
+     * channel is a key operation, writing to a video is an OAuth one.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        $client = $this->createOAuthClient($serverId);
+
+        if (!$client || !$client->getAccessToken()) {
+            return false;
+        }
+
+        $cost = CwmyoutubeQuota::COST_VIDEOS + CwmyoutubeQuota::COST_VIDEO_UPDATE;
+
+        return CwmyoutubeQuota::hasQuota($serverId, $cost);
+    }
+
+    /**
      * Push a description to a YouTube video via the Data API v3.
      *
      * Requires OAuth — videos.update needs the full snippet (title, description,
