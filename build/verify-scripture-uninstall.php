@@ -71,6 +71,8 @@ $modes = [
     'restore-manifest',
     'assert-translation-survived',
     'assert-translation-destroyed',
+    'suspend-system-disarm',
+    'resume-system-disarm',
 ];
 
 if (!\in_array($mode, $modes, true)) {
@@ -759,6 +761,58 @@ foreach ($installs as $install) {
 
             break;
 
+
+        // ⚠️ These two exist because a SECOND protection now masks the first.
+        //
+        // plg_system_cwmscripture rewrites the library's uninstall SQL to an
+        // inert file before an install or update runs. Since CWMScriptureLinks
+        // 1.2.11 it subscribes onExtensionBeforeUpdate as well as
+        // onExtensionBeforeInstall, so it fires on the library-update path too --
+        // which is the path the negative control uses.
+        //
+        // The effect is that the control could no longer fail: the plugin
+        // disarmed the planted SQL before Joomla parsed it, the data survived,
+        // and "a library update with no disarm destroys data" stopped being
+        // true. A negative control that cannot fail makes the positive phase
+        // beside it vacuous too, so both phases suspend the plugin and a third
+        // phase covers the plugin's own behaviour deliberately.
+        //
+        // Suspending is a row update rather than an uninstall: the plugin has to
+        // come back, and reinstalling it would run the very installer path under
+        // test.
+        case 'suspend-system-disarm':
+        case 'resume-system-disarm':
+            $enable = $mode === 'resume-system-disarm' ? 1 : 0;
+            $stmt   = $db->prepare(
+                "UPDATE `{$extensions}` SET `enabled` = ?
+                  WHERE `type` = 'plugin' AND `folder` = 'system' AND `element` = 'cwmscripture'"
+            );
+            $stmt->execute([$enable]);
+
+            if ($stmt->rowCount() === 0) {
+                // Already in the wanted state is fine; absent is not. Asserting
+                // the row exists keeps a renamed or missing plugin from reading
+                // as "suspended" and quietly restoring the mask.
+                $row = $rowOrNull(
+                    $db,
+                    "SELECT `enabled` FROM `{$extensions}`
+                      WHERE `type` = 'plugin' AND `folder` = 'system' AND `element` = 'cwmscripture'"
+                );
+
+                if ($row === null) {
+                    fwrite(STDERR, "  FAIL plg_system_cwmscripture is not installed, so its disarm cannot be\n");
+                    fwrite(STDERR, "       suspended. The negative control would silently measure nothing.\n");
+                    $failures++;
+
+                    break;
+                }
+            }
+
+            echo $enable === 1
+                ? "  OK   plg_system_cwmscripture re-enabled — its automatic disarm is back\n"
+                : "  OK   plg_system_cwmscripture suspended — the planted SQL will reach the installer\n";
+
+            break;
 
         case 'assert-sql-armed':
         case 'assert-sql-disarmed':
