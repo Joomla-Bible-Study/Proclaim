@@ -219,7 +219,11 @@ async function shoot(page, file, locator) {
 
                     try {
                         await all.nth(i).click({ timeout: 5000 });
-                    } catch (e) {
+                    } catch {
+                        // A tab that will not open -- a ColorPicker's nested
+                        // tablist is present but hidden until the picker is
+                        // opened. Skip it rather than abandon the remaining
+                        // tabs on this form.
                         console.log(`  -- ${slug}: tab would not open, skipped`);
                         continue;
                     }
