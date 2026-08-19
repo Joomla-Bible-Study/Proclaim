@@ -152,7 +152,7 @@ class Cwmrestore
      *
      * @return  bool  True when the statement should be skipped entirely
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     private static function targetsPreservedTable(string $statement): bool
     {

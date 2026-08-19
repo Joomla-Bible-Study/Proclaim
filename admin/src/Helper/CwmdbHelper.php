@@ -311,7 +311,7 @@ class CwmdbHelper
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function tableExists(string $table): bool
     {
@@ -343,7 +343,7 @@ class CwmdbHelper
      *
      * @return  bool
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function columnExists(string $table, string $column): bool
     {
@@ -381,7 +381,7 @@ class CwmdbHelper
      *
      * @return  string[]  Table names with the `#__` prefix.
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function getScriptureTables(): array
     {
@@ -406,7 +406,7 @@ class CwmdbHelper
      *
      * @return  array<int, array{name: string}>
      *
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     public static function getOwnObjects(): array
     {

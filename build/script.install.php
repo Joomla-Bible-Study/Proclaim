@@ -53,7 +53,7 @@ return new class () implements InstallerScriptInterface {
      * The ARS stream id Proclaim releases are announced on.
      *
      * @var string
-     * @since __DEPLOY_VERSION__
+     * @since 10.5.10
      */
     private const CURRENT_STREAM = '1';
 
@@ -431,7 +431,7 @@ return new class () implements InstallerScriptInterface {
      *
      * @return  int[]  Those on the current stream
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private function currentStreamSites(array $siteIds): array
     {

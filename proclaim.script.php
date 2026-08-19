@@ -153,7 +153,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Each entry: name, seconds, and the failure message if it did not finish.
      *
      * @var    array<int, array{name: string, secs: float, error: string}>
-     * @since  __DEPLOY_VERSION__
+     * @since  10.5.10
      */
     private array $taskLog = [];
 
@@ -664,7 +664,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  mixed  Whatever $work returned
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.5.10
      */
     private function task(string $name, callable $work): mixed
     {
