@@ -762,24 +762,24 @@ foreach ($installs as $install) {
             break;
 
 
-        // ⚠️ These two exist because a SECOND protection now masks the first.
-        //
-        // plg_system_cwmscripture rewrites the library's uninstall SQL to an
-        // inert file before an install or update runs. Since CWMScriptureLinks
-        // 1.2.11 it subscribes onExtensionBeforeUpdate as well as
-        // onExtensionBeforeInstall, so it fires on the library-update path too --
-        // which is the path the negative control uses.
-        //
-        // The effect is that the control could no longer fail: the plugin
-        // disarmed the planted SQL before Joomla parsed it, the data survived,
-        // and "a library update with no disarm destroys data" stopped being
-        // true. A negative control that cannot fail makes the positive phase
-        // beside it vacuous too, so both phases suspend the plugin and a third
-        // phase covers the plugin's own behaviour deliberately.
-        //
-        // Suspending is a row update rather than an uninstall: the plugin has to
-        // come back, and reinstalling it would run the very installer path under
-        // test.
+            // ⚠️ These two exist because a SECOND protection now masks the first.
+            //
+            // plg_system_cwmscripture rewrites the library's uninstall SQL to an
+            // inert file before an install or update runs. Since CWMScriptureLinks
+            // 1.2.11 it subscribes onExtensionBeforeUpdate as well as
+            // onExtensionBeforeInstall, so it fires on the library-update path too --
+            // which is the path the negative control uses.
+            //
+            // The effect is that the control could no longer fail: the plugin
+            // disarmed the planted SQL before Joomla parsed it, the data survived,
+            // and "a library update with no disarm destroys data" stopped being
+            // true. A negative control that cannot fail makes the positive phase
+            // beside it vacuous too, so both phases suspend the plugin and a third
+            // phase covers the plugin's own behaviour deliberately.
+            //
+            // Suspending is a row update rather than an uninstall: the plugin has to
+            // come back, and reinstalling it would run the very installer path under
+            // test.
         case 'suspend-system-disarm':
         case 'resume-system-disarm':
             $enable = $mode === 'resume-system-disarm' ? 1 : 0;
