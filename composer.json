@@ -162,6 +162,7 @@
     "sync-languages-force": "cwm-sync-languages --force",
     "sync-languages-setup": "cwm-sync-languages setup",
     "sync-configs": "cwm-sync-configs",
+    "schema-replay": "cwm-schema-replay",
     "vendor:check": "node libraries/vendor/cwm/build-tools/templates/vendor-check.js",
     "vendor:update": "node libraries/vendor/cwm/build-tools/templates/vendor-update.js",
     "post-install-cmd": [

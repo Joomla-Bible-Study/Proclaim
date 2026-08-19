@@ -192,6 +192,20 @@
             ]
         }
     },
+    "_schemaReplay_comment": "The baseline is a SITE's schema, not this extension's install SQL alone \u2014 four migrations write to core tables no Proclaim manifest creates. Order matters: core first. Raising the supported floor means replacing com_proclaim-10.0.0.sql and moving `from` to match, not editing it.",
+    "schemaReplay": {
+        "targets": [
+            {
+                "name": "com_proclaim",
+                "manifest": "admin/proclaim.xml",
+                "baseline": [
+                    "build/sql-baselines/joomla-core.sql",
+                    "build/sql-baselines/com_proclaim-10.0.0.sql"
+                ],
+                "from": "10.0.0"
+            }
+        ]
+    },
     "ars": {
         "endpoint": "https://www.christianwebministries.org",
         "categoryId": 1,
