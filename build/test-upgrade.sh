@@ -535,8 +535,24 @@ cp "$LIBSRC" "$LIBZIP"
 # The baseline no longer supplies the hazard: lib_cwmscripture has shipped a
 # disarmed uninstall SQL since 1.1.5, so these two phases plant the pre-1.1.5
 # file themselves and then assert it really is armed before relying on it.
+# ⚠️ Phases 15 and 16 suspend plg_system_cwmscripture, and phase 16b covers it.
+#
+# That plugin rewrites the library's uninstall SQL to an inert file before an
+# install runs, and since CWMScriptureLinks 1.2.11 it subscribes
+# onExtensionBeforeUpdate as well as onExtensionBeforeInstall -- so it now fires
+# on the library-update path these phases use.
+#
+# It disarmed the planted SQL before Joomla could parse it, so the negative
+# control stopped being able to fail: the data survived, and "an un-disarmed
+# update destroys data" was no longer true on this fixture. A negative control
+# that cannot fail makes the positive phase next to it vacuous as well -- phase
+# 16 would have passed whether or not the explicit disarm did anything.
+#
+# So both phases isolate the hazard from that plugin, and 16b asserts the
+# plugin's own protection on purpose, which nothing covered before.
 echo "-- [15/17] NEGATIVE CONTROL: library-only update with no disarm must destroy data"
 "$BIN/cwm-install-zip" --zip "$BASEZIP" >/dev/null
+php build/verify-scripture-uninstall.php suspend-system-disarm
 php build/verify-scripture-uninstall.php arm
 php build/verify-scripture-uninstall.php assert-sql-armed
 php build/verify-scripture-uninstall.php seed-translation
@@ -552,6 +568,7 @@ php build/verify-scripture-uninstall.php assert-translation-destroyed
 
 echo "-- [16/17] library-only update AFTER the disarm must preserve data"
 "$BIN/cwm-install-zip" --zip "$BASEZIP" >/dev/null
+php build/verify-scripture-uninstall.php suspend-system-disarm
 php build/verify-scripture-uninstall.php arm
 php build/verify-scripture-uninstall.php assert-sql-armed
 php build/verify-scripture-uninstall.php seed-translation
@@ -563,6 +580,32 @@ if ! php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1;
 fi
 
 php build/verify-scripture-uninstall.php assert-translation-survived
+
+# The protection real sites actually rely on, asserted rather than assumed.
+# Nothing disarms the SQL here by hand: the plugin is enabled and has to do it
+# itself, on the update path, before Joomla parses the file. This is what made
+# phases 15 and 16 stop discriminating, so it is worth an assertion of its own
+# rather than being the silent reason two other phases passed.
+echo "-- [16b/17] with plg_system_cwmscripture ENABLED, its disarm must protect the data"
+"$BIN/cwm-install-zip" --zip "$BASEZIP" >/dev/null
+php build/verify-scripture-uninstall.php resume-system-disarm
+php build/verify-scripture-uninstall.php arm
+php build/verify-scripture-uninstall.php assert-sql-armed
+php build/verify-scripture-uninstall.php seed-translation
+if ! php "$JCLI" extension:install -n --path="$(pwd)/${LIBZIP}" >/dev/null 2>&1; then
+    echo "ERROR: the library-only update failed, so 'the data survived' is vacuous." >&2
+    exit 1
+fi
+# Deliberately NOT assert-sql-disarmed here. After the update the file on disk
+# is 1.1.18's own shipped uninstall SQL, which is inert whatever the plugin did,
+# so that assertion would pass without the plugin having done anything. The data
+# surviving a *planted armed* file is the only thing that discriminates.
+php build/verify-scripture-uninstall.php assert-translation-survived
+
+# Leave the plugin enabled whatever the phases above did: test:e2e runs against
+# this install straight after, and a suspended system plugin would fail it for a
+# reason that has nothing to do with the change under test.
+php build/verify-scripture-uninstall.php resume-system-disarm
 
 # Phases 14 and 15 use the released baseline as their fixture, so the site is
 # left on ${BASEVER} with a newer library over it. Nothing here needs the site
