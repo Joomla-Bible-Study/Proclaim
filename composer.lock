@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b9e366487d31c6fb4ef51aeda4cce7d",
+    "content-hash": "ec60bef7e149ccafbbf7407943788870",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -548,16 +548,16 @@
         },
         {
             "name": "cwm/build-tools",
-            "version": "v1.28.0",
+            "version": "v1.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Joomla-Bible-Study/cwm-build-tools.git",
-                "reference": "289b22ac9e0c563458c2d76a1e7240c866f7ef80"
+                "reference": "3b99210586ca0e8b68c87ded8028f61fbe824292"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/289b22ac9e0c563458c2d76a1e7240c866f7ef80",
-                "reference": "289b22ac9e0c563458c2d76a1e7240c866f7ef80",
+                "url": "https://api.github.com/repos/Joomla-Bible-Study/cwm-build-tools/zipball/3b99210586ca0e8b68c87ded8028f61fbe824292",
+                "reference": "3b99210586ca0e8b68c87ded8028f61fbe824292",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +599,8 @@
                 "bin/cwm-lint-comments",
                 "bin/cwm-lint-workflows",
                 "bin/cwm-reset-testsite",
-                "bin/cwm-verify-update-stream"
+                "bin/cwm-verify-update-stream",
+                "bin/cwm-schema-replay"
             ],
             "type": "library",
             "autoload": {
@@ -664,10 +665,10 @@
                 "release"
             ],
             "support": {
-                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.28.0",
+                "source": "https://github.com/Joomla-Bible-Study/cwm-build-tools/tree/v1.29.0",
                 "issues": "https://github.com/Joomla-Bible-Study/cwm-build-tools/issues"
             },
-            "time": "2026-08-18T21:22:29+00:00"
+            "time": "2026-08-19T12:54:25+00:00"
         },
         {
             "name": "danog/advanced-json-rpc",
