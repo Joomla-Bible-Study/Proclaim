@@ -64,6 +64,13 @@ const TARGETS = [
     { key: 'templatecodes', view: 'cwmtemplatecodes' },
     { key: 'comments', view: 'cwmcomments' },
     { key: 'playlists', view: 'cwmplaylists' },
+    { key: 'mediafile', task: 'cwmmediafile.edit', id: 1, tabs: true },
+    { key: 'server', task: 'cwmserver.edit', id: 1, tabs: true },
+    { key: 'messagetype', task: 'cwmmessagetype.edit', id: 1, tabs: true },
+    { key: 'templatecode', task: 'cwmtemplatecode.edit', id: 1, tabs: true },
+    // No comments exist on a demo-seeded site, so capture the blank form --
+    // which is what a reader following "select New" sees anyway.
+    { key: 'comment', task: 'cwmcomment.add', tabs: true },
     { key: 'admin', view: 'cwmadmin', tabs: true },
     { key: 'cwmassets', view: 'cwmassets' },
     { key: 'cwmpermissions', view: 'cwmpermissions' },
