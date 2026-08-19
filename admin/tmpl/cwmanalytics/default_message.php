@@ -127,7 +127,7 @@ $tsJson = json_encode([
     // Gate 1 is a property of the addon class; gate 3 is a property of the
     // individual server, because a capable platform still cannot be written
     // to until its credentials are configured. Offering the action on gate 1
-    // alone produces a button that always fails (#1920).
+    // alone produces a button that always fails.
     //
     // ⚠️ Keyed on the media file's own server type, not the `platform` in
     // #__bsms_platform_stats. Those are different values, and the stats one

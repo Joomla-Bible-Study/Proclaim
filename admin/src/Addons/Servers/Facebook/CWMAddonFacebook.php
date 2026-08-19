@@ -394,7 +394,7 @@ class CWMAddonFacebook extends CWMAddon
      * after telling them it is.
      *
      * Flip this to true in the same change that implements the push, never
-     * before. See #1920.
+     * before.
      *
      * @return  bool
      *
