@@ -2332,6 +2332,48 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * YouTube needs an OAuth connection and remaining quota before it can
+     * update a video.
+     *
+     * ⚠️ Deliberately inspects the stored credentials rather than calling
+     * `createOAuthClient()`, which is not a read: it refreshes an expired
+     * token over the network and writes the new one back to the server
+     * record. This runs once per server while rendering an analytics page, so
+     * it must not perform a token refresh, spend an API round trip, or write
+     * anything.
+     *
+     * An expired-but-refreshable token still counts as ready. The refresh
+     * belongs at the point of use, in `syncDescription()`, which does it
+     * anyway — the question here is only whether this server has what a push
+     * would need.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        $config = $this->getServerConfig($serverId);
+
+        // The same three things createOAuthClient() needs before it can
+        // produce a usable client, checked without building one.
+        if (empty($config['client_id']) || empty($config['client_secret'])) {
+            return false;
+        }
+
+        if (empty($config['oauth_token'])) {
+            return false;
+        }
+
+        $cost = CwmyoutubeQuota::COST_VIDEOS + CwmyoutubeQuota::COST_VIDEO_UPDATE;
+
+        return CwmyoutubeQuota::hasQuota($serverId, $cost);
+    }
+
+    /**
      * Push a description to a YouTube video via the Data API v3.
      *
      * Requires OAuth — videos.update needs the full snippet (title, description,

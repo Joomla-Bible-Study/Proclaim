@@ -10,6 +10,7 @@
  */
 \defined('_JEXEC') or die;
 
+use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
@@ -116,29 +117,78 @@ $tsJson = json_encode([
         }
     }
 
-    // Build sync-capable media list for JS (Vimeo/Wistia support API sync)
-    $syncMedia     = [];
-    $syncPlatforms = ['vimeo', 'wistia'];
+    // Whether a media file can be pushed back to its platform is the addon's
+    // answer, not a list kept here. Three gates, and all three must pass:
+    //
+    //   1. the platform can do it at all       supportsDescriptionSync()
+    //   2. the server is enabled               sv.published
+    //   3. this server is set up for it        isDescriptionSyncReady()
+    //
+    // Gate 1 is a property of the addon class; gate 3 is a property of the
+    // individual server, because a capable platform still cannot be written
+    // to until its credentials are configured. Offering the action on gate 1
+    // alone produces a button that always fails.
+    //
+    // ⚠️ Keyed on the media file's own server type, not the `platform` in
+    // #__bsms_platform_stats. Those are different values, and the stats one
+    // does not exist until a stats row does -- which would hide the option on
+    // exactly the media nobody has synced yet.
+    $syncMedia   = [];
+    $syncCapable = [];
+    $syncReady   = [];
 
     foreach ($this->studyMedia as $mf) {
         if ((int) ($mf['content_origin'] ?? 0) === 1) {
             continue;
         }
 
-        $platform = '';
+        $serverType = strtolower((string) ($mf['server_type'] ?? ''));
+        $serverId   = (int) ($mf['server_id'] ?? 0);
 
-        if (isset($platformIndex[(int) $mf['media_id']])) {
-            $platform = strtolower((string) ($platformIndex[(int) $mf['media_id']]['platform'] ?? ''));
+        if ($serverType === '' || $serverId === 0) {
+            continue;
         }
 
-        if (in_array($platform, $syncPlatforms, true)) {
-            $syncMedia[] = [
-                'mediaId'    => (int) $mf['media_id'],
-                'platform'   => $platform,
-                'canSync'    => true,
-                'serverName' => (string) ($mf['server_name'] ?? ''),
-            ];
+        // Gate 2: a disabled server is not a place to push anything.
+        if ((int) ($mf['server_published'] ?? 0) !== 1) {
+            continue;
         }
+
+        // Gate 1, cached per type -- it cannot vary between servers.
+        if (!isset($syncCapable[$serverType])) {
+            try {
+                $syncCapable[$serverType] = CWMAddon::getInstance($serverType)->supportsDescriptionSync();
+            } catch (\RuntimeException $e) {
+                // A media file whose server type no longer ships an addon. Not
+                // syncable, and not a reason to take the whole drill-down down.
+                $syncCapable[$serverType] = false;
+            }
+        }
+
+        if (!$syncCapable[$serverType]) {
+            continue;
+        }
+
+        // Gate 3, cached per server -- it reads that server's credentials, so
+        // it must not be cached by type, and it can be an API call.
+        if (!isset($syncReady[$serverId])) {
+            try {
+                $syncReady[$serverId] = CWMAddon::getInstance($serverType)->isDescriptionSyncReady($serverId);
+            } catch (\Exception $e) {
+                $syncReady[$serverId] = false;
+            }
+        }
+
+        if (!$syncReady[$serverId]) {
+            continue;
+        }
+
+        $syncMedia[] = [
+            'mediaId'    => (int) $mf['media_id'],
+            'platform'   => $serverType,
+            'canSync'    => true,
+            'serverName' => (string) ($mf['server_name'] ?? ''),
+        ];
     }
 
     $syncMediaJson = htmlspecialchars(json_encode($syncMedia, JSON_THROW_ON_ERROR), ENT_QUOTES);

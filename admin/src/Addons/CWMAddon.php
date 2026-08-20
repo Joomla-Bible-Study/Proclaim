@@ -544,6 +544,30 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this *server* can push a description right now.
+     *
+     * `supportsDescriptionSync()` answers "could the platform"; this answers
+     * "is this particular server set up to". They are different questions: a
+     * capable platform still cannot be written to until its credentials are
+     * configured, so offering the action on the strength of the capability
+     * alone produces a button that always fails.
+     *
+     * Base implementation denies it, so an addon that has not thought about
+     * its own prerequisites never claims readiness. Override alongside
+     * `syncDescription()` and check exactly what that method needs.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return false;
+    }
+
+    /**
      * Push a description to a video on the platform.
      * Override in child class to implement platform-specific API calls.
      *
