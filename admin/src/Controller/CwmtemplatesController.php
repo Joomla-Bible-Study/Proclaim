@@ -307,16 +307,25 @@ class CwmtemplatesController extends AdminController
 
         if (!$exporttemplate) {
             $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
-            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
-        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
+        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title']));
         $query->from($db->quoteName('#__bsms_templates', 't'));
         $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
         $db->setQuery($query);
-        $result       = $db->loadObject();
+        $result = $db->loadObject();
+
+        // A deleted or non-existent id yields no row, which the export cannot describe.
+        if (!$result) {
+            $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+        }
+
         $objects[]    = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
         $filename     = $result->title . '.sql';
@@ -332,6 +341,22 @@ class CwmtemplatesController extends AdminController
         $message = Text::_('JBS_TPL_EXPORT_SUCCESS');
 
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+    }
+
+    /**
+     * Check whether a table is present in the current database.
+     *
+     * @param   string  $table  Table name in `#__` prefixed form
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function tableExists(string $table): bool
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        return \in_array(str_replace('#__', $db->getPrefix(), $table), $db->getTableList(), true);
     }
 
     /**
@@ -351,22 +376,27 @@ class CwmtemplatesController extends AdminController
         $params  = $registry;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
-        $css     = $params->get('css');
-        $css     = substr($css, 0, -4);
+        $css     = substr((string) $params->get('css', ''), 0, -4);
 
-        if ($css) {
-            $objects = "--\n-- CSS Style Code\n--\n";
-            $query2  = $db->createQuery();
+        // #__bsms_styles is a pre-10.0 table the install schema never creates, so
+        // only sites upgraded from 7.x still carry it — and the seeded default
+        // template names a stylesheet on every site regardless. Export the style
+        // when it is really there and skip it otherwise, rather than dying.
+        if ($css && $this->tableExists('#__bsms_styles')) {
+            $query2 = $db->createQuery();
             $query2->select($db->quoteName('style') . '.*');
             $query2->from($db->quoteName('#__bsms_styles', 'style'));
             $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
             $db->setQuery($query2);
-            $db->execute();
             $cssresult = $db->loadObject();
-            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
-                $cssresult->filename
-            )
-                . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
+
+            if ($cssresult) {
+                $objects = "--\n-- CSS Style Code\n--\n";
+                $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
+                    $cssresult->filename
+                )
+                    . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
+            }
         }
 
         // Get the individual template files
@@ -417,8 +447,7 @@ class CwmtemplatesController extends AdminController
         // Create the main template insert
         $objects .= "\nINSERT INTO #__bsms_templates SET `type` = " . $db->q($result->type) . ",";
         $objects .= "\n`params` = " . $db->q($result->params) . ",";
-        $objects .= "\n`title` = " . $db->q($result->title) . ",";
-        $objects .= "\n`text` = " . $db->q($result->text) . ";";
+        $objects .= "\n`title` = " . $db->q($result->title) . ";";
 
         $objects .= "\n-- --------------------------------------------------------\n\n";
 
