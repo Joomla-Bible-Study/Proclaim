@@ -52,6 +52,9 @@
 		<testsuite name="Admin Controller Tests">
 			<directory>tests/unit/Admin/Controller</directory>
 		</testsuite>
+		<testsuite name="Admin View Tests">
+			<directory>tests/unit/Admin/View</directory>
+		</testsuite>
 		<testsuite name="Admin Model Tests">
 			<directory>tests/unit/Admin/Model</directory>
 		</testsuite>

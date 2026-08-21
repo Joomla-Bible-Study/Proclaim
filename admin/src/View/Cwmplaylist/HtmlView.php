@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -109,26 +110,43 @@ class HtmlView extends BaseHtmlView
             'list list'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmplaylist.apply');
-            ToolbarHelper::save('cwmplaylist.save');
-            ToolbarHelper::save2new('cwmplaylist.save2new');
-            ToolbarHelper::cancel('cwmplaylist.cancel');
-        } else {
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmplaylist.apply');
-                ToolbarHelper::save('cwmplaylist.save');
+            $toolbar->apply('cwmplaylist.apply');
 
-                if ($this->canDo->get('core.create', 'com_proclaim')) {
-                    ToolbarHelper::save2new('cwmplaylist.save2new');
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmplaylist.save');
+                    $childBar->save2new('cwmplaylist.save2new');
                 }
+            );
+
+            $toolbar->cancel('cwmplaylist.cancel');
+        } else {
+            $canDo = $this->canDo;
+
+            if ($canDo->get('core.edit', 'com_proclaim')) {
+                $toolbar->apply('cwmplaylist.apply');
             }
 
-            if ($this->canDo->get('core.create', 'com_proclaim')) {
-                ToolbarHelper::save2copy('cwmplaylist.save2copy');
-            }
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) use ($canDo) {
+                    if ($canDo->get('core.edit', 'com_proclaim')) {
+                        $childBar->save('cwmplaylist.save');
 
-            ToolbarHelper::cancel('cwmplaylist.cancel', 'JTOOLBAR_CLOSE');
+                        if ($canDo->get('core.create', 'com_proclaim')) {
+                            $childBar->save2new('cwmplaylist.save2new');
+                        }
+                    }
+
+                    if ($canDo->get('core.create', 'com_proclaim')) {
+                        $childBar->save2copy('cwmplaylist.save2copy');
+                    }
+                }
+            );
+
+            $toolbar->cancel('cwmplaylist.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();
