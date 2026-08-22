@@ -23,6 +23,7 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -121,18 +122,28 @@ class HtmlView extends BaseHtmlView
             'comment comment'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmcomment.apply');
-            ToolbarHelper::save('cwmcomment.save');
-            ToolbarHelper::save2new('cwmcomment.save2new');
-            ToolbarHelper::cancel('cwmcomment.cancel');
+            $toolbar->apply('cwmcomment.apply');
+
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmcomment.save');
+                    $childBar->save2new('cwmcomment.save2new');
+                }
+            );
+
+            $toolbar->cancel('cwmcomment.cancel');
         } else {
+            // A comment belongs to its message, so it is never created from a
+            // copy or spun into a new one from here — Save is the only variant.
             if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmcomment.apply');
-                ToolbarHelper::save('cwmcomment.save');
+                $toolbar->apply('cwmcomment.apply');
+                $toolbar->save('cwmcomment.save');
             }
 
-            ToolbarHelper::cancel('cwmcomment.cancel', 'JTOOLBAR_CLOSE');
+            $toolbar->cancel('cwmcomment.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();

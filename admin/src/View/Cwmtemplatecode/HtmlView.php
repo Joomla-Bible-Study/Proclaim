@@ -22,6 +22,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -150,19 +151,34 @@ class HtmlView extends BaseHtmlView
             'file'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmtemplatecode.apply');
-            ToolbarHelper::save('cwmtemplatecode.save');
-            ToolbarHelper::save2new('cwmtemplatecode.save2new');
-            ToolbarHelper::cancel('cwmtemplatecode.cancel');
+            $toolbar->apply('cwmtemplatecode.apply');
+
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmtemplatecode.save');
+                    $childBar->save2new('cwmtemplatecode.save2new');
+                }
+            );
+
+            $toolbar->cancel('cwmtemplatecode.cancel');
         } else {
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmtemplatecode.apply');
-                ToolbarHelper::save('cwmtemplatecode.save');
-                ToolbarHelper::save2copy('cwmtemplatecode.save2copy');
+            $canDo = $this->canDo;
+
+            if ($canDo->get('core.edit', 'com_proclaim')) {
+                $toolbar->apply('cwmtemplatecode.apply');
+
+                $toolbar->dropdownButton('save-group')->configure(
+                    static function (Toolbar $childBar) {
+                        $childBar->save('cwmtemplatecode.save');
+                        $childBar->save2copy('cwmtemplatecode.save2copy');
+                    }
+                );
             }
 
-            ToolbarHelper::cancel('cwmtemplatecode.cancel', 'JTOOLBAR_CLOSE');
+            $toolbar->cancel('cwmtemplatecode.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();
