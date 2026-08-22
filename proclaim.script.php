@@ -2226,6 +2226,12 @@ class com_proclaimInstallerScript extends InstallerScript
                 $this->dropLegacyTemplateColumns();
             });
 
+            // The 'easy' starter template and the two orphaned fluid layouts,
+            // which were swept into the package rather than authored as layouts.
+            $this->step('Stray layouts', '10.5.11', function () {
+                return $this->removeStrayTemplateLayouts();
+            });
+
             // pre-10.1 / pre-10.0 orphaned tables, which linger on sites upgraded
             // across several major versions — Joomla skips already-applied
             // migrations on a jump upgrade, so the per-version DROPs never ran.
@@ -2912,6 +2918,190 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since 10.1.0
      */
+    /**
+     * Remove the stray template layouts that shipped by accident.
+     *
+     * `default_easy.php` was committed in 2019 and carried along by folder
+     * renames; `default_fluidsermonlist.php` and `default_fluidsermondetail.php`
+     * were never reachable because no templatecode record ever named them. The
+     * install SQL also seeded an `easy` templatecode row whose stored PHP still
+     * calls `JHtml`, removed in Joomla 4 — and both `CwmtemplatecodeTable::store()`
+     * and the backup restore rewrite the layout file from that row, so saving the
+     * record or restoring a backup replaced a working layout with fatal code.
+     *
+     * A record whose code no longer carries the `JHtml` signature has been edited
+     * by the site and is left alone, along with the file it owns.
+     *
+     * @return  string  Summary for the install report
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function removeStrayTemplateLayouts(): string
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $removed = [];
+
+        // filename => every layout path that record may have generated. The
+        // shipped folders are lower case, but CwmtemplatecodeTable::store()
+        // still writes the pre-2022 capitalised names, so a case-sensitive
+        // host can hold both.
+        $strays = [
+            'easy' => [
+                '/components/com_proclaim/tmpl/cwmsermons/default_easy.php',
+                '/components/com_proclaim/tmpl/Cwmsermons/default_easy.php',
+            ],
+            'fluidsermonlist' => [
+                '/components/com_proclaim/tmpl/cwmsermons/default_fluidsermonlist.php',
+                '/components/com_proclaim/tmpl/Cwmsermons/default_fluidsermonlist.php',
+            ],
+            'fluidsermondetail' => [
+                '/components/com_proclaim/tmpl/cwmsermon/default_fluidsermondetail.php',
+                '/components/com_proclaim/tmpl/Cwmsermon/default_fluidsermondetail.php',
+            ],
+        ];
+
+        foreach ($strays as $filename => $relativePaths) {
+            try {
+                $query = $db->createQuery()
+                    ->select($db->quoteName(['id', 'templatecode']))
+                    ->from($db->quoteName('#__bsms_templatecode'))
+                    ->where($db->quoteName('filename') . ' = :filename')
+                    ->bind(':filename', $filename);
+                $db->setQuery($query);
+                $records = $db->loadObjectList();
+            } catch (\Exception $e) {
+                continue;
+            }
+
+            $customised = false;
+
+            foreach ($records as $record) {
+                // Only the untouched seed is safe to drop; anything else is the
+                // site's own work and keeps both its record and its file.
+                if (!str_contains((string) $record->templatecode, 'JHtml::addIncludePath')) {
+                    $customised = true;
+
+                    continue;
+                }
+
+                try {
+                    $delete = $db->createQuery()
+                        ->delete($db->quoteName('#__bsms_templatecode'))
+                        ->where($db->quoteName('id') . ' = :id')
+                        ->bind(':id', $record->id, ParameterType::INTEGER);
+                    $db->setQuery($delete)->execute();
+                    $removed[] = $filename . ' (record)';
+                } catch (\Exception $e) {
+                    $customised = true;
+                }
+            }
+
+            if ($customised) {
+                continue;
+            }
+
+            foreach ($relativePaths as $relativePath) {
+                $path = JPATH_ROOT . $relativePath;
+
+                if (is_file($path) && File::delete($path)) {
+                    $removed[] = $filename . ' (layout)';
+                }
+            }
+        }
+
+        $cleared = $this->clearStrayTemplatePointers(array_keys($strays));
+
+        if ($cleared > 0) {
+            $removed[] = $cleared . ' template pointer(s) reset';
+        }
+
+        return $removed === [] ? 'nothing to remove' : implode(', ', $removed);
+    }
+
+    /**
+     * Reset template params that still select a removed layout.
+     *
+     * `loadTemplate()` throws a 500 when the file is gone, so a template left
+     * pointing at one of these would break the front end rather than fall back.
+     * Only pointers whose layout no longer exists on disk are cleared.
+     *
+     * @param   string[]  $removedNames  Layout names that were candidates for removal
+     *
+     * @return  int  Number of templates changed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function clearStrayTemplatePointers(array $removedNames): int
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $changed = 0;
+
+        // param => the directory its value resolves a layout file in
+        $pointers = [
+            'sermonstemplate' => '/components/com_proclaim/tmpl/cwmsermons/',
+            'sermontemplate'  => '/components/com_proclaim/tmpl/cwmsermon/',
+        ];
+
+        try {
+            $db->setQuery(
+                $db->createQuery()
+                    ->select($db->quoteName(['id', 'params']))
+                    ->from($db->quoteName('#__bsms_templates'))
+            );
+            $templates = $db->loadObjectList();
+        } catch (\Exception $e) {
+            return 0;
+        }
+
+        foreach ($templates as $template) {
+            $params = json_decode((string) $template->params, true);
+
+            if (!\is_array($params)) {
+                continue;
+            }
+
+            $dirty = false;
+
+            foreach ($pointers as $key => $directory) {
+                $value = (string) ($params[$key] ?? '');
+
+                if ($value === '' || $value === '0' || !\in_array($value, $removedNames, true)) {
+                    continue;
+                }
+
+                // A site that kept its own record still has the file; leave it.
+                if (is_file(JPATH_ROOT . $directory . 'default_' . $value . '.php')) {
+                    continue;
+                }
+
+                $params[$key] = '0';
+                $dirty        = true;
+            }
+
+            if (!$dirty) {
+                continue;
+            }
+
+            try {
+                $encoded = json_encode($params, JSON_THROW_ON_ERROR);
+
+                $update = $db->createQuery()
+                    ->update($db->quoteName('#__bsms_templates'))
+                    ->set($db->quoteName('params') . ' = :params')
+                    ->where($db->quoteName('id') . ' = :id')
+                    ->bind(':params', $encoded)
+                    ->bind(':id', $template->id, ParameterType::INTEGER);
+                $db->setQuery($update)->execute();
+                $changed++;
+            } catch (\Exception $e) {
+                // A template we cannot rewrite is left as it was.
+                continue;
+            }
+        }
+
+        return $changed;
+    }
+
     /**
      * Drop unused text and pdf columns from the templates table.
      *
