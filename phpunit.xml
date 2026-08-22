@@ -31,6 +31,9 @@
 		<testsuite name="Migration SQL Contract Tests">
 			<directory>tests/unit/Sql</directory>
 		</testsuite>
+		<testsuite name="Repo Contract Tests">
+			<directory>tests/unit/Repo</directory>
+		</testsuite>
 		<testsuite name="Admin Field Tests">
 			<directory>tests/unit/Admin/Field</directory>
 		</testsuite>

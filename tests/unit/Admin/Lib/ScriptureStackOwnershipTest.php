@@ -9,7 +9,7 @@
  * @link       https://www.christianwebministries.org
  * */
 
-namespace CWM\Component\Proclaim\Tests\Admin;
+namespace CWM\Component\Proclaim\Tests\Admin\Lib;
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Tests\ProclaimTestCase;
@@ -126,7 +126,7 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
     public function testTheRestoreDropLoopNeitherTouchesTheStackNorKeepsTheDeadPreserveList(): void
     {
         $source = (string) file_get_contents(
-            __DIR__ . '/../../../admin/src/Controller/CwmbackupController.php'
+            \dirname(__DIR__, 4) . '/admin/src/Controller/CwmbackupController.php'
         );
 
         $this->assertMatchesRegularExpression(
