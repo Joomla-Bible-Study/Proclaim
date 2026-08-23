@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 /**
@@ -113,28 +114,43 @@ class HtmlView extends BaseHtmlView
             'square square'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmtemplate.apply');
-            ToolbarHelper::save('cwmtemplate.save');
-            ToolbarHelper::save2new('cwmtemplate.save2new');
-            ToolbarHelper::cancel('cwmtemplate.cancel');
-        } else {
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmtemplate.apply');
-                ToolbarHelper::save('cwmtemplate.save');
+            $toolbar->apply('cwmtemplate.apply');
 
-                // We can save this record, but check the create permission to see if we can return to make a new one.
-                if ($this->canDo->get('core.create', 'com_proclaim')) {
-                    ToolbarHelper::save2new('cwmtemplate.save2new');
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmtemplate.save');
+                    $childBar->save2new('cwmtemplate.save2new');
                 }
+            );
+
+            $toolbar->cancel('cwmtemplate.cancel');
+        } else {
+            $canDo = $this->canDo;
+
+            if ($canDo->get('core.edit', 'com_proclaim')) {
+                $toolbar->apply('cwmtemplate.apply');
             }
 
-            // If checked out, we can still save
-            if ($this->canDo->get('core.create', 'com_proclaim')) {
-                ToolbarHelper::save2copy('cwmtemplate.save2copy');
-            }
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) use ($canDo) {
+                    if ($canDo->get('core.edit', 'com_proclaim')) {
+                        $childBar->save('cwmtemplate.save');
 
-            ToolbarHelper::cancel('cwmtemplate.cancel', 'JTOOLBAR_CLOSE');
+                        if ($canDo->get('core.create', 'com_proclaim')) {
+                            $childBar->save2new('cwmtemplate.save2new');
+                        }
+                    }
+
+                    if ($canDo->get('core.create', 'com_proclaim')) {
+                        $childBar->save2copy('cwmtemplate.save2copy');
+                    }
+                }
+            );
+
+            $toolbar->cancel('cwmtemplate.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();

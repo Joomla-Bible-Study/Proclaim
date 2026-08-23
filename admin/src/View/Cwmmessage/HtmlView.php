@@ -27,6 +27,7 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
@@ -217,32 +218,51 @@ class HtmlView extends BaseHtmlView
             'book book'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $this->canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmmessage.apply');
-            ToolbarHelper::save('cwmmessage.save');
-            ToolbarHelper::save2new('cwmmessage.save2new');
-            ToolbarHelper::cancel('cwmmessage.cancel');
-        } else {
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmmessage.apply');
-                ToolbarHelper::save('cwmmessage.save');
+            $toolbar->apply('cwmmessage.apply');
 
-                // We can save this record, but check the create permission to see if we can return to make a new one.
-                if ($this->canDo->get('core.create', 'com_proclaim')) {
-                    ToolbarHelper::save2new('cwmmessage.save2new');
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmmessage.save');
+                    $childBar->save2new('cwmmessage.save2new');
                 }
+            );
+
+            $toolbar->cancel('cwmmessage.cancel');
+        } else {
+            $canDo = $this->canDo;
+
+            if ($canDo->get('core.edit', 'com_proclaim')) {
+                $toolbar->apply('cwmmessage.apply');
             }
 
-            // If checked out, we can still save
-            if ($this->canDo->get('core.create', 'com_proclaim')) {
-                ToolbarHelper::save2copy('cwmmessage.save2copy');
-            }
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) use ($canDo) {
+                    if ($canDo->get('core.edit', 'com_proclaim')) {
+                        $childBar->save('cwmmessage.save');
 
-            ToolbarHelper::cancel('cwmmessage.cancel', 'JTOOLBAR_CLOSE');
+                        // Saving is allowed, but returning to a blank form is
+                        // only useful with the create permission.
+                        if ($canDo->get('core.create', 'com_proclaim')) {
+                            $childBar->save2new('cwmmessage.save2new');
+                        }
+                    }
 
-            if ($this->canDo->get('core.edit', 'com_proclaim')) {
+                    // A copy is a new record, so this stands on create alone.
+                    if ($canDo->get('core.create', 'com_proclaim')) {
+                        $childBar->save2copy('cwmmessage.save2copy');
+                    }
+                }
+            );
+
+            $toolbar->cancel('cwmmessage.cancel', 'JTOOLBAR_CLOSE');
+
+            // Resetting the counter is destructive and unrelated to saving, so
+            // it stays a button of its own rather than joining the save group.
+            if ($canDo->get('core.edit', 'com_proclaim')) {
                 ToolbarHelper::divider();
-                $toolbar = $this->getDocument()->getToolbar();
                 $toolbar->confirmButton('undo', 'JBS_STY_RESET_HITS', 'resetHits')
                     ->message('JBS_STY_RESET_HITS_CONFIRM')
                     ->listCheck(false);
