@@ -60,7 +60,7 @@
         "excludeMatchMode": "strict",
         "excludes": [
             "build.xml", "build.properties", "build.dist.properties",
-            "phpunit.xml", "phpunit.xml.bak",
+            "phpunit.xml",
             ".php-cs-fixer.dist.php",
             "CLAUDE.md", "GEMINI.md", "SECURITY.md", "_config.yml",
             ".git", ".vscode", ".idea", ".DS_Store",
