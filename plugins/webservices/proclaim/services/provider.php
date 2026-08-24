@@ -15,7 +15,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
-use Joomla\Event\DispatcherInterface;
 
 return new class () implements ServiceProviderInterface {
     /**
@@ -32,8 +31,11 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             PluginInterface::class,
             function (Container $container) {
+                // CMSPlugin has warned since 6.x that passing a dispatcher to
+                // the constructor will not be supported in 7.0, where the class
+                // stops implementing DispatcherAwareInterface. Config-first is
+                // the supported form on every version we target.
                 $plugin = new Proclaim(
-                    $container->get(DispatcherInterface::class),
                     (array) PluginHelper::getPlugin('webservices', 'proclaim')
                 );
                 $plugin->setApplication(Factory::getApplication());

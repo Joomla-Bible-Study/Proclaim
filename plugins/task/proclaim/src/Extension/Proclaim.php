@@ -25,7 +25,6 @@ use Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent;
 use Joomla\Component\Scheduler\Administrator\Task\Status;
 use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Event\DispatcherInterface;
 use Joomla\Event\SubscriberInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -137,14 +136,18 @@ final class Proclaim extends CMSPlugin implements SubscriberInterface
     /**
      * Constructor.
      *
-     * @param   DispatcherInterface  $dispatcher     The dispatcher
-     * @param   array                $config         An optional associative array of configuration settings
+     * Takes the config alone. CMSPlugin has warned since 6.x that passing a
+     * dispatcher here will not be supported in 7.0, where the class stops
+     * implementing DispatcherAwareInterface; the dispatcher is injected by the
+     * plugin system rather than constructed in.
+     *
+     * @param   array  $config  An optional associative array of configuration settings
      *
      * @since   4.2.0
      */
-    public function __construct(DispatcherInterface $dispatcher, array $config)
+    public function __construct($config = [])
     {
-        parent::__construct($dispatcher, $config);
+        parent::__construct($config);
 
         // Always load CWM API if it exists.
         $api = JPATH_ADMINISTRATOR . '/components/com_proclaim/api.php';
