@@ -318,8 +318,9 @@ echo Route::_(
             // is drawn from left it uneditable and still live.
             //
             // The scripture subform is shown whole rather than capped at one
-            // row: a cap would hide references 2..n on messages that already
-            // have them, which is the same invisible-content trap as #1940.
+            // row: a cap would hide every reference after the first on messages
+            // that already have them, which is the same trap as hiding a field
+            // whose content the site still publishes.
             ?>
             <div class="col-lg-7">
                 <div>
