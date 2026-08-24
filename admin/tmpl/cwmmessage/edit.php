@@ -307,17 +307,29 @@ echo Route::_(
                         </div>
                     </div>
                 <?php endif; ?>
-                <div class="col-lg-7">
-                    <div>
-                        <?php echo $this->form->renderField('studyintro'); ?>
-                        <div class="scripture-stacked mb-3">
-                            <?php echo $this->form->renderField('scriptures'); ?>
-                            <?php echo $this->form->renderField('secondary_reference'); ?>
-                        </div>
-                    </div>
-                </div>
                 <?php
             } ?>
+            <?php
+            // Description and scripture stay in Simple Mode. They were only
+            // hidden because they sat next to the study text in the 2018 markup
+            // and one `if` wrapped the pair (dd34a24bf) — studynumber came out
+            // of that same block long ago. The site publishes all three
+            // regardless, so hiding the field a listing or podcast description
+            // is drawn from left it uneditable and still live.
+            //
+            // The scripture subform is shown whole rather than capped at one
+            // row: a cap would hide references 2..n on messages that already
+            // have them, which is the same invisible-content trap as #1940.
+            ?>
+            <div class="col-lg-7">
+                <div>
+                    <?php echo $this->form->renderField('studyintro'); ?>
+                    <div class="scripture-stacked mb-3">
+                        <?php echo $this->form->renderField('scriptures'); ?>
+                        <?php echo $this->form->renderField('secondary_reference'); ?>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-5">
                 <?php // Hits moved to the Publishing tab via the form's new "hits" field.?>
                 <?php echo $this->form->renderField('published'); ?>

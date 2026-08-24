@@ -126,9 +126,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             // there, so it stays collapsed. Bootstrap's collapse rather than
             // <details>, which Atum renders as a full-width bordered box.
             $simpleHidden = [
-                'JBS_CMN_DESCRIPTION',
                 'JBS_STY_STUDY_TEXT',
-                'JBS_CMN_SCRIPTURE_REFERENCES',
                 'JBS_CMN_TOPICS',
                 'JBS_CMN_LOCATIONS',
                 'JBS_CMN_COMMENTS',
