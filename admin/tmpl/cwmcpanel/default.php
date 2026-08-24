@@ -27,6 +27,7 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Factory;
 
 /** @var CWM\Component\Proclaim\Administrator\View\Cwmcpanel\HtmlView $this */
@@ -120,43 +121,54 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
         <?php
             if ($simple->mode === 1 && $simple->display === 1) {
                 ?>
-            <div class="alert alert-info d-flex flex-wrap align-items-center gap-2 py-2">
-                <span class="icon-info-circle" aria-hidden="true"></span>
-                <span class="me-auto">
-                    <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?></strong>
-                    <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-                </span>
+            <?php
+            // The list is only useful to someone hunting a field that is not
+            // there, so it stays collapsed. Bootstrap's collapse rather than
+            // <details>, which Atum renders as a full-width bordered box.
+            $simpleHidden = [
+                'JBS_CMN_DESCRIPTION',
+                'JBS_STY_STUDY_TEXT',
+                'JBS_CMN_SCRIPTURE_REFERENCES',
+                'JBS_CMN_TOPICS',
+                'JBS_CMN_LOCATIONS',
+                'JBS_CMN_COMMENTS',
+                'JBS_CMN_MESSAGETYPES',
+                'JBS_CMN_TEMPLATES',
+                'JBS_CMN_TEMPLATECODE',
+            ];
+            ?>
+            <div class="alert alert-info py-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="icon-info-circle" aria-hidden="true"></span>
+                    <span class="me-auto">
+                        <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?></strong>
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+                        <button type="button" class="btn btn-link btn-sm p-0 align-baseline"
+                                data-bs-toggle="collapse" data-bs-target="#simpleModeHidden"
+                                aria-expanded="false" aria-controls="simpleModeHidden">
+                            <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_WHAT'); ?>
+                        </button>
+                    </span>
 
-                <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
-                   class="btn btn-sm btn-primary">
-                    <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
-                </a>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
+                       class="btn btn-sm btn-primary">
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+                    </a>
 
-                <?php
-                // Collapsed by default: the list is what someone hunting a
-                // missing field needs, and nobody else. Expanded on every
-                // dashboard load it would earn its space exactly once.
-                $simpleHidden = [
-                    'JBS_CMN_DESCRIPTION',
-                    'JBS_STY_STUDY_TEXT',
-                    'JBS_CMN_SCRIPTURE_REFERENCES',
-                    'JBS_CMN_TOPICS',
-                    'JBS_CMN_LOCATIONS',
-                    'JBS_CMN_COMMENTS',
-                    'JBS_CMN_MESSAGETYPES',
-                    'JBS_CMN_TEMPLATES',
-                    'JBS_CMN_TEMPLATECODE',
-                ];
-                ?>
-                <details class="w-100 mt-1">
-                    <summary class="small"><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDDEN'); ?></summary>
-                    <ul class="small mb-1 mt-1">
-                        <?php foreach ($simpleHidden as $simpleKey) : ?>
-                            <li><?php echo Text::_($simpleKey); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmcpanel.hideSimpleNotice&' . Session::getFormToken() . '=1'); ?>"
+                       class="btn btn-sm btn-outline-secondary"
+                       title="<?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDE_DESC'); ?>">
+                        <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDE'); ?>
+                    </a>
+                </div>
+
+                <div class="collapse mt-2" id="simpleModeHidden">
+                    <p class="small mb-1">
+                        <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDDEN'); ?></strong>
+                        <?php echo implode(', ', array_map(static fn($k) => Text::_($k), $simpleHidden)); ?>
+                    </p>
                     <p class="small mb-0"><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_KEPT'); ?></p>
-                </details>
+                </div>
             </div>
             <?php
             }
