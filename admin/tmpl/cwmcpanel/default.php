@@ -120,22 +120,43 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
         <?php
             if ($simple->mode === 1 && $simple->display === 1) {
                 ?>
-            <div class="alert alert-info">
-                <h3>
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?>
-                </h3>
+            <div class="alert alert-info d-flex flex-wrap align-items-center gap-2 py-2">
+                <span class="icon-info-circle" aria-hidden="true"></span>
+                <span class="me-auto">
+                    <strong><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_ON'); ?></strong>
+                    <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
+                </span>
 
-                <p>
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_DESC'); ?>
-                </p>
-                <a href="<?php
-                    echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
-                   class="btn btn-primary btn-large" style="color: #FFFFFF">
-                    <?php
-                        echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
+                <a href="<?php echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
+                   class="btn btn-sm btn-primary">
+                    <?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_LINK'); ?>
                 </a>
+
+                <?php
+                // Collapsed by default: the list is what someone hunting a
+                // missing field needs, and nobody else. Expanded on every
+                // dashboard load it would earn its space exactly once.
+                $simpleHidden = [
+                    'JBS_CMN_DESCRIPTION',
+                    'JBS_STY_STUDY_TEXT',
+                    'JBS_CMN_SCRIPTURE_REFERENCES',
+                    'JBS_CMN_TOPICS',
+                    'JBS_CMN_LOCATIONS',
+                    'JBS_CMN_COMMENTS',
+                    'JBS_CMN_MESSAGETYPES',
+                    'JBS_CMN_TEMPLATES',
+                    'JBS_CMN_TEMPLATECODE',
+                ];
+                ?>
+                <details class="w-100 mt-1">
+                    <summary class="small"><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_HIDDEN'); ?></summary>
+                    <ul class="small mb-1 mt-1">
+                        <?php foreach ($simpleHidden as $simpleKey) : ?>
+                            <li><?php echo Text::_($simpleKey); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <p class="small mb-0"><?php echo Text::_('JBS_CPANEL_SIMPLE_MODE_KEPT'); ?></p>
+                </details>
             </div>
             <?php
             }
@@ -407,7 +428,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                         </a>
                     </div>
                     <?php endif; ?>
-                    <?php if ($canSee('location')) : ?>
+                    <?php if ($advanced && $canSee('location')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmlocations'); ?>"
                            title="<?php echo Text::_('JBS_CMN_LOCATIONS'); ?>" class="cpanel-btn">
@@ -424,7 +445,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                             <span><?php echo Text::_('JBS_CMN_TOPICS'); ?></span>
                         </a>
                     </div>
-                    <?php if ($canSee('comment')) : ?>
+                    <?php if ($advanced && $canSee('comment')) : ?>
                     <div class="col">
                         <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmcomments'); ?>"
                            title="<?php echo Text::_('JBS_CMN_COMMENTS'); ?>" class="cpanel-btn">
