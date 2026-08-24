@@ -327,7 +327,12 @@ echo Route::_(
                     <?php echo $this->form->renderField('studyintro'); ?>
                     <div class="scripture-stacked mb-3">
                         <?php echo $this->form->renderField('scriptures'); ?>
-                        <?php echo $this->form->renderField('secondary_reference'); ?>
+                        <?php
+                        // Not scripture: film, literature, web sites. A simple
+                        // entry tags the passage it preached on and stops there.
+                        if (!$this->simple->mode) : ?>
+                            <?php echo $this->form->renderField('secondary_reference'); ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
