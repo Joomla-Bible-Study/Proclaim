@@ -333,8 +333,20 @@ class Cwmhelper
             $params = Cwmparams::getAdmin()->params;
         }
 
-        $simple->mode    = (int)$params->get('simple_mode');
-        $simple->display = (int)$params->get('simple_mode_display');
+        $simple->mode = (int)$params->get('simple_mode');
+
+        // Default the indicator ON. An unset param used to cast to 0, so a site
+        // switched to Simple Mode without ever visiting the display setting hid
+        // the fields *and* the notice explaining why — which reads as a broken
+        // form rather than a configured one. The setting still turns it off;
+        // it just no longer does so by omission.
+        //
+        // Registry::get() only falls back when the key is absent, and these
+        // params have been seen stored as an empty string, so treat that as
+        // unset too rather than as an explicit "no".
+        $display = $params->get('simple_mode_display', 1);
+
+        $simple->display = ($display === null || $display === '') ? 1 : (int) $display;
 
         return $simple;
     }

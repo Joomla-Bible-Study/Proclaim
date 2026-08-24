@@ -18,7 +18,7 @@
             <option value="1">CWM_SIMPLE_TEXTOVERLAY</option>
             <option value="0">CWM_SIMPLE_NOTEXTOVERLAY</option>
         </field>
-        <field name="simple_mode_display" type="radio" default="0" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
+        <field name="simple_mode_display" type="radio" default="1" label="JBS_ADM_SIMPLE_MODE_DISPLAY"
                description="JBS_ADM_SIMPLE_MODE_DISPLAY_DESC"
                layout="joomla.form.field.radio.switcher">
             <option value="0">JNO</option>
