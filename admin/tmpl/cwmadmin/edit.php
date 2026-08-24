@@ -15,6 +15,7 @@
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmlangHelper;
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use CWM\Library\Scripture\Field\TranslationsmanagerField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -44,6 +45,10 @@ Text::script('JGLOBAL_VALIDATION_FORM_FAILED');
 if ($this->has9xSchema) {
     $wa->useScript('com_proclaim.upgrade-wizard');
 }
+
+// Simple Mode trims this screen to what a simple site configures. The Simple
+// Mode fields themselves are never hidden, or there would be no way back.
+$simple = Cwmhelper::getSimpleView();
 
 $app   = Factory::getApplication();
 $input = $app->getInput();
@@ -275,6 +280,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('metadesc', 'params'); ?>
                     <?php echo $this->form->renderField('org_name', 'params'); ?>
                 </div>
+                    <?php // Simple Mode: AI Assist is hidden on the message form.
+                    if (!$simple->mode) : ?>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AI_PROVIDER'); ?></h3>
                     <p class="text-body-secondary"><?php echo Text::_('JBS_ADM_AI_API_KEY_DESC'); ?></p>
@@ -305,12 +312,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     </div>
                     <?php echo $this->form->renderField('ai_voice', 'params'); ?>
                 </div>
+                    <?php endif; ?>
             </div>
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_DISPLAY_SETTINGS'); ?></h3>
                     <?php echo $this->form->renderField('studylistlimit', 'params'); ?>
+                    <?php // Simple Mode: locations are hidden.
+                    if (!$simple->mode) : ?>
                     <?php echo $this->form->renderField('show_location_media', 'params'); ?>
+                    <?php endif; ?>
                     <?php echo $this->form->renderField('popular_limit', 'params'); ?>
                     <?php echo $this->form->renderField('format_popular', 'params'); ?>
                 </div>
@@ -333,10 +344,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
             <div class="col-12 col-lg-6">
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_AUTO_FILL_STUDY_REC'); ?></h3>
+                    <?php // Simple Mode: locations are hidden.
+                    if (!$simple->mode) : ?>
                     <?php echo $this->form->renderField('location_id', 'params'); ?>
+                    <?php endif; ?>
                     <?php echo $this->form->renderField('teacher_id', 'params'); ?>
                     <?php echo $this->form->renderField('series_id', 'params'); ?>
+                    <?php // Simple Mode: message types are hidden.
+                    if (!$simple->mode) : ?>
                     <?php echo $this->form->renderField('messagetype', 'params'); ?>
+                    <?php endif; ?>
                 </div>
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_CMN_DEFAULT_IMAGES'); ?></h3>
@@ -366,6 +383,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                 <div class="cwmadmin-panel mb-4">
                     <h3 class="tab-description"><?php echo Text::_('JBS_ADM_DOWNLOAD_BUTTON_DEFAULTS'); ?></h3>
                     <?php echo $this->form->renderField('download_show', 'params'); ?>
+                    <?php // Simple Mode: button appearance tuning.
+                    if (!$simple->mode) : ?>
                     <?php echo $this->form->renderField('download_use_button_icon', 'params'); ?>
                     <?php echo $this->form->renderField('default_download_image', 'params'); ?>
                     <?php echo $this->form->renderField('download_button_text', 'params'); ?>
@@ -374,6 +393,7 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                     <?php echo $this->form->renderField('download_icon_type', 'params'); ?>
                     <?php echo $this->form->renderField('download_custom_icon', 'params'); ?>
                     <?php echo $this->form->renderField('download_icon_text_size', 'params'); ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -459,6 +479,8 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php // Simple Mode: one-off migration and bulk-import tooling.
+        if (!$simple->mode) : ?>
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'convert', Text::_('JBS_IBM_CONVERT'));
 // Check if SermonSpeaker or PreachIt is installed
@@ -520,13 +542,17 @@ $piInstalled = strpos($this->pi, 'href=') !== false;
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
+        <?php // Simple Mode: one-off migration and bulk-import tooling.
+        if (!$simple->mode) : ?>
         <?php if ($this->has9xSchema) : ?>
         <?php
         echo HTMLHelper::_('uitab.addTab', 'myTab', 'upgrade', Text::_('JBS_UPG_TAB_TITLE')); ?>
         <?php echo $this->loadTemplate('upgrade'); ?>
         <?php
         echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
         <?php endif; ?>
 
         <?php
@@ -856,17 +882,23 @@ echo TranslationsmanagerField::renderScriptureTab('jform[params]');
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php // Simple Mode: one-off migration and bulk-import tooling.
+        if (!$simple->mode) : ?>
         <?php
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'csvimport', Text::_('JBS_CSV_TAB_TITLE')); ?>
         <?php echo $this->loadTemplate('csvimport'); ?>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
+        <?php // Simple Mode: one-off migration and bulk-import tooling.
+        if (!$simple->mode) : ?>
         <?php
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'servermigration', Text::_('JBS_SMG_TAB_TITLE')); ?>
         <?php echo $this->loadTemplate('servermigration'); ?>
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
         <?php
 echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYTICS')); ?>
@@ -920,6 +952,8 @@ echo HTMLHelper::_('uitab.addTab', 'myTab', 'analytics', Text::_('JBS_ANA_ANALYT
         <?php
 echo HTMLHelper::_('uitab.endTab'); ?>
 
+        <?php // Simple Mode: one-off migration and bulk-import tooling.
+        if (!$simple->mode) : ?>
 <?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'youtubelog', Text::_('JBS_ADM_YOUTUBE_LOG_TAB')); ?>
 <?php
 // Load YouTube server quota data and log entries inline
@@ -1080,6 +1114,7 @@ $logSize    = \CWM\Component\Proclaim\Administrator\Helper\CwmyoutubeLogHelper::
     </div>
 </div>
 <?php echo HTMLHelper::_('uitab.endTab'); ?>
+        <?php endif; ?>
 
         <!-- Track thumbnail sizes to fire event if they are changed -->
         <input type="hidden" id="thumbnail_teacher_size_old"
