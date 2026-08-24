@@ -127,6 +127,7 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             // <details>, which Atum renders as a full-width bordered box.
             $simpleHidden = [
                 'JBS_STY_STUDY_TEXT',
+                'JBS_CMN_SECONDARY_REFERENCES',
                 'JBS_CMN_TOPICS',
                 'JBS_CMN_LOCATIONS',
                 'JBS_CMN_COMMENTS',
