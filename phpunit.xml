@@ -34,6 +34,9 @@
 		<testsuite name="Repo Contract Tests">
 			<directory>tests/unit/Repo</directory>
 		</testsuite>
+		<testsuite name="Language Contract Tests">
+			<directory>tests/unit/Language</directory>
+		</testsuite>
 		<testsuite name="Admin Field Tests">
 			<directory>tests/unit/Admin/Field</directory>
 		</testsuite>
