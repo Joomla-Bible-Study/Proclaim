@@ -139,6 +139,54 @@ class CwmserverMigrationHelper
     }
 
     /**
+     * How much of the site is still waiting on a server migration.
+     *
+     * scanLegacyServers() answers a similar question but loads every media row
+     * on a legacy server and parses its params to classify it — on the site
+     * that prompted this, 2,094 rows. That is the right cost for the migration
+     * screen and the wrong one for something that runs on a dashboard render,
+     * so this asks the database for two counts and nothing else.
+     *
+     * ⚠️ Deliberately free of any application context: no user, no session, no
+     * request. It has to give the same answer from a page render, a restore
+     * finishing, and a scheduled task — and a helper that reaches for the
+     * identity or the session works in the browser and dies under cron.
+     *
+     * @return  array{servers: int, media: int}  Legacy servers, and the media
+     *                                           rows still pointing at them
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function countPendingMigration(): array
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('type') . ' = ' . $db->quote('legacy'));
+        $db->setQuery($query);
+        $servers = (int) $db->loadResult();
+
+        if ($servers === 0) {
+            return ['servers' => 0, 'media' => 0];
+        }
+
+        $query = $db->createQuery()
+            ->select('COUNT(*)')
+            ->from($db->quoteName('#__bsms_mediafiles', 'm'))
+            ->join(
+                'INNER',
+                $db->quoteName('#__bsms_servers', 's'),
+                $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id')
+            )
+            ->where($db->quoteName('s.type') . ' = ' . $db->quote('legacy'));
+        $db->setQuery($query);
+
+        return ['servers' => $servers, 'media' => (int) $db->loadResult()];
+    }
+
+    /**
      * Scan all legacy servers and classify their media files by detected type.
      *
      * @return  array  Array of legacy servers with media file counts per detected type.
