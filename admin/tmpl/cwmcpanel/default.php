@@ -308,10 +308,12 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             // A restored 9.x backup arrives with every server typed `legacy`,
             // and until they are migrated most media will not resolve. Nothing
             // used to say so: the restore reported success and left the site
-            // looking finished. There is no dismiss here on purpose -- this
-            // describes a state, not news, so it goes away when it is true
-            // again and not before.
-            if ($this->pendingServerMigration['servers'] > 0) :
+            // looking finished.
+            //
+            // Clearing it is safe now that System Health lists the same
+            // finding permanently -- the banner is the nag, that view is the
+            // record. It stays clear only while the counts stay the same.
+            if ($this->pendingServerMigration['servers'] > 0 && !$this->serverMigrationQuiet) :
         ?>
             <div class="col-12">
                 <div class="alert alert-warning">
@@ -333,6 +335,14 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1#servermigration'); ?>"
                        class="btn btn-primary btn-sm">
                         <?php echo Text::_('JBS_CPL_SERVER_MIGRATION_BUTTON'); ?>
+                    </a>
+                    <a href="<?php echo Route::_(
+                        'index.php?option=com_proclaim&task=cwmhealth.quieten&check=content.legacy-servers&'
+                        . Session::getFormToken() . '=1'
+                    ); ?>"
+                       class="btn btn-secondary btn-sm"
+                       title="<?php echo Text::_('JBS_HEALTH_QUIETEN_DESC'); ?>">
+                        <?php echo Text::_('JBS_HEALTH_QUIETEN'); ?>
                     </a>
                 </div>
             </div>
@@ -525,6 +535,17 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                            title="<?php echo Text::_('JBS_ANA_ANALYTICS'); ?>" class="cpanel-btn">
                             <i class="fa-solid fa-chart-bar fa-3x"></i>
                             <span><?php echo Text::_('JBS_ANA_ANALYTICS'); ?></span>
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                    <?php // Gated on core.admin to match the view itself: the
+                          // report is the whole site's state, not one section's. ?>
+                    <?php if ($cpanelUser->authorise('core.admin', 'com_proclaim')) : ?>
+                    <div class="col">
+                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmhealth'); ?>"
+                           title="<?php echo Text::_('JBS_HEALTH_TITLE'); ?>" class="cpanel-btn">
+                            <i class="fa-solid fa-stethoscope fa-3x"></i>
+                            <span><?php echo Text::_('JBS_HEALTH_TITLE'); ?></span>
                         </a>
                     </div>
                     <?php endif; ?>

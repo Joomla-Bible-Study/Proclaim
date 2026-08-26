@@ -43,6 +43,9 @@
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
 		</testsuite>
+		<testsuite name="Admin Health Tests">
+			<directory>tests/unit/Admin/Health</directory>
+		</testsuite>
 		<testsuite name="Admin Lib Tests">
 			<directory>tests/unit/Admin/Lib</directory>
 		</testsuite>

@@ -804,6 +804,34 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * ⚠️ Costs one unit of the server's daily quota, which is why the check
+     * that calls this reports itself as not passive. `testApiConnection()`
+     * records the spend against the server it resolves from the key.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        $config = $this->getServerConfig($serverId);
+
+        return $this->testApiConnection($config['api_key'] ?? '', $config['channel_id'] ?? '');
+    }
+
+    /**
      * Handle fetchUpcoming AJAX action
      *
      * @return  array  Response data
