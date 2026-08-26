@@ -257,6 +257,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmadmin'); ?>"
                         </button>
                     </div>
                 </div>
+
+                <?php // The report sits below the tools rather than on a screen
+                      // of its own: it is the record behind the dashboard's
+                      // banners, and this is where the rest of the component's
+                      // diagnostics already live. ?>
+                <?php echo LayoutHelper::render(
+                    'health.report',
+                    ['report' => $this->healthReport, 'summary' => $this->healthSummary],
+                    JPATH_ADMINISTRATOR . '/components/com_proclaim/layouts'
+                ); ?>
             </div>
         </div>
         <?php
