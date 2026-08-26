@@ -210,26 +210,36 @@ class HealthContractTest extends ProclaimTestCase
     /**
      * A check class nobody registers is dead code that still reads as coverage.
      *
+     * ⚠️ Asserted against the registry's source, not against what it returned
+     * here. Some checks are per-record -- one connection test per media server
+     * -- so a database with no API-backed server legitimately produces none,
+     * and comparing instantiated classes would fail on correct code. That is
+     * exactly how this test first went red in CI.
+     *
      * @return  void
      *
      * @since   10.6.0
      */
-    #[TestDox('Every check class in the Check directory is registered')]
+    #[TestDox('Every check class in the Check directory is wired into the registry')]
     public function testEveryCheckClassIsRegistered(): void
     {
-        $registered = [];
+        $registry = (string) file_get_contents(
+            \dirname(__DIR__, 4) . '/admin/src/Health/HealthRegistry.php'
+        );
 
-        foreach (HealthRegistry::checks() as $check) {
-            $registered[(new \ReflectionClass($check))->getShortName()] = true;
-        }
+        $this->assertNotSame('', $registry, 'HealthRegistry could not be read — this test would pass on nothing.');
 
-        foreach ($this->checkFiles() as $file) {
+        $files = $this->checkFiles();
+
+        $this->assertNotEmpty($files, 'No check sources were found — this test would pass on nothing.');
+
+        foreach ($files as $file) {
             $short = basename($file, '.php');
 
-            $this->assertArrayHasKey(
-                $short,
-                $registered,
-                $short . ' exists but HealthRegistry::checks() never returns one.'
+            $this->assertStringContainsString(
+                'new ' . $short . '(',
+                $registry,
+                $short . ' exists but HealthRegistry never constructs one.'
             );
         }
     }
