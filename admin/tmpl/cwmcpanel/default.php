@@ -303,6 +303,41 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
             </div>
         <?php endif; ?>
         <?php
+            // Servers still awaiting migration.
+            //
+            // A restored 9.x backup arrives with every server typed `legacy`,
+            // and until they are migrated most media will not resolve. Nothing
+            // used to say so: the restore reported success and left the site
+            // looking finished. There is no dismiss here on purpose -- this
+            // describes a state, not news, so it goes away when it is true
+            // again and not before.
+            if ($this->pendingServerMigration['servers'] > 0) :
+        ?>
+            <div class="col-12">
+                <div class="alert alert-warning">
+                    <span class="icon-warning-circle" aria-hidden="true"></span>
+                    <strong><?php echo Text::_('JBS_CPL_SERVER_MIGRATION_PENDING'); ?></strong>
+                    <p class="mb-1">
+                        <?php
+                        // The `_N` belongs to the key passed in: Text::plural()
+                        // appends only the suffix, so the keys it looks for are
+                        // ..._DESC_N_1 and ..._DESC_N_MORE.
+                        echo Text::plural(
+                            'JBS_CPL_SERVER_MIGRATION_PENDING_DESC_N',
+                            $this->pendingServerMigration['servers'],
+                            $this->pendingServerMigration['media']
+                        );
+                        ?>
+                    </p>
+                    <?php // btn-primary for the same contrast reason as the schema notice below. ?>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1#servermigration'); ?>"
+                       class="btn btn-primary btn-sm">
+                        <?php echo Text::_('JBS_CPL_SERVER_MIGRATION_BUTTON'); ?>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?php
             // Database schema out-of-sync warning
             $schemaGap = CwmupgradeHelper::isSchemaOutOfDate();
             if ($schemaGap) :

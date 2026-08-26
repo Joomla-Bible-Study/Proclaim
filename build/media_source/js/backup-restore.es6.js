@@ -597,7 +597,19 @@
                     );
                 }
 
-                this.showComplete(true, Joomla.Text._('JBS_IBM_IMPORT_COMPLETE'));
+                // The restore is finished, but a 9.x backup arrives with every
+                // server typed `legacy` and nothing here re-points media rows
+                // uninvited. Say so rather than closing on "successfully".
+                const pending = finalizeResult.data?.pending_migration;
+                let message = Joomla.Text._('JBS_IBM_IMPORT_COMPLETE');
+
+                if (pending?.servers > 0) {
+                    message += `\n\n${Joomla.Text._('JBS_IBM_SERVERS_PENDING')
+                        .replace('%d', pending.servers)
+                        .replace('%d', pending.media)}`;
+                }
+
+                this.showComplete(true, message);
             } catch (error) {
                 console.error('Import error:', error);
                 this.showComplete(false, error.message);

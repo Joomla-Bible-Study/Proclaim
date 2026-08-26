@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Controller\Trait\CwmJsonResponseTrait;
 use CWM\Component\Proclaim\Administrator\Helper\CwmdbHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmmigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmtemplatemigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
@@ -930,12 +931,19 @@ class CwmbackupController extends BaseController
             // Clean up tmp files left by the import
             $this->cleanupImportTmpFiles($importFilePath);
 
+            // What the restore could not do for the user. A 9.x backup arrives
+            // with every server typed `legacy`, and the restore has no business
+            // re-pointing thousands of media rows without being asked -- but it
+            // should not report itself finished without saying so either.
+            $pendingMigration = CwmserverMigrationHelper::countPendingMigration();
+
             $this->sendJsonResponse(true, Text::_('JBS_CMN_OPERATION_SUCCESSFUL'), [
                 'templatecodes_created' => $templatecodesCreated,
                 'tables_restored'       => $integrity['tables'],
                 'tasks_restored'        => $integrity['tasks'],
                 'config_restored'       => $integrity['config'],
                 'auto_increment_fixes'  => $autoIncrementFixes,
+                'pending_migration'     => $pendingMigration,
             ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());

@@ -50,6 +50,7 @@ Text::script('JBS_IBM_DATA_MIGRATION');
 Text::script('JBS_IBM_FIXING_ASSETS');
 Text::script('JBS_IBM_IMPORT_COMPLETE');
 Text::script('JBS_IBM_IMPORT_HAD_ERRORS');
+Text::script('JBS_IBM_SERVERS_PENDING');
 Text::script('JBS_IBM_STATEMENTS_FAILED');
 Text::script('JBS_IBM_STATEMENTS_SKIPPED');
 Text::script('JBS_IBM_COMPLETE');
