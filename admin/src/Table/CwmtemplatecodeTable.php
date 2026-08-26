@@ -133,6 +133,102 @@ class CwmtemplatecodeTable extends Table
     public ?string $checked_out_time = null;
 
     /**
+     * Where a record of each type writes its layout, relative to the site root.
+     *
+     * ⚠️ Lower case, because that is what the package ships and what Joomla
+     * looks for. The folders were renamed in 2022 (50b3cd85e, "Renaming tmpl
+     * folders as joomla wants them small case … Found this out because it
+     * wouldn't work on Dreamhost") and these paths were not renamed with them.
+     *
+     * On a case-insensitive filesystem — macOS, most Windows — the old
+     * capitalised spelling resolved to the same file and nothing looked wrong.
+     * On a case-sensitive one, which is essentially all Linux hosting, writing
+     * to `tmpl/Cwmsermons` created a second directory the front end never
+     * reads: editing template code appeared to save and changed nothing.
+     *
+     * Kept in one place because there were three copies of this map — here in
+     * store(), here again in delete(), and a third in
+     * CwmbackupController::recreateTemplatecodeFiles() — and drifting apart is
+     * how the rename came to be missed twice over.
+     *
+     * @var    array<int, string>
+     * @since  __DEPLOY_VERSION__
+     */
+    public const array LAYOUT_DIRECTORIES = [
+        1 => 'components/com_proclaim/tmpl/cwmsermons',
+        2 => 'components/com_proclaim/tmpl/cwmsermon',
+        3 => 'components/com_proclaim/tmpl/cwmteachers',
+        4 => 'components/com_proclaim/tmpl/cwmteacher',
+        5 => 'components/com_proclaim/tmpl/cwmseriesdisplays',
+        6 => 'components/com_proclaim/tmpl/cwmseriesdisplay',
+        7 => 'modules/mod_proclaim/tmpl',
+    ];
+
+    /**
+     * The absolute path a record of this type and filename writes to.
+     *
+     * @param   int     $type      The record's template type
+     * @param   string  $filename  The layout filename, including `default_`
+     *
+     * @return  string|null  Null for a type with no layout directory
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function layoutPath(int $type, string $filename): ?string
+    {
+        if (!isset(self::LAYOUT_DIRECTORIES[$type])) {
+            return null;
+        }
+
+        return JPATH_ROOT . '/' . self::LAYOUT_DIRECTORIES[$type] . '/' . $filename;
+    }
+
+    /**
+     * Delete the copy an older version wrote to the capitalised directory.
+     *
+     * ⚠️ Guarded on realpath rather than on the name. Where the two spellings
+     * are the same file — every case-insensitive filesystem, which includes the
+     * machine most of this is developed on — deleting the "stray" would delete
+     * the layout just written. They are only ever different files on the hosts
+     * that had the bug in the first place.
+     *
+     * @param   int     $type      The record's template type
+     * @param   string  $filename  The layout filename
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function removeCapitalisedTwin(int $type, string $filename): void
+    {
+        $correct = self::layoutPath($type, $filename);
+
+        if ($correct === null || !isset(self::LAYOUT_DIRECTORIES[$type])) {
+            return;
+        }
+
+        $directory = self::LAYOUT_DIRECTORIES[$type];
+        $base      = basename($directory);
+
+        // mod_proclaim's `tmpl` has no capitalised variant to worry about.
+        if (!str_starts_with($base, 'cwm')) {
+            return;
+        }
+
+        $stray = JPATH_ROOT . '/' . \dirname($directory) . '/' . ucfirst($base) . '/' . $filename;
+
+        if (!is_file($stray)) {
+            return;
+        }
+
+        if (realpath($stray) === realpath($correct)) {
+            return;
+        }
+
+        File::delete($stray);
+    }
+
+    /**
      * Constructor
      *
      * @param     $db  DatabaseInterface connector object
@@ -230,39 +326,7 @@ class CwmtemplatecodeTable extends Table
         $templateType = $this->type;
         $filename     = 'default_' . $this->filename . '.php';
 
-        switch ($templateType) {
-            case 1:
-                // Sermons
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermons' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 2:
-                // Sermon
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermon' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 3:
-                // Teachers
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmteachers' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 4:
-                // Teacher
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmteacher' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 5:
-                // Seriesdisplays
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmseriesdisplays' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 6:
-                // Seriesdisplay
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmseriesdisplay' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 7:
-                // Module's Display
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            default:
-                $file = null;
-                break;
-        }
+        $file = self::layoutPath((int) $templateType, $filename);
 
         $templateCodeContent = $this->templatecode;
 
@@ -279,6 +343,11 @@ class CwmtemplatecodeTable extends Table
 
             return false;
         }
+
+        // An older version of this method wrote to the capitalised directory.
+        // On a case-sensitive host that copy is still sitting there, ignored by
+        // the front end and confusing to anyone who finds it.
+        self::removeCapitalisedTwin((int) $templateType, $filename);
 
         $result = parent::store($updateNulls);
 
@@ -307,45 +376,16 @@ class CwmtemplatecodeTable extends Table
         $filename     = 'default_' . $this->filename . '.php';
         $templateType = $this->type;
 
-        switch ($templateType) {
-            case 1:
-                // Sermons
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermons' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 2:
-                // Sermon
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmsermon' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 3:
-                // Teachers
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmteachers' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 4:
-                // Teacher
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmteacher' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 5:
-                // Seriesdisplays
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmseriesdisplays' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 6:
-                // Seriesdisplay
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'components/com_proclaim/tmpl/Cwmseriesdisplay' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            case 7:
-                // Module's Display
-                $file = JPATH_ROOT . DIRECTORY_SEPARATOR . 'modules/mod_proclaim/tmpl' . DIRECTORY_SEPARATOR . $filename;
-                break;
-            default:
-                $file = null;
-                break;
-        }
+        $file = self::layoutPath((int) $templateType, $filename);
 
-        if (file_exists($file) && !File::delete($file)) {
+        if ($file !== null && file_exists($file) && !File::delete($file)) {
             Factory::getApplication()->enqueueMessage('JBS_STYLE_FILENAME_NOT_DELETED', 'error');
 
             return false;
         }
+
+        // And the one an older version may have written beside it.
+        self::removeCapitalisedTwin((int) $templateType, $filename);
 
         return parent::delete($pk);
     }
