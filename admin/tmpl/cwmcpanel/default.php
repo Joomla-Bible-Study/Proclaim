@@ -319,8 +319,11 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                     <strong><?php echo Text::_('JBS_CPL_SERVER_MIGRATION_PENDING'); ?></strong>
                     <p class="mb-1">
                         <?php
+                        // The `_N` belongs to the key passed in: Text::plural()
+                        // appends only the suffix, so the keys it looks for are
+                        // ..._DESC_N_1 and ..._DESC_N_MORE.
                         echo Text::plural(
-                            'JBS_CPL_SERVER_MIGRATION_PENDING_DESC',
+                            'JBS_CPL_SERVER_MIGRATION_PENDING_DESC_N',
                             $this->pendingServerMigration['servers'],
                             $this->pendingServerMigration['media']
                         );
