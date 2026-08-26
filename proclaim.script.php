@@ -2230,7 +2230,11 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // The 'easy' starter template and the two orphaned fluid layouts,
             // which were swept into the package rather than authored as layouts.
-            $this->step('Stray layouts', '10.5.11', function () {
+            // Gated on 10.6.0, the version this actually ships in. 10.5.11 was
+            // developed but never released — its work went out as 10.6.0 — so a
+            // gate naming it would be describing a version no site can be on.
+            // Behaviourally the same either way: nothing is between the two.
+            $this->step('Stray layouts', '10.6.0', function () {
                 return $this->removeStrayTemplateLayouts();
             });
 
