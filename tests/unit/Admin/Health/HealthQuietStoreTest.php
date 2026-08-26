@@ -151,6 +151,79 @@ class HealthQuietStoreTest extends ProclaimTestCase
     }
 
     /**
+     * ⚠️ A truncated write leaves a params column that still starts with `{`,
+     * and Registry throws for exactly that -- the case Cwmparams::getAdmin()
+     * and setCompParams() both already guard. This store is read on every
+     * admin's dashboard, so an unguarded throw would turn a half-written row
+     * into a dead screen.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
+    #[TestDox('Unreadable params report nothing quietened rather than throwing')]
+    public function testCorruptParamsAreSurvivable(): void
+    {
+        $this->corruptParams();
+
+        $this->assertSame([], HealthQuietStore::read());
+        $this->assertFalse(
+            HealthQuietStore::isQuiet(new HealthResult('test.finding', HealthStatus::Warning, 'x', '1:2'))
+        );
+    }
+
+    /**
+     * Writing means re-serialising the whole params column, so proceeding from
+     * an empty fallback would trade every stored setting for a cleared banner.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
+    #[TestDox('Quietening refuses to write over a params column it could not read')]
+    public function testCorruptParamsAreNotOverwritten(): void
+    {
+        $this->corruptParams();
+
+        try {
+            HealthQuietStore::quieten(new HealthResult('test.finding', HealthStatus::Warning, 'x', '1:2'));
+            $this->fail('Quietening overwrote an unreadable params column instead of refusing.');
+        } catch (\RuntimeException) {
+            // Expected.
+        }
+
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db->setQuery(
+            'SELECT ' . $db->quoteName('params') . ' FROM ' . $db->quoteName('#__bsms_admin')
+            . ' WHERE ' . $db->quoteName('id') . ' = 1'
+        );
+
+        $this->assertSame(
+            '{"broken',
+            $db->loadResult(),
+            'The corrupt value was replaced, which is the data loss this refusal exists to prevent.'
+        );
+    }
+
+    /**
+     * Leave the admin row holding a value Registry cannot parse.
+     *
+     * @return  void
+     *
+     * @since   10.6.0
+     */
+    private function corruptParams(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $db->setQuery(
+            'UPDATE ' . $db->quoteName('#__bsms_admin')
+            . ' SET ' . $db->quoteName('params') . ' = ' . $db->quote('{"broken')
+            . ' WHERE ' . $db->quoteName('id') . ' = 1'
+        );
+        $db->execute();
+    }
+
+    /**
      * Check ids contain dots, which Registry reads as a path separator. Storing
      * the map as an encoded string is what keeps `content.legacy-servers` one
      * key rather than a `legacy-servers` node under `content`.

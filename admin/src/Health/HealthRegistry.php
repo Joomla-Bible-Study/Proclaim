@@ -56,7 +56,11 @@ final class HealthRegistry
         ];
 
         foreach (self::testableServers() as $server) {
-            $checks[] = new ServerConnectionCheck((int) $server['id'], (string) $server['server_name']);
+            $checks[] = new ServerConnectionCheck(
+                (int) $server['id'],
+                (string) $server['server_name'],
+                (string) $server['type']
+            );
         }
 
         return $checks;

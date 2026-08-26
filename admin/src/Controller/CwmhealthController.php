@@ -101,7 +101,16 @@ class CwmhealthController extends BaseController
             return;
         }
 
-        HealthQuietStore::quieten($result);
+        try {
+            HealthQuietStore::quieten($result);
+        } catch (\RuntimeException $e) {
+            // The store refuses to write over a params column it could not
+            // read, rather than trading the site's settings for a cleared
+            // banner. Say so instead of reporting a success that did nothing.
+            $this->setRedirect(Route::_(self::RETURN_VIEW, false), Text::_('JBS_HEALTH_QUIET_SAVE_FAILED'), 'error');
+
+            return;
+        }
 
         $this->setRedirect(Route::_(self::RETURN_VIEW, false), Text::_('JBS_HEALTH_QUIETENED'), 'message');
     }
@@ -119,7 +128,13 @@ class CwmhealthController extends BaseController
         $this->assertToken();
         $this->assertAdmin();
 
-        HealthQuietStore::restore($this->input->getCmd('check', ''));
+        try {
+            HealthQuietStore::restore($this->input->getCmd('check', ''));
+        } catch (\RuntimeException $e) {
+            $this->setRedirect(Route::_(self::RETURN_VIEW, false), Text::_('JBS_HEALTH_QUIET_SAVE_FAILED'), 'error');
+
+            return;
+        }
 
         $this->setRedirect(Route::_(self::RETURN_VIEW, false), Text::_('JBS_HEALTH_RESTORED'), 'message');
     }

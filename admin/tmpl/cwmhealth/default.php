@@ -83,12 +83,15 @@ use Joomla\CMS\Session\Session;
                                 <?php // An active check renders a button rather than a result: opening
                                       // this page must never be what spends a platform's API quota. ?>
                                 <?php if (!$check->isPassive()) : ?>
+                                    <?php // Confirmed because the click is what costs something --
+                                          // on YouTube it spends a unit of the day's quota. ?>
                                     <a class="btn btn-sm btn-secondary mb-1"
                                        href="<?php echo Route::_(
                                            'index.php?option=com_proclaim&task=cwmhealth.test&check='
                                            . urlencode($check->getId())
                                            . '&' . Session::getFormToken() . '=1'
-                                       ); ?>">
+                                       ); ?>"
+                                       onclick="return confirm('<?php echo $this->escape(Text::_('JBS_HEALTH_TEST_NOW_CONFIRM')); ?>')">
                                         <?php echo Text::_('JBS_HEALTH_TEST_NOW'); ?>
                                     </a>
                                 <?php endif; ?>

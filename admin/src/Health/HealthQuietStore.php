@@ -121,7 +121,9 @@ final class HealthQuietStore
      */
     public static function read(): array
     {
-        $raw = (string) self::params()->get(self::PARAM_KEY, '');
+        // An unreadable row means nothing is quietened, which errs towards
+        // showing notices rather than hiding them.
+        $raw = (string) (self::readParams()?->get(self::PARAM_KEY, '') ?? '');
 
         if ($raw === '') {
             return [];
@@ -165,7 +167,16 @@ final class HealthQuietStore
      */
     private static function write(array $map): void
     {
-        $params = self::params();
+        $params = self::readParams();
+
+        // ⚠️ Refuse rather than overwrite. Writing here means re-serialising
+        // the whole params column, so proceeding from the empty fallback would
+        // trade every stored setting for a cosmetic preference. Quietening a
+        // banner is not worth that; repairing the row is a separate job.
+        if ($params === null) {
+            throw new \RuntimeException('Proclaim admin params are unreadable, so quieting state cannot be saved.');
+        }
+
         $params->set(self::PARAM_KEY, $map === [] ? '' : json_encode($map, JSON_THROW_ON_ERROR));
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -178,17 +189,17 @@ final class HealthQuietStore
     }
 
     /**
-     * The admin params row, read fresh.
+     * The admin params row, read fresh, or null when it cannot be parsed.
      *
      * Not taken from `Cwmparams::getAdmin()`: that caches the row for the
      * request, so a write followed by a read in the same request would return
      * the pre-write state.
      *
-     * @return  Registry
+     * @return  ?Registry
      *
      * @since   __DEPLOY_VERSION__
      */
-    private static function params(): Registry
+    private static function readParams(): ?Registry
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery()
@@ -197,6 +208,23 @@ final class HealthQuietStore
             ->where($db->quoteName('id') . ' = 1');
         $db->setQuery($query, 0, 1);
 
-        return new Registry($db->loadResult() ?: '{}');
+        try {
+            return new Registry($db->loadResult() ?: '{}');
+        } catch (\RuntimeException $e) {
+            // ⚠️ Registry does not shrug this off. A truncated write leaves a
+            // string that still starts with `{`, and Json::stringToObject()
+            // throws for exactly that -- the case Cwmparams::getAdmin() and
+            // setCompParams() both already guard. This runs on every admin's
+            // dashboard, so an unguarded throw would turn a half-written row
+            // into a dead screen.
+            //
+            Log::add(
+                'Proclaim admin params were unreadable while checking health quieting: ' . $e->getMessage(),
+                Log::WARNING,
+                'com_proclaim'
+            );
+
+            return null;
+        }
     }
 }

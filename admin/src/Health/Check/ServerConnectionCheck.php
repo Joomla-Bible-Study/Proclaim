@@ -42,12 +42,14 @@ final class ServerConnectionCheck implements HealthCheckInterface
      *
      * @param   int     $serverId    The server record ID.
      * @param   string  $serverName  The server's name, for the report row.
+     * @param   string  $serverType  The addon type backing the server.
      *
      * @since   __DEPLOY_VERSION__
      */
     public function __construct(
         private readonly int $serverId,
-        private readonly string $serverName
+        private readonly string $serverName,
+        private readonly string $serverType
     ) {
     }
 
@@ -111,7 +113,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
         }
 
         try {
-            $result = CWMAddon::getInstance($this->serverType())->testConnection($this->serverId);
+            $result = CWMAddon::getInstance($this->serverType)->testConnection($this->serverId);
         } catch (\Throwable $e) {
             return new HealthResult(
                 $this->getId(),
@@ -141,24 +143,6 @@ final class ServerConnectionCheck implements HealthCheckInterface
             'index.php?option=com_proclaim&view=cwmservers',
             Text::_('JBS_HEALTH_SERVER_CONNECTION_ACTION')
         );
-    }
-
-    /**
-     * The addon type backing this server.
-     *
-     * @return  string
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function serverType(): string
-    {
-        foreach (CWMAddon::getConnectionTestableServers() as $server) {
-            if ((int) $server['id'] === $this->serverId) {
-                return (string) $server['type'];
-            }
-        }
-
-        throw new \RuntimeException('No connection-testable server with id ' . $this->serverId);
     }
 
     /**
