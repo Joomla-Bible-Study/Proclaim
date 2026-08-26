@@ -483,6 +483,12 @@
 
                 const { totalBatches } = infoResult.data;
 
+                // Statements the server could not run. Batch 0 has already
+                // dropped every Proclaim table by the time these accumulate, so
+                // they are collected and shown rather than left in the log.
+                const importErrors = [];
+                let skippedCount = 0;
+
                 // Step 3: Import in batches (20-83%)
                 for (let batch = 0; batch < totalBatches; batch++) {
                     if (this.isCancelled) {
@@ -503,6 +509,12 @@
                     if (!batchResult.success) {
                         throw new Error(batchResult.message || `Failed to import batch ${batch + 1}`);
                     }
+
+                    if (batchResult.data?.errors?.length) {
+                        importErrors.push(...batchResult.data.errors);
+                    }
+
+                    skippedCount += batchResult.data?.skipped || 0;
                 }
 
                 // Step 4: Post-restore data fixes — run each step individually (83-93%)
@@ -548,6 +560,32 @@
                 }
 
                 this.updateProgress(100, '', '');
+
+                if (importErrors.length) {
+                    // The tables were dropped before any of this ran, so a
+                    // restore that lost statements has left the site with less
+                    // than it started with. Say so instead of showing a tick.
+                    const detail = importErrors
+                        .slice(0, 10)
+                        .map((e) => `${e.error}\n    ${e.statement}`)
+                        .join('\n\n');
+                    const more = importErrors.length > 10
+                        ? `\n\n… and ${importErrors.length - 10} more. See the Proclaim log for the full list.`
+                        : '';
+
+                    this.showComplete(
+                        false,
+                        `${Joomla.Text._('JBS_IBM_IMPORT_HAD_ERRORS')}\n\n`
+                        + `${Joomla.Text.sprintf('JBS_IBM_STATEMENTS_FAILED', importErrors.length)}\n\n${detail}${more}`,
+                    );
+
+                    return;
+                }
+
+                if (skippedCount) {
+                    console.info(Joomla.Text.sprintf('JBS_IBM_STATEMENTS_SKIPPED', skippedCount));
+                }
+
                 this.showComplete(true, Joomla.Text._('JBS_IBM_IMPORT_COMPLETE'));
             } catch (error) {
                 console.error('Import error:', error);

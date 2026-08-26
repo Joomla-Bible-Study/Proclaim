@@ -50,6 +50,38 @@ class Cwmrestore
     private const array ALLOWED_RESTORE_TABLES = ['#__extensions', '#__assets', '#__scheduler_tasks'];
 
     /**
+     * Verdicts from classifyStatement().
+     *
+     * ALLOWED   — run it.
+     * PRESERVED — targets a table the restore must leave alone; skip quietly.
+     * SESSION   — dump preamble that names no table; skip quietly.
+     * REJECTED  — names a table this component has no business writing to.
+     *
+     * @var string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_ALLOWED = 'allowed';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_PRESERVED = 'preserved';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_SESSION = 'session';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_REJECTED = 'rejected';
+
+    /**
      * Cached list of Proclaim's own table names, populated on first use.
      *
      * @var string[]|null
@@ -80,28 +112,189 @@ class Cwmrestore
      */
     private static function isSafeRestoreStatement(string $statement): bool
     {
-        $pattern = '/^(?:CREATE\s+TABLE|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|ALTER\s+TABLE|INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+`?(?<table>#__[a-z0-9_]+)`?/i';
+        $verdict = self::classifyStatement($statement);
 
-        if (!preg_match($pattern, $statement, $matches)) {
-            Log::add('Rejected restore statement (unrecognized shape): ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
-
-            return false;
-        }
-
-        if (self::$bsmsTables === null) {
-            // getOwnObjects(): a statement targeting the shared scripture stack is
-            // rejected, which also protects against restoring a backup taken
-            // before this change that still carries those tables.
-            self::$bsmsTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
-        }
-
-        if (\in_array($matches['table'], self::$bsmsTables, true) || \in_array($matches['table'], self::ALLOWED_RESTORE_TABLES, true)) {
+        if ($verdict === self::STATEMENT_ALLOWED) {
             return true;
         }
 
-        Log::add('Rejected restore statement targeting non-Proclaim table: ' . $matches['table'], Log::WARNING, 'com_proclaim');
+        if ($verdict === self::STATEMENT_SESSION) {
+            Log::add('Rejected restore statement (unrecognized shape): ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
+        } else {
+            Log::add('Rejected restore statement targeting non-Proclaim table: ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
+        }
 
         return false;
+    }
+
+    /**
+     * Decide what a restore should do with one statement.
+     *
+     * isSafeRestoreStatement() answers the same question as a bool, which is
+     * all the file-based restore paths need. A dump written by anything other
+     * than Cwmbackup also carries session preamble — SET NAMES, the
+     * character_set_client save and restore either side of every CREATE TABLE,
+     * ALTER TABLE ... DISABLE KEYS — and none of it targets a table. Counting
+     * those as failures buries the ones that matter: a 15 MB mysqldump of this
+     * component splits into 214 statements, and 137 of them are preamble.
+     *
+     * @param   string  $statement  A single SQL statement, trimmed and non-empty
+     *
+     * @return  string  One of the STATEMENT_* constants
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function classifyStatement(string $statement): string
+    {
+        if (self::targetsPreservedTable($statement)) {
+            return self::STATEMENT_PRESERVED;
+        }
+
+        $pattern = '/^(?:CREATE\s+TABLE|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|ALTER\s+TABLE|INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+`?(?<table>#__[a-z0-9_]+)`?/i';
+
+        if (!preg_match($pattern, $statement, $matches)) {
+            // No table in the leading clause. Either dump preamble, which is
+            // skipped without comment, or a shape this restore has no business
+            // running either way.
+            return self::STATEMENT_SESSION;
+        }
+
+        $table = strtolower($matches['table']);
+
+        // ⚠️ Ownership is decided from the name, not from the live table list.
+        //
+        // getOwnObjects() reads SHOW TABLES, and the batch importer drops every
+        // Proclaim table before it runs a single statement — so by the time the
+        // first statement was classified there was nothing left to match and
+        // the whole restore was rejected as foreign. Each batch is its own
+        // request, so no amount of caching survives it either. The name is the
+        // one thing that is true before and after the drop, and it is also what
+        // lets a backup from a newer version create a table this site does not
+        // have yet.
+        //
+        // getScriptureTables() is a fixed list, so excluding the shared stack
+        // costs nothing here. targetsPreservedTable() has already caught those
+        // above; this is the second lock on the same door.
+        if (\in_array($table, CwmdbHelper::getScriptureTables(), true)) {
+            return self::STATEMENT_PRESERVED;
+        }
+
+        if (str_starts_with($table, '#__bsms_') || \in_array($table, self::ALLOWED_RESTORE_TABLES, true)) {
+            return self::STATEMENT_ALLOWED;
+        }
+
+        return self::STATEMENT_REJECTED;
+    }
+
+    /**
+     * Rewrite a dump so its generated columns can be loaded.
+     *
+     * MySQL refuses any statement that supplies a value for a generated column
+     * (error 3105). Cwmbackup leaves them out of its own exports, but a
+     * mysqldump of the same database lists them like any other column, so every
+     * INSERT naming one is rejected — on the file that prompted this, all 14
+     * `#__bsms_studies` statements, which is every message on the site.
+     *
+     * Dropping the column from the CREATE TABLE does not help: the INSERT still
+     * names it and fails as an unknown column instead. So the column is demoted
+     * to an ordinary one for the load and converted back afterwards, which also
+     * recomputes every value from the expression.
+     *
+     * ⚠️ Any index spanning the column has to go before the column does.
+     * Dropping `studynumber_uk` out from under
+     * `UNIQUE (series_id, studynumber_uk)` would otherwise leave a UNIQUE index
+     * on `series_id` alone, which no site with two messages in a series can
+     * satisfy.
+     *
+     * @param   string  $sql  The dump's full text
+     *
+     * @return  array{sql: string, restore: string[]}  Rewritten dump, and the
+     *                                                 statements that put the
+     *                                                 generated columns back
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function normaliseGeneratedColumns(string $sql): array
+    {
+        $restore = [];
+
+        // Each CREATE TABLE block, from the opening line to the closing paren.
+        $blocks = preg_match_all(
+            '/CREATE TABLE(?: IF NOT EXISTS)? `(?<table>[^`]+)` \((?<body>.*?)\n\) ?(?<tail>[^;]*);/s',
+            $sql,
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        if (!$blocks) {
+            return ['sql' => $sql, 'restore' => []];
+        }
+
+        foreach ($matches as $block) {
+            $table = $block['table'];
+            $body  = $block['body'];
+
+            if (stripos($body, 'GENERATED ALWAYS') === false) {
+                continue;
+            }
+
+            $newBody = $body;
+
+            // A generated column definition, capturing its type and expression.
+            $found = preg_match_all(
+                '/^\s*`(?<col>[^`]+)` (?<type>[a-z]+(?:\([^)]*\))?(?: unsigned)?) GENERATED ALWAYS AS (?<expr>.+?) (?<kind>STORED|VIRTUAL),?$/mi',
+                $body,
+                $columns,
+                PREG_SET_ORDER
+            );
+
+            if (!$found) {
+                continue;
+            }
+
+            foreach ($columns as $column) {
+                $col = $column['col'];
+
+                // Demote to a plain nullable column so the dump's INSERT, which
+                // supplies a value for it, is accepted.
+                $newBody = str_replace(
+                    $column[0],
+                    '  `' . $col . '` ' . $column['type'] . ' DEFAULT NULL,',
+                    $newBody
+                );
+
+                // An index spanning the column is left in place: a plain column
+                // indexes exactly as a generated one does, and the values are
+                // the same either way. It only has to come off to let the
+                // column be dropped at the end, and go straight back.
+                $indexes = [];
+                preg_match_all(
+                    '/^\s*(?<unique>UNIQUE )?KEY `(?<name>[^`]+)` \((?<cols>[^)]*`' . preg_quote($col, '/') . '`[^)]*)\),?$/mi',
+                    $body,
+                    $indexes,
+                    PREG_SET_ORDER
+                );
+
+                foreach ($indexes as $index) {
+                    $restore[] = 'ALTER TABLE `' . $table . '` DROP INDEX `' . $index['name'] . '`';
+                }
+
+                $restore[] = 'ALTER TABLE `' . $table . '` DROP COLUMN `' . $col . '`';
+                $restore[] = 'ALTER TABLE `' . $table . '` ADD COLUMN `' . $col . '` '
+                    . strtoupper($column['type']) . ' GENERATED ALWAYS AS ' . $column['expr']
+                    . ' ' . strtoupper($column['kind']);
+
+                foreach ($indexes as $index) {
+                    $restore[] = 'ALTER TABLE `' . $table . '` ADD '
+                        . ($index['unique'] ? 'UNIQUE ' : '')
+                        . 'KEY `' . $index['name'] . '` (' . $index['cols'] . ')';
+                }
+            }
+
+            $sql = str_replace($body, $newBody, $sql);
+        }
+
+        return ['sql' => $sql, 'restore' => $restore];
     }
 
     /**
