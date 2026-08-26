@@ -135,7 +135,7 @@ class PluralKeyContractTest extends TestCase
             }
 
             if (!$resolved) {
-                $problems[] = sprintf(
+                $problems[] = \sprintf(
                     '%s:%d  Text::plural(\'%s\') — no %s_{%s} and no bare %s',
                     $file,
                     $line,
