@@ -262,9 +262,18 @@ class PlaceholderParityTest extends TestCase
     }
 
     /**
-     * A key en-GB declares but a translation omits falls back to English,
-     * which is survivable, but a key only the translation has is dead weight
-     * that outlived its en-GB original.
+     * Only orphans fail here, and deliberately so.
+     *
+     * ⚠️ A key en-GB declares that a translation lacks is the *normal* state of
+     * this repository between a string change and the next sync: the convention
+     * is that a feature edits en-GB alone and `cwm-sync-languages` catches the
+     * rest up later. Joomla falls back to en-GB for anything missing, so the
+     * screen stays readable. Failing on that direction would block every PR
+     * that adds a string until someone ran a sync.
+     *
+     * The other direction is a real defect. A key only the translation has is
+     * one whose en-GB original was renamed or deleted, so nothing will ever
+     * read it again and the sync will not remove it.
      *
      * @param   string  $localePath  Absolute path of the translated file
      * @param   string  $enPath      Absolute path of its en-GB original
@@ -273,9 +282,9 @@ class PlaceholderParityTest extends TestCase
      *
      * @since __DEPLOY_VERSION__
      */
-    #[TestDox('Translations declare the same keys as en-GB')]
+    #[TestDox('Translations declare no key that en-GB has dropped')]
     #[\PHPUnit\Framework\Attributes\DataProvider('localeFileProvider')]
-    public function testKeysMatchEnGb(string $localePath, string $enPath): void
+    public function testTranslationsHaveNoOrphanKeys(string $localePath, string $enPath): void
     {
         $en     = parse_ini_file($enPath, false, \INI_SCANNER_RAW);
         $locale = parse_ini_file($localePath, false, \INI_SCANNER_RAW);
@@ -285,14 +294,8 @@ class PlaceholderParityTest extends TestCase
 
         $this->assertSame(
             [],
-            array_values(array_diff(array_keys($en), array_keys($locale))),
-            'Keys en-GB declares that this translation does not: ' . $localePath
-        );
-
-        $this->assertSame(
-            [],
             array_values(array_diff(array_keys($locale), array_keys($en))),
-            'Keys this translation declares that en-GB does not: ' . $localePath
+            'Keys this translation declares that en-GB does not, so nothing reads them: ' . $localePath
         );
     }
 

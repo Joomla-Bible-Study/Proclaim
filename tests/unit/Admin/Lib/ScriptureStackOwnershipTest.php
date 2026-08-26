@@ -106,12 +106,21 @@ class ScriptureStackOwnershipTest extends ProclaimTestCase
      */
     public function testTheRestoreAllowListExcludesTheStack(): void
     {
+        // isSafeRestoreStatement() delegates to classifyStatement(), which is
+        // where ownership is decided for both the file-based restore and the
+        // batch importer.
+        //
+        // ⚠️ It asks getScriptureTables() rather than getOwnObjects() on
+        // purpose. getOwnObjects() reads the live table list, and the batch
+        // importer drops every Proclaim table before its first statement is
+        // classified, so that list is empty exactly when the gate needs it.
+        // The fixed list is what makes the exclusion hold either way.
         $body = self::methodBody(
             \CWM\Component\Proclaim\Administrator\Lib\Cwmrestore::class,
-            'isSafeRestoreStatement'
+            'classifyStatement'
         );
 
-        $this->assertMatchesRegularExpression('/getOwnObjects\(\)/', $body);
+        $this->assertMatchesRegularExpression('/getScriptureTables\(\)/', $body);
         $this->assertDoesNotMatchRegularExpression(
             '/CwmdbHelper::getObjects\(\)/',
             $body,
