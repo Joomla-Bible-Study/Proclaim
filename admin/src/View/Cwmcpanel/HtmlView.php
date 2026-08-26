@@ -11,6 +11,8 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
+use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
+use CWM\Component\Proclaim\Administrator\Health\HealthQuietStore;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
 use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
@@ -72,6 +74,19 @@ class HtmlView extends BaseHtmlView
      * @since  __DEPLOY_VERSION__
      */
     public array $pendingServerMigration = ['servers' => 0, 'media' => 0];
+
+    /**
+     * Whether the server migration notice has been cleared on the dashboard.
+     *
+     * Cleared against the finding rather than for good: the stored fingerprint
+     * is the server and media counts, so migrating some of them -- or a
+     * restore adding more -- brings the notice straight back. The System
+     * Health view lists it either way.
+     *
+     * @var    bool
+     * @since  __DEPLOY_VERSION__
+     */
+    public bool $serverMigrationQuiet = false;
 
     /**
      * The model state
@@ -140,6 +155,7 @@ class HtmlView extends BaseHtmlView
         // the user -- that check belongs here, at the point of display.
         if ($user && $user->authorise('core.admin', 'com_proclaim')) {
             $this->pendingServerMigration = CwmserverMigrationHelper::countPendingMigration();
+            $this->serverMigrationQuiet   = HealthQuietStore::isQuiet((new LegacyServersCheck())->run());
         }
 
         // Display the template

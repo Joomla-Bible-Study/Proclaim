@@ -642,6 +642,71 @@ abstract class CWMAddon
     }
 
     /**
+     * Whether this addon can test its connection to the platform.
+     *
+     * Answers "could the platform be reached at all", the same way
+     * `supportsDescriptionSync()` answers for descriptions. Addons with
+     * nothing to reach -- Local, Direct, Embed, Article and the rest -- leave
+     * this false and never appear as a testable connection.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function supportsConnectionTest(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Reach the platform and report whether the server's credentials work.
+     *
+     * ⚠️ This makes a real outbound request and, on metered platforms, spends
+     * quota. It is never called from a page render or a scheduled task -- only
+     * from an explicit "test now", which is why `HealthCheckInterface` marks
+     * the check that calls it as not passive.
+     *
+     * Takes the server id rather than reading the request, so the same method
+     * serves the AJAX handler and the health view.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  array{success: bool, message?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function testConnection(int $serverId): array
+    {
+        return ['success' => false, 'error' => Text::_('JBS_HEALTH_CONNECTION_NOT_SUPPORTED')];
+    }
+
+    /**
+     * Every published server whose addon can test its own connection.
+     *
+     * @return  array<int, array{id: int, server_name: string, type: string}>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function getConnectionTestableServers(): array
+    {
+        $db    = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->createQuery()
+            ->select([$db->quoteName('id'), $db->quoteName('server_name'), $db->quoteName('type')])
+            ->from($db->quoteName('#__bsms_servers'))
+            ->where($db->quoteName('published') . ' = 1')
+            ->order($db->quoteName('server_name') . ' ASC');
+        $servers = $db->setQuery($query)->loadAssocList() ?? [];
+
+        return array_values(array_filter($servers, static function ($srv) {
+            try {
+                return static::getInstance($srv['type'])->supportsConnectionTest();
+            } catch (\RuntimeException) {
+                return false;
+            }
+        }));
+    }
+
+    /**
      * Whether this addon supports fetching external platform statistics.
      * Override in child class and return true to enable stats sync.
      *

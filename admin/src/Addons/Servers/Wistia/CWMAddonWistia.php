@@ -633,6 +633,17 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
      * Handle testApi AJAX action
      *
      * Tests the Wistia API connection using the configured API token
@@ -644,9 +655,20 @@ class CWMAddonWistia extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
-        $serverId = $input->getInt('server_id', 0);
+        return $this->testConnection(Factory::getApplication()->getInput()->getInt('server_id', 0));
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        // See CWMAddonVimeo::testConnection() -- the health view reaches this
+        // without the addon's strings already loaded.
+        $this->loadLanguage();
 
         if (!$serverId) {
             return [
