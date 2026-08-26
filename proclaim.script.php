@@ -403,14 +403,16 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/View/CWMTerms'       => '/components/com_proclaim/src/View/Cwmterms',
         '/components/com_proclaim/src/View/CWMcommentform' => '/components/com_proclaim/src/View/Cwmcommentform',
         '/components/com_proclaim/src/View/Teacher'        => '/components/com_proclaim/src/View/Cwmteacher',
-        // Site tmpl folders - CWM prefix renamed to Cwm
-        '/components/com_proclaim/tmpl/CWMCommentForm'   => '/components/com_proclaim/tmpl/Cwmcommentform',
-        '/components/com_proclaim/tmpl/CWMCommentList'   => '/components/com_proclaim/tmpl/Cwmcommentlist',
-        '/components/com_proclaim/tmpl/CWMMediaFileForm' => '/components/com_proclaim/tmpl/Cwmmediafileform',
-        '/components/com_proclaim/tmpl/CWMMediaFileList' => '/components/com_proclaim/tmpl/Cwmmediafilelist',
-        '/components/com_proclaim/tmpl/CWMMessageForm'   => '/components/com_proclaim/tmpl/Cwmmessageform',
-        '/components/com_proclaim/tmpl/CWMMessageList'   => '/components/com_proclaim/tmpl/Cwmmessagelist',
-        '/components/com_proclaim/tmpl/Teacher'          => '/components/com_proclaim/tmpl/Cwmteacher',
+        // ⚠️ The site tmpl folders are deliberately not renamed here.
+        //
+        // They used to be, onto capitalised names — Cwmcommentform, Cwmteacher
+        // — which the package stopped shipping when the folders went lower case
+        // in 2022 (50b3cd85e). Renames run before deletions, and the delete
+        // list names the *old* folder, so on a case-sensitive host each rename
+        // moved a legacy folder to a name nothing reads and nothing removes,
+        // leaving it there for good. Every one of them is already in
+        // $deleteFolders, so letting the deletion have them is both simpler and
+        // correct: none of these layouts exists in the package any more.
     ];
 
     /**
@@ -503,7 +505,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 . '</li>';
         }
 
-        $summary = sprintf(
+        $summary = \sprintf(
             '%d ran, %d skipped%s in %ss, upgrading from %s.',
             \count($ran),
             $skipped,
@@ -604,7 +606,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => 0.0,
             ];
 
-            $this->logInstall(sprintf('  skip  %-26s not needed past %s', $name, $since));
+            $this->logInstall(\sprintf('  skip  %-26s not needed past %s', $name, $since));
 
             return;
         }
@@ -623,7 +625,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => $secs,
             ];
 
-            $this->logInstall(sprintf('  ran   %-26s %6.3fs', $name, $secs));
+            $this->logInstall(\sprintf('  ran   %-26s %6.3fs', $name, $secs));
         } catch (\Throwable $e) {
             $this->stepLog[] = [
                 'name'  => $name,
@@ -632,7 +634,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => microtime(true) - $started,
             ];
 
-            $this->logInstall(sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
+            $this->logInstall(\sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
         }
     }
 
@@ -677,7 +679,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $error = $e->getMessage() !== '' ? $e->getMessage() : $e::class;
 
             Factory::getApplication()->enqueueMessage(
-                sprintf(
+                \sprintf(
                     'Proclaim: the "%s" step of this update did not complete (%s). '
                     . 'The update itself is installed; the com_proclaim.install log has the detail.',
                     $name,
@@ -698,8 +700,8 @@ class com_proclaimInstallerScript extends InstallerScript
             // line it replaces. The gate matches this shape instead.
             $this->logInstall(
                 $error === ''
-                    ? sprintf('  task  %-26s %6.3fs', $name, $secs)
-                    : sprintf('  task  %-26s %6.3fs FAILED: %s', $name, $secs, $error)
+                    ? \sprintf('  task  %-26s %6.3fs', $name, $secs)
+                    : \sprintf('  task  %-26s %6.3fs FAILED: %s', $name, $secs, $error)
             );
         }
     }
@@ -754,7 +756,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->fromVersion = $this->readInstalledVersion();
         }
 
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'preflight: %s, from %s, PHP %s, Joomla %s',
             $type,
             $this->fromVersion !== '' ? $this->fromVersion : 'n/a',
@@ -1990,7 +1992,7 @@ class com_proclaimInstallerScript extends InstallerScript
             ? $class::VERSION
             : 'unknown';
 
-        $msg = sprintf(
+        $msg = \sprintf(
             'Proclaim: the installed scripture library is %s, older than the %s this release expects. '
             . 'Scripture still displays, using the previous lookup path. Update pkg_cwmscripture '
             . 'to get the faster and more reliable one.',
@@ -2029,7 +2031,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // download shows up in neither number and has to be timed separately.
         $beforeUs = microtime(true) - $this->startedAt;
 
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'postflight: %.2fs elapsed since preflight (unpack, file copy, schema) — download NOT included',
             $beforeUs
         ));
@@ -2318,7 +2320,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
         // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
         // which cross-checks it against the per-step lines. Keep it at the front.
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'postflight: %d step(s) in %.3fs, %d task(s) in %.2fs; postflight total %.2fs; whole install %.2fs',
             \count($this->stepLog),
             array_sum(array_column($this->stepLog, 'secs')),

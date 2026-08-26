@@ -26,6 +26,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmbackup;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmrestore;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
+use CWM\Component\Proclaim\Administrator\Table\CwmtemplatecodeTable;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -1072,26 +1073,19 @@ class CwmbackupController extends BaseController
                 return 0;
             }
 
-            // Type to path mapping (matches CwmtemplatecodeTable::store())
-            $typePaths = [
-                1 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmsermons/',
-                2 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmsermon/',
-                3 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmteachers/',
-                4 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmteacher/',
-                5 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmseriesdisplays/',
-                6 => JPATH_ROOT . '/components/com_proclaim/tmpl/Cwmseriesdisplay/',
-                7 => JPATH_ROOT . '/modules/mod_proclaim/tmpl/',
-            ];
-
+            // ⚠️ Taken from CwmtemplatecodeTable, not copied. This map used to
+            // live here as well, and both copies still named the capitalised
+            // directories the package stopped shipping in 2022 -- so a restore
+            // rewrote layouts a case-sensitive host would never read.
             foreach ($records as $record) {
                 $type = (int) $record->type;
 
-                if (!isset($typePaths[$type])) {
+                if (!isset(CwmtemplatecodeTable::LAYOUT_DIRECTORIES[$type])) {
                     Log::add('Unknown templatecode type: ' . $type . ' for ID ' . $record->id, Log::WARNING, 'com_proclaim');
                     continue;
                 }
 
-                $directory = $typePaths[$type];
+                $directory = JPATH_ROOT . '/' . CwmtemplatecodeTable::LAYOUT_DIRECTORIES[$type] . '/';
                 $filename  = 'default_' . $record->filename . '.php';
                 $filepath  = $directory . $filename;
 
