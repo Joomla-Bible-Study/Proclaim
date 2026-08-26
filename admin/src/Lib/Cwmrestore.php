@@ -187,6 +187,151 @@ class Cwmrestore
     }
 
     /**
+     * DatabaseDriver::splitSql(), with the same answer for less work.
+     *
+     * ⚠️ This is a port, not an improvement. The state machine below is the
+     * core one line for line, and it has to stay that way: the two are checked
+     * against each other on a real dump, and any difference in how a quote or a
+     * comment is read would split a statement in the wrong place and corrupt an
+     * import in a way nothing downstream could detect.
+     *
+     * What changes is the cost per character. The core reads `substr($sql, $i, 1)`,
+     * `substr($sql, $i, 2)`, `substr($sql, $i, 3)` and a fourth for the
+     * terminator on *every* character, so a 15 MB dump allocates something like
+     * 60 million short-lived strings and takes 63 seconds — past the browser's
+     * own timeout, which is how this surfaced. Indexing with `$sql[$i]` and
+     * building the two- and three-character lookaheads only when the current
+     * character could begin a quote or a comment leaves the behaviour alone and
+     * takes seconds instead.
+     *
+     * @param   string  $sql  One or more SQL statements
+     *
+     * @return  string[]  The statements, exactly as splitSql() would return them
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function splitSqlFast(string $sql): array
+    {
+        $start     = 0;
+        $open      = false;
+        $comment   = false;
+        $endString = '';
+        $end       = \strlen($sql);
+        $queries   = [];
+        $query     = '';
+
+        for ($i = 0; $i < $end; $i++) {
+            $current      = $sql[$i];
+            $lenEndString = \strlen($endString);
+
+            // The terminator being scanned for is one character for a quote and
+            // two for a block comment, so the common cases need no allocation.
+            if ($lenEndString === 0) {
+                $testEnd = '';
+            } elseif ($lenEndString === 1) {
+                $testEnd = $current;
+            } else {
+                $testEnd = substr($sql, $i, $lenEndString);
+            }
+
+            // Only these can open a quote or a comment, or close one already
+            // open. Every other character — which is nearly all of them — skips
+            // the lookaheads entirely.
+            $isQuote = $current === '"' || $current === "'";
+
+            if (
+                $isQuote
+                || $current === '-' || $current === '/' || $current === '#'
+                || ($comment && $testEnd === $endString)
+            ) {
+                $current2 = ($current === '-' || $current === '/') ? substr($sql, $i, 2) : '';
+                $current3 = ($current2 === '/*' || $current === '#') ? substr($sql, $i, 3) : '';
+
+                if (
+                    $isQuote || $current2 === '--'
+                    || ($current2 === '/*' && $current3 !== '/*!' && $current3 !== '/*+')
+                    || ($current === '#' && $current3 !== '#__')
+                    || ($comment && $testEnd === $endString)
+                ) {
+                    // Check if quoted with previous backslash. Left on substr:
+                    // it runs only at a quote or comment character, and its
+                    // negative-offset behaviour is part of what is being copied.
+                    $n = 2;
+
+                    while (substr($sql, $i - $n + 1, 1) === '\\' && $n < $i) {
+                        $n++;
+                    }
+
+                    // Not quoted
+                    if ($n % 2 === 0) {
+                        if ($open) {
+                            if ($testEnd === $endString) {
+                                if ($comment) {
+                                    $comment = false;
+
+                                    if ($lenEndString > 1) {
+                                        $i += ($lenEndString - 1);
+                                        $current = $sql[$i] ?? '';
+                                    }
+
+                                    $start = $i + 1;
+                                }
+
+                                $open      = false;
+                                $endString = '';
+                            }
+                        } else {
+                            $open = true;
+
+                            if ($current2 === '--') {
+                                $endString = "\n";
+                                $comment   = true;
+                            } elseif ($current2 === '/*') {
+                                $endString = '*/';
+                                $comment   = true;
+                            } elseif ($current === '#') {
+                                $endString = "\n";
+                                $comment   = true;
+                            } else {
+                                $endString = $current;
+                            }
+
+                            if ($comment && $start < $i) {
+                                $query .= substr($sql, $start, $i - $start);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($comment) {
+                $start = $i + 1;
+            }
+
+            if (($current === ';' && !$open) || $i === $end - 1) {
+                if ($start <= $i) {
+                    $query .= substr($sql, $start, $i - $start + 1);
+                }
+
+                $query = trim($query);
+
+                if ($query) {
+                    if (($i === $end - 1) && ($current !== ';')) {
+                        $query .= ';';
+                    }
+
+                    $queries[] = $query;
+                }
+
+                $query = '';
+                $start = $i + 1;
+            }
+        }
+
+        return $queries;
+    }
+
+    /**
      * Rewrite a dump so its generated columns can be loaded.
      *
      * MySQL refuses any statement that supplies a value for a generated column

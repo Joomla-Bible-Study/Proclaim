@@ -82,6 +82,41 @@ class CwmbackupController extends BaseController
     }
 
     /**
+     * Delete spools left by imports that never finished.
+     *
+     * finalizeImportXHR() removes the spool for an import that runs to the end.
+     * One that does not -- the browser closed, a request timed out, the user
+     * walked away -- leaves a file the size of the dump behind, and nothing
+     * else would ever come back for it. A 15 MB dump spools to 16 MB, so a few
+     * abandoned attempts are worth noticing.
+     *
+     * Anything still present after a day is not part of a live import: batches
+     * follow each other in seconds.
+     *
+     * @return  void
+     *
+     * @throws  \Exception
+     * @since   __DEPLOY_VERSION__
+     */
+    private function sweepStaleSpools(): void
+    {
+        $tmp = Factory::getApplication()->get('tmp_path', JPATH_ROOT . '/tmp');
+        $old = time() - 86400;
+
+        foreach ((array) glob(Path::clean($tmp . '/proclaim_import_*.jsonl')) as $path) {
+            if (!\is_string($path) || !is_file($path)) {
+                continue;
+            }
+
+            if (filemtime($path) < $old) {
+                File::delete($path);
+
+                Log::add('Removed an abandoned import spool: ' . basename($path), Log::INFO, 'com_proclaim');
+            }
+        }
+    }
+
+    /**
      * Read one batch of statements back off the spool.
      *
      * Only the lines this batch needs are decoded, so a request costs the same
@@ -566,15 +601,24 @@ class CwmbackupController extends BaseController
             $this->sendJsonResponse(false, Text::_('JBS_IBM_NOT_DB'));
         }
 
+        // Splitting is the one step whose cost is the size of the whole file,
+        // and it is measured in seconds per megabyte. The browser is told to
+        // wait; PHP has to be told as well, or a large dump dies here on a
+        // default 30- or 60-second limit.
+        if (\function_exists('set_time_limit')) {
+            @set_time_limit(600);
+        }
+
         // A dump written by anything other than Cwmbackup lists generated
         // columns like any other, and MySQL rejects every INSERT that names
         // one. Rewrite them before the split so the demoted definitions and
         // the statements that put them back travel together.
         $normalised = Cwmrestore::normaliseGeneratedColumns($content);
 
-        // Split into queries
-        $db      = Factory::getContainer()->get(DatabaseInterface::class);
-        $queries = $db->splitSql($normalised['sql']);
+        // Split into queries. Cwmrestore::splitSqlFast() is a port of the core
+        // splitter that returns the same statements without allocating four
+        // short strings per character; see its docblock.
+        $queries = Cwmrestore::splitSqlFast($normalised['sql']);
 
         // The generated columns go back on once every row is loaded.
         foreach ($normalised['restore'] as $restore) {
@@ -590,6 +634,8 @@ class CwmbackupController extends BaseController
         // The next request found nothing and reported "No queries found in
         // session". JSON encoding is what makes the line-per-statement format
         // safe: it escapes the newlines inside a statement.
+        $this->sweepStaleSpools();
+
         $spoolPath = $this->importSpoolPath($sessionId);
         $spool     = fopen($spoolPath, 'wb');
 

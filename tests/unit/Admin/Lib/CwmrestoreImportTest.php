@@ -172,6 +172,52 @@ SQL;
     }
 
     /**
+     * Everything the core splitter treats specially, so a port that got any of
+     * it wrong shows up here rather than as a corrupted import.
+     *
+     * @return  array<string, array{0: string}>
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function splitProvider(): array
+    {
+        return [
+            'semicolon inside a string'       => ["INSERT INTO `a` VALUES ('x; y');\nINSERT INTO `b` VALUES (2);"],
+            'backslash-escaped quote'         => ["INSERT INTO `a` VALUES ('it\\'s; fine');\nSELECT 1;"],
+            'doubled quote'                   => ["INSERT INTO `a` VALUES ('it''s; fine');\nSELECT 1;"],
+            'run of backslashes'              => ["INSERT INTO `a` VALUES ('c:\\\\\\\\');\nSELECT 1;"],
+            'double-quoted string'            => ["INSERT INTO `a` VALUES (\"x; y\");\nSELECT 1;"],
+            'line comment'                    => ["-- a; comment\nSELECT 1;\n-- another;\nSELECT 2;"],
+            'hash comment'                    => ["# a; comment\nSELECT 1;"],
+            'the #__ prefix is not a comment' => ["INSERT INTO `#__x` VALUES (1);\nSELECT 2;"],
+            'block comment'                   => ["/* a; b */ SELECT 1;\n/*!40101 SET x=1 */;\nSELECT 2;"],
+            'versioned comment runs'          => ["/*!40000 ALTER TABLE `a` DISABLE KEYS */;\nSELECT 1;"],
+            'no trailing semicolon'           => ['SELECT 1'],
+            'empty input'                     => [''],
+            'only whitespace'                 => ["\n\n  \n"],
+        ];
+    }
+
+    /**
+     * @param   string  $sql  Input to split both ways
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('The fast splitter returns exactly what the core splitter returns')]
+    #[\PHPUnit\Framework\Attributes\DataProvider('splitProvider')]
+    public function testSplitMatchesCore(string $sql): void
+    {
+        $this->assertSame(
+            \Joomla\Database\DatabaseDriver::splitSql($sql),
+            Cwmrestore::splitSqlFast($sql),
+            'splitSqlFast() is a port of DatabaseDriver::splitSql(). A statement split in a '
+            . 'different place would corrupt an import silently, so the two must not diverge.'
+        );
+    }
+
+    /**
      * @return  array<string, array{0: string, 1: string}>
      *
      * @since __DEPLOY_VERSION__

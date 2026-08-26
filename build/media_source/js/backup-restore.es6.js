@@ -474,8 +474,13 @@
                 // Step 2: Get import info
                 this.updateProgress(15, Joomla.Text._('JBS_IBM_ANALYZING_FILE'), '');
 
+                // Splitting the dump into statements is the one step whose cost
+                // scales with the whole file rather than with a batch, and the
+                // default minute is not enough for a large one — a 15 MB dump
+                // spent longer than that here and the browser gave up on a
+                // request the server was still working on.
                 const infoUrl = `index.php?option=com_proclaim&task=cwmbackup.getImportInfoXHR&format=json&sessionId=${sessionId}&${Joomla.getOptions('csrf.token')}=1`;
-                const infoResult = await this.fetchJson(infoUrl);
+                const infoResult = await this.fetchJson(infoUrl, {}, 600000);
 
                 if (!infoResult.success) {
                     throw new Error(infoResult.message || 'Failed to analyze import file');
@@ -573,17 +578,23 @@
                         ? `\n\n… and ${importErrors.length - 10} more. See the Proclaim log for the full list.`
                         : '';
 
+                    // Joomla.Text has no sprintf — the placeholder is filled in
+                    // here, as everywhere else in this codebase.
+                    const summary = Joomla.Text._('JBS_IBM_STATEMENTS_FAILED')
+                        .replace('%d', importErrors.length);
+
                     this.showComplete(
                         false,
-                        `${Joomla.Text._('JBS_IBM_IMPORT_HAD_ERRORS')}\n\n`
-                        + `${Joomla.Text.sprintf('JBS_IBM_STATEMENTS_FAILED', importErrors.length)}\n\n${detail}${more}`,
+                        `${Joomla.Text._('JBS_IBM_IMPORT_HAD_ERRORS')}\n\n${summary}\n\n${detail}${more}`,
                     );
 
                     return;
                 }
 
                 if (skippedCount) {
-                    console.info(Joomla.Text.sprintf('JBS_IBM_STATEMENTS_SKIPPED', skippedCount));
+                    console.info(
+                        Joomla.Text._('JBS_IBM_STATEMENTS_SKIPPED').replace('%d', skippedCount),
+                    );
                 }
 
                 this.showComplete(true, Joomla.Text._('JBS_IBM_IMPORT_COMPLETE'));
