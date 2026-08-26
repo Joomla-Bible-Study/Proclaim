@@ -826,11 +826,13 @@ class Cwmrestore
 
         // Is the PHP tmp directory missing?
         if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
+            // 'error' belongs to enqueueMessage, not to Text::_(), whose second
+            // argument is $jsSafe -- passing it there JS-escaped a string that
+            // is rendered as HTML, and left the message queued as an ordinary
+            // notice rather than an error.
             $app->enqueueMessage(
-                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
-                    'JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET',
-                    'error'
-                )
+                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET'),
+                'error'
             );
 
             return false;
@@ -838,11 +840,13 @@ class Cwmrestore
 
         // Is the max upload size too small in php.ini?
         if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_INI_SIZE)) {
+            // 'error' belongs to enqueueMessage, not to Text::_(), whose second
+            // argument is $jsSafe -- passing it there JS-escaped a string that
+            // is rendered as HTML, and left the message queued as an ordinary
+            // notice rather than an error.
             $app->enqueueMessage(
-                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
-                    'JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE',
-                    'error'
-                )
+                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE'),
+                'error'
             );
 
             return false;
