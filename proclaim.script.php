@@ -176,10 +176,19 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Minimum Joomla! Version required to install the extension
      *
+     * ⚠️ Must match `build/script.install.php`. Two different numbers means
+     * the package refuses at one boundary and the component at another, and a
+     * site lands half-installed. Guarded by `JoomlaFloorTest`.
+     *
+     * 5.4 is the only supported 5.x: it is the last minor of the series, and
+     * everything below it stopped receiving fixes. It is also the version CI
+     * builds against, so it is a floor something actually runs at rather than
+     * a claim nothing exercises.
+     *
      * @var    string
      * @since  3.6
      */
-    protected $minimumJoomla = '5.0.0';
+    protected $minimumJoomla = '5.4.0';
 
     /**
      * @var   string The component's name
