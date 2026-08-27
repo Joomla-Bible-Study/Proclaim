@@ -20,18 +20,21 @@ use CWM\Component\Proclaim\Administrator\Health\HealthCheckInterface;
 use CWM\Component\Proclaim\Administrator\Health\HealthGroup;
 use CWM\Component\Proclaim\Administrator\Health\HealthResult;
 use CWM\Component\Proclaim\Administrator\Health\HealthStatus;
-use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use Joomla\CMS\Language\Text;
 
 /**
- * Servers still on the 9.x `legacy` type, and the media rows riding on them.
+ * Records whose image path points at a file that is not on disk.
  *
- * A restored 9.x backup arrives with every server legacy, and most media will
- * not resolve until they are migrated.
+ * ⚠️ A strict subset of the records awaiting migration: the scan walks those
+ * and asks whether each source file exists. Migration cannot move a file that
+ * is not there, so these are the ones that will fail rather than merely wait
+ * -- which is why this reports a warning where the migration check reports a
+ * notice.
  *
  * @since  __DEPLOY_VERSION__
  */
-final class LegacyServersCheck implements HealthCheckInterface
+final class MissingImagesCheck implements HealthCheckInterface
 {
     /**
      * @inheritDoc
@@ -40,7 +43,7 @@ final class LegacyServersCheck implements HealthCheckInterface
      */
     public function getId(): string
     {
-        return 'content.legacy-servers';
+        return 'filesystem.missing-images';
     }
 
     /**
@@ -50,7 +53,7 @@ final class LegacyServersCheck implements HealthCheckInterface
      */
     public function getGroup(): HealthGroup
     {
-        return HealthGroup::ContentIntegrity;
+        return HealthGroup::Filesystem;
     }
 
     /**
@@ -60,7 +63,7 @@ final class LegacyServersCheck implements HealthCheckInterface
      */
     public function getTitle(): string
     {
-        return Text::_('JBS_HEALTH_LEGACY_SERVERS_TITLE');
+        return Text::_('JBS_HEALTH_MISSING_IMAGES_TITLE');
     }
 
     /**
@@ -80,31 +83,23 @@ final class LegacyServersCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
-        $pending = CwmserverMigrationHelper::countPendingMigration();
+        $unresolvable = CwmImageMigration::getUnresolvableRecords();
 
-        if ($pending['servers'] === 0) {
+        if ($unresolvable['count'] === 0) {
             return new HealthResult(
                 $this->getId(),
                 HealthStatus::Ok,
-                Text::_('JBS_HEALTH_LEGACY_SERVERS_OK')
+                Text::_('JBS_HEALTH_MISSING_IMAGES_OK')
             );
         }
 
         return new HealthResult(
             $this->getId(),
             HealthStatus::Warning,
-            // Text::plural(), not "server(s)" -- the dashboard banner describing
-            // this same finding pluralises properly, and the two sit minutes
-            // apart in the same workflow. The `_N` belongs to the key: plural()
-            // appends only the suffix, so the keys are ..._PENDING_N_1 and
-            // ..._PENDING_N_MORE.
-            Text::plural('JBS_HEALTH_LEGACY_SERVERS_PENDING_N', $pending['servers'], $pending['media']),
-            // Both counts, so migrating some of them -- or a restore adding
-            // more -- brings the notice back rather than leaving it quiet at a
-            // number that no longer describes the site.
-            $pending['servers'] . ':' . $pending['media'],
-            'index.php?option=com_proclaim&view=cwmservers',
-            Text::_('JBS_HEALTH_LEGACY_SERVERS_ACTION')
+            Text::plural('JBS_HEALTH_MISSING_IMAGES_N', $unresolvable['count']),
+            (string) $unresolvable['count'],
+            'index.php?option=com_proclaim&task=cwmadmin.edit&id=1#imagetools',
+            Text::_('JBS_HEALTH_IMAGE_TOOLS_ACTION')
         );
     }
 }

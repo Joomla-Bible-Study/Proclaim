@@ -17,8 +17,11 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Health\Check\ImageMigrationCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\ImageWebPCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\MaxInputVarsCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\MissingImagesCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use Joomla\CMS\Language\Text;
@@ -53,6 +56,14 @@ final class HealthRegistry
             new MaxInputVarsCheck(),
             new PluginEnabledCheck('content', 'scripturelinks', 'JBS_HEALTH_PLUGIN_SCRIPTURELINKS'),
             new LegacyServersCheck(),
+            // ⚠️ Together these three walk every study, teacher and series
+            // row and stat the files they name — around 50ms on a library of
+            // 1,000 records. Cheap enough to run on a page render, but the
+            // next filesystem check worth adding should be measured rather
+            // than assumed.
+            new ImageMigrationCheck(),
+            new MissingImagesCheck(),
+            new ImageWebPCheck(),
         ];
 
         foreach (self::testableServers() as $server) {

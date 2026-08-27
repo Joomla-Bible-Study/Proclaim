@@ -34,10 +34,14 @@ class CwmhealthController extends BaseController
     /**
      * Where every task returns to.
      *
+     * The report is a panel on the Administration screen rather than a view of
+     * its own, so `task=` is right here: `view=cwmadmin` renders the settings
+     * form without the controller having set it up.
+     *
      * @var    string
      * @since  __DEPLOY_VERSION__
      */
-    private const RETURN_VIEW = 'index.php?option=com_proclaim&view=cwmhealth';
+    private const RETURN_VIEW = 'index.php?option=com_proclaim&task=cwmadmin.edit&id=1';
 
     /**
      * Run one check on request, including the ones too expensive to run on load.

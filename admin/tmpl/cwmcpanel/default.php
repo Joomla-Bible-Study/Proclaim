@@ -344,6 +344,12 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                        title="<?php echo Text::_('JBS_HEALTH_QUIETEN_DESC'); ?>">
                         <?php echo Text::_('JBS_HEALTH_QUIETEN'); ?>
                     </a>
+                    <?php // Clearing is only safe because the finding stays on
+                          // record. Say where. ?>
+                    <a href="<?php echo Route::_('index.php?option=com_proclaim&task=cwmadmin.edit&id=1'); ?>"
+                       class="btn btn-secondary btn-sm">
+                        <?php echo Text::_('JBS_HEALTH_SEE_DETAILS'); ?>
+                    </a>
                 </div>
             </div>
         <?php endif; ?>
@@ -535,17 +541,6 @@ echo Route::_('index.php?option=com_proclaim&view=cpanel'); ?>" method="post" na
                            title="<?php echo Text::_('JBS_ANA_ANALYTICS'); ?>" class="cpanel-btn">
                             <i class="fa-solid fa-chart-bar fa-3x"></i>
                             <span><?php echo Text::_('JBS_ANA_ANALYTICS'); ?></span>
-                        </a>
-                    </div>
-                    <?php endif; ?>
-                    <?php // Gated on core.admin to match the view itself: the
-                          // report is the whole site's state, not one section's. ?>
-                    <?php if ($cpanelUser->authorise('core.admin', 'com_proclaim')) : ?>
-                    <div class="col">
-                        <a href="<?php echo Route::_('index.php?option=com_proclaim&amp;view=cwmhealth'); ?>"
-                           title="<?php echo Text::_('JBS_HEALTH_TITLE'); ?>" class="cpanel-btn">
-                            <i class="fa-solid fa-stethoscope fa-3x"></i>
-                            <span><?php echo Text::_('JBS_HEALTH_TITLE'); ?></span>
                         </a>
                     </div>
                     <?php endif; ?>

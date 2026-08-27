@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\View\Cwmadmin;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Helper\CwmupgradeHelper;
+use CWM\Component\Proclaim\Administrator\Model\CwmhealthModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper;
@@ -189,6 +190,26 @@ class HtmlView extends BaseHtmlView
      */
     public bool $has9xSchema = false;
 
+    /**
+     * Every health check and its current result, grouped by section.
+     *
+     * Rendered below the tools on the first tab. Passing checks are included:
+     * a dashboard banner can only show a failure, so the ones that are fine
+     * are exactly what this panel adds.
+     *
+     * @var    array
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $healthReport = [];
+
+    /**
+     * How many results fell into each status.
+     *
+     * @var    array<string, int>
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $healthSummary = [];
+
 
     /**
      * Form
@@ -250,6 +271,17 @@ class HtmlView extends BaseHtmlView
         $this->item  = $model->getItem();
         $this->state = $model->getState();
         $this->canDo = ContentHelper::getActions('com_proclaim', 'cwmadmin', (int)$this->item->id);
+
+        // Only the passive checks run here: the active ones report themselves
+        // as untested and offer a button, so opening this screen never spends
+        // a platform's API quota. Built through the factory rather than
+        // $this->getModel(), which only returns models the controller
+        // attached — and this screen's controller attaches Cwmadmin alone.
+        /** @var CwmhealthModel $health */
+        $health              = $app->bootComponent('com_proclaim')
+            ->getMVCFactory()->createModel('Cwmhealth', 'Administrator');
+        $this->healthReport  = $health->getReport();
+        $this->healthSummary = $health->summarise($this->healthReport);
 
         // End for a database
         $this->tmp_dest = $app->get('tmp_path');
