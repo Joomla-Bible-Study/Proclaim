@@ -1023,6 +1023,24 @@ button.cwmadmin-action-card {
   color: var(--color-gray-dark);
 }
 
+/* System Health section headings.
+   One weight down from the panel title above: the same accent rule at 1px, so
+   the sections read as divisions of the panel rather than competing with it.
+   Bootstrap's own .border-bottom was too faint against the panel background to
+   separate anything. */
+.cwmadmin-panel h4.health-section {
+  margin-top: 22px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-accent);
+  color: var(--color-gray-dark);
+  letter-spacing: 0.04em;
+}
+
+.cwmadmin-panel h4.health-section:first-of-type {
+  margin-top: 0;
+}
+
 /* ==========================================================================
    Stacked Form Fields (label on top, full-width controls)
    ========================================================================== */

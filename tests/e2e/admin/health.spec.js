@@ -28,13 +28,13 @@ const CPANEL = '/administrator/index.php?option=com_proclaim&view=cwmcpanel';
  *
  * @returns {import('@playwright/test').Locator}
  */
-const panel = (page) => page.locator('.card').filter({ hasText: 'System Health' }).first();
+const panel = (page) => page.locator('.cwmadmin-panel').filter({ hasText: 'System Health' }).first();
 
 test.describe('System Health', () => {
     test('reports checks, including the ones that are passing', async ({ page }) => {
         await page.goto(ADMIN);
 
-        await expect(panel(page).locator('table tbody tr').first()).toBeVisible({ timeout: 20000 });
+        await expect(panel(page).locator('.list-group-item').first()).toBeVisible({ timeout: 20000 });
 
         // A dashboard banner can only show a failure. The passing checks are
         // the point of this panel, so a report without any would be the bug.
