@@ -7,12 +7,11 @@
  * Administration screen's first tab, which is an edit form, so it has to be a
  * fragment something else owns rather than a page of its own.
  *
- * Built as a flush list group inside a `cwmadmin-panel`, which is the shape
- * the Image Migration Pipeline and the thumbnail tools on this same screen
- * already use. It replaced one table per group: five tables carried fifteen
- * header cells to label eight rows, an Action column that was empty for half
- * of them, and 156px per check -- around five screens once #1949's remaining
- * checks land.
+ * Built as a flush list group inside a `cwmadmin-panel`, the shape the Image
+ * Migration Pipeline and the thumbnail tools on this same screen already use.
+ * A list rather than a table because the data is not tabular -- a status, a
+ * name, a sentence and sometimes a button -- and because the panel has to stay
+ * readable as checks are added to it, so every row costs vertical space.
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
