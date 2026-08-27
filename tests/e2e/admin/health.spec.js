@@ -71,16 +71,26 @@ test.describe('System Health', () => {
 
         await clear.first().click();
 
-        await page.goto(CPANEL);
-        await expect(page.locator('a[href*="task=cwmhealth.quieten"]')).toHaveCount(0);
+        try {
+            await page.goto(CPANEL);
+            await expect(page.locator('a[href*="task=cwmhealth.quieten"]')).toHaveCount(0);
 
-        // Cleared on the dashboard, still on the record.
-        await page.goto(ADMIN);
-        const restore = panel(page).locator('a[href*="task=cwmhealth.restore"]').first();
-        await expect(restore).toBeVisible({ timeout: 20000 });
+            // Cleared on the dashboard, still on the record.
+            await page.goto(ADMIN);
+            await expect(panel(page).locator('a[href*="task=cwmhealth.restore"]').first())
+                .toBeVisible({ timeout: 20000 });
+        } finally {
+            // ⚠️ Restore even when the assertions above fail. Quietening
+            // persists in the database, so a failed run otherwise leaves the
+            // banner cleared and the *next* run fails on its own guard
+            // instead, reporting a state problem as a code problem.
+            await page.goto(ADMIN);
+            const restore = panel(page).locator('a[href*="task=cwmhealth.restore"]').first();
 
-        // Put the site back the way it was found.
-        await restore.click();
+            if (await restore.count()) {
+                await restore.click();
+            }
+        }
 
         await page.goto(CPANEL);
         await expect(page.locator('a[href*="task=cwmhealth.quieten"]').first()).toBeVisible();

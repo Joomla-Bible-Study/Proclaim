@@ -26,11 +26,8 @@ use Joomla\CMS\Language\Text;
 /**
  * Records whose image path points at a file that is not on disk.
  *
- * ⚠️ A strict subset of the records awaiting migration: the scan walks those
- * and asks whether each source file exists. Migration cannot move a file that
- * is not there, so these are the ones that will fail rather than merely wait
- * -- which is why this reports a warning where the migration check reports a
- * notice.
+ * ⚠️ A strict subset of the records awaiting migration. Migration cannot move
+ * a file that is not there, so these fail rather than wait.
  *
  * @since  __DEPLOY_VERSION__
  */

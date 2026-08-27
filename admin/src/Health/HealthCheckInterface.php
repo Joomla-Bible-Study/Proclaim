@@ -17,22 +17,20 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * One thing the System Health view can report on.
+ * One thing the System Health report can check.
  *
- * ⚠️ A check answers about the site, never about the caller. It must not read
- * the identity, the session or the request, because the same check runs from
- * an admin page render, from a restore finishing, and from a scheduled task
- * with no user at all. Authorisation belongs to whatever displays the result.
+ * ⚠️ A check answers about the site, never the caller: no identity, session or
+ * request. Authorisation belongs to whatever displays the result.
  *
  * @since  __DEPLOY_VERSION__
  */
 interface HealthCheckInterface
 {
     /**
-     * Stable identifier, `group.slug`, used as the quieting key.
+     * Stable `group.slug` identifier.
      *
-     * ⚠️ It is stored in the database once a notice is quietened, so renaming
-     * one silently un-quietens every site that had.
+     * ⚠️ Stored as the quieting key, so renaming one un-quietens every site
+     * that had cleared it.
      *
      * @return  string
      *
@@ -41,7 +39,7 @@ interface HealthCheckInterface
     public function getId(): string;
 
     /**
-     * The section of the report this check appears under.
+     * The report section this check appears under.
      *
      * @return  HealthGroup
      *
@@ -50,7 +48,7 @@ interface HealthCheckInterface
     public function getGroup(): HealthGroup;
 
     /**
-     * Translated name of the check, shown whatever it reports.
+     * Translated name of the check.
      *
      * @return  string
      *
@@ -59,12 +57,10 @@ interface HealthCheckInterface
     public function getTitle(): string;
 
     /**
-     * Whether running this check is free of side effects and safe unprompted.
+     * Whether `run()` is free to call unprompted.
      *
-     * ⚠️ False means `run()` reaches the network, spends an API quota, or
-     * otherwise costs something. Those are evaluated only when a person asks
-     * for them by name -- never on a page render, and never from the scheduled
-     * re-check, which has no one to consent on its behalf.
+     * ⚠️ False means it reaches the network or spends quota, so only an
+     * explicit request may run it.
      *
      * @return  bool
      *

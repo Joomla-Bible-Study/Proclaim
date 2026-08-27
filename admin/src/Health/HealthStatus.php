@@ -17,11 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * The state a health check reports.
- *
- * `Unknown` is a real answer rather than a missing one: an active check has
- * not been run, so nothing is known about it. Reporting that as `Ok` would
- * claim a passing result nobody measured.
+ * The state a health check reports. `Unknown` is a real answer: nothing was
+ * measured, which is not the same as passing.
  *
  * @since  __DEPLOY_VERSION__
  */

@@ -31,12 +31,10 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 class CwmhealthModel extends BaseDatabaseModel
 {
     /**
-     * Every check, with its current result, grouped by section.
+     * Every check with its current result, grouped by section.
      *
-     * Active checks are included and reported as not tested. The view is the
-     * permanent record, so a check it declines to run still has to be listed
-     * -- a report that omitted them would read as a clean bill of health it
-     * never established.
+     * ⚠️ Active checks are listed as not tested rather than omitted; a missing
+     * check reads as a passing one.
      *
      * @return  array<string, array<int, array{check: HealthCheckInterface, result: HealthResult, quiet: bool}>>
      *
@@ -61,8 +59,7 @@ class CwmhealthModel extends BaseDatabaseModel
             ];
         }
 
-        // Declaration order of HealthGroup, so the report reads the same way
-        // every time regardless of which checks happen to exist.
+        // HealthGroup declaration order, so the report reads the same every time.
         $ordered = [];
 
         foreach (HealthGroup::cases() as $group) {

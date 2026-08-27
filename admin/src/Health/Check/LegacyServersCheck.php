@@ -93,15 +93,10 @@ final class LegacyServersCheck implements HealthCheckInterface
         return new HealthResult(
             $this->getId(),
             HealthStatus::Warning,
-            // Text::plural(), not "server(s)" -- the dashboard banner describing
-            // this same finding pluralises properly, and the two sit minutes
-            // apart in the same workflow. The `_N` belongs to the key: plural()
-            // appends only the suffix, so the keys are ..._PENDING_N_1 and
-            // ..._PENDING_N_MORE.
+            // ⚠️ The `_N` belongs to the key passed in: plural() appends only
+            // the suffix, so the keys are ..._PENDING_N_1 and ..._N_MORE.
             Text::plural('JBS_HEALTH_LEGACY_SERVERS_PENDING_N', $pending['servers'], $pending['media']),
-            // Both counts, so migrating some of them -- or a restore adding
-            // more -- brings the notice back rather than leaving it quiet at a
-            // number that no longer describes the site.
+            // Both counts, so migrating some of them resurfaces the notice.
             $pending['servers'] . ':' . $pending['media'],
             'index.php?option=com_proclaim&view=cwmservers',
             Text::_('JBS_HEALTH_LEGACY_SERVERS_ACTION')

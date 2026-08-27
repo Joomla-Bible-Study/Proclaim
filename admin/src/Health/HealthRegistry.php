@@ -28,12 +28,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 
 /**
- * Every check the System Health view knows about.
- *
- * The registry is the one place that decides what runs unprompted. Callers ask
- * for `runPassive()` and get an answer for every check, with the active ones
- * reported as `Unknown` rather than skipped -- a check missing from the report
- * looks like a check that passed.
+ * Every check the System Health report knows about, and the only place that
+ * decides what runs unprompted.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -42,9 +38,8 @@ final class HealthRegistry
     /**
      * Build the list of checks.
      *
-     * ⚠️ Not cached. Some checks are per-record -- one connection test per
-     * media server -- so the list itself reflects the current site, and a
-     * server added since the last page load has to appear.
+     * ⚠️ Not cached: some are per-record, so a server added since the last
+     * page load has to appear.
      *
      * @return  HealthCheckInterface[]
      *
@@ -56,11 +51,8 @@ final class HealthRegistry
             new MaxInputVarsCheck(),
             new PluginEnabledCheck('content', 'scripturelinks', 'JBS_HEALTH_PLUGIN_SCRIPTURELINKS'),
             new LegacyServersCheck(),
-            // ⚠️ Together these three walk every study, teacher and series
-            // row and stat the files they name — around 50ms on a library of
-            // 1,000 records. Cheap enough to run on a page render, but the
-            // next filesystem check worth adding should be measured rather
-            // than assumed.
+            // ⚠️ These three stat every study, teacher and series image —
+            // ~50ms per 1,000 records. Measure the next filesystem check too.
             new ImageMigrationCheck(),
             new MissingImagesCheck(),
             new ImageWebPCheck(),
@@ -78,13 +70,10 @@ final class HealthRegistry
     }
 
     /**
-     * Run everything that is safe to run without being asked.
+     * Run everything safe to run unprompted; report the rest as `Unknown`.
      *
-     * `$checks` exists so the guarantee below can be tested against a check
-     * that records whether it was run. Which checks are registered depends on
-     * the site's data -- a site with no API-backed server has no active check
-     * at all -- and a test that silently exercises nothing is how this
-     * guarantee would quietly stop holding.
+     * `$checks` is a seam for tests: which checks exist depends on site data,
+     * so a test using the registry can exercise nothing and still pass.
      *
      * @param   ?HealthCheckInterface[]  $checks  The checks to run, or null for the registry.
      *
@@ -110,10 +99,8 @@ final class HealthRegistry
     }
 
     /**
-     * Run one check by id, active or not.
-     *
-     * Only reached from an explicit request to test something, which is the
-     * consent an active check needs.
+     * Run one check by id, active or not. ⚠️ Only reachable from an explicit
+     * request, which is the consent an active check needs.
      *
      * @param   string  $id  The check id.
      *
@@ -148,10 +135,8 @@ final class HealthRegistry
     }
 
     /**
-     * Run a check, turning a thrown error into a reportable result.
-     *
-     * A check that fatals must not take the health page down with it -- the
-     * page is what someone opens when the site is already misbehaving.
+     * Run a check, turning a throw into a reportable result. ⚠️ A check that
+     * fatals must not take the report down with it.
      *
      * @param   HealthCheckInterface  $check  The check to run.
      *
@@ -190,9 +175,6 @@ final class HealthRegistry
         try {
             return CWMAddon::getConnectionTestableServers();
         } catch (\Throwable) {
-            // A missing or unreadable servers table is itself something other
-            // checks report on. Returning nothing here keeps the rest of the
-            // report available instead of failing the whole page.
             return [];
         }
     }

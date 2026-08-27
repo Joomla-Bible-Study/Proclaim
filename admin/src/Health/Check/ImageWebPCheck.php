@@ -24,11 +24,8 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use Joomla\CMS\Language\Text;
 
 /**
- * Images with no WebP sibling built beside them.
- *
- * Nothing is broken without one -- the original still serves -- so this is a
- * notice. It is the derivative that has not been generated yet, not a missing
- * original.
+ * Images with no WebP sibling built beside them. Nothing is broken without
+ * one: the original still serves.
  *
  * @since  __DEPLOY_VERSION__
  */

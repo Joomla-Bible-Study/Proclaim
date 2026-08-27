@@ -17,12 +17,8 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * The section of the health report a check belongs to.
- *
- * The full taxonomy is declared here even though the first release fills only
- * four of the nine sections. A later check picks its group from this list
- * instead of inventing a heading, which is what keeps the report readable as
- * it grows.
+ * The section of the health report a check belongs to. A new check picks from
+ * this list rather than inventing a heading.
  *
  * @since  __DEPLOY_VERSION__
  */

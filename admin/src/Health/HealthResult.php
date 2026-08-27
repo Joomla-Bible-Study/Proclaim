@@ -17,16 +17,13 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * What one check reports about one thing.
+ * What one check reports.
  *
- * The fingerprint is the shape of the finding rather than the fact of it --
- * "10 legacy servers, 2008 media rows", not "there is a problem". Quietening a
- * dashboard notice stores this string, and the notice stays quiet only while
- * the check keeps producing it. An eleventh legacy server changes the
- * fingerprint and the notice comes back on its own.
+ * The fingerprint is the shape of the finding ("10 servers, 2008 media"), not
+ * the fact of it. A quietened notice returns as soon as it changes.
  *
- * A passing check has no fingerprint. There is nothing to quieten, and storing
- * one would mean a later failure could be silenced by a state that was fine.
+ * ⚠️ A passing result has no fingerprint: there is nothing to quieten, and
+ * storing one would let a later failure be silenced by a state that was fine.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -55,11 +52,8 @@ final readonly class HealthResult
     }
 
     /**
-     * Whether this result is something the dashboard should raise.
-     *
-     * `Unknown` is deliberately not a nag. An active check that has never been
-     * run has not found anything, and a dashboard banner saying so would fire
-     * on every site that never pressed the button.
+     * Whether the dashboard should raise this. ⚠️ `Unknown` is not a nag: an
+     * untested active check has not found anything.
      *
      * @return  bool
      *

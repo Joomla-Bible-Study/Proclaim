@@ -27,24 +27,18 @@ use Joomla\Database\DatabaseInterface;
 /**
  * Whether the permissions grid still fits inside PHP's `max_input_vars`.
  *
- * ⚠️ This is the failure mode a health check exists for: PHP discards the
- * inputs past the limit without an error, so the save appears to succeed and
- * changes nothing. `CwmpermissionsModel` already renders one section per
- * request for exactly this reason, which brought the count down by a factor of
- * seventeen -- but the grid is one field per action per user group, so a site
- * with enough groups walks back into it.
+ * ⚠️ PHP discards inputs past the limit without an error, so the save appears
+ * to succeed and changes nothing. The grid is one field per action per user
+ * group, so enough groups breach it.
  *
  * @since  __DEPLOY_VERSION__
  */
 final class MaxInputVarsCheck implements HealthCheckInterface
 {
     /**
-     * Non-grid inputs the permissions form posts -- the section, the token,
-     * the task and Joomla's standard hidden fields.
-     *
-     * Deliberately generous. Being a little pessimistic about the overhead
-     * costs a notice on a site that would just have squeaked through; being
-     * optimistic costs a silent save failure.
+     * Non-grid inputs the permissions form posts. Deliberately generous:
+     * over-estimating costs a spurious notice, under-estimating costs a
+     * silent save failure.
      *
      * @var    int
      * @since  __DEPLOY_VERSION__
@@ -109,10 +103,8 @@ final class MaxInputVarsCheck implements HealthCheckInterface
         $limit = (int) \ini_get('max_input_vars');
 
         if ($limit <= 0) {
-            // The directive is compiled out or unreadable, so there is no
-            // number to compare against. Saying nothing is better than
-            // guessing at PHP's 1000 default and reporting a limit the host
-            // may not have.
+            // No number to compare against; guessing at PHP's 1000 default
+            // would report a limit the host may not have.
             return new HealthResult(
                 $this->getId(),
                 HealthStatus::Unknown,

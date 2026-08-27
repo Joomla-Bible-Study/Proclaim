@@ -22,19 +22,14 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Registry\Registry;
 
 /**
- * Which dashboard notices have been quietened, and against what finding.
+ * Check id to the fingerprint it was quietened against, in `#__bsms_admin`
+ * params under `health_quiet`. A fingerprint that no longer matches means the
+ * finding changed and the notice is live again.
  *
- * Stored as a single JSON object under `health_quiet` in the `#__bsms_admin`
- * params, mapping a check id to the fingerprint that was current when it was
- * quietened. A stored fingerprint that no longer matches means the finding
- * changed, so the notice is live again -- nothing has to expire it.
+ * ⚠️ Affects the dashboard only; the report renders every check regardless.
  *
- * ⚠️ Quietening only affects the dashboard. The System Health view renders
- * every check whatever this says, which is what makes clearing a banner safe.
- *
- * The map is kept as an encoded string rather than a nested Registry node
- * because check ids contain dots (`content.legacy-servers`), and Registry
- * treats a dot as a path separator.
+ * ⚠️ Encoded as a JSON string, not a Registry node: check ids contain dots and
+ * Registry reads a dot as a path separator.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -49,10 +44,8 @@ final class HealthQuietStore
     public const PARAM_KEY = 'health_quiet';
 
     /**
-     * Whether this result should be hidden from the dashboard.
-     *
-     * A passing result is never "quiet" -- it has no fingerprint, so there is
-     * nothing to compare and nothing to suppress.
+     * Whether this result is hidden from the dashboard. A result with no
+     * fingerprint never is.
      *
      * @param   HealthResult  $result  The result to test.
      *
@@ -121,8 +114,8 @@ final class HealthQuietStore
      */
     public static function read(): array
     {
-        // An unreadable row means nothing is quietened, which errs towards
-        // showing notices rather than hiding them.
+        // Unreadable params mean nothing is quietened, erring towards showing
+        // notices rather than hiding them.
         $raw = (string) (self::readParams()?->get(self::PARAM_KEY, '') ?? '');
 
         if ($raw === '') {
@@ -132,10 +125,8 @@ final class HealthQuietStore
         try {
             $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
-            // A blob we cannot read is treated as nothing quietened, which
-            // errs towards showing notices rather than hiding them. Logged
-            // because the alternative reading -- everything silently
-            // un-quietened -- looks like the feature stopped working.
+            // Logged: silently un-quietening everything reads as the feature
+            // having stopped working.
             Log::add(
                 'Proclaim health quieting state was unreadable and has been ignored: ' . $e->getMessage(),
                 Log::WARNING,
@@ -169,10 +160,8 @@ final class HealthQuietStore
     {
         $params = self::readParams();
 
-        // ⚠️ Refuse rather than overwrite. Writing here means re-serialising
-        // the whole params column, so proceeding from the empty fallback would
-        // trade every stored setting for a cosmetic preference. Quietening a
-        // banner is not worth that; repairing the row is a separate job.
+        // ⚠️ A write re-serialises the whole params column, so writing from
+        // the empty fallback would discard every stored setting.
         if ($params === null) {
             throw new \RuntimeException('Proclaim admin params are unreadable, so quieting state cannot be saved.');
         }
@@ -189,11 +178,10 @@ final class HealthQuietStore
     }
 
     /**
-     * The admin params row, read fresh, or null when it cannot be parsed.
+     * The admin params row, or null when it cannot be parsed.
      *
-     * Not taken from `Cwmparams::getAdmin()`: that caches the row for the
-     * request, so a write followed by a read in the same request would return
-     * the pre-write state.
+     * ⚠️ Read fresh, not via `Cwmparams::getAdmin()`, which caches for the
+     * request and would return the pre-write state after a write.
      *
      * @return  ?Registry
      *
@@ -211,13 +199,9 @@ final class HealthQuietStore
         try {
             return new Registry($db->loadResult() ?: '{}');
         } catch (\RuntimeException $e) {
-            // ⚠️ Registry does not shrug this off. A truncated write leaves a
-            // string that still starts with `{`, and Json::stringToObject()
-            // throws for exactly that -- the case Cwmparams::getAdmin() and
-            // setCompParams() both already guard. This runs on every admin's
-            // dashboard, so an unguarded throw would turn a half-written row
-            // into a dead screen.
-            //
+            // ⚠️ Registry throws on a truncated blob that still starts with
+            // `{`. This is read on every admin's dashboard, so an unguarded
+            // throw would turn a half-written row into a dead screen.
             Log::add(
                 'Proclaim admin params were unreadable while checking health quieting: ' . $e->getMessage(),
                 Log::WARNING,
