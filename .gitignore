@@ -54,6 +54,11 @@ com_proclaim/media/css/site/
 
 # Playwright E2E
 tests/e2e/.auth/
+
+# Throwaway Playwright specs used to drive a screen once and read the result.
+# One reached development because `git add -A` ran while a `rm` had not
+# (#1967) -- ignoring the prefix means the next one cannot.
+tests/e2e/**/_tmp-*.spec.js
 playwright-report/
 test-results/
 
