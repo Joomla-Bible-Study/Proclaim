@@ -172,10 +172,14 @@ class PlaceholderParityTest extends TestCase
             'The main admin translation is missing from discovery.'
         );
 
+        // mod_proclaimicon names every file the modern way — `<extension>.ini`,
+        // no locale prefix — which is the form Joomla tries first. Discovery has
+        // to pair an unprefixed translation against an unprefixed en-GB, and
+        // this is the only extension that exercises that path.
         $this->assertArrayHasKey(
-            'modules/admin/mod_proclaimicon/language/de-DE/de-DE.mod_proclaimicon.ini',
+            'modules/admin/mod_proclaimicon/language/de-DE/mod_proclaimicon.ini',
             $pairs,
-            'An extension whose en-GB filename is unprefixed dropped out of discovery.'
+            'The unprefixed naming case dropped out of discovery.'
         );
     }
 
