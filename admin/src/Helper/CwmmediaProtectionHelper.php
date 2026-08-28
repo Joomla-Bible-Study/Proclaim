@@ -40,6 +40,29 @@ use Joomla\Http\HttpFactory;
 class CwmmediaProtectionHelper
 {
     /**
+     * Can this process work out what the site's own address is?
+     *
+     * ⚠️ `isServedByWebServer()` decides "ours" by comparing against
+     * `Uri::root()`, and outside a web request there may be nothing to compare
+     * with. With `live_site` unset, `Uri::base()` falls to its CLI branch and
+     * builds the prefix from `$_SERVER`, which under CLI carries no host — so
+     * the root comes back without one and every real URL fails the comparison.
+     *
+     * That failure is silent and it points the wrong way: a caller would read
+     * "not served by us" and conclude nothing is exposed. Anything asking the
+     * exposure question from a scheduled task has to ask this one first and
+     * report that it does not know.
+     *
+     * @return  bool  True when the root has a scheme and a host to match on.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public static function canResolveSiteRoot(): bool
+    {
+        return preg_match('#^https?://[^/]+#i', Uri::root()) === 1;
+    }
+
+    /**
      * Is this URL one the web server will answer without Joomla's involvement?
      *
      * Compared against `Uri::root()` rather than the request's Host header:
