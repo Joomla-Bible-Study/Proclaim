@@ -107,11 +107,12 @@ class com_proclaimInstallerScript extends InstallerScript
     protected DatabaseInterface|null $dbo;
 
     /**
-     * Minimum PHP version required to install the extension
+     * Log category for the install record.
      *
-     * @var    string
-     * @since  3.6
+     * @since  10.5.9
      */
+    private const INSTALL_LOG = 'com_proclaim.install';
+
     /**
      * The version this update is coming from, read before Joomla overwrites it.
      *
@@ -122,13 +123,6 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  10.5.9
      */
-    /**
-     * Log category for the install record.
-     *
-     * @since  10.5.9
-     */
-    private const INSTALL_LOG = 'com_proclaim.install';
-
     private string $fromVersion = '';
 
     /**
@@ -171,6 +165,12 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private float $startedAt = 0.0;
 
+    /**
+     * Minimum PHP version required to install the extension
+     *
+     * @var    string
+     * @since  3.6
+     */
     protected $minimumPhp = '8.3.0';
 
     /**
@@ -2924,16 +2924,6 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Migrate studyimage param values to thumbnailm column
-     *
-     * Messages that only have a studyimage (stock image) but no thumbnailm
-     * need the value preserved since the studyimage field is being removed.
-     *
-     * @return void
-     *
-     * @since 10.1.0
-     */
-    /**
      * Remove the stray template layouts that shipped by accident.
      *
      * `default_easy.php` was committed in 2019 and carried along by folder
@@ -3069,7 +3059,11 @@ class com_proclaimInstallerScript extends InstallerScript
         }
 
         foreach ($templates as $template) {
-            $params = json_decode((string) $template->params, true);
+            try {
+                $params = json_decode((string) $template->params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                continue;
+            }
 
             if (!\is_array($params)) {
                 continue;
@@ -3343,6 +3337,16 @@ class com_proclaimInstallerScript extends InstallerScript
         }
     }
 
+    /**
+     * Migrate studyimage param values to thumbnailm column
+     *
+     * Messages that only have a studyimage (stock image) but no thumbnailm
+     * need the value preserved since the studyimage field is being removed.
+     *
+     * @return void
+     *
+     * @since 10.1.0
+     */
     private function migrateStudyImageParams(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -3394,7 +3398,15 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Update thumbnailm and remove studyimage from params
             unset($params['studyimage']);
-            $newParams = json_encode($params);
+
+            try {
+                $newParams = json_encode($params, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                // Without the flag this returned false, which quoted to an empty
+                // string and wrote it over the row's entire params blob. Skip the
+                // row instead, matching the decode above.
+                continue;
+            }
 
             $update = $db->getQuery(true)
                 ->update($db->qn('#__bsms_studies'))
@@ -3501,9 +3513,18 @@ class com_proclaimInstallerScript extends InstallerScript
                     ],
                 ];
 
+                try {
+                    $encoded = json_encode($links, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    // Legacy rows can hold bytes that will not encode. Leaving the
+                    // link where it is beats counting the row as migrated and
+                    // storing an empty string.
+                    continue;
+                }
+
                 $update = $db->getQuery(true)
                     ->update($db->quoteName('#__bsms_podcast'))
-                    ->set($db->quoteName('platform_links') . ' = ' . $db->quote(json_encode($links)))
+                    ->set($db->quoteName('platform_links') . ' = ' . $db->quote($encoded))
                     ->where($db->quoteName('id') . ' = ' . (int) $row->id);
                 $db->setQuery($update);
                 $db->execute();
