@@ -19,6 +19,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Health\Check\AssetDriftCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\DebugModeCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\GdprModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageMigrationCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageWebPCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
@@ -30,6 +31,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\RecentBackupCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
@@ -81,6 +83,8 @@ final class HealthRegistry
             new OrphanMediaServerCheck(),
             new TmpPathCheck(),
             new TemplateCodeFileCheck(),
+            new RecentBackupCheck(),
+            new GdprModeCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
             new PendingReviewCheck(),

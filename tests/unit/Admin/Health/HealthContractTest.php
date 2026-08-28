@@ -393,7 +393,7 @@ class HealthContractTest extends ProclaimTestCase
     private const CONTEXT_ALLOWED = [
         'CwmmediaProtectionHelper::canResolveSiteRoot' => 'Exists precisely to answer whether Uri::root() is trustworthy off a request, and returns false when it is not.',
         'Cwmhelper::mediaBuildUrl'                     => 'Uses Uri::root() for the protocol, but RestrictedMediaCheck returns Unknown before reaching it unless canResolveSiteRoot() has already said the root is real. The ordering is the guarantee, so moving that guard below the call would break this exemption.',
-        'Cwmparams::getAdmin'                          => 'getIdentity() and enqueueMessage() are both reached through $app?-> and the helper documents the CLI case itself; the identity only decorates an extra field and does not change the params a check reads. Its only caller here is ServerConnectionCheck, which is active, so it never runs unattended.',
+        'Cwmparams::getAdmin'                          => 'getIdentity() and enqueueMessage() are both reached through $app?-> and the helper documents the CLI case itself; the identity only decorates an extra field and does not change the params a check reads. No caller depends on either running: with no application both are skipped and the params a check reads are the same either way. ⚠️ This deliberately does not rest on which checks call it — GdprModeCheck is passive and calls it too.',
     ];
 
     /**
