@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -671,17 +672,17 @@ class com_proclaimInstallerScript extends InstallerScript
      * @param   string    $name  Task name, as it appears in the log
      * @param   callable  $work  The work to time
      *
-     * @return  mixed  Whatever $work returned
+     * @return  void
      *
      * @since   __DEPLOY_VERSION__
      */
-    private function task(string $name, callable $work): mixed
+    private function task(string $name, callable $work): void
     {
         $started = microtime(true);
         $error   = '';
 
         try {
-            return $work();
+            $work();
         } catch (\Throwable $e) {
             $error = $e->getMessage() !== '' ? $e->getMessage() : $e::class;
 
@@ -694,8 +695,6 @@ class com_proclaimInstallerScript extends InstallerScript
                 ),
                 'warning'
             );
-
-            return null;
         } finally {
             $secs = microtime(true) - $started;
 
@@ -1357,7 +1356,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->scriptureConsumer('unregister');
 
         // Show the post-uninstalling page
-        $this->renderPostUninstallation($this->status, $parent);
+        $this->renderPostUninstallation($this->status);
 
         return true;
     }
@@ -1528,13 +1527,13 @@ class com_proclaimInstallerScript extends InstallerScript
      * that combine or cache whole pages, where a stale entry can reference assets
      * that no longer exist.
      *
-     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app  The application
+     * @param   CMSApplicationInterface  $app  The application
      *
      * @return  void
      *
      * @since   10.5.0
      */
-    private function warnAboutExternalCaches($app): void
+    private function warnAboutExternalCaches(CMSApplicationInterface $app): void
     {
         $known = [
             'jchoptimize'    => 'JCH Optimize',
@@ -1863,14 +1862,13 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Render Post Uninstalling
      *
-     * @param   object            $status  Object of things to uninstall
-     * @param   InstallerAdapter  $parent  The class calling this method
+     * @param   stdClass  $status  Object of things to uninstall
      *
      * @return void
      *
      * @since 1.7.0
      */
-    private function renderPostUninstallation($status, $parent): void
+    private function renderPostUninstallation(stdClass $status): void
     {
         $rows = 0;
         echo '<h2>' . Text::_('JBS_INS_UNINSTALL') . '</h2>
@@ -2093,10 +2091,10 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Language files', fn () => $this->copyLanguageFiles());
 
         // Show the post-installation page
-        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status, $parent));
+        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status));
 
         //Remove old com_biblestudy menu items on the admin side
-        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion($parent));
+        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion());
 
         // Declare our dependency on lib_cwmscripture so its uninstall guard and
         // shared-table cleanup can see us
@@ -2653,13 +2651,12 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Renders the post-installation message
      *
-     * @param   object            $status  Object of things to install
-     * @param   InstallerAdapter  $parent  The class calling this method
+     * @param   stdClass  $status  Object of things to install
      *
      * @return void
      * @since  1.7.0
      */
-    private function renderPostInstallation($status, $parent): void
+    private function renderPostInstallation(stdClass $status): void
     {
         try {
             $language = Factory::getApplication()->getLanguage();
@@ -2746,13 +2743,11 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Remove leftovers due to upgrading from an older Proclaim version.
      *
-     * @param   InstallerAdapter  $parent  The class calling this method
-     *
      * @return void
      * @throws Exception
      * @since 10.0.0
      */
-    private function removeBibleStudyVersion(InstallerAdapter $parent): void
+    private function removeBibleStudyVersion(): void
     {
         $biblestudyID = $this->getExtensionId('component', 'com_biblestudy');
 
@@ -3569,7 +3564,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->where('(' . $db->quoteName('podcastimage') . ' IS NULL OR '
                     . $db->quoteName('podcastimage') . ' = ' . $db->quote('') . ')');
             $db->setQuery($query);
-            $affected = $db->execute();
+            $db->execute();
 
             $count = $db->getAffectedRows();
 

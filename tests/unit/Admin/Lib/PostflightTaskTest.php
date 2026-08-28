@@ -71,7 +71,7 @@ class PostflightTaskTest extends ProclaimTestCase
     #[TestDox('A failing task does not roll back an install that already happened')]
     public function testTaskDoesNotAbortTheInstall(): void
     {
-        $body = self::methodBody('private function task(string $name, callable $work): mixed');
+        $body = self::methodBody('private function task(string $name, callable $work): void');
 
         $this->assertStringContainsString(
             'catch (\Throwable',
@@ -91,7 +91,7 @@ class PostflightTaskTest extends ProclaimTestCase
     #[TestDox('A failing task is reported, logged and left visible to the release gate')]
     public function testTaskFailureIsNotSilent(): void
     {
-        $body = self::methodBody('private function task(string $name, callable $work): mixed');
+        $body = self::methodBody('private function task(string $name, callable $work): void');
 
         $this->assertStringContainsString(
             'enqueueMessage',
@@ -139,7 +139,7 @@ class PostflightTaskTest extends ProclaimTestCase
     #[TestDox('Every timed task is recorded and logged')]
     public function testTaskRecordsAndLogs(): void
     {
-        $body = self::methodBody('private function task(string $name, callable $work): mixed');
+        $body = self::methodBody('private function task(string $name, callable $work): void');
 
         $this->assertStringContainsString(
             '$this->taskLog[]',
@@ -156,7 +156,7 @@ class PostflightTaskTest extends ProclaimTestCase
     #[TestDox('The migration steps and the postflight tasks stay separate')]
     public function testTaskLogIsNotTheStepLog(): void
     {
-        $body = self::methodBody('private function task(string $name, callable $work): mixed');
+        $body = self::methodBody('private function task(string $name, callable $work): void');
 
         $this->assertStringNotContainsString(
             '$this->stepLog',
