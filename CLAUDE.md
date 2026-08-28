@@ -63,6 +63,32 @@ This project follows **PSR-12** coding standards. All code must pass PHP CS Fixe
 - PHP CS Fixer config: `.php-cs-fixer.dist.php`
 - Run `composer lint:fix` before committing
 
+### Before opening a PR: run the IDE inspector on changed files
+
+`php -l` and a green test suite do **not** catch an unresolved class or method.
+The file parses; the symbol is only resolved when the line runs. If that line is
+on a path the suites do not exercise — an installer, a restore, a scheduled
+task — it ships and fails in production.
+
+Run PhpStorm's inspection on each changed PHP file (`get_file_problems`, or
+Code → Inspect Code) and read the result before pushing.
+
+⚠️ **Include warnings.** "Undefined class" and "Method not found" are severity
+**WARNING**, not ERROR. Checking errors only returns an empty list and looks
+like a clean file.
+
+Two examples, both of which passed `php -l` and the full suite:
+
+| Symptom | Where |
+|---|---|
+| `Undefined class 'Factory'` | `HealthRegistry` used `Factory` and `DatabaseInterface` with neither imported |
+| `Method 'getDatabase' not found` | `CwmbackupController` has no such method; it extends `BaseController` without the database-aware trait |
+
+⚠️ Do **not** act on its "Qualifier is unnecessary" warnings for `\count`,
+`\sprintf` and similar. Those leading slashes are PHP CS Fixer's
+`native_function_invocation` rule — following the IDE there fights
+`composer lint` on every commit.
+
 ### Naming Conventions
 
 - Class naming: `Cwm` prefix (e.g., `CwmparamsModel`, `CwmteacherTable`)
