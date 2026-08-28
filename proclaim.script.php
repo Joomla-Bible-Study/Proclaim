@@ -27,6 +27,7 @@ use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
@@ -111,7 +112,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @since  10.5.9
      */
-    private const INSTALL_LOG = 'com_proclaim.install';
+    private const string INSTALL_LOG = 'com_proclaim.install';
 
     /**
      * The version this update is coming from, read before Joomla overwrites it.
@@ -3463,7 +3464,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $xmlFile          = JPATH_ADMINISTRATOR . '/components/com_proclaim/forms/podcast-platforms.xml';
 
             if (file_exists($xmlFile)) {
-                $xml = simplexml_load_file($xmlFile);
+                $xml = simplexml_load_string(file_get_contents($xmlFile));
 
                 if ($xml !== false) {
                     foreach ($xml->platform as $p) {
