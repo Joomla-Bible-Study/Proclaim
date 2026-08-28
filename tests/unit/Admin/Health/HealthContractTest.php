@@ -279,6 +279,88 @@ class HealthContractTest extends ProclaimTestCase
         }
     }
 
+
+    /**
+     * Every route into System Health is super-admin only, and has to stay so.
+     *
+     * ⚠️ This is not a preference. Checks report the state of the *site* —
+     * `content.pending-review` counts every message awaiting review, where the
+     * dashboard's own banner is location-filtered so a campus editor sees only
+     * their own. Site-wide numbers are safe to show precisely because the only
+     * audience is a super admin. Widen the audience and the check has to be
+     * rewritten, not just re-pointed.
+     *
+     * Asserted at source level: exercising the ACL needs a booted application
+     * and a real user, and the property worth defending is that the guard is
+     * written down at all.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('Every health task is gated on core.admin')]
+    public function testHealthTasksRequireCoreAdmin(): void
+    {
+        $controller = \dirname(__DIR__, 4) . '/admin/src/Controller/CwmhealthController.php';
+
+        $this->assertFileExists($controller);
+
+        $source = (string) file_get_contents($controller);
+
+        $this->assertStringContainsString(
+            "authorise('core.admin'",
+            $source,
+            'CwmhealthController must check core.admin. Checks report site-wide state on the '
+            . 'understanding that only a super admin ever reads it.'
+        );
+
+        // Each public task, not just one of them.
+        foreach (['test', 'quieten', 'restore'] as $task) {
+            $start = strpos($source, 'public function ' . $task . '(');
+
+            $this->assertNotFalse($start, 'CwmhealthController::' . $task . '() should exist.');
+
+            $next = strpos($source, "\n    public function ", $start + 1);
+            $body = substr($source, $start, $next === false ? null : $next - $start);
+
+            $this->assertStringContainsString(
+                'assertAdmin',
+                $body,
+                $task . '() does not assert core.admin. Every route into health has to be gated the same way.'
+            );
+        }
+    }
+
+    /**
+     * The report is rendered from the Administration screen, which gates every
+     * action behind core.admin. A second surface would have to gate itself.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('The health report renders only from the core.admin Administration screen')]
+    public function testReportRendersOnlyBehindCoreAdmin(): void
+    {
+        $root = \dirname(__DIR__, 4);
+
+        $renderers = [];
+
+        foreach (glob($root . '/admin/tmpl/*/*.php') ?: [] as $file) {
+            if (str_contains((string) file_get_contents($file), "'health.report'")) {
+                $renderers[] = basename(\dirname($file));
+            }
+        }
+
+        $this->assertSame(
+            ['cwmadmin'],
+            array_values(array_unique($renderers)),
+            'The health report is rendered outside the Administration screen. That screen gates every action on '
+            . 'core.admin; anywhere else has to gate itself, or site-wide findings reach an audience they were '
+            . 'not written for.'
+        );
+    }
+
     /**
      * Absolute paths of every check source file.
      *
