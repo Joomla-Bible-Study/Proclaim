@@ -880,7 +880,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         . ' DROP COLUMN ' . $db->quoteName($column)
                     );
                     $db->execute();
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Ignore — column may have been dropped by concurrent request
                 }
             }
@@ -913,7 +913,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             . ' ADD COLUMN ' . $db->quoteName($column) . ' ' . $definition
                         );
                         $db->execute();
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         // Ignore
                     }
                 }
@@ -997,7 +997,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $columns = $this->dbo->getTableColumns($table);
 
             return array_keys($columns);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [];
         }
     }
@@ -1019,7 +1019,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $tables = $this->dbo->getTableList();
 
             return \in_array($table, $tables, true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -1145,7 +1145,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                 return;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Cleanup only. The unique key carries the lookups either way, so a
             // failure here must not take down an otherwise successful update.
         }
@@ -1321,7 +1321,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                     return;
                 }
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 // If something breaks, we will fall through
             }
         }
@@ -1692,12 +1692,12 @@ class com_proclaimInstallerScript extends InstallerScript
                     try {
                         $this->dbo->setQuery($singleQuery);
                         $this->dbo->execute();
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         // Continue dropping remaining tables
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If anything fails, don't block uninstall
         }
     }
@@ -1717,7 +1717,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->where($this->dbo->quoteName('language_extension') . ' = ' . $this->dbo->quote('com_proclaim'));
             $this->dbo->setQuery($query);
             $this->dbo->execute();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Don't block uninstall
         }
     }
@@ -2300,7 +2300,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
                     $db->setQuery($update)->execute();
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Non-critical — help will fall back to default behavior
             }
         }
@@ -2322,7 +2322,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         'warning'
                     );
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Silently ignore detection failures during install
             }
         }
@@ -2665,7 +2665,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $language = Factory::getApplication()->getLanguage();
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return;
         }
 
@@ -2783,7 +2783,10 @@ class com_proclaimInstallerScript extends InstallerScript
             try {
                 $this->dbo->execute();
             } catch (RuntimeException $e) {
-                Factory::getApplication()->enqueueMessage('Failed to execute Admin Menu removal', 'error');
+                Factory::getApplication()->enqueueMessage(
+                    'Failed to execute Admin Menu removal: ' . $e->getMessage(),
+                    'error'
+                );
             }
 
             // Update Site Menus for BibleStudy to Proclaim
@@ -2894,7 +2897,10 @@ class com_proclaimInstallerScript extends InstallerScript
         try {
             $this->dbo->execute();
         } catch (RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage("Failed to execute $element removal", 'error');
+            Factory::getApplication()->enqueueMessage(
+                "Failed to execute $element removal: " . $e->getMessage(),
+                'error'
+            );
         }
     }
 
@@ -2972,7 +2978,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     ->bind(':filename', $filename);
                 $db->setQuery($query);
                 $records = $db->loadObjectList();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 continue;
             }
 
@@ -2994,7 +3000,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         ->bind(':id', $record->id, ParameterType::INTEGER);
                     $db->setQuery($delete)->execute();
                     $removed[] = $filename . ' (record)';
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     $customised = true;
                 }
             }
@@ -3052,7 +3058,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     ->from($db->quoteName('#__bsms_templates'))
             );
             $templates = $db->loadObjectList();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return 0;
         }
 
@@ -3100,7 +3106,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     ->bind(':id', $template->id, ParameterType::INTEGER);
                 $db->setQuery($update)->execute();
                 $changed++;
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // A template we cannot rewrite is left as it was.
                 continue;
             }
@@ -3147,7 +3153,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     $db->execute();
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Non-fatal — column may already be gone
         }
     }
