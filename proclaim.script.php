@@ -590,8 +590,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Run a legacy migration, or record why it was skipped.
      *
      * Wraps the version gate and the timing in one place so the report can say
-     * what happened. Before this, an update that did nothing looked exactly like
-     * an update that did everything: a spinner, then silence.
+     * what happened rather than leaving a spinner and silence.
      *
      * A step that throws is recorded and the update carries on. None of these is
      * load-bearing enough to abandon an otherwise successful update over, and a
@@ -716,11 +715,10 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Whether a migration first shipped in `$version` still has work to do here.
      *
-     * ⚠️ A migration that ran on the update that introduced it does not need to
-     * run again, but nothing recorded that it had. With no gate, a 10.5.7 site
-     * re-ran every migration written since 10.0 — nine of them, each walking
-     * whole tables to discover there was nothing to do. That is what made
-     * updates take minutes on a site with real content.
+     * ⚠️ Nothing records that a migration already ran on the update that
+     * introduced it. Without this gate every migration written since 10.0
+     * replays on every update, each walking whole tables to find nothing to do
+     * — minutes of it on a site with real content.
      *
      * ⚠️ An unknown source version returns true. Skipping a migration that was
      * needed loses data; running one that was not costs time.
@@ -2923,13 +2921,15 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Remove the stray template layouts that shipped by accident.
      *
-     * `default_easy.php` was committed in 2019 and carried along by folder
-     * renames; `default_fluidsermonlist.php` and `default_fluidsermondetail.php`
-     * were never reachable because no templatecode record ever named them. The
-     * install SQL also seeded an `easy` templatecode row whose stored PHP still
-     * calls `JHtml`, removed in Joomla 4 — and both `CwmtemplatecodeTable::store()`
-     * and the backup restore rewrite the layout file from that row, so saving the
-     * record or restoring a backup replaced a working layout with fatal code.
+     * `default_easy.php`, `default_fluidsermonlist.php` and
+     * `default_fluidsermondetail.php` are named by no templatecode record, so
+     * nothing can reach them.
+     *
+     * ⚠️ Deleting the files is not enough. The install SQL seeds an `easy`
+     * templatecode row whose stored PHP calls `JHtml`, gone since Joomla 4, and
+     * both `CwmtemplatecodeTable::store()` and the backup restore rewrite the
+     * layout file from that row — so saving the record or restoring a backup
+     * puts the fatal code back.
      *
      * A record whose code no longer carries the `JHtml` signature has been edited
      * by the site and is left alone, along with the file it owns.
