@@ -23,6 +23,8 @@ use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\MaxInputVarsCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\MissingImagesCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -50,6 +52,8 @@ final class HealthRegistry
         $checks = [
             new MaxInputVarsCheck(),
             new PluginEnabledCheck('content', 'scripturelinks', 'JBS_HEALTH_PLUGIN_SCRIPTURELINKS'),
+            new SchemaVersionCheck(),
+            new PodcastTaskCheck(),
             new LegacyServersCheck(),
             // ⚠️ These three stat every study, teacher and series image —
             // ~50ms per 1,000 records. Measure the next filesystem check too.
