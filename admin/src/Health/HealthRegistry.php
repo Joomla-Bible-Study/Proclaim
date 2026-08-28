@@ -20,12 +20,15 @@ use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageMigrationCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageWebPCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\LocationFilteringCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\MaxInputVarsCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\MissingImagesCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 
@@ -54,7 +57,10 @@ final class HealthRegistry
             new PluginEnabledCheck('content', 'scripturelinks', 'JBS_HEALTH_PLUGIN_SCRIPTURELINKS'),
             new SchemaVersionCheck(),
             new PodcastTaskCheck(),
+            new SimpleModeCheck(),
+            new LocationFilteringCheck(),
             new LegacyServersCheck(),
+            new PendingReviewCheck(),
             // ⚠️ These three stat every study, teacher and series image —
             // ~50ms per 1,000 records. Measure the next filesystem check too.
             new ImageMigrationCheck(),
