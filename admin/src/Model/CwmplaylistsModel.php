@@ -21,6 +21,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 
 /**
  * Playlists model class
@@ -125,12 +126,12 @@ class CwmplaylistsModel extends ListModel
     /**
      * Get List Query
      *
-     * @return  \Joomla\Database\QueryInterface  A query object to retrieve the data set.
+     * @return  QueryInterface|string  A query object to retrieve the data set.
      *
      * @throws  \Exception
      * @since   10.3.3
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();

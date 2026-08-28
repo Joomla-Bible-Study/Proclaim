@@ -16,6 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -32,12 +33,12 @@ class CwmteachersModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  DatabaseQuery A DatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string A DatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface|string
     {
         $db = $this->getDatabase();
 
