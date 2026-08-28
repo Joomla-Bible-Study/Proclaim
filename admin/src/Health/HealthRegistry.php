@@ -28,6 +28,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\RestrictedMediaCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
@@ -63,6 +64,7 @@ final class HealthRegistry
             new SimpleModeCheck(),
             new AssetDriftCheck(),
             new ProtectedStorageCheck(),
+            new RestrictedMediaCheck(),
             new TemplateCodeCssCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
