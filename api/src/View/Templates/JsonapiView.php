@@ -18,9 +18,12 @@ use Joomla\CMS\MVC\View\JsonApiView as BaseApiView;
 /**
  * JSON:API view for display templates.
  *
- * `tmpl` (the markup itself) is rendered on the item only, never in lists — it
- * is the substance of the resource, but large and pointless to repeat per row.
  * `params` is withheld as it carries template configuration.
+ *
+ * ⚠️ `tmpl` was rendered on the item until 10.6.0 and is gone from both lists.
+ * The column behind it was retired: nothing ever wrote to it, so the attribute
+ * only ever carried an empty string, but a consumer reading it by name now
+ * finds it absent rather than empty.
  *
  * Sites that would rather not publish their markup at all should leave the
  * webservices plugin's "Allow public reads" parameter off, so a token is
@@ -40,7 +43,6 @@ class JsonapiView extends BaseApiView
         'id',
         'title',
         'type',
-        'tmpl',
         'location_id',
         'published',
         'access',

@@ -50,15 +50,6 @@ class CwmtemplateTable extends Table
     public ?string $type = null;
 
     /**
-     * Template
-     *
-     * @var ?string
-     *
-     * @since 9.0.0
-     */
-    public ?string $tmpl = null;
-
-    /**
      * Published
      *
      * @var int

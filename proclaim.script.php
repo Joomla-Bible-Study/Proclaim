@@ -3118,11 +3118,15 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Drop unused text and pdf columns from the templates table.
+     * Drop unused text, pdf and tmpl columns from the templates table.
      *
-     * These columns were never rendered on the frontend. The drop is done in
-     * PHP rather than SQL because ALTER TABLE … DROP COLUMN is not idempotent
-     * in MySQL — it errors if the column was already removed.
+     * None of the three was ever rendered on the frontend. `tmpl` additionally
+     * broke template export/import: it is NOT NULL with no default and the
+     * exporter never emitted it, so the generated INSERT failed with error 1364
+     * under STRICT_TRANS_TABLES, and imported an empty string everywhere else.
+     *
+     * The drop is done in PHP rather than SQL because ALTER TABLE … DROP COLUMN
+     * is not idempotent in MySQL — it errors if the column was already removed.
      *
      * @return  void
      *
@@ -3135,7 +3139,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $prefix = $db->getPrefix();
             $table  = $prefix . 'bsms_templates';
 
-            $columns = ['text', 'pdf'];
+            $columns = ['text', 'pdf', 'tmpl'];
 
             foreach ($columns as $column) {
                 $query = $db->getQuery(true)
@@ -3169,10 +3173,21 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * Each candidate has been verified against the live codebase: not
      * referenced in admin/, site/, libraries/, plugins/, or modules/.
-     * Tables still in use (`#__bsms_version`, `#__bsms_styles`) are
-     * intentionally NOT in this list — bsms_version is read by the
-     * v7→v10 upgrade detector, bsms_styles is the active template-styles
-     * store.
+     * `#__bsms_version` is intentionally NOT in this list — it is read by the
+     * v7→v10 upgrade detector.
+     *
+     * ⚠️ `#__bsms_styles` was described here as the active template-styles
+     * store. It never was on any site this code installs: the install schema
+     * has never created it, only the uninstall SQL names it, and its last two
+     * readers — an exporter branch and a helper with no callers — are gone.
+     * Custom CSS lives in params instead, `#__bsms_admin` site-wide and
+     * `#__bsms_templates` per template, and has since 10.5.8.
+     *
+     * ⚠️ It is still deliberately absent from the list below. No migration ever
+     * moved its rows into those params, so a site upgraded from 7.x may hold
+     * the only copy of its stylesheets there. Dropping the table would destroy
+     * them. Retiring the code that read it is safe; dropping the table needs a
+     * migration first.
      *
      * @return  void
      *

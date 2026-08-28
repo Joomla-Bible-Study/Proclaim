@@ -143,7 +143,7 @@ class CwmtemplatesController extends AdminController
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->createQuery();
-                        $query->update($db->quoteName('#__bsms_styles'))
+                        $query->update($db->quoteName('#__bsms_templatecode'))
                             ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
                             ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
@@ -343,21 +343,6 @@ class CwmtemplatesController extends AdminController
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
     }
 
-    /**
-     * Check whether a table is present in the current database.
-     *
-     * @param   string  $table  Table name in `#__` prefixed form
-     *
-     * @return  bool
-     *
-     * @since   __DEPLOY_VERSION__
-     */
-    private function tableExists(string $table): bool
-    {
-        $db = Factory::getContainer()->get(DatabaseInterface::class);
-
-        return \in_array(str_replace('#__', $db->getPrefix(), $table), $db->getTableList(), true);
-    }
 
     /**
      * Get Exported Template Settings
@@ -370,34 +355,12 @@ class CwmtemplatesController extends AdminController
      */
     private function getExportSetting($result): string
     {
-        // Export must be in this order: css, template files, template.
+        // Export must be in this order: template files, then the template.
         $registry = new Registry();
         $registry->loadString($result->params);
         $params  = $registry;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
-        $css     = substr((string) $params->get('css', ''), 0, -4);
-
-        // #__bsms_styles is a pre-10.0 table the install schema never creates, so
-        // only sites upgraded from 7.x still carry it — and the seeded default
-        // template names a stylesheet on every site regardless. Export the style
-        // when it is really there and skip it otherwise, rather than dying.
-        if ($css && $this->tableExists('#__bsms_styles')) {
-            $query2 = $db->createQuery();
-            $query2->select($db->quoteName('style') . '.*');
-            $query2->from($db->quoteName('#__bsms_styles', 'style'));
-            $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
-            $db->setQuery($query2);
-            $cssresult = $db->loadObject();
-
-            if ($cssresult) {
-                $objects = "--\n-- CSS Style Code\n--\n";
-                $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
-                    $cssresult->filename
-                )
-                    . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
-            }
-        }
 
         // Get the individual template files
         $sermons = $params->get('sermonstemplate');
