@@ -18,6 +18,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
 use CWM\Component\Proclaim\Administrator\Health\Check\AssetDriftCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\DebugModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageMigrationCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageWebPCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
@@ -59,6 +60,10 @@ final class HealthRegistry
         $checks = [
             new MaxInputVarsCheck(),
             new PluginEnabledCheck('content', 'scripturelinks', 'JBS_HEALTH_PLUGIN_SCRIPTURELINKS'),
+            new PluginEnabledCheck('system', 'proclaim', 'JBS_HEALTH_PLUGIN_SYSTEM'),
+            // Notice, not warning: the podcast task needs it, but a site
+            // that runs no scheduled work is not broken without it.
+            new PluginEnabledCheck('task', 'proclaim', 'JBS_HEALTH_PLUGIN_TASK', HealthStatus::Notice),
             new SchemaVersionCheck(),
             new PodcastTaskCheck(),
             new SimpleModeCheck(),
@@ -66,6 +71,7 @@ final class HealthRegistry
             new ProtectedStorageCheck(),
             new RestrictedMediaCheck(),
             new TemplateCodeCssCheck(),
+            new DebugModeCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
             new PendingReviewCheck(),

@@ -16,6 +16,7 @@ namespace CWM\Component\Proclaim\Administrator\Helper;
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Http\HttpFactory;
 
@@ -40,26 +41,40 @@ use Joomla\Http\HttpFactory;
 class CwmmediaProtectionHelper
 {
     /**
-     * Can this process work out what the site's own address is?
+     * Can this process work out what the site's own address really is?
      *
      * ⚠️ `isServedByWebServer()` decides "ours" by comparing against
-     * `Uri::root()`, and outside a web request there may be nothing to compare
-     * with. With `live_site` unset, `Uri::base()` falls to its CLI branch and
-     * builds the prefix from `$_SERVER`, which under CLI carries no host — so
-     * the root comes back without one and every real URL fails the comparison.
+     * `Uri::root()`, and outside a web request there is no request to derive
+     * that from. `Uri::base()` falls to its CLI branch and returns
+     * `http://localhost/` — which is not an obviously broken value, and that is
+     * the danger. It has a scheme and a host, so it passes any test for
+     * well-formedness, while matching nothing on a site served from its real
+     * address.
      *
-     * That failure is silent and it points the wrong way: a caller would read
-     * "not served by us" and conclude nothing is exposed. Anything asking the
-     * exposure question from a scheduled task has to ask this one first and
-     * report that it does not know.
+     * The failure is silent and points the wrong way: every URL compares as
+     * "not ours", and a caller reads that as nothing being exposed. Anything
+     * asking the exposure question off a request has to ask this one first and
+     * answer that it does not know.
      *
-     * @return  bool  True when the root has a scheme and a host to match on.
+     * Measured, not assumed: under `php -r` on a site with `live_site` empty,
+     * `Uri::root()` returns `http://localhost/`.
+     *
+     * @return  bool  True when the root is the site's own address rather than a
+     *                value invented because there was nothing to derive from.
      *
      * @since   __DEPLOY_VERSION__
      */
     public static function canResolveSiteRoot(): bool
     {
-        return preg_match('#^https?://[^/]+#i', Uri::root()) === 1;
+        // A web request derives the root from the request itself, which is the
+        // address the site was actually reached at.
+        if (!str_contains(PHP_SAPI, 'cli')) {
+            return true;
+        }
+
+        // Off a request, only a configured Site URL is real. Uri::base() uses
+        // live_site when it is set and invents a host when it is not.
+        return trim((string) Factory::getContainer()->get('config')->get('live_site', '')) !== '';
     }
 
     /**
