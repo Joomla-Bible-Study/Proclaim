@@ -68,7 +68,9 @@ class UninstallOrderTest extends ProclaimTestCase
         $body = self::method();
 
         $dropSql     = strpos($body, 'splitSql');
-        $deleteAsset = strpos($body, "quote('com_proclaim%')");
+        // Anchored on the delete itself rather than its predicate, so
+        // narrowing the predicate does not silently unanchor this test.
+        $deleteAsset = strpos($body, '->delete($this->dbo->quoteName(\'#__assets\'))');
 
         $this->assertNotFalse($dropSql, 'The uninstall SQL is no longer run here.');
         $this->assertNotFalse($deleteAsset, 'The #__assets cleanup is no longer done here.');
@@ -99,7 +101,8 @@ class UninstallOrderTest extends ProclaimTestCase
         $between = substr(
             $body,
             (int) strpos($body, 'splitSql'),
-            (int) strpos($body, "quote('com_proclaim%')") - (int) strpos($body, 'splitSql')
+            (int) strpos($body, '->delete($this->dbo->quoteName(\'#__assets\'))')
+            - (int) strpos($body, 'splitSql')
         );
 
         $this->assertStringNotContainsString(
@@ -129,6 +132,44 @@ class UninstallOrderTest extends ProclaimTestCase
             (int) strpos($body, 'splitSql'),
             $gate,
             'The drop_tables gate has to be read before anything is destroyed.'
+        );
+    }
+
+    /**
+     * ⚠️ A bare `com_proclaim%` also matches any extension whose name merely
+     * starts with ours — com_proclaimtools and the like. In an uninstall that
+     * match is a DELETE, against `#__assets` and against Joomla's action-log
+     * tables, so it takes another extension's permissions and log config with
+     * it. Our own names are exactly `com_proclaim` and `com_proclaim.<x>`, and
+     * every asset query outside this file already uses the dotted form.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('the uninstall never matches rows on a bare com_proclaim prefix')]
+    public function testDeletesDoNotUseABarePrefix(): void
+    {
+        $source = (string) file_get_contents(\dirname(__DIR__, 3) . '/proclaim.script.php');
+
+        $this->assertStringNotContainsString(
+            "quote('com_proclaim%')",
+            $source,
+            "A bare `com_proclaim%` matches any extension sharing the prefix, and here that match is\n"
+            . "a DELETE on an uninstall. Use `= 'com_proclaim' OR LIKE 'com_proclaim.%'`, bracketed,\n"
+            . 'as the rest of the codebase does.'
+        );
+    }
+
+    #[TestDox('the ACL root is still excluded from the asset delete')]
+    public function testRootAssetIsExcluded(): void
+    {
+        $this->assertStringContainsString(
+            "quote('root.1')",
+            self::method(),
+            'The root.1 exclusion is gone. Deleting the ACL root takes every extension\'s '
+            . 'permissions with it, and that guard should not depend on the predicate beside it '
+            . 'staying narrow.'
         );
     }
 }
