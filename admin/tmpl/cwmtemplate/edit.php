@@ -41,6 +41,9 @@ $this->getDocument()->addScriptOptions('csrf.token', \Joomla\CMS\Session\Session
 
 // Add layout editor assets
 $wa->useScript('bootstrap.modal')
+    // Element cards collapse their controls into a dropdown when the card is
+    // too narrow to show them inline.
+    ->useScript('bootstrap.dropdown')
     ->useScript('com_proclaim.sortable')
     ->useScript('com_proclaim.layout-editor')
     ->useStyle('com_proclaim.layout-editor');
