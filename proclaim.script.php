@@ -1405,14 +1405,12 @@ class com_proclaimInstallerScript extends InstallerScript
             try {
                 // Same narrowing as the #__assets delete: the seeded values are
                 // `com_proclaim` and `com_proclaim.<entity>`, and a bare prefix
-                // would take another extension's rows with them.
+                // would take another extension's rows with them. orWhere() so
+                // the builder brackets the two halves rather than this code.
                 $query = $this->dbo->getQuery(true)
                     ->delete($this->dbo->quoteName($table))
-                    ->where(
-                        '(' . $this->dbo->quoteName($column) . ' = ' . $this->dbo->quote('com_proclaim')
-                        . ' OR ' . $this->dbo->quoteName($column) . ' LIKE '
-                        . $this->dbo->quote('com_proclaim.%') . ')'
-                    );
+                    ->where($this->dbo->quoteName($column) . ' = ' . $this->dbo->quote('com_proclaim'))
+                    ->orWhere($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim.%'));
 
                 $this->dbo->setQuery($query)->execute();
             } catch (\Throwable $e) {
@@ -1727,21 +1725,25 @@ class com_proclaimInstallerScript extends InstallerScript
             // `com_proclaim` and `com_proclaim.<section>[.<id>]`; every other
             // asset query in this codebase already uses the dotted form.
             //
-            // The OR is bracketed because where() glues with AND and adds no
-            // brackets of its own, so a bare disjunction here would override
-            // the root.1 guard beside it.
+            // andWhere() rather than a bracketed string: the query builder
+            // groups the disjunction itself, so the SQL is the driver's to
+            // emit rather than ours to assemble. ⚠️ It goes through
+            // extendWhere(), which needs a WHERE to extend — the root.1 guard
+            // has to be the call before it, not after.
             $query = $this->dbo->getQuery(true)
                 ->delete($this->dbo->quoteName('#__assets'))
-                ->where(
-                    '(' . $this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim')
-                    . ' OR ' . $this->dbo->quoteName('name') . ' LIKE '
-                    . $this->dbo->quote('com_proclaim.%') . ')'
-                )
-                // Kept even though the pattern above can no longer reach it.
+                // Kept even though the group below can no longer reach it.
                 // Deleting the ACL root takes every extension's permissions
                 // with it, and that guard should not depend on the predicate
                 // beside it staying narrow.
-                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'))
+                ->andWhere(
+                    [
+                        $this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'),
+                        $this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim.%'),
+                    ],
+                    'OR'
+                );
             $this->dbo->setQuery($query);
             $this->dbo->execute();
         } catch (\Exception) {
