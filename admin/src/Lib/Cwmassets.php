@@ -948,21 +948,7 @@ class Cwmassets
         }
 
         // Orphan probe — one COUNT per content table, bail at first hit.
-        $orphanMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $orphanMap = self::orphanSourceMap();
 
         foreach ($orphanMap as $prefix => $sourceTable) {
             try {
@@ -1321,21 +1307,7 @@ class Cwmassets
      */
     public static function cleanOrphanedAssets(DatabaseInterface $db): int
     {
-        $assetMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $assetMap = self::orphanSourceMap();
 
         $totalRemoved = 0;
 
@@ -1628,6 +1600,30 @@ class Cwmassets
     // =========================================================================
     // Asset Table Definitions
     // =========================================================================
+
+    /**
+     * Every per-record asset name prefix, mapped to the table its ids live in.
+     *
+     * ⚠️ Derived from getAssetObjects() rather than written out, because it was
+     * written out twice and both copies drifted from it. The trailing dot is
+     * load-bearing: `message` and `messagetype` are string-prefixes of one
+     * another, as are `template` and `templatecode`, and only the dot keeps
+     * `com_proclaim.message.%` from matching a messagetype row.
+     *
+     * @return  array<string, string>  `com_proclaim.<section>.` => table
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function orphanSourceMap(): array
+    {
+        $map = [];
+
+        foreach (self::getAssetObjects() as $info) {
+            $map['com_proclaim.' . $info['assetname'] . '.'] = $info['name'];
+        }
+
+        return $map;
+    }
 
     /**
      * Table list Array.
