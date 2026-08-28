@@ -227,12 +227,12 @@ class CwmseriesdisplaysModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  QueryInterface  A DatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string  A DatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): QueryInterface
+    protected function getListQuery(): QueryInterface|string
     {
         $user = $this->getCurrentUser();
 

@@ -23,6 +23,7 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
+use Joomla\Database\QueryInterface;
 
 /**
  * Model class for MessageList
@@ -191,12 +192,12 @@ class CwmseriespodcastlistModel extends ListModel
     /**
      * Build an SQL query to load the list data
      *
-     * @return  DatabaseQuery  A DatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string  A DatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): DatabaseQuery
+    protected function getListQuery(): QueryInterface|string
     {
         // Get the current user for authorization checks
         $user = $this->getCurrentUser();

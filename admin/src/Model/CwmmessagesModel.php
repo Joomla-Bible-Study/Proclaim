@@ -202,7 +202,7 @@ class CwmmessagesModel extends ListModel
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
