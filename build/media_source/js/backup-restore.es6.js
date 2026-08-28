@@ -236,6 +236,71 @@
         }
 
         /**
+         * What the restore did, and what it could not do for you.
+         *
+         * The finalize endpoint has always returned these counts and none of
+         * them reached the user, who saw one line saying it worked. For a
+         * restore that is genuinely finished that is right; for one that is
+         * not, it reads as done while work remains.
+         *
+         * Plain text with newlines, because showComplete() assigns to
+         * textContent.
+         *
+         * @param {object} data The finalize payload.
+         * @returns {string} The summary to display.
+         */
+        buildRestoreSummary(data) {
+            const lines = [Joomla.Text._('JBS_IBM_IMPORT_COMPLETE')];
+
+            const restored = [
+                ['JBS_IBM_SUMMARY_TABLES', data.tables_restored],
+                ['JBS_IBM_SUMMARY_TASKS', data.tasks_restored],
+                ['JBS_IBM_SUMMARY_TEMPLATECODES', data.templatecodes_created],
+                ['JBS_IBM_SUMMARY_AUTO_INCREMENT', data.auto_increment_fixes],
+            ]
+                .filter(([, count]) => Number(count) > 0)
+                .map(([key, count]) => `  • ${Joomla.Text._(key).replace('%d', count)}`);
+
+            if (data.config_restored) {
+                restored.push(`  • ${Joomla.Text._('JBS_IBM_SUMMARY_CONFIG')}`);
+            }
+
+            if (restored.length) {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_RESTORED'), ...restored);
+            }
+
+            // A 9.x backup arrives with every server typed `legacy`, and the
+            // restore has no business re-pointing thousands of media rows
+            // uninvited — but it should not report itself finished in silence.
+            const attention = [];
+            const pending = data.pending_migration;
+
+            if (pending?.servers > 0) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_SERVERS_PENDING')
+                    .replace('%d', pending.servers)
+                    .replace('%d', pending.media)}`);
+            }
+
+            // Only when there are rows to be missing files for. An empty media
+            // folder on a site with no media records is a site with no media.
+            const media = data.media_status;
+
+            if (media?.rows > 0 && !media.dir_exists) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_MEDIA_DIR_MISSING').replace('%d', media.rows)}`);
+            } else if (media?.rows > 0 && media.dir_empty) {
+                attention.push(`  • ${Joomla.Text._('JBS_IBM_MEDIA_DIR_EMPTY').replace('%d', media.rows)}`);
+            }
+
+            if (attention.length) {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_ATTENTION'), ...attention);
+            } else {
+                lines.push('', Joomla.Text._('JBS_IBM_SUMMARY_NOTHING_OUTSTANDING'));
+            }
+
+            return lines.join('\n');
+        }
+
+        /**
      * Show completion state with accessibility support
      */
         showComplete(success, message) {
@@ -596,19 +661,7 @@
                     );
                 }
 
-                // The restore is finished, but a 9.x backup arrives with every
-                // server typed `legacy` and nothing here re-points media rows
-                // uninvited. Say so rather than closing on "successfully".
-                const pending = finalizeResult.data?.pending_migration;
-                let message = Joomla.Text._('JBS_IBM_IMPORT_COMPLETE');
-
-                if (pending?.servers > 0) {
-                    message += `\n\n${Joomla.Text._('JBS_IBM_SERVERS_PENDING')
-                        .replace('%d', pending.servers)
-                        .replace('%d', pending.media)}`;
-                }
-
-                this.showComplete(true, message);
+                this.showComplete(true, this.buildRestoreSummary(finalizeResult.data ?? {}));
             } catch (error) {
                 console.error('Import error:', error);
                 this.showComplete(false, error.message);

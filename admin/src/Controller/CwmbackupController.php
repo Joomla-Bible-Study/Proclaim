@@ -945,6 +945,7 @@ class CwmbackupController extends BaseController
                 'config_restored'       => $integrity['config'],
                 'auto_increment_fixes'  => $autoIncrementFixes,
                 'pending_migration'     => $pendingMigration,
+                'media_status'          => $this->mediaStatus(),
             ]);
         } catch (\Exception $e) {
             $this->sendJsonResponse(false, 'Import finalize error: ' . $e->getMessage());
@@ -1040,6 +1041,57 @@ class CwmbackupController extends BaseController
         }
 
         return $value;
+    }
+
+    /**
+     * Whether the restored database has media rows the filesystem cannot serve.
+     *
+     * A dump carries the rows and not the files, so a restore onto a new server
+     * routinely lands with every media record pointing at nothing. The Backup &
+     * Restore screen says so in general terms; this says whether it happened
+     * here.
+     *
+     * ⚠️ Reported only when there are rows to be missing files for. An empty
+     * media directory on a site with no media records is a site with no media,
+     * not a fault, and a restore that warned about it would be crying wolf on
+     * every fresh install.
+     *
+     * ⚠️ Only the canonical directory is tested. `images/biblestudy` is a
+     * legacy thumbnail search path and `MediaFiles` is absent on a healthy 10.x
+     * site — reporting either as missing would be a false alarm on exactly the
+     * sites that are correct.
+     *
+     * @return  array{rows: int, dir_exists: bool, dir_empty: bool}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function mediaStatus(): array
+    {
+        $status = ['rows' => 0, 'dir_exists' => true, 'dir_empty' => false];
+
+        try {
+            // The container, not $this->getDatabase(): this controller extends
+            // BaseController without the database-aware trait, so that method
+            // does not exist here. Every other query in this file does the same.
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            $status['rows'] = (int) $db->setQuery(
+                $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__bsms_mediafiles'))
+            )->loadResult();
+        } catch (\Exception) {
+            // The count is what decides whether the rest is worth saying. With
+            // no count, say nothing rather than guess.
+            return $status;
+        }
+
+        $dir                  = JPATH_ROOT . '/media/com_proclaim';
+        $status['dir_exists'] = is_dir($dir);
+        $status['dir_empty']  = $status['dir_exists']
+            && (glob($dir . '/*') ?: []) === [];
+
+        return $status;
     }
 
     /**
