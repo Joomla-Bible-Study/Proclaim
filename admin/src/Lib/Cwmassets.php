@@ -1672,6 +1672,14 @@ class Cwmassets
                 'realname'   => 'JBS_CMN_MESSAGETYPES',
             ],
             [
+                // ⚠️ The only table here whose name is plural, which is the
+                // likeliest reason this section was the one left out.
+                'name'       => '#__bsms_playlists',
+                'titlefield' => 'title',
+                'assetname'  => 'playlist',
+                'realname'   => 'JBS_CMN_PLAYLISTS',
+            ],
+            [
                 'name'       => '#__bsms_podcast',
                 'titlefield' => 'title',
                 'assetname'  => 'podcast',
