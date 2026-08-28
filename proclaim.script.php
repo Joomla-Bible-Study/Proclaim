@@ -1422,6 +1422,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.5.1
      */
     private function withoutCacheHousekeepingNoise(callable $operation): void
@@ -1494,6 +1495,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.5.0
      */
     private function clearCaches(): void
@@ -3253,6 +3255,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.1.0
      */
     private function ensurePrimaryKeys(): void
@@ -3345,6 +3348,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return void
      *
+     * @throws Exception
      * @since 10.1.0
      */
     private function migrateStudyImageParams(): void
@@ -3436,6 +3440,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.1.0
      */
     private function migratePodcastAlternateLinks(): void
@@ -3555,6 +3560,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return void
      *
+     * @throws Exception
      * @since 10.1.0
      */
     private function migratePodcastImageField(): void
@@ -3598,6 +3604,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return void
      *
+     * @throws Exception
      * @since 10.1.0
      */
     private function migratePodcastLinkToMenuItem(): void
@@ -3735,6 +3742,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since  10.3.0
      */
     private function migrateScriptureParamsToPlugin(): void
