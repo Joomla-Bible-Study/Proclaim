@@ -313,11 +313,13 @@ class ProclaimAssetFix {
         url.searchParams.set('task', `cwmassets.${task}`);
         url.searchParams.set('format', 'json');
 
-        // Add CSRF token
-        const tokenInput = document.querySelector('input[name^="csrf.token"]')
-                          || document.querySelector('input[name][value="1"]');
-        if (tokenInput) {
-            url.searchParams.set(tokenInput.name, '1');
+        // The token's field name is a random hash, so it can only come from
+        // script options. Reading it off the DOM meant matching on value="1",
+        // which is whichever input happens to come first.
+        const token = Joomla.getOptions('csrf.token');
+
+        if (token) {
+            url.searchParams.set(token, '1');
         }
 
         // Add additional params
