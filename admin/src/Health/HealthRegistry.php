@@ -17,6 +17,7 @@ namespace CWM\Component\Proclaim\Administrator\Health;
 // phpcs:enable PSR1.Files.SideEffects
 
 use CWM\Component\Proclaim\Administrator\Addons\CWMAddon;
+use CWM\Component\Proclaim\Administrator\Health\Check\AssetDriftCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageMigrationCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ImageWebPCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
@@ -58,6 +59,7 @@ final class HealthRegistry
             new SchemaVersionCheck(),
             new PodcastTaskCheck(),
             new SimpleModeCheck(),
+            new AssetDriftCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
             new PendingReviewCheck(),
