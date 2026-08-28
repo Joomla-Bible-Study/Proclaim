@@ -788,7 +788,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 $libBase = JPATH_LIBRARIES . $libSuffix;
 
                 if (is_dir($libBase) && !class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper', false)) {
-                    \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase, false, false, 'psr4');
+                    \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase);
 
                     break;
                 }
@@ -2770,7 +2770,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
 
             // Call parent removeFiles with the required argument
-            $this->removeFiles($parent);
+            $this->removeFiles();
 
             // Clean up Admin Menus from old install
             $query = $this->dbo->getQuery(true)
