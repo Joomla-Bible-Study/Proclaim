@@ -37,8 +37,11 @@ use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeCssCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeFileCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TmpPathCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\YoutubeQuotaCheck;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Every check the System Health report knows about, and the only place that
@@ -87,6 +90,10 @@ final class HealthRegistry
             new MissingImagesCheck(),
             new ImageWebPCheck(),
         ];
+
+        foreach (self::youtubeServers() as $server) {
+            $checks[] = new YoutubeQuotaCheck((int) $server['id'], (string) $server['server_name']);
+        }
 
         foreach (self::testableServers() as $server) {
             $checks[] = new ServerConnectionCheck(
@@ -190,6 +197,35 @@ final class HealthRegistry
                 HealthStatus::Unknown,
                 Text::sprintf('JBS_HEALTH_CHECK_ERRORED', $e->getMessage())
             );
+        }
+    }
+
+    /**
+     * Published YouTube servers, which are the only ones with an API quota.
+     *
+     * ⚠️ Separate from testableServers(): that list is every addon supporting
+     * a connection test — Vimeo, Wistia and Resi among them — and none of the
+     * others meter their calls the way YouTube does.
+     *
+     * @return  array<int, array<string, mixed>>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function youtubeServers(): array
+    {
+        try {
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+
+            return $db->setQuery(
+                $db->createQuery()
+                    ->select([$db->quoteName('id'), $db->quoteName('server_name')])
+                    ->from($db->quoteName('#__bsms_servers'))
+                    ->where($db->quoteName('published') . ' = 1')
+                    ->where($db->quoteName('type') . ' = ' . $db->quote('youtube'))
+                    ->order($db->quoteName('server_name') . ' ASC')
+            )->loadAssocList() ?? [];
+        } catch (\Throwable) {
+            return [];
         }
     }
 
