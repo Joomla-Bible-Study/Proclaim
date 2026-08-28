@@ -1403,9 +1403,14 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         foreach (['#__action_log_config' => 'type_alias', '#__action_logs_extensions' => 'extension'] as $table => $column) {
             try {
+                // Same narrowing as the #__assets delete: the seeded values are
+                // `com_proclaim` and `com_proclaim.<entity>`, and a bare prefix
+                // would take another extension's rows with them. orWhere() so
+                // the builder brackets the two halves rather than this code.
                 $query = $this->dbo->getQuery(true)
                     ->delete($this->dbo->quoteName($table))
-                    ->where($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim%'));
+                    ->where($this->dbo->quoteName($column) . ' = ' . $this->dbo->quote('com_proclaim'))
+                    ->orWhere($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim.%'));
 
                 $this->dbo->setQuery($query)->execute();
             } catch (\Throwable $e) {
@@ -1667,7 +1672,37 @@ class com_proclaimInstallerScript extends InstallerScript
                 return;
             }
 
-            // Remove component assets
+            // ⚠️ Tables first, asset rows second, and the order is the whole
+            // point. Either half can fail, but only one order fails
+            // recoverably: dropped tables with stale #__assets rows left behind
+            // is drift Cwmassets already knows how to sweep, while deleted
+            // asset rows with the tables still present is a site whose
+            // permissions are gone and whose content is still there.
+            //
+            // It ran the other way round until a missing DatabaseDriver import
+            // made the second half throw, and an uninstall destroyed the
+            // permissions without dropping a single table.
+            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
+            $buffer  = is_file($sqlFile) ? file_get_contents($sqlFile) : false;
+
+            if ($buffer !== false) {
+                foreach (DatabaseDriver::splitSql($buffer) as $singleQuery) {
+                    $singleQuery = trim($singleQuery);
+
+                    if ($singleQuery !== '' && $singleQuery[0] !== '#') {
+                        try {
+                            $this->dbo->setQuery($singleQuery);
+                            $this->dbo->execute();
+                        } catch (\Exception) {
+                            // Continue dropping remaining tables
+                        }
+                    }
+                }
+            }
+
+            // Remove component assets. Reached whether or not the uninstall SQL
+            // was there to run, which the early returns this replaced did not
+            // do — a missing file used to skip the asset cleanup entirely.
             $query = $this->dbo->getQuery(true)
                 ->select($this->dbo->quoteName('id'))
                 ->from($this->dbo->quoteName('#__assets'))
@@ -1684,40 +1719,33 @@ class com_proclaimInstallerScript extends InstallerScript
                 $this->dbo->execute();
             }
 
+            // ⚠️ `com_proclaim%` would also match another extension that merely
+            // starts with our name — com_proclaimtools and the like — and this
+            // is an uninstall, so the match is a DELETE. Ours are exactly
+            // `com_proclaim` and `com_proclaim.<section>[.<id>]`; every other
+            // asset query in this codebase already uses the dotted form.
+            //
+            // andWhere() rather than a bracketed string: the query builder
+            // groups the disjunction itself, so the SQL is the driver's to
+            // emit rather than ours to assemble. ⚠️ It goes through
+            // extendWhere(), which needs a WHERE to extend — the root.1 guard
+            // has to be the call before it, not after.
             $query = $this->dbo->getQuery(true)
                 ->delete($this->dbo->quoteName('#__assets'))
-                ->where($this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim%'))
-                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+                // Kept even though the group below can no longer reach it.
+                // Deleting the ACL root takes every extension's permissions
+                // with it, and that guard should not depend on the predicate
+                // beside it staying narrow.
+                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'))
+                ->andWhere(
+                    [
+                        $this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'),
+                        $this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim.%'),
+                    ],
+                    'OR'
+                );
             $this->dbo->setQuery($query);
             $this->dbo->execute();
-
-            // Run the uninstall SQL
-            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
-
-            if (!file_exists($sqlFile)) {
-                return;
-            }
-
-            $buffer = file_get_contents($sqlFile);
-
-            if ($buffer === false) {
-                return;
-            }
-
-            $queries = DatabaseDriver::splitSql($buffer);
-
-            foreach ($queries as $singleQuery) {
-                $singleQuery = trim($singleQuery);
-
-                if ($singleQuery !== '' && $singleQuery[0] !== '#') {
-                    try {
-                        $this->dbo->setQuery($singleQuery);
-                        $this->dbo->execute();
-                    } catch (\Exception) {
-                        // Continue dropping remaining tables
-                    }
-                }
-            }
         } catch (\Exception) {
             // If anything fails, don't block uninstall
         }
