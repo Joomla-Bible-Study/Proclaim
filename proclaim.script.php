@@ -314,6 +314,24 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/css/scripture-tooltip.css',
         '/media/com_proclaim/css/scripture-tooltip.min.css',
         '/media/com_proclaim/css/scripture-tooltip.min.css.map',
+
+        // mod_proclaimicon shipped each translation twice: once as
+        // <extension>.ini, which Joomla tries first, and once as
+        // <tag>.<extension>.ini, which therefore never loaded. The stale
+        // copies are removed from the package; these clear the ones
+        // already on disk.
+        '/administrator/modules/mod_proclaimicon/language/cs-CZ/cs-CZ.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/cs-CZ/cs-CZ.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/de-DE/de-DE.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/de-DE/de-DE.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/es-ES/es-ES.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/es-ES/es-ES.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/hu-HU/hu-HU.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/hu-HU/hu-HU.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.sys.ini',
     ];
 
     /**
@@ -326,7 +344,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // Media folders
         '/media/com_proclaim/player',
         '/media/com_proclaim/less',
-        '/media/com_proclaim/backup',
+        // ⚠️ /media/com_proclaim/backup is NOT listed. proclaim.xml ships it,
+        // it holds the .htaccess and web.config that deny web access to the
+        // directory, and on a live site it holds the backup archives
+        // themselves. It sat here unnoticed only because nothing ever ran
+        // this list.
         '/media/com_proclaim/js/plugins',
         '/media/com_proclaim/js/views',
         '/media/com_proclaim/js/mediafile',
@@ -2017,6 +2039,69 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
+     * Delete the files and folders this build no longer ships.
+     *
+     * ⚠️ Until now nothing called removeFiles(). The lists were populated
+     * release after release and consumed in exactly one place — the 9.x
+     * com_biblestudy branch, which overwrites both first — so every path in
+     * them is still sitting on upgraded sites. Wiring this up is what makes
+     * them take effect, which is why the lists were audited against the
+     * shipped tree before it was: `/media/com_proclaim/backup` was on the
+     * folder list while proclaim.xml ships it, and it holds the .htaccess and
+     * web.config that keep backups off the web.
+     *
+     * ⚠️ Update only. A fresh install has nothing to clean, and postflight
+     * also runs on uninstall — where deleting anything is the adapter's job,
+     * not ours.
+     *
+     * @return  string  What was removed, for the install log
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function removeObsoleteFiles(): string
+    {
+        $present = 0;
+
+        foreach ($this->deleteFiles as $file) {
+            if (is_file(JPATH_ROOT . $file)) {
+                $present++;
+            }
+        }
+
+        foreach ($this->deleteFolders as $folder) {
+            if (is_dir(JPATH_ROOT . $folder)) {
+                $present++;
+            }
+        }
+
+        if ($present === 0) {
+            return 'nothing to remove';
+        }
+
+        $this->removeFiles();
+
+        $left = 0;
+
+        foreach ($this->deleteFiles as $file) {
+            if (is_file(JPATH_ROOT . $file)) {
+                $left++;
+            }
+        }
+
+        foreach ($this->deleteFolders as $folder) {
+            if (is_dir(JPATH_ROOT . $folder)) {
+                $left++;
+            }
+        }
+
+        // Counted rather than trusted: removeFiles() reports a failure by
+        // echoing, which the installer captures and nobody reads.
+        return $left === 0
+            ? $present . ' obsolete path(s) removed'
+            : ($present - $left) . ' of ' . $present . ' removed, ' . $left . ' could not be deleted';
+    }
+
+    /**
      * Post Flight
      *
      * @param   string            $type    The type of change (install, update, or discover_install, not uninstall)
@@ -2075,6 +2160,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
             $this->task('Rename legacy folders', fn () => $this->renameLegacyFolders());
+            $this->task('Remove obsolete files', fn () => $this->removeObsoleteFiles());
         }
 
         // After the migration SQL has added uq_study_topic, retire the index it
