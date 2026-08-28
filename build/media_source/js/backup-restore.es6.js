@@ -24,7 +24,6 @@
             this.liveRegion = null;
             this.triggerElement = null;
             this.isCancelled = false;
-            this.token = Joomla.getOptions('csrf.token') || document.querySelector(`input[name^="${Joomla.getOptions('csrf.token', '')}"]`)?.name || '';
         }
 
         /**
