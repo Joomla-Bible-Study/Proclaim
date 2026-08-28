@@ -32,11 +32,8 @@ use Joomla\CMS\Session\Session;
 class CwmhealthController extends BaseController
 {
     /**
-     * Where every task returns to.
-     *
-     * The report is a panel on the Administration screen rather than a view of
-     * its own, so `task=` is right here: `view=cwmadmin` renders the settings
-     * form without the controller having set it up.
+     * Where every task returns to. ⚠️ `task=`, not `view=`: the settings form
+     * is set up by the controller.
      *
      * @var    string
      * @since  __DEPLOY_VERSION__
@@ -44,11 +41,10 @@ class CwmhealthController extends BaseController
     private const RETURN_VIEW = 'index.php?option=com_proclaim&task=cwmadmin.edit&id=1';
 
     /**
-     * Run one check on request, including the ones too expensive to run on load.
+     * Run one check on request.
      *
-     * ⚠️ The only path that evaluates a non-passive check. Nothing else in the
-     * component may call it, because everything else runs without someone
-     * having asked.
+     * ⚠️ The only path that may evaluate a non-passive check; everything else
+     * runs without someone having asked.
      *
      * @return  void
      *
@@ -94,9 +90,8 @@ class CwmhealthController extends BaseController
         $this->assertToken();
         $this->assertAdmin();
 
-        // Re-run rather than trusting a fingerprint from the request: what is
-        // stored has to be the finding as it is now, or a stale value could
-        // silence a state that never existed.
+        // ⚠️ Re-run rather than trust a fingerprint from the request, which
+        // could silence a state that never existed.
         $result = HealthRegistry::runOne($this->input->getCmd('check', ''));
 
         if ($result === null || $result->fingerprint === '') {
@@ -108,9 +103,8 @@ class CwmhealthController extends BaseController
         try {
             HealthQuietStore::quieten($result);
         } catch (\RuntimeException $e) {
-            // The store refuses to write over a params column it could not
-            // read, rather than trading the site's settings for a cleared
-            // banner. Say so instead of reporting a success that did nothing.
+            // The store refuses to write over unreadable params; say so
+            // rather than report a success that did nothing.
             $this->setRedirect(Route::_(self::RETURN_VIEW, false), Text::_('JBS_HEALTH_QUIET_SAVE_FAILED'), 'error');
 
             return;
@@ -144,12 +138,10 @@ class CwmhealthController extends BaseController
     }
 
     /**
-     * Refuse a request that did not come from a Proclaim screen.
+     * Refuse a request without a valid token.
      *
-     * Every task here is reached from a link on the report, so the token
-     * arrives in the query string. `checkToken()` alone looks only at POST and
-     * would reject all three -- the POST form is still accepted so a future
-     * button does not have to remember this.
+     * ⚠️ These tasks are reached from links, so the token is in the query
+     * string; `checkToken()` alone checks POST only. POST is still accepted.
      *
      * @return  void
      *

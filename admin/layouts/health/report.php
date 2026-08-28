@@ -3,15 +3,11 @@
 /**
  * The System Health report.
  *
- * A layout rather than a view template: the report is rendered inside the
- * Administration screen's first tab, which is an edit form, so it has to be a
- * fragment something else owns rather than a page of its own.
+ * A layout, not a view template: it renders inside the Administration
+ * screen's first tab, which is an edit form.
  *
- * Built as a flush list group inside a `cwmadmin-panel`, the shape the Image
- * Migration Pipeline and the thumbnail tools on this same screen already use.
- * A list rather than a table because the data is not tabular -- a status, a
- * name, a sentence and sometimes a button -- and because the panel has to stay
- * readable as checks are added to it, so every row costs vertical space.
+ * A flush list group in a `cwmadmin-panel`, matching the other tools on that
+ * tab. A list rather than a table because the data is not tabular.
  *
  * @package    Proclaim.Admin
  * @copyright  (C) 2026 CWM Team All rights reserved
@@ -70,8 +66,7 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
         <?php foreach ([HealthStatus::Warning, HealthStatus::Notice, HealthStatus::Unknown, HealthStatus::Ok] as $status) :
             $count = (int) ($summary[$status->value] ?? 0);
 
-            // A chip reading "0 Worth knowing" is noise -- it reports the
-            // absence of something nobody asked about.
+            // A chip reading "0 Worth knowing" is noise.
             if ($count === 0) :
                 continue;
             endif;
@@ -96,20 +91,13 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
                 ?>
                 <li class="list-group-item bg-transparent px-0 py-2">
                     <div class="d-flex align-items-start gap-2 flex-wrap">
-                        <?php // Badge and text in an inner flex that cannot wrap, so only
-                              // the buttons drop to a second line when space runs out. Let
-                              // the outer row wrap between them and a long title pushed the
-                              // badge onto its own line, leaving some titles indented and
-                              // some against the edge down the same list.
-                              //
-                              // `min-width: 0` on both is the flexbox default-min-content
-                              // escape: without it the text refuses to shrink below its
-                              // longest word and forces the wrap it is trying to avoid. ?>
+                        <?php // ⚠️ Inner flex must not wrap, so only the buttons drop to a
+                              // second line and every title starts at the same edge.
+                              // `min-width: 0` lets the text shrink below its longest
+                              // word; without it the row wraps anyway. ?>
                         <div class="d-flex align-items-start gap-2 flex-grow-1" style="min-width: 0;">
-                            <?php // The fixed width is on the cell, not the badge: stretching
-                                  // the badge itself left a wide block of flat colour on the
-                                  // short labels. This aligns the titles down the column and
-                                  // lets each badge size to its own word. ?>
+                            <?php // Width on the cell, not the badge, so titles align while
+                                  // each badge sizes to its own word. ?>
                             <span class="flex-shrink-0" style="min-width: 8.5em;">
                                 <span class="badge bg-<?php echo $result->status->contextClass(); ?>">
                                     <?php echo Text::_($result->status->labelKey()); ?>
@@ -136,8 +124,8 @@ $taskLink = static fn(string $task, string $check): string => Route::_(
                                 </a>
                             <?php endif; ?>
 
-                            <?php // An active check renders a button rather than a result: opening
-                                  // this screen must never be what spends a platform's API quota. ?>
+                            <?php // ⚠️ An active check offers a button, never a result: opening
+                                  // this screen must not spend a platform's API quota. ?>
                             <?php if (!$check->isPassive()) : ?>
                                 <a class="btn btn-sm btn-secondary"
                                    href="<?php echo $taskLink('test', $check->getId()); ?>"

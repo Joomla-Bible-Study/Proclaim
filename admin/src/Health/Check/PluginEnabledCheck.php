@@ -25,18 +25,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\Database\DatabaseInterface;
 
 /**
- * Whether a plugin Proclaim depends on is installed and enabled.
+ * Whether a plugin Proclaim depends on is installed and enabled. Disabling
+ * one breaks a feature with nothing on screen to say why.
  *
- * Disabling one of these breaks a feature silently -- turning off
- * `plg_content_scripturelinks` leaves the admin scripture tab dead with
- * nothing on screen to say why, because the tab reaches it through
- * `com_ajax`.
- *
- * ⚠️ The state is read from `#__extensions` rather than through
- * `PluginHelper::isEnabled()`. `PluginHelper` answers from the plugins loaded
- * for the running application, so it cannot tell "disabled" from "not
- * installed", and it is not usable from a task with no site context. The two
- * cases need different advice, so the check has to distinguish them.
+ * ⚠️ Read from `#__extensions`, not `PluginHelper::isEnabled()`, which answers
+ * only for the running application and cannot tell disabled from missing.
  *
  * @since  __DEPLOY_VERSION__
  */

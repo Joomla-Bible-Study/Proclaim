@@ -25,13 +25,10 @@ use CWM\Component\Proclaim\Administrator\Helper\Cwmparams;
 use Joomla\CMS\Language\Text;
 
 /**
- * Whether one media server can actually reach its platform.
+ * Whether one media server can reach its platform.
  *
- * ⚠️ The only check in the registry that is not passive, and the reason
- * `isPassive()` exists at all. Running it makes an outbound API call and, on
- * YouTube, spends quota -- so a health page that ran it on load would burn
- * quota by being opened, which is worst at exactly the moment someone opens
- * the page because something looks wrong.
+ * ⚠️ Not passive. Running it makes an outbound API call and, on YouTube,
+ * spends quota, so only an explicit request may run it.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -100,10 +97,8 @@ final class ServerConnectionCheck implements HealthCheckInterface
      */
     public function run(): HealthResult
     {
-        // GDPR mode is switched on to stop data leaving the server. A status
-        // page that made outbound calls anyway would be the exact surprise
-        // that setting is meant to prevent, so the test refuses rather than
-        // quietly ignoring it.
+        // ⚠️ GDPR mode exists to stop data leaving the server, so the test
+        // refuses rather than quietly ignoring it.
         if ($this->gdprMode()) {
             return new HealthResult(
                 $this->getId(),
@@ -157,9 +152,7 @@ final class ServerConnectionCheck implements HealthCheckInterface
         try {
             return (bool) Cwmparams::getAdmin()->params->get('gdpr_mode', '0');
         } catch (\Throwable) {
-            // Unreadable params are treated as GDPR mode off, matching every
-            // other reader of this setting. The button is still an explicit
-            // action by an administrator, not something that fires on its own.
+            // Unreadable params read as off, matching every other reader.
             return false;
         }
     }

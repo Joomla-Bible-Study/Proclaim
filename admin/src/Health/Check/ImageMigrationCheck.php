@@ -24,11 +24,9 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmImageMigration;
 use Joomla\CMS\Language\Text;
 
 /**
- * Studies, teachers and series whose images still sit in the old layout.
- *
- * Not a fault on its own -- the old paths keep resolving -- but the images
- * stay outside the structured `images/biblestudy/{type}/{alias}-{id}/` folders
- * until they are moved, which is what every later image feature assumes.
+ * Records whose images still sit outside the structured
+ * `images/biblestudy/{type}/{alias}-{id}/` folders. Not a fault: the old
+ * paths keep resolving.
  *
  * @since  __DEPLOY_VERSION__
  */
@@ -95,8 +93,7 @@ final class ImageMigrationCheck implements HealthCheckInterface
             $this->getId(),
             HealthStatus::Notice,
             Text::plural('JBS_HEALTH_IMAGE_MIGRATION_N', $counts['total']),
-            // Per type, so migrating one kind of record and not another still
-            // reads as a change rather than staying quiet on a stale total.
+            // Per type, so migrating one kind of record resurfaces the notice.
             $counts['studies'] . ':' . $counts['teachers'] . ':' . $counts['series'],
             'index.php?option=com_proclaim&task=cwmadmin.edit&id=1#imagetools',
             Text::_('JBS_HEALTH_IMAGE_TOOLS_ACTION')
