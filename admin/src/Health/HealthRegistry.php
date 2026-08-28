@@ -27,9 +27,11 @@ use CWM\Component\Proclaim\Administrator\Health\Check\MissingImagesCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PendingReviewCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PluginEnabledCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\PodcastTaskCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\ProtectedStorageCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeCssCheck;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 
@@ -60,6 +62,8 @@ final class HealthRegistry
             new PodcastTaskCheck(),
             new SimpleModeCheck(),
             new AssetDriftCheck(),
+            new ProtectedStorageCheck(),
+            new TemplateCodeCssCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
             new PendingReviewCheck(),
