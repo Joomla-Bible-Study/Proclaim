@@ -650,11 +650,9 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Time a piece of postflight, and record where the time went.
      *
-     * Postflight's unconditional work — installing the sub-extensions, copying
-     * language files, clearing caches — was never measured, so an update that
-     * felt slow could only be guessed at. The migrations were instrumented
-     * first and turned out to be free, which left the larger part of an update
-     * unaccounted for.
+     * Covers postflight's unconditional work — installing the sub-extensions,
+     * copying language files, clearing caches — which is where an update's time
+     * actually goes, the migrations themselves having turned out to be free.
      *
      * ⚠️ A throw is recorded and the update carries on. Joomla treats a
      * RuntimeException out of postflight as grounds to abort and roll the
@@ -1469,13 +1467,10 @@ class com_proclaimInstallerScript extends InstallerScript
      * caches, and nothing tells an optimisation plugin that the files it combined
      * have been replaced.
      *
-     * That gap is not theoretical. On a live site running JCH Optimize, updating
-     * the scripture library deleted the combined JS bundles while the cached HTML
-     * kept referencing them by filename. Every bundled script — including the
-     * Bible version switcher — returned a 404 HTML error page, so the switcher
-     * rendered and did nothing. No error was visible anywhere; the markup was
-     * correct and the JavaScript simply never arrived. Clearing both caches fixed
-     * it.
+     * That gap is not theoretical. An optimisation plugin can go on serving
+     * cached HTML that names combined bundles the update has already replaced,
+     * so every bundled script returns a 404 and the feature it powers renders
+     * correctly and does nothing — with no error anywhere to say so.
      *
      * What we can do:
      *
