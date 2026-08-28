@@ -35,17 +35,18 @@ use PHPUnit\Framework\Attributes\TestDox;
 class InstallScriptImportsTest extends ProclaimTestCase
 {
     /**
-     * Resolvable without an import: PHP's own globals, and classes this file
-     * declares. `parent::` and `self::` are language constructs, not classes.
+     * Language keywords that appear where a class name would.
+     *
+     * ⚠️ Everything else is decided by asking whether the name resolves, not by
+     * listing it here. A hand-kept list of PHP's globals is a list that goes
+     * stale: this one omitted ReflectionObject, and `new ReflectionObject()` —
+     * correct code, since the file has no namespace and the global class
+     * exists — was reported as an offender.
      *
      * @var    string[]
      * @since  __DEPLOY_VERSION__
      */
-    private const GLOBALS = [
-        'Exception', 'RuntimeException', 'Throwable', 'Error', 'JsonException',
-        'stdClass', 'DateTime', 'DateTimeZone', 'SplFileInfo', 'ArrayObject',
-        'JLoader', 'self', 'parent', 'static',
-    ];
+    private const KEYWORDS = ['self', 'parent', 'static'];
 
     /**
      * The script source with comments and string literals removed.
@@ -66,14 +67,22 @@ class InstallScriptImportsTest extends ProclaimTestCase
         $found  = [];
 
         foreach ($tokens as $i => $token) {
-            // A class name in a static call is T_STRING followed by T_DOUBLE_COLON.
             if (!\is_array($token) || $token[0] !== \T_STRING) {
                 continue;
             }
 
+            // Four shapes name a class inside a method body, and all four fail
+            // the same way when the name is not imported: a global class that
+            // does not exist, and an Error at the moment the line runs.
             $next = $tokens[$i + 1] ?? null;
+            $back = $this->previousMeaningful($tokens, $i);
 
-            if (!\is_array($next) || $next[0] !== \T_DOUBLE_COLON) {
+            $isStaticCall = \is_array($next) && $next[0] === \T_DOUBLE_COLON;
+            $isNew        = \is_array($back) && $back[0] === \T_NEW;
+            $isInstanceof = \is_array($back) && $back[0] === \T_INSTANCEOF;
+            $isCatch      = $this->isInsideCatch($tokens, $i);
+
+            if (!$isStaticCall && !$isNew && !$isInstanceof && !$isCatch) {
                 continue;
             }
 
@@ -108,19 +117,28 @@ class InstallScriptImportsTest extends ProclaimTestCase
             $imported[] = $match[2] ?? end($parts);
         }
 
-        $known  = array_merge($imported, self::GLOBALS);
         $usages = $this->staticCallTargets();
 
-        $this->assertNotEmpty($usages, 'No static calls found — the tokeniser is not seeing the file.');
+        $this->assertNotEmpty($usages, 'No class references found — the tokeniser is not seeing the file.');
 
         $offenders = [];
 
         foreach ($usages as $usage) {
-            if (\in_array($usage['name'], $known, true)) {
+            $name = $usage['name'];
+
+            if (\in_array($name, self::KEYWORDS, true) || \in_array($name, $imported, true)) {
                 continue;
             }
 
-            $offenders[] = $usage['name'] . '::  at line ' . $usage['line'];
+            // Unimported is fine when the bare name is a real global — the file
+            // has no namespace, so `new ReflectionObject()` resolves. What is
+            // not fine is a name that resolves to nothing, which is the
+            // DatabaseDriver case: an Error at the moment the line runs.
+            if (class_exists($name) || interface_exists($name) || enum_exists($name)) {
+                continue;
+            }
+
+            $offenders[] = $name . '  at line ' . $usage['line'];
         }
 
         $this->assertSame(
@@ -130,5 +148,153 @@ class InstallScriptImportsTest extends ProclaimTestCase
             . "raises an Error — which catch (\\Exception) does not catch, making it a fatal. Add the use\n"
             . "statement, or prefix the call with a backslash if the global class is genuinely meant."
         );
+    }
+
+    /**
+     * The token before $i that is not whitespace or a comment.
+     *
+     * @param   array  $tokens  token_get_all() output
+     * @param   int    $i       Index to look back from
+     *
+     * @return  mixed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function previousMeaningful(array $tokens, int $i): mixed
+    {
+        for ($j = $i - 1; $j >= 0; $j--) {
+            if (\is_array($tokens[$j]) && \in_array($tokens[$j][0], [\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT], true)) {
+                continue;
+            }
+
+            return $tokens[$j];
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether $i sits inside the parentheses of a `catch`.
+     *
+     * @param   array  $tokens  token_get_all() output
+     * @param   int    $i       Index to test
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function isInsideCatch(array $tokens, int $i): bool
+    {
+        for ($j = $i - 1; $j >= 0 && $j > $i - 12; $j--) {
+            $t = $tokens[$j];
+
+            if ($t === ')' || $t === '{' || $t === ';') {
+                return false;
+            }
+
+            if (\is_array($t) && $t[0] === \T_CATCH) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * ⚠️ Type hints fail exactly as static calls do and were invisible here.
+     *
+     * The file has no namespace, so `private function f(Foo $x)` with no `use`
+     * resolves to a global `\Foo`, and PHP raises an Error when the method is
+     * called — not when the file is parsed, so `php -l` passes and the class
+     * loads. #1981 added such a hint and its import had to be checked by hand
+     * precisely because this test could not see it.
+     *
+     * Reflection rather than tokens: it reports the name PHP actually resolved
+     * to, so an unimported hint arrives as the bare name and simply fails to
+     * exist. Nothing has to be parsed or guessed.
+     *
+     * @return  void
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('Every class named in a signature or property type resolves')]
+    public function testEverySignatureTypeResolves(): void
+    {
+        if (!class_exists('com_proclaimInstallerScript', false)) {
+            require_once \dirname(__DIR__, 3) . '/proclaim.script.php';
+        }
+
+        $class = new \ReflectionClass('com_proclaimInstallerScript');
+        $names = [];
+
+        foreach ($class->getMethods() as $method) {
+            if ($method->getDeclaringClass()->getName() !== $class->getName()) {
+                continue;
+            }
+
+            foreach ($method->getParameters() as $parameter) {
+                $names += $this->typeNames($parameter->getType(), $method->getName() . '()');
+            }
+
+            $names += $this->typeNames($method->getReturnType(), $method->getName() . '() return');
+        }
+
+        foreach ($class->getProperties() as $property) {
+            if ($property->getDeclaringClass()->getName() !== $class->getName()) {
+                continue;
+            }
+
+            $names += $this->typeNames($property->getType(), '$' . $property->getName());
+        }
+
+        $this->assertNotEmpty($names, 'No declared types were found — this test would pass on nothing.');
+
+        $offenders = [];
+
+        foreach ($names as $name => $where) {
+            if (class_exists($name) || interface_exists($name) || enum_exists($name)) {
+                continue;
+            }
+
+            $offenders[] = $name . '  (' . $where . ')';
+        }
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "proclaim.script.php has no namespace, so a type hint whose class is not imported resolves\n"
+            . "to a global one that does not exist. PHP raises an Error when the method is called, which\n"
+            . 'php -l cannot see. Add the use statement.'
+        );
+    }
+
+    /**
+     * Class names in a declared type, keyed by name.
+     *
+     * @param   ?\ReflectionType  $type   The declared type, if any
+     * @param   string            $where  Where it was declared, for the message
+     *
+     * @return  array<string, string>
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function typeNames(?\ReflectionType $type, string $where): array
+    {
+        if ($type === null) {
+            return [];
+        }
+
+        // Union and intersection types hold several named types; a single one
+        // arrives as a ReflectionNamedType on its own.
+        $parts = $type instanceof \ReflectionNamedType ? [$type] : $type->getTypes();
+        $found = [];
+
+        foreach ($parts as $part) {
+            if ($part instanceof \ReflectionNamedType && !$part->isBuiltin()) {
+                $found[$part->getName()] = $where;
+            }
+        }
+
+        return $found;
     }
 }
