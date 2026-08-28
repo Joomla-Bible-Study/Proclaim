@@ -1070,7 +1070,10 @@ class CwmbackupController extends BaseController
         $status = ['rows' => 0, 'dir_exists' => true, 'dir_empty' => false];
 
         try {
-            $db = $this->getDatabase();
+            // The container, not $this->getDatabase(): this controller extends
+            // BaseController without the database-aware trait, so that method
+            // does not exist here. Every other query in this file does the same.
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $status['rows'] = (int) $db->setQuery(
                 $db->createQuery()
