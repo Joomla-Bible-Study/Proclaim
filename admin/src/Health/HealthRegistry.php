@@ -35,6 +35,7 @@ use CWM\Component\Proclaim\Administrator\Health\Check\SchemaVersionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\ServerConnectionCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\SimpleModeCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeCssCheck;
+use CWM\Component\Proclaim\Administrator\Health\Check\TemplateCodeFileCheck;
 use CWM\Component\Proclaim\Administrator\Health\Check\TmpPathCheck;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
@@ -76,6 +77,7 @@ final class HealthRegistry
             new DebugModeCheck(),
             new OrphanMediaServerCheck(),
             new TmpPathCheck(),
+            new TemplateCodeFileCheck(),
             new LocationFilteringCheck(),
             new LegacyServersCheck(),
             new PendingReviewCheck(),
