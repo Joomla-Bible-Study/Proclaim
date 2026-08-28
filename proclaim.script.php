@@ -1667,7 +1667,37 @@ class com_proclaimInstallerScript extends InstallerScript
                 return;
             }
 
-            // Remove component assets
+            // ⚠️ Tables first, asset rows second, and the order is the whole
+            // point. Either half can fail, but only one order fails
+            // recoverably: dropped tables with stale #__assets rows left behind
+            // is drift Cwmassets already knows how to sweep, while deleted
+            // asset rows with the tables still present is a site whose
+            // permissions are gone and whose content is still there.
+            //
+            // It ran the other way round until a missing DatabaseDriver import
+            // made the second half throw, and an uninstall destroyed the
+            // permissions without dropping a single table.
+            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
+            $buffer  = is_file($sqlFile) ? file_get_contents($sqlFile) : false;
+
+            if ($buffer !== false) {
+                foreach (DatabaseDriver::splitSql($buffer) as $singleQuery) {
+                    $singleQuery = trim($singleQuery);
+
+                    if ($singleQuery !== '' && $singleQuery[0] !== '#') {
+                        try {
+                            $this->dbo->setQuery($singleQuery);
+                            $this->dbo->execute();
+                        } catch (\Exception) {
+                            // Continue dropping remaining tables
+                        }
+                    }
+                }
+            }
+
+            // Remove component assets. Reached whether or not the uninstall SQL
+            // was there to run, which the early returns this replaced did not
+            // do — a missing file used to skip the asset cleanup entirely.
             $query = $this->dbo->getQuery(true)
                 ->select($this->dbo->quoteName('id'))
                 ->from($this->dbo->quoteName('#__assets'))
@@ -1690,34 +1720,6 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
             $this->dbo->setQuery($query);
             $this->dbo->execute();
-
-            // Run the uninstall SQL
-            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
-
-            if (!file_exists($sqlFile)) {
-                return;
-            }
-
-            $buffer = file_get_contents($sqlFile);
-
-            if ($buffer === false) {
-                return;
-            }
-
-            $queries = DatabaseDriver::splitSql($buffer);
-
-            foreach ($queries as $singleQuery) {
-                $singleQuery = trim($singleQuery);
-
-                if ($singleQuery !== '' && $singleQuery[0] !== '#') {
-                    try {
-                        $this->dbo->setQuery($singleQuery);
-                        $this->dbo->execute();
-                    } catch (\Exception) {
-                        // Continue dropping remaining tables
-                    }
-                }
-            }
         } catch (\Exception) {
             // If anything fails, don't block uninstall
         }
