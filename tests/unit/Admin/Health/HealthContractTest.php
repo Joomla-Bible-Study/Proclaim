@@ -374,4 +374,166 @@ class HealthContractTest extends ProclaimTestCase
 
         return glob($dir . '/*.php') ?: [];
     }
+
+    /**
+     * Context the checks may not depend on, directly or through a helper.
+     *
+     * @var  string[]
+     * @since   __DEPLOY_VERSION__
+     */
+    private const CONTEXT_BOUND = ['getIdentity', 'getSession', 'getInput', 'enqueueMessage', 'Route::', 'Uri::'];
+
+    /**
+     * Helper methods a check may call despite naming forbidden context, with
+     * the reason each is safe.
+     *
+     * @var  array<string, string>
+     * @since   __DEPLOY_VERSION__
+     */
+    private const CONTEXT_ALLOWED = [
+        'CwmmediaProtectionHelper::canResolveSiteRoot' => 'Exists precisely to answer whether Uri::root() is trustworthy off a request, and returns false when it is not.',
+        'Cwmhelper::mediaBuildUrl'                     => 'Uses Uri::root() for the protocol, but RestrictedMediaCheck returns Unknown before reaching it unless canResolveSiteRoot() has already said the root is real. The ordering is the guarantee, so moving that guard below the call would break this exemption.',
+        'Cwmparams::getAdmin'                          => 'getIdentity() and enqueueMessage() are both reached through $app?-> and the helper documents the CLI case itself; the identity only decorates an extra field and does not change the params a check reads. Its only caller here is ServerConnectionCheck, which is active, so it never runs unattended.',
+    ];
+
+    /**
+     * Static calls a check makes, read from tokens rather than text.
+     *
+     * ⚠️ Tokenised because these files discuss helpers in their docblocks —
+     * `CwmDebug::isEnabled()` and `CwmprotectedStorage::status()` both appear
+     * in prose explaining why a check does *not* call them. A regex reports
+     * both and is worse than no test.
+     *
+     * @param   string  $file  A check's path
+     *
+     * @return  array<string, string>  Class => method
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function staticCallsIn(string $file): array
+    {
+        $tokens = token_get_all((string) file_get_contents($file));
+        $calls  = [];
+
+        foreach ($tokens as $i => $t) {
+            if (!\is_array($t) || $t[0] !== \T_DOUBLE_COLON) {
+                continue;
+            }
+
+            $class  = $tokens[$i - 1] ?? null;
+            $method = $tokens[$i + 1] ?? null;
+
+            if (\is_array($class) && $class[0] === \T_STRING && \is_array($method) && $method[0] === \T_STRING) {
+                $calls[$class[1] . '::' . $method[1]] = $class[1];
+            }
+        }
+
+        return $calls;
+    }
+
+    /**
+     * The file a class imported into $file lives in, or null.
+     *
+     * @param   string  $file   The importing file
+     * @param   string  $class  Short class name
+     *
+     * @return  ?string
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function sourceOf(string $file, string $class): ?string
+    {
+        $root = \dirname(__DIR__, 4);
+
+        if (!preg_match('/^use\s+(CWM\\\\Component\\\\Proclaim\\\\[\w\\\\]*\\\\' . preg_quote($class, '/') . ');/m', (string) file_get_contents($file), $m)) {
+            return null;
+        }
+
+        $rel  = str_replace(
+            ['CWM\\Component\\Proclaim\\Administrator\\', 'CWM\\Component\\Proclaim\\Site\\', '\\'],
+            ['admin/src/', 'site/src/', '/'],
+            $m[1]
+        );
+        $path = $root . '/' . $rel . '.php';
+
+        return is_file($path) ? $path : null;
+    }
+
+    /**
+     * ⚠️ The context rule above reads a check's own source, so a check that
+     * calls a helper which reads the identity, the session or the request
+     * passes it while breaking the same contract one level down.
+     *
+     * That is not hypothetical. Three helpers met this session would have
+     * defeated it: CwmDebug::isEnabled() reads a constant admin/api.php
+     * defines and a scheduled task therefore lacks; CwmsetupwizardHelper's
+     * wizard test calls getIdentity() and returns false without one; and
+     * isServedByWebServer() compares against Uri::root(), which off a request
+     * is invented rather than derived — that one shipped in #1985 and had to
+     * be corrected in #1989.
+     *
+     * One level deep, which is where all three sat.
+     *
+     * @return  void
+     * @since   __DEPLOY_VERSION__
+     */
+    #[TestDox('No check reaches the identity, the session or the request through a helper')]
+    public function testChecksAreContextFreeThroughTheirHelpers(): void
+    {
+        $offenders = [];
+        $examined  = 0;
+
+        foreach ($this->checkFiles() as $file) {
+            foreach ($this->staticCallsIn($file) as $call => $class) {
+                if (isset(self::CONTEXT_ALLOWED[$call])) {
+                    continue;
+                }
+
+                $source = $this->sourceOf($file, $class);
+
+                if ($source === null) {
+                    continue;
+                }
+
+                [, $method] = explode('::', $call);
+                $body       = (string) file_get_contents($source);
+                $start      = strpos($body, 'function ' . $method . '(');
+
+                if ($start === false) {
+                    continue;
+                }
+
+                $end  = strpos($body, "\n    }\n", $start);
+                $code = substr($body, $start, ($end === false ? \strlen($body) : $end) - $start);
+                $examined++;
+
+                foreach (self::CONTEXT_BOUND as $forbidden) {
+                    if (str_contains($code, $forbidden)) {
+                        $offenders[] = \sprintf(
+                            '%s -> %s uses %s',
+                            basename($file),
+                            $call,
+                            $forbidden
+                        );
+                    }
+                }
+            }
+        }
+
+        $this->assertGreaterThan(
+            0,
+            $examined,
+            'No helper bodies were examined — the resolver is not finding them, so this proves nothing.'
+        );
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "A check calls a helper that reads the identity, the session or the request. The check itself\n"
+            . "looks context-free and is not: it will answer differently from a scheduled task, and for a\n"
+            . "security check that difference is usually a false all-clear. Read the underlying state\n"
+            . "instead, or add the helper to CONTEXT_ALLOWED with the reason it is safe.\n\n"
+            . implode("\n", $offenders)
+        );
+    }
 }
