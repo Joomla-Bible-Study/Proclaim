@@ -40,7 +40,6 @@ class JsonapiView extends BaseApiView
         'id',
         'title',
         'type',
-        'tmpl',
         'location_id',
         'published',
         'access',
