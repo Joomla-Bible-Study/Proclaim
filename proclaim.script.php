@@ -3155,30 +3155,21 @@ class com_proclaimInstallerScript extends InstallerScript
      * Drop legacy/orphaned Proclaim tables that the current codebase no
      * longer references.
      *
-     * Some of these have been targeted by old migration files
-     * (10.1.0-20260228, 10.1.0-20260301), but Joomla skips already-applied
-     * migrations on upgrades that jump multiple versions, so sites that
-     * went straight from 10.0 → 10.2/10.3 still carry the rows. Others
-     * (e.g. `jbsbackup_timeset`) are pre-10.0 leftovers never covered by
-     * any migration.
+     * Done here rather than in migration SQL because Joomla skips
+     * already-applied migrations on upgrades that jump versions, so a site
+     * that went straight from 10.0 to 10.2/10.3 still carries rows the 10.1.0
+     * files were meant to remove. Others, `jbsbackup_timeset` among them,
+     * predate 10.0 and no migration ever covered them.
      *
-     * Each candidate has been verified against the live codebase: not
-     * referenced in admin/, site/, libraries/, plugins/, or modules/.
-     * `#__bsms_version` is intentionally NOT in this list — it is read by the
-     * v7→v10 upgrade detector.
+     * A table earns a place here by being unreferenced across admin/, site/,
+     * libraries/, plugins/ and modules/ — but unreferenced is not sufficient:
      *
-     * ⚠️ `#__bsms_styles` was described here as the active template-styles
-     * store. It never was on any site this code installs: the install schema
-     * has never created it, only the uninstall SQL names it, and its last two
-     * readers — an exporter branch and a helper with no callers — are gone.
-     * Custom CSS lives in params instead, `#__bsms_admin` site-wide and
-     * `#__bsms_templates` per template, and has since 10.5.8.
+     * ⚠️ `#__bsms_version` is read by the v7→v10 upgrade detector.
      *
-     * ⚠️ It is still deliberately absent from the list below. No migration ever
-     * moved its rows into those params, so a site upgraded from 7.x may hold
-     * the only copy of its stylesheets there. Dropping the table would destroy
-     * them. Retiring the code that read it is safe; dropping the table needs a
-     * migration first.
+     * ⚠️ `#__bsms_styles` is deliberately absent. Nothing reads it any more,
+     * yet no migration ever moved its rows into the params that replaced it,
+     * so a site upgraded from 7.x may hold the only copy of its stylesheets
+     * there. Dropping it needs a migration first.
      *
      * @return  void
      *
