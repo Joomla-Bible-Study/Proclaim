@@ -924,34 +924,47 @@ class Cwmassets
             array_map(static fn ($v) => $db->quote($v), self::EMPTY_RULE_VARIANTS)
         );
 
-        // ⚠️ Item-scoped on both halves. Empty rules are normal on a section
-        // row — it simply has no override — so only an item row with empty
-        // rules is cleanup material. And an item belongs under its section, so
-        // the acceptable parents are com_proclaim plus every section row.
-        $acceptable = [$parentId];
-
-        foreach (self::declaredSections() as $section) {
-            $sectionId = self::sectionId($section);
-
-            if ($sectionId > 0) {
-                $acceptable[] = $sectionId;
-            }
-        }
-
+        // ⚠️ Item-scoped, and per-section. Empty rules are normal on a section
+        // row — it simply has no override — so only an *item* row with empty
+        // rules is cleanup material.
+        //
+        // The parent test has to name the section, not merely accept any of
+        // them. An item sitting on com_proclaim while its own section row
+        // exists is exactly the state a flatten leaves behind, and treating
+        // com_proclaim as universally acceptable would report that site as
+        // clean and never repair it. sectionParentId() returns com_proclaim
+        // only when the section is genuinely absent, which is where an item
+        // does belong.
         try {
             $query = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName('#__assets'))
                 ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%.%'))
-                ->where(
-                    '(' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
-                    . ' OR ' . $db->quoteName('parent_id')
-                    . ' NOT IN (' . implode(',', array_map('intval', $acceptable)) . '))'
-                );
+                ->where($db->quoteName('rules') . ' IN (' . $emptyQuoted . ')');
             $db->setQuery($query);
 
             if ((int) $db->loadResult() > 0) {
                 return true;
+            }
+
+            foreach (self::getAssetObjects() as $info) {
+                $section  = $info['assetname'];
+                $expected = self::sectionParentId($section);
+
+                if ($expected < 1) {
+                    continue;
+                }
+
+                $query = $db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.' . $section . '.%'))
+                    ->where($db->quoteName('parent_id') . ' <> ' . (int) $expected);
+                $db->setQuery($query);
+
+                if ((int) $db->loadResult() > 0) {
+                    return true;
+                }
             }
         } catch (\Exception $e) {
             // If the drift probe fails, fall through to the full fix path

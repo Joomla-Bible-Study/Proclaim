@@ -320,6 +320,86 @@ class CwmassetsSectionSurvivalTest extends IntegrationTestCase
     }
 
     /**
+     * The repair path for sites the old cleanup already flattened.
+     *
+     * Those sites hold item assets sitting directly on com_proclaim with their
+     * section rows deleted. A later update reseeds the sections, but nothing
+     * moves the items back unless the drift probe recognises the state — and
+     * treating com_proclaim as a universally acceptable parent would report
+     * such a site as clean for ever.
+     *
+     * @return  void
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('An item flattened onto com_proclaim is moved back under its section')]
+    public function testFlattenedItemIsRepaired(): void
+    {
+        Cwmassets::seedSections();
+        Cwmassets::clearSectionCache();
+
+        $sectionId = Cwmassets::sectionParentId('message');
+        $rootId    = Cwmassets::parentId();
+
+        if ($sectionId < 1 || $sectionId === $rootId) {
+            $this->markTestSkipped('The message section could not be resolved on this install.');
+        }
+
+        $this->created[] = $sectionId;
+
+        // ⚠️ The record has to exist first, and the asset has to be named after
+        // its real id. cleanOrphanedAssets() deletes any com_proclaim.<sec>.<id>
+        // whose source record is gone, so an asset named for an id that never
+        // existed is removed as an orphan before the reparent is even reached —
+        // which is what a first version of this test actually measured.
+        $studyId = $this->createStudyRow(0);
+
+        // The flattened shape: a real-rules item parked on com_proclaim.
+        $asset = new Asset($this->db);
+        $asset->setLocation($rootId, 'last-child');
+        $asset->name  = 'com_proclaim.message.' . $studyId;
+        $asset->title = 'Flattened fixture';
+        $asset->rules = '{"core.edit":{"6":1}}';
+
+        $this->assertTrue($asset->check() && $asset->store(), 'Fixture asset could not be stored.');
+
+        $assetId         = (int) $asset->id;
+        $this->created[] = $assetId;
+
+        $this->db->setQuery(
+            'UPDATE ' . $this->db->quoteName('#__bsms_studies')
+            . ' SET ' . $this->db->quoteName('asset_id') . ' = ' . $assetId
+            . ' WHERE ' . $this->db->quoteName('id') . ' = ' . (int) $studyId
+        )->execute();
+
+        // ⚠️ Assert the starting state, or a pass could mean the fixture never
+        // landed where the test says it did.
+        $this->db->setQuery(
+            'SELECT parent_id FROM ' . $this->db->quoteName('#__assets')
+            . ' WHERE ' . $this->db->quoteName('id') . ' = ' . $assetId
+        );
+        $this->assertSame($rootId, (int) $this->db->loadResult(), 'Fixture did not start flattened.');
+
+        $this->assertTrue(
+            Cwmassets::hasAnyDrift($this->db, $rootId),
+            'A flattened item must register as drift, or fixAllAssets() returns early and never repairs it.'
+        );
+
+        Cwmassets::fixAllAssets();
+
+        $this->db->setQuery(
+            'SELECT parent_id FROM ' . $this->db->quoteName('#__assets')
+            . ' WHERE ' . $this->db->quoteName('id') . ' = ' . $assetId
+        );
+
+        $this->assertSame(
+            $sectionId,
+            (int) $this->db->loadResult(),
+            'The item was not moved back under com_proclaim.message, so a site flattened by the '
+            . 'old cleanup would stay flattened and its section rules would never reach it.'
+        );
+    }
+
+    /**
      * The prune still has to do its job — this is the behaviour the section
      * exclusion must not have broken.
      *
