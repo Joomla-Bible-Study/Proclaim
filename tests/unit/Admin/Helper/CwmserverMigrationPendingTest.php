@@ -23,6 +23,91 @@ use PHPUnit\Framework\Attributes\TestDox;
 class CwmserverMigrationPendingTest extends ProclaimTestCase
 {
     /**
+     * @var  \Joomla\Database\DatabaseDriver|null
+     * @since __DEPLOY_VERSION__
+     */
+    private $db = null;
+
+    /**
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!\defined('PROCLAIM_TEST_DB_AVAILABLE') || !PROCLAIM_TEST_DB_AVAILABLE) {
+            $this->markTestSkipped('Database not available for integration tests');
+        }
+
+        $this->db = $GLOBALS['__proclaim_test_db'] ?? null;
+
+        if ($this->db === null) {
+            $this->markTestSkipped('Database connection not available');
+        }
+
+        $this->db->transactionStart();
+    }
+
+    /**
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    protected function tearDown(): void
+    {
+        if ($this->db !== null) {
+            try {
+                $this->db->transactionRollback();
+            } catch (\Throwable) {
+                // Connection may have been lost
+            }
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * Insert a legacy server in a given published state, with media rows on it.
+     *
+     * @param   int  $published   Joomla state: 1 published, 0 unpublished, -2 trashed.
+     * @param   int  $mediaCount  How many media rows to point at it.
+     *
+     * @return  int  The new server id.
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    private function insertLegacyServer(int $published, int $mediaCount = 2): int
+    {
+        $db = $this->db;
+
+        $db->setQuery(
+            'INSERT INTO ' . $db->quoteName('#__bsms_servers')
+            . ' (' . $db->quoteName('server_name') . ', ' . $db->quoteName('published') . ', '
+            . $db->quoteName('type') . ', ' . $db->quoteName('params') . ', ' . $db->quoteName('media') . ')'
+            . ' VALUES (' . $db->quote('Pending-count fixture') . ', ' . $published . ', '
+            . $db->quote('legacy') . ", '', '')"
+        )->execute();
+
+        $serverId = (int) $db->insertid();
+
+        for ($i = 0; $i < $mediaCount; $i++) {
+            // metadata and language are NOT NULL with no default on this
+            // table, so they have to be given explicitly rather than left to
+            // the schema.
+            $db->setQuery(
+                'INSERT INTO ' . $db->quoteName('#__bsms_mediafiles')
+                . ' (' . $db->quoteName('server_id') . ', ' . $db->quoteName('published') . ', '
+                . $db->quoteName('metadata') . ', ' . $db->quoteName('language') . ')'
+                . ' VALUES (' . $serverId . ", 1, '', " . $db->quote('*') . ')'
+            )->execute();
+        }
+
+        return $serverId;
+    }
+
+    /**
      * @return  void
      *
      * @since __DEPLOY_VERSION__
@@ -41,46 +126,169 @@ class CwmserverMigrationPendingTest extends ProclaimTestCase
     }
 
     /**
-     * The media count is only meaningful next to the server count. Reporting
-     * rows without servers would put a notice on screen with no action behind
-     * it, since there would be nothing to migrate.
+     * ⚠️ The positive control. Every assertion below is that some server is
+     * *not* counted, and all of them would pass just as well if the fixture
+     * never reached the database or the helper always returned zero. This is
+     * the one that proves the mechanism works, so the others mean something.
      *
      * @return  void
      *
      * @since __DEPLOY_VERSION__
      */
-    #[TestDox('No legacy servers means no media rows are reported either')]
-    public function testMediaIsZeroWhenNoLegacyServers(): void
+    #[TestDox('A published legacy server IS counted, and its media with it')]
+    public function testPublishedLegacyServerIsCounted(): void
+    {
+        $before = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->insertLegacyServer(1, 3);
+
+        $after = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->assertSame(
+            $before['servers'] + 1,
+            $after['servers'],
+            'A published legacy server is exactly what this notice exists to report.'
+        );
+        $this->assertSame(
+            $before['media'] + 3,
+            $after['media'],
+            'Its media rows are the reason migrating it matters.'
+        );
+    }
+
+    /**
+     * The bug this test exists for: a migration signs off by calling
+     * unpublishEmptyLegacyServers(), which sets published = 0 and leaves
+     * `type` as 'legacy' for ever. Counting by type alone meant the notice
+     * still reported every server anyone had ever migrated, so it could not be
+     * cleared by doing the work it asked for — only by deleting the rows.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('A retired (unpublished) legacy server is not still reported as pending')]
+    public function testUnpublishedLegacyServerIsNotCounted(): void
+    {
+        $before = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->insertLegacyServer(0, 3);
+
+        $after = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->assertSame(
+            $before['servers'],
+            $after['servers'],
+            'A server retired by the migration must stop being reported, or the notice never clears.'
+        );
+        $this->assertSame(
+            $before['media'],
+            $after['media'],
+            'Media on a retired server is not waiting on anything either.'
+        );
+    }
+
+    /**
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('A trashed legacy server is not reported as pending')]
+    public function testTrashedLegacyServerIsNotCounted(): void
+    {
+        $before = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->insertLegacyServer(-2, 4);
+
+        $after = CwmserverMigrationHelper::countPendingMigration();
+
+        $this->assertSame(
+            $before['servers'],
+            $after['servers'],
+            'Nagging an administrator to migrate something they have thrown away has no action behind it.'
+        );
+    }
+
+    /**
+     * The two numbers have to describe the same population. Counting media
+     * across all legacy servers while counting only the published ones could
+     * put "0 servers, 400 media" on screen — rows attributed to servers the
+     * same notice has just said are not waiting on anything.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('Media is only counted for servers that are themselves counted')]
+    public function testMediaMatchesTheServersReported(): void
+    {
+        $this->insertLegacyServer(0, 5);
+        $this->insertLegacyServer(-2, 5);
+
+        $result = CwmserverMigrationHelper::countPendingMigration();
+
+        if ($result['servers'] === 0) {
+            $this->assertSame(
+                0,
+                $result['media'],
+                'With no server reported there is nothing for these media rows to be waiting on.'
+            );
+
+            return;
+        }
+
+        // ⚠️ Not a silent pass. If the fixture database has published legacy
+        // servers of its own, assert the branch that actually ran: the media
+        // reported must be only theirs, never the ten rows just parked on
+        // retired servers.
+        $db = $this->db;
+        $db->setQuery(
+            'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_mediafiles', 'm')
+            . ' INNER JOIN ' . $db->quoteName('#__bsms_servers', 's')
+            . ' ON ' . $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id')
+            . ' WHERE ' . $db->quoteName('s.type') . ' = ' . $db->quote('legacy')
+            . ' AND ' . $db->quoteName('s.published') . ' = 1'
+        );
+
+        $this->assertSame(
+            (int) $db->loadResult(),
+            $result['media'],
+            'The media count must cover exactly the published legacy servers, and nothing else.'
+        );
+    }
+
+    /**
+     * The reported server count must match what the database holds — measured
+     * with the same predicate the helper uses, not with "every legacy row",
+     * which is the assertion that let the original bug through.
+     *
+     * @return  void
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    #[TestDox('The server count matches the published legacy servers in the database')]
+    public function testCountMatchesTheDatabase(): void
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $db->setQuery(
             'SELECT COUNT(*) FROM ' . $db->quoteName('#__bsms_servers')
             . ' WHERE ' . $db->quoteName('type') . ' = ' . $db->quote('legacy')
+            . ' AND ' . $db->quoteName('published') . ' = 1'
         );
 
-        $legacy = (int) $db->loadResult();
-        $result = CwmserverMigrationHelper::countPendingMigration();
+        $expected = (int) $db->loadResult();
+        $result   = CwmserverMigrationHelper::countPendingMigration();
 
-        if ($legacy === 0) {
-            $this->assertSame(0, $result['servers']);
+        $this->assertSame($expected, $result['servers']);
+
+        if ($expected === 0) {
             $this->assertSame(
                 0,
                 $result['media'],
                 'With nothing to migrate the media count must be 0, not the whole media table.'
             );
-
-            return;
         }
-
-        // ⚠️ Not a silent skip. If the fixture has legacy servers, assert the
-        // branch that actually ran rather than reporting a pass for a case
-        // that was never exercised.
-        $this->assertSame(
-            $legacy,
-            $result['servers'],
-            'The reported server count must match what the database holds.'
-        );
     }
 
     /**

@@ -152,8 +152,8 @@ class CwmserverMigrationHelper
      * finishing, and a scheduled task — and a helper that reaches for the
      * identity or the session works in the browser and dies under cron.
      *
-     * @return  array{servers: int, media: int}  Legacy servers, and the media
-     *                                           rows still pointing at them
+     * @return  array{servers: int, media: int}  Published legacy servers, and
+     *                                           the media rows still on them
      *
      * @since 10.6.0
      */
@@ -161,10 +161,19 @@ class CwmserverMigrationHelper
     {
         $db = Factory::getContainer()->get(DatabaseInterface::class);
 
+        // ⚠️ `published = 1` is not a display nicety — it is what "still to do"
+        // means here. A migration signs off by calling
+        // unpublishEmptyLegacyServers(), which sets published = 0 once a server
+        // has no media left and never touches `type`, so a fully migrated
+        // server stays type = 'legacy' for ever. Counting by type alone made
+        // this notice impossible to clear by migrating: the only way out was to
+        // delete the rows. It also counted servers the administrator had
+        // trashed or unpublished by hand.
         $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__bsms_servers'))
-            ->where($db->quoteName('type') . ' = ' . $db->quote('legacy'));
+            ->where($db->quoteName('type') . ' = ' . $db->quote('legacy'))
+            ->where($db->quoteName('published') . ' = 1');
         $db->setQuery($query);
         $servers = (int) $db->loadResult();
 
@@ -180,7 +189,12 @@ class CwmserverMigrationHelper
                 $db->quoteName('#__bsms_servers', 's'),
                 $db->quoteName('s.id') . ' = ' . $db->quoteName('m.server_id')
             )
-            ->where($db->quoteName('s.type') . ' = ' . $db->quote('legacy'));
+            ->where($db->quoteName('s.type') . ' = ' . $db->quote('legacy'))
+            // The same predicate as the server count above. Without it the two
+            // numbers describe different populations, and the notice can read
+            // "0 servers, 400 media" — rows attributed to servers it has just
+            // said are not waiting on anything.
+            ->where($db->quoteName('s.published') . ' = 1');
         $db->setQuery($query);
 
         return ['servers' => $servers, 'media' => (int) $db->loadResult()];
