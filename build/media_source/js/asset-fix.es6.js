@@ -71,6 +71,16 @@ class ProclaimAssetFix {
         document.querySelectorAll('[data-proclaim-action]').forEach((btn) => {
             btn.addEventListener('click', (e) => this.handleAction(e));
         });
+
+        // ⚠️ The table has to be loaded here, not just on the Refresh button.
+        // The view fills its rows from the 'checklists' session key, and the
+        // only thing that ever writes that key is this XHR -- so before it has
+        // run once the template falls to its empty branch, which renders a
+        // spinner. Nothing then replaced it: the page promised it was loading
+        // and never was, and pressing Refresh was the only way to see data.
+        if (document.getElementById('asset-status-body')) {
+            this.refreshAssetStatus();
+        }
     }
 
     /**
