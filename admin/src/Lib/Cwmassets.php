@@ -752,6 +752,60 @@ class Cwmassets
     }
 
     /**
+     * Map every declared section to the parent an item of it should carry,
+     * without creating anything.
+     *
+     * ⚠️ Read-only on purpose. sectionParentId() resolves through sectionId(),
+     * which *creates* a missing section row — fine on a repair path, wrong for
+     * a status report, and expensive: called once per table it turned a bounded
+     * report into 113 queries and had it writing rows as a side effect. One
+     * query here serves all 14 tables, and a section that does not exist falls
+     * back to com_proclaim, which is where such an item does belong.
+     *
+     * @param   DatabaseInterface  $db        Database driver
+     * @param   int                $parentId  com_proclaim asset id, the fallback
+     *
+     * @return  array<string, int>  Section name => expected parent asset id
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function sectionParentMap(DatabaseInterface $db, int $parentId): array
+    {
+        $sections = self::declaredSections();
+        $map      = array_fill_keys($sections, $parentId);
+
+        if ($sections === []) {
+            return $map;
+        }
+
+        $names = array_map(
+            static fn ($section) => $db->quote('com_proclaim.' . $section),
+            $sections
+        );
+
+        try {
+            $db->setQuery(
+                $db->createQuery()
+                    ->select([$db->quoteName('id'), $db->quoteName('name')])
+                    ->from($db->quoteName('#__assets'))
+                    ->where($db->quoteName('name') . ' IN (' . implode(',', $names) . ')')
+            );
+
+            foreach ($db->loadAssocList() as $row) {
+                $section = substr((string) $row['name'], \strlen('com_proclaim.'));
+
+                if (isset($map[$section])) {
+                    $map[$section] = (int) $row['id'];
+                }
+            }
+        } catch (\Exception $e) {
+            Log::add('sectionParentMap lookup failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+        }
+
+        return $map;
+    }
+
+    /**
      * Get the com_proclaim parent asset ID, creating it if missing.
      *
      * CRITICAL: This method MUST never return 0.  All 14 Table classes call
@@ -947,9 +1001,11 @@ class Cwmassets
                 return true;
             }
 
+            $parentMap = self::sectionParentMap($db, $parentId);
+
             foreach (self::getAssetObjects() as $info) {
                 $section  = $info['assetname'];
-                $expected = self::sectionParentId($section);
+                $expected = $parentMap[$section] ?? $parentId;
 
                 if ($expected < 1) {
                     continue;
@@ -1511,9 +1567,10 @@ class Cwmassets
      */
     public static function getAssetStatus(): array
     {
-        $db       = Factory::getContainer()->get(DatabaseInterface::class);
-        $parentId = self::parentId();
-        $status   = [];
+        $db        = Factory::getContainer()->get(DatabaseInterface::class);
+        $parentId  = self::parentId();
+        $parentMap = self::sectionParentMap($db, $parentId);
+        $status    = [];
 
         $emptyQuoted = implode(
             ',',
@@ -1525,10 +1582,9 @@ class Cwmassets
             $assetName = $info['assetname'];
 
             // ⚠️ Drift is measured against the parent this table's records are
-            // actually given — sectionParentId(), the same call
-            // Table::_getAssetParentId() makes — not against com_proclaim. A
+            // actually given — its section — not against com_proclaim. A
             // correctly stored record is parented to its section.
-            $expectedParent = self::sectionParentId($assetName);
+            $expectedParent = $parentMap[$assetName] ?? $parentId;
 
             // numrows/inherited/custom_rules/needs_cleanup/drifted collapsed
             // into one conditional-aggregation query per table (was 5).
