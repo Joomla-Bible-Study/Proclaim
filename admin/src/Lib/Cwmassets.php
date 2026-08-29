@@ -767,7 +767,7 @@ class Cwmassets
      *
      * @return  array<string, int>  Section name => expected parent asset id
      *
-     * @since   __DEPLOY_VERSION__
+     * @since   10.6.2
      */
     private static function sectionParentMap(DatabaseInterface $db, int $parentId): array
     {
