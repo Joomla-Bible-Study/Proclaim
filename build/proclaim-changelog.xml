@@ -19,6 +19,23 @@
 <changelogs>
 
     <!-- ============================================================ -->
+    <!-- 10.6.0                                                   -->
+    <!-- ============================================================ -->
+    <changelog>
+        <element>pkg_proclaim</element>
+        <type>package</type>
+        <version>10.6.0</version>
+        <date>2026-08-29</date>
+        <fix>
+            <item>Playlists are now included in Proclaim&#x27;s permission maintenance. Their permission records were invisible to the Assets screen and to the clean-up tools, and a backup could not reattach them.</item>
+            <item>The layout editor&#x27;s element controls no longer run off the edge of a narrow card. They collapse into a menu instead, so every control stays reachable — including by keyboard.</item>
+            <item>The permissions Clean Up screen now shows the section rows it would remove, instead of reporting fewer than it was about to act on.</item>
+            <item>Simple Mode no longer discards a message&#x27;s description, scripture references or teachers when saving.</item>
+            <item>One copy of each translation is shipped, rather than two that could disagree.</item>
+        </fix>
+    </changelog>
+
+    <!-- ============================================================ -->
     <!-- 10.5.10                                                  -->
     <!-- ============================================================ -->
     <changelog>
