@@ -395,6 +395,24 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
+     * Vimeo needs the server's access token before it can PATCH a video.
+     *
+     * Mirrors the precondition in syncDescription() exactly, so the offer and
+     * the operation cannot disagree.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return $this->getServerAccessToken($serverId) !== '';
+    }
+
+    /**
      * Push a description to a Vimeo video via PATCH API.
      *
      * @param   int     $mediaId      The media file ID
@@ -801,6 +819,17 @@ class CWMAddonVimeo extends CWMAddon
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
      * Handle testApi AJAX action
      *
      * Tests the Vimeo API connection using the configured access token
@@ -812,9 +841,21 @@ class CWMAddonVimeo extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
-        $serverId = $input->getInt('server_id', 0);
+        return $this->testConnection(Factory::getApplication()->getInput()->getInt('server_id', 0));
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        // The AJAX path used to be the only caller and ran on a page that had
+        // already loaded these strings. Reached from System Health it has not,
+        // and the message came back as its raw key.
+        $this->loadLanguage();
 
         if (!$serverId) {
             return [

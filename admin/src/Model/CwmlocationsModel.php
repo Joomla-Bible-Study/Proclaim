@@ -21,6 +21,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Locations model class
@@ -254,12 +255,12 @@ class CwmlocationsModel extends ListModel
     /**
      * Get List Query
      *
-     * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   12.2
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();

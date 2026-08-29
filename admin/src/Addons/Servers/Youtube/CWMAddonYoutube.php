@@ -804,6 +804,34 @@ class CWMAddonYoutube extends CWMAddon
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * ⚠️ Costs one unit of the server's daily quota, which is why the check
+     * that calls this reports itself as not passive. `testApiConnection()`
+     * records the spend against the server it resolves from the key.
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        $config = $this->getServerConfig($serverId);
+
+        return $this->testApiConnection($config['api_key'] ?? '', $config['channel_id'] ?? '');
+    }
+
+    /**
      * Handle fetchUpcoming AJAX action
      *
      * @return  array  Response data
@@ -2329,6 +2357,48 @@ class CWMAddonYoutube extends CWMAddon
     public function supportsCaptions(): bool
     {
         return true;
+    }
+
+    /**
+     * YouTube needs an OAuth connection and remaining quota before it can
+     * update a video.
+     *
+     * ⚠️ Deliberately inspects the stored credentials rather than calling
+     * `createOAuthClient()`, which is not a read: it refreshes an expired
+     * token over the network and writes the new one back to the server
+     * record. This runs once per server while rendering an analytics page, so
+     * it must not perform a token refresh, spend an API round trip, or write
+     * anything.
+     *
+     * An expired-but-refreshable token still counts as ready. The refresh
+     * belongs at the point of use, in `syncDescription()`, which does it
+     * anyway — the question here is only whether this server has what a push
+     * would need.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        $config = $this->getServerConfig($serverId);
+
+        // The same three things createOAuthClient() needs before it can
+        // produce a usable client, checked without building one.
+        if (empty($config['client_id']) || empty($config['client_secret'])) {
+            return false;
+        }
+
+        if (empty($config['oauth_token'])) {
+            return false;
+        }
+
+        $cost = CwmyoutubeQuota::COST_VIDEOS + CwmyoutubeQuota::COST_VIDEO_UPDATE;
+
+        return CwmyoutubeQuota::hasQuota($serverId, $cost);
     }
 
     /**

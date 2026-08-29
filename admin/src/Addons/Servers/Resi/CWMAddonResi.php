@@ -361,13 +361,56 @@ class CWMAddonResi extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
-        $serverId = $input->getInt('server_id', 0);
+        $input = Factory::getApplication()->getInput();
 
-        // Allow testing unsaved credentials passed directly from the form
-        $clientId     = $input->getString('client_id', '');
-        $clientSecret = $input->getString('client_secret', '');
+        return $this->testCredentials(
+            $input->getInt('server_id', 0),
+            // Allow testing unsaved credentials passed directly from the form
+            $input->getString('client_id', ''),
+            $input->getString('client_secret', '')
+        );
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        // No credentials passed, so they come from the saved server -- which
+        // is the only source a health check has.
+        return $this->testCredentials($serverId, '', '');
+    }
+
+    /**
+     * Exchange Resi.io credentials for a token and report whether it worked.
+     *
+     * @param   int     $serverId      The server record ID, 0 when unsaved.
+     * @param   string  $clientId      Client id to try, empty to read the server's.
+     * @param   string  $clientSecret  Client secret to try, empty to read the server's.
+     *
+     * @return  array{success: bool, message?: string, error?: string}
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function testCredentials(int $serverId, string $clientId, string $clientSecret): array
+    {
+        // See CWMAddonVimeo::testConnection() -- the health view reaches this
+        // without the addon's strings already loaded.
+        $this->loadLanguage();
 
         // If credentials not passed in request, load from DB
         if ((empty($clientId) || empty($clientSecret)) && $serverId) {

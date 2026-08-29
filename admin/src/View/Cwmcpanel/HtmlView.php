@@ -11,7 +11,10 @@
 
 namespace CWM\Component\Proclaim\Administrator\View\Cwmcpanel;
 
+use CWM\Component\Proclaim\Administrator\Health\Check\LegacyServersCheck;
+use CWM\Component\Proclaim\Administrator\Health\HealthQuietStore;
 use CWM\Component\Proclaim\Administrator\Helper\CwmcountHelper;
+use CWM\Component\Proclaim\Administrator\Helper\CwmserverMigrationHelper;
 use CWM\Component\Proclaim\Administrator\Lib\Cwmstats;
 use CWM\Component\Proclaim\Administrator\Model\CwmcpanelModel;
 use Joomla\CMS\Component\ComponentHelper;
@@ -59,6 +62,31 @@ class HtmlView extends BaseHtmlView
      * @since  10.3.3
      */
     public int $pendingReview = 0;
+
+    /**
+     * Legacy servers still awaiting migration, and the media rows on them.
+     *
+     * Both zero when there is nothing to do, which is what the template gates
+     * on. A restored 9.x backup arrives with every server still `legacy`, and
+     * until they are migrated most media will not resolve.
+     *
+     * @var    array{servers: int, media: int}
+     * @since  __DEPLOY_VERSION__
+     */
+    public array $pendingServerMigration = ['servers' => 0, 'media' => 0];
+
+    /**
+     * Whether the server migration notice has been cleared on the dashboard.
+     *
+     * Cleared against the finding rather than for good: the stored fingerprint
+     * is the server and media counts, so migrating some of them -- or a
+     * restore adding more -- brings the notice straight back. The System
+     * Health view lists it either way.
+     *
+     * @var    bool
+     * @since  __DEPLOY_VERSION__
+     */
+    public bool $serverMigrationQuiet = false;
 
     /**
      * The model state
@@ -120,6 +148,14 @@ class HtmlView extends BaseHtmlView
 
         if ($user && $user->authorise('core.edit.state', 'com_proclaim')) {
             $this->pendingReview = CwmcountHelper::getPendingReviewCount('location');
+        }
+
+        // Migrating servers is a component-wide change, so the notice is only
+        // for those who could act on it. The count itself asks nothing about
+        // the user -- that check belongs here, at the point of display.
+        if ($user && $user->authorise('core.admin', 'com_proclaim')) {
+            $this->pendingServerMigration = CwmserverMigrationHelper::countPendingMigration();
+            $this->serverMigrationQuiet   = HealthQuietStore::isQuiet((new LegacyServersCheck())->run());
         }
 
         // Display the template

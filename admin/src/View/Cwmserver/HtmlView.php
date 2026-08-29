@@ -19,6 +19,7 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -156,28 +157,41 @@ class HtmlView extends BaseHtmlView
             'database database'
         );
 
+        $toolbar = $this->getDocument()->getToolbar();
+
         if ($isNew && $canDo->get('core.create', 'com_proclaim')) {
-            ToolbarHelper::apply('cwmserver.apply');
-            ToolbarHelper::save('cwmserver.save');
-            ToolbarHelper::save2new('cwmserver.save2new');
-            ToolbarHelper::cancel('cwmserver.cancel');
+            $toolbar->apply('cwmserver.apply');
+
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) {
+                    $childBar->save('cwmserver.save');
+                    $childBar->save2new('cwmserver.save2new');
+                }
+            );
+
+            $toolbar->cancel('cwmserver.cancel');
         } else {
             if ($canDo->get('core.edit', 'com_proclaim')) {
-                ToolbarHelper::apply('cwmserver.apply');
-                ToolbarHelper::save('cwmserver.save');
+                $toolbar->apply('cwmserver.apply');
+            }
 
-                // We can save this record, but check the create permission to see if we can return to make a new one.
-                if ($canDo->get('core.create', 'com_proclaim')) {
-                    ToolbarHelper::save2new('cwmserver.save2new');
+            $toolbar->dropdownButton('save-group')->configure(
+                static function (Toolbar $childBar) use ($canDo) {
+                    if ($canDo->get('core.edit', 'com_proclaim')) {
+                        $childBar->save('cwmserver.save');
+
+                        if ($canDo->get('core.create', 'com_proclaim')) {
+                            $childBar->save2new('cwmserver.save2new');
+                        }
+                    }
+
+                    if ($canDo->get('core.create', 'com_proclaim')) {
+                        $childBar->save2copy('cwmserver.save2copy');
+                    }
                 }
-            }
+            );
 
-            // If checked out, we can still save
-            if ($canDo->get('core.create', 'com_proclaim')) {
-                ToolbarHelper::save2copy('cwmserver.save2copy');
-            }
-
-            ToolbarHelper::cancel('cwmserver.cancel', 'JTOOLBAR_CLOSE');
+            $toolbar->cancel('cwmserver.cancel', 'JTOOLBAR_CLOSE');
         }
 
         ToolbarHelper::divider();

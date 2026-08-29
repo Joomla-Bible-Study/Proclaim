@@ -2035,18 +2035,24 @@ class CwmImageMigration
     ): void {
         $coreLike = $db->quote(self::CORE_IMAGE_DIR . '/%');
 
-        $query->extendWhere(
-            'AND',
-            [
-                '(' . $db->quoteName($imageCol) . ' IS NOT NULL AND '
-                    . $db->quoteName($imageCol) . ' != ' . $db->quote('')
-                    . ' AND ' . $db->quoteName($imageCol) . ' NOT LIKE ' . $coreLike . ')',
-                '(' . $db->quoteName($thumbCol) . ' IS NOT NULL AND '
-                    . $db->quoteName($thumbCol) . ' != ' . $db->quote('')
-                    . ' AND ' . $db->quoteName($thumbCol) . ' NOT LIKE ' . $coreLike . ')',
-            ],
-            'OR'
-        );
+        $hasUserFile = static fn (string $column): string => '(' . $db->quoteName($column) . ' IS NOT NULL AND '
+            . $db->quoteName($column) . ' != ' . $db->quote('')
+            . ' AND ' . $db->quoteName($column) . ' NOT LIKE ' . $coreLike . ')';
+
+        // ⚠️ `where()`, not `extendWhere()`. extendWhere() rewrites an existing
+        // WHERE as a child of a new one -- it opens with
+        // `$this->where->setName()`, so on a query that has no WHERE yet it is
+        // a fatal on null. Every caller here builds select/from and nothing
+        // else, so all three fataled; the only one reachable from the UI sits
+        // behind a `catch (\Throwable)` that answers `total: 0`, which is why
+        // thumbnail regeneration has been reporting "nothing to do" instead of
+        // reporting an error.
+        //
+        // Bracketed into one condition rather than passed as an array with an
+        // OR glue: `where()` applies its glue to everything added afterwards,
+        // so an array-with-OR here would silently OR any later condition into
+        // this group instead of ANDing it.
+        $query->where('(' . $hasUserFile($imageCol) . ' OR ' . $hasUserFile($thumbCol) . ')');
     }
 
     /**

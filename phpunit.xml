@@ -31,11 +31,20 @@
 		<testsuite name="Migration SQL Contract Tests">
 			<directory>tests/unit/Sql</directory>
 		</testsuite>
+		<testsuite name="Repo Contract Tests">
+			<directory>tests/unit/Repo</directory>
+		</testsuite>
+		<testsuite name="Language Contract Tests">
+			<directory>tests/unit/Language</directory>
+		</testsuite>
 		<testsuite name="Admin Field Tests">
 			<directory>tests/unit/Admin/Field</directory>
 		</testsuite>
 		<testsuite name="Admin Helper Tests">
 			<directory>tests/unit/Admin/Helper</directory>
+		</testsuite>
+		<testsuite name="Admin Health Tests">
+			<directory>tests/unit/Admin/Health</directory>
 		</testsuite>
 		<testsuite name="Admin Lib Tests">
 			<directory>tests/unit/Admin/Lib</directory>
@@ -51,6 +60,12 @@
 		</testsuite>
 		<testsuite name="Admin Controller Tests">
 			<directory>tests/unit/Admin/Controller</directory>
+		</testsuite>
+		<testsuite name="Admin View Tests">
+			<directory>tests/unit/Admin/View</directory>
+		</testsuite>
+		<testsuite name="Admin Table Tests">
+			<directory>tests/unit/Admin/Table</directory>
 		</testsuite>
 		<testsuite name="Admin Model Tests">
 			<directory>tests/unit/Admin/Model</directory>

@@ -47,6 +47,18 @@ class JsonThrowContractTest extends ProclaimTestCase
     private const ROOTS = ['admin/src', 'site/src', 'api/src'];
 
     /**
+     * Individual files of ours that live outside those trees.
+     *
+     * ⚠️ The install script is the reason this exists. It sat outside every
+     * root, so nothing held it to the contract and three bare calls collected
+     * there — two of which wrote `''` over a row it was migrating, because
+     * `json_encode()` returns false and `quote(false)` is an empty string.
+     *
+     * @var  string[]
+     */
+    private const FILES = ['proclaim.script.php'];
+
+    /**
      * Calls that deliberately omit the flag, each with the reason it is safe.
      *
      * A `json_encode()` cannot fail on a value that PHP just handed us from a
@@ -72,6 +84,8 @@ class JsonThrowContractTest extends ProclaimTestCase
         $root  = \dirname(__DIR__, 4);
         $found = [];
 
+        $paths = [];
+
         foreach (self::ROOTS as $rel) {
             $dir = $root . '/' . $rel;
 
@@ -87,48 +101,58 @@ class JsonThrowContractTest extends ProclaimTestCase
                     continue;
                 }
 
-                $tokens = token_get_all((string) file_get_contents($path));
-                $count  = \count($tokens);
+                $paths[] = $path;
+            }
+        }
 
-                for ($i = 0; $i < $count; $i++) {
-                    $token = $tokens[$i];
+        foreach (self::FILES as $rel) {
+            if (is_file($root . '/' . $rel)) {
+                $paths[] = $root . '/' . $rel;
+            }
+        }
 
-                    if (
-                        !\is_array($token)
-                        || $token[0] !== \T_STRING
-                        || !\in_array($token[1], ['json_decode', 'json_encode'], true)
-                    ) {
-                        continue;
-                    }
+        foreach ($paths as $path) {
+            $tokens = token_get_all((string) file_get_contents($path));
+            $count  = \count($tokens);
 
-                    $depth   = 0;
-                    $args    = '';
-                    $started = false;
+            for ($i = 0; $i < $count; $i++) {
+                $token = $tokens[$i];
 
-                    for ($j = $i + 1; $j < $count; $j++) {
-                        $text = \is_array($tokens[$j]) ? $tokens[$j][1] : $tokens[$j];
-
-                        if ($text === '(') {
-                            $depth++;
-                            $started = true;
-                        } elseif ($text === ')') {
-                            $depth--;
-
-                            if ($depth === 0) {
-                                break;
-                            }
-                        } elseif ($started) {
-                            $args .= $text;
-                        }
-                    }
-
-                    $found[] = [
-                        'file' => str_replace($root . '/', '', $path),
-                        'line' => $token[2],
-                        'fn'   => $token[1],
-                        'args' => $args,
-                    ];
+                if (
+                    !\is_array($token)
+                    || $token[0] !== \T_STRING
+                    || !\in_array($token[1], ['json_decode', 'json_encode'], true)
+                ) {
+                    continue;
                 }
+
+                $depth   = 0;
+                $args    = '';
+                $started = false;
+
+                for ($j = $i + 1; $j < $count; $j++) {
+                    $text = \is_array($tokens[$j]) ? $tokens[$j][1] : $tokens[$j];
+
+                    if ($text === '(') {
+                        $depth++;
+                        $started = true;
+                    } elseif ($text === ')') {
+                        $depth--;
+
+                        if ($depth === 0) {
+                            break;
+                        }
+                    } elseif ($started) {
+                        $args .= $text;
+                    }
+                }
+
+                $found[] = [
+                    'file' => str_replace($root . '/', '', $path),
+                    'line' => $token[2],
+                    'fn'   => $token[1],
+                    'args' => $args,
+                ];
             }
         }
 
@@ -175,17 +199,26 @@ class JsonThrowContractTest extends ProclaimTestCase
                 continue;
             }
 
-            // "Stored" means the result is assigned onto an object property or
-            // written to disk. A json_encode() feeding a cache key, an echoed
-            // AJAX body or a data- attribute cannot corrupt anything durable,
-            // and guarding those would be noise rather than safety.
-            $line = file($root . '/' . $call['file'])[$call['line'] - 1] ?? '';
+            // "Stored" means the result reaches something durable: an object
+            // property, a file, or a database write. A json_encode() feeding a
+            // cache key, an echoed AJAX body or a data- attribute cannot corrupt
+            // anything durable, and guarding those would be noise rather than
+            // safety.
+            //
+            // ⚠️ The database arm is not decoration. `json_encode()` returns
+            // false, `quote(false)` is `''`, and the row is written anyway — so
+            // the damage is a blanked column on a record the code believed it had
+            // migrated. Two calls in the install script had exactly that shape.
+            $lines = file($root . '/' . $call['file']);
+            $line  = $lines[$call['line'] - 1] ?? '';
 
             if (
                 preg_match(
                     '/(\$this->[a-zA-Z_]+|\$[a-zA-Z_]+->[a-zA-Z_]+)\s*=\s*json_encode|file_put_contents\s*\([^,]+,\s*json_encode/',
                     $line
                 )
+                || preg_match('/->(quote|q)\s*\(\s*json_encode/', $line)
+                || $this->encodedLocalIsPersisted($lines, $call['line'], $line)
             ) {
                 $offenders[] = $call['file'] . ':' . $call['line'];
             }
@@ -236,4 +269,37 @@ class JsonThrowContractTest extends ProclaimTestCase
             'Expected many calls to carry the flag — if this drops, the argument extraction has broken'
         );
     }
+
+    /**
+     * Whether a local `$x = json_encode(...)` is quoted into a query below it.
+     *
+     * The regex arms above only see one line, so they miss the commonest shape
+     * of all: encode into a local, then hand that local to `quote()` a few lines
+     * down as part of an UPDATE. Looks ahead a short way for that variable
+     * reaching a quote or a set().
+     *
+     * @param   string[]  $lines   Every line of the file
+     * @param   int       $number  1-indexed line the call sits on
+     * @param   string    $line    That line's text
+     *
+     * @return  bool
+     */
+    private function encodedLocalIsPersisted(array $lines, int $number, string $line): bool
+    {
+        if (!preg_match('/(\$[a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*json_encode/', $line, $m)) {
+            return false;
+        }
+
+        $variable = preg_quote($m[1], '/');
+        $end      = min(\count($lines), $number + 15);
+
+        for ($i = $number; $i < $end; $i++) {
+            if (preg_match('/->(quote|q|set|bind)\s*\([^)]*' . $variable . '\b/', $lines[$i])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

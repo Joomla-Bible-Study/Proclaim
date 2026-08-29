@@ -17,7 +17,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
-use Joomla\Event\DispatcherInterface;
 
 return new class () implements ServiceProviderInterface {
     /**
@@ -34,10 +33,25 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             PluginInterface::class,
             function (Container $container) {
-                $dispatcher = $container->get(DispatcherInterface::class);
-                $plugin     = new Proclaim(
-                    $dispatcher,
-                    (array)PluginHelper::getPlugin('finder', 'proclaim')
+                // Config first, then the database: Joomla 7 types the finder
+                // Adapter's second parameter as ?DatabaseInterface, so the old
+                // dispatcher-first form fatals before the constructor body runs.
+                // CMSPlugin has warned since 6.x that passing a dispatcher will
+                // not be supported in 7.0, and core's own finder plugins build
+                // this way. setDatabase() stays for 5.x/6.x, where the
+                // constructor takes no database argument.
+                // A disabled plugin has no row, so getPlugin() returns null and
+                // the config arrives empty. The finder Adapter dereferences
+                // $this->params in its constructor, so that empty config fatals
+                // the whole request with "call to a member function get() on
+                // null" — on 5.x and 6.x as well as 7. Give params something to
+                // read; the plugin still does nothing while disabled.
+                $config = (array) PluginHelper::getPlugin('finder', 'proclaim');
+                $config['params'] ??= '{}';
+
+                $plugin = new Proclaim(
+                    $config,
+                    $container->get(DatabaseInterface::class)
                 );
                 $plugin->setApplication(Factory::getApplication());
                 $plugin->setDatabase($container->get(DatabaseInterface::class));

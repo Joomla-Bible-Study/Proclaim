@@ -21,6 +21,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmscriptureHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Comments model class
@@ -151,11 +152,11 @@ class CwmcommentsModel extends ListModel
     /**
      * List Query
      *
-     * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
      *
      * @since   7.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         // Create a new query object.
         $db = Factory::getContainer()->get(DatabaseInterface::class);

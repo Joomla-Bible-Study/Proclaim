@@ -395,6 +395,24 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * Wistia needs the server's API token before it can update a media item.
+     *
+     * Mirrors the precondition in syncDescription() exactly, so the offer and
+     * the operation cannot disagree.
+     *
+     * @param   int  $serverId  The server record ID.
+     *
+     * @return  bool
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function isDescriptionSyncReady(int $serverId): bool
+    {
+        return $this->getServerApiToken($serverId) !== '';
+    }
+
+    /**
      * Push a description to a Wistia video via PUT API.
      *
      * @param   int     $mediaId      The media file ID
@@ -615,6 +633,17 @@ class CWMAddonWistia extends CWMAddon
     }
 
     /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function supportsConnectionTest(): bool
+    {
+        return true;
+    }
+
+    /**
      * Handle testApi AJAX action
      *
      * Tests the Wistia API connection using the configured API token
@@ -626,9 +655,20 @@ class CWMAddonWistia extends CWMAddon
      */
     protected function handleTestApiAction(): array
     {
-        $app      = Factory::getApplication();
-        $input    = $app->getInput();
-        $serverId = $input->getInt('server_id', 0);
+        return $this->testConnection(Factory::getApplication()->getInput()->getInt('server_id', 0));
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    #[\Override]
+    public function testConnection(int $serverId): array
+    {
+        // See CWMAddonVimeo::testConnection() -- the health view reaches this
+        // without the addon's strings already loaded.
+        $this->loadLanguage();
 
         if (!$serverId) {
             return [

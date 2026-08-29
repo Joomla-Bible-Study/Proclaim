@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Podcasts model class
@@ -142,12 +143,12 @@ class CwmpodcastsModel extends ListModel
     /**
      * Method to get a JDatabaseQuery object for retrieving the data set from a database.
      *
-     * @return  \Joomla\Database\QueryInterface   A JDatabaseQuery object to retrieve the data set.
+     * @return  QueryInterface|string   A JDatabaseQuery object to retrieve the data set.
      *
      * @throws \Exception
      * @since   7.0
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();

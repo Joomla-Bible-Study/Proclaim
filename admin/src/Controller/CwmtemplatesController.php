@@ -143,7 +143,7 @@ class CwmtemplatesController extends AdminController
                         $db->setQuery($query, 0, 1);
                         $data  = $db->loadObject();
                         $query = $db->createQuery();
-                        $query->update($db->quoteName('#__bsms_styles'))
+                        $query->update($db->quoteName('#__bsms_templatecode'))
                             ->set($db->quoteName('filename') . ' = ' . $db->q($data->filename . '_copy' . $data->id))
                             ->where($db->quoteName('id') . ' = ' . (int)$data->id);
                         $this->performDB($query);
@@ -307,16 +307,25 @@ class CwmtemplatesController extends AdminController
 
         if (!$exporttemplate) {
             $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
-            $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
         }
 
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();
-        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title', 't.text']));
+        $query->select($db->quoteName(['t.id', 't.type', 't.params', 't.title']));
         $query->from($db->quoteName('#__bsms_templates', 't'));
         $query->where($db->quoteName('t.id') . ' = ' . (int) $exporttemplate);
         $db->setQuery($query);
-        $result       = $db->loadObject();
+        $result = $db->loadObject();
+
+        // A deleted or non-existent id yields no row, which the export cannot describe.
+        if (!$result) {
+            $message = Text::_('JBS_TPL_NO_FILE_SELECTED');
+
+            return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
+        }
+
         $objects[]    = $this->getExportSetting($result);
         $filecontents = implode(' ', $objects);
         $filename     = $result->title . '.sql';
@@ -334,6 +343,7 @@ class CwmtemplatesController extends AdminController
         return $this->setRedirect('index.php?option=com_proclaim&view=cwmtemplates', $message);
     }
 
+
     /**
      * Get Exported Template Settings
      *
@@ -345,29 +355,12 @@ class CwmtemplatesController extends AdminController
      */
     private function getExportSetting($result): string
     {
-        // Export must be in this order: css, template files, template.
+        // Export must be in this order: template files, then the template.
         $registry = new Registry();
         $registry->loadString($result->params);
         $params  = $registry;
         $db      = Factory::getContainer()->get(DatabaseInterface::class);
         $objects = '';
-        $css     = $params->get('css');
-        $css     = substr($css, 0, -4);
-
-        if ($css) {
-            $objects = "--\n-- CSS Style Code\n--\n";
-            $query2  = $db->createQuery();
-            $query2->select($db->quoteName('style') . '.*');
-            $query2->from($db->quoteName('#__bsms_styles', 'style'));
-            $query2->where($db->quoteName('style.filename') . ' = ' . $db->q($css));
-            $db->setQuery($query2);
-            $db->execute();
-            $cssresult = $db->loadObject();
-            $objects .= "\nINSERT INTO #__bsms_styles SET `published` = '1',\n`filename` = " . $db->q(
-                $cssresult->filename
-            )
-                . ",\n`stylecode` = " . $db->q($cssresult->stylecode) . ";\n";
-        }
 
         // Get the individual template files
         $sermons = $params->get('sermonstemplate');
@@ -417,8 +410,7 @@ class CwmtemplatesController extends AdminController
         // Create the main template insert
         $objects .= "\nINSERT INTO #__bsms_templates SET `type` = " . $db->q($result->type) . ",";
         $objects .= "\n`params` = " . $db->q($result->params) . ",";
-        $objects .= "\n`title` = " . $db->q($result->title) . ",";
-        $objects .= "\n`text` = " . $db->q($result->text) . ";";
+        $objects .= "\n`title` = " . $db->q($result->title) . ";";
 
         $objects .= "\n-- --------------------------------------------------------\n\n";
 

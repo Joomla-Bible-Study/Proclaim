@@ -384,15 +384,21 @@ class CwmmessageModel extends AdminModel
         $input  = $app->getInput();
         $image  = HTMLHelper::cleanImageURL((string)$data['image']);
 
-        // Extract subform data before table binding strips it
-        $scripturesData = $data['scriptures'] ?? [];
+        // Extract subform data before table binding strips it.
+        //
+        // Null means the form never submitted the field, which is not the same
+        // as submitting it empty. Each of these persists by replacing every
+        // existing row for the study, so a field the layout did not render
+        // would otherwise read as "the user removed them all" — Simple Mode
+        // hides scriptures and topics, and saving there deleted both.
+        $scripturesData = $data['scriptures'] ?? null;
         unset($data['scriptures']);
 
-        $teachersData = $data['teachers'] ?? [];
+        $teachersData = $data['teachers'] ?? null;
         unset($data['teachers']);
 
         // topic_ids is a legacy fallback key; the TopicsForm field submits under 'topics'.
-        $topicsData = $data['topic_ids'] ?? $data['topics'] ?? '';
+        $topicsData = $data['topic_ids'] ?? $data['topics'] ?? null;
         unset($data['topic_ids'], $data['topics']);
 
         $studyIntro = (string) ($data['studyintro'] ?? '');
@@ -552,14 +558,22 @@ class CwmmessageModel extends AdminModel
     /**
      * Process and save scripture references from the subform data.
      *
-     * @param   array  $scripturesData  Subform array of ['reference_text' => ..., 'bible_version' => ...]
+     * @param   ?array  $scripturesData  Subform array of ['reference_text' => ..., 'bible_version' => ...],
+     *                                   or null when the form did not submit the field at all.
      *
      * @return  void
      *
      * @since  10.1.0
      */
-    private function saveScriptures(array $scripturesData): void
+    private function saveScriptures(?array $scripturesData): void
     {
+        // Not submitted at all — leave the existing references alone.
+        // writeScriptures() deletes every row for the study before inserting,
+        // so passing an empty set here erases them.
+        if ($scripturesData === null) {
+            return;
+        }
+
         $studyId = (int) $this->getState($this->getName() . '.id');
 
         if ($studyId <= 0) {
@@ -604,14 +618,22 @@ class CwmmessageModel extends AdminModel
     /**
      * Save teachers from the subform data to the junction table.
      *
-     * @param   array  $teachersData  Subform array of ['teacher_id' => int]
+     * @param   ?array  $teachersData  Subform array of ['teacher_id' => int], or null when the form
+     *                                 did not submit the field at all.
      *
      * @return  void
      *
      * @since  10.1.0
      */
-    private function saveTeachers(array $teachersData): void
+    private function saveTeachers(?array $teachersData): void
     {
+        // Not submitted at all — leave the existing assignments alone. The
+        // layout renders this field today, but the helper replaces every row
+        // for the study, so hiding it would silently unassign every teacher.
+        if ($teachersData === null) {
+            return;
+        }
+
         $studyId = (int) $this->getState($this->getName() . '.id');
 
         if ($studyId <= 0) {
@@ -661,7 +683,8 @@ class CwmmessageModel extends AdminModel
      * topic if no match exists). If no tags were submitted at all, existing
      * topics are auto-matched from the study's intro/body text.
      *
-     * @param   array|string  $topicsRaw   Comma-separated string or array of topic IDs/text tags.
+     * @param   array|string|null  $topicsRaw   Comma-separated string or array of topic IDs/text tags,
+     *                                          or null when the form did not submit the field at all.
      * @param   string        $studyIntro  The study's intro text, used for auto-matching when no tags are given.
      * @param   string        $studyText   The study's body text, used for auto-matching when no tags are given.
      * @param   string        $language    Language code to use when creating a new topic from free text.
@@ -670,8 +693,16 @@ class CwmmessageModel extends AdminModel
      *
      * @since  10.5.6
      */
-    private function saveTopics(array|string $topicsRaw, string $studyIntro, string $studyText, string $language): void
+    private function saveTopics(array|string|null $topicsRaw, string $studyIntro, string $studyText, string $language): void
     {
+        // Not submitted at all — leave the existing topics alone. Falling
+        // through would reach the auto-match branch with the description and
+        // study text also unsubmitted, match nothing, and then replace every
+        // row for the study with an empty set.
+        if ($topicsRaw === null) {
+            return;
+        }
+
         $studyId = (int) $this->getState($this->getName() . '.id');
 
         if ($studyId <= 0) {

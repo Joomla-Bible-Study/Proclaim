@@ -20,6 +20,7 @@ use CWM\Component\Proclaim\Administrator\Helper\CwmlocationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 
 /**
  * Template codes model class
@@ -92,11 +93,11 @@ class CwmtemplatecodesModel extends ListModel
     /**
      * Get list query
      *
-     * @return \Joomla\Database\QueryInterface
+     * @return QueryInterface|string
      *
      * @since 7.1
      */
-    protected function getListQuery(): mixed
+    protected function getListQuery(): QueryInterface|string
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery();

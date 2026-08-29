@@ -14,6 +14,7 @@
 
 // phpcs:enable PSR1.Files.SideEffects
 
+use CWM\Component\Proclaim\Administrator\Helper\Cwmhelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -27,6 +28,9 @@ $app   = Factory::getApplication();
 $input = $app->getInput();
 
 $isNewRecord = ((int)$this->item->id === 0 && empty($this->item->type));
+
+// Addons declare their own advanced settings; see the simplemode checks below.
+$simple = Cwmhelper::getSimpleView();
 
 $wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
@@ -104,6 +108,16 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
                 <?php
                 foreach ($this->server_form->getFieldsets('params') as $fieldsets) : ?>
                     <?php
+                    // An addon marks its own advanced settings with
+                    // simplemode="hide", on the fieldset or on a single field.
+                    // The addon knows what is advanced about itself, and a
+                    // third-party one gets the same treatment without this
+                    // template knowing it exists.
+                    if ($simple->mode && ($fieldsets->simplemode ?? '') === 'hide') {
+                        continue;
+                    }
+                    ?>
+                    <?php
                     echo HTMLHelper::_(
                         'uitab.addTab',
                         'myTab',
@@ -114,6 +128,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
                         <div class="col-12 col-lg-12">
                             <?php
                             foreach ($this->server_form->getFieldset($fieldsets->name) as $field) : ?>
+                                <?php
+                                if ($simple->mode && $field->getAttribute('simplemode') === 'hide') {
+                                    continue;
+                                }
+                                ?>
                                 <?php echo $field->renderField(); ?>
                                 <?php
                             endforeach; ?>
@@ -133,6 +152,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
                     <div class="accordion" id="accordionlist">
                         <?php
                 foreach ($this->server_form->getFieldsets('media') as $name => $fieldset) : ?>
+                    <?php
+                    if ($simple->mode && ($fieldset->simplemode ?? '') === 'hide') {
+                        continue;
+                    }
+                    ?>
                             <div class="accordion-item">
                                 <h2 class="accordion-heading" id="<?php
                         echo Text::_($name) ?>">
@@ -153,6 +177,11 @@ echo Route::_('index.php?option=com_proclaim&view=cwmserver&layout=' . $currentL
                                     <div class="accordion-body">
                                         <?php
                                 foreach ($this->server_form->getFieldset($name) as $field) : ?>
+                                    <?php
+                                    if ($simple->mode && $field->getAttribute('simplemode') === 'hide') {
+                                        continue;
+                                    }
+                                    ?>
                                             <?php echo $field->renderField(); ?>
                                             <?php
                                 endforeach; ?>

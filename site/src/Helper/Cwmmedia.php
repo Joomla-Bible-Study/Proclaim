@@ -258,11 +258,7 @@ class Cwmmedia
             $imageparams = $media->params;
         }
 
-        if (
-            $imageparams->get('media_use_button_icon') >= 1 || (int)$params->get('simple_mode') === 1 || $params->get(
-                'sermonstemplate'
-            ) === 'easy'
-        ) {
+        if ($imageparams->get('media_use_button_icon') >= 1 || (int)$params->get('simple_mode') === 1) {
             $image = $this->mediaButton($imageparams, $params, $media->params);
         } else {
             $mediaImage = (string)$imageparams->get('media_image');
@@ -316,7 +312,7 @@ class Cwmmedia
             $link_type = 3;
         }
 
-        if ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy') {
+        if ($params->get('simple_mode') === '1') {
             $link_type = 3;
         }
 
@@ -420,7 +416,7 @@ class Cwmmedia
                 break;
         }
 
-        if ($params->get('simple_mode') === '1' || $params->get('sermonstemplate') === 'easy') {
+        if ($params->get('simple_mode') === '1') {
             $filename = $media->get('filename');
 
             switch ($filename) {
@@ -1047,11 +1043,7 @@ class Cwmmedia
 
         $downloadLink = '';
 
-        if (
-            $params->get('download_use_button_icon') >= 2 && ($params->get('simple_mode') === '1' || $params->get(
-                'sermonstemplate'
-            ) === 'easy')
-        ) {
+        if ($params->get('download_use_button_icon') >= 2 && $params->get('simple_mode') === '1') {
             $download_image = $this->downloadButton($params);
         } elseif ($params->get('default_download_image')) {
             $d_image        = $params->get('default_download_image');
@@ -1169,7 +1161,7 @@ class Cwmmedia
                 break;
         }
 
-        if ($download->get('simple_mode') === '1' || $download->get('sermonstemplate') === 'easy') {
+        if ($download->get('simple_mode') === '1') {
             $downloadImage = '<span class="fa-solid fa-circle-chevron-down" title="download" style="font-size: 24px;"></span>';
         }
 

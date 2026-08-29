@@ -25,7 +25,7 @@
                 <option value="3">JBS_CMN_SQUEEZEBOX</option>
             </field>
         </fieldset>
-        <fieldset name="live_broadcast" label="JBS_ADDON_YOUTUBE_LIVE_BROADCAST" addon_section="general">
+        <fieldset name="live_broadcast" simplemode="hide" label="JBS_ADDON_YOUTUBE_LIVE_BROADCAST" addon_section="general">
             <field name="create_live_broadcast" type="radio" layout="joomla.form.field.radio.switcher"
                    label="JBS_ADDON_YOUTUBE_CREATE_LIVE_BROADCAST"
                    description="JBS_ADDON_YOUTUBE_CREATE_LIVE_BROADCAST_DESC"

@@ -52,10 +52,10 @@
                    filter="raw"/>
         </fieldset>
         <fieldset name="media_type" label="JBS_ADDON_LEGACY_MEDIA_TYPE">
-            <field name="media_image" type="media" directory="biblestudy"
+            <field name="media_image" simplemode="hide" type="media" directory="biblestudy"
                    label="JBS_CMN_IMAGE" description="JBS_MED_IMAGE_DESC"
                    class="inputbox"/>
-            <field name="media_use_button_icon" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
+            <field name="media_use_button_icon" simplemode="hide" label="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON"
                    description="JBS_ADDON_LEGACY_MEDIA_USE_BUTTON_DESC" class="inputbox" type="list" default="">
                 <option value="-1">JGLOBAL_USE_GLOBAL</option>
                 <option value="">JBS_MED_NONE</option>
@@ -63,9 +63,9 @@
                 <option value="2">JBS_MED_BUTTON_AND_ICON</option>
                 <option value="3">JBS_MED_ICON_ONLY</option>
             </field>
-            <field name="media_button_text" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT"
+            <field name="media_button_text" simplemode="hide" type="text" default="Audio" label="JBS_ADDON_LEGACY_BUTTON_TEXT"
                    description="JBS_ADDON_LEGACY_BUTTON_TEXT_DESC"/>
-            <field name="media_button_type" type="list" class="inputbox" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
+            <field name="media_button_type" simplemode="hide" type="list" class="inputbox" default="" label="JBS_ADDON_LEGACY_BUTTON_TYPE"
                    description="JBS_ADDON_LEGACY_BUTTON_TYPE_DESC">
                 <option value="btn-link">JBS_MED_NO_COLOR</option>
                 <option value="btn-primary">JBS_MED_PRIMARY</option>
@@ -74,12 +74,12 @@
                 <option value="btn-warning">JBS_MED_WARNING</option>
                 <option value="btn-danger">JBS_MED_DANGER</option>
             </field>
-            <field name="media_button_color" type="ColorPicker" default="black"
+            <field name="media_button_color" simplemode="hide" type="ColorPicker" default="black"
                    description="JBS_ADDON_LEGACY_BUTTON_COLOR_DESC" label="JBS_ADDON_LEGACY_BUTTON_COLOR"/>
-            <field name="media_icon_type" type="IconType" class="inputbox" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
+            <field name="media_icon_type" simplemode="hide" type="IconType" class="inputbox" default="" label="JBS_ADDON_LEGACY_ICON_TYPE"
                    description="JBS_ADDON_LEGACY_ICON_TYPE_DESC">
             </field>
-            <field name="media_custom_icon" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
+            <field name="media_custom_icon" simplemode="hide" type="text" default="" label="JBS_ADDON_LEGACY_CUSTOM_ICON"
                    description="JBS_ADDON_LEGACY_CUSTOM_ICON_DESC"/>
             <field name="mime_type" type="MimeType" extension="com_proclaim"
                    label="JBS_MED_CHOOSE_MIMETYPE" description="JBS_MED_CHOOSE_MIMETYPE_DESC"

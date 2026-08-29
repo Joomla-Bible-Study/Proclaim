@@ -370,7 +370,17 @@ class CWMAddonRumble extends CWMAddon
     }
 
     /**
-     * Rumble supports video descriptions.
+     * Rumble has no description write-back in Proclaim.
+     *
+     * The platform may well accept a description over its own API, but this
+     * addon implements no `syncDescription()`, so returning true here would
+     * clear the capability check in
+     * `CwmadminController::syncVideoDescriptionXHR()` and then fail in the
+     * base stub — telling the administrator it is unsupported immediately
+     * after telling them it is.
+     *
+     * Flip this to true in the same change that implements the push, never
+     * before.
      *
      * @return  bool
      *
@@ -379,6 +389,6 @@ class CWMAddonRumble extends CWMAddon
     #[\Override]
     public function supportsDescriptionSync(): bool
     {
-        return true;
+        return false;
     }
 }

@@ -50,6 +50,38 @@ class Cwmrestore
     private const array ALLOWED_RESTORE_TABLES = ['#__extensions', '#__assets', '#__scheduler_tasks'];
 
     /**
+     * Verdicts from classifyStatement().
+     *
+     * ALLOWED   — run it.
+     * PRESERVED — targets a table the restore must leave alone; skip quietly.
+     * SESSION   — dump preamble that names no table; skip quietly.
+     * REJECTED  — names a table this component has no business writing to.
+     *
+     * @var string
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_ALLOWED = 'allowed';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_PRESERVED = 'preserved';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_SESSION = 'session';
+
+    /**
+     * @var string
+     * @since __DEPLOY_VERSION__
+     */
+    public const string STATEMENT_REJECTED = 'rejected';
+
+    /**
      * Cached list of Proclaim's own table names, populated on first use.
      *
      * @var string[]|null
@@ -80,28 +112,334 @@ class Cwmrestore
      */
     private static function isSafeRestoreStatement(string $statement): bool
     {
-        $pattern = '/^(?:CREATE\s+TABLE|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|ALTER\s+TABLE|INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+`?(?<table>#__[a-z0-9_]+)`?/i';
+        $verdict = self::classifyStatement($statement);
 
-        if (!preg_match($pattern, $statement, $matches)) {
-            Log::add('Rejected restore statement (unrecognized shape): ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
-
-            return false;
-        }
-
-        if (self::$bsmsTables === null) {
-            // getOwnObjects(): a statement targeting the shared scripture stack is
-            // rejected, which also protects against restoring a backup taken
-            // before this change that still carries those tables.
-            self::$bsmsTables = array_column(CwmdbHelper::getOwnObjects(), 'name');
-        }
-
-        if (\in_array($matches['table'], self::$bsmsTables, true) || \in_array($matches['table'], self::ALLOWED_RESTORE_TABLES, true)) {
+        if ($verdict === self::STATEMENT_ALLOWED) {
             return true;
         }
 
-        Log::add('Rejected restore statement targeting non-Proclaim table: ' . $matches['table'], Log::WARNING, 'com_proclaim');
+        if ($verdict === self::STATEMENT_SESSION) {
+            Log::add('Rejected restore statement (unrecognized shape): ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
+        } else {
+            Log::add('Rejected restore statement targeting non-Proclaim table: ' . substr($statement, 0, 120), Log::WARNING, 'com_proclaim');
+        }
 
         return false;
+    }
+
+    /**
+     * Decide what a restore should do with one statement.
+     *
+     * isSafeRestoreStatement() answers the same question as a bool, which is
+     * all the file-based restore paths need. A dump written by anything other
+     * than Cwmbackup also carries session preamble — SET NAMES, the
+     * character_set_client save and restore either side of every CREATE TABLE,
+     * ALTER TABLE ... DISABLE KEYS — and none of it targets a table. Counting
+     * those as failures buries the ones that matter: a 15 MB mysqldump of this
+     * component splits into 214 statements, and 137 of them are preamble.
+     *
+     * @param   string  $statement  A single SQL statement, trimmed and non-empty
+     *
+     * @return  string  One of the STATEMENT_* constants
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function classifyStatement(string $statement): string
+    {
+        if (self::targetsPreservedTable($statement)) {
+            return self::STATEMENT_PRESERVED;
+        }
+
+        $pattern = '/^(?:CREATE\s+TABLE|DROP\s+TABLE(?:\s+IF\s+EXISTS)?|ALTER\s+TABLE|INSERT\s+INTO|UPDATE|DELETE\s+FROM)\s+`?(?<table>#__[a-z0-9_]+)`?/i';
+
+        if (!preg_match($pattern, $statement, $matches)) {
+            // No table in the leading clause. Either dump preamble, which is
+            // skipped without comment, or a shape this restore has no business
+            // running either way.
+            return self::STATEMENT_SESSION;
+        }
+
+        $table = strtolower($matches['table']);
+
+        // ⚠️ Ownership is decided from the name, not from the live table list.
+        //
+        // getOwnObjects() reads SHOW TABLES, and the batch importer drops every
+        // Proclaim table before it runs a single statement — so by the time the
+        // first statement was classified there was nothing left to match and
+        // the whole restore was rejected as foreign. Each batch is its own
+        // request, so no amount of caching survives it either. The name is the
+        // one thing that is true before and after the drop, and it is also what
+        // lets a backup from a newer version create a table this site does not
+        // have yet.
+        //
+        // getScriptureTables() is a fixed list, so excluding the shared stack
+        // costs nothing here. targetsPreservedTable() has already caught those
+        // above; this is the second lock on the same door.
+        if (\in_array($table, CwmdbHelper::getScriptureTables(), true)) {
+            return self::STATEMENT_PRESERVED;
+        }
+
+        if (str_starts_with($table, '#__bsms_') || \in_array($table, self::ALLOWED_RESTORE_TABLES, true)) {
+            return self::STATEMENT_ALLOWED;
+        }
+
+        return self::STATEMENT_REJECTED;
+    }
+
+    /**
+     * DatabaseDriver::splitSql(), with the same answer for less work.
+     *
+     * ⚠️ This is a port, not an improvement. The state machine below is the
+     * core one line for line, and it has to stay that way: the two are checked
+     * against each other on a real dump, and any difference in how a quote or a
+     * comment is read would split a statement in the wrong place and corrupt an
+     * import in a way nothing downstream could detect.
+     *
+     * What changes is the cost per character. The core reads `substr($sql, $i, 1)`,
+     * `substr($sql, $i, 2)`, `substr($sql, $i, 3)` and a fourth for the
+     * terminator on *every* character, so a 15 MB dump allocates something like
+     * 60 million short-lived strings and takes 63 seconds — past the browser's
+     * own timeout, which is how this surfaced. Indexing with `$sql[$i]` and
+     * building the two- and three-character lookaheads only when the current
+     * character could begin a quote or a comment leaves the behaviour alone and
+     * takes seconds instead.
+     *
+     * @param   string  $sql  One or more SQL statements
+     *
+     * @return  string[]  The statements, exactly as splitSql() would return them
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function splitSqlFast(string $sql): array
+    {
+        $start     = 0;
+        $open      = false;
+        $comment   = false;
+        $endString = '';
+        $end       = \strlen($sql);
+        $queries   = [];
+        $query     = '';
+
+        for ($i = 0; $i < $end; $i++) {
+            $current      = $sql[$i];
+            $lenEndString = \strlen($endString);
+
+            // The terminator being scanned for is one character for a quote and
+            // two for a block comment, so the common cases need no allocation.
+            if ($lenEndString === 0) {
+                $testEnd = '';
+            } elseif ($lenEndString === 1) {
+                $testEnd = $current;
+            } else {
+                $testEnd = substr($sql, $i, $lenEndString);
+            }
+
+            // Only these can open a quote or a comment, or close one already
+            // open. Every other character — which is nearly all of them — skips
+            // the lookaheads entirely.
+            $isQuote = $current === '"' || $current === "'";
+
+            if (
+                $isQuote
+                || $current === '-' || $current === '/' || $current === '#'
+                || ($comment && $testEnd === $endString)
+            ) {
+                $current2 = ($current === '-' || $current === '/') ? substr($sql, $i, 2) : '';
+                $current3 = ($current2 === '/*' || $current === '#') ? substr($sql, $i, 3) : '';
+
+                if (
+                    $isQuote || $current2 === '--'
+                    || ($current2 === '/*' && $current3 !== '/*!' && $current3 !== '/*+')
+                    || ($current === '#' && $current3 !== '#__')
+                    || ($comment && $testEnd === $endString)
+                ) {
+                    // Check if quoted with previous backslash. Left on substr:
+                    // it runs only at a quote or comment character, and its
+                    // negative-offset behaviour is part of what is being copied.
+                    $n = 2;
+
+                    while (substr($sql, $i - $n + 1, 1) === '\\' && $n < $i) {
+                        $n++;
+                    }
+
+                    // Not quoted
+                    if ($n % 2 === 0) {
+                        if ($open) {
+                            if ($testEnd === $endString) {
+                                if ($comment) {
+                                    $comment = false;
+
+                                    if ($lenEndString > 1) {
+                                        $i += ($lenEndString - 1);
+                                        $current = $sql[$i] ?? '';
+                                    }
+
+                                    $start = $i + 1;
+                                }
+
+                                $open      = false;
+                                $endString = '';
+                            }
+                        } else {
+                            $open = true;
+
+                            if ($current2 === '--') {
+                                $endString = "\n";
+                                $comment   = true;
+                            } elseif ($current2 === '/*') {
+                                $endString = '*/';
+                                $comment   = true;
+                            } elseif ($current === '#') {
+                                $endString = "\n";
+                                $comment   = true;
+                            } else {
+                                $endString = $current;
+                            }
+
+                            if ($comment && $start < $i) {
+                                $query .= substr($sql, $start, $i - $start);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($comment) {
+                $start = $i + 1;
+            }
+
+            if (($current === ';' && !$open) || $i === $end - 1) {
+                if ($start <= $i) {
+                    $query .= substr($sql, $start, $i - $start + 1);
+                }
+
+                $query = trim($query);
+
+                if ($query) {
+                    if (($i === $end - 1) && ($current !== ';')) {
+                        $query .= ';';
+                    }
+
+                    $queries[] = $query;
+                }
+
+                $query = '';
+                $start = $i + 1;
+            }
+        }
+
+        return $queries;
+    }
+
+    /**
+     * Rewrite a dump so its generated columns can be loaded.
+     *
+     * MySQL refuses any statement that supplies a value for a generated column
+     * (error 3105). Cwmbackup leaves them out of its own exports, but a
+     * mysqldump of the same database lists them like any other column, so every
+     * INSERT naming one is rejected — on the file that prompted this, all 14
+     * `#__bsms_studies` statements, which is every message on the site.
+     *
+     * Dropping the column from the CREATE TABLE does not help: the INSERT still
+     * names it and fails as an unknown column instead. So the column is demoted
+     * to an ordinary one for the load and converted back afterwards, which also
+     * recomputes every value from the expression.
+     *
+     * ⚠️ Any index spanning the column has to go before the column does.
+     * Dropping `studynumber_uk` out from under
+     * `UNIQUE (series_id, studynumber_uk)` would otherwise leave a UNIQUE index
+     * on `series_id` alone, which no site with two messages in a series can
+     * satisfy.
+     *
+     * @param   string  $sql  The dump's full text
+     *
+     * @return  array{sql: string, restore: string[]}  Rewritten dump, and the
+     *                                                 statements that put the
+     *                                                 generated columns back
+     *
+     * @since __DEPLOY_VERSION__
+     */
+    public static function normaliseGeneratedColumns(string $sql): array
+    {
+        $restore = [];
+
+        // Each CREATE TABLE block, from the opening line to the closing paren.
+        $blocks = preg_match_all(
+            '/CREATE TABLE(?: IF NOT EXISTS)? `(?<table>[^`]+)` \((?<body>.*?)\n\) ?(?<tail>[^;]*);/s',
+            $sql,
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        if (!$blocks) {
+            return ['sql' => $sql, 'restore' => []];
+        }
+
+        foreach ($matches as $block) {
+            $table = $block['table'];
+            $body  = $block['body'];
+
+            if (stripos($body, 'GENERATED ALWAYS') === false) {
+                continue;
+            }
+
+            $newBody = $body;
+
+            // A generated column definition, capturing its type and expression.
+            $found = preg_match_all(
+                '/^\s*`(?<col>[^`]+)` (?<type>[a-z]+(?:\([^)]*\))?(?: unsigned)?) GENERATED ALWAYS AS (?<expr>.+?) (?<kind>STORED|VIRTUAL),?$/mi',
+                $body,
+                $columns,
+                PREG_SET_ORDER
+            );
+
+            if (!$found) {
+                continue;
+            }
+
+            foreach ($columns as $column) {
+                $col = $column['col'];
+
+                // Demote to a plain nullable column so the dump's INSERT, which
+                // supplies a value for it, is accepted.
+                $newBody = str_replace(
+                    $column[0],
+                    '  `' . $col . '` ' . $column['type'] . ' DEFAULT NULL,',
+                    $newBody
+                );
+
+                // An index spanning the column is left in place: a plain column
+                // indexes exactly as a generated one does, and the values are
+                // the same either way. It only has to come off to let the
+                // column be dropped at the end, and go straight back.
+                $indexes = [];
+                preg_match_all(
+                    '/^\s*(?<unique>UNIQUE )?KEY `(?<name>[^`]+)` \((?<cols>[^)]*`' . preg_quote($col, '/') . '`[^)]*)\),?$/mi',
+                    $body,
+                    $indexes,
+                    PREG_SET_ORDER
+                );
+
+                foreach ($indexes as $index) {
+                    $restore[] = 'ALTER TABLE `' . $table . '` DROP INDEX `' . $index['name'] . '`';
+                }
+
+                $restore[] = 'ALTER TABLE `' . $table . '` DROP COLUMN `' . $col . '`';
+                $restore[] = 'ALTER TABLE `' . $table . '` ADD COLUMN `' . $col . '` '
+                    . strtoupper($column['type']) . ' GENERATED ALWAYS AS ' . $column['expr']
+                    . ' ' . strtoupper($column['kind']);
+
+                foreach ($indexes as $index) {
+                    $restore[] = 'ALTER TABLE `' . $table . '` ADD '
+                        . ($index['unique'] ? 'UNIQUE ' : '')
+                        . 'KEY `' . $index['name'] . '` (' . $index['cols'] . ')';
+                }
+            }
+
+            $sql = str_replace($body, $newBody, $sql);
+        }
+
+        return ['sql' => $sql, 'restore' => $restore];
     }
 
     /**
@@ -488,11 +826,13 @@ class Cwmrestore
 
         // Is the PHP tmp directory missing?
         if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_NO_TMP_DIR)) {
+            // 'error' belongs to enqueueMessage, not to Text::_(), whose second
+            // argument is $jsSafe -- passing it there JS-escaped a string that
+            // is rendered as HTML, and left the message queued as an ordinary
+            // notice rather than an error.
             $app->enqueueMessage(
-                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
-                    'JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET',
-                    'error'
-                )
+                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_PHPUPLOADNOTSET'),
+                'error'
             );
 
             return false;
@@ -500,11 +840,13 @@ class Cwmrestore
 
         // Is the max upload size too small in php.ini?
         if ($userFile['error'] && ($userFile['error'] == UPLOAD_ERR_INI_SIZE)) {
+            // 'error' belongs to enqueueMessage, not to Text::_(), whose second
+            // argument is $jsSafe -- passing it there JS-escaped a string that
+            // is rendered as HTML, and left the message queued as an ordinary
+            // notice rather than an error.
             $app->enqueueMessage(
-                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_(
-                    'JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE',
-                    'error'
-                )
+                Text::_('JBS_IBM_ERROR_UPLOAD_FAILED') . '<br />' . Text::_('JBS_IBM_ERROR_UPLOAD_FAILED_SMALLUPLOADSIZE'),
+                'error'
             );
 
             return false;

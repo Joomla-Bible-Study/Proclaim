@@ -948,21 +948,7 @@ class Cwmassets
         }
 
         // Orphan probe — one COUNT per content table, bail at first hit.
-        $orphanMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $orphanMap = self::orphanSourceMap();
 
         foreach ($orphanMap as $prefix => $sourceTable) {
             try {
@@ -1321,21 +1307,7 @@ class Cwmassets
      */
     public static function cleanOrphanedAssets(DatabaseInterface $db): int
     {
-        $assetMap = [
-            'com_proclaim.message.'      => '#__bsms_studies',
-            'com_proclaim.mediafile.'    => '#__bsms_mediafiles',
-            'com_proclaim.serie.'        => '#__bsms_series',
-            'com_proclaim.teacher.'      => '#__bsms_teachers',
-            'com_proclaim.server.'       => '#__bsms_servers',
-            'com_proclaim.comment.'      => '#__bsms_comments',
-            'com_proclaim.location.'     => '#__bsms_locations',
-            'com_proclaim.messagetype.'  => '#__bsms_message_type',
-            'com_proclaim.podcast.'      => '#__bsms_podcast',
-            'com_proclaim.template.'     => '#__bsms_templates',
-            'com_proclaim.templatecode.' => '#__bsms_templatecode',
-            'com_proclaim.topic.'        => '#__bsms_topics',
-            'com_proclaim.admin.'        => '#__bsms_admin',
-        ];
+        $assetMap = self::orphanSourceMap();
 
         $totalRemoved = 0;
 
@@ -1548,12 +1520,110 @@ class Cwmassets
             ];
         }
 
+        $sections = self::sectionAssetStatus($db, $parentId, $emptyQuoted);
+
+        if ($sections !== null) {
+            $status[] = $sections;
+        }
+
         return $status;
+    }
+
+    /**
+     * The section permission rows, which belong to no content table.
+     *
+     * ⚠️ Counted separately because the per-table figures above cannot see
+     * them. Those join a content table to `#__assets`, and a section row like
+     * `com_proclaim.message` is referenced by no record and matches no
+     * `com_proclaim.message.%` pattern — so it is invisible there by
+     * construction, while pruneEmptyAssetRows() deletes it. Without this the
+     * screen offered a Clean Up whose scope it could not show.
+     *
+     * Deleting an empty one costs nothing: sectionActions() falls back to the
+     * component's permissions, and the row is recreated when a section is next
+     * given rules of its own. A section that *has* rules is not empty, so it
+     * never matches the prune.
+     *
+     * @param   DatabaseInterface  $db           Database driver
+     * @param   int                $parentId     com_proclaim parent asset id
+     * @param   string             $emptyQuoted  Quoted empty-rule variants for an IN clause
+     *
+     * @return  ?array  A status row, or null when the count cannot be taken
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function sectionAssetStatus(DatabaseInterface $db, int $parentId, string $emptyQuoted): ?array
+    {
+        try {
+            $db->setQuery(
+                'SELECT COUNT(*) AS numrows,'
+                . ' SUM(CASE WHEN ' . $db->quoteName('rules') . ' IN (' . $emptyQuoted . ')'
+                . ' THEN 1 ELSE 0 END) AS needs_cleanup,'
+                . ' SUM(CASE WHEN ' . $db->quoteName('parent_id') . ' <> ' . (int) $parentId
+                . ' THEN 1 ELSE 0 END) AS drifted'
+                . ' FROM ' . $db->quoteName('#__assets')
+                . ' WHERE ' . $db->quoteName('name') . ' LIKE ' . $db->quote('com_proclaim.%')
+                . ' AND ' . $db->quoteName('name') . ' NOT LIKE ' . $db->quote('com_proclaim.%.%')
+            );
+            $counts = $db->loadAssoc();
+        } catch (\Exception $e) {
+            Log::add('getAssetStatus section query failed: ' . $e->getMessage(), Log::WARNING, 'com_proclaim');
+
+            return null;
+        }
+
+        $numrows = (int) ($counts['numrows'] ?? 0);
+
+        if ($numrows === 0) {
+            return null;
+        }
+
+        $needsCleanup = (int) ($counts['needs_cleanup'] ?? 0);
+
+        return [
+            'realname'  => 'JBS_ADM_ASSETS_SECTION_ROWS',
+            'tablename' => '#__assets',
+            'assetname' => 'section',
+            'numrows'   => $numrows,
+            // A section row is not "inherited" in the per-record sense: nothing
+            // points at it. Carrying the ones with rules of their own under
+            // custom_rules keeps the columns meaning what their headings say.
+            'inherited'     => 0,
+            'custom_rules'  => $numrows - $needsCleanup,
+            'needs_cleanup' => $needsCleanup,
+            'drifted'       => (int) ($counts['drifted'] ?? 0),
+            'orphans'       => 0,
+            'parent_id'     => $parentId,
+        ];
     }
 
     // =========================================================================
     // Asset Table Definitions
     // =========================================================================
+
+    /**
+     * Every per-record asset name prefix, mapped to the table its ids live in.
+     *
+     * ⚠️ Derived from getAssetObjects() rather than written out, because it was
+     * written out twice and both copies drifted from it. The trailing dot is
+     * load-bearing: `message` and `messagetype` are string-prefixes of one
+     * another, as are `template` and `templatecode`, and only the dot keeps
+     * `com_proclaim.message.%` from matching a messagetype row.
+     *
+     * @return  array<string, string>  `com_proclaim.<section>.` => table
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private static function orphanSourceMap(): array
+    {
+        $map = [];
+
+        foreach (self::getAssetObjects() as $info) {
+            $map['com_proclaim.' . $info['assetname'] . '.'] = $info['name'];
+        }
+
+        return $map;
+    }
 
     /**
      * Table list Array.
@@ -1600,6 +1670,14 @@ class Cwmassets
                 'titlefield' => 'message_type',
                 'assetname'  => 'messagetype',
                 'realname'   => 'JBS_CMN_MESSAGETYPES',
+            ],
+            [
+                // ⚠️ The only table here whose name is plural, which is the
+                // likeliest reason this section was the one left out.
+                'name'       => '#__bsms_playlists',
+                'titlefield' => 'title',
+                'assetname'  => 'playlist',
+                'realname'   => 'JBS_CMN_PLAYLISTS',
             ],
             [
                 'name'       => '#__bsms_podcast',

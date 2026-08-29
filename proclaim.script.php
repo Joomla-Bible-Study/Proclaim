@@ -18,6 +18,7 @@ use CWM\Component\Proclaim\Administrator\Lib\Cwmassets;
 use CWM\Component\Proclaim\Administrator\Lib\CwmscriptureMigration;
 use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Event\Model\AfterCleanCacheEvent;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Installer\Adapter\FileAdapter;
@@ -27,6 +28,7 @@ use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Filesystem\File;
@@ -107,11 +109,12 @@ class com_proclaimInstallerScript extends InstallerScript
     protected DatabaseInterface|null $dbo;
 
     /**
-     * Minimum PHP version required to install the extension
+     * Log category for the install record.
      *
-     * @var    string
-     * @since  3.6
+     * @since  10.5.9
      */
+    private const string INSTALL_LOG = 'com_proclaim.install';
+
     /**
      * The version this update is coming from, read before Joomla overwrites it.
      *
@@ -122,13 +125,6 @@ class com_proclaimInstallerScript extends InstallerScript
      * @var    string
      * @since  10.5.9
      */
-    /**
-     * Log category for the install record.
-     *
-     * @since  10.5.9
-     */
-    private const INSTALL_LOG = 'com_proclaim.install';
-
     private string $fromVersion = '';
 
     /**
@@ -171,15 +167,30 @@ class com_proclaimInstallerScript extends InstallerScript
      */
     private float $startedAt = 0.0;
 
+    /**
+     * Minimum PHP version required to install the extension
+     *
+     * @var    string
+     * @since  3.6
+     */
     protected $minimumPhp = '8.3.0';
 
     /**
      * Minimum Joomla! Version required to install the extension
      *
+     * ⚠️ Must match `build/script.install.php`. Two different numbers means
+     * the package refuses at one boundary and the component at another, and a
+     * site lands half-installed. Guarded by `JoomlaFloorTest`.
+     *
+     * 5.4 is the only supported 5.x: it is the last minor of the series, and
+     * everything below it stopped receiving fixes. It is also the version CI
+     * builds against, so it is a floor something actually runs at rather than
+     * a claim nothing exercises.
+     *
      * @var    string
      * @since  3.6
      */
-    protected $minimumJoomla = '5.0.0';
+    protected $minimumJoomla = '5.4.0';
 
     /**
      * @var   string The component's name
@@ -305,6 +316,24 @@ class com_proclaimInstallerScript extends InstallerScript
         '/media/com_proclaim/css/scripture-tooltip.css',
         '/media/com_proclaim/css/scripture-tooltip.min.css',
         '/media/com_proclaim/css/scripture-tooltip.min.css.map',
+
+        // mod_proclaimicon shipped each translation twice: once as
+        // <extension>.ini, which Joomla tries first, and once as
+        // <tag>.<extension>.ini, which therefore never loaded. The stale
+        // copies are removed from the package; these clear the ones
+        // already on disk.
+        '/administrator/modules/mod_proclaimicon/language/cs-CZ/cs-CZ.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/cs-CZ/cs-CZ.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/de-DE/de-DE.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/de-DE/de-DE.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/es-ES/es-ES.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/es-ES/es-ES.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/hu-HU/hu-HU.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/hu-HU/hu-HU.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/nl-NL/nl-NL.mod_proclaimicon.sys.ini',
+        '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.ini',
+        '/administrator/modules/mod_proclaimicon/language/no-NO/no-NO.mod_proclaimicon.sys.ini',
     ];
 
     /**
@@ -317,7 +346,11 @@ class com_proclaimInstallerScript extends InstallerScript
         // Media folders
         '/media/com_proclaim/player',
         '/media/com_proclaim/less',
-        '/media/com_proclaim/backup',
+        // ⚠️ /media/com_proclaim/backup is NOT listed. proclaim.xml ships it,
+        // it holds the .htaccess and web.config that deny web access to the
+        // directory, and on a live site it holds the backup archives
+        // themselves. It sat here unnoticed only because nothing ever ran
+        // this list.
         '/media/com_proclaim/js/plugins',
         '/media/com_proclaim/js/views',
         '/media/com_proclaim/js/mediafile',
@@ -403,14 +436,16 @@ class com_proclaimInstallerScript extends InstallerScript
         '/components/com_proclaim/src/View/CWMTerms'       => '/components/com_proclaim/src/View/Cwmterms',
         '/components/com_proclaim/src/View/CWMcommentform' => '/components/com_proclaim/src/View/Cwmcommentform',
         '/components/com_proclaim/src/View/Teacher'        => '/components/com_proclaim/src/View/Cwmteacher',
-        // Site tmpl folders - CWM prefix renamed to Cwm
-        '/components/com_proclaim/tmpl/CWMCommentForm'   => '/components/com_proclaim/tmpl/Cwmcommentform',
-        '/components/com_proclaim/tmpl/CWMCommentList'   => '/components/com_proclaim/tmpl/Cwmcommentlist',
-        '/components/com_proclaim/tmpl/CWMMediaFileForm' => '/components/com_proclaim/tmpl/Cwmmediafileform',
-        '/components/com_proclaim/tmpl/CWMMediaFileList' => '/components/com_proclaim/tmpl/Cwmmediafilelist',
-        '/components/com_proclaim/tmpl/CWMMessageForm'   => '/components/com_proclaim/tmpl/Cwmmessageform',
-        '/components/com_proclaim/tmpl/CWMMessageList'   => '/components/com_proclaim/tmpl/Cwmmessagelist',
-        '/components/com_proclaim/tmpl/Teacher'          => '/components/com_proclaim/tmpl/Cwmteacher',
+        // ⚠️ The site tmpl folders are deliberately not renamed here.
+        //
+        // They used to be, onto capitalised names — Cwmcommentform, Cwmteacher
+        // — which the package stopped shipping when the folders went lower case
+        // in 2022 (50b3cd85e). Renames run before deletions, and the delete
+        // list names the *old* folder, so on a case-sensitive host each rename
+        // moved a legacy folder to a name nothing reads and nothing removes,
+        // leaving it there for good. Every one of them is already in
+        // $deleteFolders, so letting the deletion have them is both simpler and
+        // correct: none of these layouts exists in the package any more.
     ];
 
     /**
@@ -503,7 +538,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 . '</li>';
         }
 
-        $summary = sprintf(
+        $summary = \sprintf(
             '%d ran, %d skipped%s in %ss, upgrading from %s.',
             \count($ran),
             $skipped,
@@ -579,8 +614,7 @@ class com_proclaimInstallerScript extends InstallerScript
      * Run a legacy migration, or record why it was skipped.
      *
      * Wraps the version gate and the timing in one place so the report can say
-     * what happened. Before this, an update that did nothing looked exactly like
-     * an update that did everything: a spinner, then silence.
+     * what happened rather than leaving a spinner and silence.
      *
      * A step that throws is recorded and the update carries on. None of these is
      * load-bearing enough to abandon an otherwise successful update over, and a
@@ -604,7 +638,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => 0.0,
             ];
 
-            $this->logInstall(sprintf('  skip  %-26s not needed past %s', $name, $since));
+            $this->logInstall(\sprintf('  skip  %-26s not needed past %s', $name, $since));
 
             return;
         }
@@ -623,7 +657,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => $secs,
             ];
 
-            $this->logInstall(sprintf('  ran   %-26s %6.3fs', $name, $secs));
+            $this->logInstall(\sprintf('  ran   %-26s %6.3fs', $name, $secs));
         } catch (\Throwable $e) {
             $this->stepLog[] = [
                 'name'  => $name,
@@ -632,18 +666,16 @@ class com_proclaimInstallerScript extends InstallerScript
                 'secs'  => microtime(true) - $started,
             ];
 
-            $this->logInstall(sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
+            $this->logInstall(\sprintf('  FAIL  %-26s %s', $name, $e->getMessage()));
         }
     }
 
     /**
      * Time a piece of postflight, and record where the time went.
      *
-     * Postflight's unconditional work — installing the sub-extensions, copying
-     * language files, clearing caches — was never measured, so an update that
-     * felt slow could only be guessed at. The migrations were instrumented
-     * first and turned out to be free, which left the larger part of an update
-     * unaccounted for.
+     * Covers postflight's unconditional work — installing the sub-extensions,
+     * copying language files, clearing caches — which is where an update's time
+     * actually goes, the migrations themselves having turned out to be free.
      *
      * ⚠️ A throw is recorded and the update carries on. Joomla treats a
      * RuntimeException out of postflight as grounds to abort and roll the
@@ -662,22 +694,22 @@ class com_proclaimInstallerScript extends InstallerScript
      * @param   string    $name  Task name, as it appears in the log
      * @param   callable  $work  The work to time
      *
-     * @return  mixed  Whatever $work returned
+     * @return  void
      *
      * @since   10.5.10
      */
-    private function task(string $name, callable $work): mixed
+    private function task(string $name, callable $work): void
     {
         $started = microtime(true);
         $error   = '';
 
         try {
-            return $work();
+            $work();
         } catch (\Throwable $e) {
             $error = $e->getMessage() !== '' ? $e->getMessage() : $e::class;
 
             Factory::getApplication()->enqueueMessage(
-                sprintf(
+                \sprintf(
                     'Proclaim: the "%s" step of this update did not complete (%s). '
                     . 'The update itself is installed; the com_proclaim.install log has the detail.',
                     $name,
@@ -685,8 +717,6 @@ class com_proclaimInstallerScript extends InstallerScript
                 ),
                 'warning'
             );
-
-            return null;
         } finally {
             $secs = microtime(true) - $started;
 
@@ -698,8 +728,8 @@ class com_proclaimInstallerScript extends InstallerScript
             // line it replaces. The gate matches this shape instead.
             $this->logInstall(
                 $error === ''
-                    ? sprintf('  task  %-26s %6.3fs', $name, $secs)
-                    : sprintf('  task  %-26s %6.3fs FAILED: %s', $name, $secs, $error)
+                    ? \sprintf('  task  %-26s %6.3fs', $name, $secs)
+                    : \sprintf('  task  %-26s %6.3fs FAILED: %s', $name, $secs, $error)
             );
         }
     }
@@ -707,11 +737,10 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Whether a migration first shipped in `$version` still has work to do here.
      *
-     * ⚠️ A migration that ran on the update that introduced it does not need to
-     * run again, but nothing recorded that it had. With no gate, a 10.5.7 site
-     * re-ran every migration written since 10.0 — nine of them, each walking
-     * whole tables to discover there was nothing to do. That is what made
-     * updates take minutes on a site with real content.
+     * ⚠️ Nothing records that a migration already ran on the update that
+     * introduced it. Without this gate every migration written since 10.0
+     * replays on every update, each walking whole tables to find nothing to do
+     * — minutes of it on a site with real content.
      *
      * ⚠️ An unknown source version returns true. Skipping a migration that was
      * needed loses data; running one that was not costs time.
@@ -754,7 +783,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->fromVersion = $this->readInstalledVersion();
         }
 
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'preflight: %s, from %s, PHP %s, Joomla %s',
             $type,
             $this->fromVersion !== '' ? $this->fromVersion : 'n/a',
@@ -780,7 +809,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 $libBase = JPATH_LIBRARIES . $libSuffix;
 
                 if (is_dir($libBase) && !class_exists('CWM\\Library\\Scripture\\Helper\\ScriptureHelper', false)) {
-                    \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase, false, false, 'psr4');
+                    \JLoader::registerNamespace('CWM\\Library\\Scripture', $libBase);
 
                     break;
                 }
@@ -872,7 +901,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         . ' DROP COLUMN ' . $db->quoteName($column)
                     );
                     $db->execute();
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Ignore — column may have been dropped by concurrent request
                 }
             }
@@ -905,7 +934,7 @@ class com_proclaimInstallerScript extends InstallerScript
                             . ' ADD COLUMN ' . $db->quoteName($column) . ' ' . $definition
                         );
                         $db->execute();
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         // Ignore
                     }
                 }
@@ -989,7 +1018,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $columns = $this->dbo->getTableColumns($table);
 
             return array_keys($columns);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [];
         }
     }
@@ -1011,7 +1040,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $tables = $this->dbo->getTableList();
 
             return \in_array($table, $tables, true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
@@ -1137,7 +1166,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                 return;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Cleanup only. The unique key carries the lookups either way, so a
             // failure here must not take down an otherwise successful update.
         }
@@ -1313,7 +1342,7 @@ class com_proclaimInstallerScript extends InstallerScript
 
                     return;
                 }
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 // If something breaks, we will fall through
             }
         }
@@ -1349,7 +1378,7 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->scriptureConsumer('unregister');
 
         // Show the post-uninstalling page
-        $this->renderPostUninstallation($this->status, $parent);
+        $this->renderPostUninstallation($this->status);
 
         return true;
     }
@@ -1374,9 +1403,14 @@ class com_proclaimInstallerScript extends InstallerScript
     {
         foreach (['#__action_log_config' => 'type_alias', '#__action_logs_extensions' => 'extension'] as $table => $column) {
             try {
+                // Same narrowing as the #__assets delete: the seeded values are
+                // `com_proclaim` and `com_proclaim.<entity>`, and a bare prefix
+                // would take another extension's rows with them. orWhere() so
+                // the builder brackets the two halves rather than this code.
                 $query = $this->dbo->getQuery(true)
                     ->delete($this->dbo->quoteName($table))
-                    ->where($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim%'));
+                    ->where($this->dbo->quoteName($column) . ' = ' . $this->dbo->quote('com_proclaim'))
+                    ->orWhere($this->dbo->quoteName($column) . ' LIKE ' . $this->dbo->quote('com_proclaim.%'));
 
                 $this->dbo->setQuery($query)->execute();
             } catch (\Throwable $e) {
@@ -1411,6 +1445,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.5.1
      */
     private function withoutCacheHousekeepingNoise(callable $operation): void
@@ -1457,13 +1492,10 @@ class com_proclaimInstallerScript extends InstallerScript
      * caches, and nothing tells an optimisation plugin that the files it combined
      * have been replaced.
      *
-     * That gap is not theoretical. On a live site running JCH Optimize, updating
-     * the scripture library deleted the combined JS bundles while the cached HTML
-     * kept referencing them by filename. Every bundled script — including the
-     * Bible version switcher — returned a 404 HTML error page, so the switcher
-     * rendered and did nothing. No error was visible anywhere; the markup was
-     * correct and the JavaScript simply never arrived. Clearing both caches fixed
-     * it.
+     * That gap is not theoretical. An optimisation plugin can go on serving
+     * cached HTML that names combined bundles the update has already replaced,
+     * so every bundled script returns a 404 and the feature it powers renders
+     * correctly and does nothing — with no error anywhere to say so.
      *
      * What we can do:
      *
@@ -1483,6 +1515,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.5.0
      */
     private function clearCaches(): void
@@ -1521,13 +1554,13 @@ class com_proclaimInstallerScript extends InstallerScript
      * that combine or cache whole pages, where a stale entry can reference assets
      * that no longer exist.
      *
-     * @param   \Joomla\CMS\Application\CMSApplicationInterface  $app  The application
+     * @param   CMSApplicationInterface  $app  The application
      *
      * @return  void
      *
      * @since   10.5.0
      */
-    private function warnAboutExternalCaches($app): void
+    private function warnAboutExternalCaches(CMSApplicationInterface $app): void
     {
         $known = [
             'jchoptimize'    => 'JCH Optimize',
@@ -1639,7 +1672,37 @@ class com_proclaimInstallerScript extends InstallerScript
                 return;
             }
 
-            // Remove component assets
+            // ⚠️ Tables first, asset rows second, and the order is the whole
+            // point. Either half can fail, but only one order fails
+            // recoverably: dropped tables with stale #__assets rows left behind
+            // is drift Cwmassets already knows how to sweep, while deleted
+            // asset rows with the tables still present is a site whose
+            // permissions are gone and whose content is still there.
+            //
+            // It ran the other way round until a missing DatabaseDriver import
+            // made the second half throw, and an uninstall destroyed the
+            // permissions without dropping a single table.
+            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
+            $buffer  = is_file($sqlFile) ? file_get_contents($sqlFile) : false;
+
+            if ($buffer !== false) {
+                foreach (DatabaseDriver::splitSql($buffer) as $singleQuery) {
+                    $singleQuery = trim($singleQuery);
+
+                    if ($singleQuery !== '' && $singleQuery[0] !== '#') {
+                        try {
+                            $this->dbo->setQuery($singleQuery);
+                            $this->dbo->execute();
+                        } catch (\Exception) {
+                            // Continue dropping remaining tables
+                        }
+                    }
+                }
+            }
+
+            // Remove component assets. Reached whether or not the uninstall SQL
+            // was there to run, which the early returns this replaced did not
+            // do — a missing file used to skip the asset cleanup entirely.
             $query = $this->dbo->getQuery(true)
                 ->select($this->dbo->quoteName('id'))
                 ->from($this->dbo->quoteName('#__assets'))
@@ -1656,41 +1719,34 @@ class com_proclaimInstallerScript extends InstallerScript
                 $this->dbo->execute();
             }
 
+            // ⚠️ `com_proclaim%` would also match another extension that merely
+            // starts with our name — com_proclaimtools and the like — and this
+            // is an uninstall, so the match is a DELETE. Ours are exactly
+            // `com_proclaim` and `com_proclaim.<section>[.<id>]`; every other
+            // asset query in this codebase already uses the dotted form.
+            //
+            // andWhere() rather than a bracketed string: the query builder
+            // groups the disjunction itself, so the SQL is the driver's to
+            // emit rather than ours to assemble. ⚠️ It goes through
+            // extendWhere(), which needs a WHERE to extend — the root.1 guard
+            // has to be the call before it, not after.
             $query = $this->dbo->getQuery(true)
                 ->delete($this->dbo->quoteName('#__assets'))
-                ->where($this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim%'))
-                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'));
+                // Kept even though the group below can no longer reach it.
+                // Deleting the ACL root takes every extension's permissions
+                // with it, and that guard should not depend on the predicate
+                // beside it staying narrow.
+                ->where($this->dbo->quoteName('name') . ' != ' . $this->dbo->quote('root.1'))
+                ->andWhere(
+                    [
+                        $this->dbo->quoteName('name') . ' = ' . $this->dbo->quote('com_proclaim'),
+                        $this->dbo->quoteName('name') . ' LIKE ' . $this->dbo->quote('com_proclaim.%'),
+                    ],
+                    'OR'
+                );
             $this->dbo->setQuery($query);
             $this->dbo->execute();
-
-            // Run the uninstall SQL
-            $sqlFile = JPATH_ADMINISTRATOR . '/components/com_proclaim/sql/uninstall.mysql.utf8.sql';
-
-            if (!file_exists($sqlFile)) {
-                return;
-            }
-
-            $buffer = file_get_contents($sqlFile);
-
-            if ($buffer === false) {
-                return;
-            }
-
-            $queries = DatabaseDriver::splitSql($buffer);
-
-            foreach ($queries as $singleQuery) {
-                $singleQuery = trim($singleQuery);
-
-                if ($singleQuery !== '' && $singleQuery[0] !== '#') {
-                    try {
-                        $this->dbo->setQuery($singleQuery);
-                        $this->dbo->execute();
-                    } catch (\Exception $e) {
-                        // Continue dropping remaining tables
-                    }
-                }
-            }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If anything fails, don't block uninstall
         }
     }
@@ -1710,7 +1766,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->where($this->dbo->quoteName('language_extension') . ' = ' . $this->dbo->quote('com_proclaim'));
             $this->dbo->setQuery($query);
             $this->dbo->execute();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Don't block uninstall
         }
     }
@@ -1856,14 +1912,13 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Render Post Uninstalling
      *
-     * @param   object            $status  Object of things to uninstall
-     * @param   InstallerAdapter  $parent  The class calling this method
+     * @param   stdClass  $status  Object of things to uninstall
      *
      * @return void
      *
      * @since 1.7.0
      */
-    private function renderPostUninstallation($status, $parent): void
+    private function renderPostUninstallation(stdClass $status): void
     {
         $rows = 0;
         echo '<h2>' . Text::_('JBS_INS_UNINSTALL') . '</h2>
@@ -1990,7 +2045,7 @@ class com_proclaimInstallerScript extends InstallerScript
             ? $class::VERSION
             : 'unknown';
 
-        $msg = sprintf(
+        $msg = \sprintf(
             'Proclaim: the installed scripture library is %s, older than the %s this release expects. '
             . 'Scripture still displays, using the previous lookup path. Update pkg_cwmscripture '
             . 'to get the faster and more reliable one.',
@@ -2003,6 +2058,69 @@ class com_proclaimInstallerScript extends InstallerScript
         } catch (\Throwable) {
             // CLI install: no application to enqueue against.
         }
+    }
+
+    /**
+     * Delete the files and folders this build no longer ships.
+     *
+     * ⚠️ Until now nothing called removeFiles(). The lists were populated
+     * release after release and consumed in exactly one place — the 9.x
+     * com_biblestudy branch, which overwrites both first — so every path in
+     * them is still sitting on upgraded sites. Wiring this up is what makes
+     * them take effect, which is why the lists were audited against the
+     * shipped tree before it was: `/media/com_proclaim/backup` was on the
+     * folder list while proclaim.xml ships it, and it holds the .htaccess and
+     * web.config that keep backups off the web.
+     *
+     * ⚠️ Update only. A fresh install has nothing to clean, and postflight
+     * also runs on uninstall — where deleting anything is the adapter's job,
+     * not ours.
+     *
+     * @return  string  What was removed, for the install log
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function removeObsoleteFiles(): string
+    {
+        $present = 0;
+
+        foreach ($this->deleteFiles as $file) {
+            if (is_file(JPATH_ROOT . $file)) {
+                $present++;
+            }
+        }
+
+        foreach ($this->deleteFolders as $folder) {
+            if (is_dir(JPATH_ROOT . $folder)) {
+                $present++;
+            }
+        }
+
+        if ($present === 0) {
+            return 'nothing to remove';
+        }
+
+        $this->removeFiles();
+
+        $left = 0;
+
+        foreach ($this->deleteFiles as $file) {
+            if (is_file(JPATH_ROOT . $file)) {
+                $left++;
+            }
+        }
+
+        foreach ($this->deleteFolders as $folder) {
+            if (is_dir(JPATH_ROOT . $folder)) {
+                $left++;
+            }
+        }
+
+        // Counted rather than trusted: removeFiles() reports a failure by
+        // echoing, which the installer captures and nobody reads.
+        return $left === 0
+            ? $present . ' obsolete path(s) removed'
+            : ($present - $left) . ' of ' . $present . ' removed, ' . $left . ' could not be deleted';
     }
 
     /**
@@ -2029,7 +2147,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // download shows up in neither number and has to be timed separately.
         $beforeUs = microtime(true) - $this->startedAt;
 
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'postflight: %.2fs elapsed since preflight (unpack, file copy, schema) — download NOT included',
             $beforeUs
         ));
@@ -2064,6 +2182,7 @@ class com_proclaimInstallerScript extends InstallerScript
         // Rename old folders before deletion (must happen before removeFiles is called)
         if ($type === 'update') {
             $this->task('Rename legacy folders', fn () => $this->renameLegacyFolders());
+            $this->task('Remove obsolete files', fn () => $this->removeObsoleteFiles());
         }
 
         // After the migration SQL has added uq_study_topic, retire the index it
@@ -2086,10 +2205,10 @@ class com_proclaimInstallerScript extends InstallerScript
         $this->task('Language files', fn () => $this->copyLanguageFiles());
 
         // Show the post-installation page
-        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status, $parent));
+        $this->task('Post-install page', fn () => $this->renderPostInstallation($this->status));
 
         //Remove old com_biblestudy menu items on the admin side
-        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion($parent));
+        $this->task('Legacy menu removal', fn () => $this->removeBibleStudyVersion());
 
         // Declare our dependency on lib_cwmscripture so its uninstall guard and
         // shared-table cleanup can see us
@@ -2226,6 +2345,16 @@ class com_proclaimInstallerScript extends InstallerScript
                 $this->dropLegacyTemplateColumns();
             });
 
+            // The 'easy' starter template and the two orphaned fluid layouts,
+            // which were swept into the package rather than authored as layouts.
+            // Gated on 10.6.0, the version this actually ships in. 10.5.11 was
+            // developed but never released — its work went out as 10.6.0 — so a
+            // gate naming it would be describing a version no site can be on.
+            // Behaviourally the same either way: nothing is between the two.
+            $this->step('Stray layouts', '10.6.0', function () {
+                return $this->removeStrayTemplateLayouts();
+            });
+
             // pre-10.1 / pre-10.0 orphaned tables, which linger on sites upgraded
             // across several major versions — Joomla skips already-applied
             // migrations on a jump upgrade, so the per-version DROPs never ran.
@@ -2283,7 +2412,7 @@ class com_proclaimInstallerScript extends InstallerScript
                         ->where($db->quoteName('type') . ' = ' . $db->quote('component'));
                     $db->setQuery($update)->execute();
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Non-critical — help will fall back to default behavior
             }
         }
@@ -2305,14 +2434,14 @@ class com_proclaimInstallerScript extends InstallerScript
                         'warning'
                     );
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Silently ignore detection failures during install
             }
         }
 
         // ⚠️ The leading "N step(s) in Ns" is parsed by build/verify-install-log.php,
         // which cross-checks it against the per-step lines. Keep it at the front.
-        $this->logInstall(sprintf(
+        $this->logInstall(\sprintf(
             'postflight: %d step(s) in %.3fs, %d task(s) in %.2fs; postflight total %.2fs; whole install %.2fs',
             \count($this->stepLog),
             array_sum(array_column($this->stepLog, 'secs')),
@@ -2636,19 +2765,18 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Renders the post-installation message
      *
-     * @param   object            $status  Object of things to install
-     * @param   InstallerAdapter  $parent  The class calling this method
+     * @param   stdClass  $status  Object of things to install
      *
      * @return void
      * @since  1.7.0
      */
-    private function renderPostInstallation($status, $parent): void
+    private function renderPostInstallation(stdClass $status): void
     {
         try {
             $language = Factory::getApplication()->getLanguage();
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', 'en-GB', true);
             $language->load('com_proclaim', JPATH_ADMINISTRATOR . '/components/com_proclaim', null, true);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return;
         }
 
@@ -2729,13 +2857,11 @@ class com_proclaimInstallerScript extends InstallerScript
     /**
      * Remove leftovers due to upgrading from an older Proclaim version.
      *
-     * @param   InstallerAdapter  $parent  The class calling this method
-     *
      * @return void
      * @throws Exception
      * @since 10.0.0
      */
-    private function removeBibleStudyVersion(InstallerAdapter $parent): void
+    private function removeBibleStudyVersion(): void
     {
         $biblestudyID = $this->getExtensionId('component', 'com_biblestudy');
 
@@ -2753,7 +2879,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $this->deleteFiles   = ['/language/en-GB/en-GB.com_biblestudy.ini'];
 
             // Call parent removeFiles with the required argument
-            $this->removeFiles($parent);
+            $this->removeFiles();
 
             // Clean up Admin Menus from old install
             $query = $this->dbo->getQuery(true)
@@ -2766,7 +2892,10 @@ class com_proclaimInstallerScript extends InstallerScript
             try {
                 $this->dbo->execute();
             } catch (RuntimeException $e) {
-                Factory::getApplication()->enqueueMessage('Failed to execute Admin Menu removal', 'error');
+                Factory::getApplication()->enqueueMessage(
+                    'Failed to execute Admin Menu removal: ' . $e->getMessage(),
+                    'error'
+                );
             }
 
             // Update Site Menus for BibleStudy to Proclaim
@@ -2877,7 +3006,10 @@ class com_proclaimInstallerScript extends InstallerScript
         try {
             $this->dbo->execute();
         } catch (RuntimeException $e) {
-            Factory::getApplication()->enqueueMessage("Failed to execute $element removal", 'error');
+            Factory::getApplication()->enqueueMessage(
+                "Failed to execute $element removal: " . $e->getMessage(),
+                'error'
+            );
         }
     }
 
@@ -2903,21 +3035,205 @@ class com_proclaimInstallerScript extends InstallerScript
     }
 
     /**
-     * Migrate studyimage param values to thumbnailm column
+     * Remove the stray template layouts that shipped by accident.
      *
-     * Messages that only have a studyimage (stock image) but no thumbnailm
-     * need the value preserved since the studyimage field is being removed.
+     * `default_easy.php`, `default_fluidsermonlist.php` and
+     * `default_fluidsermondetail.php` are named by no templatecode record, so
+     * nothing can reach them.
      *
-     * @return void
+     * ⚠️ Deleting the files is not enough. The install SQL seeds an `easy`
+     * templatecode row whose stored PHP calls `JHtml`, gone since Joomla 4, and
+     * both `CwmtemplatecodeTable::store()` and the backup restore rewrite the
+     * layout file from that row — so saving the record or restoring a backup
+     * puts the fatal code back.
      *
-     * @since 10.1.0
+     * A record whose code no longer carries the `JHtml` signature has been edited
+     * by the site and is left alone, along with the file it owns.
+     *
+     * @return  string  Summary for the install report
+     *
+     * @since   __DEPLOY_VERSION__
      */
+    private function removeStrayTemplateLayouts(): string
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $removed = [];
+
+        // filename => every layout path that record may have generated. The
+        // shipped folders are lower case, but CwmtemplatecodeTable::store()
+        // still writes the pre-2022 capitalised names, so a case-sensitive
+        // host can hold both.
+        $strays = [
+            'easy' => [
+                '/components/com_proclaim/tmpl/cwmsermons/default_easy.php',
+                '/components/com_proclaim/tmpl/Cwmsermons/default_easy.php',
+            ],
+            'fluidsermonlist' => [
+                '/components/com_proclaim/tmpl/cwmsermons/default_fluidsermonlist.php',
+                '/components/com_proclaim/tmpl/Cwmsermons/default_fluidsermonlist.php',
+            ],
+            'fluidsermondetail' => [
+                '/components/com_proclaim/tmpl/cwmsermon/default_fluidsermondetail.php',
+                '/components/com_proclaim/tmpl/Cwmsermon/default_fluidsermondetail.php',
+            ],
+        ];
+
+        foreach ($strays as $filename => $relativePaths) {
+            try {
+                $query = $db->createQuery()
+                    ->select($db->quoteName(['id', 'templatecode']))
+                    ->from($db->quoteName('#__bsms_templatecode'))
+                    ->where($db->quoteName('filename') . ' = :filename')
+                    ->bind(':filename', $filename);
+                $db->setQuery($query);
+                $records = $db->loadObjectList();
+            } catch (\Exception) {
+                continue;
+            }
+
+            $customised = false;
+
+            foreach ($records as $record) {
+                // Only the untouched seed is safe to drop; anything else is the
+                // site's own work and keeps both its record and its file.
+                if (!str_contains((string) $record->templatecode, 'JHtml::addIncludePath')) {
+                    $customised = true;
+
+                    continue;
+                }
+
+                try {
+                    $delete = $db->createQuery()
+                        ->delete($db->quoteName('#__bsms_templatecode'))
+                        ->where($db->quoteName('id') . ' = :id')
+                        ->bind(':id', $record->id, ParameterType::INTEGER);
+                    $db->setQuery($delete)->execute();
+                    $removed[] = $filename . ' (record)';
+                } catch (\Exception) {
+                    $customised = true;
+                }
+            }
+
+            if ($customised) {
+                continue;
+            }
+
+            foreach ($relativePaths as $relativePath) {
+                $path = JPATH_ROOT . $relativePath;
+
+                if (is_file($path) && File::delete($path)) {
+                    $removed[] = $filename . ' (layout)';
+                }
+            }
+        }
+
+        $cleared = $this->clearStrayTemplatePointers(array_keys($strays));
+
+        if ($cleared > 0) {
+            $removed[] = $cleared . ' template pointer(s) reset';
+        }
+
+        return $removed === [] ? 'nothing to remove' : implode(', ', $removed);
+    }
+
     /**
-     * Drop unused text and pdf columns from the templates table.
+     * Reset template params that still select a removed layout.
      *
-     * These columns were never rendered on the frontend. The drop is done in
-     * PHP rather than SQL because ALTER TABLE … DROP COLUMN is not idempotent
-     * in MySQL — it errors if the column was already removed.
+     * `loadTemplate()` throws a 500 when the file is gone, so a template left
+     * pointing at one of these would break the front end rather than fall back.
+     * Only pointers whose layout no longer exists on disk are cleared.
+     *
+     * @param   string[]  $removedNames  Layout names that were candidates for removal
+     *
+     * @return  int  Number of templates changed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function clearStrayTemplatePointers(array $removedNames): int
+    {
+        $db      = Factory::getContainer()->get(DatabaseInterface::class);
+        $changed = 0;
+
+        // param => the directory its value resolves a layout file in
+        $pointers = [
+            'sermonstemplate' => '/components/com_proclaim/tmpl/cwmsermons/',
+            'sermontemplate'  => '/components/com_proclaim/tmpl/cwmsermon/',
+        ];
+
+        try {
+            $db->setQuery(
+                $db->createQuery()
+                    ->select($db->quoteName(['id', 'params']))
+                    ->from($db->quoteName('#__bsms_templates'))
+            );
+            $templates = $db->loadObjectList();
+        } catch (\Exception) {
+            return 0;
+        }
+
+        foreach ($templates as $template) {
+            try {
+                $params = json_decode((string) $template->params, true, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                continue;
+            }
+
+            if (!\is_array($params)) {
+                continue;
+            }
+
+            $dirty = false;
+
+            foreach ($pointers as $key => $directory) {
+                $value = (string) ($params[$key] ?? '');
+
+                if ($value === '' || $value === '0' || !\in_array($value, $removedNames, true)) {
+                    continue;
+                }
+
+                // A site that kept its own record still has the file; leave it.
+                if (is_file(JPATH_ROOT . $directory . 'default_' . $value . '.php')) {
+                    continue;
+                }
+
+                $params[$key] = '0';
+                $dirty        = true;
+            }
+
+            if (!$dirty) {
+                continue;
+            }
+
+            try {
+                $encoded = json_encode($params, JSON_THROW_ON_ERROR);
+
+                $update = $db->createQuery()
+                    ->update($db->quoteName('#__bsms_templates'))
+                    ->set($db->quoteName('params') . ' = :params')
+                    ->where($db->quoteName('id') . ' = :id')
+                    ->bind(':params', $encoded)
+                    ->bind(':id', $template->id, ParameterType::INTEGER);
+                $db->setQuery($update)->execute();
+                $changed++;
+            } catch (\Exception) {
+                // A template we cannot rewrite is left as it was.
+                continue;
+            }
+        }
+
+        return $changed;
+    }
+
+    /**
+     * Drop unused text, pdf and tmpl columns from the templates table.
+     *
+     * None of the three was ever rendered on the frontend. `tmpl` additionally
+     * broke template export/import: it is NOT NULL with no default and the
+     * exporter never emitted it, so the generated INSERT failed with error 1364
+     * under STRICT_TRANS_TABLES, and imported an empty string everywhere else.
+     *
+     * The drop is done in PHP rather than SQL because ALTER TABLE … DROP COLUMN
+     * is not idempotent in MySQL — it errors if the column was already removed.
      *
      * @return  void
      *
@@ -2930,7 +3246,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $prefix = $db->getPrefix();
             $table  = $prefix . 'bsms_templates';
 
-            $columns = ['text', 'pdf'];
+            $columns = ['text', 'pdf', 'tmpl'];
 
             foreach ($columns as $column) {
                 $query = $db->getQuery(true)
@@ -2946,7 +3262,7 @@ class com_proclaimInstallerScript extends InstallerScript
                     $db->execute();
                 }
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Non-fatal — column may already be gone
         }
     }
@@ -2955,19 +3271,21 @@ class com_proclaimInstallerScript extends InstallerScript
      * Drop legacy/orphaned Proclaim tables that the current codebase no
      * longer references.
      *
-     * Some of these have been targeted by old migration files
-     * (10.1.0-20260228, 10.1.0-20260301), but Joomla skips already-applied
-     * migrations on upgrades that jump multiple versions, so sites that
-     * went straight from 10.0 → 10.2/10.3 still carry the rows. Others
-     * (e.g. `jbsbackup_timeset`) are pre-10.0 leftovers never covered by
-     * any migration.
+     * Done here rather than in migration SQL because Joomla skips
+     * already-applied migrations on upgrades that jump versions, so a site
+     * that went straight from 10.0 to 10.2/10.3 still carries rows the 10.1.0
+     * files were meant to remove. Others, `jbsbackup_timeset` among them,
+     * predate 10.0 and no migration ever covered them.
      *
-     * Each candidate has been verified against the live codebase: not
-     * referenced in admin/, site/, libraries/, plugins/, or modules/.
-     * Tables still in use (`#__bsms_version`, `#__bsms_styles`) are
-     * intentionally NOT in this list — bsms_version is read by the
-     * v7→v10 upgrade detector, bsms_styles is the active template-styles
-     * store.
+     * A table earns a place here by being unreferenced across admin/, site/,
+     * libraries/, plugins/ and modules/ — but unreferenced is not sufficient:
+     *
+     * ⚠️ `#__bsms_version` is read by the v7→v10 upgrade detector.
+     *
+     * ⚠️ `#__bsms_styles` is deliberately absent. Nothing reads it any more,
+     * yet no migration ever moved its rows into the params that replaced it,
+     * so a site upgraded from 7.x may hold the only copy of its stylesheets
+     * there. Dropping it needs a migration first.
      *
      * @return  void
      *
@@ -3039,6 +3357,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.1.0
      */
     private function ensurePrimaryKeys(): void
@@ -3123,6 +3442,17 @@ class com_proclaimInstallerScript extends InstallerScript
         }
     }
 
+    /**
+     * Migrate studyimage param values to thumbnailm column
+     *
+     * Messages that only have a studyimage (stock image) but no thumbnailm
+     * need the value preserved since the studyimage field is being removed.
+     *
+     * @return void
+     *
+     * @throws Exception
+     * @since 10.1.0
+     */
     private function migrateStudyImageParams(): void
     {
         $db    = Factory::getContainer()->get(DatabaseInterface::class);
@@ -3174,7 +3504,15 @@ class com_proclaimInstallerScript extends InstallerScript
 
             // Update thumbnailm and remove studyimage from params
             unset($params['studyimage']);
-            $newParams = json_encode($params);
+
+            try {
+                $newParams = json_encode($params, JSON_THROW_ON_ERROR);
+            } catch (\JsonException) {
+                // Without the flag this returned false, which quoted to an empty
+                // string and wrote it over the row's entire params blob. Skip the
+                // row instead, matching the decode above.
+                continue;
+            }
 
             $update = $db->getQuery(true)
                 ->update($db->qn('#__bsms_studies'))
@@ -3204,6 +3542,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since   10.1.0
      */
     private function migratePodcastAlternateLinks(): void
@@ -3240,7 +3579,7 @@ class com_proclaimInstallerScript extends InstallerScript
             $xmlFile          = JPATH_ADMINISTRATOR . '/components/com_proclaim/forms/podcast-platforms.xml';
 
             if (file_exists($xmlFile)) {
-                $xml = simplexml_load_file($xmlFile);
+                $xml = simplexml_load_string(file_get_contents($xmlFile));
 
                 if ($xml !== false) {
                     foreach ($xml->platform as $p) {
@@ -3281,9 +3620,18 @@ class com_proclaimInstallerScript extends InstallerScript
                     ],
                 ];
 
+                try {
+                    $encoded = json_encode($links, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    // Legacy rows can hold bytes that will not encode. Leaving the
+                    // link where it is beats counting the row as migrated and
+                    // storing an empty string.
+                    continue;
+                }
+
                 $update = $db->getQuery(true)
                     ->update($db->quoteName('#__bsms_podcast'))
-                    ->set($db->quoteName('platform_links') . ' = ' . $db->quote(json_encode($links)))
+                    ->set($db->quoteName('platform_links') . ' = ' . $db->quote($encoded))
                     ->where($db->quoteName('id') . ' = ' . (int) $row->id);
                 $db->setQuery($update);
                 $db->execute();
@@ -3314,6 +3662,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return void
      *
+     * @throws Exception
      * @since 10.1.0
      */
     private function migratePodcastImageField(): void
@@ -3329,7 +3678,7 @@ class com_proclaimInstallerScript extends InstallerScript
                 ->where('(' . $db->quoteName('podcastimage') . ' IS NULL OR '
                     . $db->quoteName('podcastimage') . ' = ' . $db->quote('') . ')');
             $db->setQuery($query);
-            $affected = $db->execute();
+            $db->execute();
 
             $count = $db->getAffectedRows();
 
@@ -3357,6 +3706,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return void
      *
+     * @throws Exception
      * @since 10.1.0
      */
     private function migratePodcastLinkToMenuItem(): void
@@ -3494,6 +3844,7 @@ class com_proclaimInstallerScript extends InstallerScript
      *
      * @return  void
      *
+     * @throws Exception
      * @since  10.3.0
      */
     private function migrateScriptureParamsToPlugin(): void

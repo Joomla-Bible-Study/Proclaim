@@ -519,10 +519,14 @@ class CwmadminController extends FormController
                 $description = CwmdescriptionHelper::buildVideoDescription($studyId);
             }
 
-            // Look up the server type for this media file
+            // Look up the server behind this media file
             $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->createQuery()
-                ->select($db->quoteName('sv.type'))
+                ->select([
+                    $db->quoteName('sv.type'),
+                    $db->quoteName('sv.id', 'server_id'),
+                    $db->quoteName('sv.published', 'server_published'),
+                ])
                 ->from($db->quoteName('#__bsms_mediafiles', 'm'))
                 ->leftJoin(
                     $db->quoteName('#__bsms_servers', 'sv') .
@@ -530,19 +534,42 @@ class CwmadminController extends FormController
                 )
                 ->where($db->quoteName('m.id') . ' = ' . (int) $mediaId);
             $db->setQuery($query);
-            $serverType = $db->loadResult();
+            $server = $db->loadObject();
 
-            if (empty($serverType)) {
+            if (!$server || empty($server->type)) {
                 echo json_encode(['success' => false, 'error' => 'Could not determine server type']);
                 $this->app->close();
 
                 return;
             }
 
+            $serverType = (string) $server->type;
+            $serverId   = (int) $server->server_id;
+
             $addon = CWMAddon::getInstance($serverType);
 
             if (!$addon->supportsDescriptionSync()) {
                 echo json_encode(['success' => false, 'error' => 'This platform does not support description sync']);
+                $this->app->close();
+
+                return;
+            }
+
+            if ((int) $server->server_published !== 1) {
+                echo json_encode(['success' => false, 'error' => 'That server is disabled']);
+                $this->app->close();
+
+                return;
+            }
+
+            // Re-check the server's own prerequisites rather than trusting the
+            // caller to have filtered: the view builds its list from the same
+            // gate, but this endpoint is reachable on its own.
+            if (!$addon->isDescriptionSyncReady($serverId)) {
+                echo json_encode([
+                    'success' => false,
+                    'error'   => 'That server is not configured for description sync yet',
+                ]);
                 $this->app->close();
 
                 return;
